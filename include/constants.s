@@ -1,0 +1,102 @@
+DEF XCPS_AUTO_INCREMENT = $80
+DEF NUM_COLORS = $20
+DEF NUM_PALETTE_BYTES = NUM_COLORS * 2
+DEF NUM_SPRITES = $28
+DEF NUM_ANIM_SPRITE_SPECS = $0c
+
+; --
+; -- Game states
+; --
+
+DEF GS_INIT = $00
+DEF GS_INTRO = $02
+DEF GS_SAVE_SCREEN = $0e
+DEF GS_RESET_DATA = $12
+DEF GS_DMG = $13
+; 16 - enter name
+DEF GS_SETTINGS = $17
+DEF GS_BATTLE = $2f
+DEF GS_TITLE_SCREEN = $36
+DEF GS_TITLE_MENU_SCREEN = $37
+; 3b - non-prologue intro scene
+DEF GS_44 = $44
+; 45 - shows stats? home menu?
+DEF GS_46 = $46
+DEF GS_PROLOGUE = $47
+; 49 - shows a day has passed
+
+; --
+; -- Data banks
+; --
+
+DEF KANJI_TILE_DATA_BANK = $06
+DEF SCRIPT_DATA_BANK = $41
+
+; --
+; -- Script opts
+; --
+
+DEF SO_00 = $00
+DEF SO_02 = $02
+DEF SO_03 = $03
+DEF SO_CLEAR_TEXT_BOX = $08
+DEF SO_SET_DELAY = $09
+DEF SO_SET_CHAR_ON_SCREEN = $0d
+DEF SO_LOAD_SCENERY = $0e
+DEF SO_SET_PORTRAIT = $0f
+DEF SO_16 = $16
+DEF SO_1b = $1b
+DEF SO_1d = $1d
+DEF SO_33 = $33
+DEF SO_PRE_SPECIFIED_DELAY = $34
+
+; --
+; -- Kanji text styles
+; --
+
+DEF KTS_BLACK_ON_WHITE = $03
+
+; --
+; -- Sprite idxes
+; --
+
+; Sprite group $b
+DEF SG_B = $0b
+DEF SGB_MEDIA = $02
+DEF SGB_FACTORY = $03
+DEF SGB_JUPITER1 = $6c
+DEF SGB_JUPITER2 = $6d
+DEF SGB_JUPITER3 = $6e
+DEF SGB_JUPITER4 = $6f
+DEF SGB_JUPITER5 = $70
+
+; Sprite group $c
+DEF SG_C = $0c
+DEF SGC_TITLE_SCREEN_LOGO = $4f
+DEF SGC_TITLE_SCREEN_GIRL_HAIR1 = $50
+DEF SGC_TITLE_SCREEN_GIRL_HAIR2 = $51
+DEF SGC_TITLE_SCREEN_GIRL_HAIR3 = $52
+DEF SGC_TITLE_SCREEN_GIRL_HAIR4 = $53
+DEF SGC_TITLE_SCREEN_GIRL_EYES1 = $54
+DEF SGC_TITLE_SCREEN_GIRL_EYES2 = $55
+DEF SGC_TITLE_SCREEN_GIRL_EYES3 = $56
+
+; --
+; -- Animated sprite specs
+; --
+DEF ASS_MENU_CURSOR = $1f
+
+DEF ASST_1 = $01
+
+; --
+; -- Sound
+; --
+
+DEF SND_01 = $01
+
+; --
+; -- MISC
+; --
+
+DEF RESET_DATA_YES_X = $2c
+DEF RESET_DATA_NO_X = $4c

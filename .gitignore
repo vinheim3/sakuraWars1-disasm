@@ -1,0 +1,11 @@
+*.gbc
+*.map
+*.sav
+*.sym
+*.csv
+*.tbl
+temp.s
+gfx_new.*
+
+__pycache__/
+build/
