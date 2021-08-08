@@ -8379,6 +8379,9 @@ jr_01d_677a:
 	nop                                              ; $678c: $00
 	db   $fc                                         ; $678d: $fc
 	nop                                              ; $678e: $00
+
+
+RleXorTileMap_Settings::
 	add  hl, de                                      ; $678f: $19
 	nop                                              ; $6790: $00
 	ld   a, a                                        ; $6791: $7f

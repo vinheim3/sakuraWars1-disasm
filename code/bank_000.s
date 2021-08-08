@@ -2091,48 +2091,62 @@ RLEXorCopy::
 	ret                                                             ; $0a22
 
 
-;
-	ld   [wGenericFarBank], a                                  ; $0a23: $ea $9c $c2
-	ld   a, [wRomBank]                                  ; $0a26: $fa $92 $c2
-	push af                                          ; $0a29: $f5
-	ld   a, [wGenericFarBank]                                  ; $0a2a: $fa $9c $c2
-	ld   [wRomBank], a                                  ; $0a2d: $ea $92 $c2
-	ld   [rROMB0], a                                  ; $0a30: $ea $00 $20
+; A - src rom bank
+; BC - num bytes
+; DE - dest addr
+; HL - src addr
+HBlankFarMemCopy::
+; Preserve and set new rom bank
+	ld   [wGenericFarBank], a                                       ; $0a23
 
-jr_000_0a33:
-	ldh  a, [rSTAT]                                  ; $0a33: $f0 $41
-	and  STATF_LCD                                         ; $0a35: $e6 $03
-	jr   z, jr_000_0a33                              ; $0a37: $28 $fa
+	ld   a, [wRomBank]                                              ; $0a26
+	push af                                                         ; $0a29
 
-jr_000_0a39:
-	ldh  a, [rSTAT]                                  ; $0a39: $f0 $41
-	and  STATF_LCD                                         ; $0a3b: $e6 $03
-	jr   nz, jr_000_0a39                             ; $0a3d: $20 $fa
+	ld   a, [wGenericFarBank]                                       ; $0a2a
+	ld   [wRomBank], a                                              ; $0a2d
+	ld   [rROMB0], a                                                ; $0a30
 
-	ld   a, [hl+]                                    ; $0a3f: $2a
-	ld   [de], a                                     ; $0a40: $12
-	inc  de                                          ; $0a41: $13
-	ld   a, [hl+]                                    ; $0a42: $2a
-	ld   [de], a                                     ; $0a43: $12
-	inc  de                                          ; $0a44: $13
-	ld   a, [hl+]                                    ; $0a45: $2a
-	ld   [de], a                                     ; $0a46: $12
-	inc  de                                          ; $0a47: $13
-	ld   a, [hl+]                                    ; $0a48: $2a
-	ld   [de], a                                     ; $0a49: $12
-	inc  de                                          ; $0a4a: $13
-	dec  bc                                          ; $0a4b: $0b
-	dec  bc                                          ; $0a4c: $0b
-	dec  bc                                          ; $0a4d: $0b
-	dec  bc                                          ; $0a4e: $0b
-	ld   a, b                                        ; $0a4f: $78
-	or   c                                           ; $0a50: $b1
-	jr   nz, jr_000_0a33                             ; $0a51: $20 $e0
+.loop:
+; Wait until outside of hblank
+	ldh  a, [rSTAT]                                                 ; $0a33
+	and  STATF_LCD                                                  ; $0a35
+	jr   z, .loop                                                   ; $0a37
 
-	pop  af                                          ; $0a53: $f1
-	ld   [wRomBank], a                                  ; $0a54: $ea $92 $c2
-	ld   [rROMB0], a                                  ; $0a57: $ea $00 $20
-	ret                                              ; $0a5a: $c9
+; Then wait until back in hblank
+:	ldh  a, [rSTAT]                                                 ; $0a39
+	and  STATF_LCD                                                  ; $0a3b
+	jr   nz, :-                                                     ; $0a3d
+
+; Copy 4 bytes
+	ld   a, [hl+]                                                   ; $0a3f
+	ld   [de], a                                                    ; $0a40
+	inc  de                                                         ; $0a41
+	ld   a, [hl+]                                                   ; $0a42
+	ld   [de], a                                                    ; $0a43
+	inc  de                                                         ; $0a44
+	ld   a, [hl+]                                                   ; $0a45
+	ld   [de], a                                                    ; $0a46
+	inc  de                                                         ; $0a47
+	ld   a, [hl+]                                                   ; $0a48
+	ld   [de], a                                                    ; $0a49
+	inc  de                                                         ; $0a4a
+
+; BC -= 4
+	dec  bc                                                         ; $0a4b
+	dec  bc                                                         ; $0a4c
+	dec  bc                                                         ; $0a4d
+	dec  bc                                                         ; $0a4e
+
+; Loop if not 0
+	ld   a, b                                                       ; $0a4f
+	or   c                                                          ; $0a50
+	jr   nz, .loop                                                  ; $0a51
+
+; Restore rom bank
+	pop  af                                                         ; $0a53
+	ld   [wRomBank], a                                              ; $0a54
+	ld   [rROMB0], a                                                ; $0a57
+	ret                                                             ; $0a5a
 
 
 ClearVram:

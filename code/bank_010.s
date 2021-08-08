@@ -727,7 +727,7 @@ Call_010_45b6:
 	push de                                          ; $45cd: $d5
 	push bc                                          ; $45ce: $c5
 	ld   a, $00                                      ; $45cf: $3e $00
-	call $0a23                                       ; $45d1: $cd $23 $0a
+	call HBlankFarMemCopy                                       ; $45d1: $cd $23 $0a
 	pop  bc                                          ; $45d4: $c1
 	pop  de                                          ; $45d5: $d1
 	ld   hl, $0020                                   ; $45d6: $21 $20 $00
@@ -736,7 +736,7 @@ Call_010_45b6:
 	ld   e, l                                        ; $45db: $5d
 	pop  hl                                          ; $45dc: $e1
 	ld   a, $00                                      ; $45dd: $3e $00
-	call $0a23                                       ; $45df: $cd $23 $0a
+	call HBlankFarMemCopy                                       ; $45df: $cd $23 $0a
 	pop  af                                          ; $45e2: $f1
 	ld   [wWramBank], a                                  ; $45e3: $ea $93 $c2
 	ldh  [rSVBK], a                                  ; $45e6: $e0 $70
@@ -6529,7 +6529,7 @@ Call_010_6aa4:
 	ldh  [rVBK], a                                   ; $6ab6: $e0 $4f
 	ld   bc, $0008                                   ; $6ab8: $01 $08 $00
 	ld   a, $00                                      ; $6abb: $3e $00
-	call $0a23                                       ; $6abd: $cd $23 $0a
+	call HBlankFarMemCopy                                       ; $6abd: $cd $23 $0a
 	push hl                                          ; $6ac0: $e5
 	ld   hl, $0018                                   ; $6ac1: $21 $18 $00
 	add  hl, de                                      ; $6ac4: $19
@@ -6540,7 +6540,7 @@ Call_010_6aa4:
 	add  hl, bc                                      ; $6acb: $09
 	ld   bc, $0008                                   ; $6acc: $01 $08 $00
 	ld   a, $00                                      ; $6acf: $3e $00
-	call $0a23                                       ; $6ad1: $cd $23 $0a
+	call HBlankFarMemCopy                                       ; $6ad1: $cd $23 $0a
 	ret                                              ; $6ad4: $c9
 
 

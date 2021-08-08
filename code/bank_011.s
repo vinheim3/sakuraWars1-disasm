@@ -405,12 +405,12 @@ Call_011_42d8:
 	ld   a, $00                                      ; $42e2: $3e $00
 	ld   hl, $98d4                                   ; $42e4: $21 $d4 $98
 	ld   bc, $0008                                   ; $42e7: $01 $08 $00
-	call $0a23                                       ; $42ea: $cd $23 $0a
+	call HBlankFarMemCopy                                       ; $42ea: $cd $23 $0a
 	ld   de, $9981                                   ; $42ed: $11 $81 $99
 	ld   a, $00                                      ; $42f0: $3e $00
 	ld   hl, $98f4                                   ; $42f2: $21 $f4 $98
 	ld   bc, $0008                                   ; $42f5: $01 $08 $00
-	call $0a23                                       ; $42f8: $cd $23 $0a
+	call HBlankFarMemCopy                                       ; $42f8: $cd $23 $0a
 	jr   jr_011_4319                                 ; $42fb: $18 $1c
 
 jr_011_42fd:
@@ -418,12 +418,12 @@ jr_011_42fd:
 	ld   a, $00                                      ; $4300: $3e $00
 	ld   hl, $9914                                   ; $4302: $21 $14 $99
 	ld   bc, $0008                                   ; $4305: $01 $08 $00
-	call $0a23                                       ; $4308: $cd $23 $0a
+	call HBlankFarMemCopy                                       ; $4308: $cd $23 $0a
 	ld   de, $998b                                   ; $430b: $11 $8b $99
 	ld   a, $00                                      ; $430e: $3e $00
 	ld   hl, $9934                                   ; $4310: $21 $34 $99
 	ld   bc, $0008                                   ; $4313: $01 $08 $00
-	call $0a23                                       ; $4316: $cd $23 $0a
+	call HBlankFarMemCopy                                       ; $4316: $cd $23 $0a
 
 jr_011_4319:
 	ret                                              ; $4319: $c9
@@ -448,12 +448,12 @@ Call_011_4328:
 	ld   a, $00                                      ; $4332: $3e $00
 	ld   hl, $9954                                   ; $4334: $21 $54 $99
 	ld   bc, $0008                                   ; $4337: $01 $08 $00
-	call $0a23                                       ; $433a: $cd $23 $0a
+	call HBlankFarMemCopy                                       ; $433a: $cd $23 $0a
 	ld   de, $9981                                   ; $433d: $11 $81 $99
 	ld   a, $00                                      ; $4340: $3e $00
 	ld   hl, $9974                                   ; $4342: $21 $74 $99
 	ld   bc, $0008                                   ; $4345: $01 $08 $00
-	call $0a23                                       ; $4348: $cd $23 $0a
+	call HBlankFarMemCopy                                       ; $4348: $cd $23 $0a
 	ret                                              ; $434b: $c9
 
 
@@ -462,12 +462,12 @@ jr_011_434c:
 	ld   a, $00                                      ; $434f: $3e $00
 	ld   hl, $9994                                   ; $4351: $21 $94 $99
 	ld   bc, $0008                                   ; $4354: $01 $08 $00
-	call $0a23                                       ; $4357: $cd $23 $0a
+	call HBlankFarMemCopy                                       ; $4357: $cd $23 $0a
 	ld   de, $998b                                   ; $435a: $11 $8b $99
 	ld   a, $00                                      ; $435d: $3e $00
 	ld   hl, $99b4                                   ; $435f: $21 $b4 $99
 	ld   bc, $0008                                   ; $4362: $01 $08 $00
-	call $0a23                                       ; $4365: $cd $23 $0a
+	call HBlankFarMemCopy                                       ; $4365: $cd $23 $0a
 	ret                                              ; $4368: $c9
 
 
@@ -580,12 +580,12 @@ Call_011_43e4:
 	ld   a, $00                                      ; $43ea: $3e $00
 	ld   hl, $9874                                   ; $43ec: $21 $74 $98
 	ld   bc, $0004                                   ; $43ef: $01 $04 $00
-	call $0a23                                       ; $43f2: $cd $23 $0a
+	call HBlankFarMemCopy                                       ; $43f2: $cd $23 $0a
 	ld   de, $9a04                                   ; $43f5: $11 $04 $9a
 	ld   a, $00                                      ; $43f8: $3e $00
 	ld   hl, $98b4                                   ; $43fa: $21 $b4 $98
 	ld   bc, $0004                                   ; $43fd: $01 $04 $00
-	call $0a23                                       ; $4400: $cd $23 $0a
+	call HBlankFarMemCopy                                       ; $4400: $cd $23 $0a
 	ret                                              ; $4403: $c9
 
 
@@ -596,12 +596,12 @@ Call_011_4404:
 	ld   a, $00                                      ; $440a: $3e $00
 	ld   hl, $9814                                   ; $440c: $21 $14 $98
 	ld   bc, $0004                                   ; $440f: $01 $04 $00
-	call $0a23                                       ; $4412: $cd $23 $0a
+	call HBlankFarMemCopy                                       ; $4412: $cd $23 $0a
 	ld   de, $9a04                                   ; $4415: $11 $04 $9a
 	ld   a, $00                                      ; $4418: $3e $00
 	ld   hl, $9854                                   ; $441a: $21 $54 $98
 	ld   bc, $0004                                   ; $441d: $01 $04 $00
-	call $0a23                                       ; $4420: $cd $23 $0a
+	call HBlankFarMemCopy                                       ; $4420: $cd $23 $0a
 	ret                                              ; $4423: $c9
 
 
@@ -3649,17 +3649,17 @@ jr_011_56b7:
 	ld   a, $00                                      ; $56bd: $3e $00
 	ld   hl, $c81e                                   ; $56bf: $21 $1e $c8
 	ld   bc, $0004                                   ; $56c2: $01 $04 $00
-	call $0a23                                       ; $56c5: $cd $23 $0a
+	call HBlankFarMemCopy                                       ; $56c5: $cd $23 $0a
 	ld   de, $99ed                                   ; $56c8: $11 $ed $99
 	ld   a, $04                                      ; $56cb: $3e $04
 	ld   hl, $c822                                   ; $56cd: $21 $22 $c8
 	ld   bc, $0004                                   ; $56d0: $01 $04 $00
-	call $0a23                                       ; $56d3: $cd $23 $0a
+	call HBlankFarMemCopy                                       ; $56d3: $cd $23 $0a
 	ld   de, $9a0d                                   ; $56d6: $11 $0d $9a
 	ld   a, $08                                      ; $56d9: $3e $08
 	ld   hl, $c826                                   ; $56db: $21 $26 $c8
 	ld   bc, $0004                                   ; $56de: $01 $04 $00
-	call $0a23                                       ; $56e1: $cd $23 $0a
+	call HBlankFarMemCopy                                       ; $56e1: $cd $23 $0a
 	ret                                              ; $56e4: $c9
 
 
@@ -3718,17 +3718,17 @@ jr_011_5715:
 	ld   a, $00                                      ; $5726: $3e $00
 	ld   hl, $c81e                                   ; $5728: $21 $1e $c8
 	ld   bc, $0004                                   ; $572b: $01 $04 $00
-	call $0a23                                       ; $572e: $cd $23 $0a
+	call HBlankFarMemCopy                                       ; $572e: $cd $23 $0a
 	ld   de, $99e5                                   ; $5731: $11 $e5 $99
 	ld   a, $04                                      ; $5734: $3e $04
 	ld   hl, $c822                                   ; $5736: $21 $22 $c8
 	ld   bc, $0004                                   ; $5739: $01 $04 $00
-	call $0a23                                       ; $573c: $cd $23 $0a
+	call HBlankFarMemCopy                                       ; $573c: $cd $23 $0a
 	ld   de, $9a05                                   ; $573f: $11 $05 $9a
 	ld   a, $08                                      ; $5742: $3e $08
 	ld   hl, $c826                                   ; $5744: $21 $26 $c8
 	ld   bc, $0004                                   ; $5747: $01 $04 $00
-	call $0a23                                       ; $574a: $cd $23 $0a
+	call HBlankFarMemCopy                                       ; $574a: $cd $23 $0a
 	ret                                              ; $574d: $c9
 
 
@@ -6168,7 +6168,7 @@ jr_011_6730:
 	push af                                          ; $6730: $f5
 	ld   bc, $0004                                   ; $6731: $01 $04 $00
 	ld   a, $00                                      ; $6734: $3e $00
-	call $0a23                                       ; $6736: $cd $23 $0a
+	call HBlankFarMemCopy                                       ; $6736: $cd $23 $0a
 	ld   bc, $001c                                   ; $6739: $01 $1c $00
 	add  hl, bc                                      ; $673c: $09
 	push hl                                          ; $673d: $e5
@@ -6194,7 +6194,7 @@ Call_011_674a:
 	ld   a, $00                                      ; $6759: $3e $00
 	ld   de, $99dd                                   ; $675b: $11 $dd $99
 	ld   bc, $0008                                   ; $675e: $01 $08 $00
-	call $0a23                                       ; $6761: $cd $23 $0a
+	call HBlankFarMemCopy                                       ; $6761: $cd $23 $0a
 	ld   hl, $c862                                   ; $6764: $21 $62 $c8
 	ld   de, $c875                                   ; $6767: $11 $75 $c8
 	call Call_011_677c                               ; $676a: $cd $7c $67
@@ -6202,7 +6202,7 @@ Call_011_674a:
 	ld   a, $00                                      ; $6770: $3e $00
 	ld   de, $98bd                                   ; $6772: $11 $bd $98
 	ld   bc, $0008                                   ; $6775: $01 $08 $00
-	call $0a23                                       ; $6778: $cd $23 $0a
+	call HBlankFarMemCopy                                       ; $6778: $cd $23 $0a
 	ret                                              ; $677b: $c9
 
 
@@ -6342,7 +6342,7 @@ jr_011_6811:
 	ld   a, $00                                      ; $6820: $3e $00
 	ld   de, $9a1e                                   ; $6822: $11 $1e $9a
 	ld   bc, $0008                                   ; $6825: $01 $08 $00
-	call $0a23                                       ; $6828: $cd $23 $0a
+	call HBlankFarMemCopy                                       ; $6828: $cd $23 $0a
 	ld   a, [$c877]                                  ; $682b: $fa $77 $c8
 	ld   hl, $c887                                   ; $682e: $21 $87 $c8
 	call Call_011_6843                               ; $6831: $cd $43 $68
@@ -6350,7 +6350,7 @@ jr_011_6811:
 	ld   a, $00                                      ; $6837: $3e $00
 	ld   de, $98fe                                   ; $6839: $11 $fe $98
 	ld   bc, $0008                                   ; $683c: $01 $08 $00
-	call $0a23                                       ; $683f: $cd $23 $0a
+	call HBlankFarMemCopy                                       ; $683f: $cd $23 $0a
 	ret                                              ; $6842: $c9
 
 
@@ -6442,17 +6442,17 @@ Call_011_68b5:
 	ld   a, $00                                      ; $68b8: $3e $00
 	ld   hl, $9aa0                                   ; $68ba: $21 $a0 $9a
 	ld   bc, $0010                                   ; $68bd: $01 $10 $00
-	call $0a23                                       ; $68c0: $cd $23 $0a
+	call HBlankFarMemCopy                                       ; $68c0: $cd $23 $0a
 	ld   de, $9a06                                   ; $68c3: $11 $06 $9a
 	ld   a, $00                                      ; $68c6: $3e $00
 	ld   hl, $9ac0                                   ; $68c8: $21 $c0 $9a
 	ld   bc, $0010                                   ; $68cb: $01 $10 $00
-	call $0a23                                       ; $68ce: $cd $23 $0a
+	call HBlankFarMemCopy                                       ; $68ce: $cd $23 $0a
 	ld   de, $9a26                                   ; $68d1: $11 $26 $9a
 	ld   a, $00                                      ; $68d4: $3e $00
 	ld   hl, $9ae0                                   ; $68d6: $21 $e0 $9a
 	ld   bc, $0010                                   ; $68d9: $01 $10 $00
-	call $0a23                                       ; $68dc: $cd $23 $0a
+	call HBlankFarMemCopy                                       ; $68dc: $cd $23 $0a
 	ret                                              ; $68df: $c9
 
 
@@ -6461,17 +6461,17 @@ Call_011_68e0:
 	ld   a, $00                                      ; $68e3: $3e $00
 	ld   hl, $9a40                                   ; $68e5: $21 $40 $9a
 	ld   bc, $0010                                   ; $68e8: $01 $10 $00
-	call $0a23                                       ; $68eb: $cd $23 $0a
+	call HBlankFarMemCopy                                       ; $68eb: $cd $23 $0a
 	ld   de, $9a06                                   ; $68ee: $11 $06 $9a
 	ld   a, $00                                      ; $68f1: $3e $00
 	ld   hl, $9a60                                   ; $68f3: $21 $60 $9a
 	ld   bc, $0010                                   ; $68f6: $01 $10 $00
-	call $0a23                                       ; $68f9: $cd $23 $0a
+	call HBlankFarMemCopy                                       ; $68f9: $cd $23 $0a
 	ld   de, $9a26                                   ; $68fc: $11 $26 $9a
 	ld   a, $00                                      ; $68ff: $3e $00
 	ld   hl, $9a80                                   ; $6901: $21 $80 $9a
 	ld   bc, $0010                                   ; $6904: $01 $10 $00
-	call $0a23                                       ; $6907: $cd $23 $0a
+	call HBlankFarMemCopy                                       ; $6907: $cd $23 $0a
 	ret                                              ; $690a: $c9
 
 
@@ -6498,7 +6498,7 @@ Call_011_690b:
 	ld   a, $00                                      ; $692f: $3e $00
 	ld   hl, $c8a2                                   ; $6931: $21 $a2 $c8
 	ld   bc, $0004                                   ; $6934: $01 $04 $00
-	call $0a23                                       ; $6937: $cd $23 $0a
+	call HBlankFarMemCopy                                       ; $6937: $cd $23 $0a
 	ret                                              ; $693a: $c9
 
 

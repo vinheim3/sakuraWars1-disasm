@@ -1713,7 +1713,7 @@ Jump_091_46fe:
 	inc  b                                           ; $4798: $04
 	dec  b                                           ; $4799: $05
 	ld   b, $07                                      ; $479a: $06 $07
-	ld   [$0a23], sp                                 ; $479c: $08 $23 $0a
+	ld   [HBlankFarMemCopy], sp                                 ; $479c: $08 $23 $0a
 	dec  bc                                          ; $479f: $0b
 	inc  c                                           ; $47a0: $0c
 	dec  c                                           ; $47a1: $0d
@@ -1886,7 +1886,7 @@ jr_091_47ec:
 	inc  b                                           ; $4878: $04
 	dec  b                                           ; $4879: $05
 	ld   b, $07                                      ; $487a: $06 $07
-	ld   [$0a23], sp                                 ; $487c: $08 $23 $0a
+	ld   [HBlankFarMemCopy], sp                                 ; $487c: $08 $23 $0a
 	dec  bc                                          ; $487f: $0b
 	inc  c                                           ; $4880: $0c
 	dec  c                                           ; $4881: $0d
@@ -2065,7 +2065,7 @@ jr_091_48c0:
 	inc  b                                           ; $4958: $04
 	dec  b                                           ; $4959: $05
 	ld   b, $07                                      ; $495a: $06 $07
-	ld   [$0a23], sp                                 ; $495c: $08 $23 $0a
+	ld   [HBlankFarMemCopy], sp                                 ; $495c: $08 $23 $0a
 	dec  bc                                          ; $495f: $0b
 	inc  c                                           ; $4960: $0c
 	dec  c                                           ; $4961: $0d

@@ -1390,7 +1390,11 @@ GameState17_Settings::
 	ld   a, $16                                      ; $4969: $3e $16
 	ld   hl, $d000                                   ; $496b: $21 $00 $d0
 	ld   de, $5793                                   ; $496e: $11 $93 $57
+if def(VWF)
+	call SettingsTileDataHook
+else
 	call RLEXorCopy                                       ; $4971: $cd $d2 $09
+endc
 	rst  WaitUntilVBlankIntHandledIfLCDOn                                         ; $4974: $cf
 
 ;
@@ -1421,10 +1425,14 @@ GameState17_Settings::
 	rst  WaitUntilVBlankIntHandledIfLCDOn                                         ; $49a4: $cf
 
 ;
-	ld   a, $1d                                      ; $49a5: $3e $1d
+	ld   a, BANK(RleXorTileMap_Settings)                                      ; $49a5: $3e $1d
 	ld   hl, $d800                                   ; $49a7: $21 $00 $d8
-	ld   de, $678f                                   ; $49aa: $11 $8f $67
+	ld   de, RleXorTileMap_Settings                                   ; $49aa: $11 $8f $67
+if def(VWF)
+	call SettingsTileMapHook
+else
 	call RLEXorCopy                                       ; $49ad: $cd $d2 $09
+endc
 
 ;
 	call Call_03e_4b7f                               ; $49b0: $cd $7f $4b
@@ -1443,7 +1451,11 @@ GameState17_Settings::
 	ld   a, $1b                                      ; $49c6: $3e $1b
 	ld   hl, $d800                                   ; $49c8: $21 $00 $d8
 	ld   de, $7eba                                   ; $49cb: $11 $ba $7e
+if def(VWF)
+	call SettingsTileAttrHook
+else
 	call RLEXorCopy                                       ; $49ce: $cd $d2 $09
+endc
 
 ;
 	ld   c, $81                                      ; $49d1: $0e $81
@@ -1479,7 +1491,7 @@ GameState17_Settings::
 	ld   [$c96e], a                                  ; $4a1c: $ea $6e $c9
 	call StartAnimatingAnimatedSpriteSpec                                       ; $4a1f: $cd $14 $30
 	call HLequAddrOfAnimSpriteSpecDetails                                       ; $4a22: $cd $76 $30
-	call Call_03e_4dd1                               ; $4a25: $cd $d1 $4d
+	call GetSettingsLeftArrowX                               ; $4a25: $cd $d1 $4d
 	ld   a, $30                                      ; $4a28: $3e $30
 	ld   de, $7180                                   ; $4a2a: $11 $80 $71
 	push af                                          ; $4a2d: $f5
@@ -1497,7 +1509,7 @@ GameState17_Settings::
 	ld   [$c96f], a                                  ; $4a49: $ea $6f $c9
 	call StartAnimatingAnimatedSpriteSpec                                       ; $4a4c: $cd $14 $30
 	call HLequAddrOfAnimSpriteSpecDetails                                       ; $4a4f: $cd $76 $30
-	call Call_03e_4ddf                               ; $4a52: $cd $df $4d
+	call GetSettingsRightArrowXminus8                               ; $4a52: $cd $df $4d
 	ld   a, $31                                      ; $4a55: $3e $31
 	ld   de, $7180                                   ; $4a57: $11 $80 $71
 	push af                                          ; $4a5a: $f5
@@ -1570,7 +1582,7 @@ GameState17_Settings::
 	call Call_03e_4c23                               ; $4af3: $cd $23 $4c
 	call Call_03e_4c66                               ; $4af6: $cd $66 $4c
 	call Call_03e_4be4                               ; $4af9: $cd $e4 $4b
-	call Call_03e_4ded                               ; $4afc: $cd $ed $4d
+	call SetSettingsArrowsCoords                               ; $4afc: $cd $ed $4d
 	ld   a, [wInGameButtonsPressed]                                  ; $4aff: $fa $10 $c2
 	and  $03                                         ; $4b02: $e6 $03
 	jr   z, .substate1done                              ; $4b04: $28 $0c
@@ -1643,7 +1655,11 @@ Call_03e_4b7f:
 	jr   z, jr_03e_4b8f                              ; $4b84: $28 $09
 
 	ld   hl, $d954                                   ; $4b86: $21 $54 $d9
+if def(VWF)
+	ld   de, $d963
+else
 	ld   de, $d964                                   ; $4b89: $11 $64 $d9
+endc
 	call Call_03e_4ba1                               ; $4b8c: $cd $a1 $4b
 
 jr_03e_4b8f:
@@ -1656,7 +1672,11 @@ Call_03e_4b90:
 	jr   z, jr_03e_4ba0                              ; $4b95: $28 $09
 
 	ld   hl, $d994                                   ; $4b97: $21 $94 $d9
+if def(VWF)
+	ld   de, $d9a3
+else
 	ld   de, $d9a4                                   ; $4b9a: $11 $a4 $d9
+endc
 	call Call_03e_4ba1                               ; $4b9d: $cd $a1 $4b
 
 jr_03e_4ba0:
@@ -1960,22 +1980,24 @@ Call_03e_4d07:
 	add  a                                           ; $4d0a: $87
 	ld   c, a                                        ; $4d0b: $4f
 	ld   b, $00                                      ; $4d0c: $06 $00
-	ld   hl, $4d1c                                   ; $4d0e: $21 $1c $4d
+	ld   hl, .data                                   ; $4d0e: $21 $1c $4d
 	add  hl, bc                                      ; $4d11: $09
 	ld   a, [hl+]                                    ; $4d12: $2a
 	ld   h, [hl]                                     ; $4d13: $66
 	ld   l, a                                        ; $4d14: $6f
+if def(VWF)
+	ld   de, $98ac
+else
 	ld   de, $98ad                                   ; $4d15: $11 $ad $98
-	call Call_03e_4da3                               ; $4d18: $cd $a3 $4d
+endc
+	call Copy4by2bytes                               ; $4d18: $cd $a3 $4d
 	ret                                              ; $4d1b: $c9
 
+.data:
+	dw $981c
+	dw $9818
+	dw $9814
 
-	inc  e                                           ; $4d1c: $1c
-	sbc  b                                           ; $4d1d: $98
-	jr   @-$66                                       ; $4d1e: $18 $98
-
-	inc  d                                           ; $4d20: $14
-	sbc  b                                           ; $4d21: $98
 
 Call_03e_4d22:
 	ld   a, [$c972]                                  ; $4d22: $fa $72 $c9
@@ -1987,8 +2009,12 @@ Call_03e_4d22:
 	ld   a, [hl+]                                    ; $4d2d: $2a
 	ld   h, [hl]                                     ; $4d2e: $66
 	ld   l, a                                        ; $4d2f: $6f
+if def(VWF)
+	ld   de, $98ec
+else
 	ld   de, $98ed                                   ; $4d30: $11 $ed $98
-	call Call_03e_4da3                               ; $4d33: $cd $a3 $4d
+endc
+	call Copy4by2bytes                               ; $4d33: $cd $a3 $4d
 	ret                                              ; $4d36: $c9
 
 
@@ -1996,6 +2022,8 @@ Call_03e_4d22:
 	sbc  b                                           ; $4d38: $98
 	ld   d, h                                        ; $4d39: $54
 	sbc  b                                           ; $4d3a: $98
+
+;
 	ld   a, [$c976]                                  ; $4d3b: $fa $76 $c9
 	add  a                                           ; $4d3e: $87
 	ld   c, a                                        ; $4d3f: $4f
@@ -2006,7 +2034,7 @@ Call_03e_4d22:
 	ld   h, [hl]                                     ; $4d47: $66
 	ld   l, a                                        ; $4d48: $6f
 	ld   de, $990d                                   ; $4d49: $11 $0d $99
-	call Call_03e_4da3                               ; $4d4c: $cd $a3 $4d
+	call Copy4by2bytes                               ; $4d4c: $cd $a3 $4d
 	ret                                              ; $4d4f: $c9
 
 
@@ -2023,8 +2051,12 @@ Call_03e_4d54:
 	ld   a, [hl+]                                    ; $4d5f: $2a
 	ld   h, [hl]                                     ; $4d60: $66
 	ld   l, a                                        ; $4d61: $6f
+if def(VWF)
+	ld   de, $992c
+else
 	ld   de, $992d                                   ; $4d62: $11 $2d $99
-	call Call_03e_4da3                               ; $4d65: $cd $a3 $4d
+endc
+	call Copy4by2bytes                               ; $4d65: $cd $a3 $4d
 	ret                                              ; $4d68: $c9
 
 
@@ -2046,7 +2078,7 @@ Call_03e_4d6f:
 	ld   h, [hl]                                     ; $4d7b: $66
 	ld   l, a                                        ; $4d7c: $6f
 	ld   de, $996d                                   ; $4d7d: $11 $6d $99
-	call Call_03e_4da3                               ; $4d80: $cd $a3 $4d
+	call Copy4by2bytes                               ; $4d80: $cd $a3 $4d
 	ret                                              ; $4d83: $c9
 
 
@@ -2066,7 +2098,7 @@ Call_03e_4d8a:
 	ld   h, [hl]                                     ; $4d96: $66
 	ld   l, a                                        ; $4d97: $6f
 	ld   de, $99ad                                   ; $4d98: $11 $ad $99
-	call Call_03e_4da3                               ; $4d9b: $cd $a3 $4d
+	call Copy4by2bytes                               ; $4d9b: $cd $a3 $4d
 	ret                                              ; $4d9e: $c9
 
 
@@ -2074,24 +2106,34 @@ Call_03e_4d8a:
 	sbc  c                                           ; $4da0: $99
 	jr   @-$65                                       ; $4da1: $18 $99
 
-Call_03e_4da3:
-	xor  a                                           ; $4da3: $af
-	ldh  [rVBK], a                                   ; $4da4: $e0 $4f
-	ld   bc, $0004                                   ; $4da6: $01 $04 $00
-	ld   a, $00                                      ; $4da9: $3e $00
-	call $0a23                                       ; $4dab: $cd $23 $0a
-	push hl                                          ; $4dae: $e5
-	ld   hl, $001c                                   ; $4daf: $21 $1c $00
-	add  hl, de                                      ; $4db2: $19
-	ld   e, l                                        ; $4db3: $5d
-	ld   d, h                                        ; $4db4: $54
-	pop  hl                                          ; $4db5: $e1
-	ld   bc, $001c                                   ; $4db6: $01 $1c $00
-	add  hl, bc                                      ; $4db9: $09
-	ld   bc, $0004                                   ; $4dba: $01 $04 $00
-	ld   a, $00                                      ; $4dbd: $3e $00
-	call $0a23                                       ; $4dbf: $cd $23 $0a
-	ret                                              ; $4dc2: $c9
+
+; DE - dest addr
+; HL - src addr
+Copy4by2bytes:
+; Copy 4 bytes from src to dest
+	xor  a                                                          ; $4da3
+	ldh  [rVBK], a                                                  ; $4da4
+	ld   bc, $0004                                                  ; $4da6
+	ld   a, $00                                                     ; $4da9
+	call HBlankFarMemCopy                                           ; $4dab
+
+; DE to point to the next row
+	push hl                                                         ; $4dae
+	ld   hl, SCRN_VX_B-4                                            ; $4daf
+	add  hl, de                                                     ; $4db2
+	ld   e, l                                                       ; $4db3
+	ld   d, h                                                       ; $4db4
+	pop  hl                                                         ; $4db5
+
+; Same with HL
+	ld   bc, SCRN_VX_B-4                                            ; $4db6
+	add  hl, bc                                                     ; $4db9
+
+; Copy a 2nd set of 4 bytes
+	ld   bc, $0004                                                  ; $4dba
+	ld   a, $00                                                     ; $4dbd
+	call HBlankFarMemCopy                                           ; $4dbf
+	ret                                                             ; $4dc2
 
 
 Call_03e_4dc3:
@@ -2106,59 +2148,54 @@ Call_03e_4dc3:
 	ret                                              ; $4dd0: $c9
 
 
-Call_03e_4dd1:
+GetSettingsLeftArrowX:
 	push hl                                          ; $4dd1: $e5
 	ld   hl, $4dda                                   ; $4dd2: $21 $da $4d
 	call Call_03e_4dc3                               ; $4dd5: $cd $c3 $4d
 	pop  hl                                          ; $4dd8: $e1
 	ret                                              ; $4dd9: $c9
 
-
+if def(VWF)
+	db $62, $62, $62
+else
 	ld   l, a                                        ; $4dda: $6f
 	ld   l, a                                        ; $4ddb: $6f
 	ld   l, a                                        ; $4ddc: $6f
+endc
 	ld   l, [hl]                                     ; $4ddd: $6e
 	ld   l, c                                        ; $4dde: $69
 
-Call_03e_4ddf:
+
+GetSettingsRightArrowXminus8:
 	push hl                                          ; $4ddf: $e5
 	ld   hl, $4de8                                   ; $4de0: $21 $e8 $4d
 	call Call_03e_4dc3                               ; $4de3: $cd $c3 $4d
 	pop  hl                                          ; $4de6: $e1
 	ret                                              ; $4de7: $c9
 
-
+if def(VWF)
+	db $7e, $7e, $7e
+else
 	ld   a, c                                        ; $4de8: $79
 	ld   a, c                                        ; $4de9: $79
 	ld   a, c                                        ; $4dea: $79
+endc
 	ld   a, e                                        ; $4deb: $7b
 	ld   a, a                                        ; $4dec: $7f
 
-Call_03e_4ded:
+
+SetSettingsArrowsCoords:
 	ld   a, [$c96e]                                  ; $4ded: $fa $6e $c9
 	call HLequAddrOfAnimSpriteSpecDetails                                       ; $4df0: $cd $76 $30
-	call Call_03e_4dd1                               ; $4df3: $cd $d1 $4d
-	push af                                          ; $4df6: $f5
-	ld   a, $2f                                      ; $4df7: $3e $2f
-	ld   [wFarCallAddr], a                                  ; $4df9: $ea $98 $c2
-	ld   a, $41                                      ; $4dfc: $3e $41
-	ld   [wFarCallAddr+1], a                                  ; $4dfe: $ea $99 $c2
-	ld   a, $01                                      ; $4e01: $3e $01
-	ld   [wFarCallBank], a                                  ; $4e03: $ea $9a $c2
-	pop  af                                          ; $4e06: $f1
-	call FarCall                                       ; $4e07: $cd $62 $09
+	call GetSettingsLeftArrowX                               ; $4df3: $cd $d1 $4d
+
+	M_FarCall SetAnimSpriteSpecInstanceCoords
+
 	ld   a, [$c96f]                                  ; $4e0a: $fa $6f $c9
 	call HLequAddrOfAnimSpriteSpecDetails                                       ; $4e0d: $cd $76 $30
-	call Call_03e_4ddf                               ; $4e10: $cd $df $4d
-	push af                                          ; $4e13: $f5
-	ld   a, $2f                                      ; $4e14: $3e $2f
-	ld   [wFarCallAddr], a                                  ; $4e16: $ea $98 $c2
-	ld   a, $41                                      ; $4e19: $3e $41
-	ld   [wFarCallAddr+1], a                                  ; $4e1b: $ea $99 $c2
-	ld   a, $01                                      ; $4e1e: $3e $01
-	ld   [wFarCallBank], a                                  ; $4e20: $ea $9a $c2
-	pop  af                                          ; $4e23: $f1
-	call FarCall                                       ; $4e24: $cd $62 $09
+	call GetSettingsRightArrowXminus8                               ; $4e10: $cd $df $4d
+
+	M_FarCall SetAnimSpriteSpecInstanceCoords
 	ret                                              ; $4e27: $c9
 
 
@@ -3257,7 +3294,7 @@ Call_03e_5524:
 jr_03e_5524:
 	push bc                                          ; $5524: $c5
 	ld   bc, $0008                                   ; $5525: $01 $08 $00
-	call $0a23                                       ; $5528: $cd $23 $0a
+	call HBlankFarMemCopy                                       ; $5528: $cd $23 $0a
 	ld   bc, $0018                                   ; $552b: $01 $18 $00
 	add  hl, bc                                      ; $552e: $09
 	push hl                                          ; $552f: $e5
@@ -9393,3 +9430,28 @@ Func_3e_7f51::
 	ld   a, $00                                      ; $7f5e: $3e $00
 	ld   [wGameSubstate], a                                  ; $7f60: $ea $a1 $c2
 	ret                                              ; $7f63: $c9
+
+
+if def(VWF)
+
+SettingsTileDataHook:
+	call RLEXorCopy
+
+	M_FarCall LoadSettingsEnTileData
+	ret
+
+
+SettingsTileMapHook:
+	call RLEXorCopy
+
+	M_FarCall ChangeSettingsTileMap
+	ret
+
+
+SettingsTileAttrHook:
+	call RLEXorCopy
+
+	M_FarCall ChangeSettingsTileAttr
+	ret
+
+endc

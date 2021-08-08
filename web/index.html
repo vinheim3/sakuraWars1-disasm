@@ -165,7 +165,10 @@
                             }
                         }
                     }
-                    console.log(this.screenSpec.name, (addr+offset).toString(16))
+                    console.log(
+                        this.screenSpec.name, 
+                        (addr+offset).toString(16), 
+                        (dest+destOffset).toString(16));
                 }
 
                 drawKanjis(addr, dest) {
@@ -583,7 +586,8 @@
                                 ['simpleCopy', 0x1e, 0x677c, 0x0000, 0x40, 'rom', 'bgPalettes'],
                             ],
                             isGBC: true,
-                            showTileData: true,
+                            colsShown: 32,
+                            canvasWidth: 32 * 8,
                         },
                     ],
                 },

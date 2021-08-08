@@ -362,14 +362,18 @@ Func_01_411c::
 	ret                                              ; $412e: $c9
 
 
-	push hl                                          ; $412f: $e5
-	ld   de, $0004                                   ; $4130: $11 $04 $00
-	add  hl, de                                      ; $4133: $19
-	ld   [hl], b                                     ; $4134: $70
-	inc  hl                                          ; $4135: $23
-	ld   [hl], c                                     ; $4136: $71
-	pop  hl                                          ; $4137: $e1
-	ret                                              ; $4138: $c9
+; B - ASSI_X
+; C - ASSI_Y
+; HL - addr of anim sprite spec instance
+SetAnimSpriteSpecInstanceCoords::
+	push hl                                                         ; $412f
+	ld   de, ASSI_X                                                 ; $4130
+	add  hl, de                                                     ; $4133
+	ld   [hl], b                                                    ; $4134
+	inc  hl                                                         ; $4135
+	ld   [hl], c                                                    ; $4136
+	pop  hl                                                         ; $4137
+	ret                                                             ; $4138
 
 
 ; HL - addr of anim sprite spec instance
