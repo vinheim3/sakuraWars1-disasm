@@ -1926,7 +1926,7 @@ FarCall::
 
 ; BC - num bytes
 ; HL - dest addr
-MemClear:
+MemClear::
 	xor  a                                                          ; $0995
 
 ; A - value to set
@@ -2602,32 +2602,35 @@ HLequHdivModL::
 	ret                                                             ; $0c4f
 
 
-;
+; A -
+Func_0c50::
 	push bc                                          ; $0c50: $c5
 	push de                                          ; $0c51: $d5
+
+;
 	ld   c, a                                        ; $0c52: $4f
 	xor  a                                           ; $0c53: $af
 	ld   b, $10                                      ; $0c54: $06 $10
 
-jr_000_0c56:
+.loopB:
 	sla  l                                           ; $0c56: $cb $25
 	rl   h                                           ; $0c58: $cb $14
 	rl   a                                           ; $0c5a: $cb $17
 	rl   e                                           ; $0c5c: $cb $13
 	bit  0, e                                        ; $0c5e: $cb $43
-	jr   nz, jr_000_0c65                             ; $0c60: $20 $03
+	jr   nz, .br_0c65                             ; $0c60: $20 $03
 
 	cp   c                                           ; $0c62: $b9
-	jr   c, jr_000_0c6a                              ; $0c63: $38 $05
+	jr   c, .toLoopB                              ; $0c63: $38 $05
 
-jr_000_0c65:
+.br_0c65:
 	set  0, l                                        ; $0c65: $cb $c5
 	res  0, e                                        ; $0c67: $cb $83
 	sub  c                                           ; $0c69: $91
 
-jr_000_0c6a:
+.toLoopB:
 	dec  b                                           ; $0c6a: $05
-	jr   nz, jr_000_0c56                             ; $0c6b: $20 $e9
+	jr   nz, .loopB                             ; $0c6b: $20 $e9
 
 	pop  de                                          ; $0c6d: $d1
 	pop  bc                                          ; $0c6e: $c1
@@ -4102,7 +4105,12 @@ LoadInstantText::
 .specialCodeExcept0a:
 ; Clear curr col
 	xor  a                                                          ; $1344
+
+if def(VWF)
+	call OtherSpecialTextByte
+else
 	ld   [wCurrKanjiCol], a                                         ; $1345
+endc
 
 	ld   a, [wNumKanjiTextBoxRows]                                  ; $1348
 	ld   b, a                                                       ; $134b
@@ -4128,9 +4136,14 @@ LoadInstantText::
 
 .regularKanji:
 ; Kanji in C, load its tile data, then continue to the next kanji
+if def(VWF)
+	jp   InstantSaveKanjiIdx
+.instantSaveRet:
+else
 	ld   c, a                                                       ; $135f
 	push hl                                                         ; $1360
 	push de                                                         ; $1361
+endc
 	call LoadInstantKanjiTileData                                   ; $1362
 	pop  de                                                         ; $1365
 	pop  hl                                                         ; $1366
@@ -4243,7 +4256,11 @@ LoadInstantKanjiTileData:
 	ld   [wRomBank], a                                              ; $13e6
 	ld   [rROMB0], a                                                ; $13e9
 
+if def(VWF)
+	jp   VWFLoadInstantKanjiTileDataWithTextStyle
+else
 	call LoadKanjiTileDataWithTextStyle                             ; $13ec
+endc
 
 ; Restore rom bank
 	pop  af                                                         ; $13ef
@@ -9846,16 +9863,156 @@ GetCharWidth1:
 	ret
 
 
+; A - 0
 OtherSpecialTextByte:
 	ld   [wCurrKanjiCol], a
 	ld   [wKanjiPixelInTileIdx], a
 	ret
 
 
+; A - kanji idx
 SaveKanjiIdx:
 	ld   [wSavedKanjiIdx], a
 	ld   a, [wNumKanjiTextBoxCols]
 	ret
+
+
+; A - kanji idx
+InstantSaveKanjiIdx:
+; Set saved kanji idx
+	ld   [wSavedKanjiIdx], a
+
+; Copy replaced instructions and jump
+	ld   c, a
+	push hl
+	push de
+
+	jp   LoadInstantText.instantSaveRet
+
+
+; DE - src addr
+; HL - dest addr
+; trashes A, B, C, HL
+VWFLoadInstantKanjiTileDataWithTextStyle:
+	ld   a, h
+	ld   [wPointerToInstantTileDataBuffer], a
+	ld   a, l
+	ld   [wPointerToInstantTileDataBuffer+1], a
+
+; Load single tile into a buffer
+	ld   hl, wInstantTextSingleTileDataBuffer
+	call LoadKanjiTileDataWithTextStyle
+
+; Shift a given byte in the buffer B times, with remainder in C
+	ld   a, [wKanjiPixelInTileIdx]
+	and  a
+	jr   nz, :+
+
+; If starting from the leftmost of a col, load the 1 tile
+	ld   a, [wPointerToInstantTileDataBuffer]
+	ld   d, a
+	ld   a, [wPointerToInstantTileDataBuffer+1]
+	ld   e, a
+	ld   hl, wInstantTextSingleTileDataBuffer
+	ld   bc, $20
+	call MemCopy
+	jr   .fromNoShift
+
+:	ld   b, a
+
+	ld   a, [wPointerToInstantTileDataBuffer]
+	ld   h, a
+	ld   a, [wPointerToInstantTileDataBuffer+1]
+	ld   l, a
+	ld   de, wInstantTextSingleTileDataBuffer
+	ld   c, $20
+.nextByte:
+	push bc
+	push de
+
+; Shift currently loaded tile
+	ld   a, [de]
+	ld   c, 0
+.nextShift:
+	srl  a
+	rr   c
+	dec  b
+	jr   nz, .nextShift
+
+; Mix with previous remainder, and store in single tile
+	or   [hl]
+	ld   [hl+], a
+	push hl
+
+; Store shifted remainder into curr remainder buffer
+	ld   de, $1f
+	add  hl, de
+	ld   a, c
+	ld   [hl], a
+	pop  hl
+
+	pop  de
+	inc  de
+	pop  bc
+	dec  c
+	jr   nz, .nextByte
+
+; Get char width so we know how where to draw to next
+.fromNoShift:
+	ld   b, $08
+	ld   a, [wCurrKanjiDataQuarterBankOffset]
+	cp   $00
+	jr   nz, .notPage0Kanji
+
+; Page 0 kanji
+	ld   a, [wSavedKanjiIdx]
+	call GetCharWidth0
+	jr   .gotWidth
+
+.notPage0Kanji:
+	cp   $01
+	jr   nz, .gotWidth
+
+; Page 1 kanji
+	ld   a, [wSavedKanjiIdx]
+	call GetCharWidth1
+
+.gotWidth:
+	ld   a, [wKanjiPixelInTileIdx]
+	add  b
+	sub  $08
+	jr   c, .withinCol
+
+	ld   [wKanjiPixelInTileIdx], a
+
+; Inc pointer to next dest
+	ld   a, [wPointerToInstantTileDataBuffer]
+	ld   h, a
+	ld   a, [wPointerToInstantTileDataBuffer+1]
+	ld   l, a
+	ld   de, $20
+	add  hl, de
+	ld   a, h
+	ld   [wPointerToInstantTileDataBuffer], a
+	ld   a, l
+	ld   [wPointerToInstantTileDataBuffer+1], a
+
+; Inc col
+	ld   hl, wCurrKanjiCol
+	inc  [hl]
+	jr   .end
+
+.withinCol:
+	add  $08
+	ld   [wKanjiPixelInTileIdx], a
+
+.end:
+; Restore rom bank
+	pop  af
+	ld   [wRomBank], a
+	ld   [rROMB0], a
+
+	jp   LoadInstantKanjiTileData.done
 
 
 ; DE - kanji tile data src addr
@@ -10015,7 +10172,16 @@ VWFLoadKanjiTileDataWithTextStyle:
 ; A - kanji col to set
 ClearVwfVars:
 	push af
+	push hl
+
 	ld   [wCurrKanjiCol], a
+
+	ld   a, [wWramBank]
+	push af
+
+	ld   a, BANK(wSingleTileDataBuffer)
+	ld   [wWramBank], a
+	ldh  [rSVBK], a
 
 	xor  a
 	ld   [wKanjiPixelInTileIdx], a
@@ -10028,6 +10194,11 @@ ClearVwfTileBuffers:
 	dec  b
 	jr   nz, .nextByte
 
+	pop  af
+	ld   [wWramBank], a
+	ldh  [rSVBK], a
+
+	pop  hl
 	pop  af
 	ret
 endc

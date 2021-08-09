@@ -4698,7 +4698,7 @@ jr_011_5dcd:
 	call RLEXorCopy                                       ; $5e3f: $cd $d2 $09
 	ld   hl, $9c00                                   ; $5e42: $21 $00 $9c
 	ld   bc, $0400                                   ; $5e45: $01 $00 $04
-	call $0995                                       ; $5e48: $cd $95 $09
+	call MemClear                                       ; $5e48: $cd $95 $09
 	xor  a                                           ; $5e4b: $af
 	ldh  [rVBK], a                                   ; $5e4c: $e0 $4f
 	ld   a, $1d                                      ; $5e4e: $3e $1d
@@ -7400,7 +7400,7 @@ GameState20::
 	ldh  [rVBK], a                                   ; $6e60: $e0 $4f
 	ld   hl, $8800                                   ; $6e62: $21 $00 $88
 	ld   bc, $0400                                   ; $6e65: $01 $00 $04
-	call $0995                                       ; $6e68: $cd $95 $09
+	call MemClear                                       ; $6e68: $cd $95 $09
 	ld   a, $1c                                      ; $6e6b: $3e $1c
 	ld   de, $6073                                   ; $6e6d: $11 $73 $60
 	ld   hl, $9800                                   ; $6e70: $21 $00 $98
@@ -7909,7 +7909,7 @@ jr_011_71f0:
 	ldh  [rSVBK], a                                  ; $7228: $e0 $70
 	ld   hl, $d000                                   ; $722a: $21 $00 $d0
 	ld   bc, $0400                                   ; $722d: $01 $00 $04
-	call $0995                                       ; $7230: $cd $95 $09
+	call MemClear                                       ; $7230: $cd $95 $09
 	ld   c, $81                                      ; $7233: $0e $81
 	ld   de, $8800                                   ; $7235: $11 $00 $88
 	ld   a, $03                                      ; $7238: $3e $03

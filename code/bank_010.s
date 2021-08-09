@@ -4319,7 +4319,7 @@ jr_010_5c37:
 	ldh  [rSVBK], a                                  ; $5cd3: $e0 $70
 	ld   hl, $d000                                   ; $5cd5: $21 $00 $d0
 	ld   bc, $0400                                   ; $5cd8: $01 $00 $04
-	call $0995                                       ; $5cdb: $cd $95 $09
+	call MemClear                                       ; $5cdb: $cd $95 $09
 	pop  af                                          ; $5cde: $f1
 	ld   [wWramBank], a                                  ; $5cdf: $ea $93 $c2
 	ldh  [rSVBK], a                                  ; $5ce2: $e0 $70

@@ -932,7 +932,7 @@ Call_03f_4647:
 	ld   d, b                                        ; $46b3: $50
 	adc  h                                           ; $46b4: $8c
 	ld   d, b                                        ; $46b5: $50
-	call nz, $0c50                                   ; $46b6: $c4 $50 $0c
+	call nz, Func_0c50                                   ; $46b6: $c4 $50 $0c
 	ld   d, c                                        ; $46b9: $51
 	ld   d, h                                        ; $46ba: $54
 	ld   d, c                                        ; $46bb: $51

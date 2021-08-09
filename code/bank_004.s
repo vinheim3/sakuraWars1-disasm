@@ -627,19 +627,19 @@ jr_004_4395:
 	ld   a, [$cc65]                                  ; $43c3: $fa $65 $cc
 	ld   h, a                                        ; $43c6: $67
 	ld   a, $0a                                      ; $43c7: $3e $0a
-	call $0c50                                       ; $43c9: $cd $50 $0c
+	call Func_0c50                                       ; $43c9: $cd $50 $0c
 	add  $11                                         ; $43cc: $c6 $11
 	ld   [$da83], a                                  ; $43ce: $ea $83 $da
 	ld   a, $0a                                      ; $43d1: $3e $0a
-	call $0c50                                       ; $43d3: $cd $50 $0c
+	call Func_0c50                                       ; $43d3: $cd $50 $0c
 	add  $11                                         ; $43d6: $c6 $11
 	ld   [$da82], a                                  ; $43d8: $ea $82 $da
 	ld   a, $0a                                      ; $43db: $3e $0a
-	call $0c50                                       ; $43dd: $cd $50 $0c
+	call Func_0c50                                       ; $43dd: $cd $50 $0c
 	add  $11                                         ; $43e0: $c6 $11
 	ld   [$da81], a                                  ; $43e2: $ea $81 $da
 	ld   a, $0a                                      ; $43e5: $3e $0a
-	call $0c50                                       ; $43e7: $cd $50 $0c
+	call Func_0c50                                       ; $43e7: $cd $50 $0c
 	add  $11                                         ; $43ea: $c6 $11
 	ld   [$da80], a                                  ; $43ec: $ea $80 $da
 	xor  a                                           ; $43ef: $af
@@ -1093,16 +1093,16 @@ jr_004_46da:
 	ld   a, [$cc60]                                  ; $46de: $fa $60 $cc
 	ld   l, a                                        ; $46e1: $6f
 	ld   a, $0a                                      ; $46e2: $3e $0a
-	call $0c50                                       ; $46e4: $cd $50 $0c
+	call Func_0c50                                       ; $46e4: $cd $50 $0c
 	ld   [wPlayerName+3], a                                  ; $46e7: $ea $11 $cb
 	ld   a, $0a                                      ; $46ea: $3e $0a
-	call $0c50                                       ; $46ec: $cd $50 $0c
+	call Func_0c50                                       ; $46ec: $cd $50 $0c
 	ld   [wPlayerName+2], a                                  ; $46ef: $ea $10 $cb
 	ld   a, $0a                                      ; $46f2: $3e $0a
-	call $0c50                                       ; $46f4: $cd $50 $0c
+	call Func_0c50                                       ; $46f4: $cd $50 $0c
 	ld   [wPlayerName+1], a                                  ; $46f7: $ea $0f $cb
 	ld   a, $0a                                      ; $46fa: $3e $0a
-	call $0c50                                       ; $46fc: $cd $50 $0c
+	call Func_0c50                                       ; $46fc: $cd $50 $0c
 	ld   [wPlayerName], a                                  ; $46ff: $ea $0e $cb
 	ld   a, l                                        ; $4702: $7d
 	ld   [$cb0d], a                                  ; $4703: $ea $0d $cb
@@ -2360,7 +2360,7 @@ jr_004_4e85:
 	call FarCall                                       ; $4f03: $cd $62 $09
 	pop  hl                                          ; $4f06: $e1
 	ld   a, $0a                                      ; $4f07: $3e $0a
-	call $0c50                                       ; $4f09: $cd $50 $0c
+	call Func_0c50                                       ; $4f09: $cd $50 $0c
 	ld   a, l                                        ; $4f0c: $7d
 	ld   [$cc62], a                                  ; $4f0d: $ea $62 $cc
 	ld   a, h                                        ; $4f10: $7c

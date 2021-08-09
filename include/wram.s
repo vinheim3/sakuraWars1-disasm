@@ -424,7 +424,25 @@ wCurrAudChannelTimes5:: ; $cdab
     db
 
 wcdac:
-    ds $1000-$dac
+    ds $f00-$dac
+
+wInstantTextSingleTileDataBuffer:: ; $cf00
+    ds $20
+
+wKanjiPixelInTileIdx:: ; $cf20
+    db
+
+wSavedKanjiIdx:: ; $cf21
+    db
+
+wEnqueue2VwfTiles:: ; $cf22
+    db
+
+wPointerToInstantTileDataBuffer:: ; $cf23
+    dw
+
+wcf25:
+    ds $1000-$f25
 
 wStackTop:: ; $d000
 
@@ -438,14 +456,8 @@ wIdxUsedForKanjiTileDataBuffer:: ; $d100
 
 if def(VWF)
 
-wKanjiPixelInTileIdx:: ; $d101
-    db
-
-wSavedKanjiIdx:: ; $d102
-    db
-
-wEnqueue2VwfTiles:: ; $d103
-    ds $20-3
+w1_d101:
+    ds $20-1
 
 wSingleTileDataBuffer:: ; $d120
     ds $20

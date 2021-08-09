@@ -473,7 +473,7 @@ jr_03e_423d:
 	call SetBGandOBJPaletteRangesToUpdate                                       ; $43a1: $cd $aa $04
 	ld   hl, $d080                                   ; $43a4: $21 $80 $d0
 	ld   bc, $02a0                                   ; $43a7: $01 $a0 $02
-	call $0995                                       ; $43aa: $cd $95 $09
+	call MemClear                                       ; $43aa: $cd $95 $09
 	pop  af                                          ; $43ad: $f1
 	ld   [wWramBank], a                                  ; $43ae: $ea $93 $c2
 	ldh  [rSVBK], a                                  ; $43b1: $e0 $70
@@ -3507,7 +3507,7 @@ jr_03e_563e:
 	call SetBGandOBJPaletteRangesToUpdate                                       ; $56dc: $cd $aa $04
 	ld   hl, $d800                                   ; $56df: $21 $00 $d8
 	ld   bc, $0800                                   ; $56e2: $01 $00 $08
-	call $0995                                       ; $56e5: $cd $95 $09
+	call MemClear                                       ; $56e5: $cd $95 $09
 	pop  af                                          ; $56e8: $f1
 	ld   [wWramBank], a                                  ; $56e9: $ea $93 $c2
 	ldh  [rSVBK], a                                  ; $56ec: $e0 $70
@@ -5945,7 +5945,7 @@ Call_03e_66c7:
 	ld   l, $68                                      ; $66c8: $2e $68
 	call AequHtimesL                                       ; $66ca: $cd $ac $0b
 	ld   a, [$c9c0]                                  ; $66cd: $fa $c0 $c9
-	call $0c50                                       ; $66d0: $cd $50 $0c
+	call Func_0c50                                       ; $66d0: $cd $50 $0c
 	ld   h, a                                        ; $66d3: $67
 	ld   a, l                                        ; $66d4: $7d
 	or   a                                           ; $66d5: $b7
@@ -5967,7 +5967,7 @@ Call_03e_66e2:
 	ld   l, $30                                      ; $66e3: $2e $30
 	call AequHtimesL                                       ; $66e5: $cd $ac $0b
 	ld   a, [$c9c3]                                  ; $66e8: $fa $c3 $c9
-	call $0c50                                       ; $66eb: $cd $50 $0c
+	call Func_0c50                                       ; $66eb: $cd $50 $0c
 	ld   h, a                                        ; $66ee: $67
 	ld   a, l                                        ; $66ef: $7d
 	or   a                                           ; $66f0: $b7
@@ -5989,7 +5989,7 @@ Call_03e_66fd:
 	ld   l, $68                                      ; $66fe: $2e $68
 	call AequHtimesL                                       ; $6700: $cd $ac $0b
 	ld   a, [$c9c6]                                  ; $6703: $fa $c6 $c9
-	call $0c50                                       ; $6706: $cd $50 $0c
+	call Func_0c50                                       ; $6706: $cd $50 $0c
 	ld   h, a                                        ; $6709: $67
 	ld   a, l                                        ; $670a: $7d
 	or   a                                           ; $670b: $b7
@@ -6057,13 +6057,13 @@ jr_03e_6745:
 	ld   l, $68                                      ; $674e: $2e $68
 	call AequHtimesL                                       ; $6750: $cd $ac $0b
 	ld   a, [$c9c0]                                  ; $6753: $fa $c0 $c9
-	call $0c50                                       ; $6756: $cd $50 $0c
+	call Func_0c50                                       ; $6756: $cd $50 $0c
 	ld   a, l                                        ; $6759: $7d
 	ld   [$c9c1], a                                  ; $675a: $ea $c1 $c9
 	ld   h, a                                        ; $675d: $67
 	ld   l, $00                                      ; $675e: $2e $00
 	ld   a, $4b                                      ; $6760: $3e $4b
-	call $0c50                                       ; $6762: $cd $50 $0c
+	call Func_0c50                                       ; $6762: $cd $50 $0c
 	ld   a, l                                        ; $6765: $7d
 	ld   [$c834], a                                  ; $6766: $ea $34 $c8
 	ld   a, h                                        ; $6769: $7c

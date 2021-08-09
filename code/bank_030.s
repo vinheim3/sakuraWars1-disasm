@@ -6393,7 +6393,7 @@ jr_030_6368:
 	rst  WaitUntilVBlankIntHandledIfLCDOn                                         ; $637b: $cf
 	ld   hl, $d000                                   ; $637c: $21 $00 $d0
 	ld   bc, $0400                                   ; $637f: $01 $00 $04
-	call $0995                                       ; $6382: $cd $95 $09
+	call MemClear                                       ; $6382: $cd $95 $09
 	ld   c, $81                                      ; $6385: $0e $81
 	ld   de, $9c00                                   ; $6387: $11 $00 $9c
 	ld   a, $05                                      ; $638a: $3e $05
@@ -6589,7 +6589,7 @@ jr_030_64e8:
 	ldh  [rSVBK], a                                  ; $64f2: $e0 $70
 	ld   hl, $d000                                   ; $64f4: $21 $00 $d0
 	ld   bc, $0800                                   ; $64f7: $01 $00 $08
-	call $0995                                       ; $64fa: $cd $95 $09
+	call MemClear                                       ; $64fa: $cd $95 $09
 	ld   c, $80                                      ; $64fd: $0e $80
 	ld   de, $8800                                   ; $64ff: $11 $00 $88
 	ld   a, $05                                      ; $6502: $3e $05
@@ -6606,7 +6606,7 @@ jr_030_64e8:
 	rst  WaitUntilVBlankIntHandledIfLCDOn                                         ; $651c: $cf
 	ld   hl, $d000                                   ; $651d: $21 $00 $d0
 	ld   bc, $0480                                   ; $6520: $01 $80 $04
-	call $0995                                       ; $6523: $cd $95 $09
+	call MemClear                                       ; $6523: $cd $95 $09
 	ld   hl, $d000                                   ; $6526: $21 $00 $d0
 	ld   a, $34                                      ; $6529: $3e $34
 	ld   de, $6aaa                                   ; $652b: $11 $aa $6a
@@ -6915,7 +6915,7 @@ jr_030_6705:
 	ldh  [rSVBK], a                                  ; $6714: $e0 $70
 	ld   hl, $d000                                   ; $6716: $21 $00 $d0
 	ld   bc, $0200                                   ; $6719: $01 $00 $02
-	call $0995                                       ; $671c: $cd $95 $09
+	call MemClear                                       ; $671c: $cd $95 $09
 	pop  af                                          ; $671f: $f1
 	ld   [wWramBank], a                                  ; $6720: $ea $93 $c2
 	ldh  [rSVBK], a                                  ; $6723: $e0 $70
@@ -7775,7 +7775,7 @@ jr_030_6b4c:
 	ldh  [rSVBK], a                                  ; $6b6a: $e0 $70
 	ld   hl, $d000                                   ; $6b6c: $21 $00 $d0
 	ld   bc, $0400                                   ; $6b6f: $01 $00 $04
-	call $0995                                       ; $6b72: $cd $95 $09
+	call MemClear                                       ; $6b72: $cd $95 $09
 	ld   de, $9800                                   ; $6b75: $11 $00 $98
 	ld   c, $81                                      ; $6b78: $0e $81
 	ld   a, $05                                      ; $6b7a: $3e $05
@@ -8051,7 +8051,7 @@ jr_030_6c81:
 	call EnqueueHDMATransfer                                       ; $6cf2: $cd $7c $02
 	ld   hl, $d200                                   ; $6cf5: $21 $00 $d2
 	ld   bc, $0080                                   ; $6cf8: $01 $80 $00
-	call $0995                                       ; $6cfb: $cd $95 $09
+	call MemClear                                       ; $6cfb: $cd $95 $09
 	ld   a, [$c71b]                                  ; $6cfe: $fa $1b $c7
 	and  $08                                         ; $6d01: $e6 $08
 	set  1, a                                        ; $6d03: $cb $cf
@@ -8148,7 +8148,7 @@ jr_030_6d28:
 	push af                                          ; $6d96: $f5
 	ld   hl, $d000                                   ; $6d97: $21 $00 $d0
 	ld   bc, $0200                                   ; $6d9a: $01 $00 $02
-	call $0995                                       ; $6d9d: $cd $95 $09
+	call MemClear                                       ; $6d9d: $cd $95 $09
 	pop  af                                          ; $6da0: $f1
 	add  a                                           ; $6da1: $87
 	ld   c, a                                        ; $6da2: $4f
@@ -8186,7 +8186,7 @@ jr_030_6d28:
 	call EnqueueHDMATransfer                                       ; $6ddc: $cd $7c $02
 	ld   hl, $d200                                   ; $6ddf: $21 $00 $d2
 	ld   bc, $0080                                   ; $6de2: $01 $80 $00
-	call $0995                                       ; $6de5: $cd $95 $09
+	call MemClear                                       ; $6de5: $cd $95 $09
 	ld   a, [$c71b]                                  ; $6de8: $fa $1b $c7
 	and  $08                                         ; $6deb: $e6 $08
 	set  0, a                                        ; $6ded: $cb $c7
@@ -8984,7 +8984,7 @@ jr_030_7015:
 	push de                                          ; $7191: $d5
 	ld   hl, $d000                                   ; $7192: $21 $00 $d0
 	ld   bc, $0040                                   ; $7195: $01 $40 $00
-	call $0995                                       ; $7198: $cd $95 $09
+	call MemClear                                       ; $7198: $cd $95 $09
 	ld   a, [wSCY]                                  ; $719b: $fa $08 $c2
 	add  $a0                                         ; $719e: $c6 $a0
 	and  $f8                                         ; $71a0: $e6 $f8
