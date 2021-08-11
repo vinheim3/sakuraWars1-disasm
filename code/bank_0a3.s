@@ -10439,13 +10439,13 @@ Palettes_TitleScreen::
 
 if def(VWF)
 	db $ff, $7f, $ff, $7f, $2c, $77, $00, $55
-	db $ff, $7f, $ff, $7f, $3f, $4c, $1d, $28
+	db $ff, $7f, $7f, $4d, $3f, $4c, $1d, $28
 	db $bf, $7e, $19, $7f, $b0, $59, $ff, $7f
 	db $bf, $7e, $ff, $7f, $df, $5d, $a5, $30
 	db $bf, $7e, $1a, $00, $0c, $00, $a5, $30
 	db $00, $00, $10, $56, $d6, $38, $a5, $30
 	db $bf, $7e, $ff, $7f, $38, $19, $00, $00
-	db $ff, $7f, $ff, $7f, $80, $2d, $11, $7c
+	db $ff, $7f, $ff, $7f, $16, $7d, $11, $7c
 else
 	db $bf, $7e, $16, $7d, $11, $7c, $5f, $4c
 	db $bf, $7e, $60, $5b, $ff, $7f, $ff, $7f
