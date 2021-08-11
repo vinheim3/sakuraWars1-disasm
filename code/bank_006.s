@@ -12,4 +12,4 @@ if def(VWF)
 	INCBIN "newLetters.1bpp"
 else
 	INCBIN "origLetters.1bpp"
-endc	
+endc

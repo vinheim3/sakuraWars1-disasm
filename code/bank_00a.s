@@ -4594,7 +4594,11 @@ endc
 	ld   a, BANK(RleXorTileData_TitleScreenBank1_8000)              ; $63e1
 	ld   hl, wTitleScreenTileDataBuffer+$800                        ; $63e3
 	ld   de, RleXorTileData_TitleScreenBank1_8000                   ; $63e6
+if def(VWF)
+	call TitleScreenVramBank1_8000h_hook
+else
 	call RLEXorCopy                                                 ; $63e9
+endc
 
 ; Enqueue 1st $600 tile data bytes for vram bank 0
 	ld   c, $81                                                     ; $63ec
@@ -7336,11 +7340,6 @@ TitleScreenVramBank0_8000h_hook:
 	ld   hl, .leaf
 	call MemCopy
 
-	ld   bc, $10
-	ld   de, wTitleScreenTileDataBuffer+$6a0
-	ld   hl, .subtitleFlower
-	call MemCopy
-
 	ret
 .belowA:
 	db $80,$80, $80,$80, $80,$80, $00,$00
@@ -7357,8 +7356,50 @@ TitleScreenVramBank0_8000h_hook:
 .leaf:
 	db $00,$1c, $00,$3a, $00,$7e, $00,$7e
 	db $00,$fc, $00,$f8, $00,$e0, $00,$00
-.subtitleFlower:
-	db $00,$60, $00,$c0, $00,$00, $00,$00
+
+
+TitleScreenVramBank1_8000h_hook:
+	call RLEXorCopy
+
+	ld   bc, $10
+	ld   de, wTitleScreenTileDataBuffer+$800+$420
+	ld   hl, .kana1
+	call MemCopy
+
+	ld   bc, $10
+	ld   de, wTitleScreenTileDataBuffer+$800+$440
+	ld   hl, .kana2
+	call MemCopy
+
+	ld   bc, $10
+	ld   de, wTitleScreenTileDataBuffer+$800+$460
+	ld   hl, .kana3
+	call MemCopy
+
+	ld   bc, $10
+	ld   de, wTitleScreenTileDataBuffer+$800+$480
+	ld   hl, .kana4
+	call MemCopy
+
+	ld   bc, $10
+	ld   de, wTitleScreenTileDataBuffer+$800+$4a0
+	ld   hl, .kana5
+	call MemCopy
+	ret
+.kana1:
+	db $00,$00, $52,$00, $fb,$00, $54,$00
+	db $11,$00, $22,$00, $00,$00, $00,$00
+.kana2:
+	db $00,$00, $39,$00, $f9,$00, $8b,$00
+	db $30,$00, $01,$00, $00,$00, $00,$00
+.kana3:
+	db $02,$00, $04,$00, $c9,$00, $78,$00
+	db $c8,$00, $00,$00, $00,$00, $00,$00
+.kana4:
+	db $00,$00, $80,$00, $f6,$00, $81,$00
+	db $66,$00, $00,$00, $00,$00, $00,$00
+.kana5:
+	db $00,$00, $00,$00, $80,$00, $00,$00
 	db $00,$00, $00,$00, $00,$00, $00,$00
 
 

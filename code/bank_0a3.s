@@ -10438,7 +10438,7 @@ Palettes_TitleScreen::
 	db $4a, $7e, $bf, $76, $bf, $51, $d8, $28
 
 if def(VWF)
-	db $ff, $7f, $ff, $7f, $2c, $77, $00, $55
+	db $ff, $7f, $1e, $02, $2c, $77, $00, $55
 	db $ff, $7f, $7f, $4d, $3f, $4c, $1d, $28
 	db $bf, $7e, $19, $7f, $b0, $59, $ff, $7f
 	db $bf, $7e, $ff, $7f, $df, $5d, $a5, $30
