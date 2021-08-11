@@ -255,7 +255,16 @@ wDefaultKanjiTileTextStyle:: ; $c5ef
     db
 
 wc5f0:
-    ds $916-$5f0
+    ds $8bd-$5f0
+
+wContinueGameReturnState:: ; $c8bd
+    db
+
+wContinueGameReturnSubstate:: ; $c8be
+    db
+
+wc8bf:
+    ds $916-$8bf
 
 wResetDataBaseAnimSpriteSpecIdxUsed:: ; $c916
     db
@@ -473,6 +482,11 @@ w2_d000:
 
 wTitleScreenPressStartRowTileMap:: ; $d880
     ds SCRN_VX_B
+
+SECTION "WRAM 3", WRAMX[$d000], BANK[$3]
+
+wSaveScreenTileDataBuffer:: ; $d000
+    ds $1000
 
 SECTION "WRAM 7", WRAMX[$d000], BANK[$7]
 

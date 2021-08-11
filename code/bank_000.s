@@ -3296,7 +3296,7 @@ HandleGameState:
 	AddrBank GameState42
 	AddrBank GameState43
 	AddrBank GameState44
-	AddrBank GameState45
+	AddrBank GameState45_DormRoom
 	AddrBank GameState46
 	AddrBank GameState47_Prologue
 	AddrBank GameState48

@@ -20,7 +20,7 @@ DEF GS_TITLE_SCREEN = $36
 DEF GS_TITLE_MENU_SCREEN = $37
 ; 3b - non-prologue intro scene
 DEF GS_44 = $44
-; 45 - shows stats? home menu?
+DEF GS_DORM_ROOM = $45
 DEF GS_46 = $46
 DEF GS_PROLOGUE = $47
 ; 49 - shows a day has passed

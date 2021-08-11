@@ -589,6 +589,30 @@
                             colsShown: 32,
                             canvasWidth: 32 * 8,
                         },
+                        {
+                            name: "Save screen (gs $0e)",
+                            sources: [
+                                ['rleXorCopy', 0x1b, 0x450c, 0xd000],
+                                ['simpleCopy', 0x00, 0xd000, 0x8000, 0x800, 'memory', 'memory'],
+
+                                ['rleXorCopy', 0x14, 0x6e31, 0xd000],
+                                ['simpleCopy', 0x00, 0xd000, 0x8800, 0x1000, 'memory', 'memory'],
+
+                                ['rleXorCopy', 0x19, 0x5fb2, 0xd000],
+                                ['simpleCopy', 0x00, 0xd000, 0x0800, 0x800, 'memory', 'vram1'],
+
+                                ['rleXorCopy', 0x1c, 0x79a7, 0xd400],
+                                ['simpleCopy', 0x00, 0xd400, 0x9800, 0x400, 'memory', 'memory'],
+
+                                ['rleXorCopy', 0x1d, 0x750b, 0xd000],
+                                ['simpleCopy', 0x00, 0xd000, 0x1800, 0x400, 'memory', 'vram1'],
+                                
+                                ['simpleCopy', 0x1e, 0x65fc, 0x0000, 0x40, 'rom', 'bgPalettes'],
+                            ],
+                            isGBC: true,
+                            rowsShown: 32,
+                            canvasHeight: 32 * 8,
+                        },
                     ],
                 },
                 methods: {

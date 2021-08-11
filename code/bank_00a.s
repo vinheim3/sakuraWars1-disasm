@@ -716,22 +716,24 @@ jr_00a_4397:
 	ret                                              ; $43a5: $c9
 
 
-Call_00a_43a6:
+; A - file idx
+HLequAddrOfFileData:
 	ld   hl, $a2c0                                   ; $43a6: $21 $c0 $a2
 	ld   bc, $0227                                   ; $43a9: $01 $27 $02
 	rlca                                             ; $43ac: $07
 
-jr_00a_43ad:
+.loop:
 	dec  a                                           ; $43ad: $3d
 	bit  7, a                                        ; $43ae: $cb $7f
 	ret  nz                                          ; $43b0: $c0
 
 	add  hl, bc                                      ; $43b1: $09
-	jr   jr_00a_43ad                                 ; $43b2: $18 $f9
+	jr   .loop                                 ; $43b2: $18 $f9
+
 
 Call_00a_43b4:
 	push af                                          ; $43b4: $f5
-	call Call_00a_43a6                               ; $43b5: $cd $a6 $43
+	call HLequAddrOfFileData                               ; $43b5: $cd $a6 $43
 	ld   bc, $0217                                   ; $43b8: $01 $17 $02
 	add  hl, bc                                      ; $43bb: $09
 	ld   de, $444a                                   ; $43bc: $11 $4a $44
@@ -751,7 +753,7 @@ jr_00a_43cc:
 	call Call_00a_477d                               ; $43ce: $cd $7d $47
 	pop  af                                          ; $43d1: $f1
 	push af                                          ; $43d2: $f5
-	call Call_00a_43a6                               ; $43d3: $cd $a6 $43
+	call HLequAddrOfFileData                               ; $43d3: $cd $a6 $43
 	ld   bc, $020f                                   ; $43d6: $01 $0f $02
 	add  hl, bc                                      ; $43d9: $09
 	ld   de, $b61f                                   ; $43da: $11 $1f $b6
@@ -767,7 +769,7 @@ jr_00a_43cc:
 
 jr_00a_43ea:
 	pop  af                                          ; $43ea: $f1
-	call Call_00a_43a6                               ; $43eb: $cd $a6 $43
+	call HLequAddrOfFileData                               ; $43eb: $cd $a6 $43
 	ld   bc, $0213                                   ; $43ee: $01 $13 $02
 	add  hl, bc                                      ; $43f1: $09
 	ld   de, $b623                                   ; $43f2: $11 $23 $b6
@@ -782,7 +784,7 @@ jr_00a_43ea:
 
 Call_00a_4400:
 	and  $7f                                         ; $4400: $e6 $7f
-	call Call_00a_43a6                               ; $4402: $cd $a6 $43
+	call HLequAddrOfFileData                               ; $4402: $cd $a6 $43
 	ld   b, h                                        ; $4405: $44
 	ld   c, l                                        ; $4406: $4d
 	ld   de, $0227                                   ; $4407: $11 $27 $02
@@ -798,7 +800,7 @@ Call_00a_4400:
 
 Call_00a_4416:
 	and  $7f                                         ; $4416: $e6 $7f
-	call Call_00a_43a6                               ; $4418: $cd $a6 $43
+	call HLequAddrOfFileData                               ; $4418: $cd $a6 $43
 	ld   d, h                                        ; $441b: $54
 	ld   e, l                                        ; $441c: $5d
 	ld   bc, $0227                                   ; $441d: $01 $27 $02
@@ -810,7 +812,7 @@ Call_00a_4416:
 
 Call_00a_4428:
 	push af                                          ; $4428: $f5
-	call Call_00a_43a6                               ; $4429: $cd $a6 $43
+	call HLequAddrOfFileData                               ; $4429: $cd $a6 $43
 	ld   bc, $0217                                   ; $442c: $01 $17 $02
 	add  hl, bc                                      ; $442f: $09
 	ld   d, h                                        ; $4430: $54
@@ -871,7 +873,7 @@ Call_00a_4428:
 
 Call_00a_447d:
 	push af                                          ; $447d: $f5
-	call Call_00a_43a6                               ; $447e: $cd $a6 $43
+	call HLequAddrOfFileData                               ; $447e: $cd $a6 $43
 	push hl                                          ; $4481: $e5
 	ld   bc, $0206                                   ; $4482: $01 $06 $02
 	add  hl, bc                                      ; $4485: $09
@@ -1136,7 +1138,7 @@ jr_00a_44d4:
 Call_00a_464c:
 	push af                                          ; $464c: $f5
 	xor  a                                           ; $464d: $af
-	call Call_00a_43a6                               ; $464e: $cd $a6 $43
+	call HLequAddrOfFileData                               ; $464e: $cd $a6 $43
 	ld   bc, $0207                                   ; $4651: $01 $07 $02
 	add  hl, bc                                      ; $4654: $09
 	pop  af                                          ; $4655: $f1
@@ -1145,7 +1147,7 @@ Call_00a_464c:
 
 	push af                                          ; $4659: $f5
 	ld   a, $01                                      ; $465a: $3e $01
-	call Call_00a_43a6                               ; $465c: $cd $a6 $43
+	call HLequAddrOfFileData                               ; $465c: $cd $a6 $43
 	ld   bc, $0207                                   ; $465f: $01 $07 $02
 	add  hl, bc                                      ; $4662: $09
 	pop  af                                          ; $4663: $f1
@@ -1154,7 +1156,7 @@ Call_00a_464c:
 
 	push af                                          ; $4667: $f5
 	ld   a, $02                                      ; $4668: $3e $02
-	call Call_00a_43a6                               ; $466a: $cd $a6 $43
+	call HLequAddrOfFileData                               ; $466a: $cd $a6 $43
 	ld   bc, $0207                                   ; $466d: $01 $07 $02
 	add  hl, bc                                      ; $4670: $09
 	pop  af                                          ; $4671: $f1
@@ -1173,11 +1175,11 @@ jr_00a_4677:
 	ld   d, h                                        ; $467a: $54
 	ld   e, l                                        ; $467b: $5d
 	ld   a, d                                        ; $467c: $7a
-	call Call_00a_43a6                               ; $467d: $cd $a6 $43
+	call HLequAddrOfFileData                               ; $467d: $cd $a6 $43
 	ld   a, e                                        ; $4680: $7b
 	ld   d, h                                        ; $4681: $54
 	ld   e, l                                        ; $4682: $5d
-	call Call_00a_43a6                               ; $4683: $cd $a6 $43
+	call HLequAddrOfFileData                               ; $4683: $cd $a6 $43
 	ld   bc, $0227                                   ; $4686: $01 $27 $02
 	call MemCopy                                       ; $4689: $cd $a9 $09
 	ret                                              ; $468c: $c9
@@ -1189,7 +1191,7 @@ jr_00a_4677:
 
 jr_00a_4691:
 	push af                                          ; $4691: $f5
-	call Call_00a_43a6                               ; $4692: $cd $a6 $43
+	call HLequAddrOfFileData                               ; $4692: $cd $a6 $43
 	ld   d, h                                        ; $4695: $54
 	ld   e, l                                        ; $4696: $5d
 	ld   hl, sPlayerName                                   ; $4697: $21 $aa $af
@@ -1203,42 +1205,49 @@ jr_00a_4691:
 	ret                                              ; $46a9: $c9
 
 
-	call Call_00a_43a6                               ; $46aa: $cd $a6 $43
+	call HLequAddrOfFileData                               ; $46aa: $cd $a6 $43
 	ld   de, sPlayerName                                   ; $46ad: $11 $aa $af
 	ld   bc, $044e                                   ; $46b0: $01 $4e $04
 	call MemCopy                                       ; $46b3: $cd $a9 $09
 	ret                                              ; $46b6: $c9
 
 
+; A - file idx
+; HL - dest addr to populate
+PopulateHLwithDayAndFileNameChars::
 	ld   d, h                                        ; $46b7: $54
 	ld   e, l                                        ; $46b8: $5d
-	call Call_00a_43a6                               ; $46b9: $cd $a6 $43
+	call HLequAddrOfFileData                               ; $46b9: $cd $a6 $43
 	push hl                                          ; $46bc: $e5
 	ld   bc, $0006                                   ; $46bd: $01 $06 $00
 	add  hl, bc                                      ; $46c0: $09
 	ld   a, [hl]                                     ; $46c1: $7e
 	or   a                                           ; $46c2: $b7
-	jr   nz, jr_00a_46c9                             ; $46c3: $20 $04
+	jr   nz, .fileExists                             ; $46c3: $20 $04
 
 	pop  hl                                          ; $46c5: $e1
 	xor  a                                           ; $46c6: $af
 	ld   [de], a                                     ; $46c7: $12
 	ret                                              ; $46c8: $c9
 
-
-jr_00a_46c9:
+.fileExists:
+; HL = (num days+1) divmod 10, ie BCD
 	ld   h, [hl]                                     ; $46c9: $66
 	inc  h                                           ; $46ca: $24
 	ld   l, $0a                                      ; $46cb: $2e $0a
 	call HLequHdivModL                                       ; $46cd: $cd $fb $0b
-	ld   a, $11                                      ; $46d0: $3e $11
+
+; Store day characters
+	ld   a, "0"                                      ; $46d0: $3e $11
 	add  h                                           ; $46d2: $84
 	ld   [de], a                                     ; $46d3: $12
 	inc  de                                          ; $46d4: $13
-	ld   a, $11                                      ; $46d5: $3e $11
+	ld   a, "0"                                      ; $46d5: $3e $11
 	add  l                                           ; $46d7: $85
 	ld   [de], a                                     ; $46d8: $12
 	inc  de                                          ; $46d9: $13
+
+; Pop addr of file data, and copy filename
 	pop  hl                                          ; $46da: $e1
 	ld   bc, $0000                                   ; $46db: $01 $00 $00
 	add  hl, bc                                      ; $46de: $09
@@ -1253,7 +1262,7 @@ jr_00a_46c9:
 jr_00a_46e9:
 	push bc                                          ; $46e9: $c5
 	ld   a, b                                        ; $46ea: $78
-	call Call_00a_43a6                               ; $46eb: $cd $a6 $43
+	call HLequAddrOfFileData                               ; $46eb: $cd $a6 $43
 	ld   bc, $0207                                   ; $46ee: $01 $07 $02
 	add  hl, bc                                      ; $46f1: $09
 	ld   a, [hl-]                                    ; $46f2: $3a
@@ -1290,7 +1299,7 @@ jr_00a_46fa:
 jr_00a_471f:
 	push bc                                          ; $471f: $c5
 	ld   a, b                                        ; $4720: $78
-	call Call_00a_43a6                               ; $4721: $cd $a6 $43
+	call HLequAddrOfFileData                               ; $4721: $cd $a6 $43
 	ld   bc, $0207                                   ; $4724: $01 $07 $02
 	add  hl, bc                                      ; $4727: $09
 	ld   a, [hl+]                                    ; $4728: $2a
@@ -1323,7 +1332,7 @@ jr_00a_4730:
 
 Func_0a_4752::
 	xor  a                                           ; $4752: $af
-	call Call_00a_43a6                               ; $4753: $cd $a6 $43
+	call HLequAddrOfFileData                               ; $4753: $cd $a6 $43
 	ld   bc, $0006                                   ; $4756: $01 $06 $00
 	add  hl, bc                                      ; $4759: $09
 	ld   a, [hl]                                     ; $475a: $7e
@@ -1331,7 +1340,7 @@ Func_0a_4752::
 	jr   nz, jr_00a_477b                             ; $475c: $20 $1d
 
 	ld   a, $01                                      ; $475e: $3e $01
-	call Call_00a_43a6                               ; $4760: $cd $a6 $43
+	call HLequAddrOfFileData                               ; $4760: $cd $a6 $43
 	ld   bc, $0006                                   ; $4763: $01 $06 $00
 	add  hl, bc                                      ; $4766: $09
 	ld   a, [hl]                                     ; $4767: $7e
@@ -1339,7 +1348,7 @@ Func_0a_4752::
 	jr   nz, jr_00a_477b                             ; $4769: $20 $10
 
 	ld   a, $02                                      ; $476b: $3e $02
-	call Call_00a_43a6                               ; $476d: $cd $a6 $43
+	call HLequAddrOfFileData                               ; $476d: $cd $a6 $43
 	ld   bc, $0006                                   ; $4770: $01 $06 $00
 	add  hl, bc                                      ; $4773: $09
 	ld   a, [hl]                                     ; $4774: $7e
@@ -1356,7 +1365,7 @@ jr_00a_477b:
 
 
 Call_00a_477d:
-	call Call_00a_43a6                               ; $477d: $cd $a6 $43
+	call HLequAddrOfFileData                               ; $477d: $cd $a6 $43
 	push hl                                          ; $4780: $e5
 	ld   de, $0000                                   ; $4781: $11 $00 $00
 	ld   bc, $0206                                   ; $4784: $01 $06 $02
@@ -1446,7 +1455,7 @@ Call_00a_47f3:
 	push af                                          ; $47f3: $f5
 	call Call_00a_477d                               ; $47f4: $cd $7d $47
 	pop  af                                          ; $47f7: $f1
-	call Call_00a_43a6                               ; $47f8: $cd $a6 $43
+	call HLequAddrOfFileData                               ; $47f8: $cd $a6 $43
 	ld   bc, $020f                                   ; $47fb: $01 $0f $02
 	add  hl, bc                                      ; $47fe: $09
 	ld   d, h                                        ; $47ff: $54
@@ -6902,13 +6911,10 @@ jr_00a_7300:
 	pop  af                                          ; $731e: $f1
 	call FarCall                                       ; $731f: $cd $62 $09
 
-jr_00a_7322:
 	ld   a, [de]                                     ; $7322: $1a
 	inc  de                                          ; $7323: $13
 	ld   b, a                                        ; $7324: $47
 	push af                                          ; $7325: $f5
-
-jr_00a_7326:
 	ld   a, $55                                      ; $7326: $3e $55
 	ld   [wFarCallAddr], a                                  ; $7328: $ea $98 $c2
 	ld   a, $40                                      ; $732b: $3e $40
@@ -6945,13 +6951,13 @@ jr_00a_7339:
 
 
 	ld   c, b                                        ; $7365: $48
-	jr   nc, jr_00a_7398                             ; $7366: $30 $30
+	db $30, $30
 
 	jr   nc, @+$62                                   ; $7368: $30 $60
 
 	jr   nc, @+$32                                   ; $736a: $30 $30
 
-	jr   nc, jr_00a_73e6                             ; $736c: $30 $78
+	db $30, $78
 
 	ld   c, b                                        ; $736e: $48
 	jr   nc, @+$32                                   ; $736f: $30 $30
@@ -6963,11 +6969,11 @@ jr_00a_7339:
 	xor  b                                           ; $7375: $a8
 	ld   a, b                                        ; $7376: $78
 	ld   c, b                                        ; $7377: $48
-	jr   nc, jr_00a_7322                             ; $7378: $30 $a8
+	db $30, $a8
 
 	sub  b                                           ; $737a: $90
 	ld   h, b                                        ; $737b: $60
-	jr   nc, jr_00a_7326                             ; $737c: $30 $a8
+	db $30, $a8
 
 	xor  b                                           ; $737e: $a8
 	ld   a, b                                        ; $737f: $78
@@ -6993,11 +6999,9 @@ jr_00a_7339:
 TitleMenuScreenAnimationHandlerD:
 	ld   a, [wTitleScreenMiscCounterIdx]                                  ; $7391: $fa $03 $cc
 	or   a                                           ; $7394: $b7
-	jr   nz, jr_00a_73af                             ; $7395: $20 $18
+	jr   nz, .afterInit                             ; $7395: $20 $18
 
 	xor  a                                           ; $7397: $af
-
-jr_00a_7398:
 	ld   [wStartingColorIdxToLoadCompDataFor], a                                  ; $7398: $ea $62 $c3
 	ld   a, $40                                      ; $739b: $3e $40
 	ld   [wNumPaletteColorsToLoadCompDataFor], a                                  ; $739d: $ea $63 $c3
@@ -7008,12 +7012,12 @@ jr_00a_7398:
 	ld   de, $7000                                   ; $73a9: $11 $00 $70
 	call FarLoadPaletteValsFadeToValsAndSetFadeSpeed                                       ; $73ac: $cd $48 $07
 
-jr_00a_73af:
+.afterInit:
 	ld   hl, wTitleScreenMiscCounterIdx                                   ; $73af: $21 $03 $cc
 	ld   a, [hl]                                     ; $73b2: $7e
 	inc  [hl]                                        ; $73b3: $34
 	cp   $1f                                         ; $73b4: $fe $1f
-	jr   nc, jr_00a_73c1                             ; $73b6: $30 $09
+	jr   nc, .afterFade                             ; $73b6: $30 $09
 
 	and  $03                                         ; $73b8: $e6 $03
 	ret  nz                                          ; $73ba: $c0
@@ -7021,8 +7025,7 @@ jr_00a_73af:
 	ld   bc, $0040                                   ; $73bb: $01 $40 $00
 	jp   FadePalettesAndSetRangeToUpdate                                       ; $73be: $c3 $32 $08
 
-
-jr_00a_73c1:
+.afterFade:
 	ld   a, $01                                      ; $73c1: $3e $01
 	ld   hl, $7000                                   ; $73c3: $21 $00 $70
 	ld   de, wBGPalettes                                   ; $73c6: $11 $de $c2
@@ -7034,32 +7037,25 @@ jr_00a_73c1:
 	sla  a                                           ; $73d8: $cb $27
 	ld   h, $00                                      ; $73da: $26 $00
 	ld   l, a                                        ; $73dc: $6f
-	ld   bc, $73e5                                   ; $73dd: $01 $e5 $73
+	ld   bc, .optHandler                                   ; $73dd: $01 $e5 $73
 	add  hl, bc                                      ; $73e0: $09
 	ld   a, [hl+]                                    ; $73e1: $2a
 	ld   h, [hl]                                     ; $73e2: $66
 	ld   l, a                                        ; $73e3: $6f
 	jp   hl                                          ; $73e4: $e9
 
+.optHandler:
+	dw .prologue
+	dw .newGame
+	dw .continue
+	dw .settings
+	dw $748b
+	dw $7521
+	dw $755c
+	dw $75a0
+	dw $75bd
 
-	rst  $30                                         ; $73e5: $f7
-
-jr_00a_73e6:
-	ld   [hl], e                                     ; $73e6: $73
-	jr   jr_00a_745d                                 ; $73e7: $18 $74
-
-	ld   b, b                                        ; $73e9: $40
-	ld   [hl], h                                     ; $73ea: $74
-	ld   l, d                                        ; $73eb: $6a
-	ld   [hl], h                                     ; $73ec: $74
-	adc  e                                           ; $73ed: $8b
-	ld   [hl], h                                     ; $73ee: $74
-	ld   hl, $5c75                                   ; $73ef: $21 $75 $5c
-	ld   [hl], l                                     ; $73f2: $75
-	and  b                                           ; $73f3: $a0
-	ld   [hl], l                                     ; $73f4: $75
-	cp   l                                           ; $73f5: $bd
-	ld   [hl], l                                     ; $73f6: $75
+.prologue:
 	xor  a                                           ; $73f7: $af
 	call PlaySound                                       ; $73f8: $cd $92 $1a
 	ld   h, $37                                      ; $73fb: $26 $37
@@ -7077,7 +7073,7 @@ jr_00a_73e6:
 	call FarCall                                       ; $7414: $cd $62 $09
 	ret                                              ; $7417: $c9
 
-
+.newGame:
 	xor  a                                           ; $7418: $af
 	call PlaySound                                       ; $7419: $cd $92 $1a
 	xor  a                                           ; $741c: $af
@@ -7098,7 +7094,7 @@ jr_00a_73e6:
 	ld   [wGameSubstate], a                                  ; $743c: $ea $a1 $c2
 	ret                                              ; $743f: $c9
 
-
+.continue:
 	xor  a                                           ; $7440: $af
 	call PlaySound                                       ; $7441: $cd $92 $1a
 	ld   a, $ff                                      ; $7444: $3e $ff
@@ -7109,20 +7105,11 @@ jr_00a_73e6:
 	ld   l, $00                                      ; $744f: $2e $00
 	ld   d, $37                                      ; $7451: $16 $37
 	ld   e, $01                                      ; $7453: $1e $01
-	push af                                          ; $7455: $f5
-	ld   a, $89                                      ; $7456: $3e $89
-	ld   [wFarCallAddr], a                                  ; $7458: $ea $98 $c2
-	ld   a, $4e                                      ; $745b: $3e $4e
 
-jr_00a_745d:
-	ld   [wFarCallAddr+1], a                                  ; $745d: $ea $99 $c2
-	ld   a, $10                                      ; $7460: $3e $10
-	ld   [wFarCallBank], a                                  ; $7462: $ea $9a $c2
-	pop  af                                          ; $7465: $f1
-	call FarCall                                       ; $7466: $cd $62 $09
+	M_FarCall Func_10_4e89
 	ret                                              ; $7469: $c9
 
-
+.settings:
 	xor  a                                           ; $746a: $af
 	call PlaySound                                       ; $746b: $cd $92 $1a
 	ld   a, $14                                      ; $746e: $3e $14

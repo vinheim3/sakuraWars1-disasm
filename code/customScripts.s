@@ -466,4 +466,8 @@ ChangeSettingsTileAttr::
 	ld   [$d827], a
 	ret
 
+
+Gfx_EnSaveScreen::
+	INCBIN "en_saveScreen.2bpp"
+
 endc

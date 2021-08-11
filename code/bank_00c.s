@@ -7875,6 +7875,7 @@ jr_00c_7192:
 	jp   LCDCInterruptHandler.return                                       ; $719f: $c3 $4a $04
 
 
+Func_0c_71a2::
 	call Call_00c_640f                               ; $71a2: $cd $0f $64
 	ld   a, [$cc56]                                  ; $71a5: $fa $56 $cc
 	or   a                                           ; $71a8: $b7

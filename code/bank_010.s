@@ -197,6 +197,7 @@ GameState0e_SaveScreen::
 	ret                                              ; $4198: $c9
 
 .substate1:
+; eg from title menu screen
 	ld   a, $01                                      ; $4199: $3e $01
 	ld   [$c8b6], a                                  ; $419b: $ea $b6 $c8
 	ld   a, $02                                      ; $419e: $3e $02
@@ -204,25 +205,35 @@ GameState0e_SaveScreen::
 	ret                                              ; $41a3: $c9
 
 .substate2:
-	ld   a, $ff                                      ; $41a4: $3e $ff
-	ld   [wInGameInputsEnabled], a                                  ; $41a6: $ea $0e $c2
-	ld   a, $0c                                      ; $41a9: $3e $0c
-	ld   [wBaseInitialStickyCounter], a                                  ; $41ab: $ea $13 $c2
-	ld   a, $04                                      ; $41ae: $3e $04
-	ld   [wBaseRepeatedStickyCounter], a                                  ; $41b0: $ea $14 $c2
-	call ClearOam                                       ; $41b3: $cd $d7 $0d
-	call ClearDisplayRegsAllowVBlankInt                                       ; $41b6: $cd $59 $0b
-	ld   a, $83                                      ; $41b9: $3e $83
-	ld   [wLCDC], a                                  ; $41bb: $ea $03 $c2
-	ld   a, [wWramBank]                                  ; $41be: $fa $93 $c2
-	push af                                          ; $41c1: $f5
-	ld   a, $03                                      ; $41c2: $3e $03
-	ld   [wWramBank], a                                  ; $41c4: $ea $93 $c2
-	ldh  [rSVBK], a                                  ; $41c7: $e0 $70
+; Allow inputs and set sticky button settings
+	ld   a, $ff                                                     ; $41a4
+	ld   [wInGameInputsEnabled], a                                  ; $41a6
+	ld   a, $0c                                                     ; $41a9
+	ld   [wBaseInitialStickyCounter], a                             ; $41ab
+	ld   a, $04                                                     ; $41ae
+	ld   [wBaseRepeatedStickyCounter], a                            ; $41b0
+
+; Clear oam and display regs, turn on LCD
+	call ClearOam                                                   ; $41b3
+	call ClearDisplayRegsAllowVBlankInt                             ; $41b6
+	ld   a, LCDCF_ON|LCDCF_OBJON|LCDCF_BGON                         ; $41b9
+	ld   [wLCDC], a                                                 ; $41bb
+
+; Preserve ram bank, and set ram bank of data load buffers
+	ld   a, [wWramBank]                                             ; $41be
+	push af                                                         ; $41c1
+
+	ld   a, BANK(wSaveScreenTileDataBuffer)                         ; $41c2
+	ld   [wWramBank], a                                             ; $41c4
+	ldh  [rSVBK], a                                                 ; $41c7
+
+;
 	ld   a, $1b                                      ; $41c9: $3e $1b
 	ld   hl, $d000                                   ; $41cb: $21 $00 $d0
 	ld   de, $450c                                   ; $41ce: $11 $0c $45
 	call RLEXorCopy                                       ; $41d1: $cd $d2 $09
+
+;
 	ld   c, $80                                      ; $41d4: $0e $80
 	ld   de, $8000                                   ; $41d6: $11 $00 $80
 	ld   a, $03                                      ; $41d9: $3e $03
@@ -230,6 +241,8 @@ GameState0e_SaveScreen::
 	ld   b, $40                                      ; $41de: $06 $40
 	call EnqueueHDMATransfer                                       ; $41e0: $cd $7c $02
 	rst  WaitUntilVBlankIntHandledIfLCDOn                                         ; $41e3: $cf
+
+;
 	ld   c, $80                                      ; $41e4: $0e $80
 	ld   de, $8400                                   ; $41e6: $11 $00 $84
 	ld   a, $03                                      ; $41e9: $3e $03
@@ -237,10 +250,18 @@ GameState0e_SaveScreen::
 	ld   b, $40                                      ; $41ee: $06 $40
 	call EnqueueHDMATransfer                                       ; $41f0: $cd $7c $02
 	rst  WaitUntilVBlankIntHandledIfLCDOn                                         ; $41f3: $cf
+
+;
 	ld   a, $14                                      ; $41f4: $3e $14
 	ld   hl, $d000                                   ; $41f6: $21 $00 $d0
 	ld   de, $6e31                                   ; $41f9: $11 $31 $6e
+if def(VWF)
+	call SaveScreenTileDataBank0_8800h_hook
+else
 	call RLEXorCopy                                       ; $41fc: $cd $d2 $09
+endc
+
+;
 	ld   c, $80                                      ; $41ff: $0e $80
 	ld   de, $8800                                   ; $4201: $11 $00 $88
 	ld   a, $03                                      ; $4204: $3e $03
@@ -248,6 +269,8 @@ GameState0e_SaveScreen::
 	ld   b, $40                                      ; $4209: $06 $40
 	call EnqueueHDMATransfer                                       ; $420b: $cd $7c $02
 	rst  WaitUntilVBlankIntHandledIfLCDOn                                         ; $420e: $cf
+
+;
 	ld   c, $80                                      ; $420f: $0e $80
 	ld   de, $8c00                                   ; $4211: $11 $00 $8c
 	ld   a, $03                                      ; $4214: $3e $03
@@ -255,6 +278,8 @@ GameState0e_SaveScreen::
 	ld   b, $60                                      ; $4219: $06 $60
 	call EnqueueHDMATransfer                                       ; $421b: $cd $7c $02
 	rst  WaitUntilVBlankIntHandledIfLCDOn                                         ; $421e: $cf
+
+;
 	ld   c, $80                                      ; $421f: $0e $80
 	ld   de, $9200                                   ; $4221: $11 $00 $92
 	ld   a, $03                                      ; $4224: $3e $03
@@ -262,10 +287,18 @@ GameState0e_SaveScreen::
 	ld   b, $60                                      ; $4229: $06 $60
 	call EnqueueHDMATransfer                                       ; $422b: $cd $7c $02
 	rst  WaitUntilVBlankIntHandledIfLCDOn                                         ; $422e: $cf
+
+;
 	ld   a, $19                                      ; $422f: $3e $19
 	ld   hl, $d000                                   ; $4231: $21 $00 $d0
 	ld   de, $5fb2                                   ; $4234: $11 $b2 $5f
+if def(VWF)
+	call SaveScreenTileDataBank1_8800h_hook
+else
 	call RLEXorCopy                                       ; $4237: $cd $d2 $09
+endc
+
+;
 	ld   c, $81                                      ; $423a: $0e $81
 	ld   de, $8800                                   ; $423c: $11 $00 $88
 	ld   a, $03                                      ; $423f: $3e $03
@@ -273,6 +306,8 @@ GameState0e_SaveScreen::
 	ld   b, $40                                      ; $4244: $06 $40
 	call EnqueueHDMATransfer                                       ; $4246: $cd $7c $02
 	rst  WaitUntilVBlankIntHandledIfLCDOn                                         ; $4249: $cf
+
+;
 	ld   c, $81                                      ; $424a: $0e $81
 	ld   de, $8c00                                   ; $424c: $11 $00 $8c
 	ld   a, $03                                      ; $424f: $3e $03
@@ -280,10 +315,18 @@ GameState0e_SaveScreen::
 	ld   b, $40                                      ; $4254: $06 $40
 	call EnqueueHDMATransfer                                       ; $4256: $cd $7c $02
 	rst  WaitUntilVBlankIntHandledIfLCDOn                                         ; $4259: $cf
+
+;
 	ld   a, $1c                                      ; $425a: $3e $1c
 	ld   hl, $d400                                   ; $425c: $21 $00 $d4
 	ld   de, $79a7                                   ; $425f: $11 $a7 $79
+if def(VWF)
+	call SaveScreenTileMap_hook
+else
 	call RLEXorCopy                                       ; $4262: $cd $d2 $09
+endc
+
+;
 	ld   c, $80                                      ; $4265: $0e $80
 	ld   de, $9800                                   ; $4267: $11 $00 $98
 	ld   a, $03                                      ; $426a: $3e $03
@@ -291,10 +334,18 @@ GameState0e_SaveScreen::
 	ld   b, $40                                      ; $426f: $06 $40
 	call EnqueueHDMATransfer                                       ; $4271: $cd $7c $02
 	rst  WaitUntilVBlankIntHandledIfLCDOn                                         ; $4274: $cf
+
+;
 	ld   a, $1d                                      ; $4275: $3e $1d
 	ld   hl, $d000                                   ; $4277: $21 $00 $d0
 	ld   de, $750b                                   ; $427a: $11 $0b $75
+if def(VWF)
+	call SaveScreenTileAttr_hook
+else
 	call RLEXorCopy                                       ; $427d: $cd $d2 $09
+endc
+
+;
 	ld   c, $81                                      ; $4280: $0e $81
 	ld   de, $9800                                   ; $4282: $11 $00 $98
 	ld   a, $03                                      ; $4285: $3e $03
@@ -302,49 +353,73 @@ GameState0e_SaveScreen::
 	ld   b, $40                                      ; $428a: $06 $40
 	call EnqueueHDMATransfer                                       ; $428c: $cd $7c $02
 	rst  WaitUntilVBlankIntHandledIfLCDOn                                         ; $428f: $cf
+
+;
 	ld   de, $de00                                   ; $4290: $11 $00 $de
 	ld   hl, $d0a0                                   ; $4293: $21 $a0 $d0
 	ld   bc, $0040                                   ; $4296: $01 $40 $00
 	call MemCopy                                       ; $4299: $cd $a9 $09
+
+;
 	ld   de, $de40                                   ; $429c: $11 $40 $de
 	ld   hl, $d0a0                                   ; $429f: $21 $a0 $d0
 	ld   bc, $0040                                   ; $42a2: $01 $40 $00
 	call MemCopy                                       ; $42a5: $cd $a9 $09
+
+;
 	ld   hl, $de42                                   ; $42a8: $21 $42 $de
 	ld   c, $10                                      ; $42ab: $0e $10
 	ld   e, $05                                      ; $42ad: $1e $05
 	call Call_010_4522                               ; $42af: $cd $22 $45
+
+;
 	ld   de, $de80                                   ; $42b2: $11 $80 $de
 	ld   hl, $d0a0                                   ; $42b5: $21 $a0 $d0
 	ld   bc, $0040                                   ; $42b8: $01 $40 $00
 	call MemCopy                                       ; $42bb: $cd $a9 $09
+
+;
 	ld   hl, $de82                                   ; $42be: $21 $82 $de
 	ld   c, $10                                      ; $42c1: $0e $10
 	ld   e, $06                                      ; $42c3: $1e $06
 	call Call_010_4522                               ; $42c5: $cd $22 $45
+
+;
 	ld   de, $dec0                                   ; $42c8: $11 $c0 $de
 	ld   hl, $d160                                   ; $42cb: $21 $60 $d1
 	ld   bc, $0040                                   ; $42ce: $01 $40 $00
 	call MemCopy                                       ; $42d1: $cd $a9 $09
+
+;
 	ld   de, $df00                                   ; $42d4: $11 $00 $df
 	ld   hl, $d160                                   ; $42d7: $21 $60 $d1
 	ld   bc, $0040                                   ; $42da: $01 $40 $00
 	call MemCopy                                       ; $42dd: $cd $a9 $09
+
+;
 	ld   hl, $df02                                   ; $42e0: $21 $02 $df
 	ld   c, $10                                      ; $42e3: $0e $10
 	ld   e, $05                                      ; $42e5: $1e $05
 	call Call_010_4522                               ; $42e7: $cd $22 $45
+
+;
 	ld   de, $df40                                   ; $42ea: $11 $40 $df
 	ld   hl, $d160                                   ; $42ed: $21 $60 $d1
 	ld   bc, $0040                                   ; $42f0: $01 $40 $00
 	call MemCopy                                       ; $42f3: $cd $a9 $09
+
+;
 	ld   hl, $df42                                   ; $42f6: $21 $42 $df
 	ld   c, $10                                      ; $42f9: $0e $10
 	ld   e, $06                                      ; $42fb: $1e $06
 	call Call_010_4522                               ; $42fd: $cd $22 $45
+
+; Restore ram bank
 	pop  af                                          ; $4300: $f1
 	ld   [wWramBank], a                                  ; $4301: $ea $93 $c2
 	ldh  [rSVBK], a                                  ; $4304: $e0 $70
+
+;
 	call Call_010_4b82                               ; $4306: $cd $82 $4b
 	xor  a                                           ; $4309: $af
 	ld   [wWY], a                                  ; $430a: $ea $0a $c2
@@ -356,63 +431,66 @@ GameState0e_SaveScreen::
 	ld   [$c8b5], a                                  ; $431b: $ea $b5 $c8
 	ld   a, $10                                      ; $431e: $3e $10
 	ld   [$c8b4], a                                  ; $4320: $ea $b4 $c8
-	call Call_010_4b92                               ; $4323: $cd $92 $4b
+
+;
+	call LoadAndDisplayAllFileNames                               ; $4323: $cd $92 $4b
 	call Call_010_478e                               ; $4326: $cd $8e $47
+
+;
 	call ClearBaseAnimSpriteSpecDetails                                       ; $4329: $cd $c9 $2e
 	ld   a, $01                                      ; $432c: $3e $01
 	ld   hl, $0000                                   ; $432e: $21 $00 $00
 	call ReserveBaseAnimSpriteSpecAndInstance                                       ; $4331: $cd $4b $2f
 	ld   [$c8af], a                                  ; $4334: $ea $af $c8
+
+;
 	call StartAnimatingAnimatedSpriteSpec                                       ; $4337: $cd $14 $30
 	call HLequAddrOfAnimSpriteSpecDetails                                       ; $433a: $cd $76 $30
+
 	ld   a, $00                                      ; $433d: $3e $00
 	ld   [$c8b0], a                                  ; $433f: $ea $b0 $c8
 	ld   bc, $0000                                   ; $4342: $01 $00 $00
 	ld   de, $7180                                   ; $4345: $11 $80 $71
-	push af                                          ; $4348: $f5
-	ld   a, $03                                      ; $4349: $3e $03
-	ld   [wFarCallAddr], a                                  ; $434b: $ea $98 $c2
-	ld   a, $41                                      ; $434e: $3e $41
-	ld   [wFarCallAddr+1], a                                  ; $4350: $ea $99 $c2
-	ld   a, $01                                      ; $4353: $3e $01
-	ld   [wFarCallBank], a                                  ; $4355: $ea $9a $c2
-	pop  af                                          ; $4358: $f1
-	call FarCall                                       ; $4359: $cd $62 $09
+	M_FarCall LoadNewAnimatedSpriteSpecDetails
+	
+;
 	ld   a, $01                                      ; $435c: $3e $01
 	ld   hl, $0000                                   ; $435e: $21 $00 $00
 	call ReserveBaseAnimSpriteSpecAndInstance                                       ; $4361: $cd $4b $2f
 	ld   [$c8b1], a                                  ; $4364: $ea $b1 $c8
+
+;
 	call StartAnimatingAnimatedSpriteSpec                                       ; $4367: $cd $14 $30
 	call HLequAddrOfAnimSpriteSpecDetails                                       ; $436a: $cd $76 $30
 	ld   a, $00                                      ; $436d: $3e $00
 	ld   bc, $0000                                   ; $436f: $01 $00 $00
 	ld   de, $7180                                   ; $4372: $11 $80 $71
-	push af                                          ; $4375: $f5
-	ld   a, $03                                      ; $4376: $3e $03
-	ld   [wFarCallAddr], a                                  ; $4378: $ea $98 $c2
-	ld   a, $41                                      ; $437b: $3e $41
-	ld   [wFarCallAddr+1], a                                  ; $437d: $ea $99 $c2
-	ld   a, $01                                      ; $4380: $3e $01
-	ld   [wFarCallBank], a                                  ; $4382: $ea $9a $c2
-	pop  af                                          ; $4385: $f1
-	call FarCall                                       ; $4386: $cd $62 $09
+	M_FarCall LoadNewAnimatedSpriteSpecDetails
+	
+;
 	ld   a, $01                                      ; $4389: $3e $01
 	ld   hl, $7000                                   ; $438b: $21 $00 $70
 	ld   de, wBGPalettes                                   ; $438e: $11 $de $c2
 	ld   bc, $0080                                   ; $4391: $01 $80 $00
 	call FarMemCopy                                       ; $4394: $cd $b2 $09
+
 	ld   bc, $003f                                   ; $4397: $01 $3f $00
 	call SetBGandOBJPaletteRangesToUpdate                                       ; $439a: $cd $aa $04
+
+;
 	xor  a                                           ; $439d: $af
 	ld   [wStartingColorIdxToLoadCompDataFor], a                                  ; $439e: $ea $62 $c3
 	ld   a, $40                                      ; $43a1: $3e $40
 	ld   [wNumPaletteColorsToLoadCompDataFor], a                                  ; $43a3: $ea $63 $c3
+
 	ld   a, $03                                      ; $43a6: $3e $03
 	ld   b, $01                                      ; $43a8: $06 $01
 	ld   hl, $7000                                   ; $43aa: $21 $00 $70
 	ld   c, $1e                                      ; $43ad: $0e $1e
 	ld   de, $65fc                                   ; $43af: $11 $fc $65
 	call FarLoadPaletteValsFadeToValsAndSetFadeSpeed                                       ; $43b2: $cd $48 $07
+
+;
 	ld   a, [$c8b6]                                  ; $43b5: $fa $b6 $c8
 	or   a                                           ; $43b8: $b7
 	jr   z, :+                              ; $43b9: $28 $05
@@ -421,23 +499,23 @@ GameState0e_SaveScreen::
 	call PlaySound                                       ; $43bd: $cd $92 $1a
 
 :	call Call_010_4571                               ; $43c0: $cd $71 $45
-	push af                                          ; $43c3: $f5
-	ld   a, $54                                      ; $43c4: $3e $54
-	ld   [wFarCallAddr], a                                  ; $43c6: $ea $98 $c2
-	ld   a, $57                                      ; $43c9: $3e $57
-	ld   [wFarCallAddr+1], a                                  ; $43cb: $ea $99 $c2
-	ld   a, $11                                      ; $43ce: $3e $11
-	ld   [wFarCallBank], a                                  ; $43d0: $ea $9a $c2
-	pop  af                                          ; $43d3: $f1
-	call FarCall                                       ; $43d4: $cd $62 $09
+
+	M_FarCall FadeBGpals8timesHandlingAnimatedSpriteSpecs
+	
+;
 	ld   a, $1e                                      ; $43d7: $3e $1e
 	ld   hl, $65fc                                   ; $43d9: $21 $fc $65
 	ld   de, wBGPalettes                                   ; $43dc: $11 $de $c2
 	ld   bc, $0080                                   ; $43df: $01 $80 $00
 	call FarMemCopy                                       ; $43e2: $cd $b2 $09
+
 	ld   bc, $003f                                   ; $43e5: $01 $3f $00
 	call SetBGandOBJPaletteRangesToUpdate                                       ; $43e8: $cd $aa $04
+
+;
 	call Call_010_473c                               ; $43eb: $cd $3c $47
+
+; To next substate
 	ld   hl, wGameSubstate                                   ; $43ee: $21 $a1 $c2
 	inc  [hl]                                        ; $43f1: $34
 	ret                                              ; $43f2: $c9
@@ -570,15 +648,17 @@ GameState0e_SaveScreen::
 	ld   [wGameState], a                                  ; $44ef: $ea $a0 $c2
 	ld   a, [$c8c0]                                  ; $44f2: $fa $c0 $c8
 	ld   [wGameSubstate], a                                  ; $44f5: $ea $a1 $c2
+
+;
 	ld   a, [$c8b6]                                  ; $44f8: $fa $b6 $c8
 	bit  7, a                                        ; $44fb: $cb $7f
-	jr   nz, .br_4515                             ; $44fd: $20 $16
+	jr   nz, .returnToPrevState                             ; $44fd: $20 $16
 
 	bit  0, a                                        ; $44ff: $cb $47
 	jr   z, .done                              ; $4501: $28 $1e
 
 	bit  4, a                                        ; $4503: $cb $67
-	jr   z, .br_4515                              ; $4505: $28 $0e
+	jr   z, .returnToPrevState                              ; $4505: $28 $0e
 
 	ld   a, [$c8bb]                                  ; $4507: $fa $bb $c8
 	ld   [wGameState], a                                  ; $450a: $ea $a0 $c2
@@ -586,10 +666,12 @@ GameState0e_SaveScreen::
 	ld   [wGameSubstate], a                                  ; $4510: $ea $a1 $c2
 	jr   .done                                 ; $4513: $18 $0c
 
-.br_4515:
-	ld   a, [$c8bd]                                  ; $4515: $fa $bd $c8
+.returnToPrevState:
+; Set specified state and substate
+	ld   a, [wContinueGameReturnState]                                  ; $4515: $fa $bd $c8
 	ld   [wGameState], a                                  ; $4518: $ea $a0 $c2
-	ld   a, [$c8be]                                  ; $451b: $fa $be $c8
+
+	ld   a, [wContinueGameReturnSubstate]                                  ; $451b: $fa $be $c8
 	ld   [wGameSubstate], a                                  ; $451e: $ea $a1 $c2
 
 .done:
@@ -1662,14 +1744,16 @@ jr_010_4b91:
 	ret                                              ; $4b91: $c9
 
 
-Call_010_4b92:
-	call Call_010_4bad                               ; $4b92: $cd $ad $4b
-	rst  WaitUntilVBlankIntHandledIfLCDOn                                         ; $4b95: $cf
-	call Call_010_4be5                               ; $4b96: $cd $e5 $4b
-	rst  WaitUntilVBlankIntHandledIfLCDOn                                         ; $4b99: $cf
-	call Call_010_4c1d                               ; $4b9a: $cd $1d $4c
-	rst  WaitUntilVBlankIntHandledIfLCDOn                                         ; $4b9d: $cf
-	ret                                              ; $4b9e: $c9
+LoadAndDisplayAllFileNames:
+	call LoadAndDisplay1stFileName                                  ; $4b92
+	rst  WaitUntilVBlankIntHandledIfLCDOn                           ; $4b95
+
+	call LoadAndDisplay2ndFileName                                  ; $4b96
+	rst  WaitUntilVBlankIntHandledIfLCDOn                           ; $4b99
+
+	call LoadAndDisplay3rdFileName                                  ; $4b9a
+	rst  WaitUntilVBlankIntHandledIfLCDOn                           ; $4b9d
+	ret                                                             ; $4b9e
 
 
 Call_010_4b9f:
@@ -1684,7 +1768,8 @@ Call_010_4b9f:
 	dec  e                                           ; $4bab: $1d
 	ld   c, h                                        ; $4bac: $4c
 
-Call_010_4bad:
+
+LoadAndDisplay1stFileName:
 	ld   a, [wWramBank]                                  ; $4bad: $fa $93 $c2
 	push af                                          ; $4bb0: $f5
 	ld   a, $03                                      ; $4bb1: $3e $03
@@ -1692,27 +1777,21 @@ Call_010_4bad:
 	ldh  [rSVBK], a                                  ; $4bb6: $e0 $70
 	ld   a, $00                                      ; $4bb8: $3e $00
 	ld   hl, $db00                                   ; $4bba: $21 $00 $db
-	push af                                          ; $4bbd: $f5
-	ld   a, $b7                                      ; $4bbe: $3e $b7
-	ld   [wFarCallAddr], a                                  ; $4bc0: $ea $98 $c2
-	ld   a, $46                                      ; $4bc3: $3e $46
-	ld   [wFarCallAddr+1], a                                  ; $4bc5: $ea $99 $c2
-	ld   a, $0a                                      ; $4bc8: $3e $0a
-	ld   [wFarCallBank], a                                  ; $4bca: $ea $9a $c2
-	pop  af                                          ; $4bcd: $f1
-	call FarCall                                       ; $4bce: $cd $62 $09
+
+	M_FarCall PopulateHLwithDayAndFileNameChars
+	
 	ld   hl, $db00                                   ; $4bd1: $21 $00 $db
 	ld   a, [hl]                                     ; $4bd4: $7e
 	ld   [$c8b8], a                                  ; $4bd5: $ea $b8 $c8
-	call Call_010_4c55                               ; $4bd8: $cd $55 $4c
-	call Call_010_4cb9                               ; $4bdb: $cd $b9 $4c
+	call FillAndAdjustRestOfFileName                               ; $4bd8: $cd $55 $4c
+	call Display1stFileName                               ; $4bdb: $cd $b9 $4c
 	pop  af                                          ; $4bde: $f1
 	ld   [wWramBank], a                                  ; $4bdf: $ea $93 $c2
 	ldh  [rSVBK], a                                  ; $4be2: $e0 $70
 	ret                                              ; $4be4: $c9
 
 
-Call_010_4be5:
+LoadAndDisplay2ndFileName:
 	ld   a, [wWramBank]                                  ; $4be5: $fa $93 $c2
 	push af                                          ; $4be8: $f5
 	ld   a, $03                                      ; $4be9: $3e $03
@@ -1720,27 +1799,21 @@ Call_010_4be5:
 	ldh  [rSVBK], a                                  ; $4bee: $e0 $70
 	ld   a, $01                                      ; $4bf0: $3e $01
 	ld   hl, $db0f                                   ; $4bf2: $21 $0f $db
-	push af                                          ; $4bf5: $f5
-	ld   a, $b7                                      ; $4bf6: $3e $b7
-	ld   [wFarCallAddr], a                                  ; $4bf8: $ea $98 $c2
-	ld   a, $46                                      ; $4bfb: $3e $46
-	ld   [wFarCallAddr+1], a                                  ; $4bfd: $ea $99 $c2
-	ld   a, $0a                                      ; $4c00: $3e $0a
-	ld   [wFarCallBank], a                                  ; $4c02: $ea $9a $c2
-	pop  af                                          ; $4c05: $f1
-	call FarCall                                       ; $4c06: $cd $62 $09
+
+	M_FarCall PopulateHLwithDayAndFileNameChars
+	
 	ld   hl, $db0f                                   ; $4c09: $21 $0f $db
 	ld   a, [hl]                                     ; $4c0c: $7e
 	ld   [$c8b9], a                                  ; $4c0d: $ea $b9 $c8
-	call Call_010_4c55                               ; $4c10: $cd $55 $4c
-	call Call_010_4ce3                               ; $4c13: $cd $e3 $4c
+	call FillAndAdjustRestOfFileName                               ; $4c10: $cd $55 $4c
+	call Display2ndFileName                               ; $4c13: $cd $e3 $4c
 	pop  af                                          ; $4c16: $f1
 	ld   [wWramBank], a                                  ; $4c17: $ea $93 $c2
 	ldh  [rSVBK], a                                  ; $4c1a: $e0 $70
 	ret                                              ; $4c1c: $c9
 
 
-Call_010_4c1d:
+LoadAndDisplay3rdFileName:
 	ld   a, [wWramBank]                                  ; $4c1d: $fa $93 $c2
 	push af                                          ; $4c20: $f5
 	ld   a, $03                                      ; $4c21: $3e $03
@@ -1748,56 +1821,59 @@ Call_010_4c1d:
 	ldh  [rSVBK], a                                  ; $4c26: $e0 $70
 	ld   a, $02                                      ; $4c28: $3e $02
 	ld   hl, $db1e                                   ; $4c2a: $21 $1e $db
-	push af                                          ; $4c2d: $f5
-	ld   a, $b7                                      ; $4c2e: $3e $b7
-	ld   [wFarCallAddr], a                                  ; $4c30: $ea $98 $c2
-	ld   a, $46                                      ; $4c33: $3e $46
-	ld   [wFarCallAddr+1], a                                  ; $4c35: $ea $99 $c2
-	ld   a, $0a                                      ; $4c38: $3e $0a
-	ld   [wFarCallBank], a                                  ; $4c3a: $ea $9a $c2
-	pop  af                                          ; $4c3d: $f1
-	call FarCall                                       ; $4c3e: $cd $62 $09
+
+	M_FarCall PopulateHLwithDayAndFileNameChars
+	
 	ld   hl, $db1e                                   ; $4c41: $21 $1e $db
 	ld   a, [hl]                                     ; $4c44: $7e
 	ld   [$c8ba], a                                  ; $4c45: $ea $ba $c8
-	call Call_010_4c55                               ; $4c48: $cd $55 $4c
-	call Call_010_4d0d                               ; $4c4b: $cd $0d $4d
+	call FillAndAdjustRestOfFileName                               ; $4c48: $cd $55 $4c
+	call Display3rdFileName                               ; $4c4b: $cd $0d $4d
 	pop  af                                          ; $4c4e: $f1
 	ld   [wWramBank], a                                  ; $4c4f: $ea $93 $c2
 	ldh  [rSVBK], a                                  ; $4c52: $e0 $70
 	ret                                              ; $4c54: $c9
 
 
-Call_010_4c55:
+; HL - addr of days + filename chars
+FillAndAdjustRestOfFileName:
 	ld   a, [hl]                                     ; $4c55: $7e
 	or   a                                           ; $4c56: $b7
-	jr   z, jr_010_4c82                              ; $4c57: $28 $29
+	jr   z, .noFile                              ; $4c57: $28 $29
 
-	call Call_010_4ca7                               ; $4c59: $cd $a7 $4c
+	call FillUnusedPartsOfFileNameCharsWithSpaces                               ; $4c59: $cd $a7 $4c
 	ld   bc, $0007                                   ; $4c5c: $01 $07 $00
 	add  hl, bc                                      ; $4c5f: $09
 	ld   d, h                                        ; $4c60: $54
 	ld   e, l                                        ; $4c61: $5d
+if def(VWF)
+	ld   bc, 5
+else
 	ld   bc, $0007                                   ; $4c62: $01 $07 $00
+endc
 	add  hl, bc                                      ; $4c65: $09
 	ld   c, $06                                      ; $4c66: $0e $06
 
-jr_010_4c68:
+.loop1:
 	ld   a, [de]                                     ; $4c68: $1a
 	dec  de                                          ; $4c69: $1b
 	ld   [hl-], a                                    ; $4c6a: $32
 	dec  c                                           ; $4c6b: $0d
-	jr   nz, jr_010_4c68                             ; $4c6c: $20 $fa
+	jr   nz, .loop1                             ; $4c6c: $20 $fa
 
 	ld   c, $07                                      ; $4c6e: $0e $07
+if def(VWF)
+	jp   EnFillAndAdjustFileNameHook
+else
 	ld   de, $4c96                                   ; $4c70: $11 $96 $4c
+endc
 
-jr_010_4c73:
+.loop2:
 	ld   a, [de]                                     ; $4c73: $1a
 	dec  de                                          ; $4c74: $1b
 	ld   [hl-], a                                    ; $4c75: $32
 	dec  c                                           ; $4c76: $0d
-	jr   nz, jr_010_4c73                             ; $4c77: $20 $fa
+	jr   nz, .loop2                             ; $4c77: $20 $fa
 
 	ld   bc, $000d                                   ; $4c79: $01 $0d $00
 	add  hl, bc                                      ; $4c7c: $09
@@ -1805,31 +1881,47 @@ jr_010_4c73:
 	ld   [hl], $00                                   ; $4c7f: $36 $00
 	ret                                              ; $4c81: $c9
 
-
-jr_010_4c82:
-	ld   de, $4c9a                                   ; $4c82: $11 $9a $4c
+.noFile:
+if def(VWF)
+	ld   de, EnNoSaveData
+	ld   c, EnNoSaveData.end-EnNoSaveData
+else
+	ld   de, Text_NoSaveData                                   ; $4c82: $11 $9a $4c
 	ld   c, $0d                                      ; $4c85: $0e $0d
+endc
 
-jr_010_4c87:
-	ld   a, [de]                                     ; $4c87: $1a
+:	ld   a, [de]                                     ; $4c87: $1a
 	inc  de                                          ; $4c88: $13
 	ld   [hl+], a                                    ; $4c89: $22
 	dec  c                                           ; $4c8a: $0d
-	jr   nz, jr_010_4c87                             ; $4c8b: $20 $fa
+	jr   nz, :-                             ; $4c8b: $20 $fa
 
 	ret                                              ; $4c8d: $c9
 
 
+;
 	ld   [bc], a                                     ; $4c8e: $02
 	nop                                              ; $4c8f: $00
+
+
 	inc  b                                           ; $4c90: $04
+
+
 	xor  d                                           ; $4c91: $aa
 	inc  b                                           ; $4c92: $04
 	call nc, $10fc                                   ; $4c93: $d4 $fc $10
+
+
 	stop                                             ; $4c96: $10 $00
 	ld   [bc], a                                     ; $4c98: $02
 	nop                                              ; $4c99: $00
+
+
+Text_NoSaveData:
 	db   $10                                         ; $4c9a: $10
+
+
+;
 	db   $10                                         ; $4c9b: $10
 	db   $10                                         ; $4c9c: $10
 	ld   e, e                                        ; $4c9d: $5b
@@ -1842,29 +1934,31 @@ jr_010_4c87:
 	db   $10                                         ; $4ca4: $10
 	stop                                             ; $4ca5: $10 $00
 
-Call_010_4ca7:
+
+; HL - addr of days + filename chars
+FillUnusedPartsOfFileNameCharsWithSpaces:
 	push hl                                          ; $4ca7: $e5
 	ld   c, $08                                      ; $4ca8: $0e $08
 
-jr_010_4caa:
+.loop1:
 	dec  c                                           ; $4caa: $0d
 	ld   a, [hl+]                                    ; $4cab: $2a
 	or   a                                           ; $4cac: $b7
-	jr   nz, jr_010_4caa                             ; $4cad: $20 $fb
+	jr   nz, .loop1                             ; $4cad: $20 $fb
 
 	dec  hl                                          ; $4caf: $2b
-	ld   a, [$4c9a]                                  ; $4cb0: $fa $9a $4c
+	ld   a, [Text_NoSaveData]                                  ; $4cb0: $fa $9a $4c
 
-jr_010_4cb3:
+.loop2:
 	ld   [hl+], a                                    ; $4cb3: $22
 	dec  c                                           ; $4cb4: $0d
-	jr   nz, jr_010_4cb3                             ; $4cb5: $20 $fc
+	jr   nz, .loop2                             ; $4cb5: $20 $fc
 
 	pop  hl                                          ; $4cb7: $e1
 	ret                                              ; $4cb8: $c9
 
 
-Call_010_4cb9:
+Display1stFileName:
 	ld   a, [wWramBank]                                  ; $4cb9: $fa $93 $c2
 	push af                                          ; $4cbc: $f5
 	ld   a, $03                                      ; $4cbd: $3e $03
@@ -1885,7 +1979,7 @@ Call_010_4cb9:
 	ret                                              ; $4ce2: $c9
 
 
-Call_010_4ce3:
+Display2ndFileName:
 	ld   a, [wWramBank]                                  ; $4ce3: $fa $93 $c2
 	push af                                          ; $4ce6: $f5
 	ld   a, $03                                      ; $4ce7: $3e $03
@@ -1906,7 +2000,7 @@ Call_010_4ce3:
 	ret                                              ; $4d0c: $c9
 
 
-Call_010_4d0d:
+Display3rdFileName:
 	ld   a, [wWramBank]                                  ; $4d0d: $fa $93 $c2
 	push af                                          ; $4d10: $f5
 	ld   a, $03                                      ; $4d11: $3e $03
@@ -1935,7 +2029,11 @@ Call_010_4d37:
 	call SetKanjiTextBoxDimensions                                       ; $4d41: $cd $24 $14
 	ld   bc, $0000                                   ; $4d44: $01 $00 $00
 	call SetCurrKanjiColAndRowToDrawOn                                       ; $4d47: $cd $34 $14
+if def(VWF)
+	call ClearFileNameBoxBeforeLoadingText
+else
 	ld   hl, $d800                                   ; $4d4a: $21 $00 $d8
+endc
 	ld   a, $00                                      ; $4d4d: $3e $00
 	ret                                              ; $4d4f: $c9
 
@@ -2107,7 +2205,7 @@ jr_010_4e3e:
 	add  l                                           ; $4e6f: $85
 	ld   c, [hl]                                     ; $4e70: $4e
 	ld   h, $27                                      ; $4e71: $26 $27
-	jr   z, jr_010_4e9e                              ; $4e73: $28 $29
+	db $28, $29
 
 	ld   [hl-], a                                    ; $4e75: $32
 	inc  sp                                          ; $4e76: $33
@@ -2128,18 +2226,19 @@ jr_010_4e3e:
 	ld   h, e                                        ; $4e86: $63
 	ld   h, h                                        ; $4e87: $64
 	ld   h, l                                        ; $4e88: $65
+
+
+Func_10_4e89::
 	ld   a, h                                        ; $4e89: $7c
 	ld   [$c8bb], a                                  ; $4e8a: $ea $bb $c8
 	ld   a, l                                        ; $4e8d: $7d
 	ld   [$c8bc], a                                  ; $4e8e: $ea $bc $c8
 	ld   a, d                                        ; $4e91: $7a
-	ld   [$c8bd], a                                  ; $4e92: $ea $bd $c8
+	ld   [wContinueGameReturnState], a                                  ; $4e92: $ea $bd $c8
 	ld   a, e                                        ; $4e95: $7b
-	ld   [$c8be], a                                  ; $4e96: $ea $be $c8
-	ld   a, $0e                                      ; $4e99: $3e $0e
+	ld   [wContinueGameReturnSubstate], a                                  ; $4e96: $ea $be $c8
+	ld   a, GS_SAVE_SCREEN                                      ; $4e99: $3e $0e
 	ld   [wGameState], a                                  ; $4e9b: $ea $a0 $c2
-
-jr_010_4e9e:
 	ld   a, $01                                      ; $4e9e: $3e $01
 	ld   [wGameSubstate], a                                  ; $4ea0: $ea $a1 $c2
 	ret                                              ; $4ea3: $c9
@@ -8818,3 +8917,272 @@ jr_010_79ca:
 	ld   a, e                                        ; $7a31: $7b
 	ld   [$c77d], a                                  ; $7a32: $ea $7d $c7
 	ret                                              ; $7a35: $c9
+
+if def(VWF)
+SaveScreenTileDataBank0_8800h_hook:
+	call RLEXorCopy
+
+; S/Sav in Save Data
+	ld   a, BANK(Gfx_EnSaveScreen)
+	ld   bc, $10
+	ld   de, wSaveScreenTileDataBuffer+$d20-$800
+	ld   hl, Gfx_EnSaveScreen
+	call FarMemCopy
+	ld   a, BANK(Gfx_EnSaveScreen)
+	ld   bc, $30
+	ld   de, wSaveScreenTileDataBuffer+$10a0-$800
+	ld   hl, Gfx_EnSaveScreen+$390
+	call FarMemCopy
+
+; av in Save Data
+	ld   a, BANK(Gfx_EnSaveScreen)
+	ld   bc, $20
+	ld   de, wSaveScreenTileDataBuffer+$1080-$800
+	ld   hl, Gfx_EnSaveScreen+$10
+	call FarMemCopy
+
+; e Data in Save Data
+	ld   a, BANK(Gfx_EnSaveScreen)
+	ld   bc, $50
+	ld   de, wSaveScreenTileDataBuffer+$940-$800
+	ld   hl, Gfx_EnSaveScreen+$30
+	call FarMemCopy
+	ld   a, BANK(Gfx_EnSaveScreen)
+	ld   bc, $50
+	ld   de, wSaveScreenTileDataBuffer+$a80-$800
+	ld   hl, Gfx_EnSaveScreen+$390+$30
+	call FarMemCopy
+
+; Loa in Load Data
+	ld   a, BANK(Gfx_EnSaveScreen)
+	ld   bc, $30
+	ld   de, wSaveScreenTileDataBuffer+$910-$800
+	ld   hl, Gfx_EnSaveScreen+$80
+	call FarMemCopy
+	ld   a, BANK(Gfx_EnSaveScreen)
+	ld   bc, $30
+	ld   de, wSaveScreenTileDataBuffer+$a50-$800
+	ld   hl, Gfx_EnSaveScreen+$390+$80
+	call FarMemCopy
+
+; Copy missing letters in Load/Copy data and Copy/Erase
+	ld   a, BANK(Gfx_EnSaveScreen)
+	ld   bc, $10
+	ld   de, wSaveScreenTileDataBuffer+$1700-$800
+	ld   hl, Gfx_EnSaveScreen+$b0
+	call FarMemCopy
+	ld   a, BANK(Gfx_EnSaveScreen)
+	ld   bc, $10
+	ld   de, wSaveScreenTileDataBuffer+$1710-$800
+	ld   hl, Gfx_EnSaveScreen+$390+$b0
+	call FarMemCopy
+
+	ld   a, BANK(Gfx_EnSaveScreen)
+	ld   bc, $20
+	ld   de, wSaveScreenTileDataBuffer+$1720-$800
+	ld   hl, Gfx_EnSaveScreen+$e0
+	call FarMemCopy
+	ld   a, BANK(Gfx_EnSaveScreen)
+	ld   bc, $20
+	ld   de, wSaveScreenTileDataBuffer+$1740-$800
+	ld   hl, Gfx_EnSaveScreen+$390+$e0
+	call FarMemCopy
+
+	ld   a, BANK(Gfx_EnSaveScreen)
+	ld   bc, $10
+	ld   de, wSaveScreenTileDataBuffer+$1760-$800
+	ld   hl, Gfx_EnSaveScreen+$380
+	call FarMemCopy
+	ld   a, BANK(Gfx_EnSaveScreen)
+	ld   bc, $10
+	ld   de, wSaveScreenTileDataBuffer+$1770-$800
+	ld   hl, Gfx_EnSaveScreen+$390+$380
+	call FarMemCopy
+
+; Copy 1/2/3
+	ld   a, BANK(Gfx_EnSaveScreen)
+	ld   bc, $20
+	ld   de, wSaveScreenTileDataBuffer+$dc0-$800
+	ld   hl, Gfx_EnSaveScreen+$200
+	call FarMemCopy
+	ld   a, BANK(Gfx_EnSaveScreen)
+	ld   bc, $20
+	ld   de, wSaveScreenTileDataBuffer+$e50-$800
+	ld   hl, Gfx_EnSaveScreen+$390+$200
+	call FarMemCopy
+
+	ld   a, BANK(Gfx_EnSaveScreen)
+	ld   bc, $20
+	ld   de, wSaveScreenTileDataBuffer+$f10-$800
+	ld   hl, Gfx_EnSaveScreen+$220
+	call FarMemCopy
+	ld   a, BANK(Gfx_EnSaveScreen)
+	ld   bc, $20
+	ld   de, wSaveScreenTileDataBuffer+$f60-$800
+	ld   hl, Gfx_EnSaveScreen+$390+$220
+	call FarMemCopy
+
+	ld   a, BANK(Gfx_EnSaveScreen)
+	ld   bc, $20
+	ld   de, wSaveScreenTileDataBuffer+$fe0-$800
+	ld   hl, Gfx_EnSaveScreen+$240
+	call FarMemCopy
+	ld   a, BANK(Gfx_EnSaveScreen)
+	ld   bc, $20
+	ld   de, wSaveScreenTileDataBuffer+$1020-$800
+	ld   hl, Gfx_EnSaveScreen+$390+$240
+	call FarMemCopy
+
+; Copy copy/eras of copy/erase
+	ld   a, BANK(Gfx_EnSaveScreen)
+	ld   bc, $70
+	ld   de, wSaveScreenTileDataBuffer+$12c0-$800
+	ld   hl, Gfx_EnSaveScreen+$310
+	call FarMemCopy
+	ld   a, BANK(Gfx_EnSaveScreen)
+	ld   bc, $70
+	ld   de, wSaveScreenTileDataBuffer+$13f0-$800
+	ld   hl, Gfx_EnSaveScreen+$390+$310
+	call FarMemCopy
+
+	ret
+
+
+SaveScreenTileDataBank1_8800h_hook:
+	call RLEXorCopy
+
+; Co in Copy Data
+	ld   a, BANK(Gfx_EnSaveScreen)
+	ld   bc, $20
+	ld   de, wSaveScreenTileDataBuffer+$8a0-$800
+	ld   hl, Gfx_EnSaveScreen+$c0
+	call FarMemCopy
+	ld   a, BANK(Gfx_EnSaveScreen)
+	ld   bc, $20
+	ld   de, wSaveScreenTileDataBuffer+$8c0-$800
+	ld   hl, Gfx_EnSaveScreen+$390+$c0
+	call FarMemCopy
+
+; Copy to which data
+	ld   a, BANK(Gfx_EnSaveScreen)
+	ld   bc, $80
+	ld   de, wSaveScreenTileDataBuffer+$8e0-$800
+	ld   hl, Gfx_EnSaveScreen+$100
+	call FarMemCopy
+	ld   a, BANK(Gfx_EnSaveScreen)
+	ld   bc, $80
+	ld   de, wSaveScreenTileDataBuffer+$970-$800
+	ld   hl, Gfx_EnSaveScreen+$390+$100
+	call FarMemCopy
+
+; Delete data
+	ld   a, BANK(Gfx_EnSaveScreen)
+	ld   bc, $80
+	ld   de, wSaveScreenTileDataBuffer+$9f0-$800
+	ld   hl, Gfx_EnSaveScreen+$180
+	call FarMemCopy
+	ld   a, BANK(Gfx_EnSaveScreen)
+	ld   bc, $80
+	ld   de, wSaveScreenTileDataBuffer+$a70-$800
+	ld   hl, Gfx_EnSaveScreen+$390+$180
+	call FarMemCopy
+
+	ret
+
+
+SaveScreenTileMap_hook:
+	call RLEXorCopy
+
+	ld   a, $a4
+	ld   [$d400+$341], a
+
+	ld   a, $70
+	ld   [$d400+$2a5], a
+	ld   a, $71
+	ld   [$d400+$2c5], a
+
+	ld   a, $72
+	ld   [$d400+$2e4], a
+	ld   a, $73
+	ld   [$d400+$2e5], a
+
+	ld   a, $74
+	ld   [$d400+$304], a
+	ld   a, $75
+	ld   [$d400+$305], a
+
+	ld   a, $76
+	ld   [$d400+$1f2], a
+	ld   a, $77
+	ld   [$d400+$212], a
+
+	ret
+
+
+SaveScreenTileAttr_hook:
+	call RLEXorCopy
+
+	ld   a, $00
+	ld   [$d000+$341], a
+
+	ret
+
+
+; HL - points to filename chars before player name
+EnFillAndAdjustFileNameHook:
+; 2 spaces between day and name
+	ld   a, $10
+	ld   [hl-], a
+	ld   [hl-], a
+
+; Adjust day num
+	ld   bc, -3
+	add  hl, bc
+	ld   d, h
+	ld   e, l
+	ld   bc, 3
+	add  hl, bc
+	ld   c, 2
+.loop1:
+	ld   a, [de]
+	dec  de
+	ld   [hl-], a
+	dec  c
+	jr   nz, .loop1
+
+; Copy Day
+	ld   de, .end-1
+	ld   c, .end-.day
+.loop2:
+	ld   a, [de]
+	dec  de
+	ld   [hl-], a
+	dec  c
+	jr   nz, .loop2
+
+; Terminator
+	ld   bc, $0e
+	add  hl, bc
+	ld   a, 0
+	ld   [hl], 0
+	ret
+
+.day:
+	db "Day"
+.end:
+
+
+EnNoSaveData:
+	db "   No Save Data", 0
+.end:
+
+
+; Trashes BC, E
+ClearFileNameBoxBeforeLoadingText:
+	ld   bc, $180
+	ld   hl, $d800
+	call MemClear
+	ld   hl, $d800
+	ret
+
+endc

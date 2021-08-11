@@ -3568,15 +3568,15 @@ Call_004_5595:
 	ret                                              ; $559b: $c9
 
 
-GameState45::
+GameState45_DormRoom::
 	ld   a, [wGameSubstate]                                  ; $559c: $fa $a1 $c2
 	dec  a                                           ; $559f: $3d
-	jp   z, Jump_004_5784                            ; $55a0: $ca $84 $57
+	jp   z, DormRoomSubstate1                            ; $55a0: $ca $84 $57
 
 	dec  a                                           ; $55a3: $3d
-	jp   z, Jump_004_57ad                            ; $55a4: $ca $ad $57
+	jp   z, DormRoomSubstate2                            ; $55a4: $ca $ad $57
 
-Call_004_55a7:
+DormRoomSubstate0:
 	ld   a, $07                                      ; $55a7: $3e $07
 	call SafeSetAudVolForMultipleChannels                                       ; $55a9: $cd $e0 $1c
 	call ClearDisplayRegsAllowVBlankInt                                       ; $55ac: $cd $59 $0b
@@ -3594,28 +3594,25 @@ Call_004_55a7:
 	ld   [wInGameInputsEnabled], a                                  ; $55cd: $ea $0e $c2
 	call ClearOam                                       ; $55d0: $cd $d7 $0d
 	call ClearBaseAnimSpriteSpecDetails                                       ; $55d3: $cd $c9 $2e
-	call $5667                                       ; $55d6: $cd $67 $56
+	call Func_04_5667                                       ; $55d6: $cd $67 $56
 	ld   hl, $c602                                   ; $55d9: $21 $02 $c6
 	ld   de, $cc83                                   ; $55dc: $11 $83 $cc
 	ld   b, $05                                      ; $55df: $06 $05
 
-jr_004_55e1:
+.loop_55e1:
 	ld   a, [de]                                     ; $55e1: $1a
 	bit  7, a                                        ; $55e2: $cb $7f
 	ld   a, $ff                                      ; $55e4: $3e $ff
-	jr   nz, jr_004_55ea                             ; $55e6: $20 $02
-
+	jr   nz, :+                             ; $55e6: $20 $02
 	ld   a, $a0                                      ; $55e8: $3e $a0
-
-jr_004_55ea:
-	ld   [hl+], a                                    ; $55ea: $22
+:	ld   [hl+], a                                    ; $55ea: $22
 	ld   [hl+], a                                    ; $55eb: $22
 	inc  de                                          ; $55ec: $13
 	dec  b                                           ; $55ed: $05
-	jr   nz, jr_004_55e1                             ; $55ee: $20 $f1
+	jr   nz, .loop_55e1                             ; $55ee: $20 $f1
 
 	ld   de, $c642                                   ; $55f0: $11 $42 $c6
-	ld   hl, $565f                                   ; $55f3: $21 $5f $56
+	ld   hl, .data                                   ; $55f3: $21 $5f $56
 	ld   bc, $0008                                   ; $55f6: $01 $08 $00
 	call MemCopy                                       ; $55f9: $cd $a9 $09
 	ld   a, $02                                      ; $55fc: $3e $02
@@ -3627,15 +3624,9 @@ jr_004_55ea:
 	ld   a, $20                                      ; $560d: $3e $20
 	ld   b, $21                                      ; $560f: $06 $21
 	ld   c, $00                                      ; $5611: $0e $00
-	push af                                          ; $5613: $f5
-	ld   a, $ab                                      ; $5614: $3e $ab
-	ld   [wFarCallAddr], a                                  ; $5616: $ea $98 $c2
-	ld   a, $44                                      ; $5619: $3e $44
-	ld   [wFarCallAddr+1], a                                  ; $561b: $ea $99 $c2
-	ld   a, $01                                      ; $561e: $3e $01
-	ld   [wFarCallBank], a                                  ; $5620: $ea $9a $c2
-	pop  af                                          ; $5623: $f1
-	call FarCall                                       ; $5624: $cd $62 $09
+
+	M_FarCall Func_01_44ab
+	
 	ld   a, $01                                      ; $5627: $3e $01
 	ld   hl, $0000                                   ; $5629: $21 $00 $00
 	ld   d, h                                        ; $562c: $54
@@ -3661,14 +3652,17 @@ jr_004_55ea:
 	ld   [wGameSubstate], a                                  ; $565b: $ea $a1 $c2
 	ret                                              ; $565e: $c9
 
-
+.data:
 	ld   h, l                                        ; $565f: $65
 	nop                                              ; $5660: $00
 	dec  b                                           ; $5661: $05
 	ld   bc, $6200                                   ; $5662: $01 $00 $62
 	ld   [hl], a                                     ; $5665: $77
-	ld   c, $3e                                      ; $5666: $0e $3e
-	rst  $38                                         ; $5668: $ff
+	db $0e 
+	
+
+Func_04_5667:
+	ld   a, $ff ; $5667: $3e $ff
 	ld   hl, $cc83                                   ; $5669: $21 $83 $cc
 	ld   [hl+], a                                    ; $566c: $22
 	ld   [hl+], a                                    ; $566d: $22
@@ -3719,15 +3713,9 @@ jr_004_569b:
 jr_004_56ab:
 	push de                                          ; $56ab: $d5
 	push hl                                          ; $56ac: $e5
-	push af                                          ; $56ad: $f5
-	ld   a, $a2                                      ; $56ae: $3e $a2
-	ld   [wFarCallAddr], a                                  ; $56b0: $ea $98 $c2
-	ld   a, $71                                      ; $56b3: $3e $71
-	ld   [wFarCallAddr+1], a                                  ; $56b5: $ea $99 $c2
-	ld   a, $0c                                      ; $56b8: $3e $0c
-	ld   [wFarCallBank], a                                  ; $56ba: $ea $9a $c2
-	pop  af                                          ; $56bd: $f1
-	call FarCall                                       ; $56be: $cd $62 $09
+
+	M_FarCall Func_0c_71a2
+	
 	pop  hl                                          ; $56c1: $e1
 	pop  de                                          ; $56c2: $d1
 	or   a                                           ; $56c3: $b7
@@ -3853,49 +3841,42 @@ Call_004_570c:
 	ret                                              ; $5783: $c9
 
 
-Jump_004_5784:
+DormRoomSubstate1:
 	ld   a, [$cc81]                                  ; $5784: $fa $81 $cc
 	push af                                          ; $5787: $f5
-	call Call_004_55a7                               ; $5788: $cd $a7 $55
+	call DormRoomSubstate0                               ; $5788: $cd $a7 $55
 	ld   a, [$cc80]                                  ; $578b: $fa $80 $cc
 	call HLequAddrOfAnimSpriteSpecDetails                                       ; $578e: $cd $76 $30
 	pop  af                                          ; $5791: $f1
 	ld   [$cc81], a                                  ; $5792: $ea $81 $cc
 	ld   b, a                                        ; $5795: $47
 	ld   c, $00                                      ; $5796: $0e $00
-	push af                                          ; $5798: $f5
-	ld   a, $d7                                      ; $5799: $3e $d7
-	ld   [wFarCallAddr], a                                  ; $579b: $ea $98 $c2
-	ld   a, $44                                      ; $579e: $3e $44
-	ld   [wFarCallAddr+1], a                                  ; $57a0: $ea $99 $c2
-	ld   a, $01                                      ; $57a3: $3e $01
-	ld   [wFarCallBank], a                                  ; $57a5: $ea $9a $c2
-	pop  af                                          ; $57a8: $f1
-	call FarCall                                       ; $57a9: $cd $62 $09
+
+	M_FarCall Func_01_44d7
 	ret                                              ; $57ac: $c9
 
 
-Jump_004_57ad:
+DormRoomSubstate2:
 	ld   a, [wWramBank]                                  ; $57ad: $fa $93 $c2
 	push af                                          ; $57b0: $f5
 	ld   a, $07                                      ; $57b1: $3e $07
 	ld   [wWramBank], a                                  ; $57b3: $ea $93 $c2
 	ldh  [rSVBK], a                                  ; $57b6: $e0 $70
 	call ClearOam                                       ; $57b8: $cd $d7 $0d
-	ld   bc, $57cf                                   ; $57bb: $01 $cf $57
+	ld   bc, .return                                   ; $57bb: $01 $cf $57
 	push bc                                          ; $57be: $c5
 	ld   a, [$cc79]                                  ; $57bf: $fa $79 $cc
 	sla  a                                           ; $57c2: $cb $27
 	ld   h, $00                                      ; $57c4: $26 $00
 	ld   l, a                                        ; $57c6: $6f
-	ld   bc, $57dc                                   ; $57c7: $01 $dc $57
+	ld   bc, .table                                   ; $57c7: $01 $dc $57
 	add  hl, bc                                      ; $57ca: $09
 	ld   a, [hl+]                                    ; $57cb: $2a
 	ld   h, [hl]                                     ; $57cc: $66
 	ld   l, a                                        ; $57cd: $6f
 	jp   hl                                          ; $57ce: $e9
 
-
+.return:
 	call Call_004_580e                               ; $57cf: $cd $0e $58
 	call AnimateAllAnimatedSpriteSpecs                                       ; $57d2: $cd $d3 $2e
 	pop  af                                          ; $57d5: $f1
@@ -3903,58 +3884,33 @@ Jump_004_57ad:
 	ldh  [rSVBK], a                                  ; $57d9: $e0 $70
 	ret                                              ; $57db: $c9
 
+.table:
+	dw $58d5
+	dw $5afa
+	dw $5b77
+	dw $5ca7
+	dw $5cfd
+	dw $5d15
+	dw $5d2c
+	dw $5d6a
+	dw $5d97
+	dw $5daf
+	dw $5dc7
+	dw $5e00
+	dw $5fe2
+	dw $6156
+	dw $61de
+	dw $61e1
+	dw $6263
+	dw $6315
+	dw $63d0
+	dw $6469
+	dw $6510
+	dw $6581
+	dw $65c8
+	dw $66af
+	dw $66c9
 
-	push de                                          ; $57dc: $d5
-	ld   e, b                                        ; $57dd: $58
-	ld   a, [$775a]                                  ; $57de: $fa $5a $77
-	ld   e, e                                        ; $57e1: $5b
-	and  a                                           ; $57e2: $a7
-	ld   e, h                                        ; $57e3: $5c
-	db   $fd                                         ; $57e4: $fd
-	ld   e, h                                        ; $57e5: $5c
-	dec  d                                           ; $57e6: $15
-	ld   e, l                                        ; $57e7: $5d
-	inc  l                                           ; $57e8: $2c
-	ld   e, l                                        ; $57e9: $5d
-	ld   l, d                                        ; $57ea: $6a
-	ld   e, l                                        ; $57eb: $5d
-	sub  a                                           ; $57ec: $97
-	ld   e, l                                        ; $57ed: $5d
-	xor  a                                           ; $57ee: $af
-	ld   e, l                                        ; $57ef: $5d
-	rst  ToBoot                                         ; $57f0: $c7
-	ld   e, l                                        ; $57f1: $5d
-	nop                                              ; $57f2: $00
-	ld   e, [hl]                                     ; $57f3: $5e
-	ldh  [c], a                                      ; $57f4: $e2
-	ld   e, a                                        ; $57f5: $5f
-	ld   d, [hl]                                     ; $57f6: $56
-	ld   h, c                                        ; $57f7: $61
-	sbc  $61                                         ; $57f8: $de $61
-	pop  hl                                          ; $57fa: $e1
-	ld   h, c                                        ; $57fb: $61
-	ld   h, e                                        ; $57fc: $63
-	ld   h, d                                        ; $57fd: $62
-	dec  d                                           ; $57fe: $15
-	ld   h, e                                        ; $57ff: $63
-	ret  nc                                          ; $5800: $d0
-
-	ld   h, e                                        ; $5801: $63
-	ld   l, c                                        ; $5802: $69
-	ld   h, h                                        ; $5803: $64
-	db   $10                                         ; $5804: $10
-	ld   h, l                                        ; $5805: $65
-	add  c                                           ; $5806: $81
-	ld   h, l                                        ; $5807: $65
-	ret  z                                           ; $5808: $c8
-
-	ld   h, l                                        ; $5809: $65
-	xor  a                                           ; $580a: $af
-	ld   h, [hl]                                     ; $580b: $66
-	ret                                              ; $580c: $c9
-
-
-	ld   h, [hl]                                     ; $580d: $66
 
 Call_004_580e:
 	ld   a, $0c                                      ; $580e: $3e $0c
@@ -3969,15 +3925,9 @@ Call_004_580e:
 Call_004_581e:
 	ld   a, [$cc80]                                  ; $581e: $fa $80 $cc
 	call HLequAddrOfAnimSpriteSpecDetails                                       ; $5821: $cd $76 $30
-	push af                                          ; $5824: $f5
-	ld   a, $00                                      ; $5825: $3e $00
-	ld   [wFarCallAddr], a                                  ; $5827: $ea $98 $c2
-	ld   a, $45                                      ; $582a: $3e $45
-	ld   [wFarCallAddr+1], a                                  ; $582c: $ea $99 $c2
-	ld   a, $01                                      ; $582f: $3e $01
-	ld   [wFarCallBank], a                                  ; $5831: $ea $9a $c2
-	pop  af                                          ; $5834: $f1
-	call FarCall                                       ; $5835: $cd $62 $09
+
+	M_FarCall Func_01_4500
+	
 	push af                                          ; $5838: $f5
 	sla  a                                           ; $5839: $cb $27
 	ld   l, a                                        ; $583b: $6f

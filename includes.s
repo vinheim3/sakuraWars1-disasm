@@ -5,6 +5,7 @@ INCLUDE "include/macros.s"
 
 newcharmap English
 charmap "\n", $0d
+charmap " ", $10
 charmap "0", $11
 charmap "1", $12
 charmap "2", $13

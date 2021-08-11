@@ -19,3 +19,7 @@
 ;徳 - 682/6c6 - 0x169/
 
 ; bank 24 - battle text
+; rgbgfx -o en_saveScreen.2bpp en_saveScreen.png
+; rgbgfx -o en_titleMenuScreenOpts.2bpp -h en_titleMenuScreenOpts.png
+; rgbgfx -o en_settings.2bpp -h en_settings.png
+; rgbgfx -o en_titleScreen.2bpp -u -T en_titleScreen.png
