@@ -184,10 +184,17 @@ class ScriptExtractor:
                 comps.append(f"Rpn{binopName}")
             elif ctrl == 1:
                 byteToPush = self.get_script_byte()
-                comps.append(f"RpnPush ${byteToPush:02x}")
+                comps.append(f"RpnPushSpecialRamByte ${byteToPush:02x}")
+            elif ctrl == 2:
+                param = self.get_script_byte()
+                comps.append(f"Rpn03 ${param:02x}")
             elif ctrl == 3:
                 param = self.get_script_byte()
                 comps.append(f"Rpn03 ${param:02x}")
+            elif ctrl == 4:
+                paramH = self.get_script_byte()
+                paramL = self.get_script_byte()
+                comps.append(f"Rpn04 ${paramH:02x}, ${paramL:02x}")
             elif ctrl == 6:
                 paramH = self.get_script_byte()
                 paramL = self.get_script_byte()
@@ -221,6 +228,8 @@ class ScriptExtractor:
                         break
                     elif char < 8:
                         char = self.get_script_byte()
+                    elif char == 8:
+                        cond = self.get_script_byte()
                     elif char == 0x0a:
                         style = self.get_script_byte()
                     elif char < 0x10:
@@ -240,6 +249,20 @@ class ScriptExtractor:
                     "rpn": rpn_comps,
                 }
 
+            elif op == 6:
+                ref = self.get_script_byte() + self.get_script_byte() * 0x100
+                self.jumpAddresses.append(ref)
+
+                self.instructions[currOpAddress] = {
+                    "name": "ScriptOpt_Jump",
+                    "params": "r",
+                    "ref": ref,
+                }
+                jumps = list(filter(lambda item: item >= self.offset, self.jumpAddresses))
+                if not list(jumps):
+                    break
+                self.offset = min(jumps)
+
             elif op == 7:
                 ref = self.get_script_byte() + self.get_script_byte() * 0x100
                 self.jumpAddresses.append(ref)
@@ -251,12 +274,43 @@ class ScriptExtractor:
                     "rpn": rpn_comps,
                 }
 
+            elif op == 0x19:
+                q = self.get_script_byte()
+                numOpts = self.get_script_byte()
+                for i in range(numOpts):
+                    while True:
+                        char = self.get_script_byte()
+                        if char == 0:
+                            break
+                        elif char < 8:
+                            char = self.get_script_byte()
+                        # elif char == 8:
+                        #     cond = self.get_script_byte()
+                        # elif char == 0x0a:
+                        #     style = self.get_script_byte()
+                        # elif char < 0x10:
+                        #     pass
+                    self.offset += 1
+                self.instructions[currOpAddress] = {
+                    "name": "ScriptOpt_TimedQuestion",
+                    "params": "bb"+"t"*numOpts+"b",
+                }
+
             elif op in self.simpleCodes:
                 params = self.simpleCodes[op]['params']
                 for param in params:
                     if param == 'b':
                         self.offset += 1
                 self.instructions[currOpAddress] = self.simpleCodes[op]
+
+            elif op == 0x1d:
+                self.offset += 2
+                rpn_comps = self.handleRPN()
+                self.instructions[currOpAddress] = {
+                    "name": "ScriptOpt_1d", 
+                    "params": "bbR",
+                    "rpn": rpn_comps,
+                }
 
             else:
                 raise Exception(f"opcode ${op:02x}")
@@ -321,6 +375,8 @@ class ScriptExtractor:
                             param_comps.append(f"${b2:02x}")
                         else:
                             param_comps.append(f"${byte:02x}")
+
+                    # param_comps.append(f"; {address+1}")
                 else:
                     raise Exception(f"param: {param}")
 

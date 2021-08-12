@@ -1571,7 +1571,6 @@ Call_009_4a16:
 	ld   a, $ff                                      ; $4a2b: $3e $ff
 	ret                                              ; $4a2d: $c9
 
-
 Jump_009_4a2e:
 	ld   hl, $dc9c                                   ; $4a2e: $21 $9c $dc
 	xor  a                                           ; $4a31: $af
@@ -1608,7 +1607,6 @@ jr_009_4a5d:
 	ld   a, $ff                                      ; $4a5d: $3e $ff
 	ret                                              ; $4a5f: $c9
 
-
 jr_009_4a60:
 	ld   a, [hl]                                     ; $4a60: $7e
 	swap a                                           ; $4a61: $cb $37
@@ -1635,15 +1633,9 @@ jr_009_4a60:
 	push hl                                          ; $4a7d: $e5
 	ld   hl, $4000                                   ; $4a7e: $21 $00 $40
 	add  hl, bc                                      ; $4a81: $09
-	push af                                          ; $4a82: $f5
-	ld   a, $b3                                      ; $4a83: $3e $b3
-	ld   [wFarCallAddr], a                                  ; $4a85: $ea $98 $c2
-	ld   a, $44                                      ; $4a88: $3e $44
-	ld   [wFarCallAddr+1], a                                  ; $4a8a: $ea $99 $c2
-	ld   a, $08                                      ; $4a8d: $3e $08
-	ld   [wFarCallBank], a                                  ; $4a8f: $ea $9a $c2
-	pop  af                                          ; $4a92: $f1
-	call FarCall                                       ; $4a93: $cd $62 $09
+
+	M_FarCall Func_08_44b3
+
 	pop  hl                                          ; $4a96: $e1
 	or   a                                           ; $4a97: $b7
 	jr   z, jr_009_4a5d                              ; $4a98: $28 $c3

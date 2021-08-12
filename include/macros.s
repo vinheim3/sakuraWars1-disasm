@@ -95,6 +95,11 @@ macro ScriptOpt_05
     db $05, \1, \2
 endm
 
+macro ScriptOpt_Jump
+    db $06
+    dw \1
+endm
+
 macro ScriptOpt_JumpIfCalcValIsNon0
     db $07
     dw \1-SCRIPT_START
@@ -128,8 +133,16 @@ macro ScriptOpt_13
     db $13, \1
 endm
 
+macro ScriptOpt_TimedQuestion
+    db $19, \1, \2
+endm
+
 macro ScriptOpt_1c
     db $1c, \1, \2, \3
+endm
+
+macro ScriptOpt_1d
+    db $1d, \1, \2
 endm
 
 macro ScriptOpt_2c
@@ -144,8 +157,16 @@ macro RpnPush
     db $01, \1
 endm
 
+macro RpnPushSpecialRamByte
+    db $02, \1
+endm
+
 macro Rpn03
     db $03, \1
+endm
+
+macro Rpn04
+    db $04, \1, \2
 endm
 
 macro Rpn06

@@ -684,7 +684,7 @@ ScriptEngineTable:
 	ds 5, 0
 	;
 	ScriptOpData ScriptOpcode18, $03
-	ScriptOpData ScriptOpcode19, $00
+	ScriptOpData ScriptOpcode19_TimedQuestion, $00
 	;
 	ScriptOpData ScriptOpcode1a, $01
 	;
@@ -729,7 +729,7 @@ ScriptEngineTable:
 	ScriptOpData ScriptOpcode34_PreSpecifiedDelay, $01
 
 
-;
+Func_08_44b3::
 	ld   [wBaseScriptBank], a                                  ; $44b3: $ea $8c $cb
 	ld   [wCurrScriptBank], a                                  ; $44b6: $ea $8f $cb
 	ld   a, h                                        ; $44b9: $7c
@@ -5221,7 +5221,7 @@ ScriptOpcode18_Main:
 	ret                                              ; $622f: $c9
 
 
-ScriptOpcode19_Init:
+ScriptOpcode19_TimedQuestion_Init:
 	ld   a, [wWramBank]                                  ; $6230: $fa $93 $c2
 	push af                                          ; $6233: $f5
 	ld   a, $02                                      ; $6234: $3e $02
@@ -5423,7 +5423,7 @@ Table_08_638e:
 	db $02, $01, $00
 
 
-ScriptOpcode19_Main:
+ScriptOpcode19_TimedQuestion_Main:
 	xor  a                                           ; $63a0: $af
 	ld   [wScriptEngineContsRunningThisMainLoop], a                                  ; $63a1: $ea $52 $cb
 	ld   a, [$cb88]                                  ; $63a4: $fa $88 $cb

@@ -95,7 +95,7 @@ DEF ASST_1 = $01
 DEF SND_01 = $01
 
 ; --
-; -- MISC
+; -- Misc
 ; --
 
 DEF RESET_DATA_YES_X = $2c
