@@ -613,6 +613,33 @@
                             rowsShown: 32,
                             canvasHeight: 32 * 8,
                         },
+                        {
+                            name: "Dorm Room (gs $45)",
+                            sources: [
+                                ['rleXorCopy', 0x93, 0x4930, 0xd000],
+                                ['simpleCopy', 0x00, 0xd000, 0x8800, 0x1000, 'memory', 'memory'],
+
+                                ['rleXorCopy', 0x9d, 0x4000, 0xd000],
+                                ['simpleCopy', 0x00, 0xd000, 0x0000, 0x0800, 'memory', 'vram1'],
+
+                                ['rleXorCopy', 0x92, 0x752c, 0xd000],
+                                ['simpleCopy', 0x00, 0xd000, 0x0800, 0x1000, 'memory', 'vram1'],
+
+                                ['screenCopy', 0x99, 0x72f0, 0xd800, 'rom', 'memory', 0x14, 0x20],
+                                ['screenCopy', 0x99, 0x72f0+0x280, 0xdc00, 'rom', 'memory', 0x14, 0x20],
+                                //['screenCopy', 0x99, 0x77f0, 0xd800, 'rom', 'memory', 0x14, 0x20],
+                                //['screenCopy', 0x99, 0x77f0+0x280, 0xdc00, 'rom', 'memory', 0x14, 0x20],
+
+                                ['simpleCopy', 0x00, 0xd800, 0x1800, 0x400, 'memory', 'vram1'],
+                                ['simpleCopy', 0x00, 0xdc00, 0x9800, 0x400, 'memory', 'memory'],
+                                
+                                ['simpleCopy', 0xa3, 0x6d4c, 0x0000, 0x40, 'rom', 'bgPalettes'],
+                                //['simpleCopy', 0xa3, 0x6dcc, 0x0000, 0x40, 'rom', 'bgPalettes'],
+                            ],
+                            isGBC: true,
+                            rowsShown: 32,
+                            canvasHeight: 32 * 8,
+                        },
                     ],
                 },
                 methods: {

@@ -12760,7 +12760,7 @@ Jump_0e5_79aa:
 	ld   [hl], $96                                   ; $7b7d: $36 $96
 	ld   l, d                                        ; $7b7f: $6a
 	rst  $28                                         ; $7b80: $ef
-	jp   c, $cc79                                    ; $7b81: $da $79 $cc
+	jp   c, wDormRoomAnimationStep                                    ; $7b81: $da $79 $cc
 
 	sub  [hl]                                        ; $7b84: $96
 	ld   a, b                                        ; $7b85: $78

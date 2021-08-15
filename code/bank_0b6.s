@@ -8902,7 +8902,7 @@ Call_0b6_69e7:
 	cp   $71                                         ; $6aa1: $fe $71
 	ld   de, $3911                                   ; $6aa3: $11 $11 $39
 	adc  $cb                                         ; $6aa6: $ce $cb
-	jp   z, $cc79                                    ; $6aa8: $ca $79 $cc
+	jp   z, wDormRoomAnimationStep                                    ; $6aa8: $ca $79 $cc
 
 	rst  $38                                         ; $6aab: $ff
 	db   $db                                         ; $6aac: $db

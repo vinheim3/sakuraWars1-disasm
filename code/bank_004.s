@@ -3577,23 +3577,35 @@ GameState45_DormRoom::
 	jp   z, DormRoomSubstate2                            ; $55a4: $ca $ad $57
 
 DormRoomSubstate0:
+;
 	ld   a, $07                                      ; $55a7: $3e $07
 	call SafeSetAudVolForMultipleChannels                                       ; $55a9: $cd $e0 $1c
+
+;
 	call ClearDisplayRegsAllowVBlankInt                                       ; $55ac: $cd $59 $0b
 	ld   a, $87                                      ; $55af: $3e $87
 	ld   [wLCDC], a                                  ; $55b1: $ea $03 $c2
 	call TurnOnLCD                                       ; $55b4: $cd $09 $09
+
+;
 	ld   a, $01                                      ; $55b7: $3e $01
 	ld   hl, $7000                                   ; $55b9: $21 $00 $70
 	ld   de, wBGPalettes                                   ; $55bc: $11 $de $c2
 	ld   bc, $0080                                   ; $55bf: $01 $80 $00
 	call FarMemCopy                                       ; $55c2: $cd $b2 $09
+
 	ld   bc, $003f                                   ; $55c5: $01 $3f $00
 	call SetBGandOBJPaletteRangesToUpdate                                       ; $55c8: $cd $aa $04
+
+;
 	ld   a, $ff                                      ; $55cb: $3e $ff
 	ld   [wInGameInputsEnabled], a                                  ; $55cd: $ea $0e $c2
+
+;
 	call ClearOam                                       ; $55d0: $cd $d7 $0d
 	call ClearBaseAnimSpriteSpecDetails                                       ; $55d3: $cd $c9 $2e
+
+;
 	call Func_04_5667                                       ; $55d6: $cd $67 $56
 	ld   hl, $c602                                   ; $55d9: $21 $02 $c6
 	ld   de, $cc83                                   ; $55dc: $11 $83 $cc
@@ -3611,34 +3623,44 @@ DormRoomSubstate0:
 	dec  b                                           ; $55ed: $05
 	jr   nz, .loop_55e1                             ; $55ee: $20 $f1
 
+;
 	ld   de, $c642                                   ; $55f0: $11 $42 $c6
 	ld   hl, .data                                   ; $55f3: $21 $5f $56
 	ld   bc, $0008                                   ; $55f6: $01 $08 $00
 	call MemCopy                                       ; $55f9: $cd $a9 $09
+
+;
 	ld   a, $02                                      ; $55fc: $3e $02
 	ld   hl, $0000                                   ; $55fe: $21 $00 $00
 	ld   de, $c642                                   ; $5601: $11 $42 $c6
 	call ReserveBaseAnimSpriteSpecAndInstance                                       ; $5604: $cd $4b $2f
 	ld   [$cc80], a                                  ; $5607: $ea $80 $cc
 	call StartAnimatingAnimatedSpriteSpec                                       ; $560a: $cd $14 $30
+
+;
 	ld   a, $20                                      ; $560d: $3e $20
 	ld   b, $21                                      ; $560f: $06 $21
 	ld   c, $00                                      ; $5611: $0e $00
 
 	M_FarCall Func_01_44ab
 	
+;
 	ld   a, $01                                      ; $5627: $3e $01
 	ld   hl, $0000                                   ; $5629: $21 $00 $00
 	ld   d, h                                        ; $562c: $54
 	ld   e, l                                        ; $562d: $5d
 	call ReserveBaseAnimSpriteSpecAndInstance                                       ; $562e: $cd $4b $2f
 	ld   [$cc93], a                                  ; $5631: $ea $93 $cc
+
+;
 	ld   a, $01                                      ; $5634: $3e $01
 	ld   hl, $0000                                   ; $5636: $21 $00 $00
 	ld   d, h                                        ; $5639: $54
 	ld   e, l                                        ; $563a: $5d
 	call ReserveBaseAnimSpriteSpecAndInstance                                       ; $563b: $cd $4b $2f
 	ld   [$cc94], a                                  ; $563e: $ea $94 $cc
+
+;
 	ld   a, $a0                                      ; $5641: $3e $a0
 	ld   [$cc7f], a                                  ; $5643: $ea $7f $cc
 	xor  a                                           ; $5646: $af
@@ -3646,8 +3668,10 @@ DormRoomSubstate0:
 	ld   [$cc81], a                                  ; $564a: $ea $81 $cc
 	ld   [$cc82], a                                  ; $564d: $ea $82 $cc
 	ld   [$cc89], a                                  ; $5650: $ea $89 $cc
-	ld   [$cc79], a                                  ; $5653: $ea $79 $cc
-	ld   [$cc7a], a                                  ; $5656: $ea $7a $cc
+	ld   [wDormRoomAnimationStep], a                                  ; $5653: $ea $79 $cc
+	ld   [wDormRoomMiscCounterIdx], a                                  ; $5656: $ea $7a $cc
+
+;
 	ld   a, $02                                      ; $5659: $3e $02
 	ld   [wGameSubstate], a                                  ; $565b: $ea $a1 $c2
 	ret                                              ; $565e: $c9
@@ -3842,6 +3866,7 @@ Call_004_570c:
 
 
 DormRoomSubstate1:
+;
 	ld   a, [$cc81]                                  ; $5784: $fa $81 $cc
 	push af                                          ; $5787: $f5
 	call DormRoomSubstate0                               ; $5788: $cd $a7 $55
@@ -3849,6 +3874,8 @@ DormRoomSubstate1:
 	call HLequAddrOfAnimSpriteSpecDetails                                       ; $578e: $cd $76 $30
 	pop  af                                          ; $5791: $f1
 	ld   [$cc81], a                                  ; $5792: $ea $81 $cc
+
+;
 	ld   b, a                                        ; $5795: $47
 	ld   c, $00                                      ; $5796: $0e $00
 
@@ -3857,59 +3884,70 @@ DormRoomSubstate1:
 
 
 DormRoomSubstate2:
+;
 	ld   a, [wWramBank]                                  ; $57ad: $fa $93 $c2
 	push af                                          ; $57b0: $f5
+
 	ld   a, $07                                      ; $57b1: $3e $07
 	ld   [wWramBank], a                                  ; $57b3: $ea $93 $c2
 	ldh  [rSVBK], a                                  ; $57b6: $e0 $70
-	call ClearOam                                       ; $57b8: $cd $d7 $0d
-	ld   bc, .return                                   ; $57bb: $01 $cf $57
-	push bc                                          ; $57be: $c5
-	ld   a, [$cc79]                                  ; $57bf: $fa $79 $cc
-	sla  a                                           ; $57c2: $cb $27
-	ld   h, $00                                      ; $57c4: $26 $00
-	ld   l, a                                        ; $57c6: $6f
-	ld   bc, .table                                   ; $57c7: $01 $dc $57
-	add  hl, bc                                      ; $57ca: $09
-	ld   a, [hl+]                                    ; $57cb: $2a
-	ld   h, [hl]                                     ; $57cc: $66
-	ld   l, a                                        ; $57cd: $6f
-	jp   hl                                          ; $57ce: $e9
+
+; Start off with clearing oam to be added based on anim step, and push return addr
+	call ClearOam                                                   ; $57b8
+	ld   bc, .return                                                ; $57bb
+	push bc                                                         ; $57be
+
+; HL = addr of curr anim step handler
+	ld   a, [wDormRoomAnimationStep]                                ; $57bf
+	sla  a                                                          ; $57c2
+	ld   h, $00                                                     ; $57c4
+	ld   l, a                                                       ; $57c6
+	ld   bc, .animationHandlers                                                 ; $57c7
+	add  hl, bc                                                     ; $57ca
+
+; Jump to handler
+	ld   a, [hl+]                                                   ; $57cb
+	ld   h, [hl]                                                    ; $57cc
+	ld   l, a                                                       ; $57cd
+	jp   hl                                                         ; $57ce
 
 .return:
+;
 	call Call_004_580e                               ; $57cf: $cd $0e $58
 	call AnimateAllAnimatedSpriteSpecs                                       ; $57d2: $cd $d3 $2e
-	pop  af                                          ; $57d5: $f1
-	ld   [wWramBank], a                                  ; $57d6: $ea $93 $c2
-	ldh  [rSVBK], a                                  ; $57d9: $e0 $70
-	ret                                              ; $57db: $c9
 
-.table:
-	dw $58d5
-	dw $5afa
-	dw $5b77
-	dw $5ca7
-	dw $5cfd
-	dw $5d15
-	dw $5d2c
-	dw $5d6a
-	dw $5d97
-	dw $5daf
-	dw $5dc7
-	dw $5e00
-	dw $5fe2
-	dw $6156
-	dw $61de
-	dw $61e1
-	dw $6263
-	dw $6315
-	dw $63d0
-	dw $6469
-	dw $6510
-	dw $6581
-	dw $65c8
-	dw $66af
-	dw $66c9
+; Restore ram bank
+	pop  af                                                         ; $57d5
+	ld   [wWramBank], a                                             ; $57d6
+	ldh  [rSVBK], a                                                 ; $57d9
+	ret                                                             ; $57db
+
+.animationHandlers:
+	dw DormRoomAnimationHandler00
+	dw DormRoomAnimationHandler01
+	dw DormRoomAnimationHandler02
+	dw DormRoomAnimationHandler03
+	dw DormRoomAnimationHandler04
+	dw DormRoomAnimationHandler05
+	dw DormRoomAnimationHandler06
+	dw DormRoomAnimationHandler07
+	dw DormRoomAnimationHandler08
+	dw DormRoomAnimationHandler09
+	dw DormRoomAnimationHandler0a
+	dw DormRoomAnimationHandler0b
+	dw DormRoomAnimationHandler0c
+	dw DormRoomAnimationHandler0d
+	dw DormRoomAnimationHandler0e
+	dw DormRoomAnimationHandler0f
+	dw DormRoomAnimationHandler10
+	dw DormRoomAnimationHandler11
+	dw DormRoomAnimationHandler12
+	dw DormRoomAnimationHandler13
+	dw DormRoomAnimationHandler14
+	dw DormRoomAnimationHandler15
+	dw DormRoomAnimationHandler16
+	dw DormRoomAnimationHandler17
+	dw DormRoomAnimationHandler18
 
 
 Call_004_580e:
@@ -4017,65 +4055,73 @@ jr_004_58c2:
 	ret                                              ; $58cb: $c9
 
 
-Jump_004_58cc:
-	ld   hl, $cc79                                   ; $58cc: $21 $79 $cc
-	inc  [hl]                                        ; $58cf: $34
-	xor  a                                           ; $58d0: $af
-	ld   [$cc7a], a                                  ; $58d1: $ea $7a $cc
-	ret                                              ; $58d4: $c9
+IncDormRoomAnimationStep:
+	ld   hl, wDormRoomAnimationStep                                 ; $58cc
+	inc  [hl]                                                       ; $58cf
+	xor  a                                                          ; $58d0
+	ld   [wDormRoomMiscCounterIdx], a                               ; $58d1
+	ret                                                             ; $58d4
 
 
-	ld   a, [wWramBank]                                  ; $58d5: $fa $93 $c2
-	push af                                          ; $58d8: $f5
-	ld   a, $07                                      ; $58d9: $3e $07
-	ld   [wWramBank], a                                  ; $58db: $ea $93 $c2
-	ldh  [rSVBK], a                                  ; $58de: $e0 $70
-	ld   bc, $58f6                                   ; $58e0: $01 $f6 $58
-	push bc                                          ; $58e3: $c5
-	ld   hl, $cc7a                                   ; $58e4: $21 $7a $cc
-	ld   a, [hl]                                     ; $58e7: $7e
-	inc  [hl]                                        ; $58e8: $34
-	sla  a                                           ; $58e9: $cb $27
-	ld   h, $00                                      ; $58eb: $26 $00
-	ld   l, a                                        ; $58ed: $6f
-	ld   bc, $58fd                                   ; $58ee: $01 $fd $58
-	add  hl, bc                                      ; $58f1: $09
-	ld   a, [hl+]                                    ; $58f2: $2a
-	ld   h, [hl]                                     ; $58f3: $66
-	ld   l, a                                        ; $58f4: $6f
-	jp   hl                                          ; $58f5: $e9
+DormRoomAnimationHandler00:
+; Push ram bank of buffer area to load tile data on to
+	ld   a, [wWramBank]                                             ; $58d5
+	push af                                                         ; $58d8
 
+	ld   a, BANK(wDormRoomTileDataBuffer)                           ; $58d9
+	ld   [wWramBank], a                                             ; $58db
+	ldh  [rSVBK], a                                                 ; $58de
 
-	pop  af                                          ; $58f6: $f1
-	ld   [wWramBank], a                                  ; $58f7: $ea $93 $c2
-	ldh  [rSVBK], a                                  ; $58fa: $e0 $70
-	ret                                              ; $58fc: $c9
+; Push return address
+	ld   bc, .return                                                ; $58e0
+	push bc                                                         ; $58e3
 
+; Inc data load step, and use original as a double idx into the table
+	ld   hl, wDormRoomMiscCounterIdx                                ; $58e4
+	ld   a, [hl]                                                    ; $58e7
+	inc  [hl]                                                       ; $58e8
+	sla  a                                                          ; $58e9
+	ld   h, $00                                                     ; $58eb
+	ld   l, a                                                       ; $58ed
+	ld   bc, .dataLoadHandlers                                      ; $58ee
+	add  hl, bc                                                     ; $58f1
 
-	inc  de                                          ; $58fd: $13
-	ld   e, c                                        ; $58fe: $59
-	ld   l, $59                                      ; $58ff: $2e $59
-	ld   a, $59                                      ; $5901: $3e $59
-	ld   l, b                                        ; $5903: $68
-	ld   e, c                                        ; $5904: $59
-	ld   a, b                                        ; $5905: $78
-	ld   e, c                                        ; $5906: $59
-	sub  e                                           ; $5907: $93
-	ld   e, c                                        ; $5908: $59
-	and  e                                           ; $5909: $a3
-	ld   e, c                                        ; $590a: $59
-	or   e                                           ; $590b: $b3
-	ld   e, c                                        ; $590c: $59
-	or   a                                           ; $590d: $b7
-	ld   e, c                                        ; $590e: $59
-	ld   a, [bc]                                     ; $590f: $0a
-	ld   e, d                                        ; $5910: $5a
-	dec  a                                           ; $5911: $3d
-	ld   e, d                                        ; $5912: $5a
+; Jump to data load handler
+	ld   a, [hl+]                                                   ; $58f2
+	ld   h, [hl]                                                    ; $58f3
+	ld   l, a                                                       ; $58f4
+	jp   hl                                                         ; $58f5
+
+.return:
+	pop  af                                                         ; $58f6
+	ld   [wWramBank], a                                             ; $58f7
+	ldh  [rSVBK], a                                                 ; $58fa
+	ret                                                             ; $58fc
+
+.dataLoadHandlers:
+	dw .dataLoad0
+	dw .dataLoad1
+	dw .dataLoad2
+	dw .dataLoad3
+	dw .dataLoad4
+	dw .dataLoad5
+	dw .dataLoad6
+	dw .dataLoad7
+	dw .dataLoad8
+	dw .dataLoad9
+	dw .dataLoadA
+
+.dataLoad0:
+;
 	ld   a, $93                                      ; $5913: $3e $93
 	ld   hl, $d000                                   ; $5915: $21 $00 $d0
 	ld   de, $4930                                   ; $5918: $11 $30 $49
+if def(VWF)
+	call DormRoomTileDataBank0_8800h_hook
+else
 	call RLEXorCopy                                       ; $591b: $cd $d2 $09
+endc
+
 	ld   c, $80                                      ; $591e: $0e $80
 	ld   de, $8800                                   ; $5920: $11 $00 $88
 	ld   a, $07                                      ; $5923: $3e $07
@@ -4084,7 +4130,7 @@ Jump_004_58cc:
 	call EnqueueHDMATransfer                                       ; $592a: $cd $7c $02
 	ret                                              ; $592d: $c9
 
-
+.dataLoad1:
 	ld   c, $80                                      ; $592e: $0e $80
 	ld   de, $8e00                                   ; $5930: $11 $00 $8e
 	ld   a, $07                                      ; $5933: $3e $07
@@ -4093,7 +4139,7 @@ Jump_004_58cc:
 	call EnqueueHDMATransfer                                       ; $593a: $cd $7c $02
 	ret                                              ; $593d: $c9
 
-
+.dataLoad2:
 	ld   a, $9d                                      ; $593e: $3e $9d
 	ld   hl, $d000                                   ; $5940: $21 $00 $d0
 	ld   de, $4000                                   ; $5943: $11 $00 $40
@@ -4112,7 +4158,7 @@ Jump_004_58cc:
 	call EnqueueHDMATransfer                                       ; $5964: $cd $7c $02
 	ret                                              ; $5967: $c9
 
-
+.dataLoad3:
 	ld   c, $81                                      ; $5968: $0e $81
 	ld   de, $8200                                   ; $596a: $11 $00 $82
 	ld   a, $07                                      ; $596d: $3e $07
@@ -4121,11 +4167,17 @@ Jump_004_58cc:
 	call EnqueueHDMATransfer                                       ; $5974: $cd $7c $02
 	ret                                              ; $5977: $c9
 
-
+.dataLoad4:
 	ld   a, $92                                      ; $5978: $3e $92
 	ld   hl, $d000                                   ; $597a: $21 $00 $d0
 	ld   de, $752c                                   ; $597d: $11 $2c $75
+if def(VWF)
+	call DormRoomTileDataBank1_8800h_hook
+else
 	call RLEXorCopy                                       ; $5980: $cd $d2 $09
+endc
+
+;
 	ld   c, $81                                      ; $5983: $0e $81
 	ld   de, $8800                                   ; $5985: $11 $00 $88
 	ld   a, $07                                      ; $5988: $3e $07
@@ -4134,7 +4186,7 @@ Jump_004_58cc:
 	call EnqueueHDMATransfer                                       ; $598f: $cd $7c $02
 	ret                                              ; $5992: $c9
 
-
+.dataLoad5:
 	ld   c, $81                                      ; $5993: $0e $81
 	ld   de, $8e00                                   ; $5995: $11 $00 $8e
 	ld   a, $07                                      ; $5998: $3e $07
@@ -4143,7 +4195,7 @@ Jump_004_58cc:
 	call EnqueueHDMATransfer                                       ; $599f: $cd $7c $02
 	ret                                              ; $59a2: $c9
 
-
+.dataLoad6:
 	ld   c, $81                                      ; $59a3: $0e $81
 	ld   de, $9400                                   ; $59a5: $11 $00 $94
 	ld   a, $07                                      ; $59a8: $3e $07
@@ -4152,21 +4204,13 @@ Jump_004_58cc:
 	call EnqueueHDMATransfer                                       ; $59af: $cd $7c $02
 	ret                                              ; $59b2: $c9
 
-
+.dataLoad7:
 	call Call_004_570c                               ; $59b3: $cd $0c $57
 	ret                                              ; $59b6: $c9
 
-
-	push af                                          ; $59b7: $f5
-	ld   a, $3e                                      ; $59b8: $3e $3e
-	ld   [wFarCallAddr], a                                  ; $59ba: $ea $98 $c2
-	ld   a, $45                                      ; $59bd: $3e $45
-	ld   [wFarCallAddr+1], a                                  ; $59bf: $ea $99 $c2
-	ld   a, $09                                      ; $59c2: $3e $09
-	ld   [wFarCallBank], a                                  ; $59c4: $ea $9a $c2
-	pop  af                                          ; $59c7: $f1
-	call FarCall                                       ; $59c8: $cd $62 $09
-	jr   nc, jr_004_59e3                             ; $59cb: $30 $16
+.dataLoad8:
+	M_FarCall Call_009_453e
+	jr   nc, .br_59e3                             ; $59cb: $30 $16
 
 	ld   hl, $d800                                   ; $59cd: $21 $00 $d8
 	ld   a, $99                                      ; $59d0: $3e $99
@@ -4175,9 +4219,9 @@ Jump_004_58cc:
 	call FarCopyLayout                                       ; $59d8: $cd $2c $0b
 	ld   hl, $dc00                                   ; $59db: $21 $00 $dc
 	call FarCopyLayout                                       ; $59de: $cd $2c $0b
-	jr   jr_004_59f7                                 ; $59e1: $18 $14
+	jr   .cont_59f7                                 ; $59e1: $18 $14
 
-jr_004_59e3:
+.br_59e3:
 	ld   hl, $d800                                   ; $59e3: $21 $00 $d8
 	ld   a, $99                                      ; $59e6: $3e $99
 	ld   de, $77f0                                   ; $59e8: $11 $f0 $77
@@ -4186,8 +4230,12 @@ jr_004_59e3:
 	ld   hl, $dc00                                   ; $59f1: $21 $00 $dc
 	call FarCopyLayout                                       ; $59f4: $cd $2c $0b
 
-jr_004_59f7:
+.cont_59f7:
+if def(VWF)
+	call DormRoomLayoutHook
+else
 	call Call_004_5a7d                               ; $59f7: $cd $7d $5a
+endc
 	ld   c, $81                                      ; $59fa: $0e $81
 	ld   de, $9800                                   ; $59fc: $11 $00 $98
 	ld   a, $07                                      ; $59ff: $3e $07
@@ -4196,12 +4244,12 @@ jr_004_59f7:
 	call EnqueueHDMATransfer                                       ; $5a06: $cd $7c $02
 	ret                                              ; $5a09: $c9
 
-
+.dataLoad9:
 	ld   hl, $dfa5                                   ; $5a0a: $21 $a5 $df
 	ld   de, $afe1                                   ; $5a0d: $11 $e1 $af
 	ld   b, $05                                      ; $5a10: $06 $05
 
-jr_004_5a12:
+.loop_5a12:
 	ld   a, [de]                                     ; $5a12: $1a
 	inc  de                                          ; $5a13: $13
 	push bc                                          ; $5a14: $c5
@@ -4222,7 +4270,7 @@ jr_004_5a12:
 	pop  hl                                          ; $5a28: $e1
 	pop  bc                                          ; $5a29: $c1
 	dec  b                                           ; $5a2a: $05
-	jr   nz, jr_004_5a12                             ; $5a2b: $20 $e5
+	jr   nz, .loop_5a12                             ; $5a2b: $20 $e5
 
 	ld   c, $80                                      ; $5a2d: $0e $80
 	ld   de, $9800                                   ; $5a2f: $11 $00 $98
@@ -4232,34 +4280,21 @@ jr_004_5a12:
 	call EnqueueHDMATransfer                                       ; $5a39: $cd $7c $02
 	ret                                              ; $5a3c: $c9
 
-
+.dataLoadA:
 	call TurnOffLCD                                       ; $5a3d: $cd $e3 $08
 	ld   a, $84                                      ; $5a40: $3e $84
 	ld   b, $0c                                      ; $5a42: $06 $0c
 	ld   c, $0e                                      ; $5a44: $0e $0e
 	ld   de, $0600                                   ; $5a46: $11 $00 $06
 	ld   hl, $9800                                   ; $5a49: $21 $00 $98
-	push af                                          ; $5a4c: $f5
-	ld   a, $79                                      ; $5a4d: $3e $79
-	ld   [wFarCallAddr], a                                  ; $5a4f: $ea $98 $c2
-	ld   a, $5b                                      ; $5a52: $3e $5b
-	ld   [wFarCallAddr+1], a                                  ; $5a54: $ea $99 $c2
-	ld   a, $0c                                      ; $5a57: $3e $0c
-	ld   [wFarCallBank], a                                  ; $5a59: $ea $9a $c2
-	pop  af                                          ; $5a5c: $f1
-	call FarCall                                       ; $5a5d: $cd $62 $09
+
+	M_FarCall Func_0c_5b79
+	
 	call TurnOnLCD                                       ; $5a60: $cd $09 $09
 	ld   hl, $afd0                                   ; $5a63: $21 $d0 $af
-	push af                                          ; $5a66: $f5
-	ld   a, $cb                                      ; $5a67: $3e $cb
-	ld   [wFarCallAddr], a                                  ; $5a69: $ea $98 $c2
-	ld   a, $5b                                      ; $5a6c: $3e $5b
-	ld   [wFarCallAddr+1], a                                  ; $5a6e: $ea $99 $c2
-	ld   a, $0c                                      ; $5a71: $3e $0c
-	ld   [wFarCallBank], a                                  ; $5a73: $ea $9a $c2
-	pop  af                                          ; $5a76: $f1
-	call FarCall                                       ; $5a77: $cd $62 $09
-	jp   Jump_004_58cc                               ; $5a7a: $c3 $cc $58
+
+	M_FarCall Func_0c_5bcb
+	jp   IncDormRoomAnimationStep                               ; $5a7a: $c3 $cc $58
 
 
 Call_004_5a7d:
@@ -4359,9 +4394,10 @@ Call_004_5aed:
 	ret                                              ; $5af9: $c9
 
 
+DormRoomAnimationHandler01:
 	ld   hl, $cc7f                                   ; $5afa: $21 $7f $cc
 	dec  [hl]                                        ; $5afd: $35
-	ld   a, [$cc7a]                                  ; $5afe: $fa $7a $cc
+	ld   a, [wDormRoomMiscCounterIdx]                                  ; $5afe: $fa $7a $cc
 	or   a                                           ; $5b01: $b7
 	jr   nz, jr_004_5b4e                             ; $5b02: $20 $4a
 
@@ -4400,7 +4436,7 @@ jr_004_5b36:
 	call FarLoadPaletteValsFadeToValsAndSetFadeSpeed                                       ; $5b4b: $cd $48 $07
 
 jr_004_5b4e:
-	ld   hl, $cc7a                                   ; $5b4e: $21 $7a $cc
+	ld   hl, wDormRoomMiscCounterIdx                                   ; $5b4e: $21 $7a $cc
 	ld   a, [hl]                                     ; $5b51: $7e
 	inc  [hl]                                        ; $5b52: $34
 	cp   $3f                                         ; $5b53: $fe $3f
@@ -4421,9 +4457,10 @@ jr_004_5b60:
 	call FarMemCopy                                       ; $5b6b: $cd $b2 $09
 	ld   bc, $003f                                   ; $5b6e: $01 $3f $00
 	call SetBGandOBJPaletteRangesToUpdate                                       ; $5b71: $cd $aa $04
-	jp   Jump_004_58cc                               ; $5b74: $c3 $cc $58
+	jp   IncDormRoomAnimationStep                               ; $5b74: $c3 $cc $58
 
 
+DormRoomAnimationHandler02:
 	call Call_004_570c                               ; $5b77: $cd $0c $57
 	ld   a, [$cc80]                                  ; $5b7a: $fa $80 $cc
 	call HLequAddrOfAnimSpriteSpecDetails                                       ; $5b7d: $cd $76 $30
@@ -4493,20 +4530,20 @@ jr_004_5b60:
 	sub  e                                           ; $5bec: $93
 	ld   e, h                                        ; $5bed: $5c
 	ld   a, $04                                      ; $5bee: $3e $04
-	ld   [$cc79], a                                  ; $5bf0: $ea $79 $cc
+	ld   [wDormRoomAnimationStep], a                                  ; $5bf0: $ea $79 $cc
 	xor  a                                           ; $5bf3: $af
-	ld   [$cc7a], a                                  ; $5bf4: $ea $7a $cc
+	ld   [wDormRoomMiscCounterIdx], a                                  ; $5bf4: $ea $7a $cc
 	ret                                              ; $5bf7: $c9
 
 
 	ld   a, $05                                      ; $5bf8: $3e $05
-	ld   [$cc79], a                                  ; $5bfa: $ea $79 $cc
+	ld   [wDormRoomAnimationStep], a                                  ; $5bfa: $ea $79 $cc
 	xor  a                                           ; $5bfd: $af
-	ld   [$cc7a], a                                  ; $5bfe: $ea $7a $cc
+	ld   [wDormRoomMiscCounterIdx], a                                  ; $5bfe: $ea $7a $cc
 	ret                                              ; $5c01: $c9
 
 
-	jp   Jump_004_58cc                               ; $5c02: $c3 $cc $58
+	jp   IncDormRoomAnimationStep                               ; $5c02: $c3 $cc $58
 
 
 	push af                                          ; $5c05: $f5
@@ -4540,9 +4577,9 @@ jr_004_5b60:
 	ld   [wWramBank], a                                  ; $5c39: $ea $93 $c2
 	ldh  [rSVBK], a                                  ; $5c3c: $e0 $70
 	ld   a, $06                                      ; $5c3e: $3e $06
-	ld   [$cc79], a                                  ; $5c40: $ea $79 $cc
+	ld   [wDormRoomAnimationStep], a                                  ; $5c40: $ea $79 $cc
 	xor  a                                           ; $5c43: $af
-	ld   [$cc7a], a                                  ; $5c44: $ea $7a $cc
+	ld   [wDormRoomMiscCounterIdx], a                                  ; $5c44: $ea $7a $cc
 	ret                                              ; $5c47: $c9
 
 
@@ -4561,9 +4598,9 @@ jr_004_5b60:
 	ld   [wWramBank], a                                  ; $5c62: $ea $93 $c2
 	ldh  [rSVBK], a                                  ; $5c65: $e0 $70
 	ld   a, $07                                      ; $5c67: $3e $07
-	ld   [$cc79], a                                  ; $5c69: $ea $79 $cc
+	ld   [wDormRoomAnimationStep], a                                  ; $5c69: $ea $79 $cc
 	xor  a                                           ; $5c6c: $af
-	ld   [$cc7a], a                                  ; $5c6d: $ea $7a $cc
+	ld   [wDormRoomMiscCounterIdx], a                                  ; $5c6d: $ea $7a $cc
 	ret                                              ; $5c70: $c9
 
 
@@ -4579,28 +4616,29 @@ jr_004_5b60:
 	pop  af                                          ; $5c85: $f1
 	call FarCall                                       ; $5c86: $cd $62 $09
 	ld   a, $08                                      ; $5c89: $3e $08
-	ld   [$cc79], a                                  ; $5c8b: $ea $79 $cc
+	ld   [wDormRoomAnimationStep], a                                  ; $5c8b: $ea $79 $cc
 	xor  a                                           ; $5c8e: $af
-	ld   [$cc7a], a                                  ; $5c8f: $ea $7a $cc
+	ld   [wDormRoomMiscCounterIdx], a                                  ; $5c8f: $ea $7a $cc
 	ret                                              ; $5c92: $c9
 
 
 	ld   a, $09                                      ; $5c93: $3e $09
-	ld   [$cc79], a                                  ; $5c95: $ea $79 $cc
+	ld   [wDormRoomAnimationStep], a                                  ; $5c95: $ea $79 $cc
 	xor  a                                           ; $5c98: $af
-	ld   [$cc7a], a                                  ; $5c99: $ea $7a $cc
+	ld   [wDormRoomMiscCounterIdx], a                                  ; $5c99: $ea $7a $cc
 	ret                                              ; $5c9c: $c9
 
 
 Jump_004_5c9d:
 jr_004_5c9d:
 	ld   a, $15                                      ; $5c9d: $3e $15
-	ld   [$cc79], a                                  ; $5c9f: $ea $79 $cc
+	ld   [wDormRoomAnimationStep], a                                  ; $5c9f: $ea $79 $cc
 	xor  a                                           ; $5ca2: $af
-	ld   [$cc7a], a                                  ; $5ca3: $ea $7a $cc
+	ld   [wDormRoomMiscCounterIdx], a                                  ; $5ca3: $ea $7a $cc
 	ret                                              ; $5ca6: $c9
 
 
+DormRoomAnimationHandler03:
 	ld   hl, $cc89                                   ; $5ca7: $21 $89 $cc
 	ld   a, [hl]                                     ; $5caa: $7e
 	cp   $01                                         ; $5cab: $fe $01
@@ -4640,12 +4678,13 @@ jr_004_5cd2:
 
 jr_004_5cf3:
 	ld   a, $02                                      ; $5cf3: $3e $02
-	ld   [$cc79], a                                  ; $5cf5: $ea $79 $cc
+	ld   [wDormRoomAnimationStep], a                                  ; $5cf5: $ea $79 $cc
 	xor  a                                           ; $5cf8: $af
-	ld   [$cc7a], a                                  ; $5cf9: $ea $7a $cc
+	ld   [wDormRoomMiscCounterIdx], a                                  ; $5cf9: $ea $7a $cc
 	ret                                              ; $5cfc: $c9
 
 
+DormRoomAnimationHandler04:
 	xor  a                                           ; $5cfd: $af
 	ld   [$cc91], a                                  ; $5cfe: $ea $91 $cc
 	ld   a, $01                                      ; $5d01: $3e $01
@@ -4653,12 +4692,13 @@ jr_004_5cf3:
 	ld   a, $07                                      ; $5d06: $3e $07
 	ld   [$cc8b], a                                  ; $5d08: $ea $8b $cc
 	ld   a, $0a                                      ; $5d0b: $3e $0a
-	ld   [$cc79], a                                  ; $5d0d: $ea $79 $cc
+	ld   [wDormRoomAnimationStep], a                                  ; $5d0d: $ea $79 $cc
 	xor  a                                           ; $5d10: $af
-	ld   [$cc7a], a                                  ; $5d11: $ea $7a $cc
+	ld   [wDormRoomMiscCounterIdx], a                                  ; $5d11: $ea $7a $cc
 	ret                                              ; $5d14: $c9
 
 
+DormRoomAnimationHandler05:
 	xor  a                                           ; $5d15: $af
 	ld   [$cc91], a                                  ; $5d16: $ea $91 $cc
 	ld   a, $01                                      ; $5d19: $3e $01
@@ -4666,12 +4706,13 @@ jr_004_5cf3:
 	xor  a                                           ; $5d1e: $af
 	ld   [$cc8b], a                                  ; $5d1f: $ea $8b $cc
 	ld   a, $0a                                      ; $5d22: $3e $0a
-	ld   [$cc79], a                                  ; $5d24: $ea $79 $cc
+	ld   [wDormRoomAnimationStep], a                                  ; $5d24: $ea $79 $cc
 	xor  a                                           ; $5d27: $af
-	ld   [$cc7a], a                                  ; $5d28: $ea $7a $cc
+	ld   [wDormRoomMiscCounterIdx], a                                  ; $5d28: $ea $7a $cc
 	ret                                              ; $5d2b: $c9
 
 
+DormRoomAnimationHandler06:
 	xor  a                                           ; $5d2c: $af
 	ld   [$cc91], a                                  ; $5d2d: $ea $91 $cc
 	ld   a, $01                                      ; $5d30: $3e $01
@@ -4705,12 +4746,13 @@ jr_004_5cf3:
 
 Jump_004_5d60:
 	ld   a, $0a                                      ; $5d60: $3e $0a
-	ld   [$cc79], a                                  ; $5d62: $ea $79 $cc
+	ld   [wDormRoomAnimationStep], a                                  ; $5d62: $ea $79 $cc
 	xor  a                                           ; $5d65: $af
-	ld   [$cc7a], a                                  ; $5d66: $ea $7a $cc
+	ld   [wDormRoomMiscCounterIdx], a                                  ; $5d66: $ea $7a $cc
 	ret                                              ; $5d69: $c9
 
 
+DormRoomAnimationHandler07:
 	xor  a                                           ; $5d6a: $af
 	ld   [$cc91], a                                  ; $5d6b: $ea $91 $cc
 	ld   [$cc8a], a                                  ; $5d6e: $ea $8a $cc
@@ -4737,12 +4779,13 @@ jr_004_5d89:
 	jr   nz, jr_004_5d7b                             ; $5d8b: $20 $ee
 
 	ld   a, $0a                                      ; $5d8d: $3e $0a
-	ld   [$cc79], a                                  ; $5d8f: $ea $79 $cc
+	ld   [wDormRoomAnimationStep], a                                  ; $5d8f: $ea $79 $cc
 	xor  a                                           ; $5d92: $af
-	ld   [$cc7a], a                                  ; $5d93: $ea $7a $cc
+	ld   [wDormRoomMiscCounterIdx], a                                  ; $5d93: $ea $7a $cc
 	ret                                              ; $5d96: $c9
 
 
+DormRoomAnimationHandler08:
 	xor  a                                           ; $5d97: $af
 	ld   [$cc91], a                                  ; $5d98: $ea $91 $cc
 	ld   a, $01                                      ; $5d9b: $3e $01
@@ -4750,12 +4793,13 @@ jr_004_5d89:
 	ld   a, $0e                                      ; $5da0: $3e $0e
 	ld   [$cc8b], a                                  ; $5da2: $ea $8b $cc
 	ld   a, $0a                                      ; $5da5: $3e $0a
-	ld   [$cc79], a                                  ; $5da7: $ea $79 $cc
+	ld   [wDormRoomAnimationStep], a                                  ; $5da7: $ea $79 $cc
 	xor  a                                           ; $5daa: $af
-	ld   [$cc7a], a                                  ; $5dab: $ea $7a $cc
+	ld   [wDormRoomMiscCounterIdx], a                                  ; $5dab: $ea $7a $cc
 	ret                                              ; $5dae: $c9
 
 
+DormRoomAnimationHandler09:
 	xor  a                                           ; $5daf: $af
 	ld   [$cc91], a                                  ; $5db0: $ea $91 $cc
 	ld   a, $01                                      ; $5db3: $3e $01
@@ -4763,17 +4807,18 @@ jr_004_5d89:
 	ld   a, $0f                                      ; $5db8: $3e $0f
 	ld   [$cc8b], a                                  ; $5dba: $ea $8b $cc
 	ld   a, $0a                                      ; $5dbd: $3e $0a
-	ld   [$cc79], a                                  ; $5dbf: $ea $79 $cc
+	ld   [wDormRoomAnimationStep], a                                  ; $5dbf: $ea $79 $cc
 	xor  a                                           ; $5dc2: $af
-	ld   [$cc7a], a                                  ; $5dc3: $ea $7a $cc
+	ld   [wDormRoomMiscCounterIdx], a                                  ; $5dc3: $ea $7a $cc
 	ret                                              ; $5dc6: $c9
 
 
+DormRoomAnimationHandler0a:
 	ld   hl, $cc7f                                   ; $5dc7: $21 $7f $cc
 	ld   a, [hl]                                     ; $5dca: $7e
 	add  $08                                         ; $5dcb: $c6 $08
 	ld   [hl], a                                     ; $5dcd: $77
-	ld   a, [$cc7a]                                  ; $5dce: $fa $7a $cc
+	ld   a, [wDormRoomMiscCounterIdx]                                  ; $5dce: $fa $7a $cc
 	or   a                                           ; $5dd1: $b7
 	jr   nz, jr_004_5ded                             ; $5dd2: $20 $19
 
@@ -4789,11 +4834,11 @@ jr_004_5d89:
 	call FarLoadPaletteValsFadeToValsAndSetFadeSpeed                                       ; $5dea: $cd $48 $07
 
 jr_004_5ded:
-	ld   hl, $cc7a                                   ; $5ded: $21 $7a $cc
+	ld   hl, wDormRoomMiscCounterIdx                                   ; $5ded: $21 $7a $cc
 	ld   a, [hl]                                     ; $5df0: $7e
 	inc  [hl]                                        ; $5df1: $34
 	cp   $07                                         ; $5df2: $fe $07
-	jp   nc, Jump_004_58cc                           ; $5df4: $d2 $cc $58
+	jp   nc, IncDormRoomAnimationStep                           ; $5df4: $d2 $cc $58
 
 	and  $01                                         ; $5df7: $e6 $01
 	ret  nz                                          ; $5df9: $c0
@@ -4802,6 +4847,7 @@ jr_004_5ded:
 	jp   FadePalettesAndSetRangeToUpdate                                       ; $5dfd: $c3 $32 $08
 
 
+DormRoomAnimationHandler0b:
 	call Call_004_6113                               ; $5e00: $cd $13 $61
 	call Call_004_5fd2                               ; $5e03: $cd $d2 $5f
 	ld   h, $00                                      ; $5e06: $26 $00
@@ -4813,12 +4859,12 @@ jr_004_5ded:
 	add  hl, bc                                      ; $5e0d: $09
 	ld   bc, $5edd                                   ; $5e0e: $01 $dd $5e
 	add  hl, bc                                      ; $5e11: $09
-	ld   a, [$cc7a]                                  ; $5e12: $fa $7a $cc
+	ld   a, [wDormRoomMiscCounterIdx]                                  ; $5e12: $fa $7a $cc
 	or   a                                           ; $5e15: $b7
 	jr   nz, jr_004_5e45                             ; $5e16: $20 $2d
 
 	inc  a                                           ; $5e18: $3c
-	ld   [$cc7a], a                                  ; $5e19: $ea $7a $cc
+	ld   [wDormRoomMiscCounterIdx], a                                  ; $5e19: $ea $7a $cc
 	ld   a, $04                                      ; $5e1c: $3e $04
 	call FarGetAddrBank                                       ; $5e1e: $cd $09 $0b
 	ld   d, h                                        ; $5e21: $54
@@ -4915,7 +4961,7 @@ jr_004_5e9f:
 	ld   [wFarCallBank], a                                  ; $5ed3: $ea $9a $c2
 	pop  af                                          ; $5ed6: $f1
 	call FarCall                                       ; $5ed7: $cd $62 $09
-	jp   Jump_004_58cc                               ; $5eda: $c3 $cc $58
+	jp   IncDormRoomAnimationStep                               ; $5eda: $c3 $cc $58
 
 
 	sbc  l                                           ; $5edd: $9d
@@ -5101,6 +5147,7 @@ Call_004_5fd2:
 	ret                                              ; $5fe1: $c9
 
 
+DormRoomAnimationHandler0c:
 	ld   a, [wInGameButtonsPressed]                                  ; $5fe2: $fa $10 $c2
 	bit  0, a                                        ; $5fe5: $cb $47
 	jr   nz, jr_004_6033                             ; $5fe7: $20 $4a
@@ -5137,9 +5184,9 @@ jr_004_6002:
 
 jr_004_6014:
 	ld   a, $0b                                      ; $6014: $3e $0b
-	ld   [$cc79], a                                  ; $6016: $ea $79 $cc
+	ld   [wDormRoomAnimationStep], a                                  ; $6016: $ea $79 $cc
 	xor  a                                           ; $6019: $af
-	ld   [$cc7a], a                                  ; $601a: $ea $7a $cc
+	ld   [wDormRoomMiscCounterIdx], a                                  ; $601a: $ea $7a $cc
 	ret                                              ; $601d: $c9
 
 
@@ -5162,9 +5209,9 @@ jr_004_6033:
 	ld   a, $21                                      ; $6033: $3e $21
 	call Func_1adf                                       ; $6035: $cd $df $1a
 	ld   a, $15                                      ; $6038: $3e $15
-	ld   [$cc79], a                                  ; $603a: $ea $79 $cc
+	ld   [wDormRoomAnimationStep], a                                  ; $603a: $ea $79 $cc
 	xor  a                                           ; $603d: $af
-	ld   [$cc7a], a                                  ; $603e: $ea $7a $cc
+	ld   [wDormRoomMiscCounterIdx], a                                  ; $603e: $ea $7a $cc
 	call Call_004_5fd2                               ; $6041: $cd $d2 $5f
 	push af                                          ; $6044: $f5
 	sla  a                                           ; $6045: $cb $27
@@ -5204,7 +5251,7 @@ Jump_004_6053:
 	pop  af                                          ; $608a: $f1
 	ld   [wWramBank], a                                  ; $608b: $ea $93 $c2
 	ldh  [rSVBK], a                                  ; $608e: $e0 $70
-	jp   Jump_004_58cc                               ; $6090: $c3 $cc $58
+	jp   IncDormRoomAnimationStep                               ; $6090: $c3 $cc $58
 
 
 	cp   b                                           ; $6093: $b8
@@ -5287,9 +5334,9 @@ Jump_004_6053:
 	ld   a, $0a                                      ; $6104: $3e $0a
 	ld   [$cc82], a                                  ; $6106: $ea $82 $cc
 	ld   a, $0e                                      ; $6109: $3e $0e
-	ld   [$cc79], a                                  ; $610b: $ea $79 $cc
+	ld   [wDormRoomAnimationStep], a                                  ; $610b: $ea $79 $cc
 	xor  a                                           ; $610e: $af
-	ld   [$cc7a], a                                  ; $610f: $ea $7a $cc
+	ld   [wDormRoomMiscCounterIdx], a                                  ; $610f: $ea $7a $cc
 	ret                                              ; $6112: $c9
 
 
@@ -5333,12 +5380,17 @@ Call_004_6113:
 	nop                                              ; $6150: $00
 	ld   bc, $0302                                   ; $6151: $01 $02 $03
 	ld   [bc], a                                     ; $6154: $02
-	ld   bc, $7f21                                   ; $6155: $01 $21 $7f
-	call z, $d67e                                    ; $6158: $cc $7e $d6
-	ld   [$fa77], sp                                 ; $615b: $08 $77 $fa
-	ld   a, d                                        ; $615e: $7a
-	call z, $20b7                                    ; $615f: $cc $b7 $20
-	ld   c, e                                        ; $6162: $4b
+	db $01 
+	
+	
+DormRoomAnimationHandler0d:
+	ld   hl, $cc7f ; $6156: $21 $7f $cc
+	ld   a, [hl]                                    ; $6159: $7e
+	sub  $08                                    ; $615a: $d6 $08
+	ld   [hl], a                                 ; $615c: $77
+	ld   a, [wDormRoomMiscCounterIdx]                                 ; $615d: $fa $7a $cc
+	or   a                                    ; $6160: $b7
+	jr   nz, jr_004_61ae                                    ; $6161: $20 $4b
 	ld   a, $a3                                      ; $6163: $3e $a3
 	ld   de, $d000                                   ; $6165: $11 $00 $d0
 	ld   hl, $6d4c                                   ; $6168: $21 $4c $6d
@@ -5372,7 +5424,9 @@ jr_004_6195:
 	ld   c, $00                                      ; $61a6: $0e $00
 	ld   de, $d000                                   ; $61a8: $11 $00 $d0
 	call FarLoadPaletteValsFadeToValsAndSetFadeSpeed                                       ; $61ab: $cd $48 $07
-	ld   hl, $cc7a                                   ; $61ae: $21 $7a $cc
+
+jr_004_61ae:
+	ld   hl, wDormRoomMiscCounterIdx                                   ; $61ae: $21 $7a $cc
 	ld   a, [hl]                                     ; $61b1: $7e
 	inc  [hl]                                        ; $61b2: $34
 	cp   $07                                         ; $61b3: $fe $07
@@ -5394,16 +5448,18 @@ jr_004_61c0:
 	ld   bc, $003f                                   ; $61ce: $01 $3f $00
 	call SetBGandOBJPaletteRangesToUpdate                                       ; $61d1: $cd $aa $04
 	ld   a, $02                                      ; $61d4: $3e $02
-	ld   [$cc79], a                                  ; $61d6: $ea $79 $cc
+	ld   [wDormRoomAnimationStep], a                                  ; $61d6: $ea $79 $cc
 	xor  a                                           ; $61d9: $af
-	ld   [$cc7a], a                                  ; $61da: $ea $7a $cc
+	ld   [wDormRoomMiscCounterIdx], a                                  ; $61da: $ea $7a $cc
 	ret                                              ; $61dd: $c9
 
 
-	jp   Jump_004_58cc                               ; $61de: $c3 $cc $58
+DormRoomAnimationHandler0e:
+	jp   IncDormRoomAnimationStep                               ; $61de: $c3 $cc $58
 
 
-	ld   hl, $cc7a                                   ; $61e1: $21 $7a $cc
+DormRoomAnimationHandler0f:
+	ld   hl, wDormRoomMiscCounterIdx                                   ; $61e1: $21 $7a $cc
 	ld   a, [hl]                                     ; $61e4: $7e
 	inc  [hl]                                        ; $61e5: $34
 	sla  a                                           ; $61e6: $cb $27
@@ -5468,9 +5524,10 @@ Call_004_6201:
 	call FarCopyLayout                                       ; $6257: $cd $2c $0b
 	ld   hl, $dc00                                   ; $625a: $21 $00 $dc
 	call FarCopyLayout                                       ; $625d: $cd $2c $0b
-	jp   Jump_004_58cc                               ; $6260: $c3 $cc $58
+	jp   IncDormRoomAnimationStep                               ; $6260: $c3 $cc $58
 
 
+DormRoomAnimationHandler10:
 	ld   de, $d400                                   ; $6263: $11 $00 $d4
 	ld   hl, $d8e0                                   ; $6266: $21 $e0 $d8
 	ld   bc, $00e0                                   ; $6269: $01 $e0 $00
@@ -5479,7 +5536,7 @@ Call_004_6201:
 	ld   hl, $dce0                                   ; $6272: $21 $e0 $dc
 	ld   bc, $00e0                                   ; $6275: $01 $e0 $00
 	call MemCopy                                       ; $6278: $cd $a9 $09
-	ld   hl, $cc7a                                   ; $627b: $21 $7a $cc
+	ld   hl, wDormRoomMiscCounterIdx                                   ; $627b: $21 $7a $cc
 	ld   a, [hl]                                     ; $627e: $7e
 	inc  [hl]                                        ; $627f: $34
 	cp   $14                                         ; $6280: $fe $14
@@ -5503,7 +5560,7 @@ Call_004_6201:
 	call Func_3006                                       ; $62af: $cd $06 $30
 	ld   a, [$cc94]                                  ; $62b2: $fa $94 $cc
 	call Func_3006                                       ; $62b5: $cd $06 $30
-	jp   Jump_004_58cc                               ; $62b8: $c3 $cc $58
+	jp   IncDormRoomAnimationStep                               ; $62b8: $c3 $cc $58
 
 
 jr_004_62bb:
@@ -5524,7 +5581,7 @@ jr_004_62c8:
 	cp   $14                                         ; $62d0: $fe $14
 	jr   c, jr_004_62c8                              ; $62d2: $38 $f4
 
-	ld   hl, $cc7a                                   ; $62d4: $21 $7a $cc
+	ld   hl, wDormRoomMiscCounterIdx                                   ; $62d4: $21 $7a $cc
 	ld   a, $14                                      ; $62d7: $3e $14
 	sub  [hl]                                        ; $62d9: $96
 	ld   b, $00                                      ; $62da: $06 $00
@@ -5570,7 +5627,8 @@ jr_004_630e:
 	ret                                              ; $6314: $c9
 
 
-	ld   hl, $cc7a                                   ; $6315: $21 $7a $cc
+DormRoomAnimationHandler11:
+	ld   hl, wDormRoomMiscCounterIdx                                   ; $6315: $21 $7a $cc
 	ld   a, [hl]                                     ; $6318: $7e
 	inc  [hl]                                        ; $6319: $34
 	sla  a                                           ; $631a: $cb $27
@@ -5662,9 +5720,10 @@ jr_004_630e:
 	call FarCopyLayout                                       ; $63c4: $cd $2c $0b
 	ld   hl, $d300                                   ; $63c7: $21 $00 $d3
 	call FarCopyLayout                                       ; $63ca: $cd $2c $0b
-	jp   Jump_004_58cc                               ; $63cd: $c3 $cc $58
+	jp   IncDormRoomAnimationStep                               ; $63cd: $c3 $cc $58
 
 
+DormRoomAnimationHandler12:
 	ld   a, $0c                                      ; $63d0: $3e $0c
 	ld   [wSpriteGroup], a                                  ; $63d2: $ea $1a $c2
 	ld   bc, $4c54                                   ; $63d5: $01 $54 $4c
@@ -5678,7 +5737,7 @@ jr_004_630e:
 	ld   hl, $d100                                   ; $63ec: $21 $00 $d1
 	ld   bc, $00e0                                   ; $63ef: $01 $e0 $00
 	call MemCopy                                       ; $63f2: $cd $a9 $09
-	ld   hl, $cc7a                                   ; $63f5: $21 $7a $cc
+	ld   hl, wDormRoomMiscCounterIdx                                   ; $63f5: $21 $7a $cc
 	ld   a, [hl]                                     ; $63f8: $7e
 	inc  [hl]                                        ; $63f9: $34
 	cp   $14                                         ; $63fa: $fe $14
@@ -5696,7 +5755,7 @@ jr_004_630e:
 	ld   hl, $d100                                   ; $6414: $21 $00 $d1
 	ld   b, $0e                                      ; $6417: $06 $0e
 	call EnqueueHDMATransfer                                       ; $6419: $cd $7c $02
-	jp   Jump_004_58cc                               ; $641c: $c3 $cc $58
+	jp   IncDormRoomAnimationStep                               ; $641c: $c3 $cc $58
 
 
 jr_004_641f:
@@ -5715,7 +5774,7 @@ jr_004_6429:
 	cp   $14                                         ; $6431: $fe $14
 	jr   c, jr_004_6429                              ; $6433: $38 $f4
 
-	ld   hl, $cc7a                                   ; $6435: $21 $7a $cc
+	ld   hl, wDormRoomMiscCounterIdx                                   ; $6435: $21 $7a $cc
 	ld   b, $00                                      ; $6438: $06 $00
 	ld   c, [hl]                                     ; $643a: $4e
 	ld   hl, $d500                                   ; $643b: $21 $00 $d5
@@ -5745,12 +5804,13 @@ jr_004_643f:
 	ret                                              ; $6468: $c9
 
 
+DormRoomAnimationHandler13:
 	ld   a, $0c                                      ; $6469: $3e $0c
 	ld   [wSpriteGroup], a                                  ; $646b: $ea $1a $c2
 	ld   a, [wInGameButtonsHeld]                                  ; $646e: $fa $0f $c2
 	bit  1, a                                        ; $6471: $cb $4f
 	call nz, Call_004_6493                           ; $6473: $c4 $93 $64
-	ld   a, [$cc7a]                                  ; $6476: $fa $7a $cc
+	ld   a, [wDormRoomMiscCounterIdx]                                  ; $6476: $fa $7a $cc
 	push af                                          ; $6479: $f5
 	call Call_004_6493                               ; $647a: $cd $93 $64
 	pop  af                                          ; $647d: $f1
@@ -5759,15 +5819,15 @@ jr_004_643f:
 	add  b                                           ; $6483: $80
 	ld   bc, $4c54                                   ; $6484: $01 $54 $4c
 	call LoadSpriteFromMainTable                                       ; $6487: $cd $16 $0e
-	ld   a, [$cc7a]                                  ; $648a: $fa $7a $cc
+	ld   a, [wDormRoomMiscCounterIdx]                                  ; $648a: $fa $7a $cc
 	cp   $a1                                         ; $648d: $fe $a1
 	ret  c                                           ; $648f: $d8
 
-	jp   Jump_004_58cc                               ; $6490: $c3 $cc $58
+	jp   IncDormRoomAnimationStep                               ; $6490: $c3 $cc $58
 
 
 Call_004_6493:
-	ld   hl, $cc7a                                   ; $6493: $21 $7a $cc
+	ld   hl, wDormRoomMiscCounterIdx                                   ; $6493: $21 $7a $cc
 	ld   a, [hl]                                     ; $6496: $7e
 	inc  [hl]                                        ; $6497: $34
 	or   a                                           ; $6498: $b7
@@ -5859,12 +5919,13 @@ Call_004_64e9:
 	ret                                              ; $650f: $c9
 
 
+DormRoomAnimationHandler14:
 	ld   a, $0c                                      ; $6510: $3e $0c
 	ld   [wSpriteGroup], a                                  ; $6512: $ea $1a $c2
 	ld   bc, $4c54                                   ; $6515: $01 $54 $4c
 	ld   a, $3c                                      ; $6518: $3e $3c
 	call LoadSpriteFromMainTable                                       ; $651a: $cd $16 $0e
-	ld   a, [$cc7a]                                  ; $651d: $fa $7a $cc
+	ld   a, [wDormRoomMiscCounterIdx]                                  ; $651d: $fa $7a $cc
 	or   a                                           ; $6520: $b7
 	jr   nz, jr_004_653b                             ; $6521: $20 $18
 
@@ -5880,7 +5941,7 @@ Call_004_64e9:
 	call FarLoadPaletteValsFadeToValsAndSetFadeSpeed                                       ; $6538: $cd $48 $07
 
 jr_004_653b:
-	ld   hl, $cc7a                                   ; $653b: $21 $7a $cc
+	ld   hl, wDormRoomMiscCounterIdx                                   ; $653b: $21 $7a $cc
 	ld   a, [hl]                                     ; $653e: $7e
 	cpl                                              ; $653f: $2f
 	swap a                                           ; $6540: $cb $37
@@ -5917,13 +5978,14 @@ jr_004_6563:
 	ld   bc, $003f                                   ; $6571: $01 $3f $00
 	call SetBGandOBJPaletteRangesToUpdate                                       ; $6574: $cd $aa $04
 	ld   a, $16                                      ; $6577: $3e $16
-	ld   [$cc79], a                                  ; $6579: $ea $79 $cc
+	ld   [wDormRoomAnimationStep], a                                  ; $6579: $ea $79 $cc
 	xor  a                                           ; $657c: $af
-	ld   [$cc7a], a                                  ; $657d: $ea $7a $cc
+	ld   [wDormRoomMiscCounterIdx], a                                  ; $657d: $ea $7a $cc
 	ret                                              ; $6580: $c9
 
 
-	ld   a, [$cc7a]                                  ; $6581: $fa $7a $cc
+DormRoomAnimationHandler15:
+	ld   a, [wDormRoomMiscCounterIdx]                                  ; $6581: $fa $7a $cc
 	or   a                                           ; $6584: $b7
 	jr   nz, jr_004_659f                             ; $6585: $20 $18
 
@@ -5939,7 +6001,7 @@ jr_004_6563:
 	call FarLoadPaletteValsFadeToValsAndSetFadeSpeed                                       ; $659c: $cd $48 $07
 
 jr_004_659f:
-	ld   hl, $cc7a                                   ; $659f: $21 $7a $cc
+	ld   hl, wDormRoomMiscCounterIdx                                   ; $659f: $21 $7a $cc
 	ld   a, [hl]                                     ; $65a2: $7e
 	inc  [hl]                                        ; $65a3: $34
 	cp   $3f                                         ; $65a4: $fe $3f
@@ -5960,9 +6022,10 @@ jr_004_65b1:
 	call FarMemCopy                                       ; $65bc: $cd $b2 $09
 	ld   bc, $003f                                   ; $65bf: $01 $3f $00
 	call SetBGandOBJPaletteRangesToUpdate                                       ; $65c2: $cd $aa $04
-	jp   Jump_004_58cc                               ; $65c5: $c3 $cc $58
+	jp   IncDormRoomAnimationStep                               ; $65c5: $c3 $cc $58
 
 
+DormRoomAnimationHandler16:
 	ld   a, [$cc82]                                  ; $65c8: $fa $82 $cc
 	sla  a                                           ; $65cb: $cb $27
 	ld   h, $00                                      ; $65cd: $26 $00
@@ -6098,37 +6161,39 @@ jr_004_65ee:
 	ret                                              ; $66ae: $c9
 
 
+DormRoomAnimationHandler17:
 	ld   hl, $cc7f                                   ; $66af: $21 $7f $cc
 	ld   a, [hl]                                     ; $66b2: $7e
 	sub  $04                                         ; $66b3: $d6 $04
 	ld   [hl], a                                     ; $66b5: $77
-	ld   hl, $cc7a                                   ; $66b6: $21 $7a $cc
+	ld   hl, wDormRoomMiscCounterIdx                                   ; $66b6: $21 $7a $cc
 	ld   a, [hl]                                     ; $66b9: $7e
 	inc  [hl]                                        ; $66ba: $34
 	cp   $10                                         ; $66bb: $fe $10
 	ret  c                                           ; $66bd: $d8
 
 	ld   a, [$cc7b]                                  ; $66be: $fa $7b $cc
-	ld   [$cc79], a                                  ; $66c1: $ea $79 $cc
+	ld   [wDormRoomAnimationStep], a                                  ; $66c1: $ea $79 $cc
 	xor  a                                           ; $66c4: $af
-	ld   [$cc7a], a                                  ; $66c5: $ea $7a $cc
+	ld   [wDormRoomMiscCounterIdx], a                                  ; $66c5: $ea $7a $cc
 	ret                                              ; $66c8: $c9
 
 
+DormRoomAnimationHandler18:
 	ld   hl, $cc7f                                   ; $66c9: $21 $7f $cc
 	ld   a, [hl]                                     ; $66cc: $7e
 	add  $04                                         ; $66cd: $c6 $04
 	ld   [hl], a                                     ; $66cf: $77
-	ld   hl, $cc7a                                   ; $66d0: $21 $7a $cc
+	ld   hl, wDormRoomMiscCounterIdx                                   ; $66d0: $21 $7a $cc
 	ld   a, [hl]                                     ; $66d3: $7e
 	inc  [hl]                                        ; $66d4: $34
 	cp   $10                                         ; $66d5: $fe $10
 	ret  c                                           ; $66d7: $d8
 
 	ld   a, [$cc7b]                                  ; $66d8: $fa $7b $cc
-	ld   [$cc79], a                                  ; $66db: $ea $79 $cc
+	ld   [wDormRoomAnimationStep], a                                  ; $66db: $ea $79 $cc
 	xor  a                                           ; $66de: $af
-	ld   [$cc7a], a                                  ; $66df: $ea $7a $cc
+	ld   [wDormRoomMiscCounterIdx], a                                  ; $66df: $ea $7a $cc
 	ret                                              ; $66e2: $c9
 
 
@@ -8805,3 +8870,77 @@ jr_004_7766:
 	xor  a                                           ; $7783: $af
 	ld   [wGameSubstate], a                                  ; $7784: $ea $a1 $c2
 	ret                                              ; $7787: $c9
+
+
+if def(VWF)
+
+DormRoomTileDataBank0_8800h_hook:
+	call RLEXorCopy
+
+	ld   bc, $140
+	ld   de, $d000+$100
+	ld   hl, Gfx_EnDormRoomStatsLabels
+	call MemCopy
+
+	ld   bc, $20
+	ld   de, $d000+$330
+	ld   hl, Gfx_EnDormRoomStatsLabels+$140
+	call MemCopy
+
+	ret
+
+
+DormRoomTileDataBank1_8800h_hook:
+	call RLEXorCopy
+
+; Save
+	ld   bc, $80
+	ld   de, $d000+$380
+	ld   hl, Gfx_EnDormRoomOpts
+	call MemCopy
+
+; Items
+
+; Options
+	ld   bc, $80
+	ld   de, $d000+$200
+	ld   hl, Gfx_EnDormRoomOpts+$100
+	call MemCopy
+
+; Sleep
+	ld   bc, $80
+	ld   de, $d000+$500
+	ld   hl, Gfx_EnDormRoomOpts+$180
+	call MemCopy
+
+	ret
+
+
+DormRoomLayoutHook:
+	call Call_004_5a7d
+
+	ld   a, BANK(TileMap_DormRoomStatsLabels)
+	ldbc 5, 6
+	ld   de, TileMap_DormRoomStatsLabels
+	ld   hl, $dc01
+	call FarCopyLayout
+
+	ret
+
+
+Gfx_EnDormRoomStatsLabels:
+	INCBIN "en_statsLabels.2bpp"
+
+
+Gfx_EnDormRoomOpts:
+	INCBIN "en_dormRoomOpts.2bpp"
+
+
+TileMap_DormRoomStatsLabels:
+	db $90, $91, $92, $93, $a4
+	db $94, $95, $96, $97, $a4
+	db $98, $99, $9a, $9b, $9c
+	db $9d, $9e, $a9, $a9, $a4
+	db $9f, $a0, $a1, $a9, $a4
+	db $a2, $a3, $b3, $b4, $a4
+endc

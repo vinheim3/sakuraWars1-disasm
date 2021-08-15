@@ -409,7 +409,16 @@ wIntroScriptIdx:: ; $cc76
     dw
 
 wcc78:
-    ds $98-$78
+    ds 9-8
+
+wDormRoomAnimationStep:: ; $cc79
+    db
+
+wDormRoomMiscCounterIdx:: ; $cc7a
+    db
+
+wcc7b:
+    ds $98-$7b
 
 wPrologueMainSubSubstate:: ; $cc98
     db
@@ -502,5 +511,10 @@ wTitleScreenTileAttrBuffer:: ; $d000
 
 wTitleScreenTileMapBuffer:: ; $d800
     ds $800
+
+nextu
+
+wDormRoomTileDataBuffer:: ; $d000
+    ds $1000
 
 endu

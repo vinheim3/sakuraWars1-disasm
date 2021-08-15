@@ -23,3 +23,5 @@
 ; rgbgfx -o en_titleMenuScreenOpts.2bpp -h en_titleMenuScreenOpts.png
 ; rgbgfx -o en_settings.2bpp -h en_settings.png
 ; rgbgfx -o en_titleScreen.2bpp -u -T en_titleScreen.png
+; rgbgfx -o en_statsLabels.2bpp en_statsLabels.png
+; rgbgfx -o en_dormRoomOpts.2bpp -h en_dormRoomOpts.png

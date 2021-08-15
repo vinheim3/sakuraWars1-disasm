@@ -4519,6 +4519,9 @@ Call_00c_5ac0:
 	call nc, $8c65                                   ; $5b74: $d4 $65 $8c
 	ld   h, a                                        ; $5b77: $67
 	nop                                              ; $5b78: $00
+
+
+Func_0c_5b79::
 	ld   [$cc3e], a                                  ; $5b79: $ea $3e $cc
 	ld   a, [wWramBank]                                  ; $5b7c: $fa $93 $c2
 	push af                                          ; $5b7f: $f5
@@ -4572,6 +4575,7 @@ jr_00c_5bb2:
 	ret                                              ; $5bca: $c9
 
 
+Func_0c_5bcb::
 	ld   a, [wWramBank]                                  ; $5bcb: $fa $93 $c2
 	push af                                          ; $5bce: $f5
 	ld   a, $02                                      ; $5bcf: $3e $02

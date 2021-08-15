@@ -2185,7 +2185,7 @@ jr_0b2_49ac:
 	ld   d, [hl]                                     ; $49b4: $56
 	ld   b, h                                        ; $49b5: $44
 	ld   sp, $6711                                   ; $49b6: $31 $11 $67
-	ld   de, $cc79                                   ; $49b9: $11 $79 $cc
+	ld   de, wDormRoomAnimationStep                                   ; $49b9: $11 $79 $cc
 	cp   [hl]                                        ; $49bc: $be
 
 jr_0b2_49bd:
