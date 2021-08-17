@@ -2321,7 +2321,7 @@ jr_024_4f43:
 	ld   [$ca89], a                                  ; $4f52: $ea $89 $ca
 	xor  a                                           ; $4f55: $af
 	ld   [$ca76], a                                  ; $4f56: $ea $76 $ca
-	call $7657                                       ; $4f59: $cd $57 $76
+	call Func_24_7657                                       ; $4f59: $cd $57 $76
 	rst  WaitUntilVBlankIntHandledIfLCDOn                                         ; $4f5c: $cf
 	ld   d, $04                                      ; $4f5d: $16 $04
 	ld   a, [$ca70]                                  ; $4f5f: $fa $70 $ca
@@ -2658,7 +2658,7 @@ jr_024_5163:
 
 
 jr_024_51c6:
-	call $7657                                       ; $51c6: $cd $57 $76
+	call Func_24_7657                                       ; $51c6: $cd $57 $76
 	rst  WaitUntilVBlankIntHandledIfLCDOn                                         ; $51c9: $cf
 	ld   d, $04                                      ; $51ca: $16 $04
 	ld   a, [$ca70]                                  ; $51cc: $fa $70 $ca
@@ -3804,7 +3804,7 @@ jr_024_5974:
 	call Call_024_6bdf                               ; $599b: $cd $df $6b
 	ld   hl, wGameSubstate                                   ; $599e: $21 $a1 $c2
 	inc  [hl]                                        ; $59a1: $34
-	call $7657                                       ; $59a2: $cd $57 $76
+	call Func_24_7657                                      ; $59a2: $cd $57 $76
 	ret                                              ; $59a5: $c9
 
 
@@ -8056,7 +8056,7 @@ jr_024_6ff4:
 	inc  [hl]                                        ; $717c: $34
 	dec  [hl]                                        ; $717d: $35
 	ld   [hl], $37                                   ; $717e: $36 $37
-	jr   c, jr_024_71bb                              ; $7180: $38 $39
+	db $38, $39
 
 	ld   a, [hl-]                                    ; $7182: $3a
 	dec  sp                                          ; $7183: $3b
@@ -8097,135 +8097,84 @@ jr_024_6ff4:
 
 
 Table_24_71b0:
-	sbc  h                                           ; $71b0: $9c
-	nop                                              ; $71b1: $00
-	xor  [hl]                                        ; $71b2: $ae
-	nop                                              ; $71b3: $00
-	push bc                                          ; $71b4: $c5
-	nop                                              ; $71b5: $00
-	db   $d3                                         ; $71b6: $d3
-	nop                                              ; $71b7: $00
-	db   $dd                                         ; $71b8: $dd
-	nop                                              ; $71b9: $00
-	rst  $20                                         ; $71ba: $e7
-
-jr_024_71bb:
-	nop                                              ; $71bb: $00
-	db   $f4                                         ; $71bc: $f4
-	nop                                              ; $71bd: $00
-	ld   bc, $1301                                   ; $71be: $01 $01 $13
-	ld   bc, $011e                                   ; $71c1: $01 $1e $01
-	inc  hl                                          ; $71c4: $23
-	ld   bc, $012f                                   ; $71c5: $01 $2f $01
-	dec  sp                                          ; $71c8: $3b
-	ld   bc, $013f                  ; $71c9: $01 $3f $01
-	ld   b, [hl]                                     ; $71cc: $46
-	ld   bc, $0150                                   ; $71cd: $01 $50 $01
-	ld   e, a                                        ; $71d0: $5f
-	ld   bc, $0166                                   ; $71d1: $01 $66 $01
-	ld   l, a                                        ; $71d4: $6f
-	ld   bc, $0181                                   ; $71d5: $01 $81 $01
-	adc  e                                           ; $71d8: $8b
-	ld   bc, $0197                                   ; $71d9: $01 $97 $01
-	and  c                                           ; $71dc: $a1
-	ld   bc, $01a6                                   ; $71dd: $01 $a6 $01
-	xor  e                                           ; $71e0: $ab
-	ld   bc, $01af                                   ; $71e1: $01 $af $01
-	ret  nz                                          ; $71e4: $c0
-
-	ld   bc, $01d1                                   ; $71e5: $01 $d1 $01
-	rst  $20                                         ; $71e8: $e7
-	ld   bc, $01f0                                   ; $71e9: $01 $f0 $01
-	cp   $01                                         ; $71ec: $fe $01
-	jr   jr_024_71f2                                 ; $71ee: $18 $02
-
-	ld   e, $02                                      ; $71f0: $1e $02
-
-jr_024_71f2:
-	dec  l                                           ; $71f2: $2d
-	ld   [bc], a                                     ; $71f3: $02
-	ld   sp, $3c02                                   ; $71f4: $31 $02 $3c
-	ld   [bc], a                                     ; $71f7: $02
-	ld   c, a                                        ; $71f8: $4f
-	ld   [bc], a                                     ; $71f9: $02
-	ld   h, d                                        ; $71fa: $62
-	ld   [bc], a                                     ; $71fb: $02
-	halt                                             ; $71fc: $76
-	ld   [bc], a                                     ; $71fd: $02
-	ld   a, a                                        ; $71fe: $7f
-	ld   [bc], a                                     ; $71ff: $02
-	adc  e                                           ; $7200: $8b
-	ld   [bc], a                                     ; $7201: $02
-	sub  l                                           ; $7202: $95
-	ld   [bc], a                                     ; $7203: $02
-	sbc  a                                           ; $7204: $9f
-	ld   [bc], a                                     ; $7205: $02
-	rst  ToBoot                                         ; $7206: $c7
-	ld   [bc], a                                     ; $7207: $02
-	rst  JumpTable                                         ; $7208: $df
-	ld   [bc], a                                     ; $7209: $02
-	rst  $30                                         ; $720a: $f7
-	ld   [bc], a                                     ; $720b: $02
-	rrca                                             ; $720c: $0f
-	inc  bc                                          ; $720d: $03
-	inc  h                                           ; $720e: $24
-	inc  bc                                          ; $720f: $03
-	dec  a                                           ; $7210: $3d
-	inc  bc                                          ; $7211: $03
-	ld   d, l                                        ; $7212: $55
-	inc  bc                                          ; $7213: $03
-	ld   h, c                                        ; $7214: $61
-	inc  bc                                          ; $7215: $03
-	ld   l, d                                        ; $7216: $6a
-	inc  bc                                          ; $7217: $03
-	ld   [hl], b                                     ; $7218: $70
-	inc  bc                                          ; $7219: $03
-	halt                                             ; $721a: $76
-	inc  bc                                          ; $721b: $03
-	ld   a, h                                        ; $721c: $7c
-	inc  bc                                          ; $721d: $03
-	add  h                                           ; $721e: $84
-	inc  bc                                          ; $721f: $03
-	adc  d                                           ; $7220: $8a
-	inc  bc                                          ; $7221: $03
-	adc  a                                           ; $7222: $8f
-	inc  bc                                          ; $7223: $03
-	sub  l                                           ; $7224: $95
-	inc  bc                                          ; $7225: $03
-	sbc  h                                           ; $7226: $9c
-	inc  bc                                          ; $7227: $03
-	and  [hl]                                        ; $7228: $a6
-	inc  bc                                          ; $7229: $03
-	xor  [hl]                                        ; $722a: $ae
-	inc  bc                                          ; $722b: $03
-	or   [hl]                                        ; $722c: $b6
-	inc  bc                                          ; $722d: $03
-	rst  ToBoot                                         ; $722e: $c7
-	inc  bc                                          ; $722f: $03
-	push de                                          ; $7230: $d5
-	inc  bc                                          ; $7231: $03
-	ld   [$f603], a                                  ; $7232: $ea $03 $f6
-	inc  bc                                          ; $7235: $03
-	rst  $38                                         ; $7236: $ff
-	inc  bc                                          ; $7237: $03
-	dec  c                                           ; $7238: $0d
-	inc  b                                           ; $7239: $04
-	inc  d                                           ; $723a: $14
-	inc  b                                           ; $723b: $04
-	ld   hl, $3804                                   ; $723c: $21 $04 $38
-	inc  b                                           ; $723f: $04
-	ld   b, d                                        ; $7240: $42
-	inc  b                                           ; $7241: $04
-	ld   d, a                                        ; $7242: $57
-	inc  b                                           ; $7243: $04
-	ld   l, e                                        ; $7244: $6b
-	inc  b                                           ; $7245: $04
-	ld   a, c                                        ; $7246: $79
-	inc  b                                           ; $7247: $04
-	add  c                                           ; $7248: $81
-	inc  b                                           ; $7249: $04
-	sub  e                                           ; $724a: $93
-	inc  b                                           ; $724b: $04
+	dw $009c
+	dw $00ae
+	dw $00c5
+	dw $00d3
+	dw $00dd
+	dw $00e7
+	dw $00f4
+	dw $0101
+	dw $0113
+	dw $011e
+	dw $0123
+	dw $012f
+	dw $013b
+	dw $013f
+	dw $0146
+	dw $0150
+	dw $015f
+	dw $0166
+	dw $016f
+	dw $0181
+	dw $018b
+	dw $0197
+	dw $01a1
+	dw $01a6
+	dw $01ab
+	dw $01af
+	dw $01c0
+	dw $01d1
+	dw $01e7
+	dw $01f0
+	dw $01fe
+	dw $0218
+	dw $021e
+	dw $022d
+	dw $0231
+	dw $023c
+	dw $024f
+	dw $0262
+	dw $0276
+	dw $027f
+	dw $028b
+	dw $0295
+	dw $029f
+	dw $02c7
+	dw $02df
+	dw $02f7
+	dw $030f
+	dw $0324
+	dw $033d
+	dw $0355
+	dw $0361
+	dw $036a
+	dw $0370
+	dw $0376
+	dw $037c
+	dw $0384
+	dw $038a
+	dw $038f
+	dw $0395
+	dw $039c
+	dw $03a6
+	dw $03ae
+	dw $03b6
+	dw $03c7
+	dw $03d5
+	dw $03ea
+	dw $03f6
+	dw $03ff
+	dw $040d
+	dw $0414
+	dw $0421
+	dw $0438
+	dw $0442
+	dw $0457
+	dw $046b
+	dw $0479
+	dw $0481
+	dw $0493
 
 
 	sub  [hl]                                        ; $724c: $96
@@ -9132,8 +9081,11 @@ jr_024_75d0:
 	ld   d, d                                        ; $7652: $52
 	ld   e, l                                        ; $7653: $5d
 	ld   l, h                                        ; $7654: $6c
-	ld   a, [$3e00]                                  ; $7655: $fa $00 $3e
-	inc  b                                           ; $7658: $04
+	db $fa, $00 
+	
+	
+Func_24_7657:
+	ld   a, $04 ; $7657: $3e $04
 	ld   [wStartingColorIdxToLoadCompDataFor], a                                  ; $7659: $ea $62 $c3
 	ld   a, $08                                      ; $765c: $3e $08
 	ld   [wNumPaletteColorsToLoadCompDataFor], a                                  ; $765e: $ea $63 $c3

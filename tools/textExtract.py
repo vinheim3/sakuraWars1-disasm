@@ -411,6 +411,23 @@ if __name__ == "__main__":
     _addr = conv(sys.argv[2])
     _scriptNum = sys.argv[3]
 
+    """
+    Extract battle text
+    """
+    rom = getRom()
+    for i in range(0x9c//2):
+        offset = wordIn(rom, bankAddr(0x24, 0x71b0+i*2))
+        try:
+            addToSpreadSheetComps(rom, 0x24, 0x71b0, 'battle', offset, 'Battle')
+        except:
+            print(hex(_addr), hex(i))
+            raise
+    with open('temp.csv', 'w') as f:
+        writer = csv.writer(f)
+        for comp in spreadSheetComps:
+            writer.writerow(comp)
+    exit(0)
+
     # screens = get_script_screens(_bank, _addr, _scriptNum)
 
     # final_str = json.dumps(screens)
