@@ -75,6 +75,9 @@ endm
 
 macro ScriptOpt_DisplayText
     db $01
+endm
+
+macro TEXT
 rept _NARG
 if \1 < $100
     db \1
@@ -89,6 +92,14 @@ endm
 
 macro ScriptOpt_02
     db $02
+endm
+
+macro ScriptOpt_03
+    db $03
+endm
+
+macro ScriptOpt_04
+    db $04
 endm
 
 macro ScriptOpt_05
@@ -129,12 +140,48 @@ macro ScriptOpt_0f
     db $0f, \1, \2
 endm
 
+macro ScriptOpt_10
+    db $10, \1, \2
+endm
+
+macro ScriptOpt_11
+    db $11, \1
+endm
+
+macro ScriptOpt_12
+    db $12, \1
+endm
+
 macro ScriptOpt_13
     db $13, \1
 endm
 
+macro ScriptOpt_14
+    db $14, \1, \2
+endm
+
+macro ScriptOpt_15
+    db $15, \1
+endm
+
+macro ScriptOpt_16
+    db $16, \1
+endm
+
+macro ScriptOpt_UntimedQuestion
+    db $18, \1, \2, \3
+endm
+
 macro ScriptOpt_TimedQuestion
     db $19, \1, \2
+endm
+
+macro ScriptOpt_1a
+    db $1a, \1
+endm
+
+macro ScriptOpt_1b
+    db $1b, \1
 endm
 
 macro ScriptOpt_1c
@@ -145,8 +192,68 @@ macro ScriptOpt_1d
     db $1d, \1, \2
 endm
 
+macro ScriptOpt_1e
+    db $1e
+endm
+
+macro ScriptOpt_20
+    db $20, \1, \2
+endm
+
+macro ScriptOpt_21
+    db $21
+endm
+
+macro ScriptOpt_23
+    db $23, \1
+endm
+
+macro ScriptOpt_25
+    db $25, \1
+endm
+
+macro ScriptOpt_26
+    db $26
+endm
+
+macro ScriptOpt_27
+    db $27, \1
+endm
+
+macro ScriptOpt_28
+    db $28
+endm
+
+macro ScriptOpt_29
+    db $29, \1
+endm
+
+macro ScriptOpt_2a
+    db $2a, \1
+endm
+
+macro ScriptOpt_2b
+    db $2b, \1, \2
+endm
+
 macro ScriptOpt_2c
     db $2c, \1
+endm
+
+macro ScriptOpt_2e
+    db $2e, \1
+endm
+
+macro ScriptOpt_2f
+    db $2f, \1
+endm
+
+macro ScriptOpt_30
+    db $30
+endm
+
+macro ScriptOpt_31
+    db $31, \1, \2
 endm
 
 macro RpnEnd

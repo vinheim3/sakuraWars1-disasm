@@ -45,7 +45,7 @@ def toWords(bs):
 
 
 def getRom():
-    fname = 'sakuraWars1.gbc'
+    fname = 'tools/sakuraWars1.gbc'
     # fname = 'replaced.gbc'
     with open(fname, 'rb') as f:
         data = f.read()

@@ -7060,6 +7060,9 @@ jr_042_5f7a:
 	ld   a, [bc]                                     ; $5f89: $0a
 	nop                                              ; $5f8a: $00
 	nop                                              ; $5f8b: $00
+
+
+
 	rlca                                             ; $5f8c: $07
 	ld   hl, sp+$00                                  ; $5f8d: $f8 $00
 	ld   b, $20                                      ; $5f8f: $06 $20

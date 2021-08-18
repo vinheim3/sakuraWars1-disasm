@@ -7379,7 +7379,6 @@ jr_041_5fc0:
 	nop                                              ; $607c: $00
 	nop                                              ; $607d: $00
 
-
 	StartScript
 
 Script_005::
@@ -7393,100 +7392,129 @@ Script_005::
 	ScriptOpt_LoadScenery $13
 	ScriptOpt_1c $0e, $01, $01
 	ScriptOpt_02
-	ScriptOpt_DisplayText $b6, $b0, $eb, $40e, $3a8, $21, $1c, $a0, $58, $48d, $52, $365, $60, $0d, $52, $6d, $6e, $5b, $9e, $8c, $61, $76, $79, $50, $98, $5a, $76, $54, $0d, $62, $64, $52, $8c, $fc, $67, $9f, $0d
+	ScriptOpt_DisplayText
+		TEXT $b6, $b0, $eb, $40e, $3a8, $21, $1c, $a0, $58, $48d, $52, $365, $60, $0d, $52, $6d, $6e, $5b, $9e, $8c, $61, $76, $79, $50, $98, $5a, $76, $54, $0d, $62, $64, $52, $8c, $fc, $67, $9f, $0d
 	ScriptOpt_ContinuePrompt
 	ScriptOpt_05 $20, $00
 		RpnPush $01
 		RpnEnd
 	ScriptOpt_End
 
-
 ; unused - $60c3
 	nop                                              ; $60c3: $00
 
-if def(VWF)
-else
 	StartScript
 
 Script_006::
-endc
 	ScriptOpt_13 $04
 	ScriptOpt_LoadScenery $93
 	ScriptOpt_0f $00, $01
 	ScriptOpt_02
-	ScriptOpt_DisplayText $a1, $fc, $2a5, $4aa, $90, $52, $52, $413, $2a1, $6e, $78, $fc, $9f
+	ScriptOpt_DisplayText
+		TEXT $a1, $fc, $2a5, $4aa, $90, $52, $52, $413, $2a1, $6e, $78, $fc, $9f
 	ScriptOpt_SetDelay $3c
-	ScriptOpt_DisplayText $0d
+	ScriptOpt_DisplayText
+		TEXT $0d
 	ScriptOpt_ContinuePrompt
 	ScriptOpt_1c $0b, $00, $00
-	ScriptOpt_DisplayText $6b, $61, $7c, $50, $78, $6d, $9e, $6f, $95, $71, $76, $0d, $52, $52, $59, $65, $97, $f9
+	ScriptOpt_DisplayText
+		TEXT $6b, $61, $7c, $50, $78, $6d, $9e, $6f, $95, $71, $76, $0d, $52, $52, $59, $65, $97, $f9
 	ScriptOpt_SetDelay $3c
-	ScriptOpt_DisplayText $0d
+	ScriptOpt_DisplayText
+		TEXT $0d
 	ScriptOpt_ContinuePrompt
 	ScriptOpt_0f $00, $01
-	ScriptOpt_DisplayText $56, $ff, $ff, $f9, $0d, $46d, $7c, $61, $76, $75, $67, $59, $f9
+	ScriptOpt_DisplayText
+		TEXT $56, $ff, $ff, $f9, $0d, $46d, $7c, $61, $76, $75, $67, $59, $f9
 	ScriptOpt_SetDelay $3c
-	ScriptOpt_DisplayText $0d
+	ScriptOpt_DisplayText
+		TEXT $0d
 	ScriptOpt_ContinuePrompt
 	ScriptOpt_1c $0b, $01, $01
-	ScriptOpt_DisplayText $6b, $54, $9e, $50, $78, $6d, $9e, $78, $59, $78, $59, $52, $52, $0d, $90, $7c, $a0, $3a0, $71, $74, $52, $99, $9d, $7b, $9f
+	ScriptOpt_DisplayText
+		TEXT $6b, $54, $9e, $50, $78, $6d, $9e, $78, $59, $78, $59, $52, $52, $0d, $90, $7c, $a0, $3a0, $71, $74, $52, $99, $9d, $7b, $9f
 	ScriptOpt_SetDelay $3c
-	ScriptOpt_DisplayText $0d
+	ScriptOpt_DisplayText
+		TEXT $0d
 	ScriptOpt_ContinuePrompt
 	ScriptOpt_1c $0b, $00, $00
-	ScriptOpt_DisplayText $9d, $6d, $65, $7d, $9e, $408, $28f, $290, $291, $409, $f3, $69e, $31f, $501, $0d, $5f8, $686, $50, $92, $8f, $9f
+	ScriptOpt_DisplayText
+		TEXT $9d, $6d, $65, $7d, $9e, $408, $28f, $290, $291, $409, $f3, $69e, $31f, $501, $0d, $5f8, $686, $50, $92, $8f, $9f
 	ScriptOpt_SetDelay $3c
-	ScriptOpt_DisplayText $0d
+	ScriptOpt_DisplayText
+		TEXT $0d
 	ScriptOpt_ContinuePrompt
-	ScriptOpt_DisplayText $2a5, $9e, $357, $28f, $a0, $293, $71, $74, $9e, $509, $50a, $a0, $0d, $3a0, $71, $6d, $51f, $3b0, $a0, $63, $5a, $65, $74, $52, $99, $0d, $76, $61, $9b, $78, $7c, $96, $9f
+	ScriptOpt_DisplayText
+		TEXT $2a5, $9e, $357, $28f, $a0, $293, $71, $74, $9e, $509, $50a, $a0, $0d, $3a0, $71, $6d, $51f, $3b0, $a0, $63, $5a, $65, $74, $52, $99, $0d, $76, $61, $9b, $78, $7c, $96, $9f
 	ScriptOpt_SetDelay $3c
-	ScriptOpt_DisplayText $0d
+	ScriptOpt_DisplayText
+		TEXT $0d
 	ScriptOpt_ContinuePrompt
-	ScriptOpt_DisplayText $6b, $65, $74, $9e, $4e2, $4b2, $78, $386, $79, $7d, $0d, $408, $28f, $290, $291, $409, $86, $7c, $220, $f8, $29b, $7c, $0d, $40d, $296, $445, $40a, $a0, $58, $280, $52, $65, $74, $52, $99, $7c, $9f
+	ScriptOpt_DisplayText
+		TEXT $6b, $65, $74, $9e, $4e2, $4b2, $78, $386, $79, $7d, $0d, $408, $28f, $290, $291, $409, $86, $7c, $220, $f8, $29b, $7c, $0d, $40d, $296, $445, $40a, $a0, $58, $280, $52, $65, $74, $52, $99, $7c, $9f
 	ScriptOpt_SetDelay $3c
-	ScriptOpt_DisplayText $0d
+	ScriptOpt_DisplayText
+		TEXT $0d
 	ScriptOpt_ContinuePrompt
-	ScriptOpt_DisplayText $77, $54, $59, $65, $97, $f9, $0d, $90, $65, $9e, $50, $78, $6d, $5a, $331, $7e, $9a, $6d, $97, $0d, $40d, $296, $445, $40a, $67, $99, $2a1, $7d, $50, $99, $f9
+	ScriptOpt_DisplayText
+		TEXT $77, $54, $59, $65, $97, $f9, $0d, $90, $65, $9e, $50, $78, $6d, $5a, $331, $7e, $9a, $6d, $97, $0d, $40d, $296, $445, $40a, $67, $99, $2a1, $7d, $50, $99, $f9
 	ScriptOpt_SetDelay $3c
-	ScriptOpt_DisplayText $0d
+	ScriptOpt_DisplayText
+		TEXT $0d
 	ScriptOpt_ContinuePrompt
 	ScriptOpt_1c $0b, $01, $01
-	ScriptOpt_DisplayText $76, $7d, $29d, $71, $74, $90, $9e, $8c, $6e, $34a, $2f5, $79, $0d, $283, $8c, $71, $6d, $9d, $5f, $75, $7d, $78, $52, $7c, $96, $9f
+	ScriptOpt_DisplayText
+		TEXT $76, $7d, $29d, $71, $74, $90, $9e, $8c, $6e, $34a, $2f5, $79, $0d, $283, $8c, $71, $6d, $9d, $5f, $75, $7d, $78, $52, $7c, $96, $9f
 	ScriptOpt_SetDelay $3c
-	ScriptOpt_DisplayText $0d
+	ScriptOpt_DisplayText
+		TEXT $0d
 	ScriptOpt_ContinuePrompt
-	ScriptOpt_DisplayText $357, $28f, $a0, $293, $71, $74, $9e, $6b, $7c, $40b, $75, $0d, $50, $78, $6d, $7c, $3a6, $315, $5a, $220, $479, $2be, $52, $76, $0d, $78, $71, $6d, $97, $36b, $5e4, $a0, $39f, $99, $9d, $9f
+	ScriptOpt_DisplayText
+		TEXT $357, $28f, $a0, $293, $71, $74, $9e, $6b, $7c, $40b, $75, $0d, $50, $78, $6d, $7c, $3a6, $315, $5a, $220, $479, $2be, $52, $76, $0d, $78, $71, $6d, $97, $36b, $5e4, $a0, $39f, $99, $9d, $9f
 	ScriptOpt_SetDelay $3c
-	ScriptOpt_DisplayText $0d
+	ScriptOpt_DisplayText
+		TEXT $0d
 	ScriptOpt_ContinuePrompt
-	ScriptOpt_DisplayText $6b, $7c, $36f, $7d, $9e, $96, $9b, $65, $5d, $0d, $6d, $7c, $8e, $9d, $7b, $9f
+	ScriptOpt_DisplayText
+		TEXT $6b, $7c, $36f, $7d, $9e, $96, $9b, $65, $5d, $0d, $6d, $7c, $8e, $9d, $7b, $9f
 	ScriptOpt_SetDelay $3c
-	ScriptOpt_DisplayText $0d
+	ScriptOpt_DisplayText
+		TEXT $0d
 	ScriptOpt_ContinuePrompt
 	ScriptOpt_0d $00, $00
 	ScriptOpt_0f $00, $01
 	ScriptOpt_2c $10
 	ScriptOpt_LoadScenery $b9
 	ScriptOpt_2c $02
-	ScriptOpt_DisplayText $76, $9e, $52, $54, $61, $76, $5a, $609, $f8, $29b, $34f, $79, $0d, $50, $71, $6d, $a1, $6e, $5f, $77, $ff, $ff, $0d, $8c, $63, $59, $9e, $dc, $f5, $c9, $79, $36b, $5e4, $5a, $ff, $ff
+	ScriptOpt_DisplayText
+		TEXT $76, $9e, $52, $54, $61, $76, $5a, $609, $f8, $29b, $34f, $79, $0d, $50, $71, $6d, $a1, $6e, $5f, $77, $ff, $ff, $0d, $8c, $63, $59, $9e, $dc, $f5, $c9, $79, $36b, $5e4, $5a, $ff, $ff
 	ScriptOpt_SetDelay $3c
-	ScriptOpt_DisplayText $0d
+	ScriptOpt_DisplayText
+		TEXT $0d
 	ScriptOpt_ContinuePrompt
-	ScriptOpt_DisplayText $107, $2e2, $436, $7c, $408, $28f, $290, $291, $409, $86, $7c, $0d, $10, $40d, $296, $445, $40a, $a0, $7b, $5a, $54, $9f, $0d, $10, $408, $28f, $290, $291, $409, $10, $4d7, $421, $220, $5a9, $108
+	ScriptOpt_DisplayText
+		TEXT $107, $2e2, $436, $7c, $408, $28f, $290, $291, $409, $86, $7c, $0d, $10, $40d, $296, $445, $40a, $a0, $7b, $5a, $54, $9f, $0d, $10, $408, $28f, $290, $291, $409, $10, $4d7, $421, $220, $5a9, $108
 	ScriptOpt_SetDelay $3c
-	ScriptOpt_DisplayText $0d
+	ScriptOpt_DisplayText
+		TEXT $0d
 	ScriptOpt_ContinuePrompt
-	ScriptOpt_DisplayText $8c, $63, $59, $9e, $4de, $2a9, $382, $7c, $46d, $5a, $0d, $56, $97, $7e, $9a, $99, $78, $a1, $74, $ff, $ff
+	ScriptOpt_DisplayText
+		TEXT $8c, $63, $59, $9e, $4de, $2a9, $382, $7c, $46d, $5a, $0d, $56, $97, $7e, $9a, $99, $78, $a1, $74, $ff, $ff
 	ScriptOpt_SetDelay $3c
-	ScriptOpt_DisplayText $0d
+	ScriptOpt_DisplayText
+		TEXT $0d
 	ScriptOpt_ContinuePrompt
-	ScriptOpt_DisplayText $50, $7c, $408, $28f, $290, $291, $409, $79, $40d, $296, $445, $40a, $0d, $75, $5b, $99, $78, $a1, $74, $9e, $4be, $7c, $96, $54, $6e, $ff, $ff
+	ScriptOpt_DisplayText
+		TEXT $50, $7c, $408, $28f, $290, $291, $409, $79, $40d, $296, $445, $40a, $0d, $75, $5b, $99, $78, $a1, $74, $9e, $4be, $7c, $96, $54, $6e, $ff, $ff
 	ScriptOpt_SetDelay $3c
-	ScriptOpt_DisplayText $0d
+	ScriptOpt_DisplayText
+		TEXT $0d
 	ScriptOpt_ContinuePrompt
-	ScriptOpt_DisplayText $46d, $7c, $509, $50a, $5a, $77, $9a, $89, $77, $7c, $e4, $cf, $59, $7d, $0d, $9d, $59, $97, $78, $52, $5f, $77, $ff, $ff, $0d, $5a, $a1, $7e, $71, $74, $8d, $96, $54, $fa
+	ScriptOpt_DisplayText
+		TEXT $46d, $7c, $509, $50a, $5a, $77, $9a, $89, $77, $7c, $e4, $cf, $59, $7d, $0d, $9d, $59, $97, $78, $52, $5f, $77, $ff, $ff, $0d, $5a, $a1, $7e, $71, $74, $8d, $96, $54, $fa
 	ScriptOpt_SetDelay $3c
-	ScriptOpt_DisplayText $0d
+	ScriptOpt_DisplayText
+		TEXT $0d
 	ScriptOpt_ContinuePrompt
 	ScriptOpt_SetDelay $3c
 	ScriptOpt_End

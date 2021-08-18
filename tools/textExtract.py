@@ -202,7 +202,7 @@ def get_script_screens(bank, addr, scriptNum):
             # break
             offset = min(jumps)
         elif opcode == 0x15:
-            break
+            offset += 1
         elif opcode == 1:
             currTextOffset = offset
 
@@ -414,19 +414,19 @@ if __name__ == "__main__":
     """
     Extract battle text
     """
-    rom = getRom()
-    for i in range(0x9c//2):
-        offset = wordIn(rom, bankAddr(0x24, 0x71b0+i*2))
-        try:
-            addToSpreadSheetComps(rom, 0x24, 0x71b0, 'battle', offset, 'Battle')
-        except:
-            print(hex(_addr), hex(i))
-            raise
-    with open('temp.csv', 'w') as f:
-        writer = csv.writer(f)
-        for comp in spreadSheetComps:
-            writer.writerow(comp)
-    exit(0)
+    # rom = getRom()
+    # for i in range(0x9c//2):
+    #     offset = wordIn(rom, bankAddr(0x24, 0x71b0+i*2))
+    #     try:
+    #         addToSpreadSheetComps(rom, 0x24, 0x71b0, 'battle', offset, 'Battle')
+    #     except:
+    #         print(hex(_addr), hex(i))
+    #         raise
+    # with open('temp.csv', 'w') as f:
+    #     writer = csv.writer(f)
+    #     for comp in spreadSheetComps:
+    #         writer.writerow(comp)
+    # exit(0)
 
     # screens = get_script_screens(_bank, _addr, _scriptNum)
 
