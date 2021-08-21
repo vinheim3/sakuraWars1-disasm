@@ -10,6 +10,11 @@ macro ldbc
     ld bc, (\1<<8)|\2
 endm
 
+macro dwb
+    dw \1
+    db \2
+endm
+
 ; macro ldde
 ;     ld de, (\1<<8)|\2
 ; endm
@@ -208,6 +213,10 @@ macro ScriptOpt_23
     db $23, \1
 endm
 
+macro ScriptOpt_24
+    db $24, \1
+endm
+
 macro ScriptOpt_25
     db $25, \1
 endm
@@ -280,8 +289,68 @@ macro Rpn06
     db $06, \1, \2
 endm
 
+macro RpnBoolOr
+    db $1b
+endm
+
+macro RpnBoolAnd
+    db $1c
+endm
+
+macro RpnBinOr
+    db $1d
+endm
+
+macro RpnBinXor
+    db $1e
+endm
+
+macro RpnBinAnd
+    db $1f
+endm
+
 macro RpnEq
     db $20
+endm
+
+macro RpnNeq
+    db $21
+endm
+
+macro RpnLt
+    db $22
+endm
+
+macro RpnLte
+    db $23
+endm
+
+macro RpnGt
+    db $24
+endm
+
+macro RpnGte
+    db $25
+endm
+
+macro RpnAdd
+    db $28
+endm
+
+macro RpnSub
+    db $29
+endm
+
+macro RpnMult
+    db $2a
+endm
+
+macro RpnDiv
+    db $2b
+endm
+
+macro RpnMod
+    db $2c
 endm
 
 macro StartScript

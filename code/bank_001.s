@@ -12,7 +12,7 @@ SECTION "ROM Bank $001", ROMX[$4000], BANK[$1]
 	nop                                              ; $4002: $00
 
 
-Func_01_4003::
+AnimSpriteSpecType0Load::
 	push af                                          ; $4003: $f5
 	ld   a, d                                        ; $4004: $7a
 	and  $80                                         ; $4005: $e6 $80
@@ -25,7 +25,7 @@ Func_01_4003::
 	ret                                              ; $400d: $c9
 
 
-Func_01_400e::
+AnimSpriteSpecType0Update::
 	ld   a, [hl+]                                    ; $400e: $2a
 	bit  7, a                                        ; $400f: $cb $7f
 	jr   z, .br_402d                              ; $4011: $28 $1a
@@ -67,7 +67,7 @@ Func_01_400e::
 	ret                                              ; $403a: $c9
 
 
-;
+AnimSpriteSpecType0Delete::
 	ret                                              ; $403b: $c9
 
 
@@ -295,8 +295,8 @@ AnimSpriteSpecType1Update::
 	ret                                                             ; $4101
 
 
-;
-	ret                                              ; $4102: $c9
+AnimSpriteSpecType1Delete::
+	ret                                                             ; $4102
 
 
 ; A - anim sprite idx
@@ -1004,6 +1004,7 @@ Call_001_4484:
 	ret                                              ; $4493: $c9
 
 
+AnimSpriteSpecType2Delete::
 	ret                                              ; $4494: $c9
 
 

@@ -14235,16 +14235,25 @@ jr_042_7d9e:
 	ld   [bc], a                                     ; $7f4e: $02
 	nop                                              ; $7f4f: $00
 	nop                                              ; $7f50: $00
+
+
+
 	inc  b                                           ; $7f51: $04
 	add  b                                           ; $7f52: $80
 	dec  sp                                          ; $7f53: $3b
+
 	ld   bc, $20ff                                   ; $7f54: $01 $ff $20
+
 	inc  b                                           ; $7f57: $04
 	add  b                                           ; $7f58: $80
 	inc  a                                           ; $7f59: $3c
+	
 	ld   bc, $2000                                   ; $7f5a: $01 $00 $20
 	inc  e                                           ; $7f5d: $1c
 	nop                                              ; $7f5e: $00
+
+
+
 	ld   c, $01                                      ; $7f5f: $0e $01
 	rrca                                             ; $7f61: $0f
 	nop                                              ; $7f62: $00

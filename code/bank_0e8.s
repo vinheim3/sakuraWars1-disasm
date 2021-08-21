@@ -12431,7 +12431,7 @@ Call_0e8_74a9:
 	ld   a, [$a47f]                                  ; $74b5: $fa $7f $a4
 	pop  bc                                          ; $74b8: $c1
 	rra                                              ; $74b9: $1f
-	ld   de, Func_2ff9                                   ; $74ba: $11 $f9 $2f
+	ld   de, CheckIfAnimatedSpriteSpecIsAnimating                                   ; $74ba: $11 $f9 $2f
 	ret  z                                           ; $74bd: $c8
 
 	ei                                               ; $74be: $fb

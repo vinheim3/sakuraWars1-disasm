@@ -1234,7 +1234,7 @@ jr_00c_47cf:
 	ld   a, [hl]                                     ; $47d4: $7e
 	push af                                          ; $47d5: $f5
 	ld   a, [$cb30]                                  ; $47d6: $fa $30 $cb
-	call Func_3006                                       ; $47d9: $cd $06 $30
+	call StopAnimatingAnimatedSpriteSpec                                       ; $47d9: $cd $06 $30
 	ld   a, [$cb31]                                  ; $47dc: $fa $31 $cb
 	bit  7, a                                        ; $47df: $cb $7f
 	call z, StartAnimatingAnimatedSpriteSpec                                    ; $47e1: $cc $14 $30
@@ -1270,7 +1270,7 @@ jr_00c_47f7:
 	add  hl, bc                                      ; $4811: $09
 	ld   a, [hl]                                     ; $4812: $7e
 	ld   [$cb31], a                                  ; $4813: $ea $31 $cb
-	call Func_3006                                       ; $4816: $cd $06 $30
+	call StopAnimatingAnimatedSpriteSpec                                       ; $4816: $cd $06 $30
 	call HLequAddrOfAnimSpriteSpecDetails                                       ; $4819: $cd $76 $30
 	inc  hl                                          ; $481c: $23
 	inc  hl                                          ; $481d: $23
@@ -3791,9 +3791,9 @@ jr_00c_56ec:
 	ret  c                                           ; $5719: $d8
 
 	ld   a, [$cc33]                                  ; $571a: $fa $33 $cc
-	call Func_3006                                       ; $571d: $cd $06 $30
+	call StopAnimatingAnimatedSpriteSpec                                       ; $571d: $cd $06 $30
 	ld   a, [$cc35]                                  ; $5720: $fa $35 $cc
-	call Func_3006                                       ; $5723: $cd $06 $30
+	call StopAnimatingAnimatedSpriteSpec                                       ; $5723: $cd $06 $30
 	ld   hl, $cc28                                   ; $5726: $21 $28 $cc
 	inc  [hl]                                        ; $5729: $34
 	xor  a                                           ; $572a: $af
@@ -3952,7 +3952,7 @@ jr_00c_57f8:
 	jr   nz, jr_00c_583f                             ; $580d: $20 $30
 
 	ld   a, [$cc32]                                  ; $580f: $fa $32 $cc
-	call Func_3006                                       ; $5812: $cd $06 $30
+	call StopAnimatingAnimatedSpriteSpec                                       ; $5812: $cd $06 $30
 	ld   a, [$cc36]                                  ; $5815: $fa $36 $cc
 	call StartAnimatingAnimatedSpriteSpec                                       ; $5818: $cd $14 $30
 	call HLequAddrOfAnimSpriteSpecDetails                                       ; $581b: $cd $76 $30
@@ -4143,7 +4143,7 @@ jr_00c_594f:
 	ret  z                                           ; $596b: $c8
 
 	ld   a, [$cc36]                                  ; $596c: $fa $36 $cc
-	call Func_3006                                       ; $596f: $cd $06 $30
+	call StopAnimatingAnimatedSpriteSpec                                       ; $596f: $cd $06 $30
 	ld   hl, $cc28                                   ; $5972: $21 $28 $cc
 	inc  [hl]                                        ; $5975: $34
 	inc  [hl]                                        ; $5976: $34
@@ -4196,7 +4196,7 @@ jr_00c_59af:
 	ld   a, [$cc32]                                  ; $59cc: $fa $32 $cc
 	call StartAnimatingAnimatedSpriteSpec                                       ; $59cf: $cd $14 $30
 	ld   a, [$cc36]                                  ; $59d2: $fa $36 $cc
-	call Func_3006                                       ; $59d5: $cd $06 $30
+	call StopAnimatingAnimatedSpriteSpec                                       ; $59d5: $cd $06 $30
 	ld   a, $02                                      ; $59d8: $3e $02
 	ld   [$cc28], a                                  ; $59da: $ea $28 $cc
 	xor  a                                           ; $59dd: $af
@@ -6077,9 +6077,9 @@ jr_00c_6672:
 	ret  z                                           ; $6676: $c8
 
 	ld   a, [$cc5e]                                  ; $6677: $fa $5e $cc
-	call Func_3006                                       ; $667a: $cd $06 $30
+	call StopAnimatingAnimatedSpriteSpec                                       ; $667a: $cd $06 $30
 	ld   a, [$cc5d]                                  ; $667d: $fa $5d $cc
-	call Func_3006                                       ; $6680: $cd $06 $30
+	call StopAnimatingAnimatedSpriteSpec                                       ; $6680: $cd $06 $30
 	call $66e5                                       ; $6683: $cd $e5 $66
 	bit  7, a                                        ; $6686: $cb $7f
 	ret  nz                                          ; $6688: $c0

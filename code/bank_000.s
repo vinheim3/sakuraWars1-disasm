@@ -9611,86 +9611,108 @@ ReserveBaseAnimSpriteSpecAndInstance::
 	ret                                                             ; $2fba
 
 
-Func_2fbb::
-	sla  a                                           ; $2fbb: $cb $27
-	sla  a                                           ; $2fbd: $cb $27
-	add  $c0                                         ; $2fbf: $c6 $c0
-	ld   l, a                                        ; $2fc1: $6f
-	ld   h, $c1                                      ; $2fc2: $26 $c1
-	xor  a                                           ; $2fc4: $af
-	ld   [hl+], a                                    ; $2fc5: $22
-	ld   a, [hl+]                                    ; $2fc6: $2a
-	ld   d, a                                        ; $2fc7: $57
-	ld   a, [hl+]                                    ; $2fc8: $2a
-	ld   e, a                                        ; $2fc9: $5f
-	xor  a                                           ; $2fca: $af
-	ld   l, [hl]                                     ; $2fcb: $6e
-	sla  l                                           ; $2fcc: $cb $25
-	rla                                              ; $2fce: $17
-	sla  l                                           ; $2fcf: $cb $25
-	rla                                              ; $2fd1: $17
-	sla  l                                           ; $2fd2: $cb $25
-	rla                                              ; $2fd4: $17
-	add  HIGH(AnimatedSpriteSpecTypeDetails)                                         ; $2fd5: $c6 $3e
-	ld   h, a                                        ; $2fd7: $67
-	inc  l                                           ; $2fd8: $2c
-	ld   a, [wRomBank]                                  ; $2fd9: $fa $92 $c2
-	push af                                          ; $2fdc: $f5
-	ld   bc, .return                                   ; $2fdd: $01 $f1 $2f
-	push bc                                          ; $2fe0: $c5
-	ld   a, [hl+]                                    ; $2fe1: $2a
-	ld   [wRomBank], a                                  ; $2fe2: $ea $92 $c2
-	ld   [rROMB0], a                                  ; $2fe5: $ea $00 $20
-	inc  l                                           ; $2fe8: $2c
-	inc  l                                           ; $2fe9: $2c
-	inc  l                                           ; $2fea: $2c
-	inc  l                                           ; $2feb: $2c
-	ld   a, [hl+]                                    ; $2fec: $2a
-	ld   c, a                                        ; $2fed: $4f
-	ld   b, [hl]                                     ; $2fee: $46
-	push bc                                          ; $2fef: $c5
-	ret                                              ; $2ff0: $c9
+DeleteAnimatedSpriteSpec::
+; HL points to base anim sprite spec details ctrl
+	sla  a                                                          ; $2fbb
+	sla  a                                                          ; $2fbd
+	add  LOW(wBaseAnimSpriteSpecDetails+BASS_CTRL)                  ; $2fbf
+	ld   l, a                                                       ; $2fc1
+	ld   h, HIGH(wBaseAnimSpriteSpecDetails+BASS_CTRL)              ; $2fc2
+
+; Clear spot in use and animatable bit
+	xor  a                                                          ; $2fc4
+	ld   [hl+], a                                                   ; $2fc5
+
+; Address in DE
+	ld   a, [hl+]                                                   ; $2fc6
+	ld   d, a                                                       ; $2fc7
+	ld   a, [hl+]                                                   ; $2fc8
+	ld   e, a                                                       ; $2fc9
+
+; HL points to the table using BASS_TYPE * 8, skip past 1st byte
+	xor  a                                                          ; $2fca
+	ld   l, [hl]                                                    ; $2fcb
+	sla  l                                                          ; $2fcc
+	rla                                                             ; $2fce
+	sla  l                                                          ; $2fcf
+	rla                                                             ; $2fd1
+	sla  l                                                          ; $2fd2
+	rla                                                             ; $2fd4
+	add  HIGH(AnimatedSpriteSpecTypeDetails)                        ; $2fd5
+	ld   h, a                                                       ; $2fd7
+	inc  l                                                          ; $2fd8
+
+; Preserve rom bank and push return addr
+	ld   a, [wRomBank]                                              ; $2fd9
+	push af                                                         ; $2fdc
+
+	ld   bc, .return                                                ; $2fdd
+	push bc                                                         ; $2fe0
+
+; 1st byte is the rom bank to set
+	ld   a, [hl+]                                                   ; $2fe1
+	ld   [wRomBank], a                                              ; $2fe2
+	ld   [rROMB0], a                                                ; $2fe5
+
+; Push 3rd word to ret to
+	inc  l                                                          ; $2fe8
+	inc  l                                                          ; $2fe9
+	inc  l                                                          ; $2fea
+	inc  l                                                          ; $2feb
+	ld   a, [hl+]                                                   ; $2fec
+	ld   c, a                                                       ; $2fed
+	ld   b, [hl]                                                    ; $2fee
+	push bc                                                         ; $2fef
+	ret                                                             ; $2ff0
 
 .return:
-	pop  af                                          ; $2ff1: $f1
-	ld   [wRomBank], a                                  ; $2ff2: $ea $92 $c2
-	ld   [rROMB0], a                                  ; $2ff5: $ea $00 $20
-	ret                                              ; $2ff8: $c9
+; Restore rom bank
+	pop  af                                                         ; $2ff1
+	ld   [wRomBank], a                                              ; $2ff2
+	ld   [rROMB0], a                                                ; $2ff5
+	ret                                                             ; $2ff8
 
 
-Func_2ff9::
-	sla  a                                           ; $2ff9: $cb $27
-	sla  a                                           ; $2ffb: $cb $27
-	add  $c0                                         ; $2ffd: $c6 $c0
-	ld   l, a                                        ; $2fff: $6f
-	ld   h, $c1                                      ; $3000: $26 $c1
-	ld   a, [hl]                                     ; $3002: $7e
-	and  $02                                         ; $3003: $e6 $02
-	ret                                              ; $3005: $c9
+CheckIfAnimatedSpriteSpecIsAnimating::
+; HL points to base anim sprite spec details ctrl
+	sla  a                                                          ; $2ff9
+	sla  a                                                          ; $2ffb
+	add  LOW(wBaseAnimSpriteSpecDetails+BASS_CTRL)                  ; $2ffd
+	ld   l, a                                                       ; $2fff
+	ld   h, HIGH(wBaseAnimSpriteSpecDetails+BASS_CTRL)              ; $3000
+
+; Check of animatable bit set
+	ld   a, [hl]                                                    ; $3002
+	and  $02                                                        ; $3003
+	ret                                                             ; $3005
 
 
-Func_3006::
-	push af                                          ; $3006: $f5
-	sla  a                                           ; $3007: $cb $27
-	sla  a                                           ; $3009: $cb $27
-	add  $c0                                         ; $300b: $c6 $c0
-	ld   l, a                                        ; $300d: $6f
-	ld   h, $c1                                      ; $300e: $26 $c1
-	res  1, [hl]                                     ; $3010: $cb $8e
-	pop  af                                          ; $3012: $f1
-	ret                                              ; $3013: $c9
+StopAnimatingAnimatedSpriteSpec::
+	push af                                                         ; $3006
+
+; HL points to base anim sprite spec details ctrl
+	sla  a                                                          ; $3007
+	sla  a                                                          ; $3009
+	add  LOW(wBaseAnimSpriteSpecDetails+BASS_CTRL)                  ; $300b
+	ld   l, a                                                       ; $300d
+	ld   h, HIGH(wBaseAnimSpriteSpecDetails+BASS_CTRL)              ; $300e
+
+; Reset bit 1 of BASS_CTRL (animatable)
+	res  1, [hl]                                                    ; $3010
+	pop  af                                                         ; $3012
+	ret                                                             ; $3013
 
 
 ; A - base anim sprite spec details idx used
 StartAnimatingAnimatedSpriteSpec::
 	push af                                                         ; $3014
 
-; HL points to base anim sprite spec details addr
+; HL points to base anim sprite spec details ctrl
 	sla  a                                                          ; $3015
 	sla  a                                                          ; $3017
-	add  LOW(wBaseAnimSpriteSpecDetails)                            ; $3019
+	add  LOW(wBaseAnimSpriteSpecDetails+BASS_CTRL)                  ; $3019
 	ld   l, a                                                       ; $301b
-	ld   h, HIGH(wBaseAnimSpriteSpecDetails)                        ; $301c
+	ld   h, HIGH(wBaseAnimSpriteSpecDetails+BASS_CTRL)              ; $301c
 
 ; Set bit 1 of BASS_CTRL (animatable)
 	set  1, [hl]                                                    ; $301e
@@ -9782,15 +9804,18 @@ CopyAnimSpriteSpecDetailsFromHramBasedOnAnimType::
 
 ; A - idx of animate sprite spec in base struct
 HLequAddrOfAnimSpriteSpecDetails::
-	sla  a                                           ; $3076: $cb $27
-	sla  a                                           ; $3078: $cb $27
-	add  $c1                                         ; $307a: $c6 $c1
-	ld   l, a                                        ; $307c: $6f
-	ld   h, $c1                                      ; $307d: $26 $c1
-	ld   a, [hl+]                                    ; $307f: $2a
-	ld   l, [hl]                                     ; $3080: $6e
-	ld   h, a                                        ; $3081: $67
-	ret                                              ; $3082: $c9
+; BASS_SIZEOF = 4
+	sla  a                                                          ; $3076
+	sla  a                                                          ; $3078
+	add  LOW(wBaseAnimSpriteSpecDetails+BASS_ADDR)                  ; $307a
+	ld   l, a                                                       ; $307c
+	ld   h, HIGH(wBaseAnimSpriteSpecDetails+BASS_ADDR)              ; $307d
+
+; Get word BASS_ADDR in HL
+	ld   a, [hl+]                                                   ; $307f
+	ld   l, [hl]                                                    ; $3080
+	ld   h, a                                                       ; $3081
+	ret                                                             ; $3082
 
 
 if def(VWF)
@@ -10207,20 +10232,20 @@ endc
 SECTION "Bank $00, $3e00", ROM0[$3e00]
 
 AnimatedSpriteSpecTypeDetails:
-	db $00
+	db $00 ; num sprite spec struct bytes
 	db $01 ; rom bank of the below
-	dw Func_01_400e ; on update
-	dw Func_01_4003 ; on load
-	dw $403b
+	dw AnimSpriteSpecType0Update
+	dw AnimSpriteSpecType0Load
+	dw AnimSpriteSpecType0Delete
 
-	db $06
+	db $06 ; num sprite spec struct bytes
 	db $01 ; rom bank of the below
 	dw AnimSpriteSpecType1Update
 	dw AnimSpriteSpecType1Load
-	dw $4102
+	dw AnimSpriteSpecType1Delete
 
-	db $10
+	db $10 ; num sprite spec struct bytes
 	db $01 ; rom bank of the below
 	dw AnimSpriteSpecType2Update
 	dw AnimSpriteSpecType2Load
-	dw $4494
+	dw AnimSpriteSpecType2Delete

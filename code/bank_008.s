@@ -717,7 +717,7 @@ ScriptEngineTable:
 	ScriptOpData ScriptOpcode2c, $00
 	;
 	ScriptOpData ScriptOpcode2d, $03
-	ScriptOpData ScriptOpcode2e, $00
+	ScriptOpData ScriptOpcode2e_StartScript, $00
 	;
 	ScriptOpData ScriptOpcode2f, $01
 	ScriptOpData ScriptOpcode30, $00
@@ -3887,7 +3887,7 @@ Jump_008_5883:
 	ld   bc, $0140                                   ; $593d: $01 $40 $01
 	call MemCopy                                       ; $5940: $cd $a9 $09
 	ldh  a, [$a5]                                    ; $5943: $f0 $a5
-	call Func_3006                                       ; $5945: $cd $06 $30
+	call StopAnimatingAnimatedSpriteSpec                                       ; $5945: $cd $06 $30
 	ld   a, $a3                                      ; $5948: $3e $a3
 	ld   de, $644c                                   ; $594a: $11 $4c $64
 	ld   hl, $d366                                   ; $594d: $21 $66 $d3
@@ -4037,13 +4037,13 @@ jr_008_59fe:
 	M_FarCall Func_01_411c
 	
 	ldh  a, [$a6]                                    ; $5a76: $f0 $a6
-	call Func_2fbb                                       ; $5a78: $cd $bb $2f
+	call DeleteAnimatedSpriteSpec                                       ; $5a78: $cd $bb $2f
 	jp   $574e                                       ; $5a7b: $c3 $4e $57
 
 
 	call DequeueAScriptOpcode                               ; $5a7e: $cd $bc $40
 	ldh  a, [$a5]                                    ; $5a81: $f0 $a5
-	call Func_2fbb                                       ; $5a83: $cd $bb $2f
+	call DeleteAnimatedSpriteSpec                                       ; $5a83: $cd $bb $2f
 	ldh  a, [hScriptOpcodeParams+4]                                    ; $5a86: $f0 $a4
 	bit  7, a                                        ; $5a88: $cb $7f
 	ret  nz                                          ; $5a8a: $c0
@@ -6342,7 +6342,7 @@ jr_008_6ae5:
 
 
 	ldh  a, [hScriptOpcodeParams+2]                                    ; $6ae8: $f0 $a2
-	call Func_2fbb                                       ; $6aea: $cd $bb $2f
+	call DeleteAnimatedSpriteSpec                                       ; $6aea: $cd $bb $2f
 	call DequeueAScriptOpcode                               ; $6aed: $cd $bc $40
 	ld   a, SO_CLEAR_TEXT_BOX                                      ; $6af0: $3e $08
 	call EnqueueAScriptOpcode                               ; $6af2: $cd $97 $40
@@ -8044,33 +8044,45 @@ jr_008_7633:
 	jp   DequeueAScriptOpcode                               ; $7684: $c3 $bc $40
 
 
-ScriptOpcode2e_Init:
-ScriptOpcode2e_Main:
+ScriptOpcode2e_StartScript_Init:
+ScriptOpcode2e_StartScript_Main:
+; BC params is the script idx to load
 	call GetNextScriptOpcodeToProcess                               ; $7687: $cd $70 $42
 	ld   c, a                                        ; $768a: $4f
 	call GetNextScriptOpcodeToProcess                               ; $768b: $cd $70 $42
 	ld   b, a                                        ; $768e: $47
+
+;
 	ld   hl, ScriptSources                                   ; $768f: $21 $28 $57
 	add  hl, bc                                      ; $7692: $09
 	add  hl, bc                                      ; $7693: $09
 	add  hl, bc                                      ; $7694: $09
+
+;
 	ld   a, $40                                      ; $7695: $3e $40
 	ld   de, wBaseScriptAddr                                   ; $7697: $11 $8a $cb
 	ld   bc, $0003                                   ; $769a: $01 $03 $00
 	call FarMemCopy                                       ; $769d: $cd $b2 $09
+
+;
 	ld   a, [wBaseScriptAddr]                                  ; $76a0: $fa $8a $cb
 	ld   l, a                                        ; $76a3: $6f
 	ld   a, [wBaseScriptAddr+1]                                  ; $76a4: $fa $8b $cb
 	ld   h, a                                        ; $76a7: $67
 	ld   bc, $4000                                   ; $76a8: $01 $00 $40
 	add  hl, bc                                      ; $76ab: $09
+
+;
 	ld   a, [wBaseScriptBank]                                  ; $76ac: $fa $8c $cb
-	add  $41                                         ; $76af: $c6 $41
+	add  SCRIPT_DATA_BANK                                         ; $76af: $c6 $41
 	ld   [wBaseScriptBank], a                                  ; $76b1: $ea $8c $cb
 	ld   [wCurrScriptBank], a                                  ; $76b4: $ea $8f $cb
+
+;
 	ld   a, h                                        ; $76b7: $7c
 	ld   [wBaseScriptAddr+1], a                                  ; $76b8: $ea $8b $cb
 	ld   [wCurrScriptAddr+1], a                                  ; $76bb: $ea $8e $cb
+
 	ld   a, l                                        ; $76be: $7d
 	ld   [wBaseScriptAddr], a                                  ; $76bf: $ea $8a $cb
 	ld   [wCurrScriptAddr], a                                  ; $76c2: $ea $8d $cb

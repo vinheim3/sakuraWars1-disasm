@@ -5834,7 +5834,7 @@ jr_00a_6bf7:
 	ld   a, [hl+]                                    ; $6bf8: $2a
 	push hl                                          ; $6bf9: $e5
 	ld   d, a                                        ; $6bfa: $57
-	call Func_2ff9                                       ; $6bfb: $cd $f9 $2f
+	call CheckIfAnimatedSpriteSpecIsAnimating                                       ; $6bfb: $cd $f9 $2f
 	or   a                                           ; $6bfe: $b7
 	ld   a, d                                        ; $6bff: $7a
 	jr   z, jr_00a_6c1d                              ; $6c00: $28 $1b
@@ -5981,7 +5981,7 @@ jr_00a_6ce2:
 	ld   a, [hl+]                                    ; $6ce3: $2a
 	push hl                                          ; $6ce4: $e5
 	ld   b, a                                        ; $6ce5: $47
-	call Func_2ff9                                       ; $6ce6: $cd $f9 $2f
+	call CheckIfAnimatedSpriteSpecIsAnimating                                       ; $6ce6: $cd $f9 $2f
 	or   a                                           ; $6ce9: $b7
 	ld   a, b                                        ; $6cea: $78
 	jr   z, jr_00a_6d1b                              ; $6ceb: $28 $2e
@@ -6129,7 +6129,7 @@ TitleMenuScreenAnimationHandler6:
 
 	ld   [$cc05], a                                  ; $6df3: $ea $05 $cc
 	ld   a, [$cc09]                                  ; $6df6: $fa $09 $cc
-	call Func_3006                                       ; $6df9: $cd $06 $30
+	call StopAnimatingAnimatedSpriteSpec                                       ; $6df9: $cd $06 $30
 	ld   a, $21                                      ; $6dfc: $3e $21
 	call Func_1adf                                       ; $6dfe: $cd $df $1a
 	ld   a, $08                                      ; $6e01: $3e $08
@@ -6154,7 +6154,7 @@ jr_00a_6e0f:
 	M_FarCall Func_01_44a0
 	
 	ld   a, [$cc09]                                  ; $6e40: $fa $09 $cc
-	call Func_3006                                       ; $6e43: $cd $06 $30
+	call StopAnimatingAnimatedSpriteSpec                                       ; $6e43: $cd $06 $30
 	pop  af                                          ; $6e46: $f1
 	bit  7, a                                        ; $6e47: $cb $7f
 	jp   nz, Jump_00a_6e81                           ; $6e49: $c2 $81 $6e
@@ -6195,7 +6195,7 @@ Jump_00a_6e81:
 	ld   a, $08                                      ; $6e81: $3e $08
 	ld   [$cc07], a                                  ; $6e83: $ea $07 $cc
 	ld   a, [$cc08]                                  ; $6e86: $fa $08 $cc
-	call Func_3006                                       ; $6e89: $cd $06 $30
+	call StopAnimatingAnimatedSpriteSpec                                       ; $6e89: $cd $06 $30
 	call HLequAddrOfAnimSpriteSpecDetails                                       ; $6e8c: $cd $76 $30
 	push af                                          ; $6e8f: $f5
 	ld   a, $00                                      ; $6e90: $3e $00
@@ -6256,7 +6256,7 @@ jr_00a_6ee3:
 	ld   a, [hl+]                                    ; $6ee4: $2a
 	push hl                                          ; $6ee5: $e5
 	ld   b, a                                        ; $6ee6: $47
-	call Func_2ff9                                       ; $6ee7: $cd $f9 $2f
+	call CheckIfAnimatedSpriteSpecIsAnimating                                       ; $6ee7: $cd $f9 $2f
 	or   a                                           ; $6eea: $b7
 	ld   a, b                                        ; $6eeb: $78
 	jr   z, jr_00a_6f1c                              ; $6eec: $28 $2e
@@ -6297,13 +6297,13 @@ jr_00a_6f1c:
 
 jr_00a_6f26:
 	ld   a, [$cc0a]                                  ; $6f26: $fa $0a $cc
-	call Func_3006                                       ; $6f29: $cd $06 $30
+	call StopAnimatingAnimatedSpriteSpec                                       ; $6f29: $cd $06 $30
 	ld   a, [$cc0b]                                  ; $6f2c: $fa $0b $cc
-	call Func_3006                                       ; $6f2f: $cd $06 $30
+	call StopAnimatingAnimatedSpriteSpec                                       ; $6f2f: $cd $06 $30
 	ld   a, [$cc0c]                                  ; $6f32: $fa $0c $cc
-	call Func_3006                                       ; $6f35: $cd $06 $30
+	call StopAnimatingAnimatedSpriteSpec                                       ; $6f35: $cd $06 $30
 	ld   a, [$cc0d]                                  ; $6f38: $fa $0d $cc
-	call Func_3006                                       ; $6f3b: $cd $06 $30
+	call StopAnimatingAnimatedSpriteSpec                                       ; $6f3b: $cd $06 $30
 	ld   a, [$cc04]                                  ; $6f3e: $fa $04 $cc
 	ld   [wTitleScreenAnimationStep], a                                  ; $6f41: $ea $02 $cc
 	xor  a                                           ; $6f44: $af
@@ -6501,7 +6501,7 @@ jr_00a_7089:
 	ld   a, [hl+]                                    ; $708a: $2a
 	push hl                                          ; $708b: $e5
 	ld   d, a                                        ; $708c: $57
-	call Func_2ff9                                       ; $708d: $cd $f9 $2f
+	call CheckIfAnimatedSpriteSpecIsAnimating                                       ; $708d: $cd $f9 $2f
 	or   a                                           ; $7090: $b7
 	ld   a, d                                        ; $7091: $7a
 	jr   z, jr_00a_70af                              ; $7092: $28 $1b
@@ -6654,7 +6654,7 @@ jr_00a_7174:
 	ld   a, [hl+]                                    ; $7175: $2a
 	push hl                                          ; $7176: $e5
 	ld   b, a                                        ; $7177: $47
-	call Func_2ff9                                       ; $7178: $cd $f9 $2f
+	call CheckIfAnimatedSpriteSpecIsAnimating                                       ; $7178: $cd $f9 $2f
 	or   a                                           ; $717b: $b7
 	ld   a, b                                        ; $717c: $78
 	jr   z, jr_00a_71ad                              ; $717d: $28 $2e
@@ -6834,7 +6834,7 @@ jr_00a_727c:
 	pop  af                                          ; $728d: $f1
 	call FarCall                                       ; $728e: $cd $62 $09
 	ld   a, [$cc09]                                  ; $7291: $fa $09 $cc
-	call Func_3006                                       ; $7294: $cd $06 $30
+	call StopAnimatingAnimatedSpriteSpec                                       ; $7294: $cd $06 $30
 	pop  af                                          ; $7297: $f1
 	bit  7, a                                        ; $7298: $cb $7f
 	jr   nz, jr_00a_72af                             ; $729a: $20 $13
@@ -6899,7 +6899,7 @@ jr_00a_7300:
 	ld   a, [hl+]                                    ; $7301: $2a
 	push hl                                          ; $7302: $e5
 	ld   b, a                                        ; $7303: $47
-	call Func_2ff9                                       ; $7304: $cd $f9 $2f
+	call CheckIfAnimatedSpriteSpecIsAnimating                                       ; $7304: $cd $f9 $2f
 	or   a                                           ; $7307: $b7
 	ld   a, b                                        ; $7308: $78
 	jr   z, jr_00a_7339                              ; $7309: $28 $2e
@@ -6940,13 +6940,13 @@ jr_00a_7339:
 	ret  nz                                          ; $7342: $c0
 
 	ld   a, [$cc0a]                                  ; $7343: $fa $0a $cc
-	call Func_3006                                       ; $7346: $cd $06 $30
+	call StopAnimatingAnimatedSpriteSpec                                       ; $7346: $cd $06 $30
 	ld   a, [$cc0b]                                  ; $7349: $fa $0b $cc
-	call Func_3006                                       ; $734c: $cd $06 $30
+	call StopAnimatingAnimatedSpriteSpec                                       ; $734c: $cd $06 $30
 	ld   a, [$cc0c]                                  ; $734f: $fa $0c $cc
-	call Func_3006                                       ; $7352: $cd $06 $30
+	call StopAnimatingAnimatedSpriteSpec                                       ; $7352: $cd $06 $30
 	ld   a, [$cc0d]                                  ; $7355: $fa $0d $cc
-	call Func_3006                                       ; $7358: $cd $06 $30
+	call StopAnimatingAnimatedSpriteSpec                                       ; $7358: $cd $06 $30
 	ld   a, $04                                      ; $735b: $3e $04
 	ld   [wTitleScreenAnimationStep], a                                  ; $735d: $ea $02 $cc
 	xor  a                                           ; $7360: $af

@@ -4550,7 +4550,7 @@ jr_0c3_55b4:
 	ld   c, c                                        ; $5659: $49
 	pop  bc                                          ; $565a: $c1
 	inc  h                                           ; $565b: $24
-	ld   de, Func_2fbb                                   ; $565c: $11 $bb $2f
+	ld   de, DeleteAnimatedSpriteSpec                                   ; $565c: $11 $bb $2f
 	di                                               ; $565f: $f3
 	rst  $38                                         ; $5660: $ff
 	dec  a                                           ; $5661: $3d

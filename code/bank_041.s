@@ -7,6 +7,8 @@ INCLUDE "includes.s"
 
 SECTION "ROM Bank $041", ROMX[$4000], BANK[$41]
 
+
+RpnData_41_4000::
 	ld   bc, $00ff                                   ; $4000: $01 $ff $00
 	dec  b                                           ; $4003: $05
 	add  b                                           ; $4004: $80
@@ -7380,8 +7382,10 @@ jr_041_5fc0:
 	nop                                              ; $607d: $00
 
 	StartScript
-
+if def(VWF)
+else
 Script_005::
+endc
 	ScriptOpt_JumpIfCalcValIsNon0 .ref_b
 		Rpn06 $20, $00
 		RpnPush $00
@@ -7403,9 +7407,12 @@ Script_005::
 ; unused - $60c3
 	nop                                              ; $60c3: $00
 
+if def(VWF)
+else
 	StartScript
 
 Script_006::
+endc
 	ScriptOpt_13 $04
 	ScriptOpt_LoadScenery $93
 	ScriptOpt_0f $00, $01

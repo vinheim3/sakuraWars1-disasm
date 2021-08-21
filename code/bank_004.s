@@ -1158,9 +1158,9 @@ jr_004_4744:
 	ret  z                                           ; $4753: $c8
 
 	ld   a, [$cc5e]                                  ; $4754: $fa $5e $cc
-	call Func_3006                                       ; $4757: $cd $06 $30
+	call StopAnimatingAnimatedSpriteSpec                                       ; $4757: $cd $06 $30
 	ld   a, [$cc5d]                                  ; $475a: $fa $5d $cc
-	call Func_3006                                       ; $475d: $cd $06 $30
+	call StopAnimatingAnimatedSpriteSpec                                       ; $475d: $cd $06 $30
 	call Call_004_4486                               ; $4760: $cd $86 $44
 	bit  7, a                                        ; $4763: $cb $7f
 	ret  nz                                          ; $4765: $c0
@@ -4878,9 +4878,9 @@ DormRoomAnimationHandler0b:
 	ld   b, $60                                      ; $5e33: $06 $60
 	call EnqueueHDMATransfer                                       ; $5e35: $cd $7c $02
 	ld   a, [$cc93]                                  ; $5e38: $fa $93 $cc
-	call Func_3006                                       ; $5e3b: $cd $06 $30
+	call StopAnimatingAnimatedSpriteSpec                                       ; $5e3b: $cd $06 $30
 	ld   a, [$cc94]                                  ; $5e3e: $fa $94 $cc
-	call Func_3006                                       ; $5e41: $cd $06 $30
+	call StopAnimatingAnimatedSpriteSpec                                       ; $5e41: $cd $06 $30
 	ret                                              ; $5e44: $c9
 
 
@@ -5230,9 +5230,9 @@ Jump_004_6053:
 	ld   a, $22                                      ; $6053: $3e $22
 	call Func_1adf                                       ; $6055: $cd $df $1a
 	ld   a, [$cc93]                                  ; $6058: $fa $93 $cc
-	call Func_3006                                       ; $605b: $cd $06 $30
+	call StopAnimatingAnimatedSpriteSpec                                       ; $605b: $cd $06 $30
 	ld   a, [$cc94]                                  ; $605e: $fa $94 $cc
-	call Func_3006                                       ; $6061: $cd $06 $30
+	call StopAnimatingAnimatedSpriteSpec                                       ; $6061: $cd $06 $30
 	ld   a, [wWramBank]                                  ; $6064: $fa $93 $c2
 	push af                                          ; $6067: $f5
 	ld   a, $02                                      ; $6068: $3e $02
@@ -5557,9 +5557,9 @@ DormRoomAnimationHandler10:
 	ld   bc, $202f                                   ; $62a6: $01 $2f $20
 	call SetBGandOBJPaletteRangesToUpdate                                       ; $62a9: $cd $aa $04
 	ld   a, [$cc93]                                  ; $62ac: $fa $93 $cc
-	call Func_3006                                       ; $62af: $cd $06 $30
+	call StopAnimatingAnimatedSpriteSpec                                       ; $62af: $cd $06 $30
 	ld   a, [$cc94]                                  ; $62b2: $fa $94 $cc
-	call Func_3006                                       ; $62b5: $cd $06 $30
+	call StopAnimatingAnimatedSpriteSpec                                       ; $62b5: $cd $06 $30
 	jp   IncDormRoomAnimationStep                               ; $62b8: $c3 $cc $58
 
 

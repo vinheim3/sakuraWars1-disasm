@@ -3,7 +3,7 @@
 import csv
 import sys
 import clipboard
-from util import bankConv, getRom, conv, bankAddr, wordIn
+from util import bankConv, getRom, conv, bankAddr, wordIn, stringB
 
 
 class ScriptExtractor:
@@ -115,6 +115,10 @@ class ScriptExtractor:
             "name": "ScriptOpt_23",
             "params": "b",
         },
+        0x24: {
+            "name": "ScriptOpt_24",
+            "params": "b",
+        },
         0x25: {
             "name": "ScriptOpt_25",
             "params": "b",
@@ -140,7 +144,7 @@ class ScriptExtractor:
             "params": "b",
         },
         0x2b: {
-            "name": "ScriptOpt_",
+            "name": "ScriptOpt_2b",
             "params": "bb",
         },
         0x2c: {
@@ -310,7 +314,7 @@ class ScriptExtractor:
                 raise Exception(f"rpn byte ${ctrl:02x}")
         return [f"\t\t{comp}" for comp in comps], totalBytes
             
-    def genRefs(self):
+    def genRefs(self, getRefs=False):
         while True:
             currOpAddress = self.offset
 
@@ -356,7 +360,8 @@ class ScriptExtractor:
 
             elif op == 6:
                 ref = self.get_script_byte() + self.get_script_byte() * 0x100
-                self.jumpAddresses.append(ref)
+                if getRefs:
+                    self.jumpAddresses.append(ref)
 
                 self.instructions[currOpAddress] = {
                     "name": "ScriptOpt_Jump",
@@ -370,7 +375,8 @@ class ScriptExtractor:
 
             elif op == 7:
                 ref = self.get_script_byte() + self.get_script_byte() * 0x100
-                self.jumpAddresses.append(ref)
+                if getRefs:
+                    self.jumpAddresses.append(ref)
                 rpn_comps, totalBytes = self.handleRPN()
                 self.instructions[currOpAddress] = {
                     "name": "ScriptOpt_JumpIfCalcValIsNon0", 
@@ -497,7 +503,7 @@ class ScriptExtractor:
                     if i != 0:
                         comps.append("\tScriptOpt_SetDelay $3c")
                         comps.append("\tScriptOpt_DisplayText")
-                        comps.append("\t\TEXT $0d")
+                        comps.append("\t\tTEXT $0d")
                         comps.append("\tScriptOpt_ContinuePrompt")
                         totalBytes += 2 + 1 + 2 + 1
 
@@ -554,7 +560,7 @@ class ScriptExtractor:
                             text_comps.append(f"${byte:02x}")
                     extra_comps.append("\t\tTEXT " + ", ".join(text_comps))
 
-                    # param_comps.append(f"; {address+1}")
+                    # param_comps.append(f"; {address+1:02x}")
                 else:
                     raise Exception(f"param: {param}")
 
@@ -570,16 +576,22 @@ class ScriptExtractor:
         return comps, totalBytes
 
     def run(self):
-        self.genRefs()
+        self.genRefs(getRefs=True)
+        self.instructions = {}
+        self.offset = 0
+        self.genRefs(getRefs=False)
         return self.genComps()
 
 
 if __name__ == "__main__":
     data = getRom()
+    baseTable = bankConv('40:5728')
 
     """Individual"""
-    # start = bankConv(sys.argv[1])
-    # scriptNum = conv(sys.argv[2])
+    # scriptNum = conv(sys.argv[1])
+    # startBank = data[baseTable+scriptNum*3+2]+0x41
+    # startAddr = wordIn(data, baseTable+scriptNum*3)+0x4000
+    # start = bankAddr(startBank, startAddr)
 
     # se = ScriptExtractor(data, start, scriptNum)
     # comps, totalBytes = se.run()
@@ -626,8 +638,7 @@ if __name__ == "__main__":
     bankBytes = 0
     bankData[currBank] = []
 
-    baseTable = bankConv('40:5728')
-    for scriptNum in range(0x322):
+    for scriptNum in range(1, 0x322):
         if 0x13 <= scriptNum < 0x100:
             continue
 
@@ -640,6 +651,14 @@ if __name__ == "__main__":
         se = ScriptExtractor(data, bankAddr(startBank, startAddr), scriptNum)
         se.translationMap = fullTranslationMap[scriptNum]
         comps, totalBytes = se.run()
+
+        # Check for overstepping
+        # if scriptNum != 0x321:
+        #     nextScriptNum = scriptNum+1
+        #     nextStartBank = data[baseTable+nextScriptNum*3+2]+0x41
+        #     nextStartAddr = wordIn(data, baseTable+nextScriptNum*3)+0x4000
+        #     if bankAddr(startBank, startAddr) + totalBytes > bankAddr(nextStartBank, nextStartAddr):
+        #         print(hex(scriptNum))
         
         if totalBytes + bankBytes < 0x4000:
             bankData[currBank].extend(comps)
@@ -658,3 +677,4 @@ if __name__ == "__main__":
     final_str = "\n".join(finalComps)
     with open('temp.s', 'w') as f:
         f.write(final_str)
+    print(stringB(availableBanks))

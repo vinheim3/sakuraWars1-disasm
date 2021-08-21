@@ -1810,7 +1810,7 @@ jr_005_4949:
 	ld   [wWramBank], a                                  ; $49b9: $ea $93 $c2
 	ldh  [rSVBK], a                                  ; $49bc: $e0 $70
 	ld   a, [$cc27]                                  ; $49be: $fa $27 $cc
-	call Func_2fbb                                       ; $49c1: $cd $bb $2f
+	call DeleteAnimatedSpriteSpec                                       ; $49c1: $cd $bb $2f
 	ld   hl, wLCDC                                   ; $49c4: $21 $03 $c2
 	set  2, [hl]                                     ; $49c7: $cb $d6
 	jp   Jump_005_539c                               ; $49c9: $c3 $9c $53
@@ -2334,7 +2334,7 @@ jr_005_4c83:
 	ld   a, $4b                                      ; $4d7b: $3e $4b
 	call Func_1adf                                       ; $4d7d: $cd $df $1a
 	ld   a, [$cc27]                                  ; $4d80: $fa $27 $cc
-	call Func_2fbb                                       ; $4d83: $cd $bb $2f
+	call DeleteAnimatedSpriteSpec                                       ; $4d83: $cd $bb $2f
 	ld   hl, wLCDC                                   ; $4d86: $21 $03 $c2
 	set  2, [hl]                                     ; $4d89: $cb $d6
 	jp   Jump_005_539c                               ; $4d8b: $c3 $9c $53

@@ -7461,7 +7461,7 @@ jr_00b_6407:
 	push af                                          ; $640b: $f5
 	push hl                                          ; $640c: $e5
 	ld   a, [hl]                                     ; $640d: $7e
-	call Func_2fbb                                       ; $640e: $cd $bb $2f
+	call DeleteAnimatedSpriteSpec                                       ; $640e: $cd $bb $2f
 	pop  hl                                          ; $6411: $e1
 	pop  af                                          ; $6412: $f1
 	set  7, [hl]                                     ; $6413: $cb $fe
@@ -7504,7 +7504,7 @@ jr_00b_6435:
 	push af                                          ; $6439: $f5
 	push hl                                          ; $643a: $e5
 	ld   a, [hl]                                     ; $643b: $7e
-	call Func_3006                                       ; $643c: $cd $06 $30
+	call StopAnimatingAnimatedSpriteSpec                                       ; $643c: $cd $06 $30
 	pop  hl                                          ; $643f: $e1
 	pop  af                                          ; $6440: $f1
 

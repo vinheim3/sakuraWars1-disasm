@@ -1,3 +1,8 @@
+#!/usr/bin/env python3
+
+import sys
+
+
 def conv(hexstr):
     return int(f"0x{hexstr}", 16)
 
@@ -50,3 +55,29 @@ def getRom():
     with open(fname, 'rb') as f:
         data = f.read()
     return data
+
+
+def showFarCallSrces(bank, addr):
+    data = getRom()
+    bank = conv(bank)
+    addr = conv(addr)
+    bytesToFind = bytes([
+        0xf5,
+        0x3e, addr&0xff, 
+        0xea, 0x98, 0xc2, 
+        0x3e, addr>>8, 
+        0xea, 0x99, 0xc2,
+        0x3e, bank,
+        0xea, 0x9a, 0xc2,
+        0xf1,
+    ])
+    for i in range(len(data)):
+        try:
+            if data[i:i+len(bytesToFind)] == bytesToFind:
+                print(hex(i//0x4000), hex((i%0x4000)+0x4000))
+        except:
+            pass
+
+
+if __name__ == "__main__":
+    showFarCallSrces(sys.argv[1], sys.argv[2])
