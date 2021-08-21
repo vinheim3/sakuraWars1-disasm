@@ -428,7 +428,7 @@ class ScriptExtractor:
                     self.offset += 1
                 self.instructions[currOpAddress] = {
                     "name": "ScriptOpt_TimedQuestion",
-                    "params": "bb"+"t"*numOpts+"b",
+                    "params": "bb"+"tb"*numOpts,
                 }
 
             elif op in self.simpleCodes:
@@ -497,6 +497,9 @@ class ScriptExtractor:
             params = details['params']
             param_comps = []
             param = None
+
+            # todo: translate multi-questions
+
             if params == 't' and address+1 in self.translationMap:
                 textboxes = self.translationMap[address+1]
                 for i, textbox in enumerate(textboxes):
@@ -524,9 +527,29 @@ class ScriptExtractor:
                     param_comps.append(f"${byte:02x}")
                     totalBytes += 1
                 elif param == 'r':
-                    param_comps.append(f".ref_{details['ref']:x}")
                     offset += 2
                     totalBytes += 2
+
+                    if self.scriptNum == 0x2e0:
+                        if details['ref'] == 0x7e4:
+                            param_comps.append(".ref_7ec-8")
+                            continue
+                        if details['ref'] == 0x938:
+                            param_comps.append(".ref_93c-4")
+                            continue
+                        if details['ref'] == 0xa75:
+                            param_comps.append(".ref_a79-4")
+                            continue
+                        if details['ref'] == 0xba4:
+                            param_comps.append(".ref_ba8-4")
+                            continue
+                        if details['ref'] == 0xce3:
+                            param_comps.append(".ref_ce7-4")
+                            continue
+                        if details['ref'] == 0xe2b:
+                            param_comps.append(".ref_e2f-4")
+                            continue
+                    param_comps.append(f".ref_{details['ref']:x}")
                 elif param == 'R':
                     # exit early
                     if param_comps:

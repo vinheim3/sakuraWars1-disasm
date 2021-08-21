@@ -6276,7 +6276,7 @@ macro ScriptSrc
 endm
 ScriptSources::
 if def(VWF)
-	ScriptSrc RpcData_41_4000
+	ScriptSrc RpnData_41_4000
 	ScriptSrc Script_001
 	ScriptSrc Script_002
 	ScriptSrc Script_003
