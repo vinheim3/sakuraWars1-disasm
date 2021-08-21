@@ -113,7 +113,7 @@ endm
 
 macro ScriptOpt_Jump
     db $06
-    dw \1
+    dw \1-SCRIPT_START
 endm
 
 macro ScriptOpt_JumpIfCalcValIsNon0

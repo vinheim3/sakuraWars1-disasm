@@ -186,7 +186,10 @@ class ScriptExtractor:
         boxBytes = []
         spaceLen = 3
         for word in words:
-            wordLen = ScriptExtractor.getWordLength(word)
+            if word == '<name>':
+                wordLen = 5*8
+            else:
+                wordLen = ScriptExtractor.getWordLength(word)
             if colCounter + wordLen + spaceLen >= 0x0e * 8:
                 lineCounter += 1
                 colCounter = 0
@@ -196,23 +199,26 @@ class ScriptExtractor:
                     lineCounter = 0
                 else:
                     boxBytes.append(0x0d)
-                for char in word:
-                    boxBytes.extend(ScriptExtractor.getCharVal(char))
-
-                if colCounter != 0:
-                    colCounter += spaceLen
-                colCounter += wordLen
             else:
                 if colCounter != 0:
                     boxBytes.append(0x10)
+
+            # Add word
+            if word[:6] == '<name>':
+                boxBytes.extend([0x08, 0x00])
+                for char in word[6:]:
+                    boxBytes.extend(ScriptExtractor.getCharVal(char))
+            else:
                 for char in word:
                     boxBytes.extend(ScriptExtractor.getCharVal(char))
 
-                if colCounter != 0:
-                    colCounter += spaceLen
-                colCounter += wordLen
+            if colCounter != 0:
+                colCounter += spaceLen
+            colCounter += wordLen
+
         if boxBytes:
             textboxes.append(boxBytes)
+            
         return textboxes
 
     @staticmethod
@@ -257,7 +263,7 @@ class ScriptExtractor:
             if char.isalnum():
                 if char in "1ITt":
                     total += 4
-                elif char in "il":
+                elif char in "il!":
                     total += 2
                 else:
                     total += 5
@@ -406,7 +412,7 @@ class ScriptExtractor:
                     self.offset += 1
                 self.instructions[currOpAddress] = {
                     "name": "ScriptOpt_UntimedQuestion",
-                    "params": "bbb"+"t"*numOpts+"b",
+                    "params": "bbb"+"t"*numOpts,
                 }
 
             elif op == 0x19:
@@ -504,9 +510,9 @@ class ScriptExtractor:
                 textboxes = self.translationMap[address+1]
                 for i, textbox in enumerate(textboxes):
                     if i != 0:
-                        comps.append("\tScriptOpt_SetDelay $3c")
-                        comps.append("\tScriptOpt_DisplayText")
-                        comps.append("\t\tTEXT $0d")
+                        # comps.append("\tScriptOpt_SetDelay $3c")
+                        # comps.append("\tScriptOpt_DisplayText")
+                        # comps.append("\t\tTEXT $0d")
                         comps.append("\tScriptOpt_ContinuePrompt")
                         totalBytes += 2 + 1 + 2 + 1
 
@@ -561,28 +567,50 @@ class ScriptExtractor:
                     break
                 elif param == 't':
                     text_comps = []
-                    while True:
-                        byte = self.rom[self.start+address+offset]
-                        offset += 1
-                        totalBytes += 1
-                        if byte == 0:
-                            break
+                    # param_comps.append(f"; {address+offset}")
 
-                        if byte < 8:
-                            b2 = self.rom[self.start+address+offset]
+                    if (address+offset in self.translationMap) or (address+offset-1 in self.translationMap):
+                        try:
+                            textboxes = self.translationMap[address+offset]
+                        except:
+                            textboxes = self.translationMap[address+offset-1]
+                        assert len(textboxes) == 1
+                        for i, textbox in enumerate(textboxes):
+                            paramStr = ','.join(f"${kanji:02x}" for kanji in textbox)
+                            extra_comps.append(f"\t\tTEXT {paramStr}")
+                            totalBytes += len(textbox) + 1
+
+                        while True:
+                            byte = self.rom[self.start+address+offset]
+                            offset += 1
+                            if byte == 0:
+                                break
+                            if byte <= 8 or byte == 0x0a:
+                                offset += 1
+                    else:
+                        while True:
+                            byte = self.rom[self.start+address+offset]
                             offset += 1
                             totalBytes += 1
-                            text_comps.append(f"${byte:1x}{b2:02x}")
-                        elif byte == 0x0a:
-                            b2 = self.rom[self.start+address+offset]
-                            offset += 1
-                            totalBytes += 1
-                            text_comps.append(f"${byte:02x}")
-                            text_comps.append(f"${b2:02x}")
-                        else:
-                            text_comps.append(f"${byte:02x}")
-                    extra_comps.append("\t\tTEXT " + ", ".join(text_comps))
-                    if name == 'ScriptOpt_TimedQuestion':
+                            if byte == 0:
+                                break
+
+                            if byte < 8:
+                                b2 = self.rom[self.start+address+offset]
+                                offset += 1
+                                totalBytes += 1
+                                text_comps.append(f"${byte:1x}{b2:02x}")
+                            elif byte in (0x08, 0x0a):
+                                b2 = self.rom[self.start+address+offset]
+                                offset += 1
+                                totalBytes += 1
+                                text_comps.append(f"${byte:02x}")
+                                text_comps.append(f"${b2:02x}")
+                            else:
+                                text_comps.append(f"${byte:02x}")
+                        extra_comps.append("\t\tTEXT " + ", ".join(text_comps))
+
+                    if 'imedQuestion' in name:
                         nb = self.rom[self.start+address+offset]
                         offset += 1
                         totalBytes += 1

@@ -9865,6 +9865,11 @@ GetCharWidth0:
 	cp   $f2 ; .
 	ret  z
 
+; The following takes up 1 pixel, so 1+1 space
+	ld   b, $02
+	cp   $fa ; !
+	ret  z
+
 ; By default, other non-alphanumeric tiles take up a full 8 pixels
 	ld   b, $08
 	ret

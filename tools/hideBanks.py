@@ -4,7 +4,7 @@ import sys
 import os
 
 if 'VWF' in sys.argv:
-    for i in range(0x41, 0x67):
+    for i in range(0x41, 0x68):
         os.system(f"mv code/bank_0{i:02x}.s temp/")
 else:
     os.system("mv temp/bank_* code/")

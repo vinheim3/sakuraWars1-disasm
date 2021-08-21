@@ -2852,7 +2852,7 @@ ScriptOpcode23_Init:
 	pop  hl                                          ; $528e: $e1
 	ld   a, [$cbac]                                  ; $528f: $fa $ac $cb
 	or   a                                           ; $5292: $b7
-	jr   z, jr_008_529f                              ; $5293: $28 $0a
+	jr   z, ScriptOpcode23_Main                              ; $5293: $28 $0a
 
 	dec  hl                                          ; $5295: $2b
 	inc  [hl]                                        ; $5296: $34
@@ -2863,7 +2863,6 @@ ScriptOpcode23_Init:
 	ret                                              ; $529e: $c9
 
 
-jr_008_529f:
 ScriptOpcode23_Main:
 	ld   a, l                                        ; $529f: $7d
 	ld   [wScriptOpcodeParamPointer], a                                  ; $52a0: $ea $74 $cb
@@ -2881,23 +2880,21 @@ ScriptOpcode23_Main:
 	sla  a                                           ; $52b6: $cb $27
 	ld   b, $00                                      ; $52b8: $06 $00
 	ld   c, a                                        ; $52ba: $4f
-	ld   hl, $52c3                                   ; $52bb: $21 $c3 $52
+	ld   hl, .table                                   ; $52bb: $21 $c3 $52
 	add  hl, bc                                      ; $52be: $09
 	ld   a, [hl+]                                    ; $52bf: $2a
 	ld   h, [hl]                                     ; $52c0: $66
 	ld   l, a                                        ; $52c1: $6f
 	jp   hl                                          ; $52c2: $e9
 
+.table:
+	dw todo_Opcode23Entry0
+	dw todo_Opcode23Entry1
+	dw todo_Opcode23Entry2
+	dw todo_Opcode23Entry3
 
-	bit  2, d                                        ; $52c3: $cb $52
-	and  d                                           ; $52c5: $a2
-	ld   d, e                                        ; $52c6: $53
-	jr   jr_008_531d                                 ; $52c7: $18 $54
 
-	inc  l                                           ; $52c9: $2c
-	ld   d, h                                        ; $52ca: $54
-
-	
+todo_Opcode23Entry0:
 	ldh  a, [hScriptOpcodeParams+2]                                    ; $52cb: $f0 $a2
 	or   a                                           ; $52cd: $b7
 	jp   nz, Jump_008_52fc                           ; $52ce: $c2 $fc $52
@@ -2940,8 +2937,6 @@ Jump_008_52fc:
 	ld   bc, $0020                                   ; $5317: $01 $20 $00
 	ld   a, $80                                      ; $531a: $3e $80
 	ld   [hl], a                                     ; $531c: $77
-
-jr_008_531d:
 	add  hl, bc                                      ; $531d: $09
 	ld   [hl], a                                     ; $531e: $77
 	add  hl, bc                                      ; $531f: $09
@@ -3001,13 +2996,13 @@ jr_008_531d:
 	call EnqueueHDMATransfer                                       ; $536d: $cd $7c $02
 	ldh  a, [hScriptOpcodeParams+2]                                    ; $5370: $f0 $a2
 	cp   $14                                         ; $5372: $fe $14
-	jp   c, Jump_008_5513                            ; $5374: $da $13 $55
+	jp   c, Opcode23_SaveParamsFromHram                            ; $5374: $da $13 $55
 
 	ld   hl, hScriptOpcodeParams+1                                   ; $5377: $21 $a1 $ff
 	inc  [hl]                                        ; $537a: $34
 	xor  a                                           ; $537b: $af
 	ldh  [hScriptOpcodeParams+2], a                                    ; $537c: $e0 $a2
-	jp   Jump_008_5513                               ; $537e: $c3 $13 $55
+	jp   Opcode23_SaveParamsFromHram                               ; $537e: $c3 $13 $55
 
 
 LCDCFunc0f::
@@ -3034,6 +3029,7 @@ jr_008_5390:
 	jp   LCDCInterruptHandler.return                                       ; $539f: $c3 $4a $04
 
 
+todo_Opcode23Entry1:
 	ld   a, [wWramBank]                                  ; $53a2: $fa $93 $c2
 	push af                                          ; $53a5: $f5
 	ld   a, $02                                      ; $53a6: $3e $02
@@ -3088,22 +3084,24 @@ jr_008_5409:
 	or   a                                           ; $5411: $b7
 	jp   z, DequeueAScriptOpcode                            ; $5412: $ca $bc $40
 
-	jp   Jump_008_5513                               ; $5415: $c3 $13 $55
+	jp   Opcode23_SaveParamsFromHram                               ; $5415: $c3 $13 $55
 
 
+todo_Opcode23Entry2:
 	ld   hl, hScriptOpcodeParams+2                                   ; $5418: $21 $a2 $ff
 	ld   a, [hl]                                     ; $541b: $7e
 	inc  [hl]                                        ; $541c: $34
 	cp   $3c                                         ; $541d: $fe $3c
-	jp   c, Jump_008_5513                            ; $541f: $da $13 $55
+	jp   c, Opcode23_SaveParamsFromHram                            ; $541f: $da $13 $55
 
 	ld   hl, hScriptOpcodeParams+1                                   ; $5422: $21 $a1 $ff
 	inc  [hl]                                        ; $5425: $34
 	xor  a                                           ; $5426: $af
 	ldh  [hScriptOpcodeParams+2], a                                    ; $5427: $e0 $a2
-	jp   Jump_008_5513                               ; $5429: $c3 $13 $55
+	jp   Opcode23_SaveParamsFromHram                               ; $5429: $c3 $13 $55
 
 
+todo_Opcode23Entry3:
 	ld   c, $81                                      ; $542c: $0e $81
 	ld   de, $9800                                   ; $542e: $11 $00 $98
 	ld   a, $02                                      ; $5431: $3e $02
@@ -3237,10 +3235,10 @@ jr_008_54f1:
 	pop  af                                          ; $550a: $f1
 	ld   [wWramBank], a                                  ; $550b: $ea $93 $c2
 	ldh  [rSVBK], a                                  ; $550e: $e0 $70
-	jp   Jump_008_5513                               ; $5510: $c3 $13 $55
+	jp   Opcode23_SaveParamsFromHram                               ; $5510: $c3 $13 $55
 
 
-Jump_008_5513:
+Opcode23_SaveParamsFromHram:
 	ld   hl, wScriptOpcodeParamPointer                                   ; $5513: $21 $74 $cb
 	ld   a, [hl+]                                    ; $5516: $2a
 	ld   h, [hl]                                     ; $5517: $66
@@ -4868,36 +4866,33 @@ ScriptOpcode1b_Main:
 	ldh  [hScriptOpcodeParams+1], a                                    ; $5f87: $e0 $a1
 	ld   a, [hl-]                                    ; $5f89: $3a
 	ldh  [hScriptOpcodeParams+2], a                                    ; $5f8a: $e0 $a2
-	ld   bc, $5f9f                                   ; $5f8c: $01 $9f $5f
+	ld   bc, .return                                   ; $5f8c: $01 $9f $5f
 	push bc                                          ; $5f8f: $c5
 	ldh  a, [hScriptOpcodeParams+1]                                    ; $5f90: $f0 $a1
 	sla  a                                           ; $5f92: $cb $27
 	ld   b, $00                                      ; $5f94: $06 $00
 	ld   c, a                                        ; $5f96: $4f
-	ld   hl, $5fa6                                   ; $5f97: $21 $a6 $5f
+	ld   hl, .table                                   ; $5f97: $21 $a6 $5f
 	add  hl, bc                                      ; $5f9a: $09
 	ld   a, [hl+]                                    ; $5f9b: $2a
 	ld   h, [hl]                                     ; $5f9c: $66
 	ld   l, a                                        ; $5f9d: $6f
 	jp   hl                                          ; $5f9e: $e9
 
-
+.return:
 	pop  af                                          ; $5f9f: $f1
 	ld   [wWramBank], a                                  ; $5fa0: $ea $93 $c2
 	ldh  [rSVBK], a                                  ; $5fa3: $e0 $70
 	ret                                              ; $5fa5: $c9
 
+.table:
+	dw todo_Opcode1bEntry0
+	dw todo_Opcode1bEntry1
+	dw todo_Opcode1bEntry2
+	dw todo_Opcode1bEntry3
 
-	cp   [hl]                                        ; $5fa6: $be
-	ld   e, a                                        ; $5fa7: $5f
-	ld   e, b                                        ; $5fa8: $58
-	ld   h, b                                        ; $5fa9: $60
-	or   [hl]                                        ; $5faa: $b6
-	ld   h, b                                        ; $5fab: $60
-	db   $f4                                         ; $5fac: $f4
-	ld   h, b                                        ; $5fad: $60
 
-Jump_008_5fae:
+Opcode1b_SaveParamsFromHram:
 	ld   hl, wScriptOpcodeParamPointer                                   ; $5fae: $21 $74 $cb
 	ld   a, [hl+]                                    ; $5fb1: $2a
 	ld   h, [hl]                                     ; $5fb2: $66
@@ -4911,6 +4906,7 @@ Jump_008_5fae:
 	ret                                              ; $5fbd: $c9
 
 
+todo_Opcode1bEntry0:
 	ldh  a, [hScriptOpcodeParams+2]                                    ; $5fbe: $f0 $a2
 	or   a                                           ; $5fc0: $b7
 	jr   nz, jr_008_5fdc                             ; $5fc1: $20 $19
@@ -4948,7 +4944,7 @@ jr_008_5fee:
 	bit  0, a                                        ; $5ff4: $cb $47
 	ld   bc, $181c                                   ; $5ff6: $01 $1c $18
 	call z, FadePalettesAndSetRangeToUpdate                                    ; $5ff9: $cc $32 $08
-	jp   Jump_008_5fae                               ; $5ffc: $c3 $ae $5f
+	jp   Opcode1b_SaveParamsFromHram                               ; $5ffc: $c3 $ae $5f
 
 
 jr_008_5fff:
@@ -4982,9 +4978,10 @@ jr_008_5fff:
 	inc  [hl]                                        ; $6051: $34
 	xor  a                                           ; $6052: $af
 	ldh  [hScriptOpcodeParams+2], a                                    ; $6053: $e0 $a2
-	jp   Jump_008_5fae                               ; $6055: $c3 $ae $5f
+	jp   Opcode1b_SaveParamsFromHram                               ; $6055: $c3 $ae $5f
 
 
+todo_Opcode1bEntry1:
 	ld   hl, hScriptOpcodeParams+2                                   ; $6058: $21 $a2 $ff
 	ld   a, [hl]                                     ; $605b: $7e
 	inc  [hl]                                        ; $605c: $34
@@ -5028,9 +5025,10 @@ jr_008_606e:
 	ldh  [hScriptOpcodeParams+2], a                                    ; $60b1: $e0 $a2
 
 jr_008_60b3:
-	jp   Jump_008_5fae                               ; $60b3: $c3 $ae $5f
+	jp   Opcode1b_SaveParamsFromHram                               ; $60b3: $c3 $ae $5f
 
 
+todo_Opcode1bEntry2:
 	ld   a, [$cba6]                                  ; $60b6: $fa $a6 $cb
 	ld   l, a                                        ; $60b9: $6f
 	ld   h, $00                                      ; $60ba: $26 $00
@@ -5047,9 +5045,10 @@ jr_008_60b3:
 	inc  [hl]                                        ; $60ed: $34
 	xor  a                                           ; $60ee: $af
 	ldh  [hScriptOpcodeParams+2], a                                    ; $60ef: $e0 $a2
-	jp   Jump_008_5fae                               ; $60f1: $c3 $ae $5f
+	jp   Opcode1b_SaveParamsFromHram                               ; $60f1: $c3 $ae $5f
 
 
+todo_Opcode1bEntry3:
 	ldh  a, [hScriptOpcodeParams+2]                                    ; $60f4: $f0 $a2
 	or   a                                           ; $60f6: $b7
 	jp   nz, Jump_008_6134                           ; $60f7: $c2 $34 $61
@@ -5100,7 +5099,7 @@ jr_008_6146:
 	bit  0, a                                        ; $614c: $cb $47
 	ld   bc, $181c                                   ; $614e: $01 $1c $18
 	call z, FadePalettesAndSetRangeToUpdate                                    ; $6151: $cc $32 $08
-	jp   Jump_008_5fae                               ; $6154: $c3 $ae $5f
+	jp   Opcode1b_SaveParamsFromHram                               ; $6154: $c3 $ae $5f
 
 
 jr_008_6157:
