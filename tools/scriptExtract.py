@@ -428,7 +428,7 @@ class ScriptExtractor:
                     self.offset += 1
                 self.instructions[currOpAddress] = {
                     "name": "ScriptOpt_TimedQuestion",
-                    "params": "bb"+"tb"*numOpts,
+                    "params": "bb"+"t"*numOpts,
                 }
 
             elif op in self.simpleCodes:
@@ -582,6 +582,11 @@ class ScriptExtractor:
                         else:
                             text_comps.append(f"${byte:02x}")
                     extra_comps.append("\t\tTEXT " + ", ".join(text_comps))
+                    if name == 'ScriptOpt_TimedQuestion':
+                        nb = self.rom[self.start+address+offset]
+                        offset += 1
+                        totalBytes += 1
+                        extra_comps.append(f"\t\tdb ${nb:02x}")
 
                     # param_comps.append(f"; {address+1:02x}")
                 else:
@@ -691,7 +696,7 @@ if __name__ == "__main__":
             bankBytes = totalBytes
             bankData[currBank] = comps
 
-    finalComps = []
+    finalComps = ['include "includes.s"\n\n']
     for k, v in bankData.items():
         finalComps.append(f"SECTION \"Bank ${k:02x}\", ROMX[$4000], BANK[${k:02x}]")
         finalComps.append("if def(VWF)")
