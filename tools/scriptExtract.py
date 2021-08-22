@@ -204,13 +204,21 @@ class ScriptExtractor:
                     boxBytes.append(0x10)
 
             # Add word
-            if word[:6] == '<name>':
-                boxBytes.extend([0x08, 0x00])
-                for char in word[6:]:
-                    boxBytes.extend(ScriptExtractor.getCharVal(char))
-            else:
-                for char in word:
-                    boxBytes.extend(ScriptExtractor.getCharVal(char))
+            wordIdx = 0
+            while wordIdx < len(word):
+                if word[wordIdx:wordIdx+6] == '<name>':
+                    boxBytes.extend([0x08, 0x00])
+                    wordIdx += 6
+                    continue
+
+                if word[wordIdx] == "'":
+                    if wordIdx != len(word)-1 and word[wordIdx+1] in "0123456789":
+                        boxBytes.extend([0x0a, int(word[wordIdx+1])])
+                        wordIdx += 2
+                        continue
+
+                boxBytes.extend(ScriptExtractor.getCharVal(word[wordIdx]))
+                wordIdx += 1
 
             if colCounter != 0:
                 colCounter += spaceLen
@@ -223,11 +231,6 @@ class ScriptExtractor:
 
     @staticmethod
     def getCharVal(char):
-        # todo: temp
-        if char == ";": char = "."
-        if char == "è": char = "e"
-        if char == "ó": char = "o"
-
         if '0' <= char <= '9':
             return [ord(char)-ord('0')+0x11]
 
@@ -243,16 +246,21 @@ class ScriptExtractor:
         if char == "?": return [0xf9]
         if char == ",": return [0xe1]
         if char == '"': return [0x01, 0x02]
+        if char == '+': return [0x01, 0x09]
         if char == "!": return [0xfa]
         if char == "<": return [0x01, 0x11]
         if char == ">": return [0x01, 0x12]
         if char == "(": return [0x01, 0x03]
         if char == ")": return [0x01, 0x04]
         if char == "*": return [0x01, 0x0b] # todo: x
+        if char == "=": return [0x01, 0x0d]
         if char == ":": return [0x01, 0x15]
         if char == "%": return [0x01, 0x0e]
         if char == "/": return [0x01, 0x00]
         if char == "~": return [0xfc]
+        if char == ";": return [0x01, 0x18]
+        if char == "è": return [0x01, 0x19]
+        if char == "ó": return [0x01, 0x1a]
 
         raise Exception(f"get byte for {char}")
 
@@ -269,8 +277,10 @@ class ScriptExtractor:
                     total += 5
             elif char in '"':
                 total += 6
-            elif char in ",.'":
+            elif char in ",.';:":
                 total += 3
+            elif char in "èó":
+                total += 5
             else:
                 total += 8
         return total
@@ -395,7 +405,6 @@ class ScriptExtractor:
             elif op == 0x18:
                 numOpts = self.get_script_byte()
                 b1 = self.get_script_byte()
-                b2 = self.get_script_byte()
                 for i in range(numOpts):
                     while True:
                         char = self.get_script_byte()
@@ -412,7 +421,7 @@ class ScriptExtractor:
                     self.offset += 1
                 self.instructions[currOpAddress] = {
                     "name": "ScriptOpt_UntimedQuestion",
-                    "params": "bbb"+"t"*numOpts,
+                    "params": "bb"+"t"*numOpts,
                 }
 
             elif op == 0x19:
@@ -489,6 +498,7 @@ class ScriptExtractor:
 
     def genComps(self):
         totalBytes = 0
+        prompted = True # if a new textbox has started
 
         comps = ["\tStartScript", "", f"Script_{scriptNum:03x}::"]
         addresses = sorted(self.instructions.keys())
@@ -504,23 +514,29 @@ class ScriptExtractor:
             param_comps = []
             param = None
 
-            # todo: translate multi-questions
+            if name in ('ScriptOpt_ContinuePrompt', 'ScriptOpt_Jump'):
+                prompted = True
 
             if params == 't' and address+1 in self.translationMap:
                 textboxes = self.translationMap[address+1]
+                if prompted is False:
+                    comps.append("\tScriptOpt_ContinuePrompt")
+                    totalBytes += 1
+
                 for i, textbox in enumerate(textboxes):
                     if i != 0:
                         # comps.append("\tScriptOpt_SetDelay $3c")
                         # comps.append("\tScriptOpt_DisplayText")
                         # comps.append("\t\tTEXT $0d")
                         comps.append("\tScriptOpt_ContinuePrompt")
-                        totalBytes += 2 + 1 + 2 + 1
+                        totalBytes += 1
 
                     paramStr = ','.join(f"${kanji:02x}" for kanji in textbox)
-                    comps.append("\tScriptOpt_DisplayText")
+                    comps.append(f"\tScriptOpt_DisplayText ; {address+offset}")
                     comps.append(f"\t\tTEXT {paramStr}")
                     totalBytes += 1 + len(textbox) + 1
 
+                prompted = False
                 continue
 
             extra_comps = []
@@ -567,13 +583,10 @@ class ScriptExtractor:
                     break
                 elif param == 't':
                     text_comps = []
-                    # param_comps.append(f"; {address+offset}")
+                    param_comps.append(f"; {address+offset}")
 
-                    if (address+offset in self.translationMap) or (address+offset-1 in self.translationMap):
-                        try:
-                            textboxes = self.translationMap[address+offset]
-                        except:
-                            textboxes = self.translationMap[address+offset-1]
+                    if address + offset in self.translationMap:
+                        textboxes = self.translationMap[address+offset]
                         assert len(textboxes) == 1
                         for i, textbox in enumerate(textboxes):
                             paramStr = ','.join(f"${kanji:02x}" for kanji in textbox)
@@ -662,7 +675,7 @@ if __name__ == "__main__":
 
     fullTranslationMap = {}
     doneTranslations = {}
-    with open('sakura wars GB - 18:08:21.csv') as f:
+    with open('sakura wars GB - 22:08:21.csv') as f:
         reader = csv.reader(f)
         for scriptNum, offset, orig, blank, english, char, dupe1, dupe2 in reader:
             if not scriptNum:

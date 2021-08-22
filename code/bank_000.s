@@ -9883,6 +9883,17 @@ GetCharWidth1:
 	cp   $01 ; '
 	ret  z
 
+	cp   $18 ; ;
+	ret  z
+
+; The following takes up 4 pixels + 1 space
+	ld   b, $05
+	cp   $19 ; è
+	ret  z
+
+	cp   $1a ; ó
+	ret  z
+
 ; The following takes up 5 pixels + 1 space
 	ld   b, $06
 	cp   $02 ; "

@@ -683,7 +683,7 @@ ScriptEngineTable:
 	ScriptOpData ScriptOpcode16, $03
 	ds 5, 0
 	;
-	ScriptOpData ScriptOpcode18, $03
+	ScriptOpData ScriptOpcode18_UntimedQuestion, $03
 	ScriptOpData ScriptOpcode19_TimedQuestion, $00
 	;
 	ScriptOpData ScriptOpcode1a, $01
@@ -5119,7 +5119,7 @@ jr_008_6170:
 	jp   DequeueAScriptOpcode                               ; $6170: $c3 $bc $40
 
 
-ScriptOpcode18_Init:
+ScriptOpcode18_UntimedQuestion_Init:
 	ld   a, [wWramBank]                                  ; $6173: $fa $93 $c2
 	push af                                          ; $6176: $f5
 	ld   a, $02                                      ; $6177: $3e $02
@@ -5184,7 +5184,7 @@ ScriptOpcode18_Init:
 	ld   [wWramBank], a                                  ; $61e6: $ea $93 $c2
 	ldh  [rSVBK], a                                  ; $61e9: $e0 $70
 
-ScriptOpcode18_Main:
+ScriptOpcode18_UntimedQuestion_Main:
 	xor  a                                           ; $61eb: $af
 	ld   [wScriptEngineContsRunningThisMainLoop], a                                  ; $61ec: $ea $52 $cb
 	ld   a, [hl-]                                    ; $61ef: $3a

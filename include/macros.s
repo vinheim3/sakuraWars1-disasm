@@ -174,7 +174,7 @@ macro ScriptOpt_16
 endm
 
 macro ScriptOpt_UntimedQuestion
-    db $18, \1, \2, \3
+    db $18, \1, \2
 endm
 
 macro ScriptOpt_TimedQuestion
