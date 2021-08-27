@@ -9886,6 +9886,14 @@ GetCharWidth1:
 	cp   $18 ; ;
 	ret  z
 
+; The following takes up 3 pixels + 1 space
+	ld   b, $04
+	cp   $03 ; (
+	ret  z
+
+	cp   $04 ; )
+	ret  z
+
 ; The following takes up 4 pixels + 1 space
 	ld   b, $05
 	cp   $19 ; è
@@ -9896,7 +9904,25 @@ GetCharWidth1:
 
 ; The following takes up 5 pixels + 1 space
 	ld   b, $06
+	cp   $00 ; /
+	ret  z
+
 	cp   $02 ; "
+	ret  z
+
+	cp   $09 ; +
+	ret   z
+
+	cp   $0a ; -
+	ret  z
+
+	cp   $0d ; =
+	ret  z
+
+	cp   $11 ; <
+	ret  z
+
+	cp   $12 ; >
 	ret  z
 
 ; Regular kanji takes up 8 pixels

@@ -19,12 +19,14 @@
 ;徳 - 682/6c6 - 0x169/
 
 ; bank 24 - battle text
+
 ; rgbgfx -o en_saveScreen.2bpp en_saveScreen.png
 ; rgbgfx -o en_titleMenuScreenOpts.2bpp -h en_titleMenuScreenOpts.png
 ; rgbgfx -o en_settings.2bpp -h en_settings.png
 ; rgbgfx -o en_titleScreen.2bpp -u -T en_titleScreen.png
 ; rgbgfx -o en_statsLabels.2bpp en_statsLabels.png
 ; rgbgfx -o en_dormRoomOpts.2bpp -h en_dormRoomOpts.png
+; tools/gfx.py 1bpp newLetters.png --from=png --interleave
 
 ; empty banks
 ; 0x02, 0x03, 0x1f, 0x2b, 0x36, 0x37, 0x38, 0x39

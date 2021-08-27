@@ -277,12 +277,14 @@ class ScriptExtractor:
                     total += 5
             elif char in "!":
                 total += 2
-            elif char in '"':
-                total += 6
             elif char in ",.';:":
                 total += 3
+            elif char in "()":
+                total += 4
             elif char in "èó":
                 total += 5
+            elif char in '"-+<>=/':
+                total += 6
             else:
                 total += 8
         return total
