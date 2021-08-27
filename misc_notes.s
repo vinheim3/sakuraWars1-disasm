@@ -23,7 +23,7 @@
 ; rgbgfx -o en_saveScreen.2bpp en_saveScreen.png
 ; rgbgfx -o en_titleMenuScreenOpts.2bpp -h en_titleMenuScreenOpts.png
 ; rgbgfx -o en_settings.2bpp -h en_settings.png
-; rgbgfx -o en_titleScreen.2bpp -u -T en_titleScreen.png
+; rgbgfx -o en_titleScreen.2bpp -u -T en_titleScreen.png ; gfx loading - bank_00a, tile map/attr - bank_097, sprites - bank_00e, palettes - bank_0a3
 ; rgbgfx -o en_statsLabels.2bpp en_statsLabels.png
 ; rgbgfx -o en_dormRoomOpts.2bpp -h en_dormRoomOpts.png
 ; tools/gfx.py 1bpp newLetters.png --from=png --interleave

@@ -261,6 +261,7 @@ class ScriptExtractor:
         if char == ";": return [0x01, 0x18]
         if char == "è": return [0x01, 0x19]
         if char == "ó": return [0x01, 0x1a]
+        if char == "é": return [0x01, 0x1b]
 
         raise Exception(f"get byte for {char}")
 
@@ -281,7 +282,7 @@ class ScriptExtractor:
                 total += 3
             elif char in "()":
                 total += 4
-            elif char in "èó":
+            elif char in "èóé":
                 total += 5
             elif char in '"-+<>=/':
                 total += 6
@@ -679,7 +680,7 @@ if __name__ == "__main__":
 
     fullTranslationMap = {}
     doneTranslations = {}
-    with open('sakura wars GB - 22:08:21.csv') as f:
+    with open('sakura wars GB - 27:08:21.csv') as f:
         reader = csv.reader(f)
         for scriptNum, offset, orig, blank, english, char, dupe1, dupe2 in reader:
             if not scriptNum:

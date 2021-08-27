@@ -9557,27 +9557,10 @@ jr_00e_6c72:
 	db $16 
 	
 	
-Data_0e_6c84:
 if def(VWF)
-; GB flowers
-	db $e9, $5b, $0c, $02
-	db $e0, $53, $0a, $02
-	db $f0, $4c, $08, $02
-	db $e0, $4b, $06, $02
-
-	db $25-$40, $67-$40, $60, $00 ; below sakurA
-	db $1f-$40, $68-$40, $62, $01 ; right side of sakurA
-	db $30-$40, $6a-$40, $64, $00 ; left of warS
-	db $32-$40, $70-$40, $66, $07 ; right side of warS
-	db $2a-$40, $71-$40, $68, $01 ; leaf
-
-; kana
-	db $17-$40, $46-$40, $42, $08
-	db $17-$40, $4e-$40, $44, $08
-	db $17-$40, $56-$40, $46, $08
-	db $17-$40, $5e-$40, $48, $08
-	db $17-$40, $66-$40, $4a, $18
 else
+Data_0e_6c84:
+endc
 	db $e8, $30, $7c, $00
 	db $f8, $1f, $6a, $07
 	db $f8, $17, $68, $07
@@ -9592,7 +9575,6 @@ else
 	db $f0, $d8, $04, $01
 	db $d8, $f8, $02, $00
 	db $e0, $28, $00, $10
-endc
 
 	
 	jr   c, jr_00e_6cde                              ; $6cbc: $38 $20
@@ -11824,3 +11806,27 @@ jr_00e_7787:
 	ldh  a, [rAUD1SWEEP]                             ; $778a: $f0 $10
 	nop                                              ; $778c: $00
 	stop                                             ; $778d: $10 $00
+
+
+if def(VWF)
+Data_0e_6c84:
+; GB flowers
+	db $e9, $5b, $0c, $02
+	db $e0, $53, $0a, $02
+	db $f0, $4c, $08, $02
+	db $e0, $4b, $06, $02
+
+	db $25-$40, $67-$40, $60, $00 ; below sakurA
+	db $1f-$40, $68-$40, $62, $01 ; right side of sakurA
+	db $30-$40, $6a-$40, $64, $00 ; left of warS
+	db $32-$40, $70-$40, $66, $07 ; right side of warS
+	db $2a-$40, $71-$40, $68, $01 ; leaf
+	db $3e-$40, $88-$40, $6a, $07 ; flower on subtitle
+
+; kana
+	db $3a-$40, $4f-$40, $42, $08
+	db $3a-$40, $57-$40, $44, $08
+	db $3a-$40, $5f-$40, $46, $08
+	db $3a-$40, $67-$40, $48, $08
+	db $3a-$40, $6f-$40, $4a, $18
+endc

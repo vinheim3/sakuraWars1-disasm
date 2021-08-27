@@ -7340,6 +7340,11 @@ TitleScreenVramBank0_8000h_hook:
 	ld   hl, .leaf
 	call MemCopy
 
+	ld   bc, $10
+	ld   de, wTitleScreenTileDataBuffer+$6a0
+	ld   hl, .blossom
+	call MemCopy
+
 	ret
 .belowA:
 	db $80,$80, $80,$80, $80,$80, $00,$00
@@ -7356,6 +7361,9 @@ TitleScreenVramBank0_8000h_hook:
 .leaf:
 	db $00,$1c, $00,$3a, $00,$7e, $00,$7e
 	db $00,$fc, $00,$f8, $00,$e0, $00,$00
+.blossom:
+	db $20,$00, $d8,$00, $00,$00, $00,$00
+	db $00,$00, $00,$00, $00,$00, $00,$00
 
 
 TitleScreenVramBank1_8000h_hook:
@@ -7387,20 +7395,20 @@ TitleScreenVramBank1_8000h_hook:
 	call MemCopy
 	ret
 .kana1:
-	db $00,$00, $52,$00, $fb,$00, $54,$00
-	db $11,$00, $22,$00, $00,$00, $00,$00
+	db $00,$00, $51,$00, $f9,$00, $52,$00
+	db $10,$00, $21,$00, $00,$00, $00,$00
 .kana2:
-	db $00,$00, $39,$00, $f9,$00, $8b,$00
-	db $30,$00, $01,$00, $00,$00, $00,$00
+	db $00,$00, $0e,$00, $de,$00, $42,$00
+	db $84,$00, $08,$00, $00,$00, $00,$00
 .kana3:
-	db $02,$00, $04,$00, $c9,$00, $78,$00
-	db $c8,$00, $00,$00, $00,$00, $00,$00
+	db $40,$00, $71,$00, $d2,$00, $3e,$00
+	db $42,$00, $02,$00, $00,$00, $00,$00
 .kana4:
-	db $00,$00, $80,$00, $f6,$00, $81,$00
-	db $66,$00, $00,$00, $00,$00, $00,$00
+	db $80,$00, $11,$00, $3e,$00, $10,$00
+	db $0d,$00, $00,$00, $00,$00, $00,$00
 .kana5:
-	db $00,$00, $00,$00, $80,$00, $00,$00
-	db $00,$00, $00,$00, $00,$00, $00,$00
+	db $00,$00, $80,$00, $20,$00, $40,$00
+	db $80,$00, $00,$00, $00,$00, $00,$00
 
 
 TitleScreenVramBank0_8800h_hook:
@@ -7415,7 +7423,7 @@ TitleScreenVramBank0_8800h_hook:
 TitleScreenVramBank0_9000h_hook:
 	call RLEXorCopy
 
-	ld   bc, $10
+	ld   bc, $60
 	ld   de, wTitleScreenTileDataBuffer+$600
 	ld   hl, Gfx_EnTitleScreen+$780
 	jp   MemCopy
