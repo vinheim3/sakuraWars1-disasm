@@ -271,10 +271,12 @@ class ScriptExtractor:
             if char.isalnum():
                 if char in "1ITt":
                     total += 4
-                elif char in "il!":
+                elif char in "il":
                     total += 2
                 else:
                     total += 5
+            elif char in "!":
+                total += 2
             elif char in '"':
                 total += 6
             elif char in ",.';:":
@@ -712,7 +714,7 @@ if __name__ == "__main__":
             continue
 
         if scriptNum not in fullTranslationMap:
-            continue
+            fullTranslationMap[scriptNum] = {}
 
         startBank = data[baseTable+scriptNum*3+2]+0x41
         startAddr = wordIn(data, baseTable+scriptNum*3)+0x4000

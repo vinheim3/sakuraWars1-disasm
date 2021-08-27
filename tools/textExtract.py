@@ -7,7 +7,7 @@ from uuid import uuid4
 import clipboard
 from util import getRom, conv, bankAddr, wordIn, stringW
 
-with open('kanjiTable.txt', encoding='shift-jis') as f:
+with open('tools/kanjiTable.txt', encoding='shift-jis') as f:
     kanji_lines = f.read().split('\n')
 kanji_map = {}
 for line in kanji_lines:
@@ -17,6 +17,13 @@ for line in kanji_lines:
     kanji_map[int(k, 16)] = v
 kanji_map[0] = '\n'
 kanji_map[1] = '<name>'
+
+existingTranslations = {}
+with open('sakura wars GB - 22:08:21.csv') as f:
+    reader = csv.reader(f)
+    for row in reader:
+        if row[0]:
+            existingTranslations[(int(row[0]), int(row[1]))] = row[4]
 
 
 params_to_skip = {
@@ -39,6 +46,7 @@ params_to_skip = {
     0x1e: 0,
     0x21: 0,
     0x23: 1,
+    0x24: 1,
     0x25: 1,
     0x26: 0,
     0x27: 1,
@@ -106,6 +114,7 @@ def addToSpreadSheetComps(data, baseBank, baseAddr, scriptNum, offset, currChar)
     start = bankAddr(baseBank, baseAddr+offset)
     i = 0
     letters = []
+    hasNameReplacement = ''
     while True:
         byteRead = data[start+i]
         i += 1
@@ -116,6 +125,8 @@ def addToSpreadSheetComps(data, baseBank, baseAddr, scriptNum, offset, currChar)
         if byteRead >= 8:
             if byteRead == 0x08:
                 letters.append(1)
+                if data[start+i] != 0:
+                    hasNameReplacement = f"x - {data[start+i]}"
                 i += 1
                 continue
             if byteRead == 0x0a:
@@ -157,10 +168,20 @@ def addToSpreadSheetComps(data, baseBank, baseAddr, scriptNum, offset, currChar)
                 0x664, 0x5a3, 0x4bf, 0x689, 0x335, 0x34c, 0x5b8, 0x62a, 
                 0x5f2, 0x47b, 0x603, 0x572, 0x682}):
             isReplacement = 'x'
-        spreadSheetComps.append([f"{scriptNum}", f"{offset}", kanjis, currChar, isDupe, isReplacement])
+        spreadSheetComps.append([
+            f"{scriptNum}", 
+            f"{offset}", 
+            kanjis, 
+            '',
+            existingTranslations.get((scriptNum, offset)),
+            currChar, 
+            isDupe,
+            # isReplacement,
+            hasNameReplacement,
+        ])
 
 
-def get_script_screens(bank, addr, scriptNum):
+def get_script_screens(bank, addr, scriptNum, providedJumps=None):
     data = getRom()
     offset = 0
     dest = 0x8800
@@ -194,7 +215,11 @@ def get_script_screens(bank, addr, scriptNum):
                 word = wordIn(data, start+offset)
                 jumpAddresses.append(word)
                 offset += 2
-            jumps = list(filter(lambda item: item >= offset, jumpAddresses))
+
+            if providedJumps is None:
+                jumps = list(filter(lambda item: item >= offset, jumpAddresses))
+            else:
+                jumps = list(filter(lambda item: item >= offset, providedJumps))
             if not list(jumps):
                 break
             # with open('temp.s', 'a') as f:
@@ -207,7 +232,8 @@ def get_script_screens(bank, addr, scriptNum):
             currTextOffset = offset
 
             screenSources.append(['drawKanjis', bank, addr+offset, dest])
-            addToSpreadSheetComps(data, bank, addr, scriptNum, offset, currChar)
+            if providedJumps is not None:
+                addToSpreadSheetComps(data, bank, addr, scriptNum, offset, currChar)
             dest += 0x200
             if dest == 0x9800:
                 dest = 0x8800
@@ -314,7 +340,8 @@ def get_script_screens(bank, addr, scriptNum):
             assert numOpts <= 3
             for i in range(numOpts):
                 screenSources.append(['drawKanjis', bank, addr+offset, dest])
-                addToSpreadSheetComps(data, bank, addr, scriptNum, offset, currChar)
+                if providedJumps is not None:
+                    addToSpreadSheetComps(data, bank, addr, scriptNum, offset, currChar)
                 dest += 0x200
                 if dest == 0x9800:
                     dest = 0x8800
@@ -338,7 +365,8 @@ def get_script_screens(bank, addr, scriptNum):
             assert numOpts <= 3
             for i in range(numOpts):
                 screenSources.append(['drawKanjis', bank, addr+offset, dest])
-                addToSpreadSheetComps(data, bank, addr, scriptNum, offset, currChar)
+                if providedJumps is not None:
+                    addToSpreadSheetComps(data, bank, addr, scriptNum, offset, currChar)
                 dest += 0x200
                 if dest == 0x9800:
                     dest = 0x8800
@@ -403,6 +431,8 @@ def get_script_screens(bank, addr, scriptNum):
     if len(screenSources) != 1:
         addScreen(screens, scriptNum, screenSources, currTextOffset)
 
+    if providedJumps is None:
+        return jumpAddresses
     return screens
 
 
@@ -437,7 +467,7 @@ if __name__ == "__main__":
     #     f.write(final_str)
 
     data = getRom()
-    for i in range(0x322):
+    for i in range(1, 0x322):
         if 0x13 <= i < 0x100:
             continue
 
@@ -446,7 +476,8 @@ if __name__ == "__main__":
         bank = data[srcAddr+2]+0x41
         addr = wordIn(data, srcAddr)+0x4000
 
-        screens = get_script_screens(bank, addr, i)
+        _jumps = get_script_screens(bank, addr, i)
+        screens = get_script_screens(bank, addr, i, providedJumps=_jumps)
 
     with open('temp.csv', 'w') as f:
         writer = csv.writer(f)
