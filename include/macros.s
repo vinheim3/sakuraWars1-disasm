@@ -23,10 +23,10 @@ endm
 ;     ld hl, (\1<<8)|\2
 ; endm
 
-; macro lda
-; ASSERT \1 == 0
-; 	xor a
-; endm
+macro lda
+ASSERT \1 == 0
+	xor a
+endm
 
 ; macro DEplusEquImm
 ;     ld   a, e

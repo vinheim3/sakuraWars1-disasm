@@ -11346,7 +11346,7 @@ jr_085_6e2a:
 	rst  $38                                         ; $6e7b: $ff
 	ld   a, a                                        ; $6e7c: $7f
 	adc  $75                                         ; $6e7d: $ce $75
-	ld   sp, $c946                                   ; $6e7f: $31 $46 $c9
+	ld   sp, wEnterNameReturnState                                   ; $6e7f: $31 $46 $c9
 	inc  l                                           ; $6e82: $2c
 	rst  $38                                         ; $6e83: $ff
 	ld   a, a                                        ; $6e84: $7f

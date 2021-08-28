@@ -116,7 +116,7 @@ SECTION "ROM Bank $079", ROMX[$4000], BANK[$79]
 
 
 jr_079_4083:
-	ld   bc, $c949                                   ; $4083: $01 $49 $c9
+	ld   bc, wPointerToPlayerNameToEnter+1                                   ; $4083: $01 $49 $c9
 	add  b                                           ; $4086: $80
 	ld   c, c                                        ; $4087: $49
 	nop                                              ; $4088: $00

@@ -7533,7 +7533,7 @@ jr_07c_6103:
 	add  hl, sp                                      ; $6134: $39
 	add  l                                           ; $6135: $85
 	ld   e, c                                        ; $6136: $59
-	ld   bc, $c951                                   ; $6137: $01 $51 $c9
+	ld   bc, wEnterNameNumCharsEntered                                   ; $6137: $01 $51 $c9
 	add  c                                           ; $613a: $81
 	ret  nz                                          ; $613b: $c0
 

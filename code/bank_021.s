@@ -6030,7 +6030,7 @@ GameState30::
 	ld   bc, $003f                                   ; $6954: $01 $3f $00
 	call SetBGandOBJPaletteRangesToUpdate                                       ; $6957: $cd $aa $04
 	xor  a                                           ; $695a: $af
-	call PlaySound                                       ; $695b: $cd $92 $1a
+	call PlaySong                                       ; $695b: $cd $92 $1a
 	ld   a, $07                                      ; $695e: $3e $07
 	call SafeSetAudVolForMultipleChannels                                       ; $6960: $cd $e0 $1c
 	call TurnOnLCD                                       ; $6963: $cd $09 $09
@@ -6341,13 +6341,13 @@ Jump_021_6aff:
 	jr   z, jr_021_6b11                              ; $6b08: $28 $07
 
 	ld   a, [$ca66]                                  ; $6b0a: $fa $66 $ca
-	call Func_1adf                                       ; $6b0d: $cd $df $1a
+	call PlaySoundEffect                                       ; $6b0d: $cd $df $1a
 	ret                                              ; $6b10: $c9
 
 
 jr_021_6b11:
 	ld   a, [$ca65]                                  ; $6b11: $fa $65 $ca
-	call PlaySound                                       ; $6b14: $cd $92 $1a
+	call PlaySong                                       ; $6b14: $cd $92 $1a
 	ret                                              ; $6b17: $c9
 
 
@@ -6371,7 +6371,7 @@ Jump_021_6b2b:
 	add  $11                                         ; $6b2e: $c6 $11
 	dec  a                                           ; $6b30: $3d
 	xor  a                                           ; $6b31: $af
-	call PlaySound                                       ; $6b32: $cd $92 $1a
+	call PlaySong                                       ; $6b32: $cd $92 $1a
 	ret                                              ; $6b35: $c9
 
 
@@ -6677,7 +6677,7 @@ GameState32::
 	ld   [$ca42], a                                  ; $6d25: $ea $42 $ca
 	ld   [$ca43], a                                  ; $6d28: $ea $43 $ca
 	ld   a, $03                                      ; $6d2b: $3e $03
-	call PlaySound                                       ; $6d2d: $cd $92 $1a
+	call PlaySong                                       ; $6d2d: $cd $92 $1a
 	ld   a, $07                                      ; $6d30: $3e $07
 	call SafeSetAudVolForMultipleChannels                                       ; $6d32: $cd $e0 $1c
 	call TurnOnLCD                                       ; $6d35: $cd $09 $09

@@ -266,7 +266,7 @@ jr_020_41b0:
 	ld   [wInGameInputsEnabled], a                                  ; $41b4: $ea $0e $c2
 	call TurnOffLCD                                       ; $41b7: $cd $e3 $08
 	xor  a                                           ; $41ba: $af
-	call PlaySound                                       ; $41bb: $cd $92 $1a
+	call PlaySong                                       ; $41bb: $cd $92 $1a
 	call ClearDisplayRegsAllowVBlankInt                                       ; $41be: $cd $59 $0b
 	call ClearOam                                       ; $41c1: $cd $d7 $0d
 	ld   a, [wLCDC]                                  ; $41c4: $fa $03 $c2
@@ -435,7 +435,7 @@ jr_020_42f0:
 	call Call_020_4eac                               ; $431b: $cd $ac $4e
 	call Call_020_4e19                               ; $431e: $cd $19 $4e
 	ld   a, $0e                                      ; $4321: $3e $0e
-	call PlaySound                                       ; $4323: $cd $92 $1a
+	call PlaySong                                       ; $4323: $cd $92 $1a
 	ld   a, $07                                      ; $4326: $3e $07
 	call SafeSetAudVolForMultipleChannels                                       ; $4328: $cd $e0 $1c
 	call TurnOnLCD                                       ; $432b: $cd $09 $09
@@ -1566,7 +1566,7 @@ jr_020_49cf:
 
 	push af                                          ; $4a08: $f5
 	ld   a, $2f                                      ; $4a09: $3e $2f
-	call Func_1adf                                       ; $4a0b: $cd $df $1a
+	call PlaySoundEffect                                       ; $4a0b: $cd $df $1a
 	pop  af                                          ; $4a0e: $f1
 	push af                                          ; $4a0f: $f5
 	call Call_020_4c22                               ; $4a10: $cd $22 $4c
@@ -1862,7 +1862,7 @@ Call_020_4b81:
 	sub  c                                           ; $4bb4: $91
 	ld   [hl], a                                     ; $4bb5: $77
 	ld   a, $30                                      ; $4bb6: $3e $30
-	call Func_1adf                                       ; $4bb8: $cd $df $1a
+	call PlaySoundEffect                                       ; $4bb8: $cd $df $1a
 	ld   c, $02                                      ; $4bbb: $0e $02
 	call Call_020_554f                               ; $4bbd: $cd $4f $55
 	ld   a, $3c                                      ; $4bc0: $3e $3c
@@ -3240,7 +3240,7 @@ jr_020_52ff:
 	ld   hl, $ca49                                   ; $5314: $21 $49 $ca
 	ld   [hl], $01                                   ; $5317: $36 $01
 	ld   a, $2e                                      ; $5319: $3e $2e
-	call Func_1adf                                       ; $531b: $cd $df $1a
+	call PlaySoundEffect                                       ; $531b: $cd $df $1a
 	ld   a, $08                                      ; $531e: $3e $08
 	ld   [wGameSubstate], a                                  ; $5320: $ea $a1 $c2
 	ret                                              ; $5323: $c9
@@ -6587,7 +6587,7 @@ jr_020_6410:
 	ld   a, $04                                      ; $641f: $3e $04
 	ld   [wBaseRepeatedStickyCounter], a                                  ; $6421: $ea $14 $c2
 	xor  a                                           ; $6424: $af
-	call PlaySound                                       ; $6425: $cd $92 $1a
+	call PlaySong                                       ; $6425: $cd $92 $1a
 	call ClearDisplayRegsAllowVBlankInt                                       ; $6428: $cd $59 $0b
 	call ClearOam                                       ; $642b: $cd $d7 $0d
 	ld   a, [wLCDC]                                  ; $642e: $fa $03 $c2
@@ -6757,7 +6757,7 @@ jr_020_6598:
 
 jr_020_65a2:
 	ld   a, $0e                                      ; $65a2: $3e $0e
-	call PlaySound                                       ; $65a4: $cd $92 $1a
+	call PlaySong                                       ; $65a4: $cd $92 $1a
 	ld   a, $07                                      ; $65a7: $3e $07
 	call SafeSetAudVolForMultipleChannels                                       ; $65a9: $cd $e0 $1c
 	call TurnOnLCD                                       ; $65ac: $cd $09 $09
@@ -7344,7 +7344,7 @@ jr_020_6902:
 	ld   [$cac5], a                                  ; $6911: $ea $c5 $ca
 	ld   [$cab1], a                                  ; $6914: $ea $b1 $ca
 	ld   a, $19                                      ; $6917: $3e $19
-	call Func_1adf                                       ; $6919: $cd $df $1a
+	call PlaySoundEffect                                       ; $6919: $cd $df $1a
 	ret                                              ; $691c: $c9
 
 
@@ -7411,7 +7411,7 @@ Jump_020_6954:
 	xor  a                                           ; $696b: $af
 	ld   [$ca72], a                                  ; $696c: $ea $72 $ca
 	ld   a, $16                                      ; $696f: $3e $16
-	call Func_1adf                                       ; $6971: $cd $df $1a
+	call PlaySoundEffect                                       ; $6971: $cd $df $1a
 
 Jump_020_6974:
 	ld   a, [$ca6f]                                  ; $6974: $fa $6f $ca
@@ -7446,7 +7446,7 @@ jr_020_69a5:
 	ld   a, $02                                      ; $69a5: $3e $02
 	ld   [$ca71], a                                  ; $69a7: $ea $71 $ca
 	ld   a, $17                                      ; $69aa: $3e $17
-	call Func_1adf                                       ; $69ac: $cd $df $1a
+	call PlaySoundEffect                                       ; $69ac: $cd $df $1a
 
 Jump_020_69af:
 	call Call_020_6bc8                               ; $69af: $cd $c8 $6b
@@ -7512,7 +7512,7 @@ jr_020_6a2e:
 	xor  a                                           ; $6a33: $af
 	ld   [$ca42], a                                  ; $6a34: $ea $42 $ca
 	ld   a, $18                                      ; $6a37: $3e $18
-	call Func_1adf                                       ; $6a39: $cd $df $1a
+	call PlaySoundEffect                                       ; $6a39: $cd $df $1a
 
 Jump_020_6a3c:
 	ld   a, [$ca42]                                  ; $6a3c: $fa $42 $ca
@@ -7592,7 +7592,7 @@ Jump_020_6a92:
 
 jr_020_6aae:
 	ld   a, $16                                      ; $6aae: $3e $16
-	call Func_1adf                                       ; $6ab0: $cd $df $1a
+	call PlaySoundEffect                                       ; $6ab0: $cd $df $1a
 	ld   a, $00                                      ; $6ab3: $3e $00
 	ld   [$ca71], a                                  ; $6ab5: $ea $71 $ca
 
@@ -7977,7 +7977,7 @@ jr_020_6cc0:
 
 	push hl                                          ; $6cef: $e5
 	ld   a, $1a                                      ; $6cf0: $3e $1a
-	call Func_1adf                                       ; $6cf2: $cd $df $1a
+	call PlaySoundEffect                                       ; $6cf2: $cd $df $1a
 	ld   a, [$ca45]                                  ; $6cf5: $fa $45 $ca
 	ld   d, $00                                      ; $6cf8: $16 $00
 	ld   e, a                                        ; $6cfa: $5f
@@ -8214,7 +8214,7 @@ Call_020_6e48:
 	jr   nz, jr_020_6e91                             ; $6e6b: $20 $24
 
 	ld   a, $1b                                      ; $6e6d: $3e $1b
-	call Func_1adf                                       ; $6e6f: $cd $df $1a
+	call PlaySoundEffect                                       ; $6e6f: $cd $df $1a
 	ld   a, $01                                      ; $6e72: $3e $01
 	ld   [$ca71], a                                  ; $6e74: $ea $71 $ca
 	ld   a, $ff                                      ; $6e77: $3e $ff
@@ -8232,7 +8232,7 @@ Call_020_6e48:
 
 jr_020_6e91:
 	ld   a, $1c                                      ; $6e91: $3e $1c
-	call Func_1adf                                       ; $6e93: $cd $df $1a
+	call PlaySoundEffect                                       ; $6e93: $cd $df $1a
 	xor  a                                           ; $6e96: $af
 	ld   [$cac4], a                                  ; $6e97: $ea $c4 $ca
 	ld   [$cac6], a                                  ; $6e9a: $ea $c6 $ca
@@ -10306,7 +10306,7 @@ GameState24::
 	ld   a, $ff                                      ; $7a29: $3e $ff
 	ld   [$cb1d], a                                  ; $7a2b: $ea $1d $cb
 	ld   a, $03                                      ; $7a2e: $3e $03
-	call PlaySound                                       ; $7a30: $cd $92 $1a
+	call PlaySong                                       ; $7a30: $cd $92 $1a
 	ld   hl, wGameSubstate                                   ; $7a33: $21 $a1 $c2
 	inc  [hl]                                        ; $7a36: $34
 	ret                                              ; $7a37: $c9

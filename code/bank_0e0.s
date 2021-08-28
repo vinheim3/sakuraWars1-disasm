@@ -2516,7 +2516,7 @@ jr_0e0_4aff:
 	xor  d                                           ; $4b31: $aa
 	db   $e4                                         ; $4b32: $e4
 	rst  $30                                         ; $4b33: $f7
-	call z, $c94b                                    ; $4b34: $cc $4b $c9
+	call z, wEnterNameMaxChars                                    ; $4b34: $cc $4b $c9
 	push hl                                          ; $4b37: $e5
 	ret  c                                           ; $4b38: $d8
 

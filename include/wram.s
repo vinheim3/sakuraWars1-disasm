@@ -276,7 +276,62 @@ wResetSaveDataReturnSubstate:: ; $c918
     db
 
 wc919:
-    ds $7a-$19
+    ds $46-$19
+
+wEnterNameReturnState:: ; $c946
+    db
+
+wEnterNameReturnSubstate:: ; $c947
+    db
+
+wPointerToPlayerNameToEnter:: ; $c948
+    dw
+
+wPlayerNameRamBank:: ; $c94a
+    db
+
+wEnterNameMaxChars:: ; $c94b
+    db
+
+; bit 0 set - exit state when deleting with no chars
+; bit 1 set - allow spaces in name
+; bit 2 set - pre-fill inputted chars with player name
+wEnterNameControlByte:: ; $c94c
+    db
+
+wEnterNameLetterCursorBaseAnimSpriteSpecUsed:: ; $c94d
+    db
+
+wEnterNameNameUnderlineBaseAnimSpriteSpecUsed:: ; $c94e
+    db
+
+wEnterNameCursorLetterColIdx:: ; $c94f
+    db
+
+wEnterNameCursorLetterRowIdx:: ; $c950
+    db
+
+wEnterNameNumCharsEntered:: ; $c951
+    db
+
+wEnterNameInputtedChars:: ; $c952
+    ds $0a
+
+wc95c:
+    ds $e-$c
+
+wEnterNameSpaceKanjiIdx:: ; $c95e
+    db
+
+; 0 - hiragana, 1 - katakana, 2 - english
+wEnterNameAlphabetChosen:: ; $c95f
+    db
+
+wEnterNameCursorMoved:: ; $c960
+    db
+
+wc961:
+    ds $7a-$61
 
 wSettingsScreenCursorTypeShown:: ; $c97a
     db
@@ -494,8 +549,28 @@ wTitleScreenPressStartRowTileMap:: ; $d880
 
 SECTION "WRAM 3", WRAMX[$d000], BANK[$3]
 
+union
+
 wSaveScreenTileDataBuffer:: ; $d000
     ds $1000
+
+nextu
+
+wEnterNameTileDataOrLayoutBuffer:: ; $d000
+    ds $800
+
+w3_d800:
+    ds $500
+
+wEnterNameInputtedNameTileDataBuffer:: ; $dd00
+    ds $100 ; unknown size
+
+nextu
+
+wEnterNameSelectableCharsTileDataBuffer:: ; $d000
+    ds $cc0
+
+endu
 
 SECTION "WRAM 7", WRAMX[$d000], BANK[$7]
 

@@ -152,6 +152,7 @@ Func_01_407a::
 
 
 ; A - base anim sprite spec details idx used
+; Anim 3 bytes: control code, spec idx, frame counter
 AnimSpriteSpecType1Load::
 	push af                                                         ; $4083
 
@@ -225,7 +226,7 @@ AnimSpriteSpecType1Update::
 	or   a                                                          ; $40c2
 	jr   nz, .specGroupNe80h                                        ; $40c3
 
-; Spec group $80, the spec idx is also the frame counter
+; Spec group $80 (hide), the spec idx is also the frame counter
 	ld   a, [hl]                                                    ; $40c5
 	ldh  [hAnimSpriteSpecCurrFrameCounter], a                       ; $40c6
 	jr   .loadSprite                                                ; $40c8
@@ -1000,7 +1001,7 @@ Call_001_4484:
 	or   a                                           ; $448e: $b7
 	ret  z                                           ; $448f: $c8
 
-	call Func_1adf                                       ; $4490: $cd $df $1a
+	call PlaySoundEffect                                       ; $4490: $cd $df $1a
 	ret                                              ; $4493: $c9
 
 
@@ -1191,10 +1192,10 @@ AnimatedSpriteSpecs::
 	dw $740b
 	dw $7405
 	dw $740e
-	dw $7414
-	dw $741d
-	dw $7426
-	dw $742f
+	dw AnimatedSpriteSpec_2d
+	dw AnimatedSpriteSpec_2e
+	dw AnimatedSpriteSpec_2f
+	dw AnimatedSpriteSpec_30
 	dw $743b
 	dw $7447
 	dw $7450
@@ -1686,37 +1687,34 @@ jr_001_740e:
 	ld   [bc], a                                     ; $7411: $02
 	scf                                              ; $7412: $37
 	dec  b                                           ; $7413: $05
-	ld   [bc], a                                     ; $7414: $02
-	jr   c, jr_001_7417                              ; $7415: $38 $00
 
-jr_001_7417:
-	ld   [bc], a                                     ; $7417: $02
-	ld   a, [hl-]                                    ; $7418: $3a
-	inc  c                                           ; $7419: $0c
-	add  b                                           ; $741a: $80
-	inc  c                                           ; $741b: $0c
-	nop                                              ; $741c: $00
-	add  d                                           ; $741d: $82
-	rla                                              ; $741e: $17
-	ld   [hl], h                                     ; $741f: $74
-	ld   [bc], a                                     ; $7420: $02
-	dec  sp                                          ; $7421: $3b
-	inc  c                                           ; $7422: $0c
-	add  b                                           ; $7423: $80
-	inc  c                                           ; $7424: $0c
-	nop                                              ; $7425: $00
-	add  d                                           ; $7426: $82
-	jr   nz, jr_001_749d                             ; $7427: $20 $74
 
-	ld   [bc], a                                     ; $7429: $02
-	inc  a                                           ; $742a: $3c
-	inc  c                                           ; $742b: $0c
-	add  b                                           ; $742c: $80
-	inc  c                                           ; $742d: $0c
-	nop                                              ; $742e: $00
-	add  d                                           ; $742f: $82
-	add  hl, hl                                      ; $7430: $29
-	ld   [hl], h                                     ; $7431: $74
+AnimatedSpriteSpec_2d:
+	db $02, $38, $00
+:	db $02, $3a, $0c
+	db $80, $0c, $00
+
+AnimatedSpriteSpec_2e:
+	db $82
+	dw :-
+
+
+:	db $02, $3b, $0c
+	db $80, $0c, $00
+
+AnimatedSpriteSpec_2f:
+	db $82
+	dw :-
+
+
+:	db $02, $3c, $0c
+	db $80, $0c, $00
+
+AnimatedSpriteSpec_30:
+	db $82
+	dw :-
+	
+
 	ld   [bc], a                                     ; $7432: $02
 	dec  a                                           ; $7433: $3d
 	add  hl, bc                                      ; $7434: $09

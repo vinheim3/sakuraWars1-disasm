@@ -13314,7 +13314,7 @@ jr_072_7a1e:
 	ld   c, b                                        ; $7a53: $48
 	and  b                                           ; $7a54: $a0
 	ld   b, d                                        ; $7a55: $42
-	jp   nz, Func_1adf                                   ; $7a56: $c2 $df $1a
+	jp   nz, PlaySoundEffect                                   ; $7a56: $c2 $df $1a
 
 	ld   a, [$f580]                                  ; $7a59: $fa $80 $f5
 	add  b                                           ; $7a5c: $80

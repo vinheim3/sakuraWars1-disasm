@@ -13973,7 +13973,7 @@ Call_0b0_7aa8:
 	sub  c                                           ; $7dbe: $91
 	db   $fc                                         ; $7dbf: $fc
 	ld   de, $1111                                   ; $7dc0: $11 $11 $11
-	ld   de, $c947                                   ; $7dc3: $11 $47 $c9
+	ld   de, wEnterNameReturnSubstate                                   ; $7dc3: $11 $47 $c9
 	rst  $38                                         ; $7dc6: $ff
 	cp   $ff                                         ; $7dc7: $fe $ff
 	cp   [hl]                                        ; $7dc9: $be

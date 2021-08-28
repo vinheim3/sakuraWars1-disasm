@@ -744,10 +744,10 @@ JoypadInterruptHandlerStub:
 SetAllBGPaletteRangeToUpdate::
 	ld   bc, $003f                                                  ; $04a7
 
-; B - starting palette byte idx within $00 (BG) - $7f (OBJ)
-; C - ending palette byte idx, with above range
+; B - starting color idx within $00 (BG) - $3f (OBJ)
+; C - ending color idx, with above range
 SetBGandOBJPaletteRangesToUpdate::
-; If ending palette byte idx is not in the OBJ region, these are just BG palettes
+; If ending color idx is not in the OBJ region ($20+), these are just BG palettes
 	bit  5, c                                                       ; $04aa
 	jr   z, .setBGcolorRangesToUpdate                               ; $04ac
 
@@ -3249,7 +3249,7 @@ HandleGameState:
 	AddrBank GameState13_DMG
 	AddrBank GameState14
 	AddrBank GameState15
-	AddrBank GameState16
+	AddrBank GameState16_EnterName
 	AddrBank GameState17_Settings
 	AddrBank GameState18
 	AddrBank GameState19
@@ -5401,7 +5401,7 @@ jr_000_1a8d:
 	add  sp, -$0b                                    ; $1a90: $e8 $f5
 
 
-PlaySound::
+PlaySong::
 	push af                                          ; $1a92: $f5
 	push bc                                          ; $1a93: $c5
 	push de                                          ; $1a94: $d5
@@ -5456,7 +5456,7 @@ Call_000_1ac1:
 	db $21, $22, $23, $24
 
 
-Func_1adf::
+PlaySoundEffect::
 	push af                                          ; $1adf: $f5
 	push bc                                          ; $1ae0: $c5
 	push de                                          ; $1ae1: $d5
@@ -5956,7 +5956,7 @@ jr_000_1d05:
 	cp   [hl]                                        ; $1d08: $be
 	jr   z, jr_000_1d15                              ; $1d09: $28 $0a
 
-	call PlaySound                               ; $1d0b: $cd $92 $1a
+	call PlaySong                               ; $1d0b: $cd $92 $1a
 	ld   [hl], a                                     ; $1d0e: $77
 	call Call_000_1ac1                               ; $1d0f: $cd $c1 $1a
 	call Call_000_2c8c                               ; $1d12: $cd $8c $2c

@@ -5674,7 +5674,7 @@ Jump_0d3_5b22:
 Call_0d3_5b87:
 	ld   de, $ffff                                   ; $5b87: $11 $ff $ff
 	ld   h, c                                        ; $5b8a: $61
-	ld   de, $c94c                                   ; $5b8b: $11 $4c $c9
+	ld   de, wEnterNameControlByte                                   ; $5b8b: $11 $4c $c9
 	ld   d, c                                        ; $5b8e: $51
 	ld   de, $ff19                                   ; $5b8f: $11 $19 $ff
 	rst  $38                                         ; $5b92: $ff

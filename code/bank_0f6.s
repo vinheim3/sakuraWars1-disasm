@@ -2725,7 +2725,7 @@ jr_0f6_4ccf:
 	scf                                              ; $4d23: $37
 	rst  $38                                         ; $4d24: $ff
 	ld   sp, hl                                      ; $4d25: $f9
-	ld   sp, $c94c                                   ; $4d26: $31 $4c $c9
+	ld   sp, wEnterNameControlByte                                   ; $4d26: $31 $4c $c9
 	ld   a, c                                        ; $4d29: $79
 	cp   e                                           ; $4d2a: $bb
 	cp   b                                           ; $4d2b: $b8
@@ -8461,7 +8461,7 @@ Call_0f6_66a8:
 	pop  af                                          ; $6777: $f1
 	ld   e, a                                        ; $6778: $5f
 	ldh  a, [c]                                      ; $6779: $f2
-	ld   de, $c94e                                   ; $677a: $11 $4e $c9
+	ld   de, wEnterNameNameUnderlineBaseAnimSpriteSpecUsed                                   ; $677a: $11 $4e $c9
 	ld   [hl], c                                     ; $677d: $71
 	rra                                              ; $677e: $1f
 	db   $fc                                         ; $677f: $fc

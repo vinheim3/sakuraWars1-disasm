@@ -514,7 +514,7 @@ Call_008_4301:
 
 jr_008_431d:
 	ld   a, [$cbc4]                                  ; $431d: $fa $c4 $cb
-	call Func_1adf                                       ; $4320: $cd $df $1a
+	call PlaySoundEffect                                       ; $4320: $cd $df $1a
 
 jr_008_4323:
 	ld   a, [wInGameButtonsPressed]                                  ; $4323: $fa $10 $c2
@@ -698,7 +698,7 @@ ScriptEngineTable:
 	ScriptOpData ScriptOpcode1f, $01
 	ScriptOpData ScriptOpcode20, $00
 	;
-	ScriptOpData ScriptOpcode21, $01
+	ScriptOpData ScriptOpcode21_EnterName, $01
 	ScriptOpData ScriptOpcode22_Stub, $00
 	;
 	ScriptOpData ScriptOpcode23, $03
@@ -1458,7 +1458,7 @@ ScriptOpcode32_Main:
 
 ScriptOpcode02_Init:
 	ld   a, [$cbc8]                                  ; $48a3: $fa $c8 $cb
-	call PlaySound                                       ; $48a6: $cd $92 $1a
+	call PlaySong                                       ; $48a6: $cd $92 $1a
 	ld   a, $07                                      ; $48a9: $3e $07
 	call SafeSetAudVolForMultipleChannels                                       ; $48ab: $cd $e0 $1c
 	ld   a, $02                                      ; $48ae: $3e $02
@@ -4116,7 +4116,7 @@ ScriptOpcode13_Init:
 	ret  z                                           ; $5ad9: $c8
 
 	ld   a, b                                        ; $5ada: $78
-	call PlaySound                                       ; $5adb: $cd $92 $1a
+	call PlaySong                                       ; $5adb: $cd $92 $1a
 	ret                                              ; $5ade: $c9
 
 jr_008_5adf:
@@ -4154,7 +4154,7 @@ ScriptOpcode13_Main:
 
 	ld   a, b                                        ; $5b0b: $78
 	ld   [$cbc8], a                                  ; $5b0c: $ea $c8 $cb
-	call PlaySound                                       ; $5b0f: $cd $92 $1a
+	call PlaySong                                       ; $5b0f: $cd $92 $1a
 	or   a                                           ; $5b12: $b7
 	jr   z, .smth0                              ; $5b13: $28 $05
 
@@ -6403,7 +6403,7 @@ ScriptOpcode20_Main:
 	ret                                              ; $6b4d: $c9
 
 
-ScriptOpcode21_Init:
+ScriptOpcode21_EnterName_Init:
 	ld   a, $21                                      ; $6b4e: $3e $21
 	call EnqueueAScriptOpcode                               ; $6b50: $cd $97 $40
 	xor  a                                           ; $6b53: $af
@@ -6415,7 +6415,7 @@ ScriptOpcode21_Init:
 	ret                                              ; $6b5c: $c9
 
 
-ScriptOpcode21_Main:
+ScriptOpcode21_EnterName_Main:
 	xor  a                                           ; $6b5d: $af
 	ld   [wScriptEngineContsRunningThisMainLoop], a                                  ; $6b5e: $ea $52 $cb
 	ld   a, [hl]                                     ; $6b61: $7e
@@ -6431,14 +6431,17 @@ ScriptOpcode21_Main:
 	ld   [$cbb0], a                                  ; $6b74: $ea $b0 $cb
 	ld   [$cbac], a                                  ; $6b77: $ea $ac $cb
 	ld   [$cba6], a                                  ; $6b7a: $ea $a6 $cb
+
+;
 	ld   h, $3b                                      ; $6b7d: $26 $3b
 	ld   l, $01                                      ; $6b7f: $2e $01
 	ld   de, sPlayerName                                   ; $6b81: $11 $aa $af
-	ld   bc, $0005                                   ; $6b84: $01 $05 $00
+	ldbc $00, $05                                   ; $6b84: $01 $05 $00
 	xor  a                                           ; $6b87: $af
 
-	M_FarCall Func_10_6f2d
+	M_FarCall SetEnterNameState
 	
+;
 	ld   a, SO_02                                      ; $6b9c: $3e $02
 	call AddInterruptScriptOpcode                               ; $6b9e: $cd $ba $42
 	ret                                              ; $6ba1: $c9
@@ -6451,7 +6454,7 @@ ScriptOpcode22_Stub_Main:
 
 ScriptOpcode24_Init:
 	ld   a, $04                                      ; $6ba3: $3e $04
-	call PlaySound                                       ; $6ba5: $cd $92 $1a
+	call PlaySong                                       ; $6ba5: $cd $92 $1a
 	ld   a, $24                                      ; $6ba8: $3e $24
 	call EnqueueAScriptOpcode                               ; $6baa: $cd $97 $40
 	push hl                                          ; $6bad: $e5
@@ -6800,7 +6803,7 @@ ScriptOpcode26_Main:
 	xor  a                                           ; $6dec: $af
 	ld   [wScriptEngineContsRunningThisMainLoop], a                                  ; $6ded: $ea $52 $cb
 	xor  a                                           ; $6df0: $af
-	call PlaySound                                       ; $6df1: $cd $92 $1a
+	call PlaySong                                       ; $6df1: $cd $92 $1a
 	ld   a, $3f                                      ; $6df4: $3e $3f
 	ld   [wGameState], a                                  ; $6df6: $ea $a0 $c2
 	xor  a                                           ; $6df9: $af

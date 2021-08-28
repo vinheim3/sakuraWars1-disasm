@@ -6797,7 +6797,7 @@ Call_0b1_5a99:
 	rst  $38                                         ; $6012: $ff
 	ld   a, [$e99d]                                  ; $6013: $fa $9d $e9
 	ld   de, $0111                                   ; $6016: $11 $11 $01
-	ld   de, $c94b                                   ; $6019: $11 $4b $c9
+	ld   de, wEnterNameMaxChars                                   ; $6019: $11 $4b $c9
 	rst  WaitUntilVBlankIntHandledIfLCDOn                                         ; $601c: $cf
 	rst  $38                                         ; $601d: $ff
 	ld   sp, hl                                      ; $601e: $f9

@@ -2739,7 +2739,7 @@ jr_00a_57f9:
 	ld   hl, $cbdb                                   ; $5825: $21 $db $cb
 	inc  [hl]                                        ; $5828: $34
 	ld   a, $21                                      ; $5829: $3e $21
-	call Func_1adf                                       ; $582b: $cd $df $1a
+	call PlaySoundEffect                                       ; $582b: $cd $df $1a
 	ld   a, [$cbdd]                                  ; $582e: $fa $dd $cb
 	or   a                                           ; $5831: $b7
 	jr   z, jr_00a_5844                              ; $5832: $28 $10
@@ -2770,7 +2770,7 @@ jr_00a_584d:
 	ld   a, [$cbdb]                                  ; $5851: $fa $db $cb
 	call Call_00a_590d                               ; $5854: $cd $0d $59
 	ld   a, $20                                      ; $5857: $3e $20
-	call Func_1adf                                       ; $5859: $cd $df $1a
+	call PlaySoundEffect                                       ; $5859: $cd $df $1a
 	ld   a, [$cbdb]                                  ; $585c: $fa $db $cb
 	dec  a                                           ; $585f: $3d
 	ld   [$cbdb], a                                  ; $5860: $ea $db $cb
@@ -2791,7 +2791,7 @@ jr_00a_5872:
 	ret  z                                           ; $5874: $c8
 
 	ld   a, $20                                      ; $5875: $3e $20
-	call Func_1adf                                       ; $5877: $cd $df $1a
+	call PlaySoundEffect                                       ; $5877: $cd $df $1a
 	ld   a, [$cbdb]                                  ; $587a: $fa $db $cb
 	call Call_00a_590d                               ; $587d: $cd $0d $59
 	ld   a, [$cbdb]                                  ; $5880: $fa $db $cb
@@ -3235,7 +3235,7 @@ jr_00a_5adb:
 
 jr_00a_5b0c:
 	ld   a, $01                                      ; $5b0c: $3e $01
-	call Func_1adf                                       ; $5b0e: $cd $df $1a
+	call PlaySoundEffect                                       ; $5b0e: $cd $df $1a
 	ld   hl, $cbe1                                   ; $5b11: $21 $e1 $cb
 	inc  [hl]                                        ; $5b14: $34
 	xor  a                                           ; $5b15: $af
@@ -3380,7 +3380,7 @@ Func_0a_5b4b::
 
 jr_00a_5bdd:
 	ld   a, $01                                      ; $5bdd: $3e $01
-	call Func_1adf                                       ; $5bdf: $cd $df $1a
+	call PlaySoundEffect                                       ; $5bdf: $cd $df $1a
 	xor  a                                           ; $5be2: $af
 	ret                                              ; $5be3: $c9
 
@@ -3411,7 +3411,7 @@ Call_00a_5bf7:
 	ld   a, $07                                      ; $5c02: $3e $07
 	call SafeSetAudVolForMultipleChannels                                       ; $5c04: $cd $e0 $1c
 	ld   a, $01                                      ; $5c07: $3e $01
-	call PlaySound                                       ; $5c09: $cd $92 $1a
+	call PlaySong                                       ; $5c09: $cd $92 $1a
 	call ClearDisplayRegsAllowVBlankInt                                       ; $5c0c: $cd $59 $0b
 	ld   a, [wLCDC]                                  ; $5c0f: $fa $03 $c2
 	and  $e0                                         ; $5c12: $e6 $e0
@@ -3835,7 +3835,7 @@ jr_00a_5f0c:
 	jr   c, jr_00a_5f32                              ; $5f12: $38 $1e
 
 	ld   a, $21                                      ; $5f14: $3e $21
-	call Func_1adf                                       ; $5f16: $cd $df $1a
+	call PlaySoundEffect                                       ; $5f16: $cd $df $1a
 	ld   h, $02                                      ; $5f19: $26 $02
 	ld   l, $00                                      ; $5f1b: $2e $00
 	push af                                          ; $5f1d: $f5
@@ -3868,7 +3868,7 @@ jr_00a_5f43:
 	ret  z                                           ; $5f48: $c8
 
 	ld   a, $21                                      ; $5f49: $3e $21
-	call Func_1adf                                       ; $5f4b: $cd $df $1a
+	call PlaySoundEffect                                       ; $5f4b: $cd $df $1a
 	ld   a, $37                                      ; $5f4e: $3e $37
 	ld   [$cc04], a                                  ; $5f50: $ea $04 $cc
 	jp   Jump_00a_5ee6                               ; $5f53: $c3 $e6 $5e
@@ -3961,7 +3961,7 @@ jr_00a_5fc2:
 
 jr_00a_5fe7:
 	xor  a                                           ; $5fe7: $af
-	call PlaySound                                       ; $5fe8: $cd $92 $1a
+	call PlaySong                                       ; $5fe8: $cd $92 $1a
 	ld   h, $35                                      ; $5feb: $26 $35
 	ld   l, $01                                      ; $5fed: $2e $01
 	ld   bc, $0006                                   ; $5fef: $01 $06 $00
@@ -4212,8 +4212,8 @@ TitleScreenSubstate0:
 	ld   a, $07                                                     ; $61cb
 	call SafeSetAudVolForMultipleChannels                           ; $61cd
 
-	ld   a, SND_01                                                  ; $61d0
-	call PlaySound                                                  ; $61d2
+	ld   a, SONG_01                                                 ; $61d0
+	call PlaySong                                                   ; $61d2
 
 ; Clear display regs, allow vblank, retain window and display obj+bg
 	call ClearDisplayRegsAllowVBlankInt                             ; $61d5
@@ -4224,7 +4224,7 @@ TitleScreenSubstate0:
 	ld   [wLCDC], a                                                 ; $61df
 	ldh  [rLCDC], a                                                 ; $61e2
 
-; Clear palettes and update BG pals
+; Clear palettes and update all pals
 	ld   a, BANK(Palettes_AllWhite)                                 ; $61e4
 	ld   hl, Palettes_AllWhite                                      ; $61e6
 	ld   de, wBGandOBJPalettes                                      ; $61e9
@@ -4758,7 +4758,7 @@ TitleScreenAnimationHandler1_FasterUnusedFadeInMiddleBit:
 	jp   FadePalettesAndSetRangeToUpdate                            ; $64e7
 
 .toState2:
-; Load final palettes, updating BG's, then go to main anim step
+; Load final palettes, updating all, then go to main anim step
 	ld   a, BANK(Palettes_TitleScreen)                              ; $64ea
 	ld   hl, Palettes_TitleScreen                                   ; $64ec
 	ld   de, wBGandOBJPalettes                                      ; $64ef
@@ -4848,7 +4848,7 @@ TitleScreenAnimationHandler2_Main:
 
 ;
 	ld   a, $21                                      ; $6566: $3e $21
-	call Func_1adf                                       ; $6568: $cd $df $1a
+	call PlaySoundEffect                                       ; $6568: $cd $df $1a
 	ld   h, $46                                      ; $656b: $26 $46
 	ld   l, $00                                      ; $656d: $2e $00
 
@@ -4910,7 +4910,7 @@ TitleScreenAnimationHandler2_Main:
 
 .startOrApressed:
 	ld   a, $21                                      ; $65c4: $3e $21
-	call Func_1adf                                       ; $65c6: $cd $df $1a
+	call PlaySoundEffect                                       ; $65c6: $cd $df $1a
 	ld   a, $37                                      ; $65c9: $3e $37
 	ld   [$cc04], a                                  ; $65cb: $ea $04 $cc
 	jp   IncTitleScreenAnimStepClearMiscCounterIdx                               ; $65ce: $c3 $fe $64
@@ -4989,7 +4989,7 @@ TitleScreenAnimationHandler4_FadeOut:
 
 .br_6643:
 	xor  a                                           ; $6643: $af
-	call PlaySound                                       ; $6644: $cd $92 $1a
+	call PlaySong                                       ; $6644: $cd $92 $1a
 	ld   h, $36                                      ; $6647: $26 $36
 	ld   l, $01                                      ; $6649: $2e $01
 	ld   bc, $0006                                   ; $664b: $01 $06 $00
@@ -5110,7 +5110,7 @@ TitleScreenAnimationHandler6_LoadWindow:
 	ld   b, SCRN_VX_B*4/$10                                         ; $670c
 	call EnqueueHDMATransfer                                        ; $670e
 
-; Copy palettes and update BGs
+; Copy palettes and update all
 	ld   a, BANK(Palettes_TitleScreen)                              ; $6711
 	ld   hl, Palettes_TitleScreen                                   ; $6713
 	ld   de, wBGandOBJPalettes                                      ; $6716
@@ -5170,7 +5170,7 @@ TitleScreenAnimationHandler7_ScrollIn:
 	xor  a                                                          ; $676c
 	ld   [wSCY], a                                                  ; $676d
 
-; Get final palettes to start showing everything, and update BG's
+; Get final palettes to start showing everything, and update all
 	ld   a, BANK(Palettes_TitleScreen)                              ; $6770
 	ld   hl, Palettes_TitleScreen                                   ; $6772
 	ld   de, wBGandOBJPalettes                                      ; $6775
@@ -5338,8 +5338,8 @@ todo_InitTitleMenuScreen:
 	ld   a, $07                                                     ; $685f
 	call SafeSetAudVolForMultipleChannels                           ; $6861
 
-	ld   a, SND_01                                                  ; $6864
-	call PlaySound                                                  ; $6866
+	ld   a, SONG_01                                                 ; $6864
+	call PlaySong                                                   ; $6866
 
 ; Clear display regs, and turn on LCD
 	call ClearDisplayRegsAllowVBlankInt                             ; $6869
@@ -6131,7 +6131,7 @@ TitleMenuScreenAnimationHandler6:
 	ld   a, [$cc09]                                  ; $6df6: $fa $09 $cc
 	call StopAnimatingAnimatedSpriteSpec                                       ; $6df9: $cd $06 $30
 	ld   a, $21                                      ; $6dfc: $3e $21
-	call Func_1adf                                       ; $6dfe: $cd $df $1a
+	call PlaySoundEffect                                       ; $6dfe: $cd $df $1a
 	ld   a, $08                                      ; $6e01: $3e $08
 	ld   [$cc04], a                                  ; $6e03: $ea $04 $cc
 	ld   hl, wTitleScreenAnimationStep                                   ; $6e06: $21 $02 $cc
@@ -6779,7 +6779,7 @@ TitleMenuScreenAnimationHandlerA:
 	jr   nz, jr_00a_7241                             ; $7236: $20 $09
 
 	ld   a, $21                                      ; $7238: $3e $21
-	call Func_1adf                                       ; $723a: $cd $df $1a
+	call PlaySoundEffect                                       ; $723a: $cd $df $1a
 	ld   a, $ff                                      ; $723d: $3e $ff
 	jr   jr_00a_727c                                 ; $723f: $18 $3b
 
@@ -7061,7 +7061,7 @@ TitleMenuScreenAnimationHandlerD:
 
 .prologue:
 	xor  a                                           ; $73f7: $af
-	call PlaySound                                       ; $73f8: $cd $92 $1a
+	call PlaySong                                       ; $73f8: $cd $92 $1a
 	ld   h, $37                                      ; $73fb: $26 $37
 	ld   l, $01                                      ; $73fd: $2e $01
 	ld   bc, $0006                                   ; $73ff: $01 $06 $00
@@ -7079,7 +7079,7 @@ TitleMenuScreenAnimationHandlerD:
 
 .newGame:
 	xor  a                                           ; $7418: $af
-	call PlaySound                                       ; $7419: $cd $92 $1a
+	call PlaySong                                       ; $7419: $cd $92 $1a
 	xor  a                                           ; $741c: $af
 	ld   [$cb1d], a                                  ; $741d: $ea $1d $cb
 	ld   a, $03                                      ; $7420: $3e $03
@@ -7100,7 +7100,7 @@ TitleMenuScreenAnimationHandlerD:
 
 .continue:
 	xor  a                                           ; $7440: $af
-	call PlaySound                                       ; $7441: $cd $92 $1a
+	call PlaySong                                       ; $7441: $cd $92 $1a
 	ld   a, $ff                                      ; $7444: $3e $ff
 	ld   [$cc1d], a                                  ; $7446: $ea $1d $cc
 	xor  a                                           ; $7449: $af
@@ -7110,12 +7110,12 @@ TitleMenuScreenAnimationHandlerD:
 	ld   d, $37                                      ; $7451: $16 $37
 	ld   e, $01                                      ; $7453: $1e $01
 
-	M_FarCall Func_10_4e89
+	M_FarCall SetContinueGameState
 	ret                                              ; $7469: $c9
 
 .settings:
 	xor  a                                           ; $746a: $af
-	call PlaySound                                       ; $746b: $cd $92 $1a
+	call PlaySong                                       ; $746b: $cd $92 $1a
 	ld   a, $14                                      ; $746e: $3e $14
 	ld   h, $37                                      ; $7470: $26 $37
 	ld   l, $01                                      ; $7472: $2e $01
@@ -7170,7 +7170,7 @@ TitleMenuScreenAnimationHandlerD:
 	jr   nz, jr_00a_74fd                             ; $74d1: $20 $2a
 
 	xor  a                                           ; $74d3: $af
-	call PlaySound                                       ; $74d4: $cd $92 $1a
+	call PlaySong                                       ; $74d4: $cd $92 $1a
 	ld   h, $37                                      ; $74d7: $26 $37
 	ld   l, $02                                      ; $74d9: $2e $02
 	push af                                          ; $74db: $f5
@@ -7230,7 +7230,7 @@ jr_00a_7502:
 	jr   nz, jr_00a_7555                             ; $7536: $20 $1d
 
 	xor  a                                           ; $7538: $af
-	call PlaySound                                       ; $7539: $cd $92 $1a
+	call PlaySong                                       ; $7539: $cd $92 $1a
 	ld   h, $37                                      ; $753c: $26 $37
 	ld   l, $02                                      ; $753e: $2e $02
 	push af                                          ; $7540: $f5
@@ -7264,7 +7264,7 @@ jr_00a_7555:
 	jr   z, jr_00a_7598                              ; $7574: $28 $22
 
 	xor  a                                           ; $7576: $af
-	call PlaySound                                       ; $7577: $cd $92 $1a
+	call PlaySong                                       ; $7577: $cd $92 $1a
 	ld   a, $01                                      ; $757a: $3e $01
 	ld   [$cb1d], a                                  ; $757c: $ea $1d $cb
 	ld   h, $37                                      ; $757f: $26 $37
@@ -7288,7 +7288,7 @@ jr_00a_7598:
 
 
 	xor  a                                           ; $75a0: $af
-	call PlaySound                                       ; $75a1: $cd $92 $1a
+	call PlaySong                                       ; $75a1: $cd $92 $1a
 	ld   h, $37                                      ; $75a4: $26 $37
 	ld   l, $02                                      ; $75a6: $2e $02
 	push af                                          ; $75a8: $f5

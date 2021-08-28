@@ -4743,7 +4743,7 @@ Call_00d_5799:
 	jr   z, jr_00d_5819                              ; $5809: $28 $0e
 
 	ld   a, $22                                      ; $580b: $3e $22
-	call Func_1adf                                       ; $580d: $cd $df $1a
+	call PlaySoundEffect                                       ; $580d: $cd $df $1a
 	ld   hl, $cb44                                   ; $5810: $21 $44 $cb
 	inc  [hl]                                        ; $5813: $34
 	xor  a                                           ; $5814: $af
@@ -4782,7 +4782,7 @@ jr_00d_583b:
 	call Call_00d_5216                               ; $5842: $cd $16 $52
 	call Call_00d_51f7                               ; $5845: $cd $f7 $51
 	ld   a, $20                                      ; $5848: $3e $20
-	call Func_1adf                                       ; $584a: $cd $df $1a
+	call PlaySoundEffect                                       ; $584a: $cd $df $1a
 	ld   a, $01                                      ; $584d: $3e $01
 	ld   [$cb45], a                                  ; $584f: $ea $45 $cb
 	xor  a                                           ; $5852: $af
@@ -4824,7 +4824,7 @@ jr_00d_587c:
 	call Call_00d_5216                               ; $5883: $cd $16 $52
 	call Call_00d_51f7                               ; $5886: $cd $f7 $51
 	ld   a, $20                                      ; $5889: $3e $20
-	call Func_1adf                                       ; $588b: $cd $df $1a
+	call PlaySoundEffect                                       ; $588b: $cd $df $1a
 	ld   a, $02                                      ; $588e: $3e $02
 	ld   [$cb45], a                                  ; $5890: $ea $45 $cb
 	xor  a                                           ; $5893: $af
@@ -4847,7 +4847,7 @@ jr_00d_5898:
 
 	ld   [$cb4f], a                                  ; $58ab: $ea $4f $cb
 	ld   a, $20                                      ; $58ae: $3e $20
-	call Func_1adf                                       ; $58b0: $cd $df $1a
+	call PlaySoundEffect                                       ; $58b0: $cd $df $1a
 	ld   a, $03                                      ; $58b3: $3e $03
 	ld   [$cb45], a                                  ; $58b5: $ea $45 $cb
 	xor  a                                           ; $58b8: $af
@@ -4870,7 +4870,7 @@ jr_00d_58bd:
 
 	ld   [$cb4f], a                                  ; $58cc: $ea $4f $cb
 	ld   a, $20                                      ; $58cf: $3e $20
-	call Func_1adf                                       ; $58d1: $cd $df $1a
+	call PlaySoundEffect                                       ; $58d1: $cd $df $1a
 	ld   a, $04                                      ; $58d4: $3e $04
 	ld   [$cb45], a                                  ; $58d6: $ea $45 $cb
 	xor  a                                           ; $58d9: $af

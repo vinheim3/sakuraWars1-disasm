@@ -147,7 +147,7 @@ BattleSubstate00:
 	ld   a, $ff                                      ; $40e8: $3e $ff
 	ld   [wInGameInputsEnabled], a                                  ; $40ea: $ea $0e $c2
 	xor  a                                           ; $40ed: $af
-	call PlaySound                                       ; $40ee: $cd $92 $1a
+	call PlaySong                                       ; $40ee: $cd $92 $1a
 	ld   a, $0c                                      ; $40f1: $3e $0c
 	ld   [wBaseInitialStickyCounter], a                                  ; $40f3: $ea $13 $c2
 	ld   a, $04                                      ; $40f6: $3e $04
@@ -282,7 +282,7 @@ jr_024_41d5:
 	pop  af                                          ; $4204: $f1
 	call FarCall                                       ; $4205: $cd $62 $09
 	ld   a, $0c                                      ; $4208: $3e $0c
-	call PlaySound                                       ; $420a: $cd $92 $1a
+	call PlaySong                                       ; $420a: $cd $92 $1a
 	ld   a, $07                                      ; $420d: $3e $07
 	call SafeSetAudVolForMultipleChannels                                       ; $420f: $cd $e0 $1c
 	call ClearOam                                       ; $4212: $cd $d7 $0d
@@ -471,10 +471,10 @@ jr_024_4365:
 	xor  a                                           ; $4365: $af
 	ld   [$ca86], a                                  ; $4366: $ea $86 $ca
 	xor  a                                           ; $4369: $af
-	call Func_1adf                                       ; $436a: $cd $df $1a
+	call PlaySoundEffect                                       ; $436a: $cd $df $1a
 	rst  WaitUntilVBlankIntHandledIfLCDOn                                         ; $436d: $cf
 	ld   a, $01                                      ; $436e: $3e $01
-	call Func_1adf                                       ; $4370: $cd $df $1a
+	call PlaySoundEffect                                       ; $4370: $cd $df $1a
 	ld   a, [$ca87]                                  ; $4373: $fa $87 $ca
 	cp   $3d                                         ; $4376: $fe $3d
 	jr   nz, jr_024_4384                             ; $4378: $20 $0a
@@ -544,10 +544,10 @@ jr_024_43ed:
 	xor  a                                           ; $43ed: $af
 	ld   [$ca86], a                                  ; $43ee: $ea $86 $ca
 	xor  a                                           ; $43f1: $af
-	call Func_1adf                                       ; $43f2: $cd $df $1a
+	call PlaySoundEffect                                       ; $43f2: $cd $df $1a
 	rst  WaitUntilVBlankIntHandledIfLCDOn                                         ; $43f5: $cf
 	ld   a, $01                                      ; $43f6: $3e $01
-	call Func_1adf                                       ; $43f8: $cd $df $1a
+	call PlaySoundEffect                                       ; $43f8: $cd $df $1a
 	ld   hl, wGameSubstate                                   ; $43fb: $21 $a1 $c2
 	inc  [hl]                                        ; $43fe: $34
 	ret                                              ; $43ff: $c9
@@ -642,10 +642,10 @@ jr_024_4490:
 	xor  a                                           ; $4490: $af
 	ld   [$ca86], a                                  ; $4491: $ea $86 $ca
 	xor  a                                           ; $4494: $af
-	call Func_1adf                                       ; $4495: $cd $df $1a
+	call PlaySoundEffect                                       ; $4495: $cd $df $1a
 	rst  WaitUntilVBlankIntHandledIfLCDOn                                         ; $4498: $cf
 	ld   a, $01                                      ; $4499: $3e $01
-	call Func_1adf                                       ; $449b: $cd $df $1a
+	call PlaySoundEffect                                       ; $449b: $cd $df $1a
 	xor  a                                           ; $449e: $af
 	ld   [$cbe5], a                                  ; $449f: $ea $e5 $cb
 	ld   a, $0b                                      ; $44a2: $3e $0b
@@ -936,10 +936,10 @@ jr_024_4667:
 	xor  a                                           ; $4667: $af
 	ld   [$ca86], a                                  ; $4668: $ea $86 $ca
 	xor  a                                           ; $466b: $af
-	call Func_1adf                                       ; $466c: $cd $df $1a
+	call PlaySoundEffect                                       ; $466c: $cd $df $1a
 	rst  WaitUntilVBlankIntHandledIfLCDOn                                         ; $466f: $cf
 	ld   a, $01                                      ; $4670: $3e $01
-	call Func_1adf                                       ; $4672: $cd $df $1a
+	call PlaySoundEffect                                       ; $4672: $cd $df $1a
 	xor  a                                           ; $4675: $af
 	ld   [$cbe5], a                                  ; $4676: $ea $e5 $cb
 	ld   hl, wGameSubstate                                   ; $4679: $21 $a1 $c2
@@ -1214,7 +1214,7 @@ jr_024_4800:
 	xor  a                                           ; $4814: $af
 	ld   [$cbe5], a                                  ; $4815: $ea $e5 $cb
 	xor  a                                           ; $4818: $af
-	call Func_1adf                                       ; $4819: $cd $df $1a
+	call PlaySoundEffect                                       ; $4819: $cd $df $1a
 	ld   hl, wGameSubstate                                   ; $481c: $21 $a1 $c2
 	inc  [hl]                                        ; $481f: $34
 
@@ -1470,10 +1470,10 @@ jr_024_49b5:
 	xor  a                                           ; $49b5: $af
 	ld   [$ca86], a                                  ; $49b6: $ea $86 $ca
 	xor  a                                           ; $49b9: $af
-	call Func_1adf                                       ; $49ba: $cd $df $1a
+	call PlaySoundEffect                                       ; $49ba: $cd $df $1a
 	rst  WaitUntilVBlankIntHandledIfLCDOn                                         ; $49bd: $cf
 	ld   a, $01                                      ; $49be: $3e $01
-	call Func_1adf                                       ; $49c0: $cd $df $1a
+	call PlaySoundEffect                                       ; $49c0: $cd $df $1a
 	ld   hl, wGameSubstate                                   ; $49c3: $21 $a1 $c2
 	inc  [hl]                                        ; $49c6: $34
 	ret                                              ; $49c7: $c9
@@ -1624,10 +1624,10 @@ jr_024_4ab5:
 	xor  a                                           ; $4ab5: $af
 	ld   [$ca86], a                                  ; $4ab6: $ea $86 $ca
 	xor  a                                           ; $4ab9: $af
-	call Func_1adf                                       ; $4aba: $cd $df $1a
+	call PlaySoundEffect                                       ; $4aba: $cd $df $1a
 	rst  WaitUntilVBlankIntHandledIfLCDOn                                         ; $4abd: $cf
 	ld   a, $01                                      ; $4abe: $3e $01
-	call Func_1adf                                       ; $4ac0: $cd $df $1a
+	call PlaySoundEffect                                       ; $4ac0: $cd $df $1a
 	ld   hl, wGameSubstate                                   ; $4ac3: $21 $a1 $c2
 	inc  [hl]                                        ; $4ac6: $34
 	ret                                              ; $4ac7: $c9
@@ -2028,10 +2028,10 @@ jr_024_4d86:
 	xor  a                                           ; $4d86: $af
 	ld   [$ca86], a                                  ; $4d87: $ea $86 $ca
 	xor  a                                           ; $4d8a: $af
-	call Func_1adf                                       ; $4d8b: $cd $df $1a
+	call PlaySoundEffect                                       ; $4d8b: $cd $df $1a
 	rst  WaitUntilVBlankIntHandledIfLCDOn                                         ; $4d8e: $cf
 	ld   a, $01                                      ; $4d8f: $3e $01
-	call Func_1adf                                       ; $4d91: $cd $df $1a
+	call PlaySoundEffect                                       ; $4d91: $cd $df $1a
 	ld   hl, wGameSubstate                                   ; $4d94: $21 $a1 $c2
 	inc  [hl]                                        ; $4d97: $34
 	ret                                              ; $4d98: $c9
@@ -2191,10 +2191,10 @@ jr_024_4e76:
 	xor  a                                           ; $4e76: $af
 	ld   [$ca86], a                                  ; $4e77: $ea $86 $ca
 	xor  a                                           ; $4e7a: $af
-	call Func_1adf                                       ; $4e7b: $cd $df $1a
+	call PlaySoundEffect                                       ; $4e7b: $cd $df $1a
 	rst  WaitUntilVBlankIntHandledIfLCDOn                                         ; $4e7e: $cf
 	ld   a, $01                                      ; $4e7f: $3e $01
-	call Func_1adf                                       ; $4e81: $cd $df $1a
+	call PlaySoundEffect                                       ; $4e81: $cd $df $1a
 	ld   hl, wGameSubstate                                   ; $4e84: $21 $a1 $c2
 	inc  [hl]                                        ; $4e87: $34
 	ret                                              ; $4e88: $c9
@@ -2240,9 +2240,9 @@ jr_024_4e9a:
 	jr   nz, jr_024_4edd                             ; $4ece: $20 $0d
 
 	xor  a                                           ; $4ed0: $af
-	call Func_1adf                                       ; $4ed1: $cd $df $1a
+	call PlaySoundEffect                                       ; $4ed1: $cd $df $1a
 	ld   a, $0f                                      ; $4ed4: $3e $0f
-	call Func_1adf                                       ; $4ed6: $cd $df $1a
+	call PlaySoundEffect                                       ; $4ed6: $cd $df $1a
 	xor  a                                           ; $4ed9: $af
 	ld   [$ca9a], a                                  ; $4eda: $ea $9a $ca
 
@@ -2525,10 +2525,10 @@ jr_024_50ca:
 	xor  a                                           ; $50ca: $af
 	ld   [$ca86], a                                  ; $50cb: $ea $86 $ca
 	xor  a                                           ; $50ce: $af
-	call Func_1adf                                       ; $50cf: $cd $df $1a
+	call PlaySoundEffect                                       ; $50cf: $cd $df $1a
 	rst  WaitUntilVBlankIntHandledIfLCDOn                                         ; $50d2: $cf
 	ld   a, $01                                      ; $50d3: $3e $01
-	call Func_1adf                                       ; $50d5: $cd $df $1a
+	call PlaySoundEffect                                       ; $50d5: $cd $df $1a
 	ld   a, $06                                      ; $50d8: $3e $06
 	ld   [wGameSubstate], a                                  ; $50da: $ea $a1 $c2
 	ret                                              ; $50dd: $c9
@@ -2606,10 +2606,10 @@ jr_024_5163:
 	xor  a                                           ; $5163: $af
 	ld   [$ca86], a                                  ; $5164: $ea $86 $ca
 	xor  a                                           ; $5167: $af
-	call Func_1adf                                       ; $5168: $cd $df $1a
+	call PlaySoundEffect                                       ; $5168: $cd $df $1a
 	rst  WaitUntilVBlankIntHandledIfLCDOn                                         ; $516b: $cf
 	ld   a, $01                                      ; $516c: $3e $01
-	call Func_1adf                                       ; $516e: $cd $df $1a
+	call PlaySoundEffect                                       ; $516e: $cd $df $1a
 	push af                                          ; $5171: $f5
 	ld   a, $3c                                      ; $5172: $3e $3c
 	ld   [wFarCallAddr], a                                  ; $5174: $ea $98 $c2
@@ -2824,10 +2824,10 @@ jr_024_52ea:
 	xor  a                                           ; $52ea: $af
 	ld   [$ca86], a                                  ; $52eb: $ea $86 $ca
 	xor  a                                           ; $52ee: $af
-	call Func_1adf                                       ; $52ef: $cd $df $1a
+	call PlaySoundEffect                                       ; $52ef: $cd $df $1a
 	rst  WaitUntilVBlankIntHandledIfLCDOn                                         ; $52f2: $cf
 	ld   a, $01                                      ; $52f3: $3e $01
-	call Func_1adf                                       ; $52f5: $cd $df $1a
+	call PlaySoundEffect                                       ; $52f5: $cd $df $1a
 	xor  a                                           ; $52f8: $af
 	ld   [$cbe5], a                                  ; $52f9: $ea $e5 $cb
 	ld   hl, wGameSubstate                                   ; $52fc: $21 $a1 $c2
@@ -3095,7 +3095,7 @@ jr_024_5474:
 	xor  a                                           ; $5488: $af
 	ld   [$cbe5], a                                  ; $5489: $ea $e5 $cb
 	xor  a                                           ; $548c: $af
-	call Func_1adf                                       ; $548d: $cd $df $1a
+	call PlaySoundEffect                                       ; $548d: $cd $df $1a
 	ld   hl, wGameSubstate                                   ; $5490: $21 $a1 $c2
 	inc  [hl]                                        ; $5493: $34
 
@@ -3357,10 +3357,10 @@ jr_024_5663:
 	xor  a                                           ; $5663: $af
 	ld   [$ca86], a                                  ; $5664: $ea $86 $ca
 	xor  a                                           ; $5667: $af
-	call Func_1adf                                       ; $5668: $cd $df $1a
+	call PlaySoundEffect                                       ; $5668: $cd $df $1a
 	rst  WaitUntilVBlankIntHandledIfLCDOn                                         ; $566b: $cf
 	ld   a, $01                                      ; $566c: $3e $01
-	call Func_1adf                                       ; $566e: $cd $df $1a
+	call PlaySoundEffect                                       ; $566e: $cd $df $1a
 	ld   hl, wGameSubstate                                   ; $5671: $21 $a1 $c2
 	inc  [hl]                                        ; $5674: $34
 	ret                                              ; $5675: $c9
@@ -3414,10 +3414,10 @@ jr_024_56c3:
 	jr   nz, jr_024_56df                             ; $56cf: $20 $0e
 
 	xor  a                                           ; $56d1: $af
-	call Func_1adf                                       ; $56d2: $cd $df $1a
+	call PlaySoundEffect                                       ; $56d2: $cd $df $1a
 	rst  WaitUntilVBlankIntHandledIfLCDOn                                         ; $56d5: $cf
 	ld   a, $0f                                      ; $56d6: $3e $0f
-	call Func_1adf                                       ; $56d8: $cd $df $1a
+	call PlaySoundEffect                                       ; $56d8: $cd $df $1a
 	xor  a                                           ; $56db: $af
 	ld   [$ca9a], a                                  ; $56dc: $ea $9a $ca
 
@@ -3709,10 +3709,10 @@ jr_024_58d1:
 	xor  a                                           ; $58d1: $af
 	ld   [$ca86], a                                  ; $58d2: $ea $86 $ca
 	xor  a                                           ; $58d5: $af
-	call Func_1adf                                       ; $58d6: $cd $df $1a
+	call PlaySoundEffect                                       ; $58d6: $cd $df $1a
 	rst  WaitUntilVBlankIntHandledIfLCDOn                                         ; $58d9: $cf
 	ld   a, $01                                      ; $58da: $3e $01
-	call Func_1adf                                       ; $58dc: $cd $df $1a
+	call PlaySoundEffect                                       ; $58dc: $cd $df $1a
 	ld   hl, wGameSubstate                                   ; $58df: $21 $a1 $c2
 	inc  [hl]                                        ; $58e2: $34
 	ret                                              ; $58e3: $c9
@@ -3762,9 +3762,9 @@ jr_024_5934:
 
 Jump_024_5947:
 	xor  a                                           ; $5947: $af
-	call PlaySound                                       ; $5948: $cd $92 $1a
+	call PlaySong                                       ; $5948: $cd $92 $1a
 	xor  a                                           ; $594b: $af
-	call Func_1adf                                       ; $594c: $cd $df $1a
+	call PlaySoundEffect                                       ; $594c: $cd $df $1a
 	ld   a, [$cb1d]                                  ; $594f: $fa $1d $cb
 	or   a                                           ; $5952: $b7
 	jr   nz, jr_024_5974                             ; $5953: $20 $1f
@@ -3913,10 +3913,10 @@ jr_024_5a53:
 	xor  a                                           ; $5a53: $af
 	ld   [$ca86], a                                  ; $5a54: $ea $86 $ca
 	xor  a                                           ; $5a57: $af
-	call Func_1adf                                       ; $5a58: $cd $df $1a
+	call PlaySoundEffect                                       ; $5a58: $cd $df $1a
 	rst  WaitUntilVBlankIntHandledIfLCDOn                                         ; $5a5b: $cf
 	ld   a, $01                                      ; $5a5c: $3e $01
-	call Func_1adf                                       ; $5a5e: $cd $df $1a
+	call PlaySoundEffect                                       ; $5a5e: $cd $df $1a
 	ld   hl, wGameSubstate                                   ; $5a61: $21 $a1 $c2
 	inc  [hl]                                        ; $5a64: $34
 	ret                                              ; $5a65: $c9
@@ -3985,10 +3985,10 @@ jr_024_5add:
 	xor  a                                           ; $5add: $af
 	ld   [$ca86], a                                  ; $5ade: $ea $86 $ca
 	xor  a                                           ; $5ae1: $af
-	call Func_1adf                                       ; $5ae2: $cd $df $1a
+	call PlaySoundEffect                                       ; $5ae2: $cd $df $1a
 	rst  WaitUntilVBlankIntHandledIfLCDOn                                         ; $5ae5: $cf
 	ld   a, $01                                      ; $5ae6: $3e $01
-	call Func_1adf                                       ; $5ae8: $cd $df $1a
+	call PlaySoundEffect                                       ; $5ae8: $cd $df $1a
 	ld   hl, wGameSubstate                                   ; $5aeb: $21 $a1 $c2
 	inc  [hl]                                        ; $5aee: $34
 	ret                                              ; $5aef: $c9
@@ -4094,10 +4094,10 @@ jr_024_5bae:
 	xor  a                                           ; $5bae: $af
 	ld   [$ca86], a                                  ; $5baf: $ea $86 $ca
 	xor  a                                           ; $5bb2: $af
-	call Func_1adf                                       ; $5bb3: $cd $df $1a
+	call PlaySoundEffect                                       ; $5bb3: $cd $df $1a
 	rst  WaitUntilVBlankIntHandledIfLCDOn                                         ; $5bb6: $cf
 	ld   a, $01                                      ; $5bb7: $3e $01
-	call Func_1adf                                       ; $5bb9: $cd $df $1a
+	call PlaySoundEffect                                       ; $5bb9: $cd $df $1a
 	ld   hl, wGameSubstate                                   ; $5bbc: $21 $a1 $c2
 	inc  [hl]                                        ; $5bbf: $34
 	ret                                              ; $5bc0: $c9
@@ -4455,10 +4455,10 @@ jr_024_5e6d:
 	xor  a                                           ; $5e6d: $af
 	ld   [$ca86], a                                  ; $5e6e: $ea $86 $ca
 	xor  a                                           ; $5e71: $af
-	call Func_1adf                                       ; $5e72: $cd $df $1a
+	call PlaySoundEffect                                       ; $5e72: $cd $df $1a
 	rst  WaitUntilVBlankIntHandledIfLCDOn                                         ; $5e75: $cf
 	ld   a, $01                                      ; $5e76: $3e $01
-	call Func_1adf                                       ; $5e78: $cd $df $1a
+	call PlaySoundEffect                                       ; $5e78: $cd $df $1a
 	ld   hl, wGameSubstate                                   ; $5e7b: $21 $a1 $c2
 	inc  [hl]                                        ; $5e7e: $34
 	ret                                              ; $5e7f: $c9

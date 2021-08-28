@@ -5369,7 +5369,7 @@ jr_013_5657:
 	call nc, Call_013_5274                           ; $56f4: $d4 $74 $52
 	ldh  a, [c]                                      ; $56f7: $f2
 	xor  d                                           ; $56f8: $aa
-	ld   [$c949], a                                  ; $56f9: $ea $49 $c9
+	ld   [wPointerToPlayerNameToEnter+1], a                                  ; $56f9: $ea $49 $c9
 	ld   c, l                                        ; $56fc: $4d
 	ret                                              ; $56fd: $c9
 

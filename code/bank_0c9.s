@@ -5188,7 +5188,7 @@ Call_0c9_57b6:
 	adc  c                                           ; $5992: $89
 	sub  a                                           ; $5993: $97
 	ld   h, [hl]                                     ; $5994: $66
-	ld   sp, $c94a                                   ; $5995: $31 $4a $c9
+	ld   sp, wPlayerNameRamBank                                   ; $5995: $31 $4a $c9
 	xor  e                                           ; $5998: $ab
 	xor  d                                           ; $5999: $aa
 	ld   a, c                                        ; $599a: $79

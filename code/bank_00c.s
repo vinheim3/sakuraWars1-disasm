@@ -912,7 +912,7 @@ jr_00c_4613:
 	ld   a, [hl]                                     ; $461e: $7e
 	ld   [$cb2f], a                                  ; $461f: $ea $2f $cb
 	ld   a, $21                                      ; $4622: $3e $21
-	call Func_1adf                                       ; $4624: $cd $df $1a
+	call PlaySoundEffect                                       ; $4624: $cd $df $1a
 	ld   hl, $cb2b                                   ; $4627: $21 $2b $cb
 	inc  [hl]                                        ; $462a: $34
 	xor  a                                           ; $462b: $af
@@ -933,7 +933,7 @@ jr_00c_4635:
 	ld   a, [hl]                                     ; $4641: $7e
 	ld   [$cb2f], a                                  ; $4642: $ea $2f $cb
 	ld   a, $21                                      ; $4645: $3e $21
-	call Func_1adf                                       ; $4647: $cd $df $1a
+	call PlaySoundEffect                                       ; $4647: $cd $df $1a
 	ld   hl, $cb2b                                   ; $464a: $21 $2b $cb
 	inc  [hl]                                        ; $464d: $34
 	xor  a                                           ; $464e: $af
@@ -1354,7 +1354,7 @@ jr_00c_4848:
 	ld   a, $39                                      ; $489a: $3e $39
 	ld   [$cb2d], a                                  ; $489c: $ea $2d $cb
 	ld   a, $21                                      ; $489f: $3e $21
-	call Func_1adf                                       ; $48a1: $cd $df $1a
+	call PlaySoundEffect                                       ; $48a1: $cd $df $1a
 	ret                                              ; $48a4: $c9
 
 
@@ -1384,7 +1384,7 @@ jr_00c_48a5:
 	ld   a, $3b                                      ; $48cd: $3e $3b
 	ld   [$cb2d], a                                  ; $48cf: $ea $2d $cb
 	ld   a, $21                                      ; $48d2: $3e $21
-	call Func_1adf                                       ; $48d4: $cd $df $1a
+	call PlaySoundEffect                                       ; $48d4: $cd $df $1a
 	ret                                              ; $48d7: $c9
 
 
@@ -2446,7 +2446,7 @@ GameState3c::
 	ld   [wWramBank], a                                  ; $4dd7: $ea $93 $c2
 	ldh  [rSVBK], a                                  ; $4dda: $e0 $70
 	xor  a                                           ; $4ddc: $af
-	call PlaySound                                       ; $4ddd: $cd $92 $1a
+	call PlaySong                                       ; $4ddd: $cd $92 $1a
 	ld   a, $00                                      ; $4de0: $3e $00
 	call SafeSetAudVolForMultipleChannels                                       ; $4de2: $cd $e0 $1c
 	call TurnOffLCD                                       ; $4de5: $cd $e3 $08
@@ -2634,7 +2634,7 @@ jr_00c_4eae:
 	call EnqueueHDMATransfer                                       ; $4f6a: $cd $7c $02
 	call TurnOnLCD                                       ; $4f6d: $cd $09 $09
 	ld   a, $11                                      ; $4f70: $3e $11
-	call PlaySound                                       ; $4f72: $cd $92 $1a
+	call PlaySong                                       ; $4f72: $cd $92 $1a
 	ld   a, $07                                      ; $4f75: $3e $07
 	call SafeSetAudVolForMultipleChannels                                       ; $4f77: $cd $e0 $1c
 	xor  a                                           ; $4f7a: $af
@@ -2777,7 +2777,7 @@ jr_00c_5013:
 	ret  nz                                          ; $5044: $c0
 
 	xor  a                                           ; $5045: $af
-	call PlaySound                                       ; $5046: $cd $92 $1a
+	call PlaySong                                       ; $5046: $cd $92 $1a
 	jr   jr_00c_504b                                 ; $5049: $18 $00
 
 jr_00c_504b:
@@ -2843,7 +2843,7 @@ jr_00c_509d:
 	ld   bc, $003f                                   ; $50ab: $01 $3f $00
 	call SetBGandOBJPaletteRangesToUpdate                                       ; $50ae: $cd $aa $04
 	xor  a                                           ; $50b1: $af
-	call PlaySound                                       ; $50b2: $cd $92 $1a
+	call PlaySong                                       ; $50b2: $cd $92 $1a
 	ld   hl, $cc1b                                   ; $50b5: $21 $1b $cc
 	inc  [hl]                                        ; $50b8: $34
 	xor  a                                           ; $50b9: $af
@@ -3182,7 +3182,7 @@ jr_00c_52da:
 	ret  z                                           ; $52f4: $c8
 
 	ld   a, $22                                      ; $52f5: $3e $22
-	call Func_1adf                                       ; $52f7: $cd $df $1a
+	call PlaySoundEffect                                       ; $52f7: $cd $df $1a
 	jp   Jump_00c_52a0                               ; $52fa: $c3 $a0 $52
 
 
@@ -3927,7 +3927,7 @@ jr_00c_57e0:
 	ret  z                                           ; $57e9: $c8
 
 	ld   a, $21                                      ; $57ea: $3e $21
-	call Func_1adf                                       ; $57ec: $cd $df $1a
+	call PlaySoundEffect                                       ; $57ec: $cd $df $1a
 	ld   hl, $cc28                                   ; $57ef: $21 $28 $cc
 	inc  [hl]                                        ; $57f2: $34
 	xor  a                                           ; $57f3: $af
@@ -3969,7 +3969,7 @@ jr_00c_57f8:
 	pop  af                                          ; $5836: $f1
 	call FarCall                                       ; $5837: $cd $62 $09
 	ld   a, $23                                      ; $583a: $3e $23
-	call Func_1adf                                       ; $583c: $cd $df $1a
+	call PlaySoundEffect                                       ; $583c: $cd $df $1a
 
 jr_00c_583f:
 	ld   a, [$cc29]                                  ; $583f: $fa $29 $cc
@@ -4042,7 +4042,7 @@ jr_00c_5880:
 	pop  af                                          ; $58bb: $f1
 	call FarCall                                       ; $58bc: $cd $62 $09
 	ld   a, $20                                      ; $58bf: $3e $20
-	call Func_1adf                                       ; $58c1: $cd $df $1a
+	call PlaySoundEffect                                       ; $58c1: $cd $df $1a
 	ret                                              ; $58c4: $c9
 
 
@@ -4071,7 +4071,7 @@ jr_00c_58c5:
 	pop  af                                          ; $58ef: $f1
 	call FarCall                                       ; $58f0: $cd $62 $09
 	ld   a, $20                                      ; $58f3: $3e $20
-	call Func_1adf                                       ; $58f5: $cd $df $1a
+	call PlaySoundEffect                                       ; $58f5: $cd $df $1a
 	ret                                              ; $58f8: $c9
 
 
@@ -4085,7 +4085,7 @@ Jump_00c_58f9:
 	xor  a                                           ; $5903: $af
 	ld   [$cc29], a                                  ; $5904: $ea $29 $cc
 	ld   a, $21                                      ; $5907: $3e $21
-	call Func_1adf                                       ; $5909: $cd $df $1a
+	call PlaySoundEffect                                       ; $5909: $cd $df $1a
 	ret                                              ; $590c: $c9
 
 
@@ -4097,7 +4097,7 @@ jr_00c_590d:
 	xor  a                                           ; $5912: $af
 	ld   [$cc29], a                                  ; $5913: $ea $29 $cc
 	ld   a, $22                                      ; $5916: $3e $22
-	call Func_1adf                                       ; $5918: $cd $df $1a
+	call PlaySoundEffect                                       ; $5918: $cd $df $1a
 	ret                                              ; $591b: $c9
 
 
@@ -4123,7 +4123,7 @@ jr_00c_590d:
 	pop  af                                          ; $5945: $f1
 	call FarCall                                       ; $5946: $cd $62 $09
 	ld   a, $24                                      ; $5949: $3e $24
-	call Func_1adf                                       ; $594b: $cd $df $1a
+	call PlaySoundEffect                                       ; $594b: $cd $df $1a
 	ret                                              ; $594e: $c9
 
 
@@ -4174,7 +4174,7 @@ jr_00c_594f:
 	pop  af                                          ; $59a5: $f1
 	call FarCall                                       ; $59a6: $cd $62 $09
 	ld   a, $24                                      ; $59a9: $3e $24
-	call Func_1adf                                       ; $59ab: $cd $df $1a
+	call PlaySoundEffect                                       ; $59ab: $cd $df $1a
 	ret                                              ; $59ae: $c9
 
 
@@ -4861,7 +4861,7 @@ GameState3f::
 	ld   a, $00                                      ; $5e23: $3e $00
 	call SafeSetAudVolForMultipleChannels                                       ; $5e25: $cd $e0 $1c
 	xor  a                                           ; $5e28: $af
-	call PlaySound                                       ; $5e29: $cd $92 $1a
+	call PlaySong                                       ; $5e29: $cd $92 $1a
 	call TurnOffLCD                                       ; $5e2c: $cd $e3 $08
 	call ClearDisplayRegsAllowVBlankInt                                       ; $5e2f: $cd $59 $0b
 	ld   a, [wLCDC]                                  ; $5e32: $fa $03 $c2
@@ -5059,7 +5059,7 @@ jr_00c_5ec4:
 	pop  af                                          ; $5fe4: $f1
 	call FarCall                                       ; $5fe5: $cd $62 $09
 	ld   a, $10                                      ; $5fe8: $3e $10
-	call PlaySound                                       ; $5fea: $cd $92 $1a
+	call PlaySong                                       ; $5fea: $cd $92 $1a
 	call TurnOnLCD                                       ; $5fed: $cd $09 $09
 	xor  a                                           ; $5ff0: $af
 	ld   [$cc4c], a                                  ; $5ff1: $ea $4c $cc
@@ -5210,7 +5210,7 @@ jr_00c_6078:
 
 jr_00c_60e9:
 	ld   a, $1e                                      ; $60e9: $3e $1e
-	call Func_1adf                                       ; $60eb: $cd $df $1a
+	call PlaySoundEffect                                       ; $60eb: $cd $df $1a
 	ld   hl, $cc4c                                   ; $60ee: $21 $4c $cc
 	inc  [hl]                                        ; $60f1: $34
 	xor  a                                           ; $60f2: $af
@@ -5350,7 +5350,7 @@ jr_00c_61c7:
 	ld   bc, $003f                                   ; $61d5: $01 $3f $00
 	call SetBGandOBJPaletteRangesToUpdate                                       ; $61d8: $cd $aa $04
 	xor  a                                           ; $61db: $af
-	call PlaySound                                       ; $61dc: $cd $92 $1a
+	call PlaySong                                       ; $61dc: $cd $92 $1a
 	ld   h, $46                                      ; $61df: $26 $46
 	ld   l, $00                                      ; $61e1: $2e $00
 	ld   bc, $000f                                   ; $61e3: $01 $0f $00
@@ -6463,7 +6463,7 @@ jr_00c_68f4:
 	ld   a, [$cc58]                                  ; $6918: $fa $58 $cc
 	ld   [$cc59], a                                  ; $691b: $ea $59 $cc
 	ld   a, $21                                      ; $691e: $3e $21
-	call Func_1adf                                       ; $6920: $cd $df $1a
+	call PlaySoundEffect                                       ; $6920: $cd $df $1a
 	ld   a, $09                                      ; $6923: $3e $09
 	ld   [$cc50], a                                  ; $6925: $ea $50 $cc
 	xor  a                                           ; $6928: $af
@@ -6478,7 +6478,7 @@ jr_00c_692f:
 	ld   a, $ff                                      ; $6933: $3e $ff
 	ld   [$cc59], a                                  ; $6935: $ea $59 $cc
 	ld   a, $22                                      ; $6938: $3e $22
-	call Func_1adf                                       ; $693a: $cd $df $1a
+	call PlaySoundEffect                                       ; $693a: $cd $df $1a
 	ld   a, $0d                                      ; $693d: $3e $0d
 	ld   [$cc50], a                                  ; $693f: $ea $50 $cc
 	xor  a                                           ; $6942: $af
@@ -6563,7 +6563,7 @@ jr_00c_69b3:
 	jr   z, jr_00c_6a04                              ; $69be: $28 $44
 
 	ld   a, $20                                      ; $69c0: $3e $20
-	call Func_1adf                                       ; $69c2: $cd $df $1a
+	call PlaySoundEffect                                       ; $69c2: $cd $df $1a
 	call Call_00c_6ad1                               ; $69c5: $cd $d1 $6a
 	ld   [$cc58], a                                  ; $69c8: $ea $58 $cc
 	ld   hl, $cc57                                   ; $69cb: $21 $57 $cc
@@ -6587,7 +6587,7 @@ jr_00c_69dd:
 	jr   z, jr_00c_6a04                              ; $69e5: $28 $1d
 
 	ld   a, $20                                      ; $69e7: $3e $20
-	call Func_1adf                                       ; $69e9: $cd $df $1a
+	call PlaySoundEffect                                       ; $69e9: $cd $df $1a
 	call Call_00c_6aee                               ; $69ec: $cd $ee $6a
 	ld   [$cc58], a                                  ; $69ef: $ea $58 $cc
 	ld   hl, $cc57                                   ; $69f2: $21 $57 $cc
@@ -6893,7 +6893,7 @@ jr_00c_6b49:
 
 
 	ld   a, $20                                      ; $6bc1: $3e $20
-	call Func_1adf                                       ; $6bc3: $cd $df $1a
+	call PlaySoundEffect                                       ; $6bc3: $cd $df $1a
 	ld   a, [$cc58]                                  ; $6bc6: $fa $58 $cc
 	call Call_00c_6577                               ; $6bc9: $cd $77 $65
 	ld   a, $08                                      ; $6bcc: $3e $08
@@ -6904,7 +6904,7 @@ jr_00c_6b49:
 
 
 	ld   a, $20                                      ; $6bd6: $3e $20
-	call Func_1adf                                       ; $6bd8: $cd $df $1a
+	call PlaySoundEffect                                       ; $6bd8: $cd $df $1a
 	ld   a, [$cc58]                                  ; $6bdb: $fa $58 $cc
 	call Call_00c_6577                               ; $6bde: $cd $77 $65
 	ld   a, $08                                      ; $6be1: $3e $08
@@ -6934,7 +6934,7 @@ jr_00c_6b49:
 	ld   c, b                                        ; $6c01: $48
 	ld   l, h                                        ; $6c02: $6c
 	ld   a, $20                                      ; $6c03: $3e $20
-	call Func_1adf                                       ; $6c05: $cd $df $1a
+	call PlaySoundEffect                                       ; $6c05: $cd $df $1a
 	ld   a, [$cc58]                                  ; $6c08: $fa $58 $cc
 	call Call_00c_64d5                               ; $6c0b: $cd $d5 $64
 	ld   hl, $cc51                                   ; $6c0e: $21 $51 $cc
@@ -7019,7 +7019,7 @@ jr_00c_6c67:
 	ld   l, h                                        ; $6c86: $6c
 	adc  $6c                                         ; $6c87: $ce $6c
 	ld   a, $20                                      ; $6c89: $3e $20
-	call Func_1adf                                       ; $6c8b: $cd $df $1a
+	call PlaySoundEffect                                       ; $6c8b: $cd $df $1a
 	ld   a, [$cc58]                                  ; $6c8e: $fa $58 $cc
 	call Call_00c_64d5                               ; $6c91: $cd $d5 $64
 	ld   hl, $cc51                                   ; $6c94: $21 $51 $cc
@@ -7106,7 +7106,7 @@ jr_00c_6ced:
 	xor  a                                           ; $6d14: $af
 	ld   [$cc5f], a                                  ; $6d15: $ea $5f $cc
 	ld   a, $23                                      ; $6d18: $3e $23
-	call Func_1adf                                       ; $6d1a: $cd $df $1a
+	call PlaySoundEffect                                       ; $6d1a: $cd $df $1a
 
 jr_00c_6d1d:
 	ld   a, [hl]                                     ; $6d1d: $7e
@@ -7373,7 +7373,7 @@ jr_00c_6ea2:
 	jr   nz, jr_00c_6ece                             ; $6ec0: $20 $0c
 
 	ld   a, $21                                      ; $6ec2: $3e $21
-	call Func_1adf                                       ; $6ec4: $cd $df $1a
+	call PlaySoundEffect                                       ; $6ec4: $cd $df $1a
 	jp   Jump_00c_689d                               ; $6ec7: $c3 $9d $68
 
 
@@ -7383,7 +7383,7 @@ jr_00c_6eca:
 
 jr_00c_6ece:
 	ld   a, $22                                      ; $6ece: $3e $22
-	call Func_1adf                                       ; $6ed0: $cd $df $1a
+	call PlaySoundEffect                                       ; $6ed0: $cd $df $1a
 	ld   a, $01                                      ; $6ed3: $3e $01
 	ld   [$cc5f], a                                  ; $6ed5: $ea $5f $cc
 	ld   a, $0c                                      ; $6ed8: $3e $0c
@@ -7402,7 +7402,7 @@ jr_00c_6ee2:
 	ret  z                                           ; $6eea: $c8
 
 	ld   a, $20                                      ; $6eeb: $3e $20
-	call Func_1adf                                       ; $6eed: $cd $df $1a
+	call PlaySoundEffect                                       ; $6eed: $cd $df $1a
 	xor  a                                           ; $6ef0: $af
 	ld   [$cc5f], a                                  ; $6ef1: $ea $5f $cc
 	ret                                              ; $6ef4: $c9
@@ -7417,7 +7417,7 @@ jr_00c_6ef5:
 	ret  nz                                          ; $6efc: $c0
 
 	ld   a, $20                                      ; $6efd: $3e $20
-	call Func_1adf                                       ; $6eff: $cd $df $1a
+	call PlaySoundEffect                                       ; $6eff: $cd $df $1a
 	ld   a, $01                                      ; $6f02: $3e $01
 	ld   [$cc5f], a                                  ; $6f04: $ea $5f $cc
 	ret                                              ; $6f07: $c9
@@ -7467,7 +7467,7 @@ jr_00c_6f25:
 	jr   nz, jr_00c_6f47                             ; $6f40: $20 $05
 
 	ld   a, $24                                      ; $6f42: $3e $24
-	call Func_1adf                                       ; $6f44: $cd $df $1a
+	call PlaySoundEffect                                       ; $6f44: $cd $df $1a
 
 jr_00c_6f47:
 	ld   a, [hl]                                     ; $6f47: $7e
@@ -7749,7 +7749,7 @@ jr_00c_70e3:
 
 jr_00c_70ea:
 	ld   a, $11                                      ; $70ea: $3e $11
-	call Func_1adf                                       ; $70ec: $cd $df $1a
+	call PlaySoundEffect                                       ; $70ec: $cd $df $1a
 	ld   hl, $00f0                                   ; $70ef: $21 $f0 $00
 	xor  a                                           ; $70f2: $af
 	push af                                          ; $70f3: $f5
@@ -7771,15 +7771,8 @@ jr_00c_710e:
 	ld   de, sPlayerName                                   ; $7112: $11 $aa $af
 	ld   bc, $0005                                   ; $7115: $01 $05 $00
 	ld   a, $05                                      ; $7118: $3e $05
-	push af                                          ; $711a: $f5
-	ld   a, $2d                                      ; $711b: $3e $2d
-	ld   [wFarCallAddr], a                                  ; $711d: $ea $98 $c2
-	ld   a, $6f                                      ; $7120: $3e $6f
-	ld   [wFarCallAddr+1], a                                  ; $7122: $ea $99 $c2
-	ld   a, $10                                      ; $7125: $3e $10
-	ld   [wFarCallBank], a                                  ; $7127: $ea $9a $c2
-	pop  af                                          ; $712a: $f1
-	call FarCall                                       ; $712b: $cd $62 $09
+
+	M_FarCall SetEnterNameState
 	ret                                              ; $712e: $c9
 
 
@@ -8461,7 +8454,7 @@ GameState46::
 	
 .substate0:
 	xor  a                                           ; $75c2: $af
-	call PlaySound                                       ; $75c3: $cd $92 $1a
+	call PlaySong                                       ; $75c3: $cd $92 $1a
 
 	M_FarCall Func_0a_426b
 	
@@ -8859,9 +8852,9 @@ GameState47_Prologue::
 	ld   bc, $003f                                                  ; $7919
 	call SetBGandOBJPaletteRangesToUpdate                           ; $791c
 
-; Mute sound
+; Mute song
 	xor  a                                                          ; $791f
-	call PlaySound                                                  ; $7920
+	call PlaySong                                                   ; $7920
 
 ; Set new game state and substate
 	ld   a, [wPostPrologueScriptEngineGameState]                    ; $7923

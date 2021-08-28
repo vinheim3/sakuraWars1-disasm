@@ -22,7 +22,7 @@ GameState21::
 	ld   [wBaseRepeatedStickyCounter], a                                  ; $4016: $ea $14 $c2
 	call ClearOam                                       ; $4019: $cd $d7 $0d
 	call ClearDisplayRegsAllowVBlankInt                                       ; $401c: $cd $59 $0b
-	ld   a, $c3                                      ; $401f: $3e $c3
+	ld   a, LCDCF_ON|LCDCF_WIN9C00|LCDCF_OBJON|LCDCF_BGON                                      ; $401f: $3e $c3
 	ld   [wLCDC], a                                  ; $4021: $ea $03 $c2
 	ld   a, [wWramBank]                                  ; $4024: $fa $93 $c2
 	push af                                          ; $4027: $f5
@@ -128,7 +128,7 @@ GameState21::
 	jr   z, jr_010_411f                              ; $4114: $28 $09
 
 	ld   a, $21                                      ; $4116: $3e $21
-	call Func_1adf                                       ; $4118: $cd $df $1a
+	call PlaySoundEffect                                       ; $4118: $cd $df $1a
 	ld   hl, wGameSubstate                                   ; $411b: $21 $a1 $c2
 	inc  [hl]                                        ; $411e: $34
 
@@ -496,7 +496,7 @@ endc
 	jr   z, :+                              ; $43b9: $28 $05
 
 	ld   a, $05                                      ; $43bb: $3e $05
-	call PlaySound                                       ; $43bd: $cd $92 $1a
+	call PlaySong                                       ; $43bd: $cd $92 $1a
 
 :	call Call_010_4571                               ; $43c0: $cd $71 $45
 
@@ -564,7 +564,7 @@ endc
 
 	call Call_010_4d50                               ; $444c: $cd $50 $4d
 	ld   a, $21                                      ; $444f: $3e $21
-	call Func_1adf                                       ; $4451: $cd $df $1a
+	call PlaySoundEffect                                       ; $4451: $cd $df $1a
 	jr   .thing_other                                 ; $4454: $18 $3a
 
 .br_4456:
@@ -596,7 +596,7 @@ endc
 	ld   a, $04                                      ; $4486: $3e $04
 	ld   [wGameSubstate], a                                  ; $4488: $ea $a1 $c2
 	ld   a, $22                                      ; $448b: $3e $22
-	call Func_1adf                                       ; $448d: $cd $df $1a
+	call PlaySoundEffect                                       ; $448d: $cd $df $1a
 
 .thing_other:
 	call Call_010_454f                               ; $4490: $cd $4f $45
@@ -1009,7 +1009,7 @@ jr_010_46be:
 Jump_010_46c1:
 jr_010_46c1:
 	ld   a, $20                                      ; $46c1: $3e $20
-	call Func_1adf                                       ; $46c3: $cd $df $1a
+	call PlaySoundEffect                                       ; $46c3: $cd $df $1a
 
 jr_010_46c6:
 	ret                                              ; $46c6: $c9
@@ -1289,7 +1289,7 @@ Call_010_486d:
 	jr   z, jr_010_48b0                              ; $487c: $28 $32
 
 	ld   a, $21                                      ; $487e: $3e $21
-	call Func_1adf                                       ; $4880: $cd $df $1a
+	call PlaySoundEffect                                       ; $4880: $cd $df $1a
 	ld   a, [$c8b6]                                  ; $4883: $fa $b6 $c8
 	bit  2, a                                        ; $4886: $cb $57
 	jr   nz, jr_010_4897                             ; $4888: $20 $0d
@@ -1365,7 +1365,7 @@ jr_010_48ef:
 	call Call_010_478e                               ; $48ef: $cd $8e $47
 	call Call_010_473c                               ; $48f2: $cd $3c $47
 	ld   a, $21                                      ; $48f5: $3e $21
-	call Func_1adf                                       ; $48f7: $cd $df $1a
+	call PlaySoundEffect                                       ; $48f7: $cd $df $1a
 	jp   Jump_010_498b                               ; $48fa: $c3 $8b $49
 
 
@@ -1437,7 +1437,7 @@ jr_010_4969:
 	call FarCall                                       ; $4980: $cd $62 $09
 	call Call_010_473c                               ; $4983: $cd $3c $47
 	ld   a, $23                                      ; $4986: $3e $23
-	call Func_1adf                                       ; $4988: $cd $df $1a
+	call PlaySoundEffect                                       ; $4988: $cd $df $1a
 
 Jump_010_498b:
 	ret                                              ; $498b: $c9
@@ -1463,7 +1463,7 @@ Call_010_4992:
 
 jr_010_49a4:
 	ld   a, $22                                      ; $49a4: $3e $22
-	call Func_1adf                                       ; $49a6: $cd $df $1a
+	call PlaySoundEffect                                       ; $49a6: $cd $df $1a
 
 jr_010_49a9:
 	ld   hl, $c8b6                                   ; $49a9: $21 $b6 $c8
@@ -1486,7 +1486,7 @@ jr_010_49c2:
 	ld   a, $04                                      ; $49c2: $3e $04
 	ld   [wGameSubstate], a                                  ; $49c4: $ea $a1 $c2
 	ld   a, $22                                      ; $49c7: $3e $22
-	call Func_1adf                                       ; $49c9: $cd $df $1a
+	call PlaySoundEffect                                       ; $49c9: $cd $df $1a
 	jr   jr_010_49e9                                 ; $49cc: $18 $1b
 
 jr_010_49ce:
@@ -1563,7 +1563,7 @@ jr_010_49fb:
 
 jr_010_4a4e:
 	ld   a, $24                                      ; $4a4e: $3e $24
-	call Func_1adf                                       ; $4a50: $cd $df $1a
+	call PlaySoundEffect                                       ; $4a50: $cd $df $1a
 	ret                                              ; $4a53: $c9
 
 
@@ -2228,7 +2228,7 @@ jr_010_4e3e:
 	ld   h, l                                        ; $4e88: $65
 
 
-Func_10_4e89::
+SetContinueGameState::
 	ld   a, h                                        ; $4e89: $7c
 	ld   [$c8bb], a                                  ; $4e8a: $ea $bb $c8
 	ld   a, l                                        ; $4e8d: $7d
@@ -2278,7 +2278,7 @@ GameState0f::
 	ld   [wBaseRepeatedStickyCounter], a                                  ; $4ee0: $ea $14 $c2
 	call ClearOam                                       ; $4ee3: $cd $d7 $0d
 	call ClearDisplayRegsAllowVBlankInt                                       ; $4ee6: $cd $59 $0b
-	ld   a, $03                                      ; $4ee9: $3e $03
+	ld   a, LCDCF_OBJON|LCDCF_BGON                                      ; $4ee9: $3e $03
 	ld   [wLCDC], a                                  ; $4eeb: $ea $03 $c2
 	ld   a, $01                                      ; $4eee: $3e $01
 	ldh  [rVBK], a                                   ; $4ef0: $e0 $4f
@@ -2404,7 +2404,7 @@ jr_010_4fe7:
 	jr   z, jr_010_4ffc                              ; $4ff1: $28 $09
 
 	ld   a, $21                                      ; $4ff3: $3e $21
-	call Func_1adf                                       ; $4ff5: $cd $df $1a
+	call PlaySoundEffect                                       ; $4ff5: $cd $df $1a
 	ld   hl, wGameSubstate                                   ; $4ff8: $21 $a1 $c2
 	inc  [hl]                                        ; $4ffb: $34
 
@@ -2655,7 +2655,7 @@ Call_010_51ac:
 GameState10::
 	ld   a, [wGameSubstate]                                  ; $51bf: $fa $a1 $c2
 	rst  JumpTable                                         ; $51c2: $df
-	call $c951                                       ; $51c3: $cd $51 $c9
+	call wEnterNameNumCharsEntered                                       ; $51c3: $cd $51 $c9
 	ld   d, d                                        ; $51c6: $52
 	ld   hl, $2f53                                   ; $51c7: $21 $53 $2f
 	ld   d, e                                        ; $51ca: $53
@@ -2672,7 +2672,7 @@ GameState10::
 	ld   [wBaseRepeatedStickyCounter], a                                  ; $51e1: $ea $14 $c2
 	call ClearOam                                       ; $51e4: $cd $d7 $0d
 	call ClearDisplayRegsAllowVBlankInt                                       ; $51e7: $cd $59 $0b
-	ld   a, $03                                      ; $51ea: $3e $03
+	ld   a, LCDCF_OBJON|LCDCF_BGON                                      ; $51ea: $3e $03
 	ld   [wLCDC], a                                  ; $51ec: $ea $03 $c2
 	ld   a, $01                                      ; $51ef: $3e $01
 	ldh  [rVBK], a                                   ; $51f1: $e0 $4f
@@ -2831,7 +2831,7 @@ jr_010_532a:
 	jr   z, jr_010_533f                              ; $5334: $28 $09
 
 	ld   a, $21                                      ; $5336: $3e $21
-	call Func_1adf                                       ; $5338: $cd $df $1a
+	call PlaySoundEffect                                       ; $5338: $cd $df $1a
 	ld   hl, wGameSubstate                                   ; $533b: $21 $a1 $c2
 	inc  [hl]                                        ; $533e: $34
 
@@ -3207,7 +3207,7 @@ jr_010_5596:
 	ld   [wBaseRepeatedStickyCounter], a                                  ; $55ae: $ea $14 $c2
 	call ClearOam                                       ; $55b1: $cd $d7 $0d
 	call ClearDisplayRegsAllowVBlankInt                                       ; $55b4: $cd $59 $0b
-	ld   a, $03                                      ; $55b7: $3e $03
+	ld   a, LCDCF_OBJON|LCDCF_BGON                                      ; $55b7: $3e $03
 	ld   [wLCDC], a                                  ; $55b9: $ea $03 $c2
 	ld   a, $01                                      ; $55bc: $3e $01
 	ldh  [rVBK], a                                   ; $55be: $e0 $4f
@@ -3320,7 +3320,7 @@ jr_010_568d:
 	ld   a, $06                                      ; $569d: $3e $06
 	ld   [wGameSubstate], a                                  ; $569f: $ea $a1 $c2
 	ld   a, $22                                      ; $56a2: $3e $22
-	call Func_1adf                                       ; $56a4: $cd $df $1a
+	call PlaySoundEffect                                       ; $56a4: $cd $df $1a
 	jr   jr_010_56c4                                 ; $56a7: $18 $1b
 
 jr_010_56a9:
@@ -3361,7 +3361,7 @@ jr_010_56c4:
 	jr   z, jr_010_56eb                              ; $56e0: $28 $09
 
 	ld   a, $21                                      ; $56e2: $3e $21
-	call Func_1adf                                       ; $56e4: $cd $df $1a
+	call PlaySoundEffect                                       ; $56e4: $cd $df $1a
 	ld   hl, wGameSubstate                                   ; $56e7: $21 $a1 $c2
 	inc  [hl]                                        ; $56ea: $34
 
@@ -4365,7 +4365,7 @@ jr_010_5c37:
 	ld   [wBaseRepeatedStickyCounter], a                                  ; $5c4e: $ea $14 $c2
 	call ClearOam                                       ; $5c51: $cd $d7 $0d
 	call ClearDisplayRegsAllowVBlankInt                                       ; $5c54: $cd $59 $0b
-	ld   a, $03                                      ; $5c57: $3e $03
+	ld   a, LCDCF_OBJON|LCDCF_BGON                                      ; $5c57: $3e $03
 	ld   [wLCDC], a                                  ; $5c59: $ea $03 $c2
 	ld   a, [wWramBank]                                  ; $5c5c: $fa $93 $c2
 	push af                                          ; $5c5f: $f5
@@ -4515,7 +4515,7 @@ jr_010_5d42:
 	call Call_010_6612                               ; $5dbd: $cd $12 $66
 	call TurnOnLCD                                       ; $5dc0: $cd $09 $09
 	ld   a, $02                                      ; $5dc3: $3e $02
-	call PlaySound                                       ; $5dc5: $cd $92 $1a
+	call PlaySong                                       ; $5dc5: $cd $92 $1a
 	ld   a, $07                                      ; $5dc8: $3e $07
 	call SafeSetAudVolForMultipleChannels                                       ; $5dca: $cd $e0 $1c
 	call Call_010_61b8                               ; $5dcd: $cd $b8 $61
@@ -4600,7 +4600,7 @@ jr_010_5e3a:
 	jr   nz, jr_010_5e53                             ; $5e4a: $20 $07
 
 	ld   a, $21                                      ; $5e4c: $3e $21
-	call Func_1adf                                       ; $5e4e: $cd $df $1a
+	call PlaySoundEffect                                       ; $5e4e: $cd $df $1a
 	jr   jr_010_5e7e                                 ; $5e51: $18 $2b
 
 jr_010_5e53:
@@ -4610,7 +4610,7 @@ jr_010_5e53:
 	ld   hl, $c919                                   ; $5e5c: $21 $19 $c9
 	inc  [hl]                                        ; $5e5f: $34
 	ld   a, $23                                      ; $5e60: $3e $23
-	call Func_1adf                                       ; $5e62: $cd $df $1a
+	call PlaySoundEffect                                       ; $5e62: $cd $df $1a
 	jr   jr_010_5e83                                 ; $5e65: $18 $1c
 
 jr_010_5e67:
@@ -4618,7 +4618,7 @@ jr_010_5e67:
 	jr   z, jr_010_5ea2                              ; $5e69: $28 $37
 
 	ld   a, $22                                      ; $5e6b: $3e $22
-	call Func_1adf                                       ; $5e6d: $cd $df $1a
+	call PlaySoundEffect                                       ; $5e6d: $cd $df $1a
 	call Call_010_62a6                               ; $5e70: $cd $a6 $62
 	ld   a, $03                                      ; $5e73: $3e $03
 	ld   [$c91d], a                                  ; $5e75: $ea $1d $c9
@@ -4747,7 +4747,7 @@ jr_010_5f16:
 jr_010_5f26:
 	call Call_010_6584                               ; $5f26: $cd $84 $65
 	ld   a, $20                                      ; $5f29: $3e $20
-	call Func_1adf                                       ; $5f2b: $cd $df $1a
+	call PlaySoundEffect                                       ; $5f2b: $cd $df $1a
 	jr   jr_010_5f7e                                 ; $5f2e: $18 $4e
 
 jr_010_5f30:
@@ -4759,7 +4759,7 @@ jr_010_5f30:
 	jr   z, jr_010_5f4b                              ; $5f39: $28 $10
 
 	ld   a, $21                                      ; $5f3b: $3e $21
-	call Func_1adf                                       ; $5f3d: $cd $df $1a
+	call PlaySoundEffect                                       ; $5f3d: $cd $df $1a
 	ld   a, $06                                      ; $5f40: $3e $06
 	ld   [$c919], a                                  ; $5f42: $ea $19 $c9
 	jr   jr_010_5f7e                                 ; $5f45: $18 $37
@@ -4770,7 +4770,7 @@ jr_010_5f47:
 
 jr_010_5f4b:
 	ld   a, $24                                      ; $5f4b: $3e $24
-	call Func_1adf                                       ; $5f4d: $cd $df $1a
+	call PlaySoundEffect                                       ; $5f4d: $cd $df $1a
 	ld   a, [$c91a]                                  ; $5f50: $fa $1a $c9
 	call HLequAddrOfAnimSpriteSpecDetails                                       ; $5f53: $cd $76 $30
 	ld   a, $26                                      ; $5f56: $3e $26
@@ -5110,7 +5110,7 @@ jr_010_6125:
 	jr   nz, jr_010_6150                             ; $613c: $20 $12
 
 	ld   a, $24                                      ; $613e: $3e $24
-	call Func_1adf                                       ; $6140: $cd $df $1a
+	call PlaySoundEffect                                       ; $6140: $cd $df $1a
 	call Call_010_6474                               ; $6143: $cd $74 $64
 	ld   a, $05                                      ; $6146: $3e $05
 	ld   [$c919], a                                  ; $6148: $ea $19 $c9
@@ -5149,7 +5149,7 @@ jr_010_617e:
 
 	call TurnOffLCD                                       ; $617f: $cd $e3 $08
 	ld   a, $00                                      ; $6182: $3e $00
-	call PlaySound                                       ; $6184: $cd $92 $1a
+	call PlaySong                                       ; $6184: $cd $92 $1a
 	ld   a, [$c91d]                                  ; $6187: $fa $1d $c9
 	rst  JumpTable                                         ; $618a: $df
 	sub  e                                           ; $618b: $93
@@ -5223,7 +5223,7 @@ jr_010_61d9:
 
 jr_010_61e7:
 	ld   a, $20                                      ; $61e7: $3e $20
-	call Func_1adf                                       ; $61e9: $cd $df $1a
+	call PlaySoundEffect                                       ; $61e9: $cd $df $1a
 
 jr_010_61ec:
 	call Call_010_62b6                               ; $61ec: $cd $b6 $62
@@ -5951,7 +5951,7 @@ Call_010_6666:
 
 jr_010_6699:
 	ld   a, $01                                      ; $6699: $3e $01
-	call Func_1adf                                       ; $669b: $cd $df $1a
+	call PlaySoundEffect                                       ; $669b: $cd $df $1a
 	xor  a                                           ; $669e: $af
 	ret                                              ; $669f: $c9
 
@@ -6045,200 +6045,230 @@ jr_010_66e9:
 	ret                                              ; $6712: $c9
 
 
-GameState16::
-	ld   a, [wGameSubstate]                                  ; $6713: $fa $a1 $c2
-	rst  JumpTable                                         ; $6716: $df
-	dec  e                                           ; $6717: $1d
-	ld   h, a                                        ; $6718: $67
-	ld   [hl], a                                     ; $6719: $77
-	ld   l, b                                        ; $671a: $68
-	adc  d                                           ; $671b: $8a
-	ld   l, b                                        ; $671c: $68
-	ld   a, $ff                                      ; $671d: $3e $ff
-	ld   [wInGameInputsEnabled], a                                  ; $671f: $ea $0e $c2
-	ld   a, $0c                                      ; $6722: $3e $0c
-	ld   [wBaseInitialStickyCounter], a                                  ; $6724: $ea $13 $c2
-	ld   a, $04                                      ; $6727: $3e $04
-	ld   [wBaseRepeatedStickyCounter], a                                  ; $6729: $ea $14 $c2
-	call ClearOam                                       ; $672c: $cd $d7 $0d
-	call ClearDisplayRegsAllowVBlankInt                                       ; $672f: $cd $59 $0b
-	ld   a, $83                                      ; $6732: $3e $83
-	ld   [wLCDC], a                                  ; $6734: $ea $03 $c2
-	ld   a, [wWramBank]                                  ; $6737: $fa $93 $c2
-	push af                                          ; $673a: $f5
-	ld   a, $03                                      ; $673b: $3e $03
-	ld   [wWramBank], a                                  ; $673d: $ea $93 $c2
-	ldh  [rSVBK], a                                  ; $6740: $e0 $70
-	rst  WaitUntilVBlankIntHandledIfLCDOn                                         ; $6742: $cf
-	ld   a, $1e                                      ; $6743: $3e $1e
-	ld   hl, $d000                                   ; $6745: $21 $00 $d0
-	ld   de, $4000                                   ; $6748: $11 $00 $40
-	call RLEXorCopy                                       ; $674b: $cd $d2 $09
-	ld   c, $81                                      ; $674e: $0e $81
-	ld   de, $9800                                   ; $6750: $11 $00 $98
-	ld   a, $03                                      ; $6753: $3e $03
-	ld   hl, $d000                                   ; $6755: $21 $00 $d0
-	ld   b, $40                                      ; $6758: $06 $40
-	call EnqueueHDMATransfer                                       ; $675a: $cd $7c $02
-	rst  WaitUntilVBlankIntHandledIfLCDOn                                         ; $675d: $cf
-	ld   a, $1c                                      ; $675e: $3e $1c
-	ld   hl, $d000                                   ; $6760: $21 $00 $d0
-	ld   de, $4ee1                                   ; $6763: $11 $e1 $4e
-	call RLEXorCopy                                       ; $6766: $cd $d2 $09
-	ld   c, $81                                      ; $6769: $0e $81
-	ld   de, $8800                                   ; $676b: $11 $00 $88
-	ld   a, $03                                      ; $676e: $3e $03
-	ld   hl, $d000                                   ; $6770: $21 $00 $d0
-	ld   b, $80                                      ; $6773: $06 $80
-	call EnqueueHDMATransfer                                       ; $6775: $cd $7c $02
-	rst  WaitUntilVBlankIntHandledIfLCDOn                                         ; $6778: $cf
-	ld   a, $1d                                      ; $6779: $3e $1d
-	ld   hl, $d000                                   ; $677b: $21 $00 $d0
-	ld   de, $567f                                   ; $677e: $11 $7f $56
-	call RLEXorCopy                                       ; $6781: $cd $d2 $09
-	ld   c, $80                                      ; $6784: $0e $80
-	ld   de, $9800                                   ; $6786: $11 $00 $98
-	ld   a, $03                                      ; $6789: $3e $03
-	ld   hl, $d000                                   ; $678b: $21 $00 $d0
-	ld   b, $40                                      ; $678e: $06 $40
-	call EnqueueHDMATransfer                                       ; $6790: $cd $7c $02
-	rst  WaitUntilVBlankIntHandledIfLCDOn                                         ; $6793: $cf
-	pop  af                                          ; $6794: $f1
-	ld   [wWramBank], a                                  ; $6795: $ea $93 $c2
-	ldh  [rSVBK], a                                  ; $6798: $e0 $70
-	xor  a                                           ; $679a: $af
-	ld   [wWY], a                                  ; $679b: $ea $0a $c2
-	ld   [wWX], a                                  ; $679e: $ea $09 $c2
-	ld   [wSCY], a                                  ; $67a1: $ea $08 $c2
-	ld   a, $04                                      ; $67a4: $3e $04
-	ld   [wSCX], a                                  ; $67a6: $ea $07 $c2
-	ld   a, $00                                      ; $67a9: $3e $00
-	ld   [$c95f], a                                  ; $67ab: $ea $5f $c9
-	call Call_010_6d90                               ; $67ae: $cd $90 $6d
-	call Call_010_6d9c                               ; $67b1: $cd $9c $6d
-	xor  a                                           ; $67b4: $af
-	ld   [$c94f], a                                  ; $67b5: $ea $4f $c9
-	ld   [$c950], a                                  ; $67b8: $ea $50 $c9
-	call ClearBaseAnimSpriteSpecDetails                                       ; $67bb: $cd $c9 $2e
-	ld   a, $01                                      ; $67be: $3e $01
-	ld   hl, $0000                                   ; $67c0: $21 $00 $00
-	call ReserveBaseAnimSpriteSpecAndInstance                                       ; $67c3: $cd $4b $2f
-	ld   [$c94d], a                                  ; $67c6: $ea $4d $c9
-	call StartAnimatingAnimatedSpriteSpec                                       ; $67c9: $cd $14 $30
-	call HLequAddrOfAnimSpriteSpecDetails                                       ; $67cc: $cd $76 $30
-	call Call_010_6cdb                               ; $67cf: $cd $db $6c
-	ld   a, $2d                                      ; $67d2: $3e $2d
-	ld   de, $7180                                   ; $67d4: $11 $80 $71
-	push af                                          ; $67d7: $f5
-	ld   a, $03                                      ; $67d8: $3e $03
-	ld   [wFarCallAddr], a                                  ; $67da: $ea $98 $c2
-	ld   a, $41                                      ; $67dd: $3e $41
-	ld   [wFarCallAddr+1], a                                  ; $67df: $ea $99 $c2
-	ld   a, $01                                      ; $67e2: $3e $01
-	ld   [wFarCallBank], a                                  ; $67e4: $ea $9a $c2
-	pop  af                                          ; $67e7: $f1
-	call FarCall                                       ; $67e8: $cd $62 $09
-	ld   a, $01                                      ; $67eb: $3e $01
-	ld   hl, $0000                                   ; $67ed: $21 $00 $00
-	call ReserveBaseAnimSpriteSpecAndInstance                                       ; $67f0: $cd $4b $2f
-	ld   [$c94e], a                                  ; $67f3: $ea $4e $c9
-	call StartAnimatingAnimatedSpriteSpec                                       ; $67f6: $cd $14 $30
-	call HLequAddrOfAnimSpriteSpecDetails                                       ; $67f9: $cd $76 $30
-	call Call_010_6cfb                               ; $67fc: $cd $fb $6c
-	ld   a, $2f                                      ; $67ff: $3e $2f
-	ld   de, $7180                                   ; $6801: $11 $80 $71
-	push af                                          ; $6804: $f5
-	ld   a, $03                                      ; $6805: $3e $03
-	ld   [wFarCallAddr], a                                  ; $6807: $ea $98 $c2
-	ld   a, $41                                      ; $680a: $3e $41
-	ld   [wFarCallAddr+1], a                                  ; $680c: $ea $99 $c2
-	ld   a, $01                                      ; $680f: $3e $01
-	ld   [wFarCallBank], a                                  ; $6811: $ea $9a $c2
-	pop  af                                          ; $6814: $f1
-	call FarCall                                       ; $6815: $cd $62 $09
-	ld   a, $01                                      ; $6818: $3e $01
-	ld   hl, $7000                                   ; $681a: $21 $00 $70
-	ld   de, wBGPalettes                                   ; $681d: $11 $de $c2
-	ld   bc, $0080                                   ; $6820: $01 $80 $00
-	call FarMemCopy                                       ; $6823: $cd $b2 $09
-	ld   bc, $003f                                   ; $6826: $01 $3f $00
-	call SetBGandOBJPaletteRangesToUpdate                                       ; $6829: $cd $aa $04
-	xor  a                                           ; $682c: $af
-	ld   [wStartingColorIdxToLoadCompDataFor], a                                  ; $682d: $ea $62 $c3
-	ld   a, $40                                      ; $6830: $3e $40
-	ld   [wNumPaletteColorsToLoadCompDataFor], a                                  ; $6832: $ea $63 $c3
-	ld   a, $03                                      ; $6835: $3e $03
-	ld   b, $01                                      ; $6837: $06 $01
-	ld   hl, $7000                                   ; $6839: $21 $00 $70
-	ld   c, $1e                                      ; $683c: $0e $1e
-	ld   de, $66fc                                   ; $683e: $11 $fc $66
-	call FarLoadPaletteValsFadeToValsAndSetFadeSpeed                                       ; $6841: $cd $48 $07
-	call Call_010_68f6                               ; $6844: $cd $f6 $68
-	call Call_010_6ebb                               ; $6847: $cd $bb $6e
-	push af                                          ; $684a: $f5
-	ld   a, $54                                      ; $684b: $3e $54
-	ld   [wFarCallAddr], a                                  ; $684d: $ea $98 $c2
-	ld   a, $57                                      ; $6850: $3e $57
-	ld   [wFarCallAddr+1], a                                  ; $6852: $ea $99 $c2
-	ld   a, $11                                      ; $6855: $3e $11
-	ld   [wFarCallBank], a                                  ; $6857: $ea $9a $c2
-	pop  af                                          ; $685a: $f1
-	call FarCall                                       ; $685b: $cd $62 $09
-	ld   a, $1e                                      ; $685e: $3e $1e
-	ld   hl, $66fc                                   ; $6860: $21 $fc $66
-	ld   de, wBGPalettes                                   ; $6863: $11 $de $c2
-	ld   bc, $0080                                   ; $6866: $01 $80 $00
-	call FarMemCopy                                       ; $6869: $cd $b2 $09
-	ld   bc, $003f                                   ; $686c: $01 $3f $00
-	call SetBGandOBJPaletteRangesToUpdate                                       ; $686f: $cd $aa $04
-	ld   hl, wGameSubstate                                   ; $6872: $21 $a1 $c2
-	inc  [hl]                                        ; $6875: $34
-	ret                                              ; $6876: $c9
+GameState16_EnterName::
+	ld   a, [wGameSubstate]                                         ; $6713
+	rst  JumpTable                                                  ; $6716
+	dw .substate0_init
+	dw .substate1_main
+	dw .substate2_exit
+
+.substate0_init:
+; Enable inputs, and set up sticky params
+	ld   a, $ff                                                     ; $671d
+	ld   [wInGameInputsEnabled], a                                  ; $671f
+	ld   a, $0c                                                     ; $6722
+	ld   [wBaseInitialStickyCounter], a                             ; $6724
+	ld   a, $04                                                     ; $6727
+	ld   [wBaseRepeatedStickyCounter], a                            ; $6729
+
+; Clear oam, display regs, and turn on LCD
+	call ClearOam                                                   ; $672c
+	call ClearDisplayRegsAllowVBlankInt                             ; $672f
+	ld   a, LCDCF_ON|LCDCF_OBJON|LCDCF_BGON                         ; $6732
+	ld   [wLCDC], a                                                 ; $6734
+
+; Preserve ram bank, set ram bank of buffer area, then wait until vblank int handled
+	ld   a, [wWramBank]                                             ; $6737
+	push af                                                         ; $673a
+
+	ld   a, BANK(wEnterNameTileDataOrLayoutBuffer)                  ; $673b
+	ld   [wWramBank], a                                             ; $673d
+	ldh  [rSVBK], a                                                 ; $6740
+	rst  WaitUntilVBlankIntHandledIfLCDOn                           ; $6742
+
+; Load tile attrs
+	ld   a, BANK(RLEXorTileAttr_EnterName)                          ; $6743
+	ld   hl, wEnterNameTileDataOrLayoutBuffer                       ; $6745
+	ld   de, RLEXorTileAttr_EnterName                               ; $6748
+	call RLEXorCopy                                                 ; $674b
+
+; Enqueue attrs transfer
+	ld   c, $81                                                     ; $674e
+	ld   de, _SCRN0                                                 ; $6750
+	ld   a, BANK(wEnterNameTileDataOrLayoutBuffer)                  ; $6753
+	ld   hl, wEnterNameTileDataOrLayoutBuffer                       ; $6755
+	ld   b, $400/$10                                                ; $6758
+	call EnqueueHDMATransfer                                        ; $675a
+	rst  WaitUntilVBlankIntHandledIfLCDOn                           ; $675d
+
+; Load tile data
+	ld   a, BANK(RleXorTileData_EnterName)                          ; $675e
+	ld   hl, wEnterNameTileDataOrLayoutBuffer                       ; $6760
+	ld   de, RleXorTileData_EnterName                               ; $6763
+	call RLEXorCopy                                                 ; $6766
+
+; Enqueue tile data transfer
+	ld   c, $81                                                     ; $6769
+	ld   de, _VRAM+$800                                             ; $676b
+	ld   a, BANK(wEnterNameTileDataOrLayoutBuffer)                  ; $676e
+	ld   hl, wEnterNameTileDataOrLayoutBuffer                       ; $6770
+	ld   b, $800/$10                                                ; $6773
+	call EnqueueHDMATransfer                                        ; $6775
+	rst  WaitUntilVBlankIntHandledIfLCDOn                           ; $6778
+
+; Load tile map
+	ld   a, BANK(RleXorTileMap_EnterName)                           ; $6779
+	ld   hl, wEnterNameTileDataOrLayoutBuffer                       ; $677b
+	ld   de, RleXorTileMap_EnterName                                ; $677e
+	call RLEXorCopy                                                 ; $6781
+
+; Enqueue tile map transfer
+	ld   c, $80                                                     ; $6784
+	ld   de, _SCRN0                                                 ; $6786
+	ld   a, BANK(wEnterNameTileDataOrLayoutBuffer)                  ; $6789
+	ld   hl, wEnterNameTileDataOrLayoutBuffer                       ; $678b
+	ld   b, $400/$10                                                ; $678e
+	call EnqueueHDMATransfer                                        ; $6790
+	rst  WaitUntilVBlankIntHandledIfLCDOn                           ; $6793
+
+; Restore ram bank
+	pop  af                                                         ; $6794
+	ld   [wWramBank], a                                             ; $6795
+	ldh  [rSVBK], a                                                 ; $6798
+
+; Clear window vars, and slightly adjust scroll to offset chars
+	xor  a                                                          ; $679a
+	ld   [wWY], a                                                   ; $679b
+	ld   [wWX], a                                                   ; $679e
+	ld   [wSCY], a                                                  ; $67a1
+	ld   a, $04                                                     ; $67a4
+	ld   [wSCX], a                                                  ; $67a6
+
+; Set alphabet, space kanji idx, and init the inputted chars at the top of the screen
+	ld   a, ENTER_NAME_HIRA_ALPHABET                                ; $67a9
+	ld   [wEnterNameAlphabetChosen], a                              ; $67ab
+	call SetSpaceKanjiIdx                                           ; $67ae
+	call InitEnterNameInputtedChars                                 ; $67b1
+
+; Start cursor row and col pointing to top-left char
+	xor  a                                                          ; $67b4
+	ld   [wEnterNameCursorLetterColIdx], a                          ; $67b5
+	ld   [wEnterNameCursorLetterRowIdx], a                          ; $67b8
+
+; Clear anim sprite spec details, and get a new one using anim type 1
+	call ClearBaseAnimSpriteSpecDetails                             ; $67bb
+	ld   a, ASST_1                                                  ; $67be
+	ld   hl, $0000                                                  ; $67c0
+	call ReserveBaseAnimSpriteSpecAndInstance                       ; $67c3
+	ld   [wEnterNameLetterCursorBaseAnimSpriteSpecUsed], a          ; $67c6
+
+; Enable animating it, then load its addr and coords
+	call StartAnimatingAnimatedSpriteSpec                           ; $67c9
+	call HLequAddrOfAnimSpriteSpecDetails                           ; $67cc
+	call GetEnterNameCursorCoords                                   ; $67cf
+	ld   a, ASS_ENTER_NAME_SMALL_CURSOR                             ; $67d2
+	ld   de, AnimatedSpriteSpecs                                    ; $67d4
+	M_FarCall LoadNewAnimatedSpriteSpecDetails
+
+; Clear anim sprite spec details, and get a new one using anim type 1
+	ld   a, ASST_1                                                  ; $67eb
+	ld   hl, $0000                                                  ; $67ed
+	call ReserveBaseAnimSpriteSpecAndInstance                       ; $67f0
+	ld   [wEnterNameNameUnderlineBaseAnimSpriteSpecUsed], a         ; $67f3
+
+; Enable animating it, then load its addr and coords
+	call StartAnimatingAnimatedSpriteSpec                           ; $67f6
+	call HLequAddrOfAnimSpriteSpecDetails                           ; $67f9
+	call GetEnterNameUnderlineCoords                                ; $67fc
+	ld   a, ASS_ENTER_NAME_UNDERLINE                                ; $67ff
+	ld   de, AnimatedSpriteSpecs                                    ; $6801
+	M_FarCall LoadNewAnimatedSpriteSpecDetails
+
+; Load all white palettes, and update all
+	ld   a, BANK(Palettes_AllWhite)                                 ; $6818
+	ld   hl, Palettes_AllWhite                                      ; $681a
+	ld   de, wBGPalettes                                            ; $681d
+	ld   bc, NUM_PALETTE_BYTES * 2                                  ; $6820
+	call FarMemCopy                                                 ; $6823
+
+	ldbc $00, $3f                                                   ; $6826
+	call SetBGandOBJPaletteRangesToUpdate                           ; $6829
+
+; Load comps and set to fade at 1/8th speed
+	xor  a                                                          ; $682c
+	ld   [wStartingColorIdxToLoadCompDataFor], a                    ; $682d
+	ld   a, $40                                                     ; $6830
+	ld   [wNumPaletteColorsToLoadCompDataFor], a                    ; $6832
+
+	ld   a, $03                                                     ; $6835
+	ld   b, BANK(Palettes_AllWhite)                                 ; $6837
+	ld   hl, Palettes_AllWhite                                      ; $6839
+	ld   c, BANK(Palettes_EnterName)                                ; $683c
+	ld   de, Palettes_EnterName                                     ; $683e
+	call FarLoadPaletteValsFadeToValsAndSetFadeSpeed                ; $6841
+
+; Draw selectable char options, and the inputted name (cleared)
+	call DrawEnterNameSelectableChars                               ; $6844
+	call DisplayEnterNamesInputtedName                              ; $6847
+
+	M_FarCall FadeBGpals8timesHandlingAnimatedSpriteSpecs
+	
+; Load all palettes, and s
+	ld   a, BANK(Palettes_EnterName)                                ; $685e
+	ld   hl, Palettes_EnterName                                     ; $6860
+	ld   de, wBGPalettes                                            ; $6863
+	ld   bc, NUM_PALETTE_BYTES * 2                                  ; $6866
+	call FarMemCopy                                                 ; $6869
+
+	ldbc $00, $3f                                                   ; $686c
+	call SetBGandOBJPaletteRangesToUpdate                           ; $686f
+
+; To next substate
+	ld   hl, wGameSubstate                                          ; $6872
+	inc  [hl]                                                       ; $6875
+	ret                                                             ; $6876
+
+.substate1_main:
+; Clear oam (handling hiding sprites), and animate
+	call ClearOam                                                   ; $6877
+	call AnimateAllAnimatedSpriteSpecs                              ; $687a
+
+; Handle inputs
+	call HandleEnterNameDirInput                                    ; $687d
+	call HandleEnterNameNonDirInput                                 ; $6880
+
+; Update either the entire sprite spec for the cursor, or the underline's coords
+	call SetEnterNameLetterCursorAnimSpriteSpecIdx                  ; $6883
+	call SetEnterNameUnderLineAnimSpriteSpecCoords                  ; $6886
+	ret                                                             ; $6889
+
+.substate2_exit:
+; Load all white for all colors, and fade at 1/8th speed
+	xor  a                                                          ; $688a
+	ld   [wStartingColorIdxToLoadCompDataFor], a                    ; $688b
+	ld   a, $40                                                     ; $688e
+	ld   [wNumPaletteColorsToLoadCompDataFor], a                    ; $6890
+
+	ld   a, $03                                                     ; $6893
+	ld   b, BANK(Palettes_EnterName)                                ; $6895
+	ld   hl, Palettes_EnterName                                     ; $6897
+	ld   c, BANK(Palettes_AllWhite)                                 ; $689a
+	ld   de, Palettes_AllWhite                                      ; $689c
+	call FarLoadPaletteValsFadeToValsAndSetFadeSpeed                ; $689f
+
+; Fade the 8 times, to white, while still animating
+	M_FarCall FadeBGpals8timesHandlingAnimatedSpriteSpecs
+
+; Set all palettes to white, updating all pals
+	ld   a, BANK(Palettes_AllWhite)                                 ; $68b6
+	ld   hl, Palettes_AllWhite                                      ; $68b8
+	ld   de, wBGPalettes                                            ; $68bb
+	ld   bc, NUM_PALETTE_BYTES * 2                                  ; $68be
+	call FarMemCopy                                                 ; $68c1
+
+	ldbc $00, $3f                                                   ; $68c4
+	call SetBGandOBJPaletteRangesToUpdate                           ; $68c7
+
+; Return to next state
+	ld   a, [wEnterNameReturnState]                                 ; $68ca
+	ld   [wGameState], a                                            ; $68cd
+	ld   a, [wEnterNameReturnSubstate]                              ; $68d0
+	ld   [wGameSubstate], a                                         ; $68d3
+	ret                                                             ; $68d6
 
 
-	call ClearOam                                       ; $6877: $cd $d7 $0d
-	call AnimateAllAnimatedSpriteSpecs                                       ; $687a: $cd $d3 $2e
-	call Call_010_6adb                               ; $687d: $cd $db $6a
-	call Call_010_6d22                               ; $6880: $cd $22 $6d
-	call Call_010_6c8b                               ; $6883: $cd $8b $6c
-	call Call_010_6cbd                               ; $6886: $cd $bd $6c
-	ret                                              ; $6889: $c9
-
-
-	xor  a                                           ; $688a: $af
-	ld   [wStartingColorIdxToLoadCompDataFor], a                                  ; $688b: $ea $62 $c3
-	ld   a, $40                                      ; $688e: $3e $40
-	ld   [wNumPaletteColorsToLoadCompDataFor], a                                  ; $6890: $ea $63 $c3
-	ld   a, $03                                      ; $6893: $3e $03
-	ld   b, $1e                                      ; $6895: $06 $1e
-	ld   hl, $66fc                                   ; $6897: $21 $fc $66
-	ld   c, $01                                      ; $689a: $0e $01
-	ld   de, $7000                                   ; $689c: $11 $00 $70
-	call FarLoadPaletteValsFadeToValsAndSetFadeSpeed                                       ; $689f: $cd $48 $07
-	push af                                          ; $68a2: $f5
-	ld   a, $54                                      ; $68a3: $3e $54
-	ld   [wFarCallAddr], a                                  ; $68a5: $ea $98 $c2
-	ld   a, $57                                      ; $68a8: $3e $57
-	ld   [wFarCallAddr+1], a                                  ; $68aa: $ea $99 $c2
-	ld   a, $11                                      ; $68ad: $3e $11
-	ld   [wFarCallBank], a                                  ; $68af: $ea $9a $c2
-	pop  af                                          ; $68b2: $f1
-	call FarCall                                       ; $68b3: $cd $62 $09
-	ld   a, $01                                      ; $68b6: $3e $01
-	ld   hl, $7000                                   ; $68b8: $21 $00 $70
-	ld   de, wBGPalettes                                   ; $68bb: $11 $de $c2
-	ld   bc, $0080                                   ; $68be: $01 $80 $00
-	call FarMemCopy                                       ; $68c1: $cd $b2 $09
-	ld   bc, $003f                                   ; $68c4: $01 $3f $00
-	call SetBGandOBJPaletteRangesToUpdate                                       ; $68c7: $cd $aa $04
-	ld   a, [$c946]                                  ; $68ca: $fa $46 $c9
-	ld   [wGameState], a                                  ; $68cd: $ea $a0 $c2
-	ld   a, [$c947]                                  ; $68d0: $fa $47 $c9
-	ld   [wGameSubstate], a                                  ; $68d3: $ea $a1 $c2
-	ret                                              ; $68d6: $c9
-
-
-	ld   a, [$c94b]                                  ; $68d7: $fa $4b $c9
+;
+	ld   a, [wEnterNameMaxChars]                                  ; $68d7: $fa $4b $c9
 	ld   c, a                                        ; $68da: $4f
 	ld   b, $00                                      ; $68db: $06 $00
 	ld   hl, $9807                                   ; $68dd: $21 $07 $98
@@ -6255,1163 +6285,1049 @@ GameState16::
 	ret                                              ; $68f5: $c9
 
 
-Call_010_68f6:
-	call InitWideTextBoxDimensions                                       ; $68f6: $cd $ec $0f
-	call ClearTextBoxDimensionsAndSetDefaultTextStyle                                       ; $68f9: $cd $09 $14
-	ld   bc, $1106                                   ; $68fc: $01 $06 $11
-	call SetKanjiTextBoxDimensions                                       ; $68ff: $cd $24 $14
-	ld   bc, $0000                                   ; $6902: $01 $00 $00
-	call SetCurrKanjiColAndRowToDrawOn                                       ; $6905: $cd $34 $14
-	call Call_010_6d7d                               ; $6908: $cd $7d $6d
-	ld   a, [wWramBank]                                  ; $690b: $fa $93 $c2
-	push af                                          ; $690e: $f5
-	ld   a, $03                                      ; $690f: $3e $03
-	ld   [wWramBank], a                                  ; $6911: $ea $93 $c2
-	ldh  [rSVBK], a                                  ; $6914: $e0 $70
-	ld   e, l                                        ; $6916: $5d
-	ld   d, h                                        ; $6917: $54
-	ld   hl, $d000                                   ; $6918: $21 $00 $d0
-	ld   a, $10                                      ; $691b: $3e $10
-	call LoadInstantText                                       ; $691d: $cd $06 $13
-	pop  af                                          ; $6920: $f1
-	ld   [wWramBank], a                                  ; $6921: $ea $93 $c2
-	ldh  [rSVBK], a                                  ; $6924: $e0 $70
-	rst  WaitUntilVBlankIntHandledIfLCDOn                                         ; $6926: $cf
-	ld   c, $80                                      ; $6927: $0e $80
-	ld   de, $9000                                   ; $6929: $11 $00 $90
-	ld   a, $03                                      ; $692c: $3e $03
-	ld   hl, $d000                                   ; $692e: $21 $00 $d0
-	ld   b, $40                                      ; $6931: $06 $40
-	call EnqueueHDMATransfer                                       ; $6933: $cd $7c $02
-	rst  WaitUntilVBlankIntHandledIfLCDOn                                         ; $6936: $cf
-	ld   c, $80                                      ; $6937: $0e $80
-	ld   de, $9400                                   ; $6939: $11 $00 $94
-	ld   a, $03                                      ; $693c: $3e $03
-	ld   hl, $d400                                   ; $693e: $21 $00 $d4
-	ld   b, $40                                      ; $6941: $06 $40
-	call EnqueueHDMATransfer                                       ; $6943: $cd $7c $02
-	rst  WaitUntilVBlankIntHandledIfLCDOn                                         ; $6946: $cf
-	ld   c, $81                                      ; $6947: $0e $81
-	ld   de, $9000                                   ; $6949: $11 $00 $90
-	ld   a, $03                                      ; $694c: $3e $03
-	ld   hl, $d800                                   ; $694e: $21 $00 $d8
-	ld   b, $4c                                      ; $6951: $06 $4c
-	call EnqueueHDMATransfer                                       ; $6953: $cd $7c $02
-	call Call_010_6aa4                               ; $6956: $cd $a4 $6a
-	ret                                              ; $6959: $c9
-
-
-	ld   b, $00                                      ; $695a: $06 $00
-	ld   [hl], d                                     ; $695c: $72
-	nop                                              ; $695d: $00
-	sbc  $00                                         ; $695e: $de $00
-	ld   d, b                                        ; $6960: $50
-	ld   d, d                                        ; $6961: $52
-	ld   d, h                                        ; $6962: $54
-	ld   d, [hl]                                     ; $6963: $56
-	ld   e, b                                        ; $6964: $58
-	db   $10                                         ; $6965: $10
-	ld   e, c                                        ; $6966: $59
-	ld   e, e                                        ; $6967: $5b
-	ld   e, l                                        ; $6968: $5d
-	ld   e, a                                        ; $6969: $5f
-	ld   h, c                                        ; $696a: $61
-	db   $10                                         ; $696b: $10
-	ld   h, e                                        ; $696c: $63
-	ld   h, l                                        ; $696d: $65
-	ld   h, a                                        ; $696e: $67
-	ld   l, c                                        ; $696f: $69
-	ld   l, e                                        ; $6970: $6b
-	dec  c                                           ; $6971: $0d
-	ld   l, l                                        ; $6972: $6d
-	ld   l, a                                        ; $6973: $6f
-	ld   [hl], d                                     ; $6974: $72
-	ld   [hl], h                                     ; $6975: $74
-	halt                                             ; $6976: $76
-	db   $10                                         ; $6977: $10
-	ld   a, b                                        ; $6978: $78
-	ld   a, c                                        ; $6979: $79
-	ld   a, d                                        ; $697a: $7a
-	ld   a, e                                        ; $697b: $7b
-	ld   a, h                                        ; $697c: $7c
-	db   $10                                         ; $697d: $10
-	ld   a, l                                        ; $697e: $7d
-	add  b                                           ; $697f: $80
-	add  e                                           ; $6980: $83
-	add  [hl]                                        ; $6981: $86
-	adc  c                                           ; $6982: $89
-	dec  c                                           ; $6983: $0d
-	adc  h                                           ; $6984: $8c
-	adc  l                                           ; $6985: $8d
-	adc  [hl]                                        ; $6986: $8e
-	adc  a                                           ; $6987: $8f
-	sub  b                                           ; $6988: $90
-	db   $10                                         ; $6989: $10
-	sub  d                                           ; $698a: $92
-	db   $10                                         ; $698b: $10
-	sub  h                                           ; $698c: $94
-	db   $10                                         ; $698d: $10
-	sub  [hl]                                        ; $698e: $96
-	db   $10                                         ; $698f: $10
-	sub  a                                           ; $6990: $97
-	sbc  b                                           ; $6991: $98
-	sbc  c                                           ; $6992: $99
-	sbc  d                                           ; $6993: $9a
-	sbc  e                                           ; $6994: $9b
-	dec  c                                           ; $6995: $0d
-	sbc  l                                           ; $6996: $9d
-	db   $10                                         ; $6997: $10
-	and  b                                           ; $6998: $a0
-	db   $10                                         ; $6999: $10
-	and  c                                           ; $699a: $a1
-	db   $10                                         ; $699b: $10
-	ld   e, d                                        ; $699c: $5a
-	ld   e, h                                        ; $699d: $5c
-	ld   e, [hl]                                     ; $699e: $5e
-	ld   h, b                                        ; $699f: $60
-	ld   h, d                                        ; $69a0: $62
-	db   $10                                         ; $69a1: $10
-	ld   h, h                                        ; $69a2: $64
-	ld   h, [hl]                                     ; $69a3: $66
-	ld   l, b                                        ; $69a4: $68
-	ld   l, d                                        ; $69a5: $6a
-	ld   l, h                                        ; $69a6: $6c
-	dec  c                                           ; $69a7: $0d
-	ld   l, [hl]                                     ; $69a8: $6e
-	ld   [hl], b                                     ; $69a9: $70
-	ld   [hl], e                                     ; $69aa: $73
-	ld   [hl], l                                     ; $69ab: $75
-	ld   [hl], a                                     ; $69ac: $77
-	db   $10                                         ; $69ad: $10
-	ld   a, [hl]                                     ; $69ae: $7e
-	add  c                                           ; $69af: $81
-	add  h                                           ; $69b0: $84
-	add  a                                           ; $69b1: $87
-	adc  d                                           ; $69b2: $8a
-	db   $10                                         ; $69b3: $10
-	ld   a, a                                        ; $69b4: $7f
-	add  d                                           ; $69b5: $82
-	add  l                                           ; $69b6: $85
-	adc  b                                           ; $69b7: $88
-	adc  e                                           ; $69b8: $8b
-	dec  c                                           ; $69b9: $0d
-	ld   c, a                                        ; $69ba: $4f
-	ld   d, c                                        ; $69bb: $51
-	ld   d, e                                        ; $69bc: $53
-	ld   d, l                                        ; $69bd: $55
-	ld   d, a                                        ; $69be: $57
-	db   $10                                         ; $69bf: $10
-	sub  c                                           ; $69c0: $91
-	db   $10                                         ; $69c1: $10
-	sub  e                                           ; $69c2: $93
-	db   $10                                         ; $69c3: $10
-	sub  l                                           ; $69c4: $95
-	db   $10                                         ; $69c5: $10
-	ld   [hl], c                                     ; $69c6: $71
-	db   $10                                         ; $69c7: $10
-	db   $10                                         ; $69c8: $10
-	db   $10                                         ; $69c9: $10
-	ei                                               ; $69ca: $fb
-	nop                                              ; $69cb: $00
-	and  e                                           ; $69cc: $a3
-	and  l                                           ; $69cd: $a5
-	and  a                                           ; $69ce: $a7
-	xor  c                                           ; $69cf: $a9
-	xor  e                                           ; $69d0: $ab
-	db   $10                                         ; $69d1: $10
-	xor  h                                           ; $69d2: $ac
-	xor  [hl]                                        ; $69d3: $ae
-	or   b                                           ; $69d4: $b0
-	or   d                                           ; $69d5: $b2
-	or   h                                           ; $69d6: $b4
-	db   $10                                         ; $69d7: $10
-	or   [hl]                                        ; $69d8: $b6
-	cp   b                                           ; $69d9: $b8
-	cp   d                                           ; $69da: $ba
-	cp   h                                           ; $69db: $bc
-	cp   [hl]                                        ; $69dc: $be
-	dec  c                                           ; $69dd: $0d
-	ret  nz                                          ; $69de: $c0
-
-	jp   nz, $c7c5                                   ; $69df: $c2 $c5 $c7
-
-	ret                                              ; $69e2: $c9
-
-
-	db   $10                                         ; $69e3: $10
-	set  1, h                                        ; $69e4: $cb $cc
-	call $cfce                                       ; $69e6: $cd $ce $cf
-	db   $10                                         ; $69e9: $10
-	ret  nc                                          ; $69ea: $d0
-
-	db   $d3                                         ; $69eb: $d3
-	sub  $d9                                         ; $69ec: $d6 $d9
-	call c, $df0d                                    ; $69ee: $dc $0d $df
-	ldh  [$e2], a                                    ; $69f1: $e0 $e2
-	db   $e3                                         ; $69f3: $e3
-	db   $e4                                         ; $69f4: $e4
-	db   $10                                         ; $69f5: $10
-	and  $10                                         ; $69f6: $e6 $10
-	add  sp, $10                                     ; $69f8: $e8 $10
-	ld   [$eb10], a                                  ; $69fa: $ea $10 $eb
-	db   $ec                                         ; $69fd: $ec
-	db   $ed                                         ; $69fe: $ed
-	xor  $ef                                         ; $69ff: $ee $ef
-	dec  c                                           ; $6a01: $0d
-	pop  af                                          ; $6a02: $f1
-	db   $10                                         ; $6a03: $10
-	db   $f4                                         ; $6a04: $f4
-	db   $10                                         ; $6a05: $10
-	push af                                          ; $6a06: $f5
-	db   $10                                         ; $6a07: $10
-	xor  l                                           ; $6a08: $ad
-	xor  a                                           ; $6a09: $af
-	or   c                                           ; $6a0a: $b1
-	or   e                                           ; $6a0b: $b3
-	or   l                                           ; $6a0c: $b5
-	db   $10                                         ; $6a0d: $10
-	or   a                                           ; $6a0e: $b7
-	cp   c                                           ; $6a0f: $b9
-	cp   e                                           ; $6a10: $bb
-	cp   l                                           ; $6a11: $bd
-	cp   a                                           ; $6a12: $bf
-	dec  c                                           ; $6a13: $0d
-	pop  bc                                          ; $6a14: $c1
-	jp   $c8c6                                       ; $6a15: $c3 $c6 $c8
-
-
-	jp   z, $d110                                    ; $6a18: $ca $10 $d1
-
-	call nc, $dad7                                   ; $6a1b: $d4 $d7 $da
-	db   $dd                                         ; $6a1e: $dd
-	db   $10                                         ; $6a1f: $10
-	jp   nc, $d8d5                                   ; $6a20: $d2 $d5 $d8
-
-	db   $db                                         ; $6a23: $db
-	sbc  $0d                                         ; $6a24: $de $0d
-	and  d                                           ; $6a26: $a2
-	and  h                                           ; $6a27: $a4
-	and  [hl]                                        ; $6a28: $a6
-	xor  b                                           ; $6a29: $a8
-	xor  d                                           ; $6a2a: $aa
-	db   $10                                         ; $6a2b: $10
-	push hl                                          ; $6a2c: $e5
-	db   $10                                         ; $6a2d: $10
-	rst  $20                                         ; $6a2e: $e7
-	db   $10                                         ; $6a2f: $10
-	jp   hl                                          ; $6a30: $e9
-
-
-	db   $10                                         ; $6a31: $10
-	call nz, $1010                                   ; $6a32: $c4 $10 $10
-	db   $10                                         ; $6a35: $10
-	ei                                               ; $6a36: $fb
-	nop                                              ; $6a37: $00
-	db   $10                                         ; $6a38: $10
-	dec  de                                          ; $6a39: $1b
-	inc  e                                           ; $6a3a: $1c
-	dec  e                                           ; $6a3b: $1d
-	ld   e, $1f                                      ; $6a3c: $1e $1f
-	jr   nz, @+$23                                   ; $6a3e: $20 $21
-
-	ld   [hl+], a                                    ; $6a40: $22
-	inc  hl                                          ; $6a41: $23
-	inc  h                                           ; $6a42: $24
-	dec  h                                           ; $6a43: $25
-	ld   h, $27                                      ; $6a44: $26 $27
-	jr   z, jr_010_6a71                              ; $6a46: $28 $29
-
-	db   $10                                         ; $6a48: $10
-	dec  c                                           ; $6a49: $0d
-	db   $10                                         ; $6a4a: $10
-	ld   a, [hl+]                                    ; $6a4b: $2a
-	dec  hl                                          ; $6a4c: $2b
-	inc  l                                           ; $6a4d: $2c
-	dec  l                                           ; $6a4e: $2d
-	ld   l, $2f                                      ; $6a4f: $2e $2f
-	jr   nc, jr_010_6a84                             ; $6a51: $30 $31
-
-	ld   [hl-], a                                    ; $6a53: $32
-	inc  sp                                          ; $6a54: $33
-	inc  [hl]                                        ; $6a55: $34
-	db   $10                                         ; $6a56: $10
-	db   $10                                         ; $6a57: $10
-	db   $10                                         ; $6a58: $10
-	db   $10                                         ; $6a59: $10
-	db   $10                                         ; $6a5a: $10
-	dec  c                                           ; $6a5b: $0d
-	db   $10                                         ; $6a5c: $10
-	dec  [hl]                                        ; $6a5d: $35
-	ld   [hl], $37                                   ; $6a5e: $36 $37
-	jr   c, jr_010_6a9b                              ; $6a60: $38 $39
-
-	ld   a, [hl-]                                    ; $6a62: $3a
-	dec  sp                                          ; $6a63: $3b
-	inc  a                                           ; $6a64: $3c
-	dec  a                                           ; $6a65: $3d
-	ld   a, $3f                                      ; $6a66: $3e $3f
-	ld   b, b                                        ; $6a68: $40
-	ld   b, c                                        ; $6a69: $41
-	ld   b, d                                        ; $6a6a: $42
-	ld   b, e                                        ; $6a6b: $43
-	db   $10                                         ; $6a6c: $10
-	dec  c                                           ; $6a6d: $0d
-	db   $10                                         ; $6a6e: $10
-	ld   b, h                                        ; $6a6f: $44
-	ld   b, l                                        ; $6a70: $45
-
-jr_010_6a71:
-	ld   b, [hl]                                     ; $6a71: $46
-	ld   b, a                                        ; $6a72: $47
-	ld   c, b                                        ; $6a73: $48
-	ld   c, c                                        ; $6a74: $49
-	ld   c, d                                        ; $6a75: $4a
-	ld   c, e                                        ; $6a76: $4b
-	ld   c, h                                        ; $6a77: $4c
-	ld   c, l                                        ; $6a78: $4d
-	ld   c, [hl]                                     ; $6a79: $4e
-	db   $10                                         ; $6a7a: $10
-	db   $10                                         ; $6a7b: $10
-	db   $10                                         ; $6a7c: $10
-	db   $10                                         ; $6a7d: $10
-	db   $10                                         ; $6a7e: $10
-	dec  c                                           ; $6a7f: $0d
-	db   $10                                         ; $6a80: $10
-	ld   de, $1312                                   ; $6a81: $11 $12 $13
-
-jr_010_6a84:
-	inc  d                                           ; $6a84: $14
-	dec  d                                           ; $6a85: $15
-	ld   d, $17                                      ; $6a86: $16 $17
-	jr   @+$1b                                       ; $6a88: $18 $19
-
-	ld   a, [de]                                     ; $6a8a: $1a
-	db   $10                                         ; $6a8b: $10
-	db   $10                                         ; $6a8c: $10
-	db   $10                                         ; $6a8d: $10
-	db   $10                                         ; $6a8e: $10
-	db   $10                                         ; $6a8f: $10
-	db   $10                                         ; $6a90: $10
-	dec  c                                           ; $6a91: $0d
-	db   $10                                         ; $6a92: $10
-	db   $10                                         ; $6a93: $10
-	db   $10                                         ; $6a94: $10
-	db   $10                                         ; $6a95: $10
-	db   $10                                         ; $6a96: $10
-	db   $10                                         ; $6a97: $10
-	db   $10                                         ; $6a98: $10
-	db   $10                                         ; $6a99: $10
-	db   $10                                         ; $6a9a: $10
-
-jr_010_6a9b:
-	db   $10                                         ; $6a9b: $10
-	db   $10                                         ; $6a9c: $10
-	db   $10                                         ; $6a9d: $10
-	db   $10                                         ; $6a9e: $10
-	db   $10                                         ; $6a9f: $10
-	db   $10                                         ; $6aa0: $10
-	db   $10                                         ; $6aa1: $10
-	stop                                             ; $6aa2: $10 $00
-
-Call_010_6aa4:
-	ld   a, [$c95f]                                  ; $6aa4: $fa $5f $c9
-	add  a                                           ; $6aa7: $87
-	ld   c, a                                        ; $6aa8: $4f
-	ld   b, $00                                      ; $6aa9: $06 $00
-	ld   hl, $6ad5                                   ; $6aab: $21 $d5 $6a
-	add  hl, bc                                      ; $6aae: $09
-	ld   a, [hl+]                                    ; $6aaf: $2a
-	ld   h, [hl]                                     ; $6ab0: $66
-	ld   l, a                                        ; $6ab1: $6f
-	ld   de, $99e2                                   ; $6ab2: $11 $e2 $99
-	xor  a                                           ; $6ab5: $af
-	ldh  [rVBK], a                                   ; $6ab6: $e0 $4f
-	ld   bc, $0008                                   ; $6ab8: $01 $08 $00
-	ld   a, $00                                      ; $6abb: $3e $00
-	call HBlankFarMemCopy                                       ; $6abd: $cd $23 $0a
-	push hl                                          ; $6ac0: $e5
-	ld   hl, $0018                                   ; $6ac1: $21 $18 $00
-	add  hl, de                                      ; $6ac4: $19
-	ld   e, l                                        ; $6ac5: $5d
-	ld   d, h                                        ; $6ac6: $54
-	pop  hl                                          ; $6ac7: $e1
-	ld   bc, $0018                                   ; $6ac8: $01 $18 $00
-	add  hl, bc                                      ; $6acb: $09
-	ld   bc, $0008                                   ; $6acc: $01 $08 $00
-	ld   a, $00                                      ; $6acf: $3e $00
-	call HBlankFarMemCopy                                       ; $6ad1: $cd $23 $0a
-	ret                                              ; $6ad4: $c9
-
-
-	ld   b, b                                        ; $6ad5: $40
-	sbc  d                                           ; $6ad6: $9a
-	add  b                                           ; $6ad7: $80
-	sbc  d                                           ; $6ad8: $9a
-	ld   c, b                                        ; $6ad9: $48
-	sbc  d                                           ; $6ada: $9a
-
-Call_010_6adb:
-	xor  a                                           ; $6adb: $af
-	ld   [$c960], a                                  ; $6adc: $ea $60 $c9
-	ld   a, [$c950]                                  ; $6adf: $fa $50 $c9
-	cp   $06                                         ; $6ae2: $fe $06
-	call z, Call_010_6c12                            ; $6ae4: $cc $12 $6c
-	ld   a, [$c95f]                                  ; $6ae7: $fa $5f $c9
-	cp   $02                                         ; $6aea: $fe $02
-	jr   z, jr_010_6afb                              ; $6aec: $28 $0d
-
-	ld   a, [$c950]                                  ; $6aee: $fa $50 $c9
-	cp   $06                                         ; $6af1: $fe $06
-	call nz, Call_010_6b07                           ; $6af3: $c4 $07 $6b
-	call Call_010_6b50                               ; $6af6: $cd $50 $6b
-	jr   jr_010_6b06                                 ; $6af9: $18 $0b
-
-jr_010_6afb:
-	ld   a, [$c950]                                  ; $6afb: $fa $50 $c9
-	cp   $06                                         ; $6afe: $fe $06
-	call nz, Call_010_6b87                           ; $6b00: $c4 $87 $6b
-	call Call_010_6bc7                               ; $6b03: $cd $c7 $6b
-
-jr_010_6b06:
-	ret                                              ; $6b06: $c9
-
-
-Call_010_6b07:
-	ld   hl, $c94f                                   ; $6b07: $21 $4f $c9
-	ld   a, [wInGameStickyButtonsPressed]                                  ; $6b0a: $fa $11 $c2
-	bit  4, a                                        ; $6b0d: $cb $67
-	jr   z, jr_010_6b22                              ; $6b0f: $28 $11
-
-	ld   a, [hl]                                     ; $6b11: $7e
-	cp   $10                                         ; $6b12: $fe $10
-	jr   z, jr_010_6b36                              ; $6b14: $28 $20
-
-	inc  a                                           ; $6b16: $3c
-	cp   $05                                         ; $6b17: $fe $05
-	jr   z, jr_010_6b1f                              ; $6b19: $28 $04
-
-	cp   $0b                                         ; $6b1b: $fe $0b
-	jr   nz, jr_010_6b46                             ; $6b1d: $20 $27
-
-jr_010_6b1f:
-	inc  a                                           ; $6b1f: $3c
-	jr   jr_010_6b46                                 ; $6b20: $18 $24
-
-jr_010_6b22:
-	bit  5, a                                        ; $6b22: $cb $6f
-	jr   z, jr_010_6b4f                              ; $6b24: $28 $29
-
-	ld   a, [hl]                                     ; $6b26: $7e
-	or   a                                           ; $6b27: $b7
-	jr   z, jr_010_6b36                              ; $6b28: $28 $0c
-
-	dec  a                                           ; $6b2a: $3d
-	cp   $05                                         ; $6b2b: $fe $05
-	jr   z, jr_010_6b33                              ; $6b2d: $28 $04
-
-	cp   $0b                                         ; $6b2f: $fe $0b
-	jr   nz, jr_010_6b46                             ; $6b31: $20 $13
-
-jr_010_6b33:
-	dec  a                                           ; $6b33: $3d
-	jr   jr_010_6b46                                 ; $6b34: $18 $10
-
-jr_010_6b36:
-	ld   a, [wInGameButtonsPressed]                                  ; $6b36: $fa $10 $c2
-	bit  4, a                                        ; $6b39: $cb $67
-	jr   z, jr_010_6b40                              ; $6b3b: $28 $03
-
-	xor  a                                           ; $6b3d: $af
-	jr   jr_010_6b46                                 ; $6b3e: $18 $06
-
-jr_010_6b40:
-	bit  5, a                                        ; $6b40: $cb $6f
-	jr   z, jr_010_6b4f                              ; $6b42: $28 $0b
-
-	ld   a, $10                                      ; $6b44: $3e $10
-
-jr_010_6b46:
-	ld   [hl], a                                     ; $6b46: $77
-	call Call_010_6c85                               ; $6b47: $cd $85 $6c
-	ld   a, $20                                      ; $6b4a: $3e $20
-	call Func_1adf                                       ; $6b4c: $cd $df $1a
-
-jr_010_6b4f:
-	ret                                              ; $6b4f: $c9
-
-
-Call_010_6b50:
-	ld   hl, $c950                                   ; $6b50: $21 $50 $c9
-	ld   a, [wInGameStickyButtonsPressed]                                  ; $6b53: $fa $11 $c2
-	bit  6, a                                        ; $6b56: $cb $77
-	jr   z, jr_010_6b61                              ; $6b58: $28 $07
-
-	ld   a, [hl]                                     ; $6b5a: $7e
-	or   a                                           ; $6b5b: $b7
-	jr   z, jr_010_6b6d                              ; $6b5c: $28 $0f
-
-	dec  a                                           ; $6b5e: $3d
-	jr   jr_010_6b7d                                 ; $6b5f: $18 $1c
-
-jr_010_6b61:
-	bit  7, a                                        ; $6b61: $cb $7f
-	jr   z, jr_010_6b86                              ; $6b63: $28 $21
-
-	ld   a, [hl]                                     ; $6b65: $7e
-	cp   $06                                         ; $6b66: $fe $06
-	jr   z, jr_010_6b6d                              ; $6b68: $28 $03
-
-	inc  a                                           ; $6b6a: $3c
-	jr   jr_010_6b7d                                 ; $6b6b: $18 $10
-
-jr_010_6b6d:
-	ld   a, [wInGameButtonsPressed]                                  ; $6b6d: $fa $10 $c2
-	bit  6, a                                        ; $6b70: $cb $77
-	jr   z, jr_010_6b78                              ; $6b72: $28 $04
-
-	ld   a, $06                                      ; $6b74: $3e $06
-	jr   jr_010_6b7d                                 ; $6b76: $18 $05
-
-jr_010_6b78:
-	bit  7, a                                        ; $6b78: $cb $7f
-	jr   z, jr_010_6b86                              ; $6b7a: $28 $0a
-
-	xor  a                                           ; $6b7c: $af
-
-jr_010_6b7d:
-	ld   [hl], a                                     ; $6b7d: $77
-	call Call_010_6c85                               ; $6b7e: $cd $85 $6c
-	ld   a, $20                                      ; $6b81: $3e $20
-	call Func_1adf                                       ; $6b83: $cd $df $1a
-
-jr_010_6b86:
-	ret                                              ; $6b86: $c9
-
-
-Call_010_6b87:
-	ld   hl, $c94f                                   ; $6b87: $21 $4f $c9
-	ld   a, [wInGameStickyButtonsPressed]                                  ; $6b8a: $fa $11 $c2
-	bit  4, a                                        ; $6b8d: $cb $67
-	jr   z, jr_010_6b9d                              ; $6b8f: $28 $0c
-
-	ld   a, [hl]                                     ; $6b91: $7e
-	cp   $10                                         ; $6b92: $fe $10
-	jr   z, jr_010_6bac                              ; $6b94: $28 $16
-
-	cp   $0f                                         ; $6b96: $fe $0f
-	jr   z, jr_010_6bac                              ; $6b98: $28 $12
-
-	inc  a                                           ; $6b9a: $3c
-	jr   jr_010_6bbd                                 ; $6b9b: $18 $20
-
-jr_010_6b9d:
-	bit  5, a                                        ; $6b9d: $cb $6f
-	jr   z, jr_010_6bc6                              ; $6b9f: $28 $25
-
-	ld   a, [hl]                                     ; $6ba1: $7e
-	or   a                                           ; $6ba2: $b7
-	jr   z, jr_010_6bac                              ; $6ba3: $28 $07
-
-	cp   $01                                         ; $6ba5: $fe $01
-	jr   z, jr_010_6bac                              ; $6ba7: $28 $03
-
-	dec  a                                           ; $6ba9: $3d
-	jr   jr_010_6bbd                                 ; $6baa: $18 $11
-
-jr_010_6bac:
-	ld   a, [wInGameButtonsPressed]                                  ; $6bac: $fa $10 $c2
-	bit  4, a                                        ; $6baf: $cb $67
-	jr   z, jr_010_6bb7                              ; $6bb1: $28 $04
-
-	ld   a, $01                                      ; $6bb3: $3e $01
-	jr   jr_010_6bbd                                 ; $6bb5: $18 $06
-
-jr_010_6bb7:
-	bit  5, a                                        ; $6bb7: $cb $6f
-	jr   z, jr_010_6bc6                              ; $6bb9: $28 $0b
-
-	ld   a, $0f                                      ; $6bbb: $3e $0f
-
-jr_010_6bbd:
-	ld   [hl], a                                     ; $6bbd: $77
-	call Call_010_6c85                               ; $6bbe: $cd $85 $6c
-	ld   a, $20                                      ; $6bc1: $3e $20
-	call Func_1adf                                       ; $6bc3: $cd $df $1a
-
-jr_010_6bc6:
-	ret                                              ; $6bc6: $c9
-
-
-Call_010_6bc7:
-	ld   hl, $c950                                   ; $6bc7: $21 $50 $c9
-	ld   a, [wInGameStickyButtonsPressed]                                  ; $6bca: $fa $11 $c2
-	bit  6, a                                        ; $6bcd: $cb $77
-	jr   z, jr_010_6bdd                              ; $6bcf: $28 $0c
-
-	ld   a, [hl]                                     ; $6bd1: $7e
-	or   a                                           ; $6bd2: $b7
-	jr   z, jr_010_6bee                              ; $6bd3: $28 $19
-
-	dec  a                                           ; $6bd5: $3d
-	cp   $05                                         ; $6bd6: $fe $05
-	jr   nz, jr_010_6bfe                             ; $6bd8: $20 $24
-
-	dec  a                                           ; $6bda: $3d
-	jr   jr_010_6bfe                                 ; $6bdb: $18 $21
-
-jr_010_6bdd:
-	bit  7, a                                        ; $6bdd: $cb $7f
-	jr   z, jr_010_6c11                              ; $6bdf: $28 $30
-
-	ld   a, [hl]                                     ; $6be1: $7e
-	cp   $06                                         ; $6be2: $fe $06
-	jr   z, jr_010_6bee                              ; $6be4: $28 $08
-
-	inc  a                                           ; $6be6: $3c
-	cp   $05                                         ; $6be7: $fe $05
-	jr   nz, jr_010_6bfe                             ; $6be9: $20 $13
-
-	inc  a                                           ; $6beb: $3c
-	jr   jr_010_6bfe                                 ; $6bec: $18 $10
-
-jr_010_6bee:
-	ld   a, [wInGameButtonsPressed]                                  ; $6bee: $fa $10 $c2
-	bit  6, a                                        ; $6bf1: $cb $77
-	jr   z, jr_010_6bf9                              ; $6bf3: $28 $04
-
-	ld   a, $06                                      ; $6bf5: $3e $06
-	jr   jr_010_6bfe                                 ; $6bf7: $18 $05
-
-jr_010_6bf9:
-	bit  7, a                                        ; $6bf9: $cb $7f
-	jr   z, jr_010_6c11                              ; $6bfb: $28 $14
-
-	xor  a                                           ; $6bfd: $af
-
-jr_010_6bfe:
-	ld   [hl], a                                     ; $6bfe: $77
-	ld   a, [$c94f]                                  ; $6bff: $fa $4f $c9
-	or   a                                           ; $6c02: $b7
-	jr   nz, jr_010_6c09                             ; $6c03: $20 $04
-
-	inc  a                                           ; $6c05: $3c
-	ld   [$c94f], a                                  ; $6c06: $ea $4f $c9
-
-jr_010_6c09:
-	call Call_010_6c85                               ; $6c09: $cd $85 $6c
-	ld   a, $20                                      ; $6c0c: $3e $20
-	call Func_1adf                                       ; $6c0e: $cd $df $1a
-
-jr_010_6c11:
-	ret                                              ; $6c11: $c9
-
-
-Call_010_6c12:
-	ld   a, [wInGameButtonsPressed]                                  ; $6c12: $fa $10 $c2
-	bit  5, a                                        ; $6c15: $cb $6f
-	jr   z, jr_010_6c24                              ; $6c17: $28 $0b
-
-	call Call_010_6c68                               ; $6c19: $cd $68 $6c
-	or   a                                           ; $6c1c: $b7
-	jr   z, jr_010_6c34                              ; $6c1d: $28 $15
-
-	call Call_010_6c50                               ; $6c1f: $cd $50 $6c
-	jr   jr_010_6c44                                 ; $6c22: $18 $20
-
-jr_010_6c24:
-	bit  4, a                                        ; $6c24: $cb $67
-	jr   z, jr_010_6c4f                              ; $6c26: $28 $27
-
-	call Call_010_6c68                               ; $6c28: $cd $68 $6c
-	cp   $0f                                         ; $6c2b: $fe $0f
-	jr   z, jr_010_6c34                              ; $6c2d: $28 $05
-
-	call Call_010_6c5c                               ; $6c2f: $cd $5c $6c
-	jr   jr_010_6c44                                 ; $6c32: $18 $10
-
-jr_010_6c34:
-	ld   a, [wInGameButtonsPressed]                                  ; $6c34: $fa $10 $c2
-	bit  4, a                                        ; $6c37: $cb $67
-	jr   z, jr_010_6c3e                              ; $6c39: $28 $03
-
-	xor  a                                           ; $6c3b: $af
-	jr   jr_010_6c44                                 ; $6c3c: $18 $06
-
-jr_010_6c3e:
-	bit  5, a                                        ; $6c3e: $cb $6f
-	jr   z, jr_010_6c4f                              ; $6c40: $28 $0d
-
-	ld   a, $0f                                      ; $6c42: $3e $0f
-
-jr_010_6c44:
-	ld   [$c94f], a                                  ; $6c44: $ea $4f $c9
-	call Call_010_6c85                               ; $6c47: $cd $85 $6c
-	ld   a, $20                                      ; $6c4a: $3e $20
-	call Func_1adf                                       ; $6c4c: $cd $df $1a
-
-jr_010_6c4f:
-	ret                                              ; $6c4f: $c9
-
-
-Call_010_6c50:
-	ld   hl, $6c74                                   ; $6c50: $21 $74 $6c
-
-jr_010_6c53:
-	cp   [hl]                                        ; $6c53: $be
-	jr   z, jr_010_6c59                              ; $6c54: $28 $03
-
-	inc  hl                                          ; $6c56: $23
-	jr   jr_010_6c53                                 ; $6c57: $18 $fa
-
-jr_010_6c59:
-	dec  hl                                          ; $6c59: $2b
-	ld   a, [hl]                                     ; $6c5a: $7e
-	ret                                              ; $6c5b: $c9
-
-
-Call_010_6c5c:
-	ld   hl, $6c84                                   ; $6c5c: $21 $84 $6c
-
-jr_010_6c5f:
-	cp   [hl]                                        ; $6c5f: $be
-	jr   z, jr_010_6c65                              ; $6c60: $28 $03
-
-	dec  hl                                          ; $6c62: $2b
-	jr   jr_010_6c5f                                 ; $6c63: $18 $fa
-
-jr_010_6c65:
-	inc  hl                                          ; $6c65: $23
-	ld   a, [hl]                                     ; $6c66: $7e
-	ret                                              ; $6c67: $c9
-
-
-Call_010_6c68:
-	ld   a, [$c94f]                                  ; $6c68: $fa $4f $c9
-	ld   c, a                                        ; $6c6b: $4f
-	ld   b, $00                                      ; $6c6c: $06 $00
-	ld   hl, $6c74                                   ; $6c6e: $21 $74 $6c
-	add  hl, bc                                      ; $6c71: $09
-	ld   a, [hl]                                     ; $6c72: $7e
-	ret                                              ; $6c73: $c9
-
-
-	nop                                              ; $6c74: $00
-	nop                                              ; $6c75: $00
-	nop                                              ; $6c76: $00
-	inc  b                                           ; $6c77: $04
-	inc  b                                           ; $6c78: $04
-	inc  b                                           ; $6c79: $04
-	inc  b                                           ; $6c7a: $04
-	ld   [$0808], sp                                 ; $6c7b: $08 $08 $08
-	ld   [$0f08], sp                                 ; $6c7e: $08 $08 $0f
-	rrca                                             ; $6c81: $0f
-	rrca                                             ; $6c82: $0f
-	rrca                                             ; $6c83: $0f
-	rrca                                             ; $6c84: $0f
-
-Call_010_6c85:
-	ld   a, $01                                      ; $6c85: $3e $01
-	ld   [$c960], a                                  ; $6c87: $ea $60 $c9
-	ret                                              ; $6c8a: $c9
-
-
-Call_010_6c8b:
-	ld   a, [$c960]                                  ; $6c8b: $fa $60 $c9
-	or   a                                           ; $6c8e: $b7
-	ret  z                                           ; $6c8f: $c8
-
-	ld   a, [$c94d]                                  ; $6c90: $fa $4d $c9
-	call HLequAddrOfAnimSpriteSpecDetails                                       ; $6c93: $cd $76 $30
-	call Call_010_6cdb                               ; $6c96: $cd $db $6c
-	ld   e, $2d                                      ; $6c99: $1e $2d
-	ld   a, [$c950]                                  ; $6c9b: $fa $50 $c9
-	cp   $06                                         ; $6c9e: $fe $06
-	jr   nz, jr_010_6ca4                             ; $6ca0: $20 $02
-
-	ld   e, $2e                                      ; $6ca2: $1e $2e
-
-jr_010_6ca4:
-	ld   a, e                                        ; $6ca4: $7b
-	ld   de, $7180                                   ; $6ca5: $11 $80 $71
-	push af                                          ; $6ca8: $f5
-	ld   a, $03                                      ; $6ca9: $3e $03
-	ld   [wFarCallAddr], a                                  ; $6cab: $ea $98 $c2
-	ld   a, $41                                      ; $6cae: $3e $41
-	ld   [wFarCallAddr+1], a                                  ; $6cb0: $ea $99 $c2
-	ld   a, $01                                      ; $6cb3: $3e $01
-	ld   [wFarCallBank], a                                  ; $6cb5: $ea $9a $c2
-	pop  af                                          ; $6cb8: $f1
-	call FarCall                                       ; $6cb9: $cd $62 $09
-	ret                                              ; $6cbc: $c9
-
-
-Call_010_6cbd:
-	ld   a, [$c94e]                                  ; $6cbd: $fa $4e $c9
-	call HLequAddrOfAnimSpriteSpecDetails                                       ; $6cc0: $cd $76 $30
-	call Call_010_6cfb                               ; $6cc3: $cd $fb $6c
-	push af                                          ; $6cc6: $f5
-	ld   a, $2f                                      ; $6cc7: $3e $2f
-	ld   [wFarCallAddr], a                                  ; $6cc9: $ea $98 $c2
-	ld   a, $41                                      ; $6ccc: $3e $41
-	ld   [wFarCallAddr+1], a                                  ; $6cce: $ea $99 $c2
-	ld   a, $01                                      ; $6cd1: $3e $01
-	ld   [wFarCallBank], a                                  ; $6cd3: $ea $9a $c2
-	pop  af                                          ; $6cd6: $f1
-	call FarCall                                       ; $6cd7: $cd $62 $09
-	ret                                              ; $6cda: $c9
-
-
-Call_010_6cdb:
-	push hl                                          ; $6cdb: $e5
-	ld   a, [$c950]                                  ; $6cdc: $fa $50 $c9
-	cp   $06                                         ; $6cdf: $fe $06
-	jr   nz, jr_010_6ce8                             ; $6ce1: $20 $05
-
-	call Call_010_6c68                               ; $6ce3: $cd $68 $6c
-	jr   jr_010_6ceb                                 ; $6ce6: $18 $03
-
-jr_010_6ce8:
-	ld   a, [$c94f]                                  ; $6ce8: $fa $4f $c9
-
-jr_010_6ceb:
-	add  a                                           ; $6ceb: $87
-	add  a                                           ; $6cec: $87
-	add  a                                           ; $6ced: $87
-	add  $0c                                         ; $6cee: $c6 $0c
-	ld   b, a                                        ; $6cf0: $47
-	ld   a, [$c950]                                  ; $6cf1: $fa $50 $c9
-	swap a                                           ; $6cf4: $cb $37
-	add  $18                                         ; $6cf6: $c6 $18
-	ld   c, a                                        ; $6cf8: $4f
-	pop  hl                                          ; $6cf9: $e1
-	ret                                              ; $6cfa: $c9
-
-
-Call_010_6cfb:
-	push hl                                          ; $6cfb: $e5
-	ld   a, [$c94b]                                  ; $6cfc: $fa $4b $c9
-	ld   c, a                                        ; $6cff: $4f
-	ld   b, $00                                      ; $6d00: $06 $00
-	ld   hl, $6d17                                   ; $6d02: $21 $17 $6d
-	add  hl, bc                                      ; $6d05: $09
-	ld   b, [hl]                                     ; $6d06: $46
-	ld   a, [$c951]                                  ; $6d07: $fa $51 $c9
-	cp   c                                           ; $6d0a: $b9
-	jr   nz, jr_010_6d0e                             ; $6d0b: $20 $01
-
-	dec  a                                           ; $6d0d: $3d
-
-jr_010_6d0e:
-	add  a                                           ; $6d0e: $87
-	add  a                                           ; $6d0f: $87
-	add  a                                           ; $6d10: $87
-	add  b                                           ; $6d11: $80
-	ld   b, a                                        ; $6d12: $47
-	ld   c, $00                                      ; $6d13: $0e $00
-	pop  hl                                          ; $6d15: $e1
-	ret                                              ; $6d16: $c9
-
-
-	ld   a, h                                        ; $6d17: $7c
-	ld   [hl], h                                     ; $6d18: $74
-	ld   l, h                                        ; $6d19: $6c
-	ld   h, h                                        ; $6d1a: $64
-	ld   e, h                                        ; $6d1b: $5c
-	ld   d, h                                        ; $6d1c: $54
-	ld   c, h                                        ; $6d1d: $4c
-	ld   b, h                                        ; $6d1e: $44
-	ld   b, h                                        ; $6d1f: $44
-	inc  a                                           ; $6d20: $3c
-	inc  a                                           ; $6d21: $3c
-
-Call_010_6d22:
-	ld   a, [$c960]                                  ; $6d22: $fa $60 $c9
-	or   a                                           ; $6d25: $b7
-	ret  nz                                          ; $6d26: $c0
-
-	ld   a, [wInGameButtonsPressed]                                  ; $6d27: $fa $10 $c2
-	bit  0, a                                        ; $6d2a: $cb $47
-	jr   z, jr_010_6d3f                              ; $6d2c: $28 $11
-
-	ld   a, [$c950]                                  ; $6d2e: $fa $50 $c9
-	cp   $06                                         ; $6d31: $fe $06
-	jr   z, jr_010_6d3a                              ; $6d33: $28 $05
-
-	call Call_010_6de6                               ; $6d35: $cd $e6 $6d
-	jr   jr_010_6d69                                 ; $6d38: $18 $2f
-
-jr_010_6d3a:
-	call Call_010_6e31                               ; $6d3a: $cd $31 $6e
-	jr   jr_010_6d69                                 ; $6d3d: $18 $2a
-
-jr_010_6d3f:
-	bit  1, a                                        ; $6d3f: $cb $4f
-	jr   z, jr_010_6d48                              ; $6d41: $28 $05
-
-	call Call_010_6e7f                               ; $6d43: $cd $7f $6e
-	jr   jr_010_6d69                                 ; $6d46: $18 $21
-
-jr_010_6d48:
-	bit  2, a                                        ; $6d48: $cb $57
-	jr   z, jr_010_6d62                              ; $6d4a: $28 $16
-
-	ld   a, [$c95f]                                  ; $6d4c: $fa $5f $c9
-	cp   $02                                         ; $6d4f: $fe $02
-	jr   z, jr_010_6d60                              ; $6d51: $28 $0d
-
-	xor  $01                                         ; $6d53: $ee $01
-	ld   [$c95f], a                                  ; $6d55: $ea $5f $c9
-	call Call_010_68f6                               ; $6d58: $cd $f6 $68
-	ld   a, $21                                      ; $6d5b: $3e $21
-	call Func_1adf                                       ; $6d5d: $cd $df $1a
-
-jr_010_6d60:
-	jr   jr_010_6d69                                 ; $6d60: $18 $07
-
-jr_010_6d62:
-	bit  3, a                                        ; $6d62: $cb $5f
-	jr   z, jr_010_6d69                              ; $6d64: $28 $03
-
-	call Call_010_6d6a                               ; $6d66: $cd $6a $6d
-
-jr_010_6d69:
-	ret                                              ; $6d69: $c9
-
-
-Call_010_6d6a:
-	ld   a, $06                                      ; $6d6a: $3e $06
-	ld   [$c950], a                                  ; $6d6c: $ea $50 $c9
-	ld   a, $0f                                      ; $6d6f: $3e $0f
-	ld   [$c94f], a                                  ; $6d71: $ea $4f $c9
-	call Call_010_6c85                               ; $6d74: $cd $85 $6c
-	ld   a, $21                                      ; $6d77: $3e $21
-	call Func_1adf                                       ; $6d79: $cd $df $1a
-	ret                                              ; $6d7c: $c9
-
-
-Call_010_6d7d:
-	ld   a, [$c95f]                                  ; $6d7d: $fa $5f $c9
-	add  a                                           ; $6d80: $87
-	ld   h, $00                                      ; $6d81: $26 $00
-	ld   l, a                                        ; $6d83: $6f
-	ld   bc, $695a                                   ; $6d84: $01 $5a $69
-	add  hl, bc                                      ; $6d87: $09
-	ld   a, [hl+]                                    ; $6d88: $2a
-	ld   h, [hl]                                     ; $6d89: $66
-	ld   l, a                                        ; $6d8a: $6f
-	ld   bc, $695a                                   ; $6d8b: $01 $5a $69
-	add  hl, bc                                      ; $6d8e: $09
-	ret                                              ; $6d8f: $c9
-
-
-Call_010_6d90:
-	call Call_010_6d7d                               ; $6d90: $cd $7d $6d
-	ld   bc, $0005                                   ; $6d93: $01 $05 $00
-	add  hl, bc                                      ; $6d96: $09
-	ld   a, [hl]                                     ; $6d97: $7e
-	ld   [$c95e], a                                  ; $6d98: $ea $5e $c9
-	ret                                              ; $6d9b: $c9
-
-
-Call_010_6d9c:
-	ld   hl, $c952                                   ; $6d9c: $21 $52 $c9
-	ld   c, $0a                                      ; $6d9f: $0e $0a
-	ld   a, [$c95e]                                  ; $6da1: $fa $5e $c9
-
-jr_010_6da4:
-	ld   [hl+], a                                    ; $6da4: $22
-	dec  c                                           ; $6da5: $0d
-	jr   nz, jr_010_6da4                             ; $6da6: $20 $fc
-
-	xor  a                                           ; $6da8: $af
-	ld   [hl], a                                     ; $6da9: $77
-	ld   [$c951], a                                  ; $6daa: $ea $51 $c9
-	ld   a, [$c94c]                                  ; $6dad: $fa $4c $c9
-	bit  2, a                                        ; $6db0: $cb $57
-	jr   z, jr_010_6de5                              ; $6db2: $28 $31
-
-	ld   a, [wWramBank]                                  ; $6db4: $fa $93 $c2
-	push af                                          ; $6db7: $f5
-	ld   a, [$c94a]                                  ; $6db8: $fa $4a $c9
-	ld   [wWramBank], a                                  ; $6dbb: $ea $93 $c2
-	ldh  [rSVBK], a                                  ; $6dbe: $e0 $70
-	ld   hl, $c948                                   ; $6dc0: $21 $48 $c9
-	ld   a, [hl+]                                    ; $6dc3: $2a
-	ld   h, [hl]                                     ; $6dc4: $66
-	ld   l, a                                        ; $6dc5: $6f
-	ld   de, $c952                                   ; $6dc6: $11 $52 $c9
-	ld   a, [$c94b]                                  ; $6dc9: $fa $4b $c9
-	ld   c, a                                        ; $6dcc: $4f
-	ld   b, $00                                      ; $6dcd: $06 $00
-
-jr_010_6dcf:
-	ld   a, [hl+]                                    ; $6dcf: $2a
-	or   a                                           ; $6dd0: $b7
-	jr   z, jr_010_6dd9                              ; $6dd1: $28 $06
-
-	ld   [de], a                                     ; $6dd3: $12
-	inc  de                                          ; $6dd4: $13
-	inc  b                                           ; $6dd5: $04
-	dec  c                                           ; $6dd6: $0d
-	jr   nz, jr_010_6dcf                             ; $6dd7: $20 $f6
-
-jr_010_6dd9:
-	ld   [hl], $00                                   ; $6dd9: $36 $00
-	ld   a, b                                        ; $6ddb: $78
-	ld   [$c951], a                                  ; $6ddc: $ea $51 $c9
-	pop  af                                          ; $6ddf: $f1
-	ld   [wWramBank], a                                  ; $6de0: $ea $93 $c2
-	ldh  [rSVBK], a                                  ; $6de3: $e0 $70
-
-jr_010_6de5:
-	ret                                              ; $6de5: $c9
-
-
-Call_010_6de6:
-	ld   a, [$c950]                                  ; $6de6: $fa $50 $c9
-	ld   l, a                                        ; $6de9: $6f
-	ld   h, $12                                      ; $6dea: $26 $12
-	call AequHtimesL                                       ; $6dec: $cd $ac $0b
-	ld   a, [$c94f]                                  ; $6def: $fa $4f $c9
-	add  l                                           ; $6df2: $85
-	ld   l, a                                        ; $6df3: $6f
-	ld   h, $00                                      ; $6df4: $26 $00
-	push hl                                          ; $6df6: $e5
-	call Call_010_6d7d                               ; $6df7: $cd $7d $6d
-	pop  bc                                          ; $6dfa: $c1
-	add  hl, bc                                      ; $6dfb: $09
-	ld   a, [$c94c]                                  ; $6dfc: $fa $4c $c9
-	bit  1, a                                        ; $6dff: $cb $4f
-	jr   nz, jr_010_6e09                             ; $6e01: $20 $06
-
-	ld   a, [$c95e]                                  ; $6e03: $fa $5e $c9
-	cp   [hl]                                        ; $6e06: $be
-	jr   z, jr_010_6e30                              ; $6e07: $28 $27
-
-jr_010_6e09:
-	ld   e, [hl]                                     ; $6e09: $5e
-	ld   hl, $c951                                   ; $6e0a: $21 $51 $c9
-	ld   a, [$c94b]                                  ; $6e0d: $fa $4b $c9
-	cp   [hl]                                        ; $6e10: $be
-	jr   nz, jr_010_6e14                             ; $6e11: $20 $01
-
-	dec  [hl]                                        ; $6e13: $35
-
-jr_010_6e14:
-	ld   a, [hl]                                     ; $6e14: $7e
-	inc  [hl]                                        ; $6e15: $34
-	ld   c, a                                        ; $6e16: $4f
-	ld   b, $00                                      ; $6e17: $06 $00
-	ld   hl, $c952                                   ; $6e19: $21 $52 $c9
-	add  hl, bc                                      ; $6e1c: $09
-	ld   [hl], e                                     ; $6e1d: $73
-	call Call_010_6ebb                               ; $6e1e: $cd $bb $6e
-	ld   hl, $c951                                   ; $6e21: $21 $51 $c9
-	ld   a, [$c94b]                                  ; $6e24: $fa $4b $c9
-	cp   [hl]                                        ; $6e27: $be
-	call z, Call_010_6d6a                            ; $6e28: $cc $6a $6d
-	ld   a, $21                                      ; $6e2b: $3e $21
-	call Func_1adf                                       ; $6e2d: $cd $df $1a
-
-jr_010_6e30:
-	ret                                              ; $6e30: $c9
-
-
-Call_010_6e31:
-	call Call_010_6c68                               ; $6e31: $cd $68 $6c
-	cp   $0f                                         ; $6e34: $fe $0f
-	jr   nz, jr_010_6e4c                             ; $6e36: $20 $14
-
-	ld   a, [$c951]                                  ; $6e38: $fa $51 $c9
-	or   a                                           ; $6e3b: $b7
-	jr   z, jr_010_6e7e                              ; $6e3c: $28 $40
-
-	call Call_010_6efe                               ; $6e3e: $cd $fe $6e
-	ld   hl, wGameSubstate                                   ; $6e41: $21 $a1 $c2
-	inc  [hl]                                        ; $6e44: $34
-	ld   a, $21                                      ; $6e45: $3e $21
-	call Func_1adf                                       ; $6e47: $cd $df $1a
-	jr   jr_010_6e7e                                 ; $6e4a: $18 $32
-
-jr_010_6e4c:
-	cp   $08                                         ; $6e4c: $fe $08
-	jr   nz, jr_010_6e55                             ; $6e4e: $20 $05
-
-	call Call_010_6e7f                               ; $6e50: $cd $7f $6e
-	jr   jr_010_6e7e                                 ; $6e53: $18 $29
-
-jr_010_6e55:
-	cp   $04                                         ; $6e55: $fe $04
-	jr   nz, jr_010_6e62                             ; $6e57: $20 $09
-
-	ld   a, [$c95f]                                  ; $6e59: $fa $5f $c9
-	cp   $02                                         ; $6e5c: $fe $02
-	jr   nz, jr_010_6e71                             ; $6e5e: $20 $11
-
-	jr   jr_010_6e69                                 ; $6e60: $18 $07
-
-jr_010_6e62:
-	ld   a, [$c95f]                                  ; $6e62: $fa $5f $c9
-	cp   $00                                         ; $6e65: $fe $00
-	jr   nz, jr_010_6e6d                             ; $6e67: $20 $04
-
-jr_010_6e69:
-	ld   a, $01                                      ; $6e69: $3e $01
-	jr   jr_010_6e73                                 ; $6e6b: $18 $06
-
-jr_010_6e6d:
-	ld   a, $00                                      ; $6e6d: $3e $00
-	jr   jr_010_6e73                                 ; $6e6f: $18 $02
-
-jr_010_6e71:
-	ld   a, $02                                      ; $6e71: $3e $02
-
-jr_010_6e73:
-	ld   [$c95f], a                                  ; $6e73: $ea $5f $c9
-	call Call_010_68f6                               ; $6e76: $cd $f6 $68
-	ld   a, $21                                      ; $6e79: $3e $21
-	call Func_1adf                                       ; $6e7b: $cd $df $1a
-
-jr_010_6e7e:
-	ret                                              ; $6e7e: $c9
-
-
-Call_010_6e7f:
-	ld   a, $22                                      ; $6e7f: $3e $22
-	call Func_1adf                                       ; $6e81: $cd $df $1a
-	ld   hl, $c951                                   ; $6e84: $21 $51 $c9
-	ld   a, [hl]                                     ; $6e87: $7e
-	or   a                                           ; $6e88: $b7
-	jr   nz, jr_010_6e98                             ; $6e89: $20 $0d
-
-	ld   a, [$c94c]                                  ; $6e8b: $fa $4c $c9
-	bit  0, a                                        ; $6e8e: $cb $47
-	jr   z, jr_010_6ea8                              ; $6e90: $28 $16
-
-	ld   hl, wGameSubstate                                   ; $6e92: $21 $a1 $c2
-	inc  [hl]                                        ; $6e95: $34
-	jr   jr_010_6ea8                                 ; $6e96: $18 $10
-
-jr_010_6e98:
-	dec  [hl]                                        ; $6e98: $35
-	ld   c, a                                        ; $6e99: $4f
-	ld   b, $00                                      ; $6e9a: $06 $00
-	ld   hl, $c952                                   ; $6e9c: $21 $52 $c9
-	add  hl, bc                                      ; $6e9f: $09
-	ld   a, [$c95e]                                  ; $6ea0: $fa $5e $c9
-	ld   [hl-], a                                    ; $6ea3: $32
-	ld   [hl], a                                     ; $6ea4: $77
-	call Call_010_6ebb                               ; $6ea5: $cd $bb $6e
-
-jr_010_6ea8:
-	ret                                              ; $6ea8: $c9
-
-
-	ld   a, [$c951]                                  ; $6ea9: $fa $51 $c9
+DrawEnterNameSelectableChars:
+; Init dimensions, and clear textbox
+	call InitWideTextBoxDimensions                                  ; $68f6
+	call ClearTextBoxDimensionsAndSetDefaultTextStyle               ; $68f9
+
+; Set actual dimensions of selectable chars, and reset initial col/row
+	ldbc ENTER_NAME_SELECTABLE_LETTERS_COLS, $06                    ; $68fc
+	call SetKanjiTextBoxDimensions                                  ; $68ff
+
+	ld   bc, $0000                                                  ; $6902
+	call SetCurrKanjiColAndRowToDrawOn                              ; $6905
+
+; HL points to the alphabet kanjis to process
+	call HLequAddressOfAlphabetsKanjiIdxes                          ; $6908
+
+; Preserve ram bank, and set instant tile data ram bank
+	ld   a, [wWramBank]                                             ; $690b
+	push af                                                         ; $690e
+
+	ld   a, BANK(wEnterNameSelectableCharsTileDataBuffer)           ; $690f
+	ld   [wWramBank], a                                             ; $6911
+	ldh  [rSVBK], a                                                 ; $6914
+
+; DE (source of instance text) now, load instant text into buffer
+	ld   e, l                                                       ; $6916
+	ld   d, h                                                       ; $6917
+	ld   hl, wEnterNameSelectableCharsTileDataBuffer                ; $6918
+	ld   a, BANK(EnterNameAlphabetKanjaIdxes)                       ; $691b
+	call LoadInstantText                                            ; $691d
+
+; Restore ram bank, and wait until vblank handled
+	pop  af                                                         ; $6920
+	ld   [wWramBank], a                                             ; $6921
+	ldh  [rSVBK], a                                                 ; $6924
+	rst  WaitUntilVBlankIntHandledIfLCDOn                           ; $6926
+
+; Transfer all the loaded tile data over 3 frames
+	ld   c, $80                                                     ; $6927
+	ld   de, _VRAM+$1000                                            ; $6929
+	ld   a, BANK(wEnterNameSelectableCharsTileDataBuffer)           ; $692c
+	ld   hl, wEnterNameSelectableCharsTileDataBuffer                ; $692e
+	ld   b, $400/$10                                                ; $6931
+	call EnqueueHDMATransfer                                        ; $6933
+	rst  WaitUntilVBlankIntHandledIfLCDOn                           ; $6936
+
+	ld   c, $80                                                     ; $6937
+	ld   de, _VRAM+$1400                                            ; $6939
+	ld   a, BANK(wEnterNameSelectableCharsTileDataBuffer)           ; $693c
+	ld   hl, wEnterNameSelectableCharsTileDataBuffer+$400           ; $693e
+	ld   b, $400/$10                                                ; $6941
+	call EnqueueHDMATransfer                                        ; $6943
+	rst  WaitUntilVBlankIntHandledIfLCDOn                           ; $6946
+
+	ld   c, $81                                                     ; $6947
+	ld   de, _VRAM+$1000                                            ; $6949
+	ld   a, BANK(wEnterNameSelectableCharsTileDataBuffer)           ; $694c
+	ld   hl, wEnterNameSelectableCharsTileDataBuffer+$800           ; $694e
+	ld   b, $4c0/$10                                                ; $6951
+	call EnqueueHDMATransfer                                        ; $6953
+
+; Update screen with the 2 other alphabet choices
+	call UpdateEnterName2AlphabetChoices                            ; $6956
+	ret                                                             ; $6959
+
+
+EnterNameAlphabetKanjaIdxes:
+	dw .hiragana-EnterNameAlphabetKanjaIdxes
+	dw .katakana-EnterNameAlphabetKanjaIdxes
+	dw .english-EnterNameAlphabetKanjaIdxes
+
+.hiragana:
+	db $50, $52, $54, $56, $58, $10, $59, $5b, $5d, $5f, $61, $10, $63, $65, $67, $69, $6b, $0d
+	db $6d, $6f, $72, $74, $76, $10, $78, $79, $7a, $7b, $7c, $10, $7d, $80, $83, $86, $89, $0d
+	db $8c, $8d, $8e, $8f, $90, $10, $92, $10, $94, $10, $96, $10, $97, $98, $99, $9a, $9b, $0d
+	db $9d, $10, $a0, $10, $a1, $10, $5a, $5c, $5e, $60, $62, $10, $64, $66, $68, $6a, $6c, $0d
+	db $6e, $70, $73, $75, $77, $10, $7e, $81, $84, $87, $8a, $10, $7f, $82, $85, $88, $8b, $0d
+	db $4f, $51, $53, $55, $57, $10, $91, $10, $93, $10, $95, $10, $71, $10, $10, $10, $fb, $00
+
+.katakana:
+	db $a3, $a5, $a7, $a9, $ab, $10, $ac, $ae, $b0, $b2, $b4, $10, $b6, $b8, $ba, $bc, $be, $0d
+	db $c0, $c2, $c5, $c7, $c9, $10, $cb, $cc, $cd, $ce, $cf, $10, $d0, $d3, $d6, $d9, $dc, $0d
+	db $df, $e0, $e2, $e3, $e4, $10, $e6, $10, $e8, $10, $ea, $10, $eb, $ec, $ed, $ee, $ef, $0d
+	db $f1, $10, $f4, $10, $f5, $10, $ad, $af, $b1, $b3, $b5, $10, $b7, $b9, $bb, $bd, $bf, $0d
+	db $c1, $c3, $c6, $c8, $ca, $10, $d1, $d4, $d7, $da, $dd, $10, $d2, $d5, $d8, $db, $de, $0d
+	db $a2, $a4, $a6, $a8, $aa, $10, $e5, $10, $e7, $10, $e9, $10, $c4, $10, $10, $10, $fb, $00
+
+.english:
+	db $10, $1b, $1c, $1d, $1e, $1f, $20, $21, $22, $23, $24, $25, $26, $27, $28, $29, $10, $0d
+	db $10, $2a, $2b, $2c, $2d, $2e, $2f, $30, $31, $32, $33, $34, $10, $10, $10, $10, $10, $0d
+	db $10, $35, $36, $37, $38, $39, $3a, $3b, $3c, $3d, $3e, $3f, $40, $41, $42, $43, $10, $0d
+	db $10, $44, $45, $46, $47, $48, $49, $4a, $4b, $4c, $4d, $4e, $10, $10, $10, $10, $10, $0d
+	db $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $1a, $10, $10, $10, $10, $10, $10, $0d
+	db $10, $10, $10, $10, $10, $10, $10, $10, $10, $10, $10, $10, $10, $10, $10, $10, $10, $00
+
+
+UpdateEnterName2AlphabetChoices:
+; HL points to a screen region containing the combinations of alphabet choices
+	ld   a, [wEnterNameAlphabetChosen]                              ; $6aa4
+	add  a                                                          ; $6aa7
+	ld   c, a                                                       ; $6aa8
+	ld   b, $00                                                     ; $6aa9
+	ld   hl, .twoOptSources                                         ; $6aab
+	add  hl, bc                                                     ; $6aae
+
+; HL equals that screen address
+	ld   a, [hl+]                                                   ; $6aaf
+	ld   h, [hl]                                                    ; $6ab0
+	ld   l, a                                                       ; $6ab1
+
+; DE = the on-screen address of the 2 opts, set to copy tilemaps
+	ld   de, _SCRN0+$1e2                                            ; $6ab2
+
+	xor  a                                                          ; $6ab5
+	ldh  [rVBK], a                                                  ; $6ab6
+
+; Copy the top 8 tiles
+	ld   bc, $0008                                                  ; $6ab8
+	ld   a, $00                                                     ; $6abb
+	call HBlankFarMemCopy                                           ; $6abd
+
+; Have dest point to start of bottom 8 tiles
+	push hl                                                         ; $6ac0
+	ld   hl, SCRN_VX_B-8                                            ; $6ac1
+	add  hl, de                                                     ; $6ac4
+	ld   e, l                                                       ; $6ac5
+	ld   d, h                                                       ; $6ac6
+	pop  hl                                                         ; $6ac7
+
+; Same with src, then copy 8 tiles
+	ld   bc, SCRN_VX_B-8                                            ; $6ac8
+	add  hl, bc                                                     ; $6acb
+
+	ld   bc, $0008                                                  ; $6acc
+	ld   a, $00                                                     ; $6acf
+	call HBlankFarMemCopy                                           ; $6ad1
+	ret                                                             ; $6ad4
+
+.twoOptSources:
+	dw _SCRN0+$240
+	dw _SCRN0+$280
+	dw _SCRN0+$248
+
+
+HandleEnterNameDirInput:
+; Clear flag to say cursor moved
+	xor  a                                                          ; $6adb
+	ld   [wEnterNameCursorMoved], a                                 ; $6adc
+
+; If on bottom row, handle when pressing left/right
+	ld   a, [wEnterNameCursorLetterRowIdx]                          ; $6adf
+	cp   $06                                                        ; $6ae2
+	call z, HandleEnterNameBottomRowLeftRightInput                  ; $6ae4
+
+; Jump if english
+	ld   a, [wEnterNameAlphabetChosen]                              ; $6ae7
+	cp   ENTER_NAME_EN_ALPHABET                                     ; $6aea
+	jr   z, .english                                                ; $6aec
+
+; Either way handle left/right if not on bottom row, then up/down
+	ld   a, [wEnterNameCursorLetterRowIdx]                          ; $6aee
+	cp   $06                                                        ; $6af1
+	call nz, HandleKanaNonBottomRowLeftRightInput                   ; $6af3
+	call HandleKanaUpDownInput                                      ; $6af6
+	jr   .done                                                      ; $6af9
+
+.english:
+	ld   a, [wEnterNameCursorLetterRowIdx]                          ; $6afb
+	cp   $06                                                        ; $6afe
+	call nz, HandleEnNonBottomRowLeftRightInput                     ; $6b00
+	call HandleEnUpDownInput                                        ; $6b03
+
+.done:
+	ret                                                             ; $6b06
+
+
+HandleKanaNonBottomRowLeftRightInput:
+	ld   hl, wEnterNameCursorLetterColIdx                           ; $6b07
+
+; Jump if not right
+	ld   a, [wInGameStickyButtonsPressed]                           ; $6b0a
+	bit  PADB_RIGHT, a                                              ; $6b0d
+	jr   z, .notRight                                               ; $6b0f
+
+; Jump if looping from the last element
+	ld   a, [hl]                                                    ; $6b11
+	cp   ENTER_NAME_SELECTABLE_LETTERS_COLS-1                       ; $6b12
+	jr   z, .loopAround                                             ; $6b14
+
+; Else inc col idx. Inc past gaps between blocks of 5
+	inc  a                                                          ; $6b16
+	cp   $05                                                        ; $6b17
+	jr   z, .incColIdx                                              ; $6b19
+
+	cp   $0b                                                        ; $6b1b
+	jr   nz, .setColIdx                                             ; $6b1d
+
+.incColIdx:
+	inc  a                                                          ; $6b1f
+	jr   .setColIdx                                                 ; $6b20
+
+.notRight:
+; Jump if not left
+	bit  PADB_LEFT, a                                               ; $6b22
+	jr   z, .done                                                   ; $6b24
+
+; Jump if looping from the 1st element
+	ld   a, [hl]                                                    ; $6b26
+	or   a                                                          ; $6b27
+	jr   z, .loopAround                                             ; $6b28
+
+; Else dec col idx. Dec past gaps between blocks of 5
+	dec  a                                                          ; $6b2a
+	cp   $05                                                        ; $6b2b
+	jr   z, .decColIdx                                              ; $6b2d
+
+	cp   $0b                                                        ; $6b2f
+	jr   nz, .setColIdx                                             ; $6b31
+
+.decColIdx:
+	dec  a                                                          ; $6b33
+	jr   .setColIdx                                                 ; $6b34
+
+.loopAround:
+; Set col based on if looping left/right
+	ld   a, [wInGameButtonsPressed]                                 ; $6b36
+	bit  PADB_RIGHT, a                                              ; $6b39
+	jr   z, .loopLeftAround                                         ; $6b3b
+
+	xor  a                                                          ; $6b3d
+	jr   .setColIdx                                                 ; $6b3e
+
+.loopLeftAround:
+	bit  PADB_LEFT, a                                               ; $6b40
+	jr   z, .done                                                   ; $6b42
+
+	ld   a, ENTER_NAME_SELECTABLE_LETTERS_COLS-1                    ; $6b44
+
+.setColIdx:
+	ld   [hl], a                                                    ; $6b46
+
+; Set that we've moved to update cursor, and play sound effect
+	call SetEnterNameCursorMoved                                    ; $6b47
+
+	ld   a, SE_20                                                   ; $6b4a
+	call PlaySoundEffect                                            ; $6b4c
+
+.done:
+	ret                                                             ; $6b4f
+
+
+HandleKanaUpDownInput:
+	ld   hl, wEnterNameCursorLetterRowIdx                           ; $6b50
+
+; Jump if not up
+	ld   a, [wInGameStickyButtonsPressed]                           ; $6b53
+	bit  PADB_UP, a                                                 ; $6b56
+	jr   z, .notUp                                                  ; $6b58
+
+; Jump if looping from top row
+	ld   a, [hl]                                                    ; $6b5a
+	or   a                                                          ; $6b5b
+	jr   z, .loopAround                                             ; $6b5c
+
+; Else dec row idx
+	dec  a                                                          ; $6b5e
+	jr   .setRowIdx                                                 ; $6b5f
+
+.notUp:
+; Jump if not down
+	bit  PADB_DOWN, a                                               ; $6b61
+	jr   z, .done                                                   ; $6b63
+
+; Jump if looping from bottom row
+	ld   a, [hl]                                                    ; $6b65
+	cp   $06                                                        ; $6b66
+	jr   z, .loopAround                                             ; $6b68
+
+; Else inc row idx
+	inc  a                                                          ; $6b6a
+	jr   .setRowIdx                                                 ; $6b6b
+
+.loopAround:
+; Set row based on if looping up/down
+	ld   a, [wInGameButtonsPressed]                                 ; $6b6d
+	bit  PADB_UP, a                                                 ; $6b70
+	jr   z, .loopDownAround                                         ; $6b72
+
+	ld   a, $06                                                     ; $6b74
+	jr   .setRowIdx                                                 ; $6b76
+
+.loopDownAround:
+	bit  PADB_DOWN, a                                               ; $6b78
+	jr   z, .done                                                   ; $6b7a
+
+	xor  a                                                          ; $6b7c
+
+.setRowIdx:
+	ld   [hl], a                                                    ; $6b7d
+
+; Set that we've moved to update cursor, and play sound effect
+	call SetEnterNameCursorMoved                                    ; $6b7e
+	
+	ld   a, SE_20                                                   ; $6b81
+	call PlaySoundEffect                                            ; $6b83
+
+.done:
+	ret                                                             ; $6b86
+
+
+HandleEnNonBottomRowLeftRightInput:
+	ld   hl, wEnterNameCursorLetterColIdx                           ; $6b87
+
+; Jump if not right
+	ld   a, [wInGameStickyButtonsPressed]                           ; $6b8a
+	bit  PADB_RIGHT, a                                              ; $6b8d
+	jr   z, .notRight                                               ; $6b8f
+
+; En has a gap on the right side, so jump if looping from the gap or last letter
+	ld   a, [hl]                                                    ; $6b91
+	cp   ENTER_NAME_SELECTABLE_LETTERS_COLS-1                       ; $6b92
+	jr   z, .loopAround                                             ; $6b94
+
+	cp   ENTER_NAME_SELECTABLE_LETTERS_COLS-2                       ; $6b96
+	jr   z, .loopAround                                             ; $6b98
+
+; Else inc col idx
+	inc  a                                                          ; $6b9a
+	jr   .setColIdx                                                 ; $6b9b
+
+.notRight:
+; Jump if not left
+	bit  PADB_LEFT, a                                               ; $6b9d
+	jr   z, .done                                                   ; $6b9f
+
+; En has a gap on the left side, so jump if looping from the gap or 1st letter
+	ld   a, [hl]                                                    ; $6ba1
+	or   a                                                          ; $6ba2
+	jr   z, .loopAround                                             ; $6ba3
+
+	cp   $01                                                        ; $6ba5
+	jr   z, .loopAround                                             ; $6ba7
+
+; Else dec col idx
+	dec  a                                                          ; $6ba9
+	jr   .setColIdx                                                 ; $6baa
+
+.loopAround:
+; Set col based on if looping left/right, setting past the gaps
+	ld   a, [wInGameButtonsPressed]                                 ; $6bac
+	bit  PADB_RIGHT, a                                              ; $6baf
+	jr   z, .loopAroundLeft                                         ; $6bb1
+
+	ld   a, $01                                                     ; $6bb3
+	jr   .setColIdx                                                 ; $6bb5
+
+.loopAroundLeft:
+	bit  PADB_LEFT, a                                               ; $6bb7
+	jr   z, .done                                                   ; $6bb9
+
+	ld   a, ENTER_NAME_SELECTABLE_LETTERS_COLS-2                    ; $6bbb
+
+.setColIdx:
+	ld   [hl], a                                                    ; $6bbd
+
+; Set that we've moved to update cursor, and play sound effect
+	call SetEnterNameCursorMoved                                    ; $6bbe
+
+	ld   a, SE_20                                                   ; $6bc1
+	call PlaySoundEffect                                            ; $6bc3
+
+.done:
+	ret                                                             ; $6bc6
+
+
+HandleEnUpDownInput:
+	ld   hl, wEnterNameCursorLetterRowIdx                           ; $6bc7
+
+; Jump if not up
+	ld   a, [wInGameStickyButtonsPressed]                           ; $6bca
+	bit  PADB_UP, a                                                 ; $6bcd
+	jr   z, .notUp                                                  ; $6bcf
+
+; Jump if looping from the 1st row
+	ld   a, [hl]                                                    ; $6bd1
+	or   a                                                          ; $6bd2
+	jr   z, .loopAround                                             ; $6bd3
+
+; Else dec row, dec'ing again past gap between letters and bottom row
+	dec  a                                                          ; $6bd5
+	cp   $05                                                        ; $6bd6
+	jr   nz, .setRowIdx                                             ; $6bd8
+
+	dec  a                                                          ; $6bda
+	jr   .setRowIdx                                                 ; $6bdb
+
+.notUp:
+; Jump if not down
+	bit  PADB_DOWN, a                                               ; $6bdd
+	jr   z, .done                                                   ; $6bdf
+
+; Jump if looping from the bottom row
+	ld   a, [hl]                                                    ; $6be1
+	cp   $06                                                        ; $6be2
+	jr   z, .loopAround                                             ; $6be4
+
+; Else inc row, inc'ing again past gap between letters and bottom row
+	inc  a                                                          ; $6be6
+	cp   $05                                                        ; $6be7
+	jr   nz, .setRowIdx                                             ; $6be9
+
+	inc  a                                                          ; $6beb
+	jr   .setRowIdx                                                 ; $6bec
+
+.loopAround:
+; Set col based on if looping up/down
+	ld   a, [wInGameButtonsPressed]                                 ; $6bee
+	bit  PADB_UP, a                                                 ; $6bf1
+	jr   z, .loopDownAround                                         ; $6bf3
+
+	ld   a, $06                                                     ; $6bf5
+	jr   .setRowIdx                                                 ; $6bf7
+
+.loopDownAround:
+	bit  PADB_DOWN, a                                               ; $6bf9
+	jr   z, .done                                                   ; $6bfb
+
+	xor  a                                                          ; $6bfd
+
+.setRowIdx:
+	ld   [hl], a                                                    ; $6bfe
+
+; Inc past 1st col if needed, eg if going up from the left kana opt
+	ld   a, [wEnterNameCursorLetterColIdx]                          ; $6bff
+	or   a                                                          ; $6c02
+	jr   nz, :+                                                     ; $6c03
+
+	inc  a                                                          ; $6c05
+	ld   [wEnterNameCursorLetterColIdx], a                          ; $6c06
+
+; Set that we've moved to update cursor, and play sound effect
+:	call SetEnterNameCursorMoved                                    ; $6c09
+
+	ld   a, SE_20                                                   ; $6c0c
+	call PlaySoundEffect                                            ; $6c0e
+
+.done:
+	ret                                                             ; $6c11
+
+
+HandleEnterNameBottomRowLeftRightInput:
+; Jump if left not pressed
+	ld   a, [wInGameButtonsPressed]                                 ; $6c12
+	bit  PADB_LEFT, a                                               ; $6c15
+	jr   z, .notLeft                                                ; $6c17
+
+; Jump if at the left most option
+	call GetEnterNameBottomRowCol                                   ; $6c19
+	or   a                                                          ; $6c1c
+	jr   z, .loopAround                                             ; $6c1d
+
+; Else set col idx to the previous option
+	call GetEnterNamePreviousBottomRowColIdx                        ; $6c1f
+	jr   .setColIdx                                                 ; $6c22
+
+.notLeft:
+	bit  PADB_RIGHT, a                                              ; $6c24
+	jr   z, .done                                                   ; $6c26
+
+; If right pressed, jump if on the rightmost option
+	call GetEnterNameBottomRowCol                                   ; $6c28
+	cp   ENTER_NAME_SUBMIT_COL                                      ; $6c2b
+	jr   z, .loopAround                                             ; $6c2d
+
+; Else set col idx to the next option
+	call GetEnterNameNextBottomRowColIdx                            ; $6c2f
+	jr   .setColIdx                                                 ; $6c32
+
+.loopAround:
+; Set appropriate opt based on the button pressed
+	ld   a, [wInGameButtonsPressed]                                 ; $6c34
+	bit  PADB_RIGHT, a                                              ; $6c37
+	jr   z, .checkLoopedLeft                                        ; $6c39
+
+	lda  ENTER_NAME_HIRA_KATA_COL                                   ; $6c3b
+	jr   .setColIdx                                                 ; $6c3c
+
+.checkLoopedLeft:
+	bit  PADB_LEFT, a                                               ; $6c3e
+	jr   z, .done                                                   ; $6c40
+
+	ld   a, ENTER_NAME_SUBMIT_COL                                   ; $6c42
+
+.setColIdx:
+	ld   [wEnterNameCursorLetterColIdx], a                          ; $6c44
+
+; Set that we've moved to update cursor, and play sound effect
+	call SetEnterNameCursorMoved                                    ; $6c47
+
+	ld   a, SE_20                                                   ; $6c4a
+	call PlaySoundEffect                                            ; $6c4c
+
+.done:
+	ret                                                             ; $6c4f
+
+
+; A - curr bottom row col idx
+; Returns previous possible col idx in A
+GetEnterNamePreviousBottomRowColIdx:
+	ld   hl, BottomRowColIdxes                                      ; $6c50
+
+.loop:
+; Go through possible col idxes forwards, until one matches, then jump
+	cp   [hl]                                                       ; $6c53
+	jr   z, .done                                                   ; $6c54
+
+	inc  hl                                                         ; $6c56
+	jr   .loop                                                      ; $6c57
+
+.done:
+; Get the previous possible option
+	dec  hl                                                         ; $6c59
+	ld   a, [hl]                                                    ; $6c5a
+	ret                                                             ; $6c5b
+
+
+; A - curr bottom row col idx
+; Returns next possible col idx in A
+GetEnterNameNextBottomRowColIdx:
+	ld   hl, BottomRowColIdxes.end-1                                ; $6c5c
+
+.loop:
+; Go through possible col idxes backwards, until one matches, then jump
+	cp   [hl]                                                       ; $6c5f
+	jr   z, .done                                                   ; $6c60
+
+	dec  hl                                                         ; $6c62
+	jr   .loop                                                      ; $6c63
+
+.done:
+; Get the next possible option
+	inc  hl                                                         ; $6c65
+	ld   a, [hl]                                                    ; $6c66
+	ret                                                             ; $6c67
+
+
+; Returns col idx in A
+GetEnterNameBottomRowCol:
+; HL points to bottom row col based on current col
+	ld   a, [wEnterNameCursorLetterColIdx]                          ; $6c68
+	ld   c, a                                                       ; $6c6b
+	ld   b, $00                                                     ; $6c6c
+	ld   hl, BottomRowColIdxes                                      ; $6c6e
+	add  hl, bc                                                     ; $6c71
+
+; Return value in A
+	ld   a, [hl]                                                    ; $6c72
+	ret                                                             ; $6c73
+
+
+BottomRowColIdxes:
+rept 3
+	db ENTER_NAME_HIRA_KATA_COL
+endr
+rept 4
+	db ENTER_NAME_ENGLISH_COL
+endr
+rept 5
+	db ENTER_NAME_DELETE_COL
+endr
+rept 5
+	db ENTER_NAME_SUBMIT_COL
+endr
+.end:
+
+
+SetEnterNameCursorMoved:
+	ld   a, $01                                                     ; $6c85
+	ld   [wEnterNameCursorMoved], a                                 ; $6c87
+	ret                                                             ; $6c8a
+
+
+SetEnterNameLetterCursorAnimSpriteSpecIdx:
+; Return if cursor didn't move
+	ld   a, [wEnterNameCursorMoved]                                 ; $6c8b
+	or   a                                                          ; $6c8e
+	ret  z                                                          ; $6c8f
+
+; Get coords of letter cursor
+	ld   a, [wEnterNameLetterCursorBaseAnimSpriteSpecUsed]          ; $6c90
+	call HLequAddrOfAnimSpriteSpecDetails                           ; $6c93
+	call GetEnterNameCursorCoords                                   ; $6c96
+
+; Animated sprite spec idx is small cursor if not on the last row, else the big cursor
+	ld   e, ASS_ENTER_NAME_SMALL_CURSOR                             ; $6c99
+	ld   a, [wEnterNameCursorLetterRowIdx]                          ; $6c9b
+	cp   $06                                                        ; $6c9e
+	jr   nz, :+                                                     ; $6ca0
+	ld   e, ASS_ENTER_NAME_BIG_CURSOR                               ; $6ca2
+:	ld   a, e                                                       ; $6ca4
+
+; Overwrite current sprite spec details
+	ld   de, AnimatedSpriteSpecs                                    ; $6ca5
+	M_FarCall LoadNewAnimatedSpriteSpecDetails
+	ret                                                             ; $6cbc
+
+
+SetEnterNameUnderLineAnimSpriteSpecCoords:
+; Get coords of inputted chars underline, and set it in anim sprite spec in ram
+	ld   a, [wEnterNameNameUnderlineBaseAnimSpriteSpecUsed]         ; $6cbd
+	call HLequAddrOfAnimSpriteSpecDetails                           ; $6cc0
+	call GetEnterNameUnderlineCoords                                ; $6cc3
+	M_FarCall SetAnimSpriteSpecInstanceCoords
+	ret                                                             ; $6cda
+
+
+; Returns base X in B, and base Y in C
+GetEnterNameCursorCoords:
+	push hl                                                         ; $6cdb
+
+; Jump if not the last row
+	ld   a, [wEnterNameCursorLetterRowIdx]                          ; $6cdc
+	cp   $06                                                        ; $6cdf
+	jr   nz, .normalChar                                            ; $6ce1
+
+; If bottom, get col based on col normal row col idx
+	call GetEnterNameBottomRowCol                                   ; $6ce3
+	jr   :+                                                         ; $6ce6
+
+.normalChar:
+	ld   a, [wEnterNameCursorLetterColIdx]                          ; $6ce8
+
+; B = $0c + 8 * col idx
+:	add  a                                                          ; $6ceb
+	add  a                                                          ; $6cec
+	add  a                                                          ; $6ced
+	add  $0c                                                        ; $6cee
+	ld   b, a                                                       ; $6cf0
+
+; C = $18 + $10 * row idx
+	ld   a, [wEnterNameCursorLetterRowIdx]                          ; $6cf1
+	swap a                                                          ; $6cf4
+	add  $18                                                        ; $6cf6
+	ld   c, a                                                       ; $6cf8
+
+	pop  hl                                                         ; $6cf9
+	ret                                                             ; $6cfa
+
+
+; Returns base X in B, and base Y in C
+GetEnterNameUnderlineCoords:
+	push hl                                                         ; $6cfb
+
+; B = leftmost possible X for underline (the more chars, the more left)
+	ld   a, [wEnterNameMaxChars]                                    ; $6cfc
+	ld   c, a                                                       ; $6cff
+	ld   b, $00                                                     ; $6d00
+	ld   hl, .startXs                                               ; $6d02
+	add  hl, bc                                                     ; $6d05
+	ld   b, [hl]                                                    ; $6d06
+
+; If num chars entered == max chars, have underline point to last char position
+	ld   a, [wEnterNameNumCharsEntered]                             ; $6d07
+	cp   c                                                          ; $6d0a
+	jr   nz, :+                                                     ; $6d0b
+	dec  a                                                          ; $6d0d
+
+; Base X = previous leftmost X + 8 * chars entered
+:	add  a                                                          ; $6d0e
+	add  a                                                          ; $6d0f
+	add  a                                                          ; $6d10
+	add  b                                                          ; $6d11
+	ld   b, a                                                       ; $6d12
+
+; Base Y = 0
+	ld   c, $00                                                     ; $6d13
+
+	pop  hl                                                         ; $6d15
+	ret                                                             ; $6d16
+
+.startXs:
+	db $7c, $74, $6c, $64, $5c, $54, $4c, $44
+	db $44, $3c, $3c
+
+
+HandleEnterNameNonDirInput:
+; Return if cursor moved
+	ld   a, [wEnterNameCursorMoved]                                 ; $6d22
+	or   a                                                          ; $6d25
+	ret  nz                                                         ; $6d26
+
+; Jump if A not pressed
+	ld   a, [wInGameButtonsPressed]                                 ; $6d27
+	bit  PADB_A, a                                                  ; $6d2a
+	jr   z, .aNotPressed                                            ; $6d2c
+
+; If A pressed, branch based on if on bottom row
+	ld   a, [wEnterNameCursorLetterRowIdx]                          ; $6d2e
+	cp   $06                                                        ; $6d31
+	jr   z, .bottomRow                                              ; $6d33
+
+	call HandleEnterNameLetterSelected                              ; $6d35
+	jr   .done                                                      ; $6d38
+
+.bottomRow:
+	call HandleEnterNameBottomOptSelected                           ; $6d3a
+	jr   .done                                                      ; $6d3d
+
+.aNotPressed:
+	bit  PADB_B, a                                                  ; $6d3f
+	jr   z, .aOrBNotPressed                                         ; $6d41
+
+; If B pressed, delete a name char
+	call DeleteEnterNameChar                                        ; $6d43
+	jr   .done                                                      ; $6d46
+
+.aOrBNotPressed:
+	bit  PADB_SELECT, a                                             ; $6d48
+	jr   z, .checkStartPressed                                      ; $6d4a
+
+; If select pressed, and not currently on English..
+	ld   a, [wEnterNameAlphabetChosen]                              ; $6d4c
+	cp   ENTER_NAME_EN_ALPHABET                                     ; $6d4f
+	jr   z, .toDone                                                 ; $6d51
+
+; Flip the kana alphabet chosen, redraw the selectable chars, and play sound
+	xor  $01                                                        ; $6d53
+	ld   [wEnterNameAlphabetChosen], a                              ; $6d55
+	call DrawEnterNameSelectableChars                               ; $6d58
+
+	ld   a, SE_21                                                   ; $6d5b
+	call PlaySoundEffect                                            ; $6d5d
+
+.toDone:
+	jr   .done                                                      ; $6d60
+
+.checkStartPressed:
+	bit  PADB_START, a                                              ; $6d62
+	jr   z, .done                                                   ; $6d64
+
+; If start pressed, jump to the submit button
+	call GoToEnterNameSubmitButton                                  ; $6d66
+
+.done:
+	ret                                                             ; $6d69
+
+
+GoToEnterNameSubmitButton:
+; Set coords to get cursor on submit button
+	ld   a, $06                                                     ; $6d6a
+	ld   [wEnterNameCursorLetterRowIdx], a                          ; $6d6c
+	ld   a, $0f                                                     ; $6d6f
+	ld   [wEnterNameCursorLetterColIdx], a                          ; $6d71
+
+; Set that we've moved to update cursor, and play sound effect
+	call SetEnterNameCursorMoved                                    ; $6d74
+	
+	ld   a, SE_21                                                   ; $6d77
+	call PlaySoundEffect                                            ; $6d79
+	ret                                                             ; $6d7c
+
+
+HLequAddressOfAlphabetsKanjiIdxes:
+; HL = alphabet double idxed into table
+	ld   a, [wEnterNameAlphabetChosen]                              ; $6d7d
+	add  a                                                          ; $6d80
+	ld   h, $00                                                     ; $6d81
+	ld   l, a                                                       ; $6d83
+	ld   bc, EnterNameAlphabetKanjaIdxes                            ; $6d84
+	add  hl, bc                                                     ; $6d87
+
+; HL = word in table
+	ld   a, [hl+]                                                   ; $6d88
+	ld   h, [hl]                                                    ; $6d89
+	ld   l, a                                                       ; $6d8a
+
+; Use as offset in table again
+	ld   bc, EnterNameAlphabetKanjaIdxes                            ; $6d8b
+	add  hl, bc                                                     ; $6d8e
+	ret                                                             ; $6d8f
+
+
+SetSpaceKanjiIdx:
+; Called when alphabet is hiragana, the 6th byte is $10 (space)
+	call HLequAddressOfAlphabetsKanjiIdxes                          ; $6d90
+	ld   bc, $0005                                                  ; $6d93
+	add  hl, bc                                                     ; $6d96
+	ld   a, [hl]                                                    ; $6d97
+	ld   [wEnterNameSpaceKanjiIdx], a                               ; $6d98
+	ret                                                             ; $6d9b
+
+
+InitEnterNameInputtedChars:
+; Fill inputted chars with a space kanji idx
+	ld   hl, wEnterNameInputtedChars                                ; $6d9c
+	ld   c, $0a                                                     ; $6d9f
+	ld   a, [wEnterNameSpaceKanjiIdx]                               ; $6da1
+
+:	ld   [hl+], a                                                   ; $6da4
+	dec  c                                                          ; $6da5
+	jr   nz, :-                                                     ; $6da6
+
+; Add a null terminator, and set that 0 chars have been entered
+	xor  a                                                          ; $6da8
+	ld   [hl], a                                                    ; $6da9
+	ld   [wEnterNameNumCharsEntered], a                             ; $6daa
+
+; If bit 2 set on state control byte, pre-fill with player name
+	ld   a, [wEnterNameControlByte]                                 ; $6dad
+	bit  2, a                                                       ; $6db0
+	jr   z, .done                                                   ; $6db2
+
+; Preserve ram bank, and set it to where the player's name is
+	ld   a, [wWramBank]                                             ; $6db4
+	push af                                                         ; $6db7
+
+	ld   a, [wPlayerNameRamBank]                                    ; $6db8
+	ld   [wWramBank], a                                             ; $6dbb
+	ldh  [rSVBK], a                                                 ; $6dbe
+
+; HL = addr of player name
+	ld   hl, wPointerToPlayerNameToEnter                            ; $6dc0
+	ld   a, [hl+]                                                   ; $6dc3
+	ld   h, [hl]                                                    ; $6dc4
+	ld   l, a                                                       ; $6dc5
+
+; Loop max chars times, B counting the number of player name chars..
+	ld   de, wEnterNameInputtedChars                                ; $6dc6
+	ld   a, [wEnterNameMaxChars]                                    ; $6dc9
+	ld   c, a                                                       ; $6dcc
+	ld   b, $00                                                     ; $6dcd
+
+.loopChars:
+; Copying from player name to inputted chars, exiting when null terminator found
+	ld   a, [hl+]                                                   ; $6dcf
+	or   a                                                          ; $6dd0
+	jr   z, .end                                                    ; $6dd1
+
+	ld   [de], a                                                    ; $6dd3
+	inc  de                                                         ; $6dd4
+
+; Inc num player chars, and dec from max chars
+	inc  b                                                          ; $6dd5
+	dec  c                                                          ; $6dd6
+	jr   nz, .loopChars                                             ; $6dd7
+
+.end:
+; Set null terminator, and num inputted chars
+	ld   [hl], $00                                                  ; $6dd9
+	ld   a, b                                                       ; $6ddb
+	ld   [wEnterNameNumCharsEntered], a                             ; $6ddc
+
+; Restore ram bank
+	pop  af                                                         ; $6ddf
+	ld   [wWramBank], a                                             ; $6de0
+	ldh  [rSVBK], a                                                 ; $6de3
+
+.done:
+	ret                                                             ; $6de5
+
+
+HandleEnterNameLetterSelected:
+; HL = row * (num selectable opts in row + newline code)
+	ld   a, [wEnterNameCursorLetterRowIdx]                          ; $6de6
+	ld   l, a                                                       ; $6de9
+	ld   h, ENTER_NAME_SELECTABLE_LETTERS_COLS+1                    ; $6dea
+	call AequHtimesL                                                ; $6dec
+
+; HL = above + col idx, ie 1-dimensional value of the letter
+	ld   a, [wEnterNameCursorLetterColIdx]                          ; $6def
+	add  l                                                          ; $6df2
+	ld   l, a                                                       ; $6df3
+	ld   h, $00                                                     ; $6df4
+
+; HL points to the kanji idx in the chosen alphabet's table
+	push hl                                                         ; $6df6
+	call HLequAddressOfAlphabetsKanjiIdxes                          ; $6df7
+	pop  bc                                                         ; $6dfa
+	add  hl, bc                                                     ; $6dfb
+
+; If state control byte bit 1 set, allow spaces
+	ld   a, [wEnterNameControlByte]                                 ; $6dfc
+	bit  1, a                                                       ; $6dff
+	jr   nz, .addLetter                                             ; $6e01
+
+; Don't do anything if space is selected
+	ld   a, [wEnterNameSpaceKanjiIdx]                               ; $6e03
+	cp   [hl]                                                       ; $6e06
+	jr   z, .done                                                   ; $6e07
+
+.addLetter:
+; E = kanji idx
+	ld   e, [hl]                                                    ; $6e09
+
+; If num chars entered == max, dec num entered to replace the last char
+	ld   hl, wEnterNameNumCharsEntered                              ; $6e0a
+	ld   a, [wEnterNameMaxChars]                                    ; $6e0d
+	cp   [hl]                                                       ; $6e10
+	jr   nz, :+                                                     ; $6e11
+	dec  [hl]                                                       ; $6e13
+
+; Get BC = num chars entered, inc num entered
+:	ld   a, [hl]                                                    ; $6e14
+	inc  [hl]                                                       ; $6e15
+	ld   c, a                                                       ; $6e16
+	ld   b, $00                                                     ; $6e17
+
+; HL points to next point in inputted chars to fill, store kanji idx there
+	ld   hl, wEnterNameInputtedChars                                ; $6e19
+	add  hl, bc                                                     ; $6e1c
+	ld   [hl], e                                                    ; $6e1d
+
+; Redraw the inputted name
+	call DisplayEnterNamesInputtedName                              ; $6e1e
+
+; If we're now at the max chars entered, jump to the submit button
+	ld   hl, wEnterNameNumCharsEntered                              ; $6e21
+	ld   a, [wEnterNameMaxChars]                                    ; $6e24
+	cp   [hl]                                                       ; $6e27
+	call z, GoToEnterNameSubmitButton                               ; $6e28
+
+; Lastly play sound effect
+	ld   a, SE_21                                                   ; $6e2b
+	call PlaySoundEffect                                            ; $6e2d
+
+.done:
+	ret                                                             ; $6e30
+
+
+HandleEnterNameBottomOptSelected:
+; Jump if submit not selected
+	call GetEnterNameBottomRowCol                                   ; $6e31
+	cp   ENTER_NAME_SUBMIT_COL                                      ; $6e34
+	jr   nz, .notSubmit                                             ; $6e36
+
+; Ignore following code if no characters were entered
+	ld   a, [wEnterNameNumCharsEntered]                             ; $6e38
+	or   a                                                          ; $6e3b
+	jr   z, .done                                                   ; $6e3c
+
+; Otherwise start process to copy name and leave state
+	call CopyEnteredNameIntoPlayerName                              ; $6e3e
+	ld   hl, wGameSubstate                                          ; $6e41
+	inc  [hl]                                                       ; $6e44
+
+; Play sound effect
+	ld   a, SE_21                                                   ; $6e45
+	call PlaySoundEffect                                            ; $6e47
+	jr   .done                                                      ; $6e4a
+
+.notSubmit:
+; Jump if delete not chosen, else delete char
+	cp   ENTER_NAME_DELETE_COL                                      ; $6e4c
+	jr   nz, .notSubmitOrDelete                                     ; $6e4e
+
+	call DeleteEnterNameChar                                        ; $6e50
+	jr   .done                                                      ; $6e53
+
+.notSubmitOrDelete:
+; Jump if english not chosen..
+	cp   ENTER_NAME_ENGLISH_COL                                     ; $6e55
+	jr   nz, .hiraOrKata                                            ; $6e57
+
+; Else toggle between english and katakana
+	ld   a, [wEnterNameAlphabetChosen]                              ; $6e59
+	cp   ENTER_NAME_EN_ALPHABET                                     ; $6e5c
+	jr   nz, .selectEnglish                                         ; $6e5e
+
+	jr   .selectKatakana                                            ; $6e60
+
+.hiraOrKata:
+; Toggle between hiragana and katakana
+	ld   a, [wEnterNameAlphabetChosen]                              ; $6e62
+	cp   ENTER_NAME_HIRA_ALPHABET                                   ; $6e65
+	jr   nz, .selectHiragana                                        ; $6e67
+
+.selectKatakana:
+	ld   a, ENTER_NAME_KATA_ALPHABET                                ; $6e69
+	jr   .setAlphabet                                               ; $6e6b
+
+.selectHiragana:
+	ld   a, ENTER_NAME_HIRA_ALPHABET                                ; $6e6d
+	jr   .setAlphabet                                               ; $6e6f
+
+.selectEnglish:
+	ld   a, ENTER_NAME_EN_ALPHABET                                  ; $6e71
+
+.setAlphabet:
+	ld   [wEnterNameAlphabetChosen], a                              ; $6e73
+
+; Redraw selected chars based on option, then play sound effect
+	call DrawEnterNameSelectableChars                               ; $6e76
+
+	ld   a, SE_21                                                   ; $6e79
+	call PlaySoundEffect                                            ; $6e7b
+
+.done:
+	ret                                                             ; $6e7e
+
+
+DeleteEnterNameChar:
+; Always play this sound
+	ld   a, SE_22                                                   ; $6e7f
+	call PlaySoundEffect                                            ; $6e81
+
+; Jump if there are chars to delete
+	ld   hl, wEnterNameNumCharsEntered                              ; $6e84
+	ld   a, [hl]                                                    ; $6e87
+	or   a                                                          ; $6e88
+	jr   nz, .deleteChar                                            ; $6e89
+
+; Else if 0 chars, and control byte bit 0 set, exit state
+	ld   a, [wEnterNameControlByte]                                 ; $6e8b
+	bit  0, a                                                       ; $6e8e
+	jr   z, .done                                                   ; $6e90
+
+	ld   hl, wGameSubstate                                          ; $6e92
+	inc  [hl]                                                       ; $6e95
+	jr   .done                                                      ; $6e96
+
+.deleteChar:
+; Dec num chars entered, and have HL point to past that char
+	dec  [hl]                                                       ; $6e98
+	ld   c, a                                                       ; $6e99
+	ld   b, $00                                                     ; $6e9a
+	ld   hl, wEnterNameInputtedChars                                ; $6e9c
+	add  hl, bc                                                     ; $6e9f
+
+; Fill the space after, as well as the deleted char, the redraw the input name
+	ld   a, [wEnterNameSpaceKanjiIdx]                               ; $6ea0
+	ld   [hl-], a                                                   ; $6ea3
+	ld   [hl], a                                                    ; $6ea4
+	call DisplayEnterNamesInputtedName                              ; $6ea5
+
+.done:
+	ret                                                             ; $6ea8
+
+
+;
+	ld   a, [wEnterNameNumCharsEntered]                                  ; $6ea9: $fa $51 $c9
 	or   a                                           ; $6eac: $b7
 	jr   nz, jr_010_6eba                             ; $6ead: $20 $0b
 
-	ld   a, [$c94c]                                  ; $6eaf: $fa $4c $c9
+	ld   a, [wEnterNameControlByte]                                  ; $6eaf: $fa $4c $c9
 	bit  0, a                                        ; $6eb2: $cb $47
 	jr   z, jr_010_6eba                              ; $6eb4: $28 $04
 
@@ -7422,85 +7338,127 @@ jr_010_6eba:
 	ret                                              ; $6eba: $c9
 
 
-Call_010_6ebb:
-	ld   a, [wWramBank]                                  ; $6ebb: $fa $93 $c2
-	push af                                          ; $6ebe: $f5
-	ld   a, $03                                      ; $6ebf: $3e $03
-	ld   [wWramBank], a                                  ; $6ec1: $ea $93 $c2
-	ldh  [rSVBK], a                                  ; $6ec4: $e0 $70
-	call InitWideTextBoxDimensions                                       ; $6ec6: $cd $ec $0f
-	call ClearTextBoxDimensionsAndSetDefaultTextStyle                                       ; $6ec9: $cd $09 $14
-	ld   b, $0b                                      ; $6ecc: $06 $0b
-	ld   c, $01                                      ; $6ece: $0e $01
-	call SetKanjiTextBoxDimensions                                       ; $6ed0: $cd $24 $14
-	ld   bc, $0000                                   ; $6ed3: $01 $00 $00
-	call SetCurrKanjiColAndRowToDrawOn                                       ; $6ed6: $cd $34 $14
-	ld   hl, $dd00                                   ; $6ed9: $21 $00 $dd
-	ld   a, $00                                      ; $6edc: $3e $00
-	ld   de, $c952                                   ; $6ede: $11 $52 $c9
-	call LoadInstantText                                       ; $6ee1: $cd $06 $13
-	pop  af                                          ; $6ee4: $f1
-	ld   [wWramBank], a                                  ; $6ee5: $ea $93 $c2
-	ldh  [rSVBK], a                                  ; $6ee8: $e0 $70
-	rst  WaitUntilVBlankIntHandledIfLCDOn                                         ; $6eea: $cf
-	ld   a, [$c94b]                                  ; $6eeb: $fa $4b $c9
-	add  a                                           ; $6eee: $87
-	ld   b, a                                        ; $6eef: $47
-	ld   a, $03                                      ; $6ef0: $3e $03
-	ld   hl, $dd00                                   ; $6ef2: $21 $00 $dd
-	ld   c, $81                                      ; $6ef5: $0e $81
-	ld   de, $8ba0                                   ; $6ef7: $11 $a0 $8b
-	call EnqueueHDMATransfer                                       ; $6efa: $cd $7c $02
-	ret                                              ; $6efd: $c9
+DisplayEnterNamesInputtedName:
+; Preserve ram bank, and set ram bank containing inputted name tile data buffer
+	ld   a, [wWramBank]                                             ; $6ebb
+	push af                                                         ; $6ebe
+
+	ld   a, BANK(wEnterNameInputtedNameTileDataBuffer)              ; $6ebf
+	ld   [wWramBank], a                                             ; $6ec1
+	ldh  [rSVBK], a                                                 ; $6ec4
+
+; Clear text box dimensions and text style
+	call InitWideTextBoxDimensions                                  ; $6ec6
+	call ClearTextBoxDimensionsAndSetDefaultTextStyle               ; $6ec9
+
+; Set text box dimensions, and clear col+row
+	ld   b, $0b                                                     ; $6ecc
+	ld   c, $01                                                     ; $6ece
+	call SetKanjiTextBoxDimensions                                  ; $6ed0
+
+	ld   bc, $0000                                                  ; $6ed3
+	call SetCurrKanjiColAndRowToDrawOn                              ; $6ed6
+
+; Load text based on inputted chars kanji idx into ram
+	ld   hl, wEnterNameInputtedNameTileDataBuffer                   ; $6ed9
+	ld   a, $00                                                     ; $6edc
+	ld   de, wEnterNameInputtedChars                                ; $6ede
+	call LoadInstantText                                            ; $6ee1
+
+; Restore ram bank, and wait until vblank int handled
+	pop  af                                                         ; $6ee4
+	ld   [wWramBank], a                                             ; $6ee5
+	ldh  [rSVBK], a                                                 ; $6ee8
+	rst  WaitUntilVBlankIntHandledIfLCDOn                           ; $6eea
+
+; B (num bytes to hdma transfer) = max chars * 2 (2 tiles per kanji char)
+	ld   a, [wEnterNameMaxChars]                                    ; $6eeb
+	add  a                                                          ; $6eee
+	ld   b, a                                                       ; $6eef
+
+; Set the rest of the hdma transfer params to display the name text
+	ld   a, BANK(wEnterNameInputtedNameTileDataBuffer)              ; $6ef0
+	ld   hl, wEnterNameInputtedNameTileDataBuffer                   ; $6ef2
+	ld   c, $81                                                     ; $6ef5
+	ld   de, _VRAM+$ba0                                             ; $6ef7
+	call EnqueueHDMATransfer                                        ; $6efa
+	ret                                                             ; $6efd
 
 
-Call_010_6efe:
-	ld   c, a                                        ; $6efe: $4f
-	ld   b, $00                                      ; $6eff: $06 $00
-	ld   hl, $c952                                   ; $6f01: $21 $52 $c9
-	add  hl, bc                                      ; $6f04: $09
-	xor  a                                           ; $6f05: $af
-	ld   [hl], a                                     ; $6f06: $77
-	ld   a, [wWramBank]                                  ; $6f07: $fa $93 $c2
-	push af                                          ; $6f0a: $f5
-	ld   a, [$c94a]                                  ; $6f0b: $fa $4a $c9
-	ld   [wWramBank], a                                  ; $6f0e: $ea $93 $c2
-	ldh  [rSVBK], a                                  ; $6f11: $e0 $70
-	ld   hl, $c948                                   ; $6f13: $21 $48 $c9
-	ld   a, [hl+]                                    ; $6f16: $2a
-	ld   d, [hl]                                     ; $6f17: $56
-	ld   e, a                                        ; $6f18: $5f
-	ld   hl, $c952                                   ; $6f19: $21 $52 $c9
-	ld   a, [$c94b]                                  ; $6f1c: $fa $4b $c9
-	inc  a                                           ; $6f1f: $3c
-	ld   c, a                                        ; $6f20: $4f
-	ld   b, $00                                      ; $6f21: $06 $00
-	call MemCopy                                       ; $6f23: $cd $a9 $09
-	pop  af                                          ; $6f26: $f1
-	ld   [wWramBank], a                                  ; $6f27: $ea $93 $c2
-	ldh  [rSVBK], a                                  ; $6f2a: $e0 $70
-	ret                                              ; $6f2c: $c9
+; A - num chars entered
+CopyEnteredNameIntoPlayerName:
+; HL points to after inputted chars
+	ld   c, a                                                       ; $6efe
+	ld   b, $00                                                     ; $6eff
+	ld   hl, wEnterNameInputtedChars                                ; $6f01
+	add  hl, bc                                                     ; $6f04
+
+; Set null terminator there
+	xor  a                                                          ; $6f05
+	ld   [hl], a                                                    ; $6f06
+
+; Preserve ram bank, and set it to where the player's name is
+	ld   a, [wWramBank]                                             ; $6f07
+	push af                                                         ; $6f0a
+
+	ld   a, [wPlayerNameRamBank]                                    ; $6f0b
+	ld   [wWramBank], a                                             ; $6f0e
+	ldh  [rSVBK], a                                                 ; $6f11
+
+; DE = addr of player name
+	ld   hl, wPointerToPlayerNameToEnter                            ; $6f13
+	ld   a, [hl+]                                                   ; $6f16
+	ld   d, [hl]                                                    ; $6f17
+	ld   e, a                                                       ; $6f18
+
+; Copy name + null terminator
+	ld   hl, wEnterNameInputtedChars                                ; $6f19
+	ld   a, [wEnterNameMaxChars]                                    ; $6f1c
+	inc  a                                                          ; $6f1f
+	ld   c, a                                                       ; $6f20
+	ld   b, $00                                                     ; $6f21
+	call MemCopy                                                    ; $6f23
+
+; Restore ram bank
+	pop  af                                                         ; $6f26
+	ld   [wWramBank], a                                             ; $6f27
+	ldh  [rSVBK], a                                                 ; $6f2a
+	ret                                                             ; $6f2c
 
 
-Func_10_6f2d::
-	ld   [$c94c], a                                  ; $6f2d: $ea $4c $c9
-	ld   a, h                                        ; $6f30: $7c
-	ld   [$c946], a                                  ; $6f31: $ea $46 $c9
-	ld   a, l                                        ; $6f34: $7d
-	ld   [$c947], a                                  ; $6f35: $ea $47 $c9
-	ld   hl, $c948                                   ; $6f38: $21 $48 $c9
-	ld   a, e                                        ; $6f3b: $7b
-	ld   [hl+], a                                    ; $6f3c: $22
-	ld   a, d                                        ; $6f3d: $7a
-	ld   [hl+], a                                    ; $6f3e: $22
-	ld   [hl], b                                     ; $6f3f: $70
-	ld   a, c                                        ; $6f40: $79
-	ld   [$c94b], a                                  ; $6f41: $ea $4b $c9
-	ld   a, $16                                      ; $6f44: $3e $16
-	ld   [wGameState], a                                  ; $6f46: $ea $a0 $c2
-	ld   a, $00                                      ; $6f49: $3e $00
-	ld   [wGameSubstate], a                                  ; $6f4b: $ea $a1 $c2
-	ret                                              ; $6f4e: $c9
+; A - state control byte, see wEnterNameControlByte
+; B - wram bank of player name
+; C - max name chars
+; DE - player name ram addr
+; H - return state
+; L - return substate
+SetEnterNameState::
+	ld   [wEnterNameControlByte], a                                 ; $6f2d
+
+; Set return state
+	ld   a, h                                                       ; $6f30
+	ld   [wEnterNameReturnState], a                                 ; $6f31
+	ld   a, l                                                       ; $6f34
+	ld   [wEnterNameReturnSubstate], a                              ; $6f35
+
+; Save pointer to where we'll fill the name
+	ld   hl, wPointerToPlayerNameToEnter                            ; $6f38
+	ld   a, e                                                       ; $6f3b
+	ld   [hl+], a                                                   ; $6f3c
+	ld   a, d                                                       ; $6f3d
+	ld   [hl+], a                                                   ; $6f3e
+
+; Set wPlayerNameRamBank and max chars
+	ld   [hl], b                                                    ; $6f3f
+	ld   a, c                                                       ; $6f40
+	ld   [wEnterNameMaxChars], a                                    ; $6f41
+
+; Set Enter Name state, and initial substate
+	ld   a, GS_ENTER_NAME                                           ; $6f44
+	ld   [wGameState], a                                            ; $6f46
+	ld   a, $00                                                     ; $6f49
+	ld   [wGameSubstate], a                                         ; $6f4b
+	ret                                                             ; $6f4e
 
 
 GameState1d::
@@ -7555,7 +7513,7 @@ jr_010_6f98:
 	ld   [wBaseRepeatedStickyCounter], a                                  ; $6fa4: $ea $14 $c2
 	call ClearOam                                       ; $6fa7: $cd $d7 $0d
 	call ClearDisplayRegsAllowVBlankInt                                       ; $6faa: $cd $59 $0b
-	ld   a, $87                                      ; $6fad: $3e $87
+	ld   a, LCDCF_ON|LCDCF_OBJ16|LCDCF_OBJON|LCDCF_BGON                                      ; $6fad: $3e $87
 	ld   [wLCDC], a                                  ; $6faf: $ea $03 $c2
 	ld   a, [wWramBank]                                  ; $6fb2: $fa $93 $c2
 	push af                                          ; $6fb5: $f5
@@ -7761,7 +7719,7 @@ jr_010_6f98:
 	ld   de, $6cfc                                   ; $71bc: $11 $fc $6c
 	call FarLoadPaletteValsFadeToValsAndSetFadeSpeed                                       ; $71bf: $cd $48 $07
 	ld   a, $07                                      ; $71c2: $3e $07
-	call PlaySound                                       ; $71c4: $cd $92 $1a
+	call PlaySong                                       ; $71c4: $cd $92 $1a
 	ld   a, [wGameSubstate]                                  ; $71c7: $fa $a1 $c2
 	cp   $01                                         ; $71ca: $fe $01
 	jr   z, jr_010_71d8                              ; $71cc: $28 $0a
@@ -7816,7 +7774,7 @@ jr_010_71e0:
 	ld   hl, wGameSubstate                                   ; $7230: $21 $a1 $c2
 	inc  [hl]                                        ; $7233: $34
 	ld   a, $21                                      ; $7234: $3e $21
-	call Func_1adf                                       ; $7236: $cd $df $1a
+	call PlaySoundEffect                                       ; $7236: $cd $df $1a
 	jr   jr_010_7254                                 ; $7239: $18 $19
 
 jr_010_723b:
@@ -7832,7 +7790,7 @@ jr_010_723b:
 	ld   a, $05                                      ; $724a: $3e $05
 	ld   [wGameSubstate], a                                  ; $724c: $ea $a1 $c2
 	ld   a, $22                                      ; $724f: $3e $22
-	call Func_1adf                                       ; $7251: $cd $df $1a
+	call PlaySoundEffect                                       ; $7251: $cd $df $1a
 
 jr_010_7254:
 	ret                                              ; $7254: $c9
@@ -7871,7 +7829,7 @@ jr_010_7270:
 jr_010_7279:
 	call Call_010_743d                               ; $7279: $cd $3d $74
 	ld   a, $20                                      ; $727c: $3e $20
-	call Func_1adf                                       ; $727e: $cd $df $1a
+	call PlaySoundEffect                                       ; $727e: $cd $df $1a
 	jr   jr_010_72bb                                 ; $7281: $18 $38
 
 jr_010_7283:
@@ -7883,7 +7841,7 @@ jr_010_7283:
 	ld   hl, wGameSubstate                                   ; $728d: $21 $a1 $c2
 	dec  [hl]                                        ; $7290: $35
 	ld   a, $22                                      ; $7291: $3e $22
-	call Func_1adf                                       ; $7293: $cd $df $1a
+	call PlaySoundEffect                                       ; $7293: $cd $df $1a
 	jr   jr_010_72bb                                 ; $7296: $18 $23
 
 jr_010_7298:
@@ -7891,7 +7849,7 @@ jr_010_7298:
 	jr   z, jr_010_72bb                              ; $729a: $28 $1f
 
 	ld   a, $21                                      ; $729c: $3e $21
-	call Func_1adf                                       ; $729e: $cd $df $1a
+	call PlaySoundEffect                                       ; $729e: $cd $df $1a
 	ld   a, $05                                      ; $72a1: $3e $05
 	ld   [wGameSubstate], a                                  ; $72a3: $ea $a1 $c2
 	ld   a, [$c9f3]                                  ; $72a6: $fa $f3 $c9
@@ -7936,7 +7894,7 @@ jr_010_72d0:
 jr_010_72da:
 	call Call_010_7433                               ; $72da: $cd $33 $74
 	ld   a, $20                                      ; $72dd: $3e $20
-	call Func_1adf                                       ; $72df: $cd $df $1a
+	call PlaySoundEffect                                       ; $72df: $cd $df $1a
 	jr   jr_010_7303                                 ; $72e2: $18 $1f
 
 jr_010_72e4:
@@ -7947,7 +7905,7 @@ jr_010_72e4:
 	ld   hl, wGameSubstate                                   ; $72eb: $21 $a1 $c2
 	dec  [hl]                                        ; $72ee: $35
 	ld   a, $22                                      ; $72ef: $3e $22
-	call Func_1adf                                       ; $72f1: $cd $df $1a
+	call PlaySoundEffect                                       ; $72f1: $cd $df $1a
 	jr   jr_010_7303                                 ; $72f4: $18 $0d
 
 jr_010_72f6:
@@ -7955,7 +7913,7 @@ jr_010_72f6:
 	jr   z, jr_010_7303                              ; $72f8: $28 $09
 
 	ld   a, $21                                      ; $72fa: $3e $21
-	call Func_1adf                                       ; $72fc: $cd $df $1a
+	call PlaySoundEffect                                       ; $72fc: $cd $df $1a
 	ld   hl, wGameSubstate                                   ; $72ff: $21 $a1 $c2
 	inc  [hl]                                        ; $7302: $34
 
@@ -8327,7 +8285,7 @@ GameState22::
 	ld   [wBaseRepeatedStickyCounter], a                                  ; $758a: $ea $14 $c2
 	call ClearOam                                       ; $758d: $cd $d7 $0d
 	call ClearDisplayRegsAllowVBlankInt                                       ; $7590: $cd $59 $0b
-	ld   a, $c3                                      ; $7593: $3e $c3
+	ld   a, LCDCF_ON|LCDCF_WIN9C00|LCDCF_OBJON|LCDCF_BGON                                      ; $7593: $3e $c3
 	ld   [wLCDC], a                                  ; $7595: $ea $03 $c2
 	ld   a, [wWramBank]                                  ; $7598: $fa $93 $c2
 	push af                                          ; $759b: $f5
@@ -8432,7 +8390,7 @@ GameState22::
 	jr   z, jr_010_7692                              ; $7687: $28 $09
 
 	ld   a, $21                                      ; $7689: $3e $21
-	call Func_1adf                                       ; $768b: $cd $df $1a
+	call PlaySoundEffect                                       ; $768b: $cd $df $1a
 	ld   hl, wGameSubstate                                   ; $768e: $21 $a1 $c2
 	inc  [hl]                                        ; $7691: $34
 
@@ -8506,7 +8464,7 @@ GameState23::
 	ld   [wBaseRepeatedStickyCounter], a                                  ; $7715: $ea $14 $c2
 	call ClearOam                                       ; $7718: $cd $d7 $0d
 	call ClearDisplayRegsAllowVBlankInt                                       ; $771b: $cd $59 $0b
-	ld   a, $03                                      ; $771e: $3e $03
+	ld   a, LCDCF_OBJON|LCDCF_BGON                                      ; $771e: $3e $03
 	ld   [wLCDC], a                                  ; $7720: $ea $03 $c2
 	ld   a, $01                                      ; $7723: $3e $01
 	ldh  [rVBK], a                                   ; $7725: $e0 $4f
@@ -8635,7 +8593,7 @@ jr_010_7824:
 	jr   z, jr_010_7839                              ; $782e: $28 $09
 
 	ld   a, $21                                      ; $7830: $3e $21
-	call Func_1adf                                       ; $7832: $cd $df $1a
+	call PlaySoundEffect                                       ; $7832: $cd $df $1a
 	ld   hl, wGameSubstate                                   ; $7835: $21 $a1 $c2
 	inc  [hl]                                        ; $7838: $34
 

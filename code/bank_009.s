@@ -275,7 +275,7 @@ jr_009_4239:
 
 jr_009_4246:
 	ld   a, b                                        ; $4246: $78
-	call PlaySound                                       ; $4247: $cd $92 $1a
+	call PlaySong                                       ; $4247: $cd $92 $1a
 	ld   a, $07                                      ; $424a: $3e $07
 	call SafeSetAudVolForMultipleChannels                                       ; $424c: $cd $e0 $1c
 	xor  a                                           ; $424f: $af
@@ -360,7 +360,7 @@ jr_009_42bb:
 
 jr_009_42c4:
 	ld   a, b                                        ; $42c4: $78
-	call PlaySound                                       ; $42c5: $cd $92 $1a
+	call PlaySong                                       ; $42c5: $cd $92 $1a
 	ld   a, $07                                      ; $42c8: $3e $07
 	call SafeSetAudVolForMultipleChannels                                       ; $42ca: $cd $e0 $1c
 	xor  a                                           ; $42cd: $af
@@ -507,7 +507,7 @@ jr_009_43ba:
 
 jr_009_43c7:
 	ld   a, b                                        ; $43c7: $78
-	call PlaySound                                       ; $43c8: $cd $92 $1a
+	call PlaySong                                       ; $43c8: $cd $92 $1a
 	ld   a, $07                                      ; $43cb: $3e $07
 	call SafeSetAudVolForMultipleChannels                                       ; $43cd: $cd $e0 $1c
 	xor  a                                           ; $43d0: $af
@@ -560,7 +560,7 @@ jr_009_4414:
 
 jr_009_441d:
 	ld   a, b                                        ; $441d: $78
-	call PlaySound                                       ; $441e: $cd $92 $1a
+	call PlaySong                                       ; $441e: $cd $92 $1a
 	ld   a, $07                                      ; $4421: $3e $07
 	call SafeSetAudVolForMultipleChannels                                       ; $4423: $cd $e0 $1c
 	xor  a                                           ; $4426: $af
@@ -2954,7 +2954,7 @@ jr_009_5137:
 	ld   a, $90                                      ; $51bb: $3e $90
 	ld   [wWY], a                                  ; $51bd: $ea $0a $c2
 	ld   a, $23                                      ; $51c0: $3e $23
-	call Func_1adf                                       ; $51c2: $cd $df $1a
+	call PlaySoundEffect                                       ; $51c2: $cd $df $1a
 
 Jump_009_51c5:
 	ld   a, [wWY]                                  ; $51c5: $fa $0a $c2
@@ -3185,7 +3185,7 @@ Call_009_5301:
 	cp   [hl]                                        ; $5311: $be
 	ret  z                                           ; $5312: $c8
 
-	call Func_1adf                                       ; $5313: $cd $df $1a
+	call PlaySoundEffect                                       ; $5313: $cd $df $1a
 	ret                                              ; $5316: $c9
 
 
@@ -3571,7 +3571,7 @@ jr_009_5532:
 	jr   nc, jr_009_554e                             ; $5541: $30 $0b
 
 	ld   a, $27                                      ; $5543: $3e $27
-	call Func_1adf                                       ; $5545: $cd $df $1a
+	call PlaySoundEffect                                       ; $5545: $cd $df $1a
 
 jr_009_5548:
 	ld   a, [wInGameButtonsPressed]                                  ; $5548: $fa $10 $c2
@@ -3607,7 +3607,7 @@ jr_009_554e:
 	ld   de, $5650                                   ; $557d: $11 $50 $56
 	call FarLoadPaletteValsFadeToValsAndSetFadeSpeed                                       ; $5580: $cd $48 $07
 	ld   a, $21                                      ; $5583: $3e $21
-	call Func_1adf                                       ; $5585: $cd $df $1a
+	call PlaySoundEffect                                       ; $5585: $cd $df $1a
 
 jr_009_5588:
 	ld   hl, $cbe5                                   ; $5588: $21 $e5 $cb
@@ -3676,7 +3676,7 @@ Jump_009_5599:
 	ld   a, $50                                      ; $5612: $3e $50
 	ld   [wWY], a                                  ; $5614: $ea $0a $c2
 	ld   a, $24                                      ; $5617: $3e $24
-	call Func_1adf                                       ; $5619: $cd $df $1a
+	call PlaySoundEffect                                       ; $5619: $cd $df $1a
 
 jr_009_561c:
 	ld   a, [wWY]                                  ; $561c: $fa $0a $c2
@@ -3791,7 +3791,7 @@ GameState41::
 	jp   z, Jump_009_5b63                            ; $56d0: $ca $63 $5b
 
 	ld   a, $14                                      ; $56d3: $3e $14
-	call PlaySound                                       ; $56d5: $cd $92 $1a
+	call PlaySong                                       ; $56d5: $cd $92 $1a
 	ld   a, $07                                      ; $56d8: $3e $07
 	call SafeSetAudVolForMultipleChannels                                       ; $56da: $cd $e0 $1c
 	xor  a                                           ; $56dd: $af
@@ -4527,7 +4527,7 @@ Jump_009_5b46:
 
 jr_009_5b56:
 	ld   a, $14                                      ; $5b56: $3e $14
-	call PlaySound                                       ; $5b58: $cd $92 $1a
+	call PlaySong                                       ; $5b58: $cd $92 $1a
 	ld   a, $07                                      ; $5b5b: $3e $07
 	call SafeSetAudVolForMultipleChannels                                       ; $5b5d: $cd $e0 $1c
 
@@ -4853,7 +4853,7 @@ jr_009_5d75:
 	ld   a, [$cc58]                                  ; $5d91: $fa $58 $cc
 	ld   [$cc59], a                                  ; $5d94: $ea $59 $cc
 	ld   a, $21                                      ; $5d97: $3e $21
-	call Func_1adf                                       ; $5d99: $cd $df $1a
+	call PlaySoundEffect                                       ; $5d99: $cd $df $1a
 	ld   a, $09                                      ; $5d9c: $3e $09
 	ld   [$cc50], a                                  ; $5d9e: $ea $50 $cc
 	xor  a                                           ; $5da1: $af
@@ -4868,9 +4868,9 @@ jr_009_5da8:
 	ld   a, $ff                                      ; $5dac: $3e $ff
 	ld   [$cc59], a                                  ; $5dae: $ea $59 $cc
 	xor  a                                           ; $5db1: $af
-	call PlaySound                                       ; $5db2: $cd $92 $1a
+	call PlaySong                                       ; $5db2: $cd $92 $1a
 	ld   a, $22                                      ; $5db5: $3e $22
-	call Func_1adf                                       ; $5db7: $cd $df $1a
+	call PlaySoundEffect                                       ; $5db7: $cd $df $1a
 	ld   a, $0d                                      ; $5dba: $3e $0d
 	ld   [$cc50], a                                  ; $5dbc: $ea $50 $cc
 	xor  a                                           ; $5dbf: $af
@@ -4954,7 +4954,7 @@ jr_009_5e30:
 	jr   z, jr_009_5e81                              ; $5e3b: $28 $44
 
 	ld   a, $20                                      ; $5e3d: $3e $20
-	call Func_1adf                                       ; $5e3f: $cd $df $1a
+	call PlaySoundEffect                                       ; $5e3f: $cd $df $1a
 	call Call_009_5f4e                               ; $5e42: $cd $4e $5f
 	ld   [$cc58], a                                  ; $5e45: $ea $58 $cc
 	ld   hl, $cc57                                   ; $5e48: $21 $57 $cc
@@ -4984,7 +4984,7 @@ jr_009_5e62:
 	jr   z, jr_009_5e81                              ; $5e6a: $28 $15
 
 	ld   a, $20                                      ; $5e6c: $3e $20
-	call Func_1adf                                       ; $5e6e: $cd $df $1a
+	call PlaySoundEffect                                       ; $5e6e: $cd $df $1a
 	call Call_009_5f6b                               ; $5e71: $cd $6b $5f
 	ld   [$cc58], a                                  ; $5e74: $ea $58 $cc
 	ld   hl, $cc57                                   ; $5e77: $21 $57 $cc
@@ -5286,7 +5286,7 @@ jr_009_5fc6:
 
 
 	ld   a, $20                                      ; $603e: $3e $20
-	call Func_1adf                                       ; $6040: $cd $df $1a
+	call PlaySoundEffect                                       ; $6040: $cd $df $1a
 	ld   a, [$cc58]                                  ; $6043: $fa $58 $cc
 	call Call_009_5a40                               ; $6046: $cd $40 $5a
 	ld   a, $08                                      ; $6049: $3e $08
@@ -5297,7 +5297,7 @@ jr_009_5fc6:
 
 
 	ld   a, $20                                      ; $6053: $3e $20
-	call Func_1adf                                       ; $6055: $cd $df $1a
+	call PlaySoundEffect                                       ; $6055: $cd $df $1a
 	ld   a, [$cc58]                                  ; $6058: $fa $58 $cc
 	call Call_009_5a40                               ; $605b: $cd $40 $5a
 	ld   a, $08                                      ; $605e: $3e $08
@@ -5328,7 +5328,7 @@ jr_009_5fc6:
 	push bc                                          ; $607e: $c5
 	ld   h, b                                        ; $607f: $60
 	ld   a, $20                                      ; $6080: $3e $20
-	call Func_1adf                                       ; $6082: $cd $df $1a
+	call PlaySoundEffect                                       ; $6082: $cd $df $1a
 	ld   a, [$cc58]                                  ; $6085: $fa $58 $cc
 	call Call_009_59c4                               ; $6088: $cd $c4 $59
 	ld   hl, $cc51                                   ; $608b: $21 $51 $cc
@@ -5411,7 +5411,7 @@ jr_009_60e4:
 	ld   c, e                                        ; $6104: $4b
 	ld   h, c                                        ; $6105: $61
 	ld   a, $20                                      ; $6106: $3e $20
-	call Func_1adf                                       ; $6108: $cd $df $1a
+	call PlaySoundEffect                                       ; $6108: $cd $df $1a
 	ld   a, [$cc58]                                  ; $610b: $fa $58 $cc
 	call Call_009_59c4                               ; $610e: $cd $c4 $59
 	ld   hl, $cc51                                   ; $6111: $21 $51 $cc
@@ -5498,7 +5498,7 @@ jr_009_616a:
 	xor  a                                           ; $6191: $af
 	ld   [$cc5f], a                                  ; $6192: $ea $5f $cc
 	ld   a, $23                                      ; $6195: $3e $23
-	call Func_1adf                                       ; $6197: $cd $df $1a
+	call PlaySoundEffect                                       ; $6197: $cd $df $1a
 
 jr_009_619a:
 	ld   a, [hl]                                     ; $619a: $7e
@@ -5773,7 +5773,7 @@ jr_009_6325:
 	jr   nz, jr_009_6357                             ; $6343: $20 $12
 
 	ld   a, $21                                      ; $6345: $3e $21
-	call Func_1adf                                       ; $6347: $cd $df $1a
+	call PlaySoundEffect                                       ; $6347: $cd $df $1a
 	ld   hl, $cc50                                   ; $634a: $21 $50 $cc
 	inc  [hl]                                        ; $634d: $34
 	xor  a                                           ; $634e: $af
@@ -5787,7 +5787,7 @@ jr_009_6353:
 
 jr_009_6357:
 	ld   a, $22                                      ; $6357: $3e $22
-	call Func_1adf                                       ; $6359: $cd $df $1a
+	call PlaySoundEffect                                       ; $6359: $cd $df $1a
 	ld   a, $01                                      ; $635c: $3e $01
 	ld   [$cc5f], a                                  ; $635e: $ea $5f $cc
 	ld   a, $0c                                      ; $6361: $3e $0c
@@ -5806,7 +5806,7 @@ jr_009_636b:
 	ret  z                                           ; $6373: $c8
 
 	ld   a, $20                                      ; $6374: $3e $20
-	call Func_1adf                                       ; $6376: $cd $df $1a
+	call PlaySoundEffect                                       ; $6376: $cd $df $1a
 	xor  a                                           ; $6379: $af
 	ld   [$cc5f], a                                  ; $637a: $ea $5f $cc
 	ret                                              ; $637d: $c9
@@ -5821,7 +5821,7 @@ jr_009_637e:
 	ret  nz                                          ; $6385: $c0
 
 	ld   a, $20                                      ; $6386: $3e $20
-	call Func_1adf                                       ; $6388: $cd $df $1a
+	call PlaySoundEffect                                       ; $6388: $cd $df $1a
 	ld   a, $01                                      ; $638b: $3e $01
 	ld   [$cc5f], a                                  ; $638d: $ea $5f $cc
 	ret                                              ; $6390: $c9
@@ -5871,7 +5871,7 @@ jr_009_63ae:
 	jr   nz, jr_009_63d0                             ; $63c9: $20 $05
 
 	ld   a, $24                                      ; $63cb: $3e $24
-	call Func_1adf                                       ; $63cd: $cd $df $1a
+	call PlaySoundEffect                                       ; $63cd: $cd $df $1a
 
 jr_009_63d0:
 	ld   a, [hl]                                     ; $63d0: $7e
