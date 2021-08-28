@@ -854,7 +854,7 @@ jr_0b9_42db:
 	call $bcfe                                       ; $43e1: $cd $fe $bc
 	jp   z, $4285                                    ; $43e4: $ca $85 $42
 
-	ld   de, $cc19                                   ; $43e7: $11 $19 $cc
+	ld   de, wDayPassedMiscCounterIdx                                   ; $43e7: $11 $19 $cc
 	rst  JumpTable                                         ; $43ea: $df
 	db   $fc                                         ; $43eb: $fc
 	call Call_0b9_44a7                               ; $43ec: $cd $a7 $44

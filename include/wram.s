@@ -451,8 +451,14 @@ wTitleScreenCounterBetweenBlinkAnimIdxes:: ; $cc16
 wTitleScreenCounterForResettingData:: ; $cc17
     db
 
-wcc18:
-    ds $74-$18
+wDayPassedAnimationStep:: ; $cc18
+    db
+
+wDayPassedMiscCounterIdx:: ; $cc19
+    db
+
+wcc1a:
+    ds $74-$1a
 
 wPostIntroScriptEngineGameState:: ; $cc74
     db

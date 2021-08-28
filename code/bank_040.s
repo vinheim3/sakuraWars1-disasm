@@ -6313,7 +6313,7 @@ endr
 	ScriptSrc Script_10a
 	ScriptSrc Script_10b
 	ScriptSrc Script_10c
-	db $06, $22, $02
+	ScriptSrc Script_10d
 	ScriptSrc Script_10e
 	ScriptSrc Script_10f
 	ScriptSrc Script_110
@@ -6366,7 +6366,7 @@ endr
 	ScriptSrc Script_13f
 	ScriptSrc Script_140
 	ScriptSrc Script_141
-	db $7a, $31, $05
+	ScriptSrc Script_142
 	ScriptSrc Script_143
 	ScriptSrc Script_144
 	ScriptSrc Script_145

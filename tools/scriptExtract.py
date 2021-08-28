@@ -2,8 +2,10 @@
 
 import csv
 import sys
+import os
 import clipboard
-from util import bankConv, getRom, conv, bankAddr, wordIn, stringB
+import time
+from util import bankConv, getRom, conv, bankAddr, wordIn, stringB, groupBytes
 
 
 class ScriptExtractor:
@@ -170,12 +172,6 @@ class ScriptExtractor:
         self.jumpAddresses = []
 
         self.translationMap = {}
-        # with open('tools/script4.csv') as f:
-        #     reader = csv.reader(f)
-        #     for scriptNum, offset, orig, blank, english, char in reader:
-        #         if english:
-        #             tbs = self.convertEnglish(english)
-        #             self.translationMap[int(offset)] = tbs
 
     @staticmethod
     def convertEnglish(english):
@@ -417,12 +413,6 @@ class ScriptExtractor:
                             break
                         elif char < 8:
                             char = self.get_script_byte()
-                        # elif char == 8:
-                        #     cond = self.get_script_byte()
-                        # elif char == 0x0a:
-                        #     style = self.get_script_byte()
-                        # elif char < 0x10:
-                        #     pass
                     self.offset += 1
                 self.instructions[currOpAddress] = {
                     "name": "ScriptOpt_UntimedQuestion",
@@ -439,12 +429,6 @@ class ScriptExtractor:
                             break
                         elif char < 8:
                             char = self.get_script_byte()
-                        # elif char == 8:
-                        #     cond = self.get_script_byte()
-                        # elif char == 0x0a:
-                        #     style = self.get_script_byte()
-                        # elif char < 0x10:
-                        #     pass
                     self.offset += 1
                 self.instructions[currOpAddress] = {
                     "name": "ScriptOpt_TimedQuestion",
@@ -647,6 +631,7 @@ class ScriptExtractor:
                 comps.append(f"\t{name}")
             if extra_comps:
                 comps.extend(extra_comps)
+        comps.append(".end:")
         return comps, totalBytes
 
     def run(self):
@@ -699,7 +684,7 @@ if __name__ == "__main__":
                 fullTranslationMap[int(scriptNum)][int(offset)] = tbs
 
     availableBanks = [
-        0x02,       0x1f, 0x2b, 0x36, 0x37, 0x38, 0x39, 
+        0x02, 0x03,       0x2b, 0x36, 0x37, 0x38, 0x39, 
         0x3a, 0x3b, 0x3c, 0x3d, 0x6c, 0x6d, 0x6e, 0x6f,
         0x86, 0x87,
     ]
@@ -725,22 +710,57 @@ if __name__ == "__main__":
         se = ScriptExtractor(data, bankAddr(startBank, startAddr), scriptNum)
         se.translationMap = fullTranslationMap[scriptNum]
         comps, totalBytes = se.run()
+        
+        # New process for rolling across banks
+        final_comps = '\n'.join(comps)
+        final_str = f"""
+include "macros.s"
 
-        # Check for overstepping
-        # if scriptNum != 0x321:
-        #     nextScriptNum = scriptNum+1
-        #     nextStartBank = data[baseTable+nextScriptNum*3+2]+0x41
-        #     nextStartAddr = wordIn(data, baseTable+nextScriptNum*3)+0x4000
-        #     if bankAddr(startBank, startAddr) + totalBytes > bankAddr(nextStartBank, nextStartAddr):
-        #         print(hex(scriptNum))
+SECTION "Bank $00", ROM0[$200]
+
+{final_comps}
+        """
+        with open('scriptBuild/script.s', 'w') as f:
+            f.write(final_str)
+
+        os.chdir('scriptBuild')
+        os.system('make -B')
+        os.chdir('..')
+
+        print(hex(scriptNum), hex(totalBytes))
+
+        with open('scriptBuild/sakuraWars1.gbc', 'rb') as f:
+            compiledBytes = f.read()[0x200:0x200+totalBytes]
         
         if totalBytes + bankBytes < 0x4000:
-            bankData[currBank].extend(comps)
+            bankData[currBank].extend(["\tStartScript", "", f"Script_{scriptNum:03x}::"])
+            for group in groupBytes(compiledBytes, 32):
+                bankData[currBank].append(stringB(group))
             bankBytes += totalBytes
         else:
+            prevBank = currBank
             currBank = availableBanks.pop(0)
-            bankBytes = totalBytes
-            bankData[currBank] = comps
+            bankData[currBank] = []
+
+            if currBank == prevBank + 1:
+                remBytesInPrevBank = 0x4000 - bankBytes
+                prevBankBytes = compiledBytes[:remBytesInPrevBank]
+                shouldRemain = totalBytes - remBytesInPrevBank
+                currBankBytes = compiledBytes[remBytesInPrevBank:]
+                assert shouldRemain == len(currBankBytes)
+
+                bankData[prevBank].extend(["\tStartScript", "", f"Script_{scriptNum:03x}::"])
+                for group in groupBytes(prevBankBytes, 32):
+                    bankData[prevBank].append(stringB(group))
+
+                bankBytes = shouldRemain
+                for group in groupBytes(currBankBytes, 32):
+                    bankData[currBank].append(stringB(group))
+            else:
+                bankData[currBank].extend(["\tStartScript", "", f"Script_{scriptNum:03x}::"])
+                bankBytes = totalBytes
+                for group in groupBytes(compiledBytes, 32):
+                    bankData[currBank].append(stringB(group))
 
     finalComps = ['include "includes.s"\n\n']
     for k, v in bankData.items():

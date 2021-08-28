@@ -12739,7 +12739,7 @@ Jump_0da_7ab8:
 	rst  $38                                         ; $7acb: $ff
 	rst  $38                                         ; $7acc: $ff
 	and  c                                           ; $7acd: $a1
-	ld   de, $cc19                                   ; $7ace: $11 $19 $cc
+	ld   de, wDayPassedMiscCounterIdx                                   ; $7ace: $11 $19 $cc
 	xor  a                                           ; $7ad1: $af
 	rst  $38                                         ; $7ad2: $ff
 	ei                                               ; $7ad3: $fb

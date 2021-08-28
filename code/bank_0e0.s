@@ -3658,7 +3658,7 @@ jr_0e0_5057:
 	ld   [hl+], a                                    ; $5070: $22
 	ld   c, d                                        ; $5071: $4a
 	sub  e                                           ; $5072: $93
-	ld   de, $cc18                                   ; $5073: $11 $18 $cc
+	ld   de, wDayPassedAnimationStep                                   ; $5073: $11 $18 $cc
 	ld   h, c                                        ; $5076: $61
 	ld   de, $ff4c                                   ; $5077: $11 $4c $ff
 	or   c                                           ; $507a: $b1

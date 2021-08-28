@@ -165,9 +165,8 @@ Jump_009_4170:
 	inc  [hl]                                        ; $4186: $34
 	ret                                              ; $4187: $c9
 
-
 jr_009_4188:
-	ld   a, $49                                      ; $4188: $3e $49
+	ld   a, GS_DAY_PASSED                                      ; $4188: $3e $49
 	ld   [wGameState], a                                  ; $418a: $ea $a0 $c2
 	xor  a                                           ; $418d: $af
 	ld   [wGameSubstate], a                                  ; $418e: $ea $a1 $c2

@@ -3583,7 +3583,7 @@ DormRoomSubstate0:
 
 ;
 	call ClearDisplayRegsAllowVBlankInt                                       ; $55ac: $cd $59 $0b
-	ld   a, $87                                      ; $55af: $3e $87
+	ld   a, LCDCF_ON|LCDCF_OBJ16|LCDCF_OBJON|LCDCF_BGON                                      ; $55af: $3e $87
 	ld   [wLCDC], a                                  ; $55b1: $ea $03 $c2
 	call TurnOnLCD                                       ; $55b4: $cd $09 $09
 
@@ -4829,8 +4829,8 @@ DormRoomAnimationHandler0a:
 	ld   a, $04                                      ; $5dde: $3e $04
 	ld   b, $00                                      ; $5de0: $06 $00
 	ld   hl, wBGPalettes                                   ; $5de2: $21 $de $c2
-	ld   c, $01                                      ; $5de5: $0e $01
-	ld   de, $7080                                   ; $5de7: $11 $80 $70
+	ld   c, BANK(Palettes_AllBlack)                                      ; $5de5: $0e $01
+	ld   de, Palettes_AllBlack                                   ; $5de7: $11 $80 $70
 	call FarLoadPaletteValsFadeToValsAndSetFadeSpeed                                       ; $5dea: $cd $48 $07
 
 jr_004_5ded:
@@ -5936,8 +5936,8 @@ DormRoomAnimationHandler14:
 	ld   a, $04                                      ; $652c: $3e $04
 	ld   b, $00                                      ; $652e: $06 $00
 	ld   hl, wBGPalettes                                   ; $6530: $21 $de $c2
-	ld   c, $01                                      ; $6533: $0e $01
-	ld   de, $7080                                   ; $6535: $11 $80 $70
+	ld   c, BANK(Palettes_AllBlack)                                      ; $6533: $0e $01
+	ld   de, Palettes_AllBlack                                   ; $6535: $11 $80 $70
 	call FarLoadPaletteValsFadeToValsAndSetFadeSpeed                                       ; $6538: $cd $48 $07
 
 jr_004_653b:
@@ -5970,8 +5970,8 @@ jr_004_6554:
 
 
 jr_004_6563:
-	ld   a, $01                                      ; $6563: $3e $01
-	ld   hl, $7080                                   ; $6565: $21 $80 $70
+	ld   a, BANK(Palettes_AllBlack)                                      ; $6563: $3e $01
+	ld   hl, Palettes_AllBlack                                   ; $6565: $21 $80 $70
 	ld   de, wBGPalettes                                   ; $6568: $11 $de $c2
 	ld   bc, $0080                                   ; $656b: $01 $80 $00
 	call FarMemCopy                                       ; $656e: $cd $b2 $09
@@ -7977,128 +7977,154 @@ jr_004_71d9:
 	ret                                              ; $720b: $c9
 
 
-GameState49::
-	ld   a, [wGameSubstate]                                  ; $720c: $fa $a1 $c2
-	or   a                                           ; $720f: $b7
-	jp   nz, Jump_004_725f                           ; $7210: $c2 $5f $72
+GameState49_DayPassed::
+; Jump if main state
+	ld   a, [wGameSubstate]                                         ; $720c
+	or   a                                                          ; $720f
+	jp   nz, DayPassedSubstate1Main                                 ; $7210
 
-	xor  a                                           ; $7213: $af
-	call PlaySong                                       ; $7214: $cd $92 $1a
-	call ClearDisplayRegsAllowVBlankInt                                       ; $7217: $cd $59 $0b
-	ld   a, [wLCDC]                                  ; $721a: $fa $03 $c2
-	and  $e0                                         ; $721d: $e6 $e0
-	or   $87                                         ; $721f: $f6 $87
-	ld   [wLCDC], a                                  ; $7221: $ea $03 $c2
-	ldh  [rLCDC], a                                  ; $7224: $e0 $40
-	ld   a, $01                                      ; $7226: $3e $01
-	ld   hl, $7080                                   ; $7228: $21 $80 $70
-	ld   de, wBGPalettes                                   ; $722b: $11 $de $c2
-	ld   bc, $0080                                   ; $722e: $01 $80 $00
-	call FarMemCopy                                       ; $7231: $cd $b2 $09
-	ld   bc, $003f                                   ; $7234: $01 $3f $00
-	call SetBGandOBJPaletteRangesToUpdate                                       ; $7237: $cd $aa $04
-	ld   a, $ff                                      ; $723a: $3e $ff
-	ld   [wInGameInputsEnabled], a                                  ; $723c: $ea $0e $c2
-	call ClearOam                                       ; $723f: $cd $d7 $0d
-	call ClearBaseAnimSpriteSpecDetails                                       ; $7242: $cd $c9 $2e
+; Substate 0 - Init, mute song
+	xor  a                                                          ; $7213
+	call PlaySong                                                   ; $7214
+
+; Clear display regs and turn on LCD
+	call ClearDisplayRegsAllowVBlankInt                             ; $7217
+	ld   a, [wLCDC]                                                 ; $721a
+	and  LCDCF_ON|LCDCF_WIN9C00|LCDCF_WINON                         ; $721d
+	or   LCDCF_ON|LCDCF_OBJ16|LCDCF_OBJON|LCDCF_BGON                ; $721f
+	ld   [wLCDC], a                                                 ; $7221
+	ldh  [rLCDC], a                                                 ; $7224
+
+; Load all black palettes, and update hw pals
+	ld   a, BANK(Palettes_AllBlack)                                 ; $7226
+	ld   hl, Palettes_AllBlack                                      ; $7228
+	ld   de, wBGPalettes                                            ; $722b
+	ld   bc, NUM_PALETTE_BYTES * 2                                  ; $722e
+	call FarMemCopy                                                 ; $7231
+
+	ldbc $00, $3f                                                   ; $7234
+	call SetBGandOBJPaletteRangesToUpdate                           ; $7237
+
+; Set all inputs enabled, clear oam and base anim sprite spec details
+	ld   a, $ff                                                     ; $723a
+	ld   [wInGameInputsEnabled], a                                  ; $723c
+	call ClearOam                                                   ; $723f
+	call ClearBaseAnimSpriteSpecDetails                             ; $7242
+
+;
 	xor  a                                           ; $7245: $af
-	ld   [$cc18], a                                  ; $7246: $ea $18 $cc
-	ld   [$cc19], a                                  ; $7249: $ea $19 $cc
-	ld   hl, wGameSubstate                                   ; $724c: $21 $a1 $c2
-	inc  [hl]                                        ; $724f: $34
-	ret                                              ; $7250: $c9
+	ld   [wDayPassedAnimationStep], a                                  ; $7246: $ea $18 $cc
+	ld   [wDayPassedMiscCounterIdx], a                                  ; $7249: $ea $19 $cc
+
+; To main substate
+	ld   hl, wGameSubstate                                          ; $724c
+	inc  [hl]                                                       ; $724f
+	ret                                                             ; $7250
 
 
 Call_004_7251:
 	ld   a, $0c                                      ; $7251: $3e $0c
 	ld   [wSpriteGroup], a                                  ; $7253: $ea $1a $c2
-	ld   bc, $0000                                   ; $7256: $01 $00 $00
+	ldbc $00, $00                                   ; $7256: $01 $00 $00
 	ld   a, $57                                      ; $7259: $3e $57
 	call LoadSpriteFromMainTable                                       ; $725b: $cd $16 $0e
 	ret                                              ; $725e: $c9
 
 
-Jump_004_725f:
+DayPassedSubstate1Main:
+;
 	call ClearOam                                       ; $725f: $cd $d7 $0d
+
 	xor  a                                           ; $7262: $af
 	ld   [$cc1a], a                                  ; $7263: $ea $1a $cc
+
+;
 	ld   a, [wInGameButtonsHeld]                                  ; $7266: $fa $0f $c2
-	bit  1, a                                        ; $7269: $cb $4f
-	jr   z, jr_004_7272                              ; $726b: $28 $05
+	bit  PADB_B, a                                        ; $7269: $cb $4f
+	jr   z, :+                              ; $726b: $28 $05
 
 	ld   a, $ff                                      ; $726d: $3e $ff
 	ld   [$cc1a], a                                  ; $726f: $ea $1a $cc
 
-jr_004_7272:
-	ld   a, [wWramBank]                                  ; $7272: $fa $93 $c2
+;
+:	ld   a, [wWramBank]                                  ; $7272: $fa $93 $c2
 	push af                                          ; $7275: $f5
+
 	ld   a, $07                                      ; $7276: $3e $07
 	ld   [wWramBank], a                                  ; $7278: $ea $93 $c2
 	ldh  [rSVBK], a                                  ; $727b: $e0 $70
-	ld   bc, $7290                                   ; $727d: $01 $90 $72
-	push bc                                          ; $7280: $c5
-	ld   a, [$cc18]                                  ; $7281: $fa $18 $cc
-	ld   b, $00                                      ; $7284: $06 $00
-	ld   c, a                                        ; $7286: $4f
-	ld   hl, $729d                                   ; $7287: $21 $9d $72
-	add  hl, bc                                      ; $728a: $09
-	add  hl, bc                                      ; $728b: $09
-	ld   a, [hl+]                                    ; $728c: $2a
-	ld   h, [hl]                                     ; $728d: $66
-	ld   l, a                                        ; $728e: $6f
-	jp   hl                                          ; $728f: $e9
 
+; Push return addr
+	ld   bc, .return                                                ; $727d
+	push bc                                                         ; $7280
 
+; HL = double anim step idxed into table
+	ld   a, [wDayPassedAnimationStep]                               ; $7281
+	ld   b, $00                                                     ; $7284
+	ld   c, a                                                       ; $7286
+	ld   hl, .animationStepHandlers                                 ; $7287
+	add  hl, bc                                                     ; $728a
+	add  hl, bc                                                     ; $728b
+
+; Jump to handler
+	ld   a, [hl+]                                                   ; $728c
+	ld   h, [hl]                                                    ; $728d
+	ld   l, a                                                       ; $728e
+	jp   hl                                                         ; $728f
+
+.return:
 	call Call_004_7251                               ; $7290: $cd $51 $72
 	call AnimateAllAnimatedSpriteSpecs                                       ; $7293: $cd $d3 $2e
-	pop  af                                          ; $7296: $f1
-	ld   [wWramBank], a                                  ; $7297: $ea $93 $c2
-	ldh  [rSVBK], a                                  ; $729a: $e0 $70
-	ret                                              ; $729c: $c9
+
+; Restore ram bank
+	pop  af                                                         ; $7296
+	ld   [wWramBank], a                                             ; $7297
+	ldh  [rSVBK], a                                                 ; $729a
+	ret                                                             ; $729c
+
+.animationStepHandlers:
+	dw DayPassedAnimationStep0
+	dw DayPassedAnimationStep1
+	dw DayPassedAnimationStep2
+	dw DayPassedAnimationStep3
+	dw DayPassedAnimationStep4
+	dw DayPassedAnimationStep5
 
 
-	xor  c                                           ; $729d: $a9
-	ld   [hl], d                                     ; $729e: $72
-	pop  bc                                          ; $729f: $c1
-	ld   [hl], e                                     ; $72a0: $73
-	inc  d                                           ; $72a1: $14
-	ld   [hl], h                                     ; $72a2: $74
-	ld   l, $74                                      ; $72a3: $2e $74
-	push af                                          ; $72a5: $f5
-	halt                                             ; $72a6: $76
-	jr   @+$79                                       ; $72a7: $18 $77
-
-	ld   hl, $cc19                                   ; $72a9: $21 $19 $cc
+DayPassedAnimationStep0:
+; Inc data load idx, and get curr in A
+	ld   hl, wDayPassedMiscCounterIdx                                   ; $72a9: $21 $19 $cc
 	ld   a, [hl]                                     ; $72ac: $7e
 	inc  [hl]                                        ; $72ad: $34
+
+; HL = double un-inc'd data load idx, idxed into table
 	sla  a                                           ; $72ae: $cb $27
 	ld   h, $00                                      ; $72b0: $26 $00
 	ld   l, a                                        ; $72b2: $6f
-	ld   bc, $72bc                                   ; $72b3: $01 $bc $72
+	ld   bc, .dataLoadHandlers                                   ; $72b3: $01 $bc $72
 	add  hl, bc                                      ; $72b6: $09
+
+; Jump to handler
 	ld   a, [hl+]                                    ; $72b7: $2a
 	ld   h, [hl]                                     ; $72b8: $66
 	ld   l, a                                        ; $72b9: $6f
 	jp   hl                                          ; $72ba: $e9
 
 
+;
 	ret                                              ; $72bb: $c9
 
+.dataLoadHandlers:
+	dw .dataLoad0
+	dw .dataLoad1
+	dw .dataLoad2
+	dw .dataLoad3
+	dw .dataLoad4
+	dw .dataLoad5
+	dw .dataLoad6
+	dw .dataLoad7
 
-	call z, $ff72                                    ; $72bc: $cc $72 $ff
-	ld   [hl], d                                     ; $72bf: $72
-	ld   a, [de]                                     ; $72c0: $1a
-	ld   [hl], e                                     ; $72c1: $73
-	ld   a, [hl+]                                    ; $72c2: $2a
-	ld   [hl], e                                     ; $72c3: $73
-	ld   d, h                                        ; $72c4: $54
-	ld   [hl], e                                     ; $72c5: $73
-	ld   h, h                                        ; $72c6: $64
-	ld   [hl], e                                     ; $72c7: $73
-	ld   a, a                                        ; $72c8: $7f
-	ld   [hl], e                                     ; $72c9: $73
-	xor  c                                           ; $72ca: $a9
-	ld   [hl], e                                     ; $72cb: $73
+.dataLoad0:
 	ld   hl, $d000                                   ; $72cc: $21 $00 $d0
 	ld   a, $a0                                      ; $72cf: $3e $a0
 	ld   de, $6a8e                                   ; $72d1: $11 $8e $6a
@@ -8120,7 +8146,7 @@ jr_004_7272:
 	call EnqueueHDMATransfer                                       ; $72fb: $cd $7c $02
 	ret                                              ; $72fe: $c9
 
-
+.dataLoad1:
 	ld   a, $8d                                      ; $72ff: $3e $8d
 	ld   hl, $d000                                   ; $7301: $21 $00 $d0
 	ld   de, $6dd0                                   ; $7304: $11 $d0 $6d
@@ -8133,7 +8159,7 @@ jr_004_7272:
 	call EnqueueHDMATransfer                                       ; $7316: $cd $7c $02
 	ret                                              ; $7319: $c9
 
-
+.dataLoad2:
 	ld   c, $80                                      ; $731a: $0e $80
 	ld   de, $8e00                                   ; $731c: $11 $00 $8e
 	ld   a, $07                                      ; $731f: $3e $07
@@ -8142,7 +8168,7 @@ jr_004_7272:
 	call EnqueueHDMATransfer                                       ; $7326: $cd $7c $02
 	ret                                              ; $7329: $c9
 
-
+.dataLoad3:
 	ld   c, $80                                      ; $732a: $0e $80
 	ld   de, $9400                                   ; $732c: $11 $00 $94
 	ld   a, $07                                      ; $732f: $3e $07
@@ -8161,7 +8187,7 @@ jr_004_7272:
 	call EnqueueHDMATransfer                                       ; $7350: $cd $7c $02
 	ret                                              ; $7353: $c9
 
-
+.dataLoad4:
 	ld   c, $81                                      ; $7354: $0e $81
 	ld   de, $9200                                   ; $7356: $11 $00 $92
 	ld   a, $07                                      ; $7359: $3e $07
@@ -8170,7 +8196,7 @@ jr_004_7272:
 	call EnqueueHDMATransfer                                       ; $7360: $cd $7c $02
 	ret                                              ; $7363: $c9
 
-
+.dataLoad5:
 	ld   a, $a0                                      ; $7364: $3e $a0
 	ld   hl, $d800                                   ; $7366: $21 $00 $d8
 	ld   de, $75ad                                   ; $7369: $11 $ad $75
@@ -8183,7 +8209,7 @@ jr_004_7272:
 	call EnqueueHDMATransfer                                       ; $737b: $cd $7c $02
 	ret                                              ; $737e: $c9
 
-
+.dataLoad6:
 	ld   c, $81                                      ; $737f: $0e $81
 	ld   de, $8e00                                   ; $7381: $11 $00 $8e
 	ld   a, $07                                      ; $7384: $3e $07
@@ -8202,7 +8228,7 @@ jr_004_7272:
 	call EnqueueHDMATransfer                                       ; $73a5: $cd $7c $02
 	ret                                              ; $73a8: $c9
 
-
+.dataLoad7:
 	ld   c, $80                                      ; $73a9: $0e $80
 	ld   de, $8200                                   ; $73ab: $11 $00 $82
 	ld   a, $07                                      ; $73ae: $3e $07
@@ -8210,17 +8236,19 @@ jr_004_7272:
 	ld   b, $60                                      ; $73b3: $06 $60
 	call EnqueueHDMATransfer                                       ; $73b5: $cd $7c $02
 
-Jump_004_73b8:
-	ld   hl, $cc18                                   ; $73b8: $21 $18 $cc
-	inc  [hl]                                        ; $73bb: $34
-	xor  a                                           ; $73bc: $af
-	ld   [$cc19], a                                  ; $73bd: $ea $19 $cc
-	ret                                              ; $73c0: $c9
+IncDayPassedAnimStep:
+	ld   hl, wDayPassedAnimationStep                                ; $73b8
+	inc  [hl]                                                       ; $73bb
+
+	xor  a                                                          ; $73bc
+	ld   [wDayPassedMiscCounterIdx], a                              ; $73bd
+	ret                                                             ; $73c0
 
 
-	ld   a, [$cc19]                                  ; $73c1: $fa $19 $cc
+DayPassedAnimationStep1:
+	ld   a, [wDayPassedMiscCounterIdx]                                  ; $73c1: $fa $19 $cc
 	or   a                                           ; $73c4: $b7
-	jr   nz, jr_004_73df                             ; $73c5: $20 $18
+	jr   nz, .afterInit                             ; $73c5: $20 $18
 
 	xor  a                                           ; $73c7: $af
 	ld   [wStartingColorIdxToLoadCompDataFor], a                                  ; $73c8: $ea $62 $c3
@@ -8233,8 +8261,8 @@ Jump_004_73b8:
 	ld   de, $704c                                   ; $73d9: $11 $4c $70
 	call FarLoadPaletteValsFadeToValsAndSetFadeSpeed                                       ; $73dc: $cd $48 $07
 
-jr_004_73df:
-	ld   hl, $cc19                                   ; $73df: $21 $19 $cc
+.afterInit:
+	ld   hl, wDayPassedMiscCounterIdx                                   ; $73df: $21 $19 $cc
 	ld   a, [$cc1a]                                  ; $73e2: $fa $1a $cc
 	or   a                                           ; $73e5: $b7
 	jr   z, jr_004_73ee                              ; $73e6: $28 $06
@@ -8256,7 +8284,6 @@ jr_004_73ee:
 	ld   bc, $0040                                   ; $73f7: $01 $40 $00
 	jp   FadePalettesAndSetRangeToUpdate                                       ; $73fa: $c3 $32 $08
 
-
 jr_004_73fd:
 	ld   a, $a3                                      ; $73fd: $3e $a3
 	ld   hl, $704c                                   ; $73ff: $21 $4c $70
@@ -8265,31 +8292,33 @@ jr_004_73fd:
 	call FarMemCopy                                       ; $7408: $cd $b2 $09
 	ld   bc, $003f                                   ; $740b: $01 $3f $00
 	call SetBGandOBJPaletteRangesToUpdate                                       ; $740e: $cd $aa $04
-	jp   Jump_004_73b8                               ; $7411: $c3 $b8 $73
+	jp   IncDayPassedAnimStep                               ; $7411: $c3 $b8 $73
 
 
-	ld   hl, $cc19                                   ; $7414: $21 $19 $cc
+DayPassedAnimationStep2:
+	ld   hl, wDayPassedMiscCounterIdx                                   ; $7414: $21 $19 $cc
 	ld   a, [$cc1a]                                  ; $7417: $fa $1a $cc
 	or   a                                           ; $741a: $b7
-	jp   nz, Jump_004_73b8                           ; $741b: $c2 $b8 $73
+	jp   nz, IncDayPassedAnimStep                           ; $741b: $c2 $b8 $73
 
 	ld   a, [hl]                                     ; $741e: $7e
 	inc  [hl]                                        ; $741f: $34
 	cp   $3c                                         ; $7420: $fe $3c
-	jp   nc, Jump_004_73b8                           ; $7422: $d2 $b8 $73
+	jp   nc, IncDayPassedAnimStep                           ; $7422: $d2 $b8 $73
 
 	ld   a, [wInGameButtonsPressed]                                  ; $7425: $fa $10 $c2
 	and  $03                                         ; $7428: $e6 $03
 	ret  z                                           ; $742a: $c8
 
-	jp   Jump_004_73b8                               ; $742b: $c3 $b8 $73
+	jp   IncDayPassedAnimStep                               ; $742b: $c3 $b8 $73
 
 
-	ld   a, [$cc19]                                  ; $742e: $fa $19 $cc
+DayPassedAnimationStep3:
+	ld   a, [wDayPassedMiscCounterIdx]                                  ; $742e: $fa $19 $cc
 	srl  a                                           ; $7431: $cb $3f
 	srl  a                                           ; $7433: $cb $3f
 	call Call_004_7495                               ; $7435: $cd $95 $74
-	ld   a, [$cc19]                                  ; $7438: $fa $19 $cc
+	ld   a, [wDayPassedMiscCounterIdx]                                  ; $7438: $fa $19 $cc
 	or   a                                           ; $743b: $b7
 	jr   nz, jr_004_7460                             ; $743c: $20 $22
 
@@ -8309,7 +8338,7 @@ jr_004_73fd:
 	call SafeSetAudVolForMultipleChannels                                       ; $745d: $cd $e0 $1c
 
 jr_004_7460:
-	ld   hl, $cc19                                   ; $7460: $21 $19 $cc
+	ld   hl, wDayPassedMiscCounterIdx                                   ; $7460: $21 $19 $cc
 	ld   a, [$cc1a]                                  ; $7463: $fa $1a $cc
 	or   a                                           ; $7466: $b7
 	jr   z, jr_004_746f                              ; $7467: $28 $06
@@ -8340,7 +8369,7 @@ jr_004_747e:
 	call FarMemCopy                                       ; $7489: $cd $b2 $09
 	ld   bc, $003f                                   ; $748c: $01 $3f $00
 	call SetBGandOBJPaletteRangesToUpdate                                       ; $748f: $cd $aa $04
-	jp   Jump_004_73b8                               ; $7492: $c3 $b8 $73
+	jp   IncDayPassedAnimStep                               ; $7492: $c3 $b8 $73
 
 
 Call_004_7495:
@@ -8787,15 +8816,16 @@ Jump_004_76e7:
 	ret                                              ; $76f4: $c9
 
 
+DayPassedAnimationStep4:
 	ld   a, $1f                                      ; $76f5: $3e $1f
 	call Call_004_7495                               ; $76f7: $cd $95 $74
 	ld   a, [$cc1a]                                  ; $76fa: $fa $1a $cc
 	or   a                                           ; $76fd: $b7
-	jp   nz, Jump_004_73b8                           ; $76fe: $c2 $b8 $73
+	jp   nz, IncDayPassedAnimStep                           ; $76fe: $c2 $b8 $73
 
 	ld   a, [wInGameButtonsPressed]                                  ; $7701: $fa $10 $c2
 	and  $03                                         ; $7704: $e6 $03
-	jp   nz, Jump_004_73b8                           ; $7706: $c2 $b8 $73
+	jp   nz, IncDayPassedAnimStep                           ; $7706: $c2 $b8 $73
 
 	ld   a, [$c653]                                  ; $7709: $fa $53 $c6
 	call $1d30                                       ; $770c: $cd $30 $1d
@@ -8804,12 +8834,13 @@ Jump_004_76e7:
 
 	xor  a                                           ; $7711: $af
 	call PlaySong                                       ; $7712: $cd $92 $1a
-	jp   Jump_004_73b8                               ; $7715: $c3 $b8 $73
+	jp   IncDayPassedAnimStep                               ; $7715: $c3 $b8 $73
 
 
+DayPassedAnimationStep5:
 	ld   a, $ff                                      ; $7718: $3e $ff
 	call Call_004_7495                               ; $771a: $cd $95 $74
-	ld   a, [$cc19]                                  ; $771d: $fa $19 $cc
+	ld   a, [wDayPassedMiscCounterIdx]                                  ; $771d: $fa $19 $cc
 	or   a                                           ; $7720: $b7
 	jr   nz, jr_004_773b                             ; $7721: $20 $18
 
@@ -8825,7 +8856,7 @@ Jump_004_76e7:
 	call FarLoadPaletteValsFadeToValsAndSetFadeSpeed                                       ; $7738: $cd $48 $07
 
 jr_004_773b:
-	ld   hl, $cc19                                   ; $773b: $21 $19 $cc
+	ld   hl, wDayPassedMiscCounterIdx                                   ; $773b: $21 $19 $cc
 	ld   a, [$cc1a]                                  ; $773e: $fa $1a $cc
 	or   a                                           ; $7741: $b7
 	jr   z, jr_004_774a                              ; $7742: $28 $06

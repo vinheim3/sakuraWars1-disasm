@@ -23,7 +23,7 @@ DEF GS_44 = $44
 DEF GS_DORM_ROOM = $45
 DEF GS_46 = $46
 DEF GS_PROLOGUE = $47
-; 49 - shows a day has passed
+DEF GS_DAY_PASSED = $49
 
 ; --
 ; -- Data banks

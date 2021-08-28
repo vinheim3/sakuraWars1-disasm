@@ -34,7 +34,8 @@ def api_get_script(_id):
     bank = data[srcAddr+2]+0x41
     addr = wordIn(data, srcAddr)+0x4000
 
-    screens = get_script_screens(bank, addr, _id)
+    jumps = get_script_screens(bank, addr, _id)
+    screens = get_script_screens(bank, addr, _id, jumps)
 
     return jsonify(screens)
 

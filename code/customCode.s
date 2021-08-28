@@ -1,7 +1,7 @@
 include "includes.s"
 
 
-SECTION "Custom misc", ROMX[$4000], BANK[$3]
+SECTION "Custom misc", ROMX[$4000], BANK[$1f]
 
 if def(VWF)
 

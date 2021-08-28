@@ -3300,7 +3300,7 @@ HandleGameState:
 	AddrBank GameState46
 	AddrBank GameState47_Prologue
 	AddrBank GameState48
-	AddrBank GameState49
+	AddrBank GameState49_DayPassed
 
 
 InitWideTextBoxDimensions::

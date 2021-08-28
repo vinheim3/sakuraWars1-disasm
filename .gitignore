@@ -6,6 +6,8 @@
 *.tbl
 temp.s
 gfx_new.*
+scriptBuild/script.o
+scriptBuild/script.s
 
 __pycache__/
 build/

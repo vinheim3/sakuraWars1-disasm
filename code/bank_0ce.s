@@ -10857,7 +10857,7 @@ jr_0ce_7092:
 	ld   l, c                                        ; $70ee: $69
 	ret  z                                           ; $70ef: $c8
 
-	ld   sp, $cc18                                   ; $70f0: $31 $18 $cc
+	ld   sp, wDayPassedAnimationStep                                   ; $70f0: $31 $18 $cc
 	rst  $38                                         ; $70f3: $ff
 	cp   $93                                         ; $70f4: $fe $93
 	ld   de, $4843                                   ; $70f6: $11 $43 $48
