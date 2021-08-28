@@ -4518,7 +4518,7 @@ Call_0bc_51eb:
 	db   $ed                                         ; $557f: $ed
 	xor  $ff                                         ; $5580: $ee $ff
 	rst  $38                                         ; $5582: $ff
-	jp   c, $cc99                                    ; $5583: $da $99 $cc
+	jp   c, wPrologueMiscCounter                                    ; $5583: $da $99 $cc
 
 Jump_0bc_5586:
 	cp   h                                           ; $5586: $bc

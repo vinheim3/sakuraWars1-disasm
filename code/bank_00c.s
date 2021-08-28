@@ -8642,20 +8642,20 @@ GameState47_Prologue::
 	ld   a, BANK(Palettes_AllWhite)                                 ; $776f
 	ld   hl, Palettes_AllWhite                                      ; $7771
 	ld   de, wBGandOBJPalettes                                      ; $7774
-	ld   bc, $0080                                                  ; $7777
+	ld   bc, NUM_PALETTE_BYTES * 2                                  ; $7777
 	call FarMemCopy                                                 ; $777a
 
 ; Have BG palettes updated
-	ld   bc, $003f                                                  ; $777d
+	ldbc $00, $3f                                                   ; $777d
 	call SetBGandOBJPaletteRangesToUpdate                           ; $7780
 
-;
-	ld   a, $ff                                      ; $7783: $3e $ff
-	ld   [wInGameInputsEnabled], a                                  ; $7785: $ea $0e $c2
+; Allow all inputs
+	ld   a, $ff                                                     ; $7783
+	ld   [wInGameInputsEnabled], a                                  ; $7785
 	
-;
-	call ClearOam                                       ; $7788: $cd $d7 $0d
-	call ClearBaseAnimSpriteSpecDetails                                       ; $778b: $cd $c9 $2e
+; Clear oam and base anim sprite specs
+	call ClearOam                                                   ; $7788
+	call ClearBaseAnimSpriteSpecDetails                             ; $778b
 	
 ;
 	ld   bc, $0000                                   ; $778e: $01 $00 $00
@@ -8685,9 +8685,9 @@ GameState47_Prologue::
 	ld   [$cbab], a                                  ; $77ea: $ea $ab $cb
 
 ; Script idx is a triple idx into the script sources table
-	ld   a, [wSpecialScriptIdx]                                     ; $77ed
+	ld   a, [wPrologueScriptIdx]                                    ; $77ed
 	ld   c, a                                                       ; $77f0
-	ld   a, [wSpecialScriptIdx+1]                                   ; $77f1
+	ld   a, [wPrologueScriptIdx+1]                                  ; $77f1
 	ld   b, a                                                       ; $77f4
 	ld   hl, ScriptSources                                          ; $77f5
 	add  hl, bc                                                     ; $77f8
@@ -8714,10 +8714,10 @@ GameState47_Prologue::
 
 	M_FarCall StartRunningScript
 
-;
-	xor  a                                           ; $782b: $af
-	ld   [wPrologueMainSubSubstate], a                                  ; $782c: $ea $98 $cc
-	ld   [$cc99], a                                  ; $782f: $ea $99 $cc
+; Clear sub-substate in main substate, and misc counter shared between those states
+	xor  a                                                          ; $782b
+	ld   [wPrologueMainSubSubstate], a                              ; $782c
+	ld   [wPrologueMiscCounter], a                                  ; $782f
 
 ; Inc to main substate
 	ld   hl, wGameSubstate                                          ; $7832
@@ -8744,8 +8744,9 @@ GameState47_Prologue::
 	jp   hl                                                         ; $784d
 
 .return:
-	call AnimateAllAnimatedSpriteSpecs                                       ; $784e: $cd $d3 $2e
-	ret                                              ; $7851: $c9
+; Process any animations
+	call AnimateAllAnimatedSpriteSpecs                              ; $784e
+	ret                                                             ; $7851
 
 .mainSubstates:
 	dw .subSubstate0
@@ -8754,7 +8755,7 @@ GameState47_Prologue::
 
 .subSubstate0:
 ;
-	ld   hl, $cc99                                   ; $7858: $21 $99 $cc
+	ld   hl, wPrologueMiscCounter                                   ; $7858: $21 $99 $cc
 	ld   a, [hl]                                     ; $785b: $7e
 	inc  [hl]                                        ; $785c: $34
 
@@ -8776,20 +8777,22 @@ GameState47_Prologue::
 	ld   hl, wPrologueMainSubSubstate                               ; $7893
 	inc  [hl]                                                       ; $7896
 
-;
-	xor  a                                           ; $7897: $af
-	ld   [$cc99], a                                  ; $7898: $ea $99 $cc
-	ret                                              ; $789b: $c9
+; Clear misc counter for it
+	xor  a                                                          ; $7897
+	ld   [wPrologueMiscCounter], a                                  ; $7898
+	ret                                                             ; $789b
 
 .subSubstate1:
-	ld   a, [wInGameButtonsPressed]                                  ; $789c: $fa $10 $c2
-	and  $0b                                         ; $789f: $e6 $0b
-	or   a                                           ; $78a1: $b7
-	jr   nz, .br_78c5                             ; $78a2: $20 $21
+; Go to exist sub-substate if start or b/a pressed
+	ld   a, [wInGameButtonsPressed]                                 ; $789c
+	and  PADF_START|PADF_B|PADF_A                                   ; $789f
+	or   a                                                          ; $78a1
+	jr   nz, .toSubSubstate2                                        ; $78a2
 
-	ld   a, $01                                      ; $78a4: $3e $01
-	ld   [wInGameButtonsPressed], a                                  ; $78a6: $ea $10 $c2
-	ld   [wInGameButtonsHeld], a                                  ; $78a9: $ea $0f $c2
+; While running script engine, act as if A is being pressed/held (auto change textboxes)
+	ld   a, PADF_A                                                  ; $78a4
+	ld   [wInGameButtonsPressed], a                                 ; $78a6
+	ld   [wInGameButtonsHeld], a                                    ; $78a9
 
 ; Run script engine, then return while the engine is running
 	M_FarCall HandleScriptEngine
@@ -8797,17 +8800,20 @@ GameState47_Prologue::
 	or   a                                                          ; $78c3
 	ret  nz                                                         ; $78c4
 
-.br_78c5:
-	ld   hl, wPrologueMainSubSubstate                                   ; $78c5: $21 $98 $cc
-	inc  [hl]                                        ; $78c8: $34
-	xor  a                                           ; $78c9: $af
-	ld   [$cc99], a                                  ; $78ca: $ea $99 $cc
-	ret                                              ; $78cd: $c9
+.toSubSubstate2:
+; Go to next sub-substate, and clear misc counter fo rit
+	ld   hl, wPrologueMainSubSubstate                               ; $78c5
+	inc  [hl]                                                       ; $78c8
+	
+	xor  a                                                          ; $78c9
+	ld   [wPrologueMiscCounter], a                                  ; $78ca
+	ret                                                             ; $78cd
 
 .subSubstate2:
-	ld   a, [$cc99]                                  ; $78ce: $fa $99 $cc
-	or   a                                           ; $78d1: $b7
-	jr   nz, .br_78ec                             ; $78d2: $20 $18
+; Jump if below init already one
+	ld   a, [wPrologueMiscCounter]                                  ; $78ce
+	or   a                                                          ; $78d1
+	jr   nz, .afterSubSubstate2Init                                 ; $78d2
 
 ; Fade current BG color vals to white at 1/8th speed
 	xor  a                                                          ; $78d4
@@ -8821,35 +8827,39 @@ GameState47_Prologue::
 	ld   de, Palettes_AllWhite                                      ; $78e6
 	call FarLoadPaletteValsFadeToValsAndSetFadeSpeed                ; $78e9
 
-.br_78ec:
-	ld   hl, $cc99                                   ; $78ec: $21 $99 $cc
-	ld   a, [hl]                                     ; $78ef: $7e
-	cpl                                              ; $78f0: $2f
-	srl  a                                           ; $78f1: $cb $3f
-	srl  a                                           ; $78f3: $cb $3f
-	srl  a                                           ; $78f5: $cb $3f
-	and  $07                                         ; $78f7: $e6 $07
-	call SafeSetAudVolForMultipleChannels                                       ; $78f9: $cd $e0 $1c
-	ld   a, [hl]                                     ; $78fc: $7e
-	inc  [hl]                                        ; $78fd: $34
-	cp   $3f                                         ; $78fe: $fe $3f
-	jr   nc, .br_790b                             ; $7900: $30 $09
+.afterSubSubstate2Init:
+; As counter goes up, have volume go down every 8 frames
+	ld   hl, wPrologueMiscCounter                                   ; $78ec
+	ld   a, [hl]                                                    ; $78ef
+	cpl                                                             ; $78f0
+	srl  a                                                          ; $78f1
+	srl  a                                                          ; $78f3
+	srl  a                                                          ; $78f5
+	and  $07                                                        ; $78f7
+	call SafeSetAudVolForMultipleChannels                           ; $78f9
 
-	and  $07                                         ; $7902: $e6 $07
-	ld   bc, $0040                                   ; $7904: $01 $40 $00
-	call z, FadePalettesAndSetRangeToUpdate                                    ; $7907: $cc $32 $08
-	ret                                              ; $790a: $c9
+; Exit after $3f frames passed
+	ld   a, [hl]                                                    ; $78fc
+	inc  [hl]                                                       ; $78fd
+	cp   $3f                                                        ; $78fe
+	jr   nc, .toExitState                                           ; $7900
 
-.br_790b:
+; Else fade to white every 8 frames
+	and  $07                                                        ; $7902
+	ldbc $00, $40                                                   ; $7904
+	call z, FadePalettesAndSetRangeToUpdate                         ; $7907
+	ret                                                             ; $790a
+
+.toExitState:
 ; Copy white pals to BG + OBJ
 	ld   a, BANK(Palettes_AllWhite)                                 ; $790b
 	ld   hl, Palettes_AllWhite                                      ; $790d
 	ld   de, wBGPalettes                                            ; $7910
-	ld   bc, $0080                                                  ; $7913
+	ld   bc, NUM_PALETTE_BYTES * 2                                  ; $7913
 	call FarMemCopy                                                 ; $7916
 
 ; Have just BG pals update
-	ld   bc, $003f                                                  ; $7919
+	ldbc $00, $3f                                                   ; $7919
 	call SetBGandOBJPaletteRangesToUpdate                           ; $791c
 
 ; Mute song
@@ -8868,21 +8878,21 @@ GameState47_Prologue::
 ; BC - script idx
 ; H - game state after script engine done
 ; L - game substate after script engine done
-InitSpecialScript::
+SetPrologueScriptState::
 ;
 	ld   [$cc9e], a                                  ; $7930: $ea $9e $cc
 
 ; Set script idx
 	ld   a, b                                                       ; $7933
-	ld   [wSpecialScriptIdx+1], a                                   ; $7934
+	ld   [wPrologueScriptIdx+1], a                                  ; $7934
 	ld   a, c                                                       ; $7937
-	ld   [wSpecialScriptIdx], a                                     ; $7938
+	ld   [wPrologueScriptIdx], a                                    ; $7938
 	
 ; Set game state/substate to go to after the script is done
 	ld   a, h                                                       ; $793b
-	ld   [wPostPrologueScriptEngineGameState], a                            ; $793c
+	ld   [wPostPrologueScriptEngineGameState], a                    ; $793c
 	ld   a, l                                                       ; $793f
-	ld   [wPostPrologueScriptEngineGameSubstate], a                         ; $7940
+	ld   [wPostPrologueScriptEngineGameSubstate], a                 ; $7940
 
 ; Start prologue state
 	ld   a, GS_PROLOGUE                                             ; $7943

@@ -484,8 +484,8 @@ wcc7b:
 wPrologueMainSubSubstate:: ; $cc98
     db
 
-wcc99:
-    ds $a-9
+wPrologueMiscCounter:: ; $cc99
+    db
 
 wPostPrologueScriptEngineGameState:: ; $cc9a
     db
@@ -493,7 +493,7 @@ wPostPrologueScriptEngineGameState:: ; $cc9a
 wPostPrologueScriptEngineGameSubstate:: ; $cc9b
     db
 
-wSpecialScriptIdx:: ; $cc9c
+wPrologueScriptIdx:: ; $cc9c
     dw
 
 wcc9e:

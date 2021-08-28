@@ -35,8 +35,3 @@
 
 ; script banks
 ; 0x41 - 0x6a
-
-
-; algo for rolling scripts across banks
-; current: script extraction generates correct data
-; need: recompile script, where curr bank is next bank -1, allow splitting script data

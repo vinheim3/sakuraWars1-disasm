@@ -1210,11 +1210,11 @@ AnimatedSpriteSpecs::
 	dw $73ff
 	dw $740b
 	dw $7405
-	dw $740e
-	dw AnimatedSpriteSpec_2d
-	dw AnimatedSpriteSpec_2e
-	dw AnimatedSpriteSpec_2f
-	dw AnimatedSpriteSpec_30
+	dw AnimatedSpriteSpec_2c-3
+	dw AnimatedSpriteSpec_2d-3
+	dw AnimatedSpriteSpec_2e-3
+	dw AnimatedSpriteSpec_2f-3
+	dw AnimatedSpriteSpec_30-3
 	dw $743b
 	dw $7447
 	dw $7450
@@ -1703,37 +1703,31 @@ jr_001_740e:
 	ld   [bc], a                                     ; $740e: $02
 	dec  [hl]                                        ; $740f: $35
 	nop                                              ; $7410: $00
-	ld   [bc], a                                     ; $7411: $02
-	scf                                              ; $7412: $37
-	dec  b                                           ; $7413: $05
 
+
+AnimatedSpriteSpec_2c:
+	db $02, $37, $05
+	db $02, $38, $00
 
 AnimatedSpriteSpec_2d:
-	db $02, $38, $00
-:	db $02, $3a, $0c
-	db $80, $0c, $00
+:	db SG_2, SG2_ENTER_NAME_SMALL_CURSOR, $0c
+	AnimHide $0c
+	AnimJump :-
+
 
 AnimatedSpriteSpec_2e:
-	db $82
-	dw :-
+:	db SG_2, SG2_ENTER_NAME_BIG_CURSOR, $0c
+	AnimHide $0c
+	AnimJump :-
 
-
-:	db $02, $3b, $0c
-	db $80, $0c, $00
 
 AnimatedSpriteSpec_2f:
-	db $82
-	dw :-
-
-
-:	db $02, $3c, $0c
-	db $80, $0c, $00
-
-AnimatedSpriteSpec_30:
-	db $82
-	dw :-
+:	db SG_2, SG2_ENTER_NAME_UNDERLINE, $0c
+	AnimHide $0c
+	AnimJump :-
 	
 
+AnimatedSpriteSpec_30:
 	ld   [bc], a                                     ; $7432: $02
 	dec  a                                           ; $7433: $3d
 	add  hl, bc                                      ; $7434: $09

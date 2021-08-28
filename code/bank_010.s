@@ -6110,7 +6110,11 @@ GameState16_EnterName::
 	ld   a, BANK(RleXorTileMap_EnterName)                           ; $6779
 	ld   hl, wEnterNameTileDataOrLayoutBuffer                       ; $677b
 	ld   de, RleXorTileMap_EnterName                                ; $677e
+if def(VWF)
+	call EnterNameTileMapHook
+else
 	call RLEXorCopy                                                 ; $6781
+endc
 
 ; Enqueue tile map transfer
 	ld   c, $80                                                     ; $6784
@@ -6135,14 +6139,22 @@ GameState16_EnterName::
 	ld   [wSCX], a                                                  ; $67a6
 
 ; Set alphabet, space kanji idx, and init the inputted chars at the top of the screen
+if def(VWF)
+	ld   a, ENTER_NAME_EN_ALPHABET
+else
 	ld   a, ENTER_NAME_HIRA_ALPHABET                                ; $67a9
+endc
 	ld   [wEnterNameAlphabetChosen], a                              ; $67ab
 	call SetSpaceKanjiIdx                                           ; $67ae
 	call InitEnterNameInputtedChars                                 ; $67b1
 
 ; Start cursor row and col pointing to top-left char
 	xor  a                                                          ; $67b4
+if def(VWF)
+	call SetEnterNameEnCoords
+else
 	ld   [wEnterNameCursorLetterColIdx], a                          ; $67b5
+endc
 	ld   [wEnterNameCursorLetterRowIdx], a                          ; $67b8
 
 ; Clear anim sprite spec details, and get a new one using anim type 1
@@ -6346,7 +6358,13 @@ DrawEnterNameSelectableChars:
 	call EnqueueHDMATransfer                                        ; $6953
 
 ; Update screen with the 2 other alphabet choices
+if def(VWF)
+	nop
+	nop
+	nop
+else
 	call UpdateEnterName2AlphabetChoices                            ; $6956
+endc
 	ret                                                             ; $6959
 
 
@@ -6741,7 +6759,11 @@ HandleEnterNameBottomRowLeftRightInput:
 	jr   z, .notLeft                                                ; $6c17
 
 ; Jump if at the left most option
+if def(VWF)
+	jp   .loopAround
+else
 	call GetEnterNameBottomRowCol                                   ; $6c19
+endc
 	or   a                                                          ; $6c1c
 	jr   z, .loopAround                                             ; $6c1d
 
@@ -6754,7 +6776,11 @@ HandleEnterNameBottomRowLeftRightInput:
 	jr   z, .done                                                   ; $6c26
 
 ; If right pressed, jump if on the rightmost option
+if def(VWF)
+	jp   .loopAround
+else
 	call GetEnterNameBottomRowCol                                   ; $6c28
+endc
 	cp   ENTER_NAME_SUBMIT_COL                                      ; $6c2b
 	jr   z, .loopAround                                             ; $6c2d
 
@@ -6764,6 +6790,17 @@ HandleEnterNameBottomRowLeftRightInput:
 
 .loopAround:
 ; Set appropriate opt based on the button pressed
+if def(VWF)
+	call GetEnterNameBottomRowCol ; 3
+	cp   ENTER_NAME_DELETE_COL ; 2
+	jr   z, .setSubmit ; 2
+	ld   a, ENTER_NAME_DELETE_COL ; 2
+	jr   .setColIdx ; 2
+.setSubmit:
+	ld   a, ENTER_NAME_SUBMIT_COL ; 2
+	jr   .setColIdx ; 2
+	nop ; 1
+else
 	ld   a, [wInGameButtonsPressed]                                 ; $6c34
 	bit  PADB_RIGHT, a                                              ; $6c37
 	jr   z, .checkLoopedLeft                                        ; $6c39
@@ -6776,6 +6813,7 @@ HandleEnterNameBottomRowLeftRightInput:
 	jr   z, .done                                                   ; $6c40
 
 	ld   a, ENTER_NAME_SUBMIT_COL                                   ; $6c42
+endc
 
 .setColIdx:
 	ld   [wEnterNameCursorLetterColIdx], a                          ; $6c44
@@ -6845,12 +6883,21 @@ GetEnterNameBottomRowCol:
 
 
 BottomRowColIdxes:
+if def (VWF)
+rept 7
+	db ENTER_NAME_DELETE_COL
+endr
+
+else
+
 rept 3
 	db ENTER_NAME_HIRA_KATA_COL
 endr
 rept 4
 	db ENTER_NAME_ENGLISH_COL
 endr
+endc
+
 rept 5
 	db ENTER_NAME_DELETE_COL
 endr
@@ -7070,8 +7117,12 @@ SetSpaceKanjiIdx:
 ; Called when alphabet is hiragana, the 6th byte is $10 (space)
 	call HLequAddressOfAlphabetsKanjiIdxes                          ; $6d90
 	ld   bc, $0005                                                  ; $6d93
+if def(VWF)
+	ld   a, $10
+else
 	add  hl, bc                                                     ; $6d96
 	ld   a, [hl]                                                    ; $6d97
+endc
 	ld   [wEnterNameSpaceKanjiIdx], a                               ; $6d98
 	ret                                                             ; $6d9b
 
@@ -9143,4 +9194,25 @@ ClearFileNameBoxBeforeLoadingText:
 	ld   hl, $d800
 	ret
 
+
+SetEnterNameEnCoords:
+	inc  a
+	ld   [wEnterNameCursorLetterColIdx], a
+	xor  a
+	ret
+
+
+EnterNameTileMapHook:
+	call RLEXorCopy
+
+	ld   a, $81
+	ld   [wEnterNameTileDataOrLayoutBuffer+$1e2], a
+	ld   [wEnterNameTileDataOrLayoutBuffer+$1e3], a
+	ld   [wEnterNameTileDataOrLayoutBuffer+$1e6], a
+	ld   [wEnterNameTileDataOrLayoutBuffer+$1e7], a
+	ld   [wEnterNameTileDataOrLayoutBuffer+$202], a
+	ld   [wEnterNameTileDataOrLayoutBuffer+$203], a
+	ld   [wEnterNameTileDataOrLayoutBuffer+$206], a
+	ld   [wEnterNameTileDataOrLayoutBuffer+$207], a
+	ret
 endc

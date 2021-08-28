@@ -71,6 +71,19 @@ endc
 endm
 
 ; --
+; -- Animations
+; --
+
+macro AnimHide
+    db $80, \1, $00
+endm
+
+macro AnimJump
+    db $82
+    dw \1
+endm
+
+; --
 ; -- Script opts
 ; --
 

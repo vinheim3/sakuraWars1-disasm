@@ -260,10 +260,10 @@ ToReset:
 SpriteGroupDataPointers:
 	db $00, $00, $00
 	AddrBank SpriteGroup1Pointers
-	db $48, $46, $3f
+	AddrBank SpriteGroup2Pointers
 	db $00, $40, $22
 	db $00, $40, $23
-	db $48, $46, $3f
+	AddrBank SpriteGroup5Pointers
 	db $f0, $4f, $0e
 	db $d4, $4d, $0f
 	db $a2, $4d, $0f
@@ -4607,12 +4607,13 @@ GameState00_Init:
 	ld   [rRAMB], a                                                 ; $1547
 	ld   [wSramBank], a                                             ; $154a
 
-;
-	ld   a, $ff                                      ; $154d: $3e $ff
-	ld   [wSoundUpdateEnabled], a                                  ; $154f: $ea $9e $c2
-	ld   a, $ff                                      ; $1552: $3e $ff
-	ld   [wRandomNumRange], a                                  ; $1554: $ea $a5 $c2
-	call UpdateSramRandomSeed                               ; $1557: $cd $70 $0c
+; Allow sound updating in vblank, set sram seed to any 8-bit value
+	ld   a, $ff                                                     ; $154d
+	ld   [wSoundUpdateEnabled], a                                   ; $154f
+	
+	ld   a, $ff                                                     ; $1552
+	ld   [wRandomNumRange], a                                       ; $1554
+	call UpdateSramRandomSeed                                       ; $1557
 
 ;
 	xor  a                                           ; $155a: $af
@@ -9822,6 +9823,17 @@ if def(VWF)
 ; A - kanji idx
 ; Returns width+1 pixel space in B
 GetCharWidth0:
+	push af
+	ld   a, [wGameState]
+	cp   GS_ENTER_NAME
+	jr   nz, .notEnterName
+
+	ld   b, $08
+	pop  af
+	ret
+
+.notEnterName:
+	pop  af
 	cp   a, $4f
 	jr   nc, .notAlpha
 

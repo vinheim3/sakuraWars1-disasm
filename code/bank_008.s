@@ -6416,8 +6416,11 @@ ScriptOpcode21_EnterName_Init:
 
 
 ScriptOpcode21_EnterName_Main:
+; Don't run anymore script opcodes after this
 	xor  a                                           ; $6b5d: $af
 	ld   [wScriptEngineContsRunningThisMainLoop], a                                  ; $6b5e: $ea $52 $cb
+
+;
 	ld   a, [hl]                                     ; $6b61: $7e
 	inc  [hl]                                        ; $6b62: $34
 	or   a                                           ; $6b63: $b7

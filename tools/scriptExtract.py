@@ -646,6 +646,10 @@ if __name__ == "__main__":
     data = getRom()
     baseTable = bankConv('40:5728')
 
+    # flags
+    translate = True
+    compileBs = True
+
     """Individual"""
     # scriptNum = conv(sys.argv[1])
     # startBank = data[baseTable+scriptNum*3+2]+0x41
@@ -665,23 +669,25 @@ if __name__ == "__main__":
 
     fullTranslationMap = {}
     doneTranslations = {}
-    with open('sakura wars GB - 27:08:21.csv') as f:
-        reader = csv.reader(f)
-        for scriptNum, offset, orig, blank, english, char, dupe1, dupe2 in reader:
-            if not scriptNum:
-                continue
 
-            fullTranslationMap.setdefault(int(scriptNum), {})
+    if translate:
+        with open('sakura wars GB - 27:08:21.csv') as f:
+            reader = csv.reader(f)
+            for scriptNum, offset, orig, blank, english, char, dupe1, dupe2 in reader:
+                if not scriptNum:
+                    continue
 
-            if dupe1 == 'x':
-                if orig in doneTranslations:
-                    fullTranslationMap[int(scriptNum)][int(offset)] = doneTranslations[orig]
-                continue
+                fullTranslationMap.setdefault(int(scriptNum), {})
 
-            if english:
-                tbs = ScriptExtractor.convertEnglish(english)
-                doneTranslations[orig] = tbs
-                fullTranslationMap[int(scriptNum)][int(offset)] = tbs
+                if dupe1 == 'x':
+                    if orig in doneTranslations:
+                        fullTranslationMap[int(scriptNum)][int(offset)] = doneTranslations[orig]
+                    continue
+
+                if english:
+                    tbs = ScriptExtractor.convertEnglish(english)
+                    doneTranslations[orig] = tbs
+                    fullTranslationMap[int(scriptNum)][int(offset)] = tbs
 
     availableBanks = [
         0x02, 0x03,       0x2b, 0x36, 0x37, 0x38, 0x39, 
@@ -710,57 +716,58 @@ if __name__ == "__main__":
         se = ScriptExtractor(data, bankAddr(startBank, startAddr), scriptNum)
         se.translationMap = fullTranslationMap[scriptNum]
         comps, totalBytes = se.run()
-        
-        # New process for rolling across banks
-        final_comps = '\n'.join(comps)
-        final_str = f"""
+
+        if compileBs:
+            # New process for rolling across banks
+            final_comps = '\n'.join(comps)
+            final_str = f"""
 include "macros.s"
 
 SECTION "Bank $00", ROM0[$200]
 
 {final_comps}
-        """
-        with open('scriptBuild/script.s', 'w') as f:
-            f.write(final_str)
+"""
+            with open('scriptBuild/script.s', 'w') as f:
+                f.write(final_str)
 
-        os.chdir('scriptBuild')
-        os.system('make -B')
-        os.chdir('..')
+            os.chdir('scriptBuild')
+            os.system('make -B')
+            os.chdir('..')
 
-        print(hex(scriptNum), hex(totalBytes))
-
-        with open('scriptBuild/sakuraWars1.gbc', 'rb') as f:
-            compiledBytes = f.read()[0x200:0x200+totalBytes]
-        
-        if totalBytes + bankBytes < 0x4000:
-            bankData[currBank].extend(["\tStartScript", "", f"Script_{scriptNum:03x}::"])
-            for group in groupBytes(compiledBytes, 32):
-                bankData[currBank].append(stringB(group))
-            bankBytes += totalBytes
-        else:
-            prevBank = currBank
-            currBank = availableBanks.pop(0)
-            bankData[currBank] = []
-
-            if currBank == prevBank + 1:
-                remBytesInPrevBank = 0x4000 - bankBytes
-                prevBankBytes = compiledBytes[:remBytesInPrevBank]
-                shouldRemain = totalBytes - remBytesInPrevBank
-                currBankBytes = compiledBytes[remBytesInPrevBank:]
-                assert shouldRemain == len(currBankBytes)
-
-                bankData[prevBank].extend(["\tStartScript", "", f"Script_{scriptNum:03x}::"])
-                for group in groupBytes(prevBankBytes, 32):
-                    bankData[prevBank].append(stringB(group))
-
-                bankBytes = shouldRemain
-                for group in groupBytes(currBankBytes, 32):
-                    bankData[currBank].append(stringB(group))
-            else:
+            with open('scriptBuild/sakuraWars1.gbc', 'rb') as f:
+                compiledBytes = f.read()[0x200:0x200+totalBytes]
+            
+            if totalBytes + bankBytes < 0x4000:
                 bankData[currBank].extend(["\tStartScript", "", f"Script_{scriptNum:03x}::"])
-                bankBytes = totalBytes
                 for group in groupBytes(compiledBytes, 32):
                     bankData[currBank].append(stringB(group))
+                bankBytes += totalBytes
+            else:
+                prevBank = currBank
+                currBank = availableBanks.pop(0)
+                bankData[currBank] = []
+
+                if currBank == prevBank + 1:
+                    remBytesInPrevBank = 0x4000 - bankBytes
+                    prevBankBytes = compiledBytes[:remBytesInPrevBank]
+                    shouldRemain = totalBytes - remBytesInPrevBank
+                    currBankBytes = compiledBytes[remBytesInPrevBank:]
+                    assert shouldRemain == len(currBankBytes)
+
+                    bankData[prevBank].extend(["\tStartScript", "", f"Script_{scriptNum:03x}::"])
+                    for group in groupBytes(prevBankBytes, 32):
+                        bankData[prevBank].append(stringB(group))
+
+                    bankBytes = shouldRemain
+                    for group in groupBytes(currBankBytes, 32):
+                        bankData[currBank].append(stringB(group))
+                else:
+                    bankData[currBank].extend(["\tStartScript", "", f"Script_{scriptNum:03x}::"])
+                    bankBytes = totalBytes
+                    for group in groupBytes(compiledBytes, 32):
+                        bankData[currBank].append(stringB(group))
+        else:
+            bankData[currBank].extend(comps)
 
     finalComps = ['include "includes.s"\n\n']
     for k, v in bankData.items():

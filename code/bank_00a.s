@@ -3967,7 +3967,7 @@ jr_00a_5fe7:
 	ld   bc, $0006                                   ; $5fef: $01 $06 $00
 	xor  a                                           ; $5ff2: $af
 
-	M_FarCall InitSpecialScript
+	M_FarCall SetPrologueScriptState
 	ret                                              ; $6007: $c9
 
 
@@ -4994,15 +4994,8 @@ TitleScreenAnimationHandler4_FadeOut:
 	ld   l, $01                                      ; $6649: $2e $01
 	ld   bc, $0006                                   ; $664b: $01 $06 $00
 	xor  a                                           ; $664e: $af
-	push af                                          ; $664f: $f5
-	ld   a, $30                                      ; $6650: $3e $30
-	ld   [wFarCallAddr], a                                  ; $6652: $ea $98 $c2
-	ld   a, $79                                      ; $6655: $3e $79
-	ld   [wFarCallAddr+1], a                                  ; $6657: $ea $99 $c2
-	ld   a, $0c                                      ; $665a: $3e $0c
-	ld   [wFarCallBank], a                                  ; $665c: $ea $9a $c2
-	pop  af                                          ; $665f: $f1
-	call FarCall                                       ; $6660: $cd $62 $09
+
+	M_FarCall SetPrologueScriptState
 	ret                                              ; $6663: $c9
 
 
@@ -7066,15 +7059,8 @@ TitleMenuScreenAnimationHandlerD:
 	ld   l, $01                                      ; $73fd: $2e $01
 	ld   bc, $0006                                   ; $73ff: $01 $06 $00
 	xor  a                                           ; $7402: $af
-	push af                                          ; $7403: $f5
-	ld   a, $30                                      ; $7404: $3e $30
-	ld   [wFarCallAddr], a                                  ; $7406: $ea $98 $c2
-	ld   a, $79                                      ; $7409: $3e $79
-	ld   [wFarCallAddr+1], a                                  ; $740b: $ea $99 $c2
-	ld   a, $0c                                      ; $740e: $3e $0c
-	ld   [wFarCallBank], a                                  ; $7410: $ea $9a $c2
-	pop  af                                          ; $7413: $f1
-	call FarCall                                       ; $7414: $cd $62 $09
+
+	M_FarCall SetPrologueScriptState
 	ret                                              ; $7417: $c9
 
 .newGame:
