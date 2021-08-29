@@ -5,18 +5,9 @@ import json
 import sys
 from uuid import uuid4
 import clipboard
-from util import getRom, conv, bankAddr, wordIn, stringW
+from util import getRom, conv, bankAddr, wordIn, getKanjiMap
 
-with open('tools/kanjiTable.txt', encoding='shift-jis') as f:
-    kanji_lines = f.read().split('\n')
-kanji_map = {}
-for line in kanji_lines:
-    if '=' not in line: continue
-    k, v = line.split('=')
-    if k == '10': v = ' '
-    kanji_map[int(k, 16)] = v
-kanji_map[0] = '\n'
-kanji_map[1] = '<name>'
+kanji_map = getKanjiMap()
 
 existingTranslations = {}
 with open('sakura wars GB - 29:08:21.csv') as f:
@@ -158,7 +149,7 @@ def addToSpreadSheetComps(data, baseBank, baseAddr, scriptNum, offset, currChar,
                     if letter in kanji_map:
                         kanjis += kanji_map[letter]
                     else:
-                        kanjis == f"<{letter:03x}>"
+                        kanjis += f"<{letter:03x}>"
         except:
             raise
         isDupe = ''

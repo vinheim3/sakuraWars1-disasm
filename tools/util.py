@@ -57,6 +57,20 @@ def getRom():
     return data
 
 
+def getKanjiMap():
+    with open('tools/kanjiTable.txt', encoding='shift-jis') as f:
+        kanji_lines = f.read().split('\n')
+    kanji_map = {}
+    for line in kanji_lines:
+        if '=' not in line: continue
+        k, v = line.split('=')
+        if k == '10': v = ' '
+        kanji_map[int(k, 16)] = v
+    kanji_map[0] = '\n'
+    kanji_map[1] = '<name>'
+    return kanji_map
+
+
 def showFarCallSrces(bank, addr):
     data = getRom()
     bank = conv(bank)
