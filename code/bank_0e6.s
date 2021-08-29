@@ -3627,7 +3627,7 @@ jr_0e6_4ea7:
 	ld   a, [de]                                     ; $4f5b: $1a
 	rst  $38                                         ; $4f5c: $ff
 	ld   de, $ff47                                   ; $4f5d: $11 $47 $ff
-	jp   nz, $cb14                                   ; $4f60: $c2 $14 $cb
+	jp   nz, wNameReplacementCharToReplace                                   ; $4f60: $c2 $14 $cb
 
 	sub  [hl]                                        ; $4f63: $96
 	ld   de, $51ff                                   ; $4f64: $11 $ff $51
@@ -6768,7 +6768,7 @@ jr_0e6_5dc0:
 	cp   a                                           ; $5e30: $bf
 	or   l                                           ; $5e31: $b5
 	ld   de, $ff6f                                   ; $5e32: $11 $6f $ff
-	ld   sp, $cb15                                   ; $5e35: $31 $15 $cb
+	ld   sp, wNameReplacementCurrReplacementListIdx                                   ; $5e35: $31 $15 $cb
 	xor  l                                           ; $5e38: $ad
 	add  $11                                         ; $5e39: $c6 $11
 	ld   c, a                                        ; $5e3b: $4f

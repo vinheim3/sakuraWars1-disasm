@@ -4090,7 +4090,7 @@ Call_0c9_5397:
 	ld   [de], a                                     ; $541b: $12
 	ld   hl, $1111                                   ; $541c: $21 $11 $11
 	ld   de, $1311                                   ; $541f: $11 $11 $13
-	ld   de, $cb16                                   ; $5422: $11 $16 $cb
+	ld   de, wNameReplacementCurrListNumChars                                   ; $5422: $11 $16 $cb
 	rst  $38                                         ; $5425: $ff
 	ld   a, [hl-]                                    ; $5426: $3a
 	rst  $38                                         ; $5427: $ff

@@ -4382,7 +4382,7 @@ Call_0f4_5411:
 	rst  $38                                         ; $547a: $ff
 	add  sp, $36                                     ; $547b: $e8 $36
 	ld   [hl], d                                     ; $547d: $72
-	ld   de, $cb14                                   ; $547e: $11 $14 $cb
+	ld   de, wNameReplacementCharToReplace                                   ; $547e: $11 $14 $cb
 	cp   l                                           ; $5481: $bd
 	rst  JumpTable                                         ; $5482: $df
 	rst  $38                                         ; $5483: $ff

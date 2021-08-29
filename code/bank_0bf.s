@@ -8756,7 +8756,7 @@ Call_0bf_64b8:
 	adc  h                                           ; $688f: $8c
 	sub  a                                           ; $6890: $97
 	halt                                             ; $6891: $76
-	ld   de, $cb15                                   ; $6892: $11 $15 $cb
+	ld   de, wNameReplacementCurrReplacementListIdx                                   ; $6892: $11 $15 $cb
 	adc  l                                           ; $6895: $8d
 	rst  $10                                         ; $6896: $d7
 	ld   c, d                                        ; $6897: $4a

@@ -2478,7 +2478,7 @@ jr_0f2_4ae6:
 	ld   de, $ef11                                   ; $4da5: $11 $11 $ef
 	rst  $38                                         ; $4da8: $ff
 	and  c                                           ; $4da9: $a1
-	ld   de, $cb15                                   ; $4daa: $11 $15 $cb
+	ld   de, wNameReplacementCurrReplacementListIdx                                   ; $4daa: $11 $15 $cb
 	ld   d, c                                        ; $4dad: $51
 	ld   de, $ff1f                                   ; $4dae: $11 $1f $ff
 	rst  $38                                         ; $4db1: $ff

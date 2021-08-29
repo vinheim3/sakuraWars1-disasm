@@ -11202,7 +11202,7 @@ Jump_0ca_6b8f:
 	ld   b, a                                        ; $6e7e: $47
 	ld   [hl], l                                     ; $6e7f: $75
 	ld   b, h                                        ; $6e80: $44
-	ld   de, $cb16                                   ; $6e81: $11 $16 $cb
+	ld   de, wNameReplacementCurrListNumChars                                   ; $6e81: $11 $16 $cb
 	rst  WaitUntilVBlankIntHandledIfLCDOn                                         ; $6e84: $cf
 	rst  $38                                         ; $6e85: $ff
 	cp   l                                           ; $6e86: $bd

@@ -1870,7 +1870,7 @@ Call_0f1_4787:
 	rst  $38                                         ; $48ca: $ff
 	adc  e                                           ; $48cb: $8b
 	ld   d, c                                        ; $48cc: $51
-	ld   de, $cb14                                   ; $48cd: $11 $14 $cb
+	ld   de, wNameReplacementCharToReplace                                   ; $48cd: $11 $14 $cb
 	rst  $38                                         ; $48d0: $ff
 	rst  $38                                         ; $48d1: $ff
 	rst  $30                                         ; $48d2: $f7

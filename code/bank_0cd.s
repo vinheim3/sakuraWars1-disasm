@@ -3033,7 +3033,7 @@ Call_0cd_4a23:
 	ld   b, d                                        ; $4e45: $42
 	inc  de                                          ; $4e46: $13
 	ld   sp, $3211                                   ; $4e47: $31 $11 $32
-	ld   de, $cb14                                   ; $4e4a: $11 $14 $cb
+	ld   de, wNameReplacementCharToReplace                                   ; $4e4a: $11 $14 $cb
 	ld   a, e                                        ; $4e4d: $7b
 	db   $ec                                         ; $4e4e: $ec
 	sub  l                                           ; $4e4f: $95

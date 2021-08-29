@@ -345,8 +345,17 @@ wc97c:
 wPlayerName:: ; $cb0e
     ds 6
 
-wcb14:
-    ds $20-$14
+wNameReplacementCharToReplace:: ; $cb14
+    db
+
+wNameReplacementCurrReplacementListIdx:: ; $cb15
+    db
+
+wNameReplacementCurrListNumChars:: ; $cb16
+    db
+
+wcb17:
+    ds $20-$17
 
 ; 16 possible values, if +6
 ; 6-10 - morning

@@ -7,109 +7,110 @@ INCLUDE "includes.s"
 
 SECTION "ROM Bank $005", ROMX[$4000], BANK[$5]
 
-Func_05_4000::
+AlterPlayerNameIntoWram::
 ; Load player name from save data
-	ld   de, wPlayerName                                   ; $4000: $11 $0e $cb
-	ld   hl, sPlayerName                                   ; $4003: $21 $aa $af
-	ld   bc, $0006                                   ; $4006: $01 $06 $00
-	call MemCopy                                       ; $4009: $cd $a9 $09
+	ld   de, wPlayerName                                            ; $4000
+	ld   hl, sPlayerName                                            ; $4003
+	ld   bc, $0006                                                  ; $4006
+	call MemCopy                                                    ; $4009
 	
 ; copy name 2nd letter to before player name
 	ld   a, [wPlayerName+1]                                  ; $400c: $fa $0f $cb
-	ld   [wPlayerName-1], a                                  ; $400f: $ea $0d $cb
+	ld   [$cb0d], a                                  ; $400f: $ea $0d $cb
 
-;
-	ld   hl, wPlayerName                                   ; $4012: $21 $0e $cb
-	call GetNumCharsInWord                               ; $4015: $cd $33 $45
-	ld   [wRandomNumRange], a                                  ; $4018: $ea $a5 $c2
+; Set random num range up to player name's length
+	ld   hl, wPlayerName                                            ; $4012
+	call GetNumCharsInWord                                          ; $4015
+	ld   [wRandomNumRange], a                                       ; $4018
 
 ; BC = random idx within player name
-	call GetRandomNumInPreSpecifiedRange                                       ; $401b: $cd $10 $0d
-	ld   b, $00                                      ; $401e: $06 $00
-	ld   c, a                                        ; $4020: $4f
+	call GetRandomNumInPreSpecifiedRange                            ; $401b
+	ld   b, $00                                                     ; $401e
+	ld   c, a                                                       ; $4020
 
 ; Try to character replace 5 times
-	ld   hl, wPlayerName                                   ; $4021: $21 $0e $cb
-	add  hl, bc                                      ; $4024: $09
-	ld   d, $05                                      ; $4025: $16 $05
+	ld   hl, wPlayerName                                            ; $4021
+	add  hl, bc                                                     ; $4024
+	ld   d, $05                                                     ; $4025
 
-.loop_4027:
-; If reached end of player name, loop back to start
-	ld   a, [hl]                                     ; $4027: $7e
-	or   a                                           ; $4028: $b7
-	jr   nz, .br_4030                             ; $4029: $20 $05
+.nextChar:
+; When null terminator found, loop through name again
+	ld   a, [hl]                                                    ; $4027
+	or   a                                                          ; $4028
+	jr   nz, .afterNullCheck                                        ; $4029
 
-	ld   hl, wPlayerName                                   ; $402b: $21 $0e $cb
-	jr   .loop_4027                                 ; $402e: $18 $f7
+	ld   hl, wPlayerName                                            ; $402b
+	jr   .nextChar                                                  ; $402e
 
-.br_4030:
-;
-	push hl                                          ; $4030: $e5
-	call Func_05_4466                                       ; $4031: $cd $66 $44
-	pop  hl                                          ; $4034: $e1
+.afterNullCheck:
+; Check if char is in normal selectable chars, and jump if found
+	push hl                                                         ; $4030
+	call CheckIfCharInKanasEnAlphabetOrNums                         ; $4031
+	pop  hl                                                         ; $4034
 
-;
-	bit  7, a                                        ; $4035: $cb $7f
-	jr   z, .br_405e                              ; $4037: $28 $25
+	bit  7, a                                                       ; $4035
+	jr   z, .normalSelectableCharFound                              ; $4037
 
-; Try to replace next character
-	inc  hl                                          ; $4039: $23
-	dec  d                                           ; $403a: $15
-	jr   nz, .loop_4027                             ; $403b: $20 $ea
+; Else try to replace next character
+	inc  hl                                                         ; $4039
+	dec  d                                                          ; $403a
+	jr   nz, .nextChar                                              ; $403b
 
-;
-	ld   a, $08                                      ; $403d: $3e $08
-	ld   [wRandomNumRange], a                                  ; $403f: $ea $a5 $c2
-	call GetRandomNumInPreSpecifiedRange                                       ; $4042: $cd $10 $0d
-	ld   b, $00                                      ; $4045: $06 $00
-	ld   c, a                                        ; $4047: $4f
-	ld   hl, PlayerNameReplacements                                   ; $4048: $21 $a0 $40
-	add  hl, bc                                      ; $404b: $09
-	add  hl, bc                                      ; $404c: $09
+; If 5 attemps made, and we couldn't replace a char,
+; HL points to a replacement list offset with idx 0-7
+	ld   a, $08                                                     ; $403d
+	ld   [wRandomNumRange], a                                       ; $403f
+	call GetRandomNumInPreSpecifiedRange                            ; $4042
+	ld   b, $00                                                     ; $4045
+	ld   c, a                                                       ; $4047
+	ld   hl, PlayerNameReplacements                                 ; $4048
+	add  hl, bc                                                     ; $404b
+	add  hl, bc                                                     ; $404c
 
-;
-	ld   a, [hl+]                                    ; $404d: $2a
-	ld   b, [hl]                                     ; $404e: $46
-	ld   c, a                                        ; $404f: $4f
-	ld   hl, PlayerNameReplacements                                   ; $4050: $21 $a0 $40
-	add  hl, bc                                      ; $4053: $09
+; HL = address of that replacement list
+	ld   a, [hl+]                                                   ; $404d
+	ld   b, [hl]                                                    ; $404e
+	ld   c, a                                                       ; $404f
+	ld   hl, PlayerNameReplacements                                 ; $4050
+	add  hl, bc                                                     ; $4053
 
-;
-	ld   de, wPlayerName                                   ; $4054: $11 $0e $cb
-	ld   bc, $0006                                   ; $4057: $01 $06 $00
-	call MemCopy                                       ; $405a: $cd $a9 $09
-	ret                                              ; $405d: $c9
+; Copy the characters there to player's name
+	ld   de, wPlayerName                                            ; $4054
+	ld   bc, $0006                                                  ; $4057
+	call MemCopy                                                    ; $405a
+	ret                                                             ; $405d
 
-.br_405e:
-	ld   a, [hl]                                     ; $405e: $7e
-	call Call_005_44d4                               ; $405f: $cd $d4 $44
-	bit  7, a                                        ; $4062: $cb $7f
-	jp   z, Jump_005_4328                            ; $4064: $ca $28 $43
+.normalSelectableCharFound:
+; Jump to a handler based on which character was found
+	ld   a, [hl]                                                    ; $405e
+	call GetIndexOfCharInSpecialList                                ; $405f
+	bit  7, a                                                       ; $4062
+	jp   z, SpecialCharFoundInName                                  ; $4064
 
-	ld   a, [hl]                                     ; $4067: $7e
-	call Call_005_448e                               ; $4068: $cd $8e $44
-	bit  7, a                                        ; $406b: $cb $7f
-	jp   z, Jump_005_43da                            ; $406d: $ca $da $43
+	ld   a, [hl]                                                    ; $4067
+	call GetIndexOfCharInHiragana                                   ; $4068
+	bit  7, a                                                       ; $406b
+	jp   z, HiraganaFoundInName                                     ; $406d
 
-	ld   a, [hl]                                     ; $4070: $7e
-	call Call_005_4497                               ; $4071: $cd $97 $44
-	bit  7, a                                        ; $4074: $cb $7f
-	jp   z, Jump_005_4443                            ; $4076: $ca $43 $44
+	ld   a, [hl]                                                    ; $4070
+	call GetIndexOfCharInKatakana                                   ; $4071
+	bit  7, a                                                       ; $4074
+	jp   z, KatakanaFoundInName                                     ; $4076
 
-	ld   a, [hl]                                     ; $4079: $7e
-	call Call_005_44a0                               ; $407a: $cd $a0 $44
-	bit  7, a                                        ; $407d: $cb $7f
-	jp   z, Jump_005_444f                            ; $407f: $ca $4f $44
+	ld   a, [hl]                                                    ; $4079
+	call GetIndexOfCharInUpperCaseVowelsOrConsonants                ; $407a
+	bit  7, a                                                       ; $407d
+	jp   z, UpperCaseFoundInName                                    ; $407f
 
-	ld   a, [hl]                                     ; $4082: $7e
-	call Call_005_44ad                               ; $4083: $cd $ad $44
-	bit  7, a                                        ; $4086: $cb $7f
-	jp   z, Jump_005_4457                            ; $4088: $ca $57 $44
+	ld   a, [hl]                                                    ; $4082
+	call GetIndexOfCharInLowerCaseVowelsOrConsonants                ; $4083
+	bit  7, a                                                       ; $4086
+	jp   z, LowerCaseFoundInName                                    ; $4088
 
-	jp   Jump_005_445f                               ; $408b: $c3 $5f $44
+	jp   NumberFoundInName                                          ; $408b
 
 
-; A - idx of player name replacement
+; A - table idx of player name replacement
 HLequAddrOfPlayerNameReplacement:
 ; HL = double idx into table below
 	push bc                                                         ; $408e
@@ -132,963 +133,650 @@ HLequAddrOfPlayerNameReplacement:
 
 
 PlayerNameReplacements:
-	dw .entry00-@
-	dw .entry01-@
-	dw .entry02-@
-	dw .entry03-@
-	dw $4105-@
-	dw $410c-@
-	dw $4113-@
-	dw $4119-@
-	dw $411f-@
-	dw $4126-@
-	dw $412b-@
-	dw $4131-@
-	dw $4138-@
-	dw $413f-@
-	dw $4146-@
-	dw $414e-@
-	dw $4155-@
-	dw $4174-@
-	dw Data_05_4193-@
-	dw $41e7-@
-	dw $423e-@
-	dw $425b-@
-	dw $4278-@
-	dw $4280-@
-	dw $4291-@
-	dw $42a0-@
-	dw $42b0-@
-	dw $42bf-@
-	dw $42d0-@
-	dw $42d8-@
-	dw $42e9-@
-	dw $42f8-@
-	dw $4309-@
-	dw $4318-@
-	dw $4329-@
-	dw $4331-@
-	dw $4349-@
-	dw $4351-@
-	dw $4369-@
+	dw .entry00-PlayerNameReplacements
+	dw .entry01-PlayerNameReplacements
+	dw .entry02-PlayerNameReplacements
+	dw .entry03-PlayerNameReplacements
+	dw .entry04-PlayerNameReplacements
+	dw .entry05-PlayerNameReplacements
+	dw .entry06-PlayerNameReplacements
+	dw .entry07-PlayerNameReplacements
+	dw .entry08-PlayerNameReplacements
+	dw .entry09-PlayerNameReplacements
+	dw .entry0a-PlayerNameReplacements
+	dw .entry0b-PlayerNameReplacements
+	dw .entry0c-PlayerNameReplacements
+	dw .entry0d-PlayerNameReplacements
+	dw .entry0e-PlayerNameReplacements
+	dw .entry0f-PlayerNameReplacements
+	dw .entry10-PlayerNameReplacements
+	dw .entry11-PlayerNameReplacements
+	dw .entry12-PlayerNameReplacements
+	dw .entry13-PlayerNameReplacements
+	dw .entry14-PlayerNameReplacements
+	dw .entry15-PlayerNameReplacements
+	dw .entry16-PlayerNameReplacements
+	dw .entry17-PlayerNameReplacements
+	dw .entry18-PlayerNameReplacements
+	dw .entry19-PlayerNameReplacements
+	dw .entry1a-PlayerNameReplacements
+	dw .entry1b-PlayerNameReplacements
+	dw .entry1c-PlayerNameReplacements
+	dw .entry1d-PlayerNameReplacements
+	dw .entry1e-PlayerNameReplacements
+	dw .entry1f-PlayerNameReplacements
+	dw .entry20-PlayerNameReplacements
+	dw .entry21-PlayerNameReplacements
+	dw .entry22-PlayerNameReplacements
+	dw .entry23-PlayerNameReplacements
+	dw .entry24-PlayerNameReplacements
+	dw .entry25-PlayerNameReplacements
+	dw .entry26-PlayerNameReplacements
 
 .entry00:
-	cp   b                                           ; $40ee: $b8
-	cp   b                                           ; $40ef: $b8
-	jp   z, $e600                                    ; $40f0: $ca $00 $e6
-	rst  JumpTable                                         ; $40f3: $df
-
+; シシド
+	db $b8, $b8, $ca, $00
 .entry01:
-	cp   b                                           ; $40f4: $b8
-	rst  $28                                         ; $40f5: $ef
-	nop                                              ; $40f6: $00
-	jp   nz, $00d1                                   ; $40f7: $c2 $d1 $00
-	xor  h                                           ; $40fa: $ac
-
+; ヤマシロ
+	db $e6, $df, $b8, $ef, $00
 .entry02:
-	cp   c                                           ; $40fb: $b9
-	nop                                              ; $40fc: $00
-	and  $df                                         ; $40fd: $e6 $df
-	db   $e4                                         ; $40ff: $e4
-
+; チバ
+	db $c2, $d1, $00
 .entry03:
-	ret                                              ; $4100: $c9
-
-
-	nop                                              ; $4101: $00
-	ret  nz                                          ; $4102: $c0
-
-	or   b                                           ; $4103: $b0
-	cp   a                                           ; $4104: $bf
-	and  a                                           ; $4105: $a7
-	nop                                              ; $4106: $00
-	and  e                                           ; $4107: $a3
-	xor  h                                           ; $4108: $ac
-	xor  a                                           ; $4109: $af
-	nop                                              ; $410a: $00
-	or   b                                           ; $410b: $b0
-	call z, $00a9                                    ; $410c: $cc $a9 $00
-	ld   l, l                                        ; $410f: $6d
-	ld   e, c                                        ; $4110: $59
-	adc  l                                           ; $4111: $8d
-	ld   a, e                                        ; $4112: $7b
-	nop                                              ; $4113: $00
-	or   b                                           ; $4114: $b0
-	db   $eb                                         ; $4115: $eb
-	nop                                              ; $4116: $00
-	ld   e, b                                        ; $4117: $58
-	inc  b                                           ; $4118: $04
-	ld   l, $00                                      ; $4119: $2e $00
-	inc  bc                                          ; $411b: $03
-	db   $e4                                         ; $411c: $e4
-	dec  b                                           ; $411d: $05
-	ld   d, l                                        ; $411e: $55
-	nop                                              ; $411f: $00
-	ld   [bc], a                                     ; $4120: $02
-	jr   nz, jr_005_4126                             ; $4121: $20 $03
-
-	and  a                                           ; $4123: $a7
-	nop                                              ; $4124: $00
-	ld   e, c                                        ; $4125: $59
-
-jr_005_4126:
-	and  c                                           ; $4126: $a1
-	ld   h, d                                        ; $4127: $62
-	add  e                                           ; $4128: $83
-	nop                                              ; $4129: $00
-	inc  b                                           ; $412a: $04
-	inc  hl                                          ; $412b: $23
-	ld   b, $2b                                      ; $412c: $06 $2b
-	ld   a, l                                        ; $412e: $7d
-	nop                                              ; $412f: $00
-	ld   h, c                                        ; $4130: $61
-	ld   [hl], c                                     ; $4131: $71
-	ld   e, l                                        ; $4132: $5d
-	sbc  b                                           ; $4133: $98
-	nop                                              ; $4134: $00
-	jr   z, jr_005_4179                              ; $4135: $28 $42
-
-	ld   [hl+], a                                    ; $4137: $22
-	inc  a                                           ; $4138: $3c
-	inc  sp                                          ; $4139: $33
-	ld   c, l                                        ; $413a: $4d
-	and  c                                           ; $413b: $a1
-	ld   c, a                                        ; $413c: $4f
-	ld   d, c                                        ; $413d: $51
-	ld   d, e                                        ; $413e: $53
-	ld   d, l                                        ; $413f: $55
-	ld   d, a                                        ; $4140: $57
-	ld   [hl], c                                     ; $4141: $71
-	sub  c                                           ; $4142: $91
-	sub  e                                           ; $4143: $93
-	sub  l                                           ; $4144: $95
-	sbc  h                                           ; $4145: $9c
-	push af                                          ; $4146: $f5
-	and  d                                           ; $4147: $a2
-	and  h                                           ; $4148: $a4
-	and  [hl]                                        ; $4149: $a6
-	xor  b                                           ; $414a: $a8
-	xor  d                                           ; $414b: $aa
-	call nz, $e7e5                                   ; $414c: $c4 $e5 $e7
-	jp   hl                                          ; $414f: $e9
-
-
-	ldh  a, [rP1]                                    ; $4150: $f0 $00
-	jr   z, jr_005_4196                              ; $4152: $28 $42
-
-	inc  sp                                          ; $4154: $33
-	ld   c, l                                        ; $4155: $4d
-	ld   [hl+], a                                    ; $4156: $22
-	inc  a                                           ; $4157: $3c
-	adc  [hl]                                        ; $4158: $8e
-	ld   d, b                                        ; $4159: $50
-	ld   d, d                                        ; $415a: $52
-	ld   d, h                                        ; $415b: $54
-	ld   d, [hl]                                     ; $415c: $56
-	ld   e, b                                        ; $415d: $58
-	ld   [hl], d                                     ; $415e: $72
-	sub  d                                           ; $415f: $92
-	sub  h                                           ; $4160: $94
-	sub  [hl]                                        ; $4161: $96
-	sbc  l                                           ; $4162: $9d
-	ldh  [c], a                                      ; $4163: $e2
-	and  e                                           ; $4164: $a3
-	and  l                                           ; $4165: $a5
-	and  a                                           ; $4166: $a7
-	xor  c                                           ; $4167: $a9
-	xor  e                                           ; $4168: $ab
-	push bc                                          ; $4169: $c5
-	and  $e8                                         ; $416a: $e6 $e8
-	ld   [$00f1], a                                  ; $416c: $ea $f1 $00
-	ld   d, b                                        ; $416f: $50
-	ld   d, d                                        ; $4170: $52
-	ld   d, h                                        ; $4171: $54
-	ld   d, [hl]                                     ; $4172: $56
-	ld   e, b                                        ; $4173: $58
-	ld   e, c                                        ; $4174: $59
-	ld   e, e                                        ; $4175: $5b
-	ld   e, l                                        ; $4176: $5d
-	ld   e, a                                        ; $4177: $5f
-	ld   h, c                                        ; $4178: $61
-
-jr_005_4179:
-	ld   h, e                                        ; $4179: $63
-	ld   h, l                                        ; $417a: $65
-	ld   h, a                                        ; $417b: $67
-	ld   l, c                                        ; $417c: $69
-	ld   l, e                                        ; $417d: $6b
-	ld   l, l                                        ; $417e: $6d
-	ld   l, a                                        ; $417f: $6f
-	ld   [hl], d                                     ; $4180: $72
-	ld   [hl], h                                     ; $4181: $74
-	halt                                             ; $4182: $76
-	ld   a, b                                        ; $4183: $78
-	ld   a, c                                        ; $4184: $79
-	ld   a, d                                        ; $4185: $7a
-	ld   a, e                                        ; $4186: $7b
-	ld   a, h                                        ; $4187: $7c
-	ld   a, l                                        ; $4188: $7d
-	add  b                                           ; $4189: $80
-	add  e                                           ; $418a: $83
-	add  [hl]                                        ; $418b: $86
-	adc  c                                           ; $418c: $89
-	adc  h                                           ; $418d: $8c
-	adc  l                                           ; $418e: $8d
-	adc  [hl]                                        ; $418f: $8e
-	adc  a                                           ; $4190: $8f
-	sub  b                                           ; $4191: $90
-	sub  d                                           ; $4192: $92
-
-
-Data_05_4193:
-	sub  h                                           ; $4193: $94
-	sub  [hl]                                        ; $4194: $96
-	sub  a                                           ; $4195: $97
-
-jr_005_4196:
-	sbc  b                                           ; $4196: $98
-	sbc  c                                           ; $4197: $99
-	sbc  d                                           ; $4198: $9a
-	sbc  e                                           ; $4199: $9b
-	sbc  l                                           ; $419a: $9d
-	and  b                                           ; $419b: $a0
-	and  c                                           ; $419c: $a1
-	ld   e, d                                        ; $419d: $5a
-	ld   e, h                                        ; $419e: $5c
-	ld   e, [hl]                                     ; $419f: $5e
-	ld   h, b                                        ; $41a0: $60
-	ld   h, d                                        ; $41a1: $62
-	ld   h, h                                        ; $41a2: $64
-	ld   h, [hl]                                     ; $41a3: $66
-	ld   l, b                                        ; $41a4: $68
-	ld   l, d                                        ; $41a5: $6a
-	ld   l, h                                        ; $41a6: $6c
-	ld   l, [hl]                                     ; $41a7: $6e
-	ld   [hl], b                                     ; $41a8: $70
-	ld   [hl], e                                     ; $41a9: $73
-	ld   [hl], l                                     ; $41aa: $75
-	ld   [hl], a                                     ; $41ab: $77
-	ld   a, [hl]                                     ; $41ac: $7e
-	add  c                                           ; $41ad: $81
-	add  h                                           ; $41ae: $84
-	add  a                                           ; $41af: $87
-	adc  d                                           ; $41b0: $8a
-	ld   a, a                                        ; $41b1: $7f
-	add  d                                           ; $41b2: $82
-	add  l                                           ; $41b3: $85
-	adc  b                                           ; $41b4: $88
-	adc  e                                           ; $41b5: $8b
-	ld   c, a                                        ; $41b6: $4f
-	ld   d, c                                        ; $41b7: $51
-	ld   d, e                                        ; $41b8: $53
-	ld   d, l                                        ; $41b9: $55
-	ld   d, a                                        ; $41ba: $57
-	ld   [hl], c                                     ; $41bb: $71
-	sub  c                                           ; $41bc: $91
-	sub  e                                           ; $41bd: $93
-	sub  l                                           ; $41be: $95
-	sbc  h                                           ; $41bf: $9c
-	nop                                              ; $41c0: $00
-	and  e                                           ; $41c1: $a3
-	and  l                                           ; $41c2: $a5
-	and  a                                           ; $41c3: $a7
-	xor  c                                           ; $41c4: $a9
-	xor  e                                           ; $41c5: $ab
-	xor  h                                           ; $41c6: $ac
-	xor  [hl]                                        ; $41c7: $ae
-	or   b                                           ; $41c8: $b0
-	or   d                                           ; $41c9: $b2
-	or   h                                           ; $41ca: $b4
-	or   [hl]                                        ; $41cb: $b6
-	cp   b                                           ; $41cc: $b8
-	cp   d                                           ; $41cd: $ba
-	cp   h                                           ; $41ce: $bc
-	cp   [hl]                                        ; $41cf: $be
-	ret  nz                                          ; $41d0: $c0
-
-	jp   nz, $c7c5                                   ; $41d1: $c2 $c5 $c7
-
-	ret                                              ; $41d4: $c9
-
-
-	set  1, h                                        ; $41d5: $cb $cc
-	call $cfce                                       ; $41d7: $cd $ce $cf
-	ret  nc                                          ; $41da: $d0
-
-	db   $d3                                         ; $41db: $d3
-	sub  $d9                                         ; $41dc: $d6 $d9
-	call c, $e0df                                    ; $41de: $dc $df $e0
-	ldh  [c], a                                      ; $41e1: $e2
-	db   $e3                                         ; $41e2: $e3
-	db   $e4                                         ; $41e3: $e4
-	and  $e8                                         ; $41e4: $e6 $e8
-	ld   [$eceb], a                                  ; $41e6: $ea $eb $ec
-	db   $ed                                         ; $41e9: $ed
-	xor  $ef                                         ; $41ea: $ee $ef
-	pop  af                                          ; $41ec: $f1
-	db   $f4                                         ; $41ed: $f4
-	push af                                          ; $41ee: $f5
-	ld   hl, sp-$0a                                  ; $41ef: $f8 $f6
-	xor  l                                           ; $41f1: $ad
-	xor  a                                           ; $41f2: $af
-	or   c                                           ; $41f3: $b1
-	or   e                                           ; $41f4: $b3
-	or   l                                           ; $41f5: $b5
-	or   a                                           ; $41f6: $b7
-	cp   c                                           ; $41f7: $b9
-	cp   e                                           ; $41f8: $bb
-	cp   l                                           ; $41f9: $bd
-	cp   a                                           ; $41fa: $bf
-	pop  bc                                          ; $41fb: $c1
-	jp   nz, $c8c6                                   ; $41fc: $c2 $c6 $c8
-
-	jp   z, $d4d1                                    ; $41ff: $ca $d1 $d4
-
-	rst  $10                                         ; $4202: $d7
-	jp   c, $d2dd                                    ; $4203: $da $dd $d2
-
-	push de                                          ; $4206: $d5
-	ret  c                                           ; $4207: $d8
-
-	db   $db                                         ; $4208: $db
-	sbc  $a2                                         ; $4209: $de $a2
-	and  h                                           ; $420b: $a4
-	and  [hl]                                        ; $420c: $a6
-	xor  b                                           ; $420d: $a8
-	xor  d                                           ; $420e: $aa
-	rst  $30                                         ; $420f: $f7
-	call nz, $e7e5                                   ; $4210: $c4 $e5 $e7
-	jp   hl                                          ; $4213: $e9
-
-
-	ldh  a, [rP1]                                    ; $4214: $f0 $00
-	dec  de                                          ; $4216: $1b
-	inc  e                                           ; $4217: $1c
-	dec  e                                           ; $4218: $1d
-	ld   e, $1f                                      ; $4219: $1e $1f
-	jr   nz, jr_005_423e                             ; $421b: $20 $21
-
-	ld   [hl+], a                                    ; $421d: $22
-	inc  hl                                          ; $421e: $23
-	inc  h                                           ; $421f: $24
-	dec  h                                           ; $4220: $25
-	ld   h, $27                                      ; $4221: $26 $27
-	jr   z, jr_005_424e                              ; $4223: $28 $29
-
-	ld   a, [hl+]                                    ; $4225: $2a
-	dec  hl                                          ; $4226: $2b
-	inc  l                                           ; $4227: $2c
-	dec  l                                           ; $4228: $2d
-	ld   l, $2f                                      ; $4229: $2e $2f
-	jr   nc, jr_005_425e                             ; $422b: $30 $31
-
-	ld   [hl-], a                                    ; $422d: $32
-	inc  sp                                          ; $422e: $33
-	inc  [hl]                                        ; $422f: $34
-	nop                                              ; $4230: $00
-	dec  [hl]                                        ; $4231: $35
-	ld   [hl], $37                                   ; $4232: $36 $37
-	jr   c, jr_005_426f                              ; $4234: $38 $39
-
-	ld   a, [hl-]                                    ; $4236: $3a
-	dec  sp                                          ; $4237: $3b
-	inc  a                                           ; $4238: $3c
-	dec  a                                           ; $4239: $3d
-	ld   a, $3f                                      ; $423a: $3e $3f
-	ld   b, b                                        ; $423c: $40
-	ld   b, c                                        ; $423d: $41
-
-jr_005_423e:
-	ld   b, d                                        ; $423e: $42
-	ld   b, e                                        ; $423f: $43
-	ld   b, h                                        ; $4240: $44
-	ld   b, l                                        ; $4241: $45
-	ld   b, [hl]                                     ; $4242: $46
-	ld   b, a                                        ; $4243: $47
-	ld   c, b                                        ; $4244: $48
-	ld   c, c                                        ; $4245: $49
-	ld   c, d                                        ; $4246: $4a
-	ld   c, e                                        ; $4247: $4b
-	ld   c, h                                        ; $4248: $4c
-	ld   c, l                                        ; $4249: $4d
-	ld   c, [hl]                                     ; $424a: $4e
-	nop                                              ; $424b: $00
-	ld   d, b                                        ; $424c: $50
-	ld   d, d                                        ; $424d: $52
-
-jr_005_424e:
-	ld   d, h                                        ; $424e: $54
-	ld   d, [hl]                                     ; $424f: $56
-	ld   e, b                                        ; $4250: $58
-	nop                                              ; $4251: $00
-	ld   e, c                                        ; $4252: $59
-	ld   h, e                                        ; $4253: $63
-	ld   l, l                                        ; $4254: $6d
-	ld   a, b                                        ; $4255: $78
-	ld   a, l                                        ; $4256: $7d
-	adc  h                                           ; $4257: $8c
-	sub  d                                           ; $4258: $92
-	sub  a                                           ; $4259: $97
-	sbc  l                                           ; $425a: $9d
-	ld   e, d                                        ; $425b: $5a
-	ld   h, h                                        ; $425c: $64
-	ld   l, [hl]                                     ; $425d: $6e
-
-jr_005_425e:
-	ld   a, [hl]                                     ; $425e: $7e
-	ld   a, a                                        ; $425f: $7f
-	nop                                              ; $4260: $00
-	ld   e, e                                        ; $4261: $5b
-	ld   h, l                                        ; $4262: $65
-	ld   l, a                                        ; $4263: $6f
-	ld   a, c                                        ; $4264: $79
-	add  b                                           ; $4265: $80
-	adc  l                                           ; $4266: $8d
-	sbc  b                                           ; $4267: $98
-	ld   e, h                                        ; $4268: $5c
-	ld   h, [hl]                                     ; $4269: $66
-	ld   [hl], b                                     ; $426a: $70
-	add  c                                           ; $426b: $81
-	add  d                                           ; $426c: $82
-	nop                                              ; $426d: $00
-	ld   e, l                                        ; $426e: $5d
-
-jr_005_426f:
-	ld   h, a                                        ; $426f: $67
-	ld   [hl], d                                     ; $4270: $72
-	ld   a, d                                        ; $4271: $7a
-	add  e                                           ; $4272: $83
-	adc  [hl]                                        ; $4273: $8e
-	sub  h                                           ; $4274: $94
-	sbc  c                                           ; $4275: $99
-	ld   e, [hl]                                     ; $4276: $5e
-	ld   l, b                                        ; $4277: $68
-	ld   [hl], e                                     ; $4278: $73
-	add  h                                           ; $4279: $84
-	add  l                                           ; $427a: $85
-	nop                                              ; $427b: $00
-	ld   e, a                                        ; $427c: $5f
-	ld   l, c                                        ; $427d: $69
-	ld   [hl], h                                     ; $427e: $74
-	ld   a, e                                        ; $427f: $7b
-	add  [hl]                                        ; $4280: $86
-	adc  a                                           ; $4281: $8f
-	sbc  d                                           ; $4282: $9a
-	ld   h, b                                        ; $4283: $60
-	ld   l, d                                        ; $4284: $6a
-	ld   [hl], l                                     ; $4285: $75
-	add  a                                           ; $4286: $87
-	adc  b                                           ; $4287: $88
-	nop                                              ; $4288: $00
-	ld   h, c                                        ; $4289: $61
-	ld   l, e                                        ; $428a: $6b
-	halt                                             ; $428b: $76
-	ld   a, h                                        ; $428c: $7c
-	adc  c                                           ; $428d: $89
-	sub  b                                           ; $428e: $90
-	sub  [hl]                                        ; $428f: $96
-	sbc  e                                           ; $4290: $9b
-	and  b                                           ; $4291: $a0
-	ld   h, d                                        ; $4292: $62
-	ld   l, h                                        ; $4293: $6c
-	ld   [hl], a                                     ; $4294: $77
-	adc  d                                           ; $4295: $8a
-	adc  e                                           ; $4296: $8b
-	nop                                              ; $4297: $00
-	and  e                                           ; $4298: $a3
-	and  l                                           ; $4299: $a5
-	and  a                                           ; $429a: $a7
-	xor  c                                           ; $429b: $a9
-	xor  e                                           ; $429c: $ab
-	nop                                              ; $429d: $00
-	xor  h                                           ; $429e: $ac
-	or   [hl]                                        ; $429f: $b6
-	ret  nz                                          ; $42a0: $c0
-
-	set  2, b                                        ; $42a1: $cb $d0
-	rst  JumpTable                                         ; $42a3: $df
-	and  $eb                                         ; $42a4: $e6 $eb
-	pop  af                                          ; $42a6: $f1
-	xor  l                                           ; $42a7: $ad
-	or   a                                           ; $42a8: $b7
-	pop  bc                                          ; $42a9: $c1
-	pop  de                                          ; $42aa: $d1
-	jp   nc, $ae00                                   ; $42ab: $d2 $00 $ae
-
-	cp   b                                           ; $42ae: $b8
-	jp   nz, $d3cc                                   ; $42af: $c2 $cc $d3
-
-	ldh  [$ec], a                                    ; $42b2: $e0 $ec
-	xor  a                                           ; $42b4: $af
-	cp   c                                           ; $42b5: $b9
-	jp   $d5d4                                       ; $42b6: $c3 $d4 $d5
-
-
-	nop                                              ; $42b9: $00
-	or   b                                           ; $42ba: $b0
-	cp   d                                           ; $42bb: $ba
-	push bc                                          ; $42bc: $c5
-	call $e2d6                                       ; $42bd: $cd $d6 $e2
-	add  sp, -$13                                    ; $42c0: $e8 $ed
-	or   $b1                                         ; $42c2: $f6 $b1
-	cp   e                                           ; $42c4: $bb
-	add  $d7                                         ; $42c5: $c6 $d7
-	ret  c                                           ; $42c7: $d8
-
-	nop                                              ; $42c8: $00
-	or   d                                           ; $42c9: $b2
-	cp   h                                           ; $42ca: $bc
-	rst  ToBoot                                         ; $42cb: $c7
-	adc  $d9                                         ; $42cc: $ce $d9
-	db   $e3                                         ; $42ce: $e3
-	xor  $b3                                         ; $42cf: $ee $b3
-	cp   l                                           ; $42d1: $bd
-	ret  z                                           ; $42d2: $c8
-
-	jp   c, $00db                                    ; $42d3: $da $db $00
-
-	or   h                                           ; $42d6: $b4
-	cp   [hl]                                        ; $42d7: $be
-	ret                                              ; $42d8: $c9
-
-
-	rst  WaitUntilVBlankIntHandledIfLCDOn                                         ; $42d9: $cf
-	call c, $eae4                                    ; $42da: $dc $e4 $ea
-	rst  $28                                         ; $42dd: $ef
-	db   $f4                                         ; $42de: $f4
-	or   l                                           ; $42df: $b5
-	cp   a                                           ; $42e0: $bf
-	jp   z, $dedd                                    ; $42e1: $ca $dd $de
-
-	nop                                              ; $42e4: $00
-	dec  de                                          ; $42e5: $1b
-	inc  hl                                          ; $42e6: $23
-	cpl                                              ; $42e7: $2f
-	rra                                              ; $42e8: $1f
-	add  hl, hl                                      ; $42e9: $29
-	nop                                              ; $42ea: $00
-	inc  e                                           ; $42eb: $1c
-	dec  e                                           ; $42ec: $1d
-	ld   e, $20                                      ; $42ed: $1e $20
-	ld   hl, $2422                                   ; $42ef: $21 $22 $24
-	dec  h                                           ; $42f2: $25
-	ld   h, $27                                      ; $42f3: $26 $27
-	jr   z, jr_005_4321                              ; $42f5: $28 $2a
-
-	dec  hl                                          ; $42f7: $2b
-	inc  l                                           ; $42f8: $2c
-	dec  l                                           ; $42f9: $2d
-	ld   l, $30                                      ; $42fa: $2e $30
-	ld   sp, $3332                                   ; $42fc: $31 $32 $33
-	inc  [hl]                                        ; $42ff: $34
-	nop                                              ; $4300: $00
-	dec  [hl]                                        ; $4301: $35
-	dec  a                                           ; $4302: $3d
-	ld   c, c                                        ; $4303: $49
-	add  hl, sp                                      ; $4304: $39
-	ld   b, e                                        ; $4305: $43
-	nop                                              ; $4306: $00
-	ld   [hl], $37                                   ; $4307: $36 $37
-	jr   c, jr_005_4345                              ; $4309: $38 $3a
-
-	dec  sp                                          ; $430b: $3b
-	inc  a                                           ; $430c: $3c
-	ld   a, $3f                                      ; $430d: $3e $3f
-	ld   b, b                                        ; $430f: $40
-	ld   b, c                                        ; $4310: $41
-	ld   b, d                                        ; $4311: $42
-	ld   b, h                                        ; $4312: $44
-	ld   b, l                                        ; $4313: $45
-	ld   b, [hl]                                     ; $4314: $46
-	ld   b, a                                        ; $4315: $47
-	ld   c, b                                        ; $4316: $48
-	ld   c, d                                        ; $4317: $4a
-	ld   c, e                                        ; $4318: $4b
-	ld   c, h                                        ; $4319: $4c
-	ld   c, l                                        ; $431a: $4d
-	ld   c, [hl]                                     ; $431b: $4e
-	nop                                              ; $431c: $00
-	ld   de, $1312                                   ; $431d: $11 $12 $13
-	inc  d                                           ; $4320: $14
-
-jr_005_4321:
-	dec  d                                           ; $4321: $15
-	ld   d, $17                                      ; $4322: $16 $17
-	jr   jr_005_433f                                 ; $4324: $18 $19
-
-	ld   a, [de]                                     ; $4326: $1a
-	nop                                              ; $4327: $00
-
-Jump_005_4328:
-	cp   $06                                         ; $4328: $fe $06
-	jr   c, jr_005_433a                              ; $432a: $38 $0e
-
-	push hl                                          ; $432c: $e5
-	ld   b, $00                                      ; $432d: $06 $00
-	ld   c, a                                        ; $432f: $4f
-	ld   a, $11                                      ; $4330: $3e $11
-	call HLequAddrOfPlayerNameReplacement                               ; $4332: $cd $8e $40
-	add  hl, bc                                      ; $4335: $09
-	ld   a, [hl]                                     ; $4336: $7e
-	pop  hl                                          ; $4337: $e1
-	ld   [hl], a                                     ; $4338: $77
-	ret                                              ; $4339: $c9
-
-
-jr_005_433a:
-	push af                                          ; $433a: $f5
-	push hl                                          ; $433b: $e5
-	ld   b, $00                                      ; $433c: $06 $00
-	ld   c, a                                        ; $433e: $4f
-
-jr_005_433f:
-	ld   hl, $434b                                   ; $433f: $21 $4b $43
-	add  hl, bc                                      ; $4342: $09
-	add  hl, bc                                      ; $4343: $09
-	ld   a, [hl+]                                    ; $4344: $2a
-
-jr_005_4345:
-	ld   b, [hl]                                     ; $4345: $46
-	ld   c, a                                        ; $4346: $4f
-	pop  hl                                          ; $4347: $e1
-	pop  af                                          ; $4348: $f1
-	push bc                                          ; $4349: $c5
-	ret                                              ; $434a: $c9
-
-
-	ld   d, a                                        ; $434b: $57
-	ld   b, e                                        ; $434c: $43
-	ld   l, d                                        ; $434d: $6a
-	ld   b, e                                        ; $434e: $43
-	ld   a, h                                        ; $434f: $7c
-	ld   b, e                                        ; $4350: $43
-	xor  c                                           ; $4351: $a9
-	ld   b, e                                        ; $4352: $43
-	ld   a, h                                        ; $4353: $7c
-	ld   b, e                                        ; $4354: $43
-	xor  c                                           ; $4355: $a9
-	ld   b, e                                        ; $4356: $43
-	push hl                                          ; $4357: $e5
-	inc  hl                                          ; $4358: $23
-	ld   a, [hl]                                     ; $4359: $7e
-	pop  hl                                          ; $435a: $e1
-	call Call_005_44c7                               ; $435b: $cd $c7 $44
-	bit  7, a                                        ; $435e: $cb $7f
-	jp   nz, Jump_005_444f                           ; $4360: $c2 $4f $44
-
-	ld   de, $43d6                                   ; $4363: $11 $d6 $43
-	jp   Jump_005_43e6                               ; $4366: $c3 $e6 $43
-
-
-	ret                                              ; $4369: $c9
-
-
-	push hl                                          ; $436a: $e5
-	inc  hl                                          ; $436b: $23
-	ld   a, [hl]                                     ; $436c: $7e
-	pop  hl                                          ; $436d: $e1
-	call Call_005_44c7                               ; $436e: $cd $c7 $44
-	bit  7, a                                        ; $4371: $cb $7f
-	jp   nz, Jump_005_4457                           ; $4373: $c2 $57 $44
-
-	ld   de, $43d8                                   ; $4376: $11 $d8 $43
-	jp   Jump_005_43e6                               ; $4379: $c3 $e6 $43
-
-
-	push hl                                          ; $437c: $e5
-	dec  hl                                          ; $437d: $2b
-	ld   a, [hl]                                     ; $437e: $7e
-	pop  hl                                          ; $437f: $e1
-	call Call_005_44c7                               ; $4380: $cd $c7 $44
-	bit  7, a                                        ; $4383: $cb $7f
-	jp   nz, Jump_005_444f                           ; $4385: $c2 $4f $44
-
-	push hl                                          ; $4388: $e5
-	inc  hl                                          ; $4389: $23
-	ld   a, [hl]                                     ; $438a: $7e
-	pop  hl                                          ; $438b: $e1
-	call Call_005_44ba                               ; $438c: $cd $ba $44
-	bit  7, a                                        ; $438f: $cb $7f
-	jp   nz, Jump_005_444f                           ; $4391: $c2 $4f $44
-
-	ld   a, [hl]                                     ; $4394: $7e
-	push hl                                          ; $4395: $e5
-	ld   h, $10                                      ; $4396: $26 $10
-	ld   l, a                                        ; $4398: $6f
-	call GetIndexOfCharInPlayerNameReplacement                               ; $4399: $cd $1c $45
-	ld   b, $00                                      ; $439c: $06 $00
-	ld   c, a                                        ; $439e: $4f
-	ld   a, $11                                      ; $439f: $3e $11
-	call HLequAddrOfPlayerNameReplacement                               ; $43a1: $cd $8e $40
-	add  hl, bc                                      ; $43a4: $09
-	ld   a, [hl]                                     ; $43a5: $7e
-	pop  hl                                          ; $43a6: $e1
-	ld   [hl], a                                     ; $43a7: $77
-	ret                                              ; $43a8: $c9
-
-
-	push hl                                          ; $43a9: $e5
-	dec  hl                                          ; $43aa: $2b
-	ld   a, [hl]                                     ; $43ab: $7e
-	pop  hl                                          ; $43ac: $e1
-	call Call_005_44c7                               ; $43ad: $cd $c7 $44
-	bit  7, a                                        ; $43b0: $cb $7f
-	jp   nz, Jump_005_4457                           ; $43b2: $c2 $57 $44
-
-	push hl                                          ; $43b5: $e5
-	inc  hl                                          ; $43b6: $23
-	ld   a, [hl]                                     ; $43b7: $7e
-	pop  hl                                          ; $43b8: $e1
-	call Call_005_44ba                               ; $43b9: $cd $ba $44
-	bit  7, a                                        ; $43bc: $cb $7f
-	jp   nz, Jump_005_4457                           ; $43be: $c2 $57 $44
-
-	ld   a, [hl]                                     ; $43c1: $7e
-	push hl                                          ; $43c2: $e5
-	ld   h, $10                                      ; $43c3: $26 $10
-	ld   l, a                                        ; $43c5: $6f
-	call GetIndexOfCharInPlayerNameReplacement                               ; $43c6: $cd $1c $45
-	ld   b, $00                                      ; $43c9: $06 $00
-	ld   c, a                                        ; $43cb: $4f
-	ld   a, $11                                      ; $43cc: $3e $11
-	call HLequAddrOfPlayerNameReplacement                               ; $43ce: $cd $8e $40
-	add  hl, bc                                      ; $43d1: $09
-	ld   a, [hl]                                     ; $43d2: $7e
-	pop  hl                                          ; $43d3: $e1
-	ld   [hl], a                                     ; $43d4: $77
-	ret                                              ; $43d5: $c9
-
-
-	ld   bc, $0122                                   ; $43d6: $01 $22 $01
-	inc  h                                           ; $43d9: $24
-
-Jump_005_43da:
-	ld   de, $43df                                   ; $43da: $11 $df $43
-	jr   jr_005_43e6                                 ; $43dd: $18 $07
-
-	ld   b, $16                                      ; $43df: $06 $16
-	rla                                              ; $43e1: $17
-	jr   jr_005_43fd                                 ; $43e2: $18 $19
-
-	ld   a, [de]                                     ; $43e4: $1a
-	dec  de                                          ; $43e5: $1b
-
-Jump_005_43e6:
-jr_005_43e6:
-	ld   a, [de]                                     ; $43e6: $1a
-
-jr_005_43e7:
-	push af                                          ; $43e7: $f5
-	push hl                                          ; $43e8: $e5
-	ld   b, $00                                      ; $43e9: $06 $00
-	ld   c, a                                        ; $43eb: $4f
-	ld   a, [hl]                                     ; $43ec: $7e
-	ld   h, d                                        ; $43ed: $62
-	ld   l, e                                        ; $43ee: $6b
-	add  hl, bc                                      ; $43ef: $09
-	ld   b, [hl]                                     ; $43f0: $46
-	ld   h, b                                        ; $43f1: $60
-	ld   l, a                                        ; $43f2: $6f
-	ld   [$cb14], a                                  ; $43f3: $ea $14 $cb
-	ld   a, b                                        ; $43f6: $78
-	ld   [$cb15], a                                  ; $43f7: $ea $15 $cb
-	call GetIndexOfCharInPlayerNameReplacement                               ; $43fa: $cd $1c $45
-
-jr_005_43fd:
-	bit  7, a                                        ; $43fd: $cb $7f
-	jr   nz, jr_005_443d                             ; $43ff: $20 $3c
-
-	ld   a, [$cb15]                                  ; $4401: $fa $15 $cb
-	call HLequAddrOfPlayerNameReplacement                               ; $4404: $cd $8e $40
-	call GetNumCharsInWord                               ; $4407: $cd $33 $45
-	ld   [$cb16], a                                  ; $440a: $ea $16 $cb
-	ld   [wRandomNumRange], a                                  ; $440d: $ea $a5 $c2
-	call GetRandomNumInPreSpecifiedRange                                       ; $4410: $cd $10 $0d
-	ld   b, $00                                      ; $4413: $06 $00
-	ld   c, a                                        ; $4415: $4f
-	ld   a, [$cb15]                                  ; $4416: $fa $15 $cb
-	call HLequAddrOfPlayerNameReplacement                               ; $4419: $cd $8e $40
-	add  hl, bc                                      ; $441c: $09
-	ld   a, [$cb14]                                  ; $441d: $fa $14 $cb
-	ld   b, a                                        ; $4420: $47
-
-jr_005_4421:
-	ld   a, [hl+]                                    ; $4421: $2a
-	or   a                                           ; $4422: $b7
-	jr   nz, jr_005_442d                             ; $4423: $20 $08
-
-	ld   a, [$cb15]                                  ; $4425: $fa $15 $cb
-	call HLequAddrOfPlayerNameReplacement                               ; $4428: $cd $8e $40
-	jr   jr_005_4421                                 ; $442b: $18 $f4
-
-jr_005_442d:
-	cp   b                                           ; $442d: $b8
-	jr   z, jr_005_4434                              ; $442e: $28 $04
-
-	pop  hl                                          ; $4430: $e1
-	ld   [hl], a                                     ; $4431: $77
-	pop  af                                          ; $4432: $f1
-	ret                                              ; $4433: $c9
-
-
-jr_005_4434:
-	ld   a, [$cb16]                                  ; $4434: $fa $16 $cb
-	dec  a                                           ; $4437: $3d
-	ld   [$cb16], a                                  ; $4438: $ea $16 $cb
-	jr   nz, jr_005_4421                             ; $443b: $20 $e4
-
-jr_005_443d:
-	pop  hl                                          ; $443d: $e1
-	pop  af                                          ; $443e: $f1
-	dec  a                                           ; $443f: $3d
-	jr   nz, jr_005_43e7                             ; $4440: $20 $a5
-
-	ret                                              ; $4442: $c9
-
-
-Jump_005_4443:
-	ld   de, $4448                                   ; $4443: $11 $48 $44
-	jr   jr_005_43e6                                 ; $4446: $18 $9e
-
-	ld   b, $1c                                      ; $4448: $06 $1c
-	dec  e                                           ; $444a: $1d
-	ld   e, $1f                                      ; $444b: $1e $1f
-	jr   nz, jr_005_4470                             ; $444d: $20 $21
-
-Jump_005_444f:
-	ld   de, $4454                                   ; $444f: $11 $54 $44
-	jr   jr_005_43e6                                 ; $4452: $18 $92
-
-	ld   [bc], a                                     ; $4454: $02
-	ld   [hl+], a                                    ; $4455: $22
-	inc  hl                                          ; $4456: $23
-
-Jump_005_4457:
-	ld   de, $445c                                   ; $4457: $11 $5c $44
-	jr   jr_005_43e6                                 ; $445a: $18 $8a
-
-	ld   [bc], a                                     ; $445c: $02
-	inc  h                                           ; $445d: $24
-	dec  h                                           ; $445e: $25
-
-Jump_005_445f:
-	ld   de, $4464                                   ; $445f: $11 $64 $44
-	jr   jr_005_43e6                                 ; $4462: $18 $82
-
-
-	db $01, $26 
+; カジ
+	db $ac, $b9, $00
+.entry04:
+; ヤマモト
+	db $e6, $df, $e4, $c9, $00
+.entry05:
+; タクゾウ
+	db $c0, $b0, $bf, $a7, $00
+.entry06:
+; アカギ
+	db $a3, $ac, $af, $00
+.entry07:
+; クニエ
+	db $b0, $cc, $a9, $00
+.entry08:
+; たかみね
+	db $6d, $59, $8d, $7b, $00
+.entry09:
+; クラ
+	db $b0, $eb, $00
+.entry0a:
+; お父
+	db $58, $04, $2e, $00
+.entry0b:
+; 電波
+	db $03, $e4, $05, $55, $00
+.entry0c:
+; 一休
+	db $02, $20, $03, $a7, $00
+.entry0d:
+; かんごふ
+	db $59, $a1, $62, $83, $00
+.entry0e:
+; 太陽は
+	db $04, $23, $06, $2b, $7d, $00
+.entry0f:
+; こっくり
+	db $61, $71, $5d, $98, $00
+.entry10:
+; NnHhYyんぁぃぅぇぉっゃゅょゎンァィゥェォッャュョヮ
+	db $28, $42, $22, $3c, $33, $4d, $a1, $4f, $51, $53, $55, $57, $71, $91, $93, $95, $9c, $f5, $a2, $a4, $a6, $a8, $aa, $c4, $e5, $e7, $e9, $f0, $00
+.entry11:
+; NnYyHhむあいうえおつやゆよわムアイウエオツヤユヨワ
+	db $28, $42, $33, $4d, $22, $3c, $8e, $50, $52, $54, $56, $58, $72, $92, $94, $96, $9d, $e2, $a3, $a5, $a7, $a9, $ab, $c5, $e6, $e8, $ea, $f1, $00
+.entry12:
+; あいうえおかきくけこさしすせそたちつてとなにぬねのはひふへほまみむめもやゆよらりるれろわをんがぎぐげござじずぜぞだぢづでどばびぶべぼぱぴぷぺぽぁぃぅぇぉっゃゅょゎ
+	db $50, $52, $54, $56, $58, $59, $5b, $5d, $5f, $61, $63, $65, $67, $69, $6b, $6d, $6f, $72, $74, $76, $78, $79, $7a, $7b, $7c, $7d, $80, $83, $86, $89, $8c, $8d, $8e, $8f, $90, $92, $94, $96, $97, $98, $99, $9a, $9b, $9d, $a0, $a1, $5a, $5c, $5e, $60, $62, $64, $66, $68, $6a, $6c, $6e, $70, $73, $75, $77, $7e, $81, $84, $87, $8a, $7f, $82, $85, $88, $8b, $4f, $51, $53, $55, $57, $71, $91, $93, $95, $9c, $00
+.entry13:
+; アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲンヶヴガギグゲゴザジズゼゾダチヅデドバビブベボパピプペポァィゥェォヵッャュョヮ
+	db $a3, $a5, $a7, $a9, $ab, $ac, $ae, $b0, $b2, $b4, $b6, $b8, $ba, $bc, $be, $c0, $c2, $c5, $c7, $c9, $cb, $cc, $cd, $ce, $cf, $d0, $d3, $d6, $d9, $dc, $df, $e0, $e2, $e3, $e4, $e6, $e8, $ea, $eb, $ec, $ed, $ee, $ef, $f1, $f4, $f5, $f8, $f6, $ad, $af, $b1, $b3, $b5, $b7, $b9, $bb, $bd, $bf, $c1, $c2, $c6, $c8, $ca, $d1, $d4, $d7, $da, $dd, $d2, $d5, $d8, $db, $de, $a2, $a4, $a6, $a8, $aa, $f7, $c4, $e5, $e7, $e9, $f0, $00
+.entry14:
+; ABCDEFGHIJKLMNOPQRSTUVWXYZ
+	db $1b, $1c, $1d, $1e, $1f, $20, $21, $22, $23, $24, $25, $26, $27, $28, $29, $2a, $2b, $2c, $2d, $2e, $2f, $30, $31, $32, $33, $34, $00
+.entry15:
+; abcdefghijklmnopqrstuvwxyz
+	db $35, $36, $37, $38, $39, $3a, $3b, $3c, $3d, $3e, $3f, $40, $41, $42, $43, $44, $45, $46, $47, $48, $49, $4a, $4b, $4c, $4d, $4e, $00
+.entry16:
+; あいうえお
+	db $50, $52, $54, $56, $58, $00
+.entry17:
+; かさたなはまやらわがざだばぱ
+	db $59, $63, $6d, $78, $7d, $8c, $92, $97, $9d, $5a, $64, $6e, $7e, $7f, $00
+.entry18:
+; きしちにひみりぎじぢびぴ
+	db $5b, $65, $6f, $79, $80, $8d, $98, $5c, $66, $70, $81, $82, $00
+.entry19:
+; くすつぬふむゆるぐずづぶぷ
+	db $5d, $67, $72, $7a, $83, $8e, $94, $99, $5e, $68, $73, $84, $85, $00
+.entry1a:
+; けせてねへめれげぜでべぺ
+	db $5f, $69, $74, $7b, $86, $8f, $9a, $60, $6a, $75, $87, $88, $00
+.entry1b:
+; こそとのほもよろをごぞどぼぽ
+	db $61, $6b, $76, $7c, $89, $90, $96, $9b, $a0, $62, $6c, $77, $8a, $8b, $00
+.entry1c:
+; アイウエオ
+	db $a3, $a5, $a7, $a9, $ab, $00
+.entry1d:
+; カサタナハマヤラワガザダバパ
+	db $ac, $b6, $c0, $cb, $d0, $df, $e6, $eb, $f1, $ad, $b7, $c1, $d1, $d2, $00
+.entry1e:
+; キシチニヒミリギジヂビピ
+	db $ae, $b8, $c2, $cc, $d3, $e0, $ec, $af, $b9, $c3, $d4, $d5, $00
+.entry1f:
+; クスツヌフムユルヴグズヅブプ
+	db $b0, $ba, $c5, $cd, $d6, $e2, $e8, $ed, $f6, $b1, $bb, $c6, $d7, $d8, $00
+.entry20:
+; ケセテネヘメレゲゼデベペ
+	db $b2, $bc, $c7, $ce, $d9, $e3, $ee, $b3, $bd, $c8, $da, $db, $00
+.entry21:
+; コソトノホモヨロヲゴゾドボポ
+	db $b4, $be, $c9, $cf, $dc, $e4, $ea, $ef, $f4, $b5, $bf, $ca, $dd, $de, $00
+.entry22:
+; AIUEO
+	db $1b, $23, $2f, $1f, $29, $00
+.entry23:
+; BCDFGHJKLMNPQRSTVWXYZ
+	db $1c, $1d, $1e, $20, $21, $22, $24, $25, $26, $27, $28, $2a, $2b, $2c, $2d, $2e, $30, $31, $32, $33, $34, $00
+.entry24:
+; aiueo
+	db $35, $3d, $49, $39, $43, $00
+.entry25:
+; bcdfghjklmnpqrstvwxyz
+	db $36, $37, $38, $3a, $3b, $3c, $3e, $3f, $40, $41, $42, $44, $45, $46, $47, $48, $4a, $4b, $4c, $4d, $4e, $00
+.entry26:
+; 0123456789
+	db $11, $12, $13, $14, $15, $16, $17, $18, $19, $1a, $00
+
+
+; A - idx into replacement list $10 where we found our char
+; HL - pointer to current player name char to replace
+SpecialCharFoundInName:
+; Jump if NnHhYy
+	cp   $06                                                        ; $4328
+	jr   c, .english                                                ; $432a
+
+; If hiragana, or katakana, HL = hira/kata idx in list $10, idxed into list $11
+	push hl                                                         ; $432c
+	ld   b, $00                                                     ; $432d
+	ld   c, a                                                       ; $432f
+	ld   a, PNR_11                                                  ; $4330
+	call HLequAddrOfPlayerNameReplacement                           ; $4332
+	add  hl, bc                                                     ; $4335
+	ld   a, [hl]                                                    ; $4336
+	pop  hl                                                         ; $4337
+	ld   [hl], a                                                    ; $4338
+	ret                                                             ; $4339
+
+.english:
+	push af                                                         ; $433a
+	push hl                                                         ; $433b
+
+; HL = en idx in list $10, double idxed into below table
+	ld   b, $00                                                     ; $433c
+	ld   c, a                                                       ; $433e
+	ld   hl, .enTable                                               ; $433f
+	add  hl, bc                                                     ; $4342
+	add  hl, bc                                                     ; $4343
+
+; BC = address in table
+	ld   a, [hl+]                                                   ; $4344
+	ld   b, [hl]                                                    ; $4345
+	ld   c, a                                                       ; $4346
+
+; Restore regs, and push bc to ret to
+	pop  hl                                                         ; $4347
+	pop  af                                                         ; $4348
+	push bc                                                         ; $4349
+	ret                                                             ; $434a
+
+.enTable:
+	dw .replace_N
+	dw .replace_n
+	dw .replace_Y
+	dw .replace_y
+	dw .replace_H
+	dw .replace_h
+
+.replace_N:
+; A = character after N
+	push hl                                                         ; $4357
+	inc  hl                                                         ; $4358
+	ld   a, [hl]                                                    ; $4359
+	pop  hl                                                         ; $435a
+
+; If the character after N is not a consonant, replace N with an upper case letter
+	call GetIndexOfCharInUpperThenLowerCaseConsonants               ; $435b
+	bit  7, a                                                       ; $435e
+	jp   nz, UpperCaseFoundInName                                   ; $4360
+
+; Else if it is <consonant>/N, replace N with an upper case vowel
+	ld   de, .dataReplace_N                                         ; $4363
+	jp   ReplacePlayerNameCharGivenReplacementLists                 ; $4366
+
+; Unused
+	ret                                                             ; $4369
+
+.replace_n:
+; A = character after N
+	push hl                                                         ; $436a
+	inc  hl                                                         ; $436b
+	ld   a, [hl]                                                    ; $436c
+	pop  hl                                                         ; $436d
+
+; If the character after n is not a consonant, replace n with an lower case letter
+	call GetIndexOfCharInUpperThenLowerCaseConsonants               ; $436e
+	bit  7, a                                                       ; $4371
+	jp   nz, LowerCaseFoundInName                                   ; $4373
+
+; Else if it is <consonant>/n, replace n with an lower case vowel
+	ld   de, .dataReplace_n                                         ; $4376
+	jp   ReplacePlayerNameCharGivenReplacementLists                 ; $4379
+
+.replace_Y:
+.replace_H:
+; A = character before Y or H
+	push hl                                                         ; $437c
+	dec  hl                                                         ; $437d
+	ld   a, [hl]                                                    ; $437e
+	pop  hl                                                         ; $437f
+
+; If the character before Y/H is not a consonant, replace Y/H with an upper case letter
+	call GetIndexOfCharInUpperThenLowerCaseConsonants               ; $4380
+	bit  7, a                                                       ; $4383
+	jp   nz, UpperCaseFoundInName                                   ; $4385
+
+; A = character after Y or H
+	push hl                                                         ; $4388
+	inc  hl                                                         ; $4389
+	ld   a, [hl]                                                    ; $438a
+	pop  hl                                                         ; $438b
+
+; If the character after Y/H is not a vowel, replace Y/H with an upper case letter
+	call GetIndexOfCharInUpperThenLowerCaseVowels                   ; $438c
+	bit  7, a                                                       ; $438f
+	jp   nz, UpperCaseFoundInName                                   ; $4391
+
+; <consonant>/<Y/H>/<vowel>, A = idx of eiter Y/H in the special list
+	ld   a, [hl]                                                    ; $4394
+	push hl                                                         ; $4395
+	ld   h, PNR_10                                                  ; $4396
+	ld   l, a                                                       ; $4398
+	call GetIndexOfCharInPlayerNameReplacement                      ; $4399
+
+; HL points to the associated replacement in the special case replacement list
+	ld   b, $00                                                     ; $439c
+	ld   c, a                                                       ; $439e
+	ld   a, PNR_11                                                  ; $439f
+	call HLequAddrOfPlayerNameReplacement                           ; $43a1
+	add  hl, bc                                                     ; $43a4
+
+; Get that replacement, and replace the curr player's char
+	ld   a, [hl]                                                    ; $43a5
+	pop  hl                                                         ; $43a6
+	ld   [hl], a                                                    ; $43a7
+	ret                                                             ; $43a8
+
+.replace_y:
+.replace_h:
+; A = character before y or h
+	push hl                                                         ; $43a9
+	dec  hl                                                         ; $43aa
+	ld   a, [hl]                                                    ; $43ab
+	pop  hl                                                         ; $43ac
+
+; If the character before y/h is not a consonant, replace y/h with an lower case letter
+	call GetIndexOfCharInUpperThenLowerCaseConsonants               ; $43ad
+	bit  7, a                                                       ; $43b0
+	jp   nz, LowerCaseFoundInName                                   ; $43b2
+
+; A = character after y or h
+	push hl                                                         ; $43b5
+	inc  hl                                                         ; $43b6
+	ld   a, [hl]                                                    ; $43b7
+	pop  hl                                                         ; $43b8
+
+; If the character after y/h is not a vowel, replace y/h with an lower case letter
+	call GetIndexOfCharInUpperThenLowerCaseVowels                   ; $43b9
+	bit  7, a                                                       ; $43bc
+	jp   nz, LowerCaseFoundInName                                   ; $43be
+
+; <consonant>/<y/h>/<vowel>, A = idx of eiter y/h in the special list
+	ld   a, [hl]                                                    ; $43c1
+	push hl                                                         ; $43c2
+	ld   h, PNR_10                                                  ; $43c3
+	ld   l, a                                                       ; $43c5
+	call GetIndexOfCharInPlayerNameReplacement                      ; $43c6
+
+; HL points to the associated replacement in the special case replacement list
+	ld   b, $00                                                     ; $43c9
+	ld   c, a                                                       ; $43cb
+	ld   a, PNR_11                                                  ; $43cc
+	call HLequAddrOfPlayerNameReplacement                           ; $43ce
+	add  hl, bc                                                     ; $43d1
+
+; Get that replacement, and replace the curr player's char
+	ld   a, [hl]                                                    ; $43d2
+	pop  hl                                                         ; $43d3
+	ld   [hl], a                                                    ; $43d4
+	ret                                                             ; $43d5
+
+.dataReplace_N:
+	db $01
+	db PNR_UPPER_CASE_VOWELS
+
+.dataReplace_n:
+	db $01
+	db PNR_LOWER_CASE_VOWELS
+
+
+; HL - pointer to current player name char to replace
+HiraganaFoundInName:
+	ld   de, .data                                                  ; $43da
+	jr   ReplacePlayerNameCharGivenReplacementLists                 ; $43dd
+
+.data:
+	db $06
+	db PNR_16
+	db PNR_17
+	db PNR_18
+	db PNR_19
+	db PNR_1a
+	db PNR_1b
+
+
+; DE - address of data containing num replacement lists + their idxes
+; HL - pointer to current player name char to replace
+ReplacePlayerNameCharGivenReplacementLists:
+	ld   a, [de]                                                    ; $43e6
+
+.nextReplacementList:
+; Push idx into given list of replacement lists
+	push af                                                         ; $43e7
+	push hl                                                         ; $43e8
+
+; BC = idx in data bytes from num bytes down to 0
+	ld   b, $00                                                     ; $43e9
+	ld   c, a                                                       ; $43eb
+
+; A = player namme char to replace (put in L later)
+	ld   a, [hl]                                                    ; $43ec
+
+; HL = byte pointed to from BC (from last data byte to 1st)
+	ld   h, d                                                       ; $43ed
+	ld   l, e                                                       ; $43ee
+	add  hl, bc                                                     ; $43ef
+
+; H = byte in table, L = player name char to replace, save both in ram
+	ld   b, [hl]                                                    ; $43f0
+	ld   h, b                                                       ; $43f1
+	ld   l, a                                                       ; $43f2
+	ld   [wNameReplacementCharToReplace], a                         ; $43f3
+	ld   a, b                                                       ; $43f6
+	ld   [wNameReplacementCurrReplacementListIdx], a                ; $43f7
+
+; Jupm if player name char not found, else continue
+	call GetIndexOfCharInPlayerNameReplacement                      ; $43fa
+	bit  7, a                                                       ; $43fd
+	jr   nz, .toNextReplacementList                                 ; $43ff
+
+; A = idx of player namme replacement, store the number of chars in that replacement list
+	ld   a, [wNameReplacementCurrReplacementListIdx]                ; $4401
+	call HLequAddrOfPlayerNameReplacement                           ; $4404
+	call GetNumCharsInWord                                          ; $4407
+	ld   [wNameReplacementCurrListNumChars], a                      ; $440a
+
+; Set that number as the random range too, and get a random num into BC
+	ld   [wRandomNumRange], a                                       ; $440d
+	call GetRandomNumInPreSpecifiedRange                            ; $4410
+	ld   b, $00                                                     ; $4413
+	ld   c, a                                                       ; $4415
+
+; A = idx of player name replacement, HL points to a randomly chosen char in it
+	ld   a, [wNameReplacementCurrReplacementListIdx]                ; $4416
+	call HLequAddrOfPlayerNameReplacement                           ; $4419
+	add  hl, bc                                                     ; $441c
+
+; B = player name char to check for
+	ld   a, [wNameReplacementCharToReplace]                         ; $441d
+	ld   b, a                                                       ; $4420
+
+.loopCurrReplacementList:
+; Jump if char in name replacement list is non-null terminator
+	ld   a, [hl+]                                                   ; $4421
+	or   a                                                          ; $4422
+	jr   nz, .nonNullCharInList                                     ; $4423
+
+; Else set HL to the start of the replacement list, and keep looping
+	ld   a, [wNameReplacementCurrReplacementListIdx]                ; $4425
+	call HLequAddrOfPlayerNameReplacement                           ; $4428
+	jr   .loopCurrReplacementList                                   ; $442b
+
+.nonNullCharInList:
+; Jump if we matched the letter we're looking for
+	cp   b                                                          ; $442d
+	jr   z, .matchedOurChar                                         ; $442e
+
+; Else pop pointer to player char to replace, and set it, then return
+	pop  hl                                                         ; $4430
+	ld   [hl], a                                                    ; $4431
+	pop  af                                                         ; $4432
+	ret                                                             ; $4433
+
+.matchedOurChar:
+; If our character to replace was the only char on the list, don't jump, choose a new list
+	ld   a, [wNameReplacementCurrListNumChars]                      ; $4434
+	dec  a                                                          ; $4437
+	ld   [wNameReplacementCurrListNumChars], a                      ; $4438
+	jr   nz, .loopCurrReplacementList                               ; $443b
+
+.toNextReplacementList:
+	pop  hl                                                         ; $443d
+	pop  af                                                         ; $443e
+
+; Dec idx of replacement list idx
+	dec  a                                                          ; $443f
+	jr   nz, .nextReplacementList                                   ; $4440
+
+	ret                                                             ; $4442
+
+
+; HL - pointer to current player name char to replace
+KatakanaFoundInName:
+	ld   de, .data                                                  ; $4443
+	jr   ReplacePlayerNameCharGivenReplacementLists                 ; $4446
+
+.data:
+	db $06
+	db PNR_1c
+	db PNR_1d
+	db PNR_1e
+	db PNR_1f
+	db PNR_20
+	db PNR_21
+
+
+; HL - pointer to current player name char to replace
+UpperCaseFoundInName:
+	ld   de, .data                                                  ; $444f
+	jr   ReplacePlayerNameCharGivenReplacementLists                 ; $4452
+
+.data:
+	db $02
+	db PNR_UPPER_CASE_VOWELS
+	db PNR_UPPER_CASE_CONSONANTS
+
+
+; HL - pointer to current player name char to replace
+LowerCaseFoundInName:
+	ld   de, .data                                                  ; $4457
+	jr   ReplacePlayerNameCharGivenReplacementLists                 ; $445a
+
+.data:
+	db $02
+	db PNR_LOWER_CASE_VOWELS
+	db PNR_LOWER_CASE_CONSONANTS
+
+
+; HL - pointer to current player name char to replace
+NumberFoundInName:
+	ld   de, .data                                                  ; $445f
+	jr   ReplacePlayerNameCharGivenReplacementLists                 ; $4462
+
+.data:
+	db $01
+	db PNR_NUMBERS
 	
-	
-Func_05_4466:
-	push af  ; $4466: $f5
-	call Call_005_448e                               ; $4467: $cd $8e $44
-	pop  bc                                          ; $446a: $c1
-	bit  7, a                                        ; $446b: $cb $7f
-	ret  z                                           ; $446d: $c8
 
-	ld   a, b                                        ; $446e: $78
-	push af                                          ; $446f: $f5
+; A - char to check for
+; Returns idx of char in A, or $ff if not found
+CheckIfCharInKanasEnAlphabetOrNums:
+; First try with hiragana, returning if $ff not returned
+	push af                                                         ; $4466
+	call GetIndexOfCharInHiragana                                   ; $4467
+	pop  bc                                                         ; $446a
 
-jr_005_4470:
-	call Call_005_4497                               ; $4470: $cd $97 $44
-	pop  bc                                          ; $4473: $c1
-	bit  7, a                                        ; $4474: $cb $7f
-	ret  z                                           ; $4476: $c8
+	bit  7, a                                                       ; $446b
+	ret  z                                                          ; $446d
 
-	ld   a, b                                        ; $4477: $78
-	push af                                          ; $4478: $f5
-	call Call_005_44a0                               ; $4479: $cd $a0 $44
-	pop  bc                                          ; $447c: $c1
-	bit  7, a                                        ; $447d: $cb $7f
-	ret  z                                           ; $447f: $c8
+; Then try with katakana
+	ld   a, b                                                       ; $446e
+	push af                                                         ; $446f
+	call GetIndexOfCharInKatakana                                   ; $4470
+	pop  bc                                                         ; $4473
 
-	ld   a, b                                        ; $4480: $78
-	push af                                          ; $4481: $f5
-	call Call_005_44ad                               ; $4482: $cd $ad $44
-	pop  bc                                          ; $4485: $c1
-	bit  7, a                                        ; $4486: $cb $7f
-	ret  z                                           ; $4488: $c8
+	bit  7, a                                                       ; $4474
+	ret  z                                                          ; $4476
 
-	ld   a, b                                        ; $4489: $78
-	call Call_005_4513                               ; $448a: $cd $13 $45
-	ret                                              ; $448d: $c9
+; Then try with upper case chars
+	ld   a, b                                                       ; $4477
+	push af                                                         ; $4478
+	call GetIndexOfCharInUpperCaseVowelsOrConsonants                ; $4479
+	pop  bc                                                         ; $447c
 
+	bit  7, a                                                       ; $447d
+	ret  z                                                          ; $447f
 
-Call_005_448e:
-	push hl                                          ; $448e: $e5
-	ld   h, $12                                      ; $448f: $26 $12
-	ld   l, a                                        ; $4491: $6f
-	call GetIndexOfCharInPlayerNameReplacement                               ; $4492: $cd $1c $45
-	pop  hl                                          ; $4495: $e1
-	ret                                              ; $4496: $c9
+; Then try with lower case chars
+	ld   a, b                                                       ; $4480
+	push af                                                         ; $4481
+	call GetIndexOfCharInLowerCaseVowelsOrConsonants                ; $4482
+	pop  bc                                                         ; $4485
 
+	bit  7, a                                                       ; $4486
+	ret  z                                                          ; $4488
 
-Call_005_4497:
-	push hl                                          ; $4497: $e5
-	ld   h, $13                                      ; $4498: $26 $13
-	ld   l, a                                        ; $449a: $6f
-	call GetIndexOfCharInPlayerNameReplacement                               ; $449b: $cd $1c $45
-	pop  hl                                          ; $449e: $e1
-	ret                                              ; $449f: $c9
+; Lastly try with numbers
+	ld   a, b                                                       ; $4489
+	call GetIndexOfCharInNumbers                                    ; $448a
+	ret                                                             ; $448d
 
 
-Call_005_44a0:
-	push af                                          ; $44a0: $f5
-	call Call_005_44ef                               ; $44a1: $cd $ef $44
-	pop  bc                                          ; $44a4: $c1
-	bit  7, a                                        ; $44a5: $cb $7f
-	ret  z                                           ; $44a7: $c8
-
-	ld   a, b                                        ; $44a8: $78
-	call Call_005_44f8                               ; $44a9: $cd $f8 $44
-	ret                                              ; $44ac: $c9
-
-
-Call_005_44ad:
-	push af                                          ; $44ad: $f5
-	call Call_005_4501                               ; $44ae: $cd $01 $45
-	pop  bc                                          ; $44b1: $c1
-	bit  7, a                                        ; $44b2: $cb $7f
-	ret  z                                           ; $44b4: $c8
-
-	ld   a, b                                        ; $44b5: $78
-	call Call_005_450a                               ; $44b6: $cd $0a $45
-	ret                                              ; $44b9: $c9
+; A - char to check for
+; Returns idx of char in A, or $ff if not found
+GetIndexOfCharInHiragana:
+	push hl                                                         ; $448e
+	ld   h, PNR_HIRAGANA                                            ; $448f
+	ld   l, a                                                       ; $4491
+	call GetIndexOfCharInPlayerNameReplacement                      ; $4492
+	pop  hl                                                         ; $4495
+	ret                                                             ; $4496
 
 
-Call_005_44ba:
-	push af                                          ; $44ba: $f5
-	call Call_005_44ef                               ; $44bb: $cd $ef $44
-	pop  bc                                          ; $44be: $c1
-	bit  7, a                                        ; $44bf: $cb $7f
-	ret  z                                           ; $44c1: $c8
-
-	ld   a, b                                        ; $44c2: $78
-	call Call_005_4501                               ; $44c3: $cd $01 $45
-	ret                                              ; $44c6: $c9
-
-
-Call_005_44c7:
-	push af                                          ; $44c7: $f5
-	call Call_005_44f8                               ; $44c8: $cd $f8 $44
-	pop  bc                                          ; $44cb: $c1
-	bit  7, a                                        ; $44cc: $cb $7f
-	ret  z                                           ; $44ce: $c8
-
-	ld   a, b                                        ; $44cf: $78
-	call Call_005_450a                               ; $44d0: $cd $0a $45
-	ret                                              ; $44d3: $c9
+; A - char to check for
+; Returns idx of char in A, or $ff if not found
+GetIndexOfCharInKatakana:
+	push hl                                                         ; $4497
+	ld   h, PNR_KATAKANA                                            ; $4498
+	ld   l, a                                                       ; $449a
+	call GetIndexOfCharInPlayerNameReplacement                      ; $449b
+	pop  hl                                                         ; $449e
+	ret                                                             ; $449f
 
 
-Call_005_44d4:
-	push hl                                          ; $44d4: $e5
-	ld   h, $10                                      ; $44d5: $26 $10
-	ld   l, a                                        ; $44d7: $6f
-	call GetIndexOfCharInPlayerNameReplacement                               ; $44d8: $cd $1c $45
-	pop  hl                                          ; $44db: $e1
-	ret                                              ; $44dc: $c9
+; A - char to check for
+; Returns idx of char in A, or $ff if not found
+GetIndexOfCharInUpperCaseVowelsOrConsonants:
+; Get index in vowels, returning if $ff not returned
+	push af                                                         ; $44a0
+	call GetIndexOfCharInUpperCaseVowels                            ; $44a1
+	pop  bc                                                         ; $44a4
+
+	bit  7, a                                                       ; $44a5
+	ret  z                                                          ; $44a7
+
+; Else try with consonants
+	ld   a, b                                                       ; $44a8
+	call GetIndexOfCharInUpperCaseConsonants                        ; $44a9
+	ret                                                             ; $44ac
 
 
+; A - char to check for
+; Returns idx of char in A, or $ff if not found
+GetIndexOfCharInLowerCaseVowelsOrConsonants:
+; Get index in vowels, returning if $ff not returned
+	push af                                                         ; $44ad
+	call GetIndexOfCharInLowerCaseVowels                            ; $44ae
+	pop  bc                                                         ; $44b1
+
+	bit  7, a                                                       ; $44b2
+	ret  z                                                          ; $44b4
+
+; Else try with consonants
+	ld   a, b                                                       ; $44b5
+	call GetIndexOfCharInLowerCaseConsonants                        ; $44b6
+	ret                                                             ; $44b9
+
+
+; A - char to check for
+; Returns idx of char in A, or $ff if not found
+GetIndexOfCharInUpperThenLowerCaseVowels:
+; Get index in upper case, returning if $ff not returned
+	push af                                                         ; $44ba
+	call GetIndexOfCharInUpperCaseVowels                            ; $44bb
+	pop  bc                                                         ; $44be
+
+	bit  7, a                                                       ; $44bf
+	ret  z                                                          ; $44c1
+
+; Else try with lower case
+	ld   a, b                                                       ; $44c2
+	call GetIndexOfCharInLowerCaseVowels                            ; $44c3
+	ret                                                             ; $44c6
+
+
+; A - char to check for
+; Returns idx of char in A, or $ff if not found
+GetIndexOfCharInUpperThenLowerCaseConsonants:
+; Get index in upper case, returning if $ff not returned
+	push af                                                         ; $44c7
+	call GetIndexOfCharInUpperCaseConsonants                        ; $44c8
+	pop  bc                                                         ; $44cb
+
+	bit  7, a                                                       ; $44cc
+	ret  z                                                          ; $44ce
+
+; Else try with lower case
+	ld   a, b                                                       ; $44cf
+	call GetIndexOfCharInLowerCaseConsonants                        ; $44d0
+	ret                                                             ; $44d3
+
+
+; A - char to check for
+; Returns idx of char in A, or $ff if not found
+GetIndexOfCharInSpecialList:
+	push hl                                                         ; $44d4
+	ld   h, PNR_10                                                  ; $44d5
+	ld   l, a                                                       ; $44d7
+	call GetIndexOfCharInPlayerNameReplacement                      ; $44d8
+	pop  hl                                                         ; $44db
+	ret                                                             ; $44dc
+
+
+;
 	push hl                                          ; $44dd: $e5
 	ld   h, $16                                      ; $44de: $26 $16
 	ld   l, a                                        ; $44e0: $6f
@@ -1097,6 +785,7 @@ Call_005_44d4:
 	ret                                              ; $44e5: $c9
 
 
+;
 	push hl                                          ; $44e6: $e5
 	ld   h, $1c                                      ; $44e7: $26 $1c
 	ld   l, a                                        ; $44e9: $6f
@@ -1105,55 +794,64 @@ Call_005_44d4:
 	ret                                              ; $44ee: $c9
 
 
-Call_005_44ef:
-	push hl                                          ; $44ef: $e5
-	ld   h, $22                                      ; $44f0: $26 $22
-	ld   l, a                                        ; $44f2: $6f
-	call GetIndexOfCharInPlayerNameReplacement                               ; $44f3: $cd $1c $45
-	pop  hl                                          ; $44f6: $e1
-	ret                                              ; $44f7: $c9
+; A - char to check for
+; Returns idx of char in A, or $ff if not found
+GetIndexOfCharInUpperCaseVowels:
+	push hl                                                         ; $44ef
+	ld   h, PNR_UPPER_CASE_VOWELS                                   ; $44f0
+	ld   l, a                                                       ; $44f2
+	call GetIndexOfCharInPlayerNameReplacement                      ; $44f3
+	pop  hl                                                         ; $44f6
+	ret                                                             ; $44f7
 
 
-Call_005_44f8:
-	push hl                                          ; $44f8: $e5
-	ld   h, $23                                      ; $44f9: $26 $23
-	ld   l, a                                        ; $44fb: $6f
-	call GetIndexOfCharInPlayerNameReplacement                               ; $44fc: $cd $1c $45
-	pop  hl                                          ; $44ff: $e1
-	ret                                              ; $4500: $c9
+; A - char to check for
+; Returns idx of char in A, or $ff if not found
+GetIndexOfCharInUpperCaseConsonants:
+	push hl                                                         ; $44f8
+	ld   h, PNR_UPPER_CASE_CONSONANTS                               ; $44f9
+	ld   l, a                                                       ; $44fb
+	call GetIndexOfCharInPlayerNameReplacement                      ; $44fc
+	pop  hl                                                         ; $44ff
+	ret                                                             ; $4500
 
 
-Call_005_4501:
-	push hl                                          ; $4501: $e5
-	ld   h, $24                                      ; $4502: $26 $24
-	ld   l, a                                        ; $4504: $6f
-	call GetIndexOfCharInPlayerNameReplacement                               ; $4505: $cd $1c $45
-	pop  hl                                          ; $4508: $e1
-	ret                                              ; $4509: $c9
+; A - char to check for
+; Returns idx of char in A, or $ff if not found
+GetIndexOfCharInLowerCaseVowels:
+	push hl                                                         ; $4501
+	ld   h, PNR_LOWER_CASE_VOWELS                                   ; $4502
+	ld   l, a                                                       ; $4504
+	call GetIndexOfCharInPlayerNameReplacement                      ; $4505
+	pop  hl                                                         ; $4508
+	ret                                                             ; $4509
 
 
-Call_005_450a:
-	push hl                                          ; $450a: $e5
-	ld   h, $25                                      ; $450b: $26 $25
-	ld   l, a                                        ; $450d: $6f
-	call GetIndexOfCharInPlayerNameReplacement                               ; $450e: $cd $1c $45
-	pop  hl                                          ; $4511: $e1
-	ret                                              ; $4512: $c9
+; A - char to check for
+; Returns idx of char in A, or $ff if not found
+GetIndexOfCharInLowerCaseConsonants:
+	push hl                                                         ; $450a
+	ld   h, PNR_LOWER_CASE_CONSONANTS                               ; $450b
+	ld   l, a                                                       ; $450d
+	call GetIndexOfCharInPlayerNameReplacement                      ; $450e
+	pop  hl                                                         ; $4511
+	ret                                                             ; $4512
 
 
-Call_005_4513:
-	push hl                                          ; $4513: $e5
-	ld   h, $26                                      ; $4514: $26 $26
-	ld   l, a                                        ; $4516: $6f
-	call GetIndexOfCharInPlayerNameReplacement                               ; $4517: $cd $1c $45
-	pop  hl                                          ; $451a: $e1
-	ret                                              ; $451b: $c9
+; A - char to check for
+; Returns idx of char in A, or $ff if not found
+GetIndexOfCharInNumbers:
+	push hl                                                         ; $4513
+	ld   h, PNR_NUMBERS                                             ; $4514
+	ld   l, a                                                       ; $4516
+	call GetIndexOfCharInPlayerNameReplacement                      ; $4517
+	pop  hl                                                         ; $451a
+	ret                                                             ; $451b
 
 
 ; H - idx of player name replacement
 ; L - char to check for
 ; Returns idx of char in A, or $ff if not found
-; Returns num chars in replacement word in B
 GetIndexOfCharInPlayerNameReplacement:
 ; HL = addr of player name replacement
 	push hl                                                         ; $451c

@@ -11975,7 +11975,7 @@ jr_0da_74e2:
 	db   $ec                                         ; $775b: $ec
 	and  h                                           ; $775c: $a4
 	ld   de, $1111                                   ; $775d: $11 $11 $11
-	ld   de, $cb15                                   ; $7760: $11 $15 $cb
+	ld   de, wNameReplacementCurrReplacementListIdx                                   ; $7760: $11 $15 $cb
 	rst  $28                                         ; $7763: $ef
 	rst  $38                                         ; $7764: $ff
 	rst  $38                                         ; $7765: $ff

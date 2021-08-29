@@ -11636,7 +11636,7 @@ jr_0d8_6d7c:
 	ld   b, c                                        ; $72cc: $41
 	dec  d                                           ; $72cd: $15
 	ld   d, l                                        ; $72ce: $55
-	ld   de, $cb15                                   ; $72cf: $11 $15 $cb
+	ld   de, wNameReplacementCurrReplacementListIdx                                   ; $72cf: $11 $15 $cb
 	ld   h, h                                        ; $72d2: $64
 	sbc  a                                           ; $72d3: $9f
 	add  sp, $46                                     ; $72d4: $e8 $46

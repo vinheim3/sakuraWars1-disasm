@@ -1187,7 +1187,7 @@ ScriptOpcode01_DisplayText_Init:
 	or   a                                           ; $4754: $b7
 
 ;
-	M_FarCall "nz", Func_05_4000
+	M_FarCall "nz", AlterPlayerNameIntoWram
 
 ; Until the null terminator is found, add a kanji to display
 	ld   de, wPlayerName                                            ; $4769
@@ -1318,23 +1318,23 @@ ScriptOpcode32_Init:
 	ld   a, $03                                      ; $47f6: $3e $03
 	call SetDefaultAndCurrKanjiTileTextStyle                                       ; $47f8: $cd $3f $15
 
-jr_008_47fb:
+.loopUp:
 	ld   h, $00                                      ; $47fb: $26 $00
 	call GetNextScriptOpcodeToProcess                               ; $47fd: $cd $70 $42
 	or   a                                           ; $4800: $b7
 	jp   z, AddKanjiToConvoStructForCurrTextBox                                    ; $4801: $ca $5f $14
 
 	cp   $10                                         ; $4804: $fe $10
-	jr   nc, jr_008_4859                             ; $4806: $30 $51
+	jr   nc, .br_4859                             ; $4806: $30 $51
 
 	cp   $08                                         ; $4808: $fe $08
-	jr   c, jr_008_4855                              ; $480a: $38 $49
+	jr   c, .entry2                              ; $480a: $38 $49
 
 	push af                                          ; $480c: $f5
 	ld   b, $00                                      ; $480d: $06 $00
 	ld   c, a                                        ; $480f: $4f
 	res  3, c                                        ; $4810: $cb $99
-	ld   hl, $485f                                   ; $4812: $21 $5f $48
+	ld   hl, .table                                   ; $4812: $21 $5f $48
 	add  hl, bc                                      ; $4815: $09
 	add  hl, bc                                      ; $4816: $09
 	ld   a, [hl+]                                    ; $4817: $2a
@@ -1343,7 +1343,7 @@ jr_008_47fb:
 	pop  af                                          ; $481a: $f1
 	jp   hl                                          ; $481b: $e9
 
-
+.entry0:
 	ld   de, wPlayerName                                   ; $481c: $11 $0e $cb
 	ld   hl, sPlayerName                                   ; $481f: $21 $aa $af
 	ld   bc, $0006                                   ; $4822: $01 $06 $00
@@ -1351,50 +1351,49 @@ jr_008_47fb:
 	call GetNextScriptOpcodeToProcess                               ; $4828: $cd $70 $42
 	or   a                                           ; $482b: $b7
 
-	M_FarCall "nz", Func_05_4000
+	M_FarCall "nz", AlterPlayerNameIntoWram
 
 	ld   de, wPlayerName                                   ; $4840: $11 $0e $cb
 
-jr_008_4843:
+.loop_4843:
 	ld   a, [de]                                     ; $4843: $1a
 	inc  de                                          ; $4844: $13
 	or   a                                           ; $4845: $b7
-	jr   z, jr_008_47fb                              ; $4846: $28 $b3
+	jr   z, .loopUp                              ; $4846: $28 $b3
 
 	call AddKanjiToConvoStructForCurrTextBox                                       ; $4848: $cd $5f $14
-	jr   jr_008_4843                                 ; $484b: $18 $f6
+	jr   .loop_4843                                 ; $484b: $18 $f6
 
-	jr   jr_008_47fb                                 ; $484d: $18 $ac
+.entry1:
+	jr   .loopUp                                 ; $484d: $18 $ac
 
+.entry3:
+.entry4:
+.entry5:
+.entry6:
+.entry7:
 	ld   h, $00                                      ; $484f: $26 $00
 	ld   a, $0d                                      ; $4851: $3e $0d
-	jr   jr_008_4859                                 ; $4853: $18 $04
+	jr   .br_4859                                 ; $4853: $18 $04
 
-jr_008_4855:
+.entry2:
 	ld   h, a                                        ; $4855: $67
 	call GetNextScriptOpcodeToProcess                               ; $4856: $cd $70 $42
 
-jr_008_4859:
+.br_4859:
 	ld   l, a                                        ; $4859: $6f
 	call AddQuarterBankOffsetAndKanjiToConvoStructForCurrTextBox                                       ; $485a: $cd $57 $14
-	jr   jr_008_47fb                                 ; $485d: $18 $9c
+	jr   .loopUp                                 ; $485d: $18 $9c
 
-	inc  e                                           ; $485f: $1c
-	ld   c, b                                        ; $4860: $48
-	ld   c, l                                        ; $4861: $4d
-	ld   c, b                                        ; $4862: $48
-	ld   d, l                                        ; $4863: $55
-	ld   c, b                                        ; $4864: $48
-	ld   c, a                                        ; $4865: $4f
-	ld   c, b                                        ; $4866: $48
-	ld   c, a                                        ; $4867: $4f
-	ld   c, b                                        ; $4868: $48
-	ld   c, a                                        ; $4869: $4f
-	ld   c, b                                        ; $486a: $48
-	ld   c, a                                        ; $486b: $4f
-	ld   c, b                                        ; $486c: $48
-	ld   c, a                                        ; $486d: $4f
-	ld   c, b                                        ; $486e: $48
+.table:
+	dw .entry0
+	dw .entry1
+	dw .entry2
+	dw .entry3
+	dw .entry4
+	dw .entry5
+	dw .entry6
+	dw .entry7
 
 
 ScriptOpcode32_Main:
