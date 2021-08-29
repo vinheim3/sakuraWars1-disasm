@@ -3569,41 +3569,41 @@ Call_004_5595:
 
 
 GameState45_DormRoom::
-	ld   a, [wGameSubstate]                                  ; $559c: $fa $a1 $c2
-	dec  a                                           ; $559f: $3d
-	jp   z, DormRoomSubstate1                            ; $55a0: $ca $84 $57
+; Branch based on substate
+	ld   a, [wGameSubstate]                                         ; $559c
+	dec  a                                                          ; $559f
+	jp   z, DormRoomSubstate1                                       ; $55a0
 
-	dec  a                                           ; $55a3: $3d
-	jp   z, DormRoomSubstate2                            ; $55a4: $ca $ad $57
+	dec  a                                                          ; $55a3
+	jp   z, DormRoomSubstate2                                       ; $55a4
 
 DormRoomSubstate0:
-;
-	ld   a, $07                                      ; $55a7: $3e $07
-	call SafeSetAudVolForMultipleChannels                                       ; $55a9: $cd $e0 $1c
+; Set max audvol
+	ld   a, $07                                                     ; $55a7
+	call SafeSetAudVolForMultipleChannels                           ; $55a9
 
-;
-	call ClearDisplayRegsAllowVBlankInt                                       ; $55ac: $cd $59 $0b
-	ld   a, LCDCF_ON|LCDCF_OBJ16|LCDCF_OBJON|LCDCF_BGON                                      ; $55af: $3e $87
-	ld   [wLCDC], a                                  ; $55b1: $ea $03 $c2
-	call TurnOnLCD                                       ; $55b4: $cd $09 $09
+; Clear display regs and turn on LCD
+	call ClearDisplayRegsAllowVBlankInt                             ; $55ac
+	ld   a, LCDCF_ON|LCDCF_OBJ16|LCDCF_OBJON|LCDCF_BGON             ; $55af
+	ld   [wLCDC], a                                                 ; $55b1
+	call TurnOnLCD                                                  ; $55b4
 
-;
-	ld   a, $01                                      ; $55b7: $3e $01
-	ld   hl, $7000                                   ; $55b9: $21 $00 $70
-	ld   de, wBGPalettes                                   ; $55bc: $11 $de $c2
-	ld   bc, $0080                                   ; $55bf: $01 $80 $00
-	call FarMemCopy                                       ; $55c2: $cd $b2 $09
+; Load all white palettes, and update hw pals
+	ld   a, BANK(Palettes_AllWhite)                                 ; $55b7
+	ld   hl, Palettes_AllWhite                                      ; $55b9
+	ld   de, wBGPalettes                                            ; $55bc
+	ld   bc, NUM_PALETTE_BYTES * 2                                  ; $55bf
+	call FarMemCopy                                                 ; $55c2
 
-	ld   bc, $003f                                   ; $55c5: $01 $3f $00
-	call SetBGandOBJPaletteRangesToUpdate                                       ; $55c8: $cd $aa $04
+	ldbc $00, $3f                                                   ; $55c5
+	call SetBGandOBJPaletteRangesToUpdate                           ; $55c8
 
-;
-	ld   a, $ff                                      ; $55cb: $3e $ff
-	ld   [wInGameInputsEnabled], a                                  ; $55cd: $ea $0e $c2
+; Allow all inputs, and clear oam and base animm sprite spec details
+	ld   a, $ff                                                     ; $55cb
+	ld   [wInGameInputsEnabled], a                                  ; $55cd
 
-;
-	call ClearOam                                       ; $55d0: $cd $d7 $0d
-	call ClearBaseAnimSpriteSpecDetails                                       ; $55d3: $cd $c9 $2e
+	call ClearOam                                                   ; $55d0
+	call ClearBaseAnimSpriteSpecDetails                             ; $55d3
 
 ;
 	call Func_04_5667                                       ; $55d6: $cd $67 $56
@@ -3662,7 +3662,7 @@ DormRoomSubstate0:
 
 ;
 	ld   a, $a0                                      ; $5641: $3e $a0
-	ld   [$cc7f], a                                  ; $5643: $ea $7f $cc
+	ld   [wDormRoomDaySpritesX], a                                  ; $5643: $ea $7f $cc
 	xor  a                                           ; $5646: $af
 	ld   [$cc92], a                                  ; $5647: $ea $92 $cc
 	ld   [$cc81], a                                  ; $564a: $ea $81 $cc
@@ -3724,7 +3724,7 @@ jr_004_5687:
 	jr   jr_004_56d9                                 ; $5699: $18 $3e
 
 jr_004_569b:
-	ld   a, [$afb0]                                  ; $569b: $fa $b0 $af
+	ld   a, [sCurrDay]                                  ; $569b: $fa $b0 $af
 	cp   $02                                         ; $569e: $fe $02
 	jr   nz, jr_004_56d9                             ; $56a0: $20 $37
 
@@ -3913,7 +3913,7 @@ DormRoomSubstate2:
 
 .return:
 ;
-	call Call_004_580e                               ; $57cf: $cd $0e $58
+	call todo_LoadsDormRoomSprites                               ; $57cf: $cd $0e $58
 	call AnimateAllAnimatedSpriteSpecs                                       ; $57d2: $cd $d3 $2e
 
 ; Restore ram bank
@@ -3950,13 +3950,16 @@ DormRoomSubstate2:
 	dw DormRoomAnimationHandler18
 
 
-Call_004_580e:
-	ld   a, $0c                                      ; $580e: $3e $0c
+todo_LoadsDormRoomSprites:
+;
+	ld   a, SG_C                                      ; $580e: $3e $0c
 	ld   [wSpriteGroup], a                                  ; $5810: $ea $1a $c2
 	call Call_004_581e                               ; $5813: $cd $1e $58
+
+;
 	ld   a, [$cc89]                                  ; $5816: $fa $89 $cc
 	or   a                                           ; $5819: $b7
-	call z, Call_004_5858                            ; $581a: $cc $58 $58
+	call z, LoadDormRoomDaySprites                            ; $581a: $cc $58 $58
 	ret                                              ; $581d: $c9
 
 
@@ -3983,7 +3986,7 @@ Call_004_581e:
 
 	db   $10                                         ; $584e: $10
 	ld   [hl], b                                     ; $584f: $70
-	jr   nc, jr_004_58c2                             ; $5850: $30 $70
+	db $30, $70
 
 	ld   d, b                                        ; $5852: $50
 	ld   [hl], b                                     ; $5853: $70
@@ -3992,67 +3995,74 @@ Call_004_581e:
 	sub  b                                           ; $5856: $90
 	ld   [hl], b                                     ; $5857: $70
 
-Call_004_5858:
-	ld   a, [$cc7f]                                  ; $5858: $fa $7f $cc
-	cp   $a0                                         ; $585b: $fe $a0
-	ret  nc                                          ; $585d: $d0
 
-	ld   a, [$cc7f]                                  ; $585e: $fa $7f $cc
-	add  $24                                         ; $5861: $c6 $24
-	ld   b, a                                        ; $5863: $47
-	ld   c, $3c                                      ; $5864: $0e $3c
-	ld   a, $1e                                      ; $5866: $3e $1e
-	call LoadSpriteFromMainTable                                       ; $5868: $cd $16 $0e
-	ld   a, [$afb0]                                  ; $586b: $fa $b0 $af
-	ld   h, a                                        ; $586e: $67
-	ld   l, $0a                                      ; $586f: $2e $0a
-	call HLequHdivModL                                       ; $5871: $cd $fb $0b
-	push hl                                          ; $5874: $e5
-	ld   a, [$cc7f]                                  ; $5875: $fa $7f $cc
-	add  $14                                         ; $5878: $c6 $14
-	ld   b, a                                        ; $587a: $47
-	ld   c, $3c                                      ; $587b: $0e $3c
-	ld   a, h                                        ; $587d: $7c
-	add  $1f                                         ; $587e: $c6 $1f
-	call LoadSpriteFromMainTable                                       ; $5880: $cd $16 $0e
-	pop  hl                                          ; $5883: $e1
-	ld   a, [$cc7f]                                  ; $5884: $fa $7f $cc
-	add  $1c                                         ; $5887: $c6 $1c
-	ld   b, a                                        ; $5889: $47
-	ld   c, $3c                                      ; $588a: $0e $3c
-	ld   a, l                                        ; $588c: $7d
-	add  $1f                                         ; $588d: $c6 $1f
-	call LoadSpriteFromMainTable                                       ; $588f: $cd $16 $0e
-	ld   a, [$afb0]                                  ; $5892: $fa $b0 $af
-	dec  a                                           ; $5895: $3d
-	ld   h, a                                        ; $5896: $67
-	ld   l, $07                                      ; $5897: $2e $07
-	call HLequHdivModL                                       ; $5899: $cd $fb $0b
-	ld   a, [$cc7f]                                  ; $589c: $fa $7f $cc
-	add  $18                                         ; $589f: $c6 $18
-	ld   b, a                                        ; $58a1: $47
-	ld   c, $4c                                      ; $58a2: $0e $4c
-	ld   a, l                                        ; $58a4: $7d
-	add  $29                                         ; $58a5: $c6 $29
-	call LoadSpriteFromMainTable                                       ; $58a7: $cd $16 $0e
-	ld   a, [$cc7f]                                  ; $58aa: $fa $7f $cc
-	add  $28                                         ; $58ad: $c6 $28
-	ld   b, a                                        ; $58af: $47
-	ld   c, $4c                                      ; $58b0: $0e $4c
-	push af                                          ; $58b2: $f5
-	ld   a, $44                                      ; $58b3: $3e $44
-	ld   [wFarCallAddr], a                                  ; $58b5: $ea $98 $c2
-	ld   a, $45                                      ; $58b8: $3e $45
-	ld   [wFarCallAddr+1], a                                  ; $58ba: $ea $99 $c2
-	ld   a, $09                                      ; $58bd: $3e $09
-	ld   [wFarCallBank], a                                  ; $58bf: $ea $9a $c2
+LoadDormRoomDaySprites:
+; Return if X is past the screen
+	ld   a, [wDormRoomDaySpritesX]                                  ; $5858
+	cp   $a0                                                        ; $585b
+	ret  nc                                                         ; $585d
 
-jr_004_58c2:
-	pop  af                                          ; $58c2: $f1
-	call FarCall                                       ; $58c3: $cd $62 $09
-	add  $30                                         ; $58c6: $c6 $30
-	call LoadSpriteFromMainTable                                       ; $58c8: $cd $16 $0e
-	ret                                              ; $58cb: $c9
+; Load day kanji sprite
+	ld   a, [wDormRoomDaySpritesX]                                  ; $585e
+	add  $24                                                        ; $5861
+	ld   b, a                                                       ; $5863
+	ld   c, $3c                                                     ; $5864
+	ld   a, SGC_DORM_ROOM_DAY                                       ; $5866
+	call LoadSpriteFromMainTable                                    ; $5868
+
+; H = 10s of curr day, L = 1s of curr day
+	ld   a, [sCurrDay]                                              ; $586b
+	ld   h, a                                                       ; $586e
+	ld   l, 10                                                      ; $586f
+	call HLequHdivModL                                              ; $5871
+
+; Load day 10's digit sprite
+	push hl                                                         ; $5874
+	ld   a, [wDormRoomDaySpritesX]                                  ; $5875
+	add  $14                                                        ; $5878
+	ld   b, a                                                       ; $587a
+	ld   c, $3c                                                     ; $587b
+	ld   a, h                                                       ; $587d
+	add  SGC_DORM_ROOM_0                                            ; $587e
+	call LoadSpriteFromMainTable                                    ; $5880
+	pop  hl                                                         ; $5883
+
+; Load day 1's digit sprite
+	ld   a, [wDormRoomDaySpritesX]                                  ; $5884
+	add  $1c                                                        ; $5887
+	ld   b, a                                                       ; $5889
+	ld   c, $3c                                                     ; $588a
+	ld   a, l                                                       ; $588c
+	add  SGC_DORM_ROOM_0                                            ; $588d
+	call LoadSpriteFromMainTable                                    ; $588f
+
+; L = curr day, 0-indexed, mod 7 to get day of week
+	ld   a, [sCurrDay]                                              ; $5892
+	dec  a                                                          ; $5895
+	ld   h, a                                                       ; $5896
+	ld   l, $07                                                     ; $5897
+	call HLequHdivModL                                              ; $5899
+
+; Load day of week sprite
+	ld   a, [wDormRoomDaySpritesX]                                  ; $589c
+	add  $18                                                        ; $589f
+	ld   b, a                                                       ; $58a1
+	ld   c, $4c                                                     ; $58a2
+	ld   a, l                                                       ; $58a4
+	add  SGC_DORM_ROOM_SUNDAY                                       ; $58a5
+	call LoadSpriteFromMainTable                                    ; $58a7
+
+; Load the kind of time of day, eg morning
+	ld   a, [wDormRoomDaySpritesX]                                  ; $58aa
+	add  $28                                                        ; $58ad
+	ld   b, a                                                       ; $58af
+	ld   c, $4c                                                     ; $58b0
+
+	M_FarCall GetNameIdxOfTimeOfDay
+
+	add  SGC_DORM_ROOM_MORNING                                      ; $58c6
+	call LoadSpriteFromMainTable                                    ; $58c8
+	ret                                                             ; $58cb
 
 
 IncDormRoomAnimationStep:
@@ -4143,7 +4153,11 @@ endc
 	ld   a, $9d                                      ; $593e: $3e $9d
 	ld   hl, $d000                                   ; $5940: $21 $00 $d0
 	ld   de, $4000                                   ; $5943: $11 $00 $40
+if def(VWF)
+	call DormRoomTileDataBank1_8000h_hook
+else
 	call RLEXorCopy                                       ; $5946: $cd $d2 $09
+endc
 	ld   c, $80                                      ; $5949: $0e $80
 	ld   de, $9400                                   ; $594b: $11 $00 $94
 	ld   a, $07                                      ; $594e: $3e $07
@@ -4395,7 +4409,7 @@ Call_004_5aed:
 
 
 DormRoomAnimationHandler01:
-	ld   hl, $cc7f                                   ; $5afa: $21 $7f $cc
+	ld   hl, wDormRoomDaySpritesX                                   ; $5afa: $21 $7f $cc
 	dec  [hl]                                        ; $5afd: $35
 	ld   a, [wDormRoomMiscCounterIdx]                                  ; $5afe: $fa $7a $cc
 	or   a                                           ; $5b01: $b7
@@ -4717,7 +4731,7 @@ DormRoomAnimationHandler06:
 	ld   [$cc91], a                                  ; $5d2d: $ea $91 $cc
 	ld   a, $01                                      ; $5d30: $3e $01
 	ld   [$cc8a], a                                  ; $5d32: $ea $8a $cc
-	ld   a, [$afb0]                                  ; $5d35: $fa $b0 $af
+	ld   a, [sCurrDay]                                  ; $5d35: $fa $b0 $af
 	dec  a                                           ; $5d38: $3d
 	ld   h, a                                        ; $5d39: $67
 	ld   l, $07                                      ; $5d3a: $2e $07
@@ -4814,7 +4828,7 @@ DormRoomAnimationHandler09:
 
 
 DormRoomAnimationHandler0a:
-	ld   hl, $cc7f                                   ; $5dc7: $21 $7f $cc
+	ld   hl, wDormRoomDaySpritesX                                   ; $5dc7: $21 $7f $cc
 	ld   a, [hl]                                     ; $5dca: $7e
 	add  $08                                         ; $5dcb: $c6 $08
 	ld   [hl], a                                     ; $5dcd: $77
@@ -5384,7 +5398,7 @@ Call_004_6113:
 	
 	
 DormRoomAnimationHandler0d:
-	ld   hl, $cc7f ; $6156: $21 $7f $cc
+	ld   hl, wDormRoomDaySpritesX ; $6156: $21 $7f $cc
 	ld   a, [hl]                                    ; $6159: $7e
 	sub  $08                                    ; $615a: $d6 $08
 	ld   [hl], a                                 ; $615c: $77
@@ -6162,7 +6176,7 @@ jr_004_65ee:
 
 
 DormRoomAnimationHandler17:
-	ld   hl, $cc7f                                   ; $66af: $21 $7f $cc
+	ld   hl, wDormRoomDaySpritesX                                   ; $66af: $21 $7f $cc
 	ld   a, [hl]                                     ; $66b2: $7e
 	sub  $04                                         ; $66b3: $d6 $04
 	ld   [hl], a                                     ; $66b5: $77
@@ -6180,7 +6194,7 @@ DormRoomAnimationHandler17:
 
 
 DormRoomAnimationHandler18:
-	ld   hl, $cc7f                                   ; $66c9: $21 $7f $cc
+	ld   hl, wDormRoomDaySpritesX                                   ; $66c9: $21 $7f $cc
 	ld   a, [hl]                                     ; $66cc: $7e
 	add  $04                                         ; $66cd: $c6 $04
 	ld   [hl], a                                     ; $66cf: $77
@@ -8374,7 +8388,7 @@ jr_004_747e:
 
 Call_004_7495:
 	ld   b, a                                        ; $7495: $47
-	ld   a, [$afb0]                                  ; $7496: $fa $b0 $af
+	ld   a, [sCurrDay]                                  ; $7496: $fa $b0 $af
 	cp   $1f                                         ; $7499: $fe $1f
 	ld   a, b                                        ; $749b: $78
 	jp   z, Jump_004_766e                            ; $749c: $ca $6e $76
@@ -8399,7 +8413,7 @@ Call_004_7495:
 	ld   bc, $0020                                   ; $74cc: $01 $20 $00
 	ld   a, $00                                      ; $74cf: $3e $00
 	call MemSet                                       ; $74d1: $cd $96 $09
-	ld   a, [$afb0]                                  ; $74d4: $fa $b0 $af
+	ld   a, [sCurrDay]                                  ; $74d4: $fa $b0 $af
 	ld   h, a                                        ; $74d7: $67
 	ld   l, $0a                                      ; $74d8: $2e $0a
 	call HLequHdivModL                                       ; $74da: $cd $fb $0b
@@ -8422,7 +8436,7 @@ Call_004_7495:
 	ld   de, $d6a0                                   ; $74fd: $11 $a0 $d6
 	ld   bc, $0020                                   ; $7500: $01 $20 $00
 	call MemCopy                                       ; $7503: $cd $a9 $09
-	ld   a, [$afb0]                                  ; $7506: $fa $b0 $af
+	ld   a, [sCurrDay]                                  ; $7506: $fa $b0 $af
 	dec  a                                           ; $7509: $3d
 	ld   h, a                                        ; $750a: $67
 	ld   l, $07                                      ; $750b: $2e $07
@@ -8477,7 +8491,7 @@ jr_004_7536:
 Jump_004_7555:
 	ld   a, $0c                                      ; $7555: $3e $0c
 	ld   [wSpriteGroup], a                                  ; $7557: $ea $1a $c2
-	ld   a, [$afb0]                                  ; $755a: $fa $b0 $af
+	ld   a, [sCurrDay]                                  ; $755a: $fa $b0 $af
 	dec  a                                           ; $755d: $3d
 	ld   h, a                                        ; $755e: $67
 	ld   l, $07                                      ; $755f: $2e $07
@@ -8755,7 +8769,7 @@ Jump_004_766e:
 	ld   hl, $d540                                   ; $768f: $21 $40 $d5
 	ld   bc, $0040                                   ; $7692: $01 $40 $00
 	call MemCopy                                       ; $7695: $cd $a9 $09
-	ld   a, [$afb0]                                  ; $7698: $fa $b0 $af
+	ld   a, [sCurrDay]                                  ; $7698: $fa $b0 $af
 	dec  a                                           ; $769b: $3d
 	ld   h, a                                        ; $769c: $67
 	ld   l, $07                                      ; $769d: $2e $07
@@ -8921,27 +8935,24 @@ DormRoomTileDataBank0_8800h_hook:
 	ret
 
 
+DormRoomTileDataBank1_8000h_hook:
+	call RLEXorCopy
+
+	ld   a, BANK(Gfx_EnDormRoomDayDetails)
+	ld   bc, Gfx_EnDormRoomDayDetails.end-Gfx_EnDormRoomDayDetails
+	ld   de, $d140
+	ld   hl, Gfx_EnDormRoomDayDetails
+	call FarMemCopy
+
+	ret
+
+
 DormRoomTileDataBank1_8800h_hook:
 	call RLEXorCopy
 
-; Save
-	ld   bc, $80
-	ld   de, $d000+$380
+	ld   bc, Gfx_EnDormRoomOpts.end-Gfx_EnDormRoomOpts
+	ld   de, $d000
 	ld   hl, Gfx_EnDormRoomOpts
-	call MemCopy
-
-; Items
-
-; Options
-	ld   bc, $80
-	ld   de, $d000+$200
-	ld   hl, Gfx_EnDormRoomOpts+$100
-	call MemCopy
-
-; Sleep
-	ld   bc, $80
-	ld   de, $d000+$500
-	ld   hl, Gfx_EnDormRoomOpts+$180
 	call MemCopy
 
 	ret
@@ -8965,6 +8976,7 @@ Gfx_EnDormRoomStatsLabels:
 
 Gfx_EnDormRoomOpts:
 	INCBIN "en_dormRoomOpts.2bpp"
+.end:
 
 
 TileMap_DormRoomStatsLabels:

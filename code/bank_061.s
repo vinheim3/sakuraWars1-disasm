@@ -7741,7 +7741,7 @@ jr_061_609b:
 	ld   [hl], c                                     ; $6330: $71
 	ld   l, l                                        ; $6331: $6d
 	sbc  l                                           ; $6332: $9d
-	ld   a, [$afb0]                                  ; $6333: $fa $b0 $af
+	ld   a, [sCurrDay]                                  ; $6333: $fa $b0 $af
 	ld   a, h                                        ; $6336: $7c
 	ld   [bc], a                                     ; $6337: $02
 	inc  bc                                          ; $6338: $03
@@ -8356,7 +8356,7 @@ Call_061_65b0:
 	dec  c                                           ; $65e2: $0d
 	nop                                              ; $65e3: $00
 	ld   a, [bc]                                     ; $65e4: $0a
-	ld   bc, $afb0                                   ; $65e5: $01 $b0 $af
+	ld   bc, sCurrDay                                   ; $65e5: $01 $b0 $af
 	rst  $38                                         ; $65e8: $ff
 	rst  $38                                         ; $65e9: $ff
 	rst  $38                                         ; $65ea: $ff
@@ -8903,7 +8903,7 @@ Call_061_65b0:
 	inc  bc                                          ; $684d: $03
 	rlca                                             ; $684e: $07
 	rlca                                             ; $684f: $07
-	ld   bc, $afb0                                   ; $6850: $01 $b0 $af
+	ld   bc, sCurrDay                                   ; $6850: $01 $b0 $af
 	rst  $38                                         ; $6853: $ff
 	rst  $38                                         ; $6854: $ff
 	inc  b                                           ; $6855: $04

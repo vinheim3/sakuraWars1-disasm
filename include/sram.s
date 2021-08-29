@@ -8,8 +8,12 @@ sa000:
 sPlayerName:: ; $afaa
     ds 6
 
-safb0:
-    ds $11b3-$fb0
+; 1-indexed
+sCurrDay:: ; $afb0
+    db
+
+safb1:
+    ds $11b3-$fb1
 
 sTextSpeedBaseCounter:: ; $b1b3
     db

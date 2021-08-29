@@ -240,7 +240,7 @@ GameState39::
 	ret                                              ; $41c9: $c9
 
 
-	ld   a, [$afb0]                                  ; $41ca: $fa $b0 $af
+	ld   a, [sCurrDay]                                  ; $41ca: $fa $b0 $af
 	ld   h, a                                        ; $41cd: $67
 	ld   l, $0a                                      ; $41ce: $2e $0a
 	call HLequHdivModL                                       ; $41d0: $cd $fb $0b
@@ -266,7 +266,7 @@ GameState39::
 	ld   de, $8120                                   ; $41f6: $11 $20 $81
 	ld   bc, $0201                                   ; $41f9: $01 $01 $02
 	call EnqueueHDMATransfer                                       ; $41fc: $cd $7c $02
-	ld   a, [$afb0]                                  ; $41ff: $fa $b0 $af
+	ld   a, [sCurrDay]                                  ; $41ff: $fa $b0 $af
 	dec  a                                           ; $4202: $3d
 	ld   h, a                                        ; $4203: $67
 	ld   l, $07                                      ; $4204: $2e $07
@@ -281,16 +281,10 @@ GameState39::
 	ld   de, $8140                                   ; $4215: $11 $40 $81
 	ld   bc, $0401                                   ; $4218: $01 $01 $04
 	call EnqueueHDMATransfer                                       ; $421b: $cd $7c $02
-	ld   a, [$cb20]                                  ; $421e: $fa $20 $cb
-	push af                                          ; $4221: $f5
-	ld   a, $44                                      ; $4222: $3e $44
-	ld   [wFarCallAddr], a                                  ; $4224: $ea $98 $c2
-	ld   a, $45                                      ; $4227: $3e $45
-	ld   [wFarCallAddr+1], a                                  ; $4229: $ea $99 $c2
-	ld   a, $09                                      ; $422c: $3e $09
-	ld   [wFarCallBank], a                                  ; $422e: $ea $9a $c2
-	pop  af                                          ; $4231: $f1
-	call FarCall                                       ; $4232: $cd $62 $09
+	ld   a, [wTimeOfDay]                                  ; $421e: $fa $20 $cb
+
+	M_FarCall GetNameIdxOfTimeOfDay
+
 	sla  a                                           ; $4235: $cb $27
 	sla  a                                           ; $4237: $cb $27
 	swap a                                           ; $4239: $cb $37
@@ -2481,7 +2475,7 @@ jr_00c_4e17:
 	call FarCopyLayout                                       ; $4e2d: $cd $2c $0b
 	ld   hl, $d400                                   ; $4e30: $21 $00 $d4
 	call FarCopyLayout                                       ; $4e33: $cd $2c $0b
-	ld   a, [$afb0]                                  ; $4e36: $fa $b0 $af
+	ld   a, [sCurrDay]                                  ; $4e36: $fa $b0 $af
 	cp   $1f                                         ; $4e39: $fe $1f
 	jr   nz, jr_00c_4e75                             ; $4e3b: $20 $38
 
@@ -2522,7 +2516,7 @@ jr_00c_4e75:
 	call StartAnimatingAnimatedSpriteSpec                                       ; $4e7f: $cd $14 $30
 	call HLequAddrOfAnimSpriteSpecDetails                                       ; $4e82: $cd $76 $30
 	push hl                                          ; $4e85: $e5
-	ld   a, [$afb0]                                  ; $4e86: $fa $b0 $af
+	ld   a, [sCurrDay]                                  ; $4e86: $fa $b0 $af
 	dec  a                                           ; $4e89: $3d
 	ld   h, a                                        ; $4e8a: $67
 	ld   l, $07                                      ; $4e8b: $2e $07
@@ -2544,7 +2538,7 @@ jr_00c_4e75:
 	call FarCall                                       ; $4eab: $cd $62 $09
 
 jr_00c_4eae:
-	ld   a, [$afb0]                                  ; $4eae: $fa $b0 $af
+	ld   a, [sCurrDay]                                  ; $4eae: $fa $b0 $af
 	cp   $0a                                         ; $4eb1: $fe $0a
 	ld   a, $00                                      ; $4eb3: $3e $00
 	ld   hl, $0000                                   ; $4eb5: $21 $00 $00
@@ -2554,7 +2548,7 @@ jr_00c_4eae:
 	call StartAnimatingAnimatedSpriteSpec                                       ; $4ebd: $cd $14 $30
 	call HLequAddrOfAnimSpriteSpecDetails                                       ; $4ec0: $cd $76 $30
 	push hl                                          ; $4ec3: $e5
-	ld   a, [$afb0]                                  ; $4ec4: $fa $b0 $af
+	ld   a, [sCurrDay]                                  ; $4ec4: $fa $b0 $af
 	ld   h, a                                        ; $4ec7: $67
 	ld   l, $0a                                      ; $4ec8: $2e $0a
 	call HLequHdivModL                                       ; $4eca: $cd $fb $0b
@@ -2581,7 +2575,7 @@ jr_00c_4eae:
 	call StartAnimatingAnimatedSpriteSpec                                       ; $4ef5: $cd $14 $30
 	call HLequAddrOfAnimSpriteSpecDetails                                       ; $4ef8: $cd $76 $30
 	push hl                                          ; $4efb: $e5
-	ld   a, [$afb0]                                  ; $4efc: $fa $b0 $af
+	ld   a, [sCurrDay]                                  ; $4efc: $fa $b0 $af
 	ld   h, a                                        ; $4eff: $67
 	ld   l, $0a                                      ; $4f00: $2e $0a
 	call HLequHdivModL                                       ; $4f02: $cd $fb $0b
@@ -4890,7 +4884,7 @@ GameState3f::
 	pop  af                                          ; $5e66: $f1
 	call FarCall                                       ; $5e67: $cd $62 $09
 	ld   [$b0ab], a                                  ; $5e6a: $ea $ab $b0
-	ld   a, [$afb0]                                  ; $5e6d: $fa $b0 $af
+	ld   a, [sCurrDay]                                  ; $5e6d: $fa $b0 $af
 	dec  a                                           ; $5e70: $3d
 	ld   h, a                                        ; $5e71: $67
 	ld   l, $07                                      ; $5e72: $2e $07

@@ -3795,7 +3795,7 @@ jr_095_575e:
 	ld   a, [$fe2f]                                  ; $5773: $fa $2f $fe
 	ld   a, a                                        ; $5776: $7f
 	ei                                               ; $5777: $fb
-	call $cc7f                                       ; $5778: $cd $7f $cc
+	call wDormRoomDaySpritesX                                       ; $5778: $cd $7f $cc
 	ld   a, a                                        ; $577b: $7f
 	xor  $3f                                         ; $577c: $ee $3f
 	ld   l, [hl]                                     ; $577e: $6e
@@ -4506,7 +4506,7 @@ jr_095_5ab2:
 	ld   a, [$fa2e]                                  ; $5ac3: $fa $2e $fa
 	ld   a, a                                        ; $5ac6: $7f
 	ld   sp, hl                                      ; $5ac7: $f9
-	call $cc7f                                       ; $5ac8: $cd $7f $cc
+	call wDormRoomDaySpritesX                                       ; $5ac8: $cd $7f $cc
 	ld   a, a                                        ; $5acb: $7f
 	xor  $3f                                         ; $5acc: $ee $3f
 	ld   l, [hl]                                     ; $5ace: $6e

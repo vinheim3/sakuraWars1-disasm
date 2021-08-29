@@ -7103,7 +7103,7 @@ jr_059_5f19:
 	sub  h                                           ; $607f: $94
 	ld   e, l                                        ; $6080: $5d
 	nop                                              ; $6081: $00
-	ld   bc, $afb0                                   ; $6082: $01 $b0 $af
+	ld   bc, sCurrDay                                   ; $6082: $01 $b0 $af
 	and  b                                           ; $6085: $a0
 	dec  b                                           ; $6086: $05
 	db   $eb                                         ; $6087: $eb
@@ -7216,7 +7216,7 @@ jr_059_5f19:
 	ld   a, [bc]                                     ; $610d: $0a
 	inc  e                                           ; $610e: $1c
 	ld   bc, $0303                                   ; $610f: $01 $03 $03
-	ld   bc, $afb0                                   ; $6112: $01 $b0 $af
+	ld   bc, sCurrDay                                   ; $6112: $01 $b0 $af
 	and  b                                           ; $6115: $a0
 	inc  b                                           ; $6116: $04
 	sub  h                                           ; $6117: $94
@@ -7259,7 +7259,7 @@ jr_059_5f19:
 	ld   a, [bc]                                     ; $6143: $0a
 	inc  e                                           ; $6144: $1c
 	ld   bc, $0202                                   ; $6145: $01 $02 $02
-	ld   bc, $afb0                                   ; $6148: $01 $b0 $af
+	ld   bc, sCurrDay                                   ; $6148: $01 $b0 $af
 	and  b                                           ; $614b: $a0
 	dec  b                                           ; $614c: $05
 	db   $eb                                         ; $614d: $eb

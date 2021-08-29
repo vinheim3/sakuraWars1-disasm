@@ -11482,3 +11482,12 @@ jr_005_787f:
 	ld   a, [$cc6e]                                  ; $7887: $fa $6e $cc
 	ldh  [rSCY], a                                   ; $788a: $e0 $42
 	jp   LCDCInterruptHandler.return                                       ; $788c: $c3 $4a $04
+
+
+if def(VWF)
+
+Gfx_EnDormRoomDayDetails::
+	INCBIN "en_dormRoomDayDetails.2bpp"
+.end::
+
+endc

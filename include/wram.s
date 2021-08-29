@@ -346,7 +346,14 @@ wPlayerName:: ; $cb0e
     ds 6
 
 wcb14:
-    ds $21-$14
+    ds $20-$14
+
+; 16 possible values, if +6
+; 6-10 - morning
+; 11-17 - noon
+; 18-21 - night
+wTimeOfDay:: ; $cb20
+    db
 
 wBattleWon:: ; $cb21
     db
@@ -479,7 +486,13 @@ wDormRoomMiscCounterIdx:: ; $cc7a
     db
 
 wcc7b:
-    ds $98-$7b
+    ds $f-$b
+
+wDormRoomDaySpritesX:: ; $cc7f
+    db
+
+wcc80:
+    ds $98-$80
 
 wPrologueMainSubSubstate:: ; $cc98
     db

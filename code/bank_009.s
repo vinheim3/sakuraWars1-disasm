@@ -18,7 +18,7 @@ GameState38::
 	ld   bc, .table                                   ; $401c: $01 $2c $40
 	add  hl, bc                                      ; $401f: $09
 	ld   a, [hl+]                                    ; $4020: $2a
-	ld   [$cb20], a                                  ; $4021: $ea $20 $cb
+	ld   [wTimeOfDay], a                                  ; $4021: $ea $20 $cb
 	ld   a, [hl+]                                    ; $4024: $2a
 	ld   [$cc7e], a                                  ; $4025: $ea $7e $cc
 	ld   a, [hl+]                                    ; $4028: $2a
@@ -75,7 +75,7 @@ GameState38::
 
 	
 	ld   a, $01                                      ; $40e0: $3e $01
-	ld   [$afb0], a                                  ; $40e2: $ea $b0 $af
+	ld   [sCurrDay], a                                  ; $40e2: $ea $b0 $af
 	ld   hl, $afb1                                   ; $40e5: $21 $b1 $af
 	inc  [hl]                                        ; $40e8: $34
 	ret                                              ; $40e9: $c9
@@ -88,7 +88,7 @@ GameState38::
 	ldh  [rSVBK], a                                  ; $40f3: $e0 $70
 	ld   a, $07                                      ; $40f5: $3e $07
 	call SafeSetAudVolForMultipleChannels                                       ; $40f7: $cd $e0 $1c
-	ld   a, [$cb20]                                  ; $40fa: $fa $20 $cb
+	ld   a, [wTimeOfDay]                                  ; $40fa: $fa $20 $cb
 	call Call_009_4841                               ; $40fd: $cd $41 $48
 	or   a                                           ; $4100: $b7
 	jr   z, jr_009_4142                              ; $4101: $28 $3f
@@ -175,7 +175,7 @@ jr_009_4188:
 	ret                                              ; $4195: $c9
 
 
-	ld   a, [$afb0]                                  ; $4196: $fa $b0 $af
+	ld   a, [sCurrDay]                                  ; $4196: $fa $b0 $af
 	cp   $20                                         ; $4199: $fe $20
 	jr   c, jr_009_41b6                              ; $419b: $38 $19
 
@@ -199,7 +199,7 @@ jr_009_41b6:
 	ld   a, $02                                      ; $41ba: $3e $02
 	ld   [wWramBank], a                                  ; $41bc: $ea $93 $c2
 	ldh  [rSVBK], a                                  ; $41bf: $e0 $70
-	ld   a, [$cb20]                                  ; $41c1: $fa $20 $cb
+	ld   a, [wTimeOfDay]                                  ; $41c1: $fa $20 $cb
 	call Call_009_4841                               ; $41c4: $cd $41 $48
 	or   a                                           ; $41c7: $b7
 	jr   z, jr_009_4218                              ; $41c8: $28 $4e
@@ -256,7 +256,7 @@ jr_009_4218:
 	ld   a, $02                                      ; $4227: $3e $02
 	ld   [wWramBank], a                                  ; $4229: $ea $93 $c2
 	ldh  [rSVBK], a                                  ; $422c: $e0 $70
-	ld   a, [$cb20]                                  ; $422e: $fa $20 $cb
+	ld   a, [wTimeOfDay]                                  ; $422e: $fa $20 $cb
 	call Call_009_4874                               ; $4231: $cd $74 $48
 	ld   b, $10                                      ; $4234: $06 $10
 	ld   hl, $dcb0                                   ; $4236: $21 $b0 $dc
@@ -304,7 +304,7 @@ jr_009_4271:
 	ret                                              ; $427b: $c9
 
 
-	ld   a, [$afb0]                                  ; $427c: $fa $b0 $af
+	ld   a, [sCurrDay]                                  ; $427c: $fa $b0 $af
 	dec  a                                           ; $427f: $3d
 	dec  a                                           ; $4280: $3d
 	ld   h, a                                        ; $4281: $67
@@ -322,7 +322,7 @@ jr_009_4271:
 	ret                                              ; $4295: $c9
 
 
-	ld   a, [$afb0]                                  ; $4296: $fa $b0 $af
+	ld   a, [sCurrDay]                                  ; $4296: $fa $b0 $af
 	dec  a                                           ; $4299: $3d
 	dec  a                                           ; $429a: $3d
 	ld   h, a                                        ; $429b: $67
@@ -386,7 +386,7 @@ jr_009_42c4:
 
 
 Jump_009_42fb:
-	ld   hl, $afb0                                   ; $42fb: $21 $b0 $af
+	ld   hl, sCurrDay                                   ; $42fb: $21 $b0 $af
 	inc  [hl]                                        ; $42fe: $34
 	ld   h, [hl]                                     ; $42ff: $66
 	ld   l, $07                                      ; $4300: $2e $07
@@ -431,7 +431,7 @@ Jump_009_42fb:
 	ld   a, $02                                      ; $433b: $3e $02
 	ld   [wWramBank], a                                  ; $433d: $ea $93 $c2
 	ldh  [rSVBK], a                                  ; $4340: $e0 $70
-	ld   a, [$cb20]                                  ; $4342: $fa $20 $cb
+	ld   a, [wTimeOfDay]                                  ; $4342: $fa $20 $cb
 	call Call_009_4841                               ; $4345: $cd $41 $48
 	or   a                                           ; $4348: $b7
 	jr   z, jr_009_4399                              ; $4349: $28 $4e
@@ -488,7 +488,7 @@ jr_009_4399:
 	ld   a, $02                                      ; $43a8: $3e $02
 	ld   [wWramBank], a                                  ; $43aa: $ea $93 $c2
 	ldh  [rSVBK], a                                  ; $43ad: $e0 $70
-	ld   a, [$cb20]                                  ; $43af: $fa $20 $cb
+	ld   a, [wTimeOfDay]                                  ; $43af: $fa $20 $cb
 	call Call_009_4874                               ; $43b2: $cd $74 $48
 	ld   b, $10                                      ; $43b5: $06 $10
 	ld   hl, $dcb0                                   ; $43b7: $21 $b0 $dc
@@ -536,7 +536,7 @@ jr_009_43f2:
 	ret                                              ; $43fc: $c9
 
 
-	ld   a, [$afb0]                                  ; $43fd: $fa $b0 $af
+	ld   a, [sCurrDay]                                  ; $43fd: $fa $b0 $af
 	dec  a                                           ; $4400: $3d
 	dec  a                                           ; $4401: $3d
 	ld   h, a                                        ; $4402: $67
@@ -590,7 +590,7 @@ jr_009_441d:
 
 Func_09_4457::
 	push af                                          ; $4457: $f5
-	ld   a, [$afb0]                                  ; $4458: $fa $b0 $af
+	ld   a, [sCurrDay]                                  ; $4458: $fa $b0 $af
 	ld   h, a                                        ; $445b: $67
 	ld   l, $07                                      ; $445c: $2e $07
 	call HLequHdivModL                                       ; $445e: $cd $fb $0b
@@ -647,7 +647,7 @@ Jump_009_4492:
 	ld   a, h                                        ; $4498: $7c
 	and  $07                                         ; $4499: $e6 $07
 	ld   h, a                                        ; $449b: $67
-	ld   bc, $afb0                                   ; $449c: $01 $b0 $af
+	ld   bc, sCurrDay                                   ; $449c: $01 $b0 $af
 	add  hl, bc                                      ; $449f: $09
 	ld   a, [hl]                                     ; $44a0: $7e
 	jr   jr_009_44cc                                 ; $44a1: $18 $29
@@ -717,7 +717,7 @@ Jump_009_44e5:
 	and  $07                                         ; $44ed: $e6 $07
 	ld   h, a                                        ; $44ef: $67
 	pop  af                                          ; $44f0: $f1
-	ld   bc, $afb0                                   ; $44f1: $01 $b0 $af
+	ld   bc, sCurrDay                                   ; $44f1: $01 $b0 $af
 	add  hl, bc                                      ; $44f4: $09
 	ld   [hl], a                                     ; $44f5: $77
 	jr   jr_009_452d                                 ; $44f6: $18 $35
@@ -780,34 +780,40 @@ Call_009_4537::
 
 
 Call_009_453e::
-	ld   a, [$cb20]                                  ; $453e: $fa $20 $cb
+	ld   a, [wTimeOfDay]                                  ; $453e: $fa $20 $cb
 	cp   $0c                                         ; $4541: $fe $0c
 	ret                                              ; $4543: $c9
 
 
-	push bc                                          ; $4544: $c5
-	push hl                                          ; $4545: $e5
-	ld   a, [$cb20]                                  ; $4546: $fa $20 $cb
-	ld   b, $00                                      ; $4549: $06 $00
-	ld   c, a                                        ; $454b: $4f
-	ld   hl, $4554                                   ; $454c: $21 $54 $45
-	add  hl, bc                                      ; $454f: $09
-	ld   a, [hl]                                     ; $4550: $7e
-	pop  hl                                          ; $4551: $e1
-	pop  bc                                          ; $4552: $c1
-	ret                                              ; $4553: $c9
+; Returns idx in A
+GetNameIdxOfTimeOfDay::
+	push bc                                                         ; $4544
+	push hl                                                         ; $4545
 
+; HL points to idx for name idx of time of day
+	ld   a, [wTimeOfDay]                                            ; $4546
+	ld   b, $00                                                     ; $4549
+	ld   c, a                                                       ; $454b
+	ld   hl, .nameIdxes                                             ; $454c
+	add  hl, bc                                                     ; $454f
 
-	nop                                              ; $4554: $00
-	nop                                              ; $4555: $00
-	nop                                              ; $4556: $00
-	nop                                              ; $4557: $00
-	nop                                              ; $4558: $00
-	ld   bc, $0101                                   ; $4559: $01 $01 $01
-	ld   bc, $0101                                   ; $455c: $01 $01 $01
-	ld   bc, $0202                                   ; $455f: $01 $02 $02
-	ld   [bc], a                                     ; $4562: $02
-	ld   [bc], a                                     ; $4563: $02
+; Return value in A
+	ld   a, [hl]                                                    ; $4550
+
+	pop  hl                                                         ; $4551
+	pop  bc                                                         ; $4552
+	ret                                                             ; $4553
+
+.nameIdxes:
+rept 5
+	db TOD_MORNING
+endr
+rept 7
+	db TOD_NOON
+endr
+rept 4
+	db TOD_NIGHT
+endr
 
 
 GameState3b::
@@ -1388,7 +1394,7 @@ Jump_009_4913:
 	ld   d, h                                        ; $4927: $54
 	ld   e, l                                        ; $4928: $5d
 	ld   hl, Table_09_4996                                   ; $4929: $21 $96 $49
-	ld   a, [$afb0]                                  ; $492c: $fa $b0 $af
+	ld   a, [sCurrDay]                                  ; $492c: $fa $b0 $af
 	and  $18                                         ; $492f: $e6 $18
 	sla  a                                           ; $4931: $cb $27
 	sla  a                                           ; $4933: $cb $27
@@ -1397,7 +1403,7 @@ Jump_009_4913:
 	add  hl, bc                                      ; $4938: $09
 
 ;
-	ld   a, [$cb20]                                  ; $4939: $fa $20 $cb
+	ld   a, [wTimeOfDay]                                  ; $4939: $fa $20 $cb
 	sla  a                                           ; $493c: $cb $27
 	ld   b, $00                                      ; $493e: $06 $00
 	ld   c, a                                        ; $4940: $4f
@@ -1604,7 +1610,7 @@ Jump_009_4a2e:
 	inc  c                                           ; $4a6a: $0c
 
 ;
-	ld   a, [$afb0]                                  ; $4a6b: $fa $b0 $af
+	ld   a, [sCurrDay]                                  ; $4a6b: $fa $b0 $af
 	and  $07                                         ; $4a6e: $e6 $07
 	cp   b                                           ; $4a70: $b8
 	jr   c, .retFFh                              ; $4a71: $38 $ea
@@ -1737,14 +1743,14 @@ Jump_009_4b1b:
 	ld   d, h                                        ; $4b34: $54
 	ld   e, l                                        ; $4b35: $5d
 	ld   hl, Table_09_4996                                   ; $4b36: $21 $96 $49
-	ld   a, [$afb0]                                  ; $4b39: $fa $b0 $af
+	ld   a, [sCurrDay]                                  ; $4b39: $fa $b0 $af
 	and  $18                                         ; $4b3c: $e6 $18
 	sla  a                                           ; $4b3e: $cb $27
 	sla  a                                           ; $4b40: $cb $27
 	ld   b, $00                                      ; $4b42: $06 $00
 	ld   c, a                                        ; $4b44: $4f
 	add  hl, bc                                      ; $4b45: $09
-	ld   a, [$cb20]                                  ; $4b46: $fa $20 $cb
+	ld   a, [wTimeOfDay]                                  ; $4b46: $fa $20 $cb
 	sla  a                                           ; $4b49: $cb $27
 	ld   b, $00                                      ; $4b4b: $06 $00
 	ld   c, a                                        ; $4b4d: $4f

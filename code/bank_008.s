@@ -807,10 +807,10 @@ HandleProcessingScriptCalcStack:
 	dw $453f
 	dw $4544
 
-	ld   a, [$afb0]                                  ; $4521: $fa $b0 $af
+	ld   a, [sCurrDay]                                  ; $4521: $fa $b0 $af
 	jr   PushAOntoScriptCalcStack                                 ; $4524: $18 $23
 
-	ld   a, [$cb20]                                  ; $4526: $fa $20 $cb
+	ld   a, [wTimeOfDay]                                  ; $4526: $fa $20 $cb
 	jr   PushAOntoScriptCalcStack                                 ; $4529: $18 $1e
 
 	ld   a, [wUntimedQuestionAnswer]                                  ; $452b: $fa $92 $cb

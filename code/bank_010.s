@@ -2123,7 +2123,7 @@ jr_010_4dad:
 	ld   h, [hl]                                     ; $4de2: $66
 	ld   l, a                                        ; $4de3: $6f
 	ld   c, $00                                      ; $4de4: $0e $00
-	ld   a, [$afb0]                                  ; $4de6: $fa $b0 $af
+	ld   a, [sCurrDay]                                  ; $4de6: $fa $b0 $af
 	inc  a                                           ; $4de9: $3c
 	cp   $08                                         ; $4dea: $fe $08
 	jr   c, jr_010_4df9                              ; $4dec: $38 $0b

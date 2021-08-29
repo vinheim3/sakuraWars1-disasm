@@ -7317,8 +7317,8 @@ SpriteGroupCPointers::
 	dw $67b0
 	dw $67c0
 	dw $67c4
-	dw $67c8
-	dw $67d0
+	dw SpriteGroupC_Idx1eh_DormRoomDay
+	dw SpriteGroupC_Idx1fh_DormRoom0
 	dw $67d4
 	dw $67d8
 	dw $67dc
@@ -7328,16 +7328,16 @@ SpriteGroupCPointers::
 	dw $67ec
 	dw $67f0
 	dw $67f4
-	dw $67f8
-	dw $6800
-	dw $6808
-	dw $6810
-	dw $6818
-	dw $6820
-	dw $6828
-	dw $6830
-	dw $6838
-	dw $6840
+	dw SpriteGroupC_Idx29h_DormRoomSunday
+	dw SpriteGroupC_Idx2ah_DormRoomMonday
+	dw SpriteGroupC_Idx2bh_DormRoomTuesday
+	dw SpriteGroupC_Idx2ch_DormRoomWednesday
+	dw SpriteGroupC_Idx2dh_DormRoomThursday
+	dw SpriteGroupC_Idx2eh_DormRoomFriday
+	dw SpriteGroupC_Idx2fh_DormRoomSaturday
+	dw SpriteGroupC_Idx30h_DormRoomMorning
+	dw SpriteGroupC_Idx31h_DormRoomNoon
+	dw SpriteGroupC_Idx32h_DormRoomNight
 	dw $6848
 	dw $687c
 	dw $68b0
@@ -8552,13 +8552,20 @@ jr_00e_678b:
 	ld   [$1d76], sp                                 ; $67c1: $08 $76 $1d
 	db   $10                                         ; $67c4: $10
 	ld   [$3d76], sp                                 ; $67c5: $08 $76 $3d
-	db   $10                                         ; $67c8: $10
-	db   $10                                         ; $67c9: $10
-	ld   a, $0f                                      ; $67ca: $3e $0f
-	db   $10                                         ; $67cc: $10
-	ld   [$1f3c], sp                                 ; $67cd: $08 $3c $1f
-	db   $10                                         ; $67d0: $10
-	ld   [$1f00], sp                                 ; $67d1: $08 $00 $1f
+
+if def(VWF)
+else
+SpriteGroupC_Idx1eh_DormRoomDay:
+endc
+	db $10, $10, $3e, $0f
+	db $10, $08, $3c, $1f
+
+
+SpriteGroupC_Idx1fh_DormRoom0:
+	db $10, $08, $00, $1f
+
+
+
 	db   $10                                         ; $67d4: $10
 	ld   [$1f02], sp                                 ; $67d5: $08 $02 $1f
 	db   $10                                         ; $67d8: $10
@@ -8577,61 +8584,90 @@ jr_00e_678b:
 	ld   [$1f10], sp                                 ; $67f1: $08 $10 $1f
 	db   $10                                         ; $67f4: $10
 	ld   [$1f12], sp                                 ; $67f5: $08 $12 $1f
-	db   $10                                         ; $67f8: $10
-	db   $10                                         ; $67f9: $10
-	ld   d, $0c                                      ; $67fa: $16 $0c
-	db   $10                                         ; $67fc: $10
-	ld   [$1c14], sp                                 ; $67fd: $08 $14 $1c
-	db   $10                                         ; $6800: $10
-	db   $10                                         ; $6801: $10
-	ld   a, [de]                                     ; $6802: $1a
-	rrca                                             ; $6803: $0f
-	db   $10                                         ; $6804: $10
-	ld   [$1f18], sp                                 ; $6805: $08 $18 $1f
-	db   $10                                         ; $6808: $10
-	db   $10                                         ; $6809: $10
-	ld   e, $0f                                      ; $680a: $1e $0f
-	db   $10                                         ; $680c: $10
-	ld   [$1f1c], sp                                 ; $680d: $08 $1c $1f
-	db   $10                                         ; $6810: $10
-	db   $10                                         ; $6811: $10
-	ld   [hl+], a                                    ; $6812: $22
-	rrca                                             ; $6813: $0f
-	db   $10                                         ; $6814: $10
-	ld   [$1f20], sp                                 ; $6815: $08 $20 $1f
-	db   $10                                         ; $6818: $10
-	db   $10                                         ; $6819: $10
-	ld   h, $0f                                      ; $681a: $26 $0f
-	db   $10                                         ; $681c: $10
-	ld   [$1f24], sp                                 ; $681d: $08 $24 $1f
-	db   $10                                         ; $6820: $10
-	db   $10                                         ; $6821: $10
-	ld   a, [hl+]                                    ; $6822: $2a
-	rrca                                             ; $6823: $0f
-	db   $10                                         ; $6824: $10
-	ld   [$1f28], sp                                 ; $6825: $08 $28 $1f
-	db   $10                                         ; $6828: $10
-	db   $10                                         ; $6829: $10
-	ld   l, $0f                                      ; $682a: $2e $0f
-	db   $10                                         ; $682c: $10
-	ld   [$1f2c], sp                                 ; $682d: $08 $2c $1f
-	db   $10                                         ; $6830: $10
-	db   $10                                         ; $6831: $10
-	ld   [hl-], a                                    ; $6832: $32
-	dec  c                                           ; $6833: $0d
-	db   $10                                         ; $6834: $10
-	ld   [$1d30], sp                                 ; $6835: $08 $30 $1d
-	db   $10                                         ; $6838: $10
-	db   $10                                         ; $6839: $10
-	ld   [hl], $0f                                   ; $683a: $36 $0f
-	db   $10                                         ; $683c: $10
-	ld   [$1f34], sp                                 ; $683d: $08 $34 $1f
-	db   $10                                         ; $6840: $10
-	db   $10                                         ; $6841: $10
-	ld   a, [hl-]                                    ; $6842: $3a
-	rrca                                             ; $6843: $0f
-	db   $10                                         ; $6844: $10
-	ld   [$1f38], sp                                 ; $6845: $08 $38 $1f
+
+
+SpriteGroupC_Idx29h_DormRoomSunday:
+	db $10, $10, $16, $0c
+	db $10, $08, $14, $1c
+
+
+SpriteGroupC_Idx2ah_DormRoomMonday:
+	db $10, $10, $1a, $0f
+	db $10, $08, $18, $1f
+
+
+if def(VWF)
+else
+SpriteGroupC_Idx2bh_DormRoomTuesday:
+endc
+	db $10, $10, $1e, $0f
+	db $10, $08, $1c, $1f
+
+
+if def(VWF)
+else
+SpriteGroupC_Idx2ch_DormRoomWednesday:
+endc
+	db $10, $10, $22, $0f
+	db $10, $08, $20, $1f
+
+
+if def(VWF)
+else
+SpriteGroupC_Idx2dh_DormRoomThursday:
+endc
+	db $10, $10, $26, $0f
+	db $10, $08, $24, $1f
+
+
+if def(VWF)
+else
+SpriteGroupC_Idx2eh_DormRoomFriday:
+endc
+	db $10, $10, $2a, $0f
+	db $10, $08, $28, $1f
+
+
+if def(VWF)
+else
+SpriteGroupC_Idx2fh_DormRoomSaturday:
+endc
+	db $10, $10, $2e, $0f
+	db $10, $08, $2c, $1f
+
+
+if def(VWF)
+SpriteGroupC_Idx30h_DormRoomMorning:
+	db $10, $10, $3a, $0d
+	db $10, $08, $38, $1d
+
+
+SpriteGroupC_Idx31h_DormRoomNoon:
+	db $10, $10, $3e, $0f
+	db $10, $08, $3c, $1f
+
+
+SpriteGroupC_Idx32h_DormRoomNight:
+	db $10, $10, $42, $0f
+	db $10, $08, $40, $1f
+else
+SpriteGroupC_Idx30h_DormRoomMorning:
+	db $10, $10, $32, $0d
+	db $10, $08, $30, $1d
+
+
+SpriteGroupC_Idx31h_DormRoomNoon:
+	db $10, $10, $36, $0f
+	db $10, $08, $34, $1f
+
+
+SpriteGroupC_Idx32h_DormRoomNight:
+	db $10, $10, $3a, $0f
+	db $10, $08, $38, $1f
+endc
+
+
+
 	add  sp, $06                                     ; $6848: $e8 $06
 	ld   b, d                                        ; $684a: $42
 	add  hl, bc                                      ; $684b: $09
@@ -11829,4 +11865,40 @@ Data_0e_6c84:
 	db $3a-$40, $5f-$40, $46, $08
 	db $3a-$40, $67-$40, $48, $08
 	db $3a-$40, $6f-$40, $4a, $18
+
+
+SpriteGroupC_Idx1eh_DormRoomDay:
+	db $10, $08, $44, $0f
+	db $10, $10, $46, $0f
+	db $10, $18, $48, $1f
+
+
+SpriteGroupC_Idx2bh_DormRoomTuesday:
+	db $10, $00, $1c, $0f
+	db $10, $08, $1e, $0f
+	db $10, $10, $20, $1f
+
+
+SpriteGroupC_Idx2ch_DormRoomWednesday:
+	db $10, $00, $22, $0f
+	db $10, $08, $24, $0f
+	db $10, $10, $26, $1f
+
+
+SpriteGroupC_Idx2dh_DormRoomThursday:
+	db $10, $00, $28, $0f
+	db $10, $08, $2a, $0f
+	db $10, $10, $2c, $1f
+
+
+SpriteGroupC_Idx2eh_DormRoomFriday:
+	db $10, $08, $2e, $0f
+	db $10, $18, $30, $1f
+
+
+SpriteGroupC_Idx2fh_DormRoomSaturday:
+	db $10, $00, $32, $0f
+	db $10, $08, $34, $0f
+	db $10, $10, $36, $1f
+	
 endc
