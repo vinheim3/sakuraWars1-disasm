@@ -205,7 +205,7 @@ jr_009_41b6:
 	jr   z, jr_009_4218                              ; $41c8: $28 $4e
 
 	ld   b, $03                                      ; $41ca: $06 $03
-	call Call_009_453e                               ; $41cc: $cd $3e $45
+	call ClearCarryIfNightElseSetIt                               ; $41cc: $cd $3e $45
 	jr   c, jr_009_41d3                              ; $41cf: $38 $02
 
 	ld   b, $02                                      ; $41d1: $06 $02
@@ -267,7 +267,7 @@ jr_009_4239:
 	jr   z, jr_009_426e                              ; $423b: $28 $31
 
 	ld   b, $03                                      ; $423d: $06 $03
-	call Call_009_453e                               ; $423f: $cd $3e $45
+	call ClearCarryIfNightElseSetIt                               ; $423f: $cd $3e $45
 	jr   c, jr_009_4246                              ; $4242: $38 $02
 
 	ld   b, $02                                      ; $4244: $06 $02
@@ -352,7 +352,7 @@ jr_009_42b6:
 
 jr_009_42bb:
 	ld   b, $03                                      ; $42bb: $06 $03
-	call Call_009_453e                               ; $42bd: $cd $3e $45
+	call ClearCarryIfNightElseSetIt                               ; $42bd: $cd $3e $45
 	jr   c, jr_009_42c4                              ; $42c0: $38 $02
 
 	ld   b, $02                                      ; $42c2: $06 $02
@@ -437,7 +437,7 @@ Jump_009_42fb:
 	jr   z, jr_009_4399                              ; $4349: $28 $4e
 
 	ld   b, $03                                      ; $434b: $06 $03
-	call Call_009_453e                               ; $434d: $cd $3e $45
+	call ClearCarryIfNightElseSetIt                               ; $434d: $cd $3e $45
 	jr   c, jr_009_4354                              ; $4350: $38 $02
 
 	ld   b, $02                                      ; $4352: $06 $02
@@ -499,7 +499,7 @@ jr_009_43ba:
 	jr   z, jr_009_43ef                              ; $43bc: $28 $31
 
 	ld   b, $03                                      ; $43be: $06 $03
-	call Call_009_453e                               ; $43c0: $cd $3e $45
+	call ClearCarryIfNightElseSetIt                               ; $43c0: $cd $3e $45
 	jr   c, jr_009_43c7                              ; $43c3: $38 $02
 
 	ld   b, $02                                      ; $43c5: $06 $02
@@ -552,7 +552,7 @@ jr_009_43f2:
 
 jr_009_4414:
 	ld   b, $03                                      ; $4414: $06 $03
-	call Call_009_453e                               ; $4416: $cd $3e $45
+	call ClearCarryIfNightElseSetIt                               ; $4416: $cd $3e $45
 	jr   c, jr_009_441d                              ; $4419: $38 $02
 
 	ld   b, $02                                      ; $441b: $06 $02
@@ -638,11 +638,13 @@ jr_009_4475:
 	inc  hl                                          ; $4490: $23
 	rra                                              ; $4491: $1f
 
-Jump_009_4492:
+GetSramValOrFlag2:
 	push bc                                          ; $4492: $c5
 	push de                                          ; $4493: $d5
+
+;
 	bit  7, h                                        ; $4494: $cb $7c
-	jr   nz, jr_009_44a3                             ; $4496: $20 $0b
+	jr   nz, .br_44a3                             ; $4496: $20 $0b
 
 	ld   a, h                                        ; $4498: $7c
 	and  $07                                         ; $4499: $e6 $07
@@ -650,67 +652,76 @@ Jump_009_4492:
 	ld   bc, sCurrDay                                   ; $449c: $01 $b0 $af
 	add  hl, bc                                      ; $449f: $09
 	ld   a, [hl]                                     ; $44a0: $7e
-	jr   jr_009_44cc                                 ; $44a1: $18 $29
+	jr   .done                                 ; $44a1: $18 $29
 
-jr_009_44a3:
+.br_44a3:
 	ld   a, h                                        ; $44a3: $7c
 	and  $07                                         ; $44a4: $e6 $07
 	ld   h, a                                        ; $44a6: $67
+
+; Clear BC
 	ld   b, $00                                      ; $44a7: $06 $00
 	ld   c, b                                        ; $44a9: $48
+
+; Low 3 bits of C is low 3 bits of L inverted
 	srl  h                                           ; $44aa: $cb $3c
 	rr   l                                           ; $44ac: $cb $1d
 	rl   c                                           ; $44ae: $cb $11
+
 	srl  h                                           ; $44b0: $cb $3c
 	rr   l                                           ; $44b2: $cb $1d
 	rl   c                                           ; $44b4: $cb $11
+
 	srl  h                                           ; $44b6: $cb $3c
 	rr   l                                           ; $44b8: $cb $1d
 	rl   c                                           ; $44ba: $cb $11
+
+; DE = orig HL / 8
 	ld   d, h                                        ; $44bc: $54
 	ld   e, l                                        ; $44bd: $5d
-	ld   hl, $44cf                                   ; $44be: $21 $cf $44
+
+; Get appropriate bit based on orig low 3 bits of L
+	ld   hl, BitTable                                   ; $44be: $21 $cf $44
 	add  hl, bc                                      ; $44c1: $09
 	ld   a, [hl]                                     ; $44c2: $7e
+
+;
 	ld   hl, $b0b0                                   ; $44c3: $21 $b0 $b0
 	add  hl, de                                      ; $44c6: $19
 	and  [hl]                                        ; $44c7: $a6
-	jr   z, jr_009_44cc                              ; $44c8: $28 $02
+	jr   z, .done                              ; $44c8: $28 $02
 
 	ld   a, $ff                                      ; $44ca: $3e $ff
 
-jr_009_44cc:
+.done:
 	pop  de                                          ; $44cc: $d1
 	pop  bc                                          ; $44cd: $c1
 	ret                                              ; $44ce: $c9
 
 
-	ld   bc, $0410                                   ; $44cf: $01 $10 $04
-	ld   b, b                                        ; $44d2: $40
-	ld   [bc], a                                     ; $44d3: $02
-	jr   nz, jr_009_44de                             ; $44d4: $20 $08
-
-	add  b                                           ; $44d6: $80
+BitTable:
+; Low 3 bits of L was = 0, 4, 2, 6, 1, 5, 3, 7
+; ie these entries = 2 ^ L's 3 bits
+	db $01, $10, $04, $40, $02, $20, $08, $80
 
 
-Func_09_44d7::
+GetSramByte2::
 	res  7, h                                        ; $44d7: $cb $bc
 	set  6, h                                        ; $44d9: $cb $f4
-	jp   Jump_009_4492                               ; $44db: $c3 $92 $44
+	jp   GetSramValOrFlag2                               ; $44db: $c3 $92 $44
 
 
-Call_009_44de::
-jr_009_44de:
+CheckIfFlagSet2::
 	set  7, h                                        ; $44de: $cb $fc
 	res  6, h                                        ; $44e0: $cb $b4
-	jp   Jump_009_4492                               ; $44e2: $c3 $92 $44
+	jp   GetSramValOrFlag2                               ; $44e2: $c3 $92 $44
 
 
-Jump_009_44e5:
+SetSramValOrFlag2:
 	push bc                                          ; $44e5: $c5
 	push de                                          ; $44e6: $d5
 	bit  7, h                                        ; $44e7: $cb $7c
-	jr   nz, jr_009_44f8                             ; $44e9: $20 $0d
+	jr   nz, .br_44f8                             ; $44e9: $20 $0d
 
 	push af                                          ; $44eb: $f5
 	ld   a, h                                        ; $44ec: $7c
@@ -720,9 +731,9 @@ Jump_009_44e5:
 	ld   bc, sCurrDay                                   ; $44f1: $01 $b0 $af
 	add  hl, bc                                      ; $44f4: $09
 	ld   [hl], a                                     ; $44f5: $77
-	jr   jr_009_452d                                 ; $44f6: $18 $35
+	jr   .done                                 ; $44f6: $18 $35
 
-jr_009_44f8:
+.br_44f8:
 	push af                                          ; $44f8: $f5
 	ld   a, h                                        ; $44f9: $7c
 	and  $07                                         ; $44fa: $e6 $07
@@ -741,19 +752,19 @@ jr_009_44f8:
 	rl   c                                           ; $4511: $cb $11
 	ld   d, h                                        ; $4513: $54
 	ld   e, l                                        ; $4514: $5d
-	ld   hl, $44cf                                   ; $4515: $21 $cf $44
+	ld   hl, BitTable                                   ; $4515: $21 $cf $44
 	add  hl, bc                                      ; $4518: $09
 	or   a                                           ; $4519: $b7
-	jr   z, jr_009_4525                              ; $451a: $28 $09
+	jr   z, .br_4525                              ; $451a: $28 $09
 
 	ld   a, [hl]                                     ; $451c: $7e
 	ld   hl, $b0b0                                   ; $451d: $21 $b0 $b0
 	add  hl, de                                      ; $4520: $19
 	or   [hl]                                        ; $4521: $b6
 	ld   [hl], a                                     ; $4522: $77
-	jr   jr_009_452d                                 ; $4523: $18 $08
+	jr   .done                                 ; $4523: $18 $08
 
-jr_009_4525:
+.br_4525:
 	ld   a, [hl]                                     ; $4525: $7e
 	cpl                                              ; $4526: $2f
 	ld   hl, $b0b0                                   ; $4527: $21 $b0 $b0
@@ -761,25 +772,25 @@ jr_009_4525:
 	and  [hl]                                        ; $452b: $a6
 	ld   [hl], a                                     ; $452c: $77
 
-jr_009_452d:
+.done:
 	pop  de                                          ; $452d: $d1
 	pop  bc                                          ; $452e: $c1
 	ret                                              ; $452f: $c9
 
 
-Func_09_4530::
+SetSramByte2::
 	res  7, h                                        ; $4530: $cb $bc
 	set  6, h                                        ; $4532: $cb $f4
-	jp   Jump_009_44e5                               ; $4534: $c3 $e5 $44
+	jp   SetSramValOrFlag2                               ; $4534: $c3 $e5 $44
 
 
-Call_009_4537::
+SetOrUnsetFlag2::
 	set  7, h                                        ; $4537: $cb $fc
 	res  6, h                                        ; $4539: $cb $b4
-	jp   Jump_009_44e5                               ; $453b: $c3 $e5 $44
+	jp   SetSramValOrFlag2                               ; $453b: $c3 $e5 $44
 
 
-Call_009_453e::
+ClearCarryIfNightElseSetIt::
 	ld   a, [wTimeOfDay]                                  ; $453e: $fa $20 $cb
 	cp   $0c                                         ; $4541: $fe $0c
 	ret                                              ; $4543: $c9
@@ -913,7 +924,7 @@ GameState3b::
 
 ;
 	ld   a, $ff                                      ; $4631: $3e $ff
-	call Call_009_4537                               ; $4633: $cd $37 $45
+	call SetOrUnsetFlag2                               ; $4633: $cd $37 $45
 
 ;
 	xor  a                                           ; $4636: $af
@@ -937,7 +948,7 @@ jr_009_4646:
 	jr   nz, jr_009_4656                             ; $464b: $20 $09
 
 	inc  hl                                          ; $464d: $23
-	call Call_009_453e                               ; $464e: $cd $3e $45
+	call ClearCarryIfNightElseSetIt                               ; $464e: $cd $3e $45
 	jr   c, jr_009_4654                              ; $4651: $38 $01
 
 	inc  hl                                          ; $4653: $23
@@ -1589,7 +1600,7 @@ Jump_009_4a2e:
 	and  $03                                         ; $4a51: $e6 $03
 	set  2, a                                        ; $4a53: $cb $d7
 	ld   h, a                                        ; $4a55: $67
-	call Call_009_44de                               ; $4a56: $cd $de $44
+	call CheckIfFlagSet2                               ; $4a56: $cd $de $44
 	pop  hl                                          ; $4a59: $e1
 
 	or   a                                           ; $4a5a: $b7
@@ -6102,15 +6113,8 @@ jr_009_6523:
 	ld   l, $01                                      ; $6528: $2e $01
 	ld   bc, $0012                                   ; $652a: $01 $12 $00
 	ld   a, [$c653]                                  ; $652d: $fa $53 $c6
-	push af                                          ; $6530: $f5
-	ld   a, $8f                                      ; $6531: $3e $8f
-	ld   [wFarCallAddr], a                                  ; $6533: $ea $98 $c2
-	ld   a, $75                                      ; $6536: $3e $75
-	ld   [wFarCallAddr+1], a                                  ; $6538: $ea $99 $c2
-	ld   a, $0c                                      ; $653b: $3e $0c
-	ld   [wFarCallBank], a                                  ; $653d: $ea $9a $c2
-	pop  af                                          ; $6540: $f1
-	call FarCall                                       ; $6541: $cd $62 $09
+
+	M_FarCall InitIntroScript
 	ret                                              ; $6544: $c9
 
 

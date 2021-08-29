@@ -4223,7 +4223,7 @@ endc
 	ret                                              ; $59b6: $c9
 
 .dataLoad8:
-	M_FarCall Call_009_453e
+	M_FarCall ClearCarryIfNightElseSetIt
 	jr   nc, .br_59e3                             ; $59cb: $30 $16
 
 	ld   hl, $d800                                   ; $59cd: $21 $00 $d8

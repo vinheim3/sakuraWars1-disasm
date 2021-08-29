@@ -301,7 +301,7 @@ Stub_0a_4187:
 	ret                                              ; $4187: $c9
 
 
-SetSramValOrFlag:
+SetSramValOrFlag1:
 	push bc                                          ; $4188: $c5
 	push de                                          ; $4189: $d5
 	push hl                                          ; $418a: $e5
@@ -364,23 +364,25 @@ jr_00a_41d1:
 	jp   $417d                                       ; $41d4: $c3 $7d $41
 
 
-SetSramByte::
+SetSramByte1::
 	set  4, h                                        ; $41d7: $cb $e4
 	res  5, h                                        ; $41d9: $cb $ac
-	jp   SetSramValOrFlag                               ; $41db: $c3 $88 $41
+	jp   SetSramValOrFlag1                               ; $41db: $c3 $88 $41
 
 
 ; A - if non-0, set, else unset
-SetOrUnsetFlag::
+SetOrUnsetFlag1::
 	res  4, h                                        ; $41de: $cb $a4
 	set  5, h                                        ; $41e0: $cb $ec
-	jp   SetSramValOrFlag                               ; $41e2: $c3 $88 $41
+	jp   SetSramValOrFlag1                               ; $41e2: $c3 $88 $41
 
 
-GetSramValOrFlag:
+GetSramValOrFlag1:
 	push bc                                          ; $41e5: $c5
 	push de                                          ; $41e6: $d5
 	push hl                                          ; $41e7: $e5
+
+;
 	bit  5, h                                        ; $41e8: $cb $6c
 	jr   nz, .br_41f7                             ; $41ea: $20 $0b
 
@@ -390,7 +392,7 @@ GetSramValOrFlag:
 	ld   bc, $a000                                   ; $41f0: $01 $00 $a0
 	add  hl, bc                                      ; $41f3: $09
 	ld   a, [hl]                                     ; $41f4: $7e
-	jr   .cont_4220                                 ; $41f5: $18 $29
+	jr   .done                                 ; $41f5: $18 $29
 
 .br_41f7:
 ; eg 0101, or 0189
@@ -428,11 +430,11 @@ GetSramValOrFlag:
 	ld   hl, $a080                                   ; $4217: $21 $80 $a0
 	add  hl, de                                      ; $421a: $19
 	and  [hl]                                        ; $421b: $a6
-	jr   z, .cont_4220                              ; $421c: $28 $02
+	jr   z, .done                              ; $421c: $28 $02
 
 	ld   a, $ff                                      ; $421e: $3e $ff
 
-.cont_4220:
+.done:
 	pop  hl                                          ; $4220: $e1
 	pop  de                                          ; $4221: $d1
 	pop  bc                                          ; $4222: $c1
@@ -445,18 +447,19 @@ BitTable:
 	db $01, $10, $04, $40, $02, $20, $08, $80
 
 
-GetSramByte::
+GetSramByte1::
 	set  4, h                                        ; $422e: $cb $e4
 	res  5, h                                        ; $4230: $cb $ac
-	jp   GetSramValOrFlag                               ; $4232: $c3 $e5 $41
+	jp   GetSramValOrFlag1                               ; $4232: $c3 $e5 $41
 
 
-CheckIfFlagSet::
+CheckIfFlagSet1::
 	res  4, h                                        ; $4235: $cb $a4
 	set  5, h                                        ; $4237: $cb $ec
-	jp   GetSramValOrFlag                               ; $4239: $c3 $e5 $41
+	jp   GetSramValOrFlag1                               ; $4239: $c3 $e5 $41
 
 
+;
 	ld   de, $a100                                   ; $423c: $11 $00 $a1
 	ld   a, l                                        ; $423f: $7d
 	ld   [de], a                                     ; $4240: $12
@@ -7174,32 +7177,24 @@ TitleMenuScreenAnimationHandlerD:
 jr_00a_74f0:
 	xor  a                                           ; $74f0: $af
 	ld   [$b0aa], a                                  ; $74f1: $ea $aa $b0
-	jr   jr_00a_7502                                 ; $74f4: $18 $0c
+	jr   Jump_00a_7502                                 ; $74f4: $18 $0c
 
 jr_00a_74f6:
 	ld   a, $02                                      ; $74f6: $3e $02
 	ld   [$b0aa], a                                  ; $74f8: $ea $aa $b0
-	jr   jr_00a_7502                                 ; $74fb: $18 $05
+	jr   Jump_00a_7502                                 ; $74fb: $18 $05
 
 jr_00a_74fd:
 	ld   a, $03                                      ; $74fd: $3e $03
 	ld   [$b0aa], a                                  ; $74ff: $ea $aa $b0
 
 Jump_00a_7502:
-jr_00a_7502:
 	ld   bc, $0011                                   ; $7502: $01 $11 $00
 	ld   h, $37                                      ; $7505: $26 $37
 	ld   l, $02                                      ; $7507: $2e $02
 	ld   a, [$c653]                                  ; $7509: $fa $53 $c6
-	push af                                          ; $750c: $f5
-	ld   a, $8f                                      ; $750d: $3e $8f
-	ld   [wFarCallAddr], a                                  ; $750f: $ea $98 $c2
-	ld   a, $75                                      ; $7512: $3e $75
-	ld   [wFarCallAddr+1], a                                  ; $7514: $ea $99 $c2
-	ld   a, $0c                                      ; $7517: $3e $0c
-	ld   [wFarCallBank], a                                  ; $7519: $ea $9a $c2
-	pop  af                                          ; $751c: $f1
-	call FarCall                                       ; $751d: $cd $62 $09
+
+	M_FarCall InitIntroScript
 	ret                                              ; $7520: $c9
 
 
@@ -7234,7 +7229,7 @@ jr_00a_7502:
 jr_00a_7555:
 	ld   a, $0a                                      ; $7555: $3e $0a
 	ld   [$b0aa], a                                  ; $7557: $ea $aa $b0
-	jr   jr_00a_7502                                 ; $755a: $18 $a6
+	jr   Jump_00a_7502                                 ; $755a: $18 $a6
 
 	ld   hl, $0002                                   ; $755c: $21 $02 $00
 	push af                                          ; $755f: $f5

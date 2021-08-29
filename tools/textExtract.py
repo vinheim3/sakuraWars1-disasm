@@ -19,7 +19,7 @@ kanji_map[0] = '\n'
 kanji_map[1] = '<name>'
 
 existingTranslations = {}
-with open('sakura wars GB - 22:08:21.csv') as f:
+with open('sakura wars GB - 29:08:21.csv') as f:
     reader = csv.reader(f)
     for row in reader:
         if row[0]:
@@ -105,7 +105,7 @@ def addScreen(_screens, _scriptNum, _screenSources, offset):
 spreadSheetComps = []
 spreadSheetCompMap = {}
 
-def addToSpreadSheetComps(data, baseBank, baseAddr, scriptNum, offset, currChar):
+def addToSpreadSheetComps(data, baseBank, baseAddr, scriptNum, offset, currChar, choiceType=''):
     """
     baseBank:baseAddr+offset is the beginning of the text
     spreadsheet comps to contain:
@@ -126,7 +126,7 @@ def addToSpreadSheetComps(data, baseBank, baseAddr, scriptNum, offset, currChar)
             if byteRead == 0x08:
                 letters.append(1)
                 if data[start+i] != 0:
-                    hasNameReplacement = f"x - {data[start+i]}"
+                    hasNameReplacement = 'z'
                 i += 1
                 continue
             if byteRead == 0x0a:
@@ -168,6 +168,10 @@ def addToSpreadSheetComps(data, baseBank, baseAddr, scriptNum, offset, currChar)
                 0x664, 0x5a3, 0x4bf, 0x689, 0x335, 0x34c, 0x5b8, 0x62a, 
                 0x5f2, 0x47b, 0x603, 0x572, 0x682}):
             isReplacement = 'x'
+
+        if choiceType:
+            currChar += f" ({choiceType})"
+
         spreadSheetComps.append([
             f"{scriptNum}", 
             f"{offset}", 
@@ -341,7 +345,7 @@ def get_script_screens(bank, addr, scriptNum, providedJumps=None):
             for i in range(numOpts):
                 screenSources.append(['drawKanjis', bank, addr+offset, dest])
                 if providedJumps is not None:
-                    addToSpreadSheetComps(data, bank, addr, scriptNum, offset, currChar)
+                    addToSpreadSheetComps(data, bank, addr, scriptNum, offset, currChar, choiceType='choice')
                 dest += 0x200
                 if dest == 0x9800:
                     dest = 0x8800
@@ -366,7 +370,7 @@ def get_script_screens(bank, addr, scriptNum, providedJumps=None):
             for i in range(numOpts):
                 screenSources.append(['drawKanjis', bank, addr+offset, dest])
                 if providedJumps is not None:
-                    addToSpreadSheetComps(data, bank, addr, scriptNum, offset, currChar)
+                    addToSpreadSheetComps(data, bank, addr, scriptNum, offset, currChar, choiceType='LIPS')
                 dest += 0x200
                 if dest == 0x9800:
                     dest = 0x8800
@@ -437,10 +441,6 @@ def get_script_screens(bank, addr, scriptNum, providedJumps=None):
 
 
 if __name__ == "__main__":
-    _bank = conv(sys.argv[1])
-    _addr = conv(sys.argv[2])
-    _scriptNum = sys.argv[3]
-
     """
     Extract battle text
     """
@@ -458,6 +458,12 @@ if __name__ == "__main__":
     #         writer.writerow(comp)
     # exit(0)
 
+    """
+    Individual
+    """
+    # _bank = conv(sys.argv[1])
+    # _addr = conv(sys.argv[2])
+    # _scriptNum = sys.argv[3]
     # screens = get_script_screens(_bank, _addr, _scriptNum)
 
     # final_str = json.dumps(screens)
@@ -465,6 +471,7 @@ if __name__ == "__main__":
     # clipboard.copy(final_str[1:-1]+",")
     # with open('temp.s', 'w') as f:
     #     f.write(final_str)
+    # exit(0)
 
     data = getRom()
     for i in range(1, 0x322):

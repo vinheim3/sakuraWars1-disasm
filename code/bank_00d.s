@@ -3479,7 +3479,7 @@ Call_00d_5014:
 
 jr_00d_5028:
 
-	M_FarCall CheckIfFlagSet
+	M_FarCall CheckIfFlagSet1
 	
 	or   a                                           ; $503c: $b7
 	jr   z, jr_00d_5043                              ; $503d: $28 $04

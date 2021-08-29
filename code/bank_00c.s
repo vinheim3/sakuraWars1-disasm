@@ -7911,7 +7911,7 @@ Call_00c_71c2:
 Call_00c_71d7:
 	inc  hl                                          ; $71d7: $23
 
-	M_FarCall CheckIfFlagSet
+	M_FarCall CheckIfFlagSet1
 	
 	dec  hl                                          ; $71ec: $2b
 	ret                                              ; $71ed: $c9
@@ -8401,7 +8401,7 @@ GameState44::
 	ret                                                             ; $758e
 
 
-; A -
+; A - intro script control byte
 ; BC - script idx
 ; H - state to set after script engine done
 ; L - substate to set after script engine done
@@ -8510,7 +8510,7 @@ GameState46::
 .substate2:
 	ld   hl, $0000                                   ; $7689: $21 $00 $00
 
-	M_FarCall CheckIfFlagSet
+	M_FarCall CheckIfFlagSet1
 	
 	or   a                                           ; $76a0: $b7
 	jr   nz, jr_00c_76c0                             ; $76a1: $20 $1d
@@ -8544,7 +8544,7 @@ jr_00c_76c3:
 	ld   h, b                                        ; $76d1: $60
 	ld   l, c                                        ; $76d2: $69
 
-	M_FarCall CheckIfFlagSet
+	M_FarCall CheckIfFlagSet1
 	
 	pop  hl                                          ; $76e7: $e1
 	pop  de                                          ; $76e8: $d1
@@ -8555,7 +8555,7 @@ jr_00c_76c3:
 	ld   h, d                                        ; $76ed: $62
 	ld   l, e                                        ; $76ee: $6b
 
-	M_FarCall CheckIfFlagSet
+	M_FarCall CheckIfFlagSet1
 	
 	pop  hl                                          ; $7703: $e1
 	or   a                                           ; $7704: $b7
@@ -8571,7 +8571,7 @@ jr_00c_76c3:
 	ret                                              ; $7723: $c9
 
 jr_00c_7724:
-	ld   a, $36                                      ; $7724: $3e $36
+	ld   a, GS_TITLE_SCREEN                                      ; $7724: $3e $36
 	ld   [wGameState], a                                  ; $7726: $ea $a0 $c2
 	xor  a                                           ; $7729: $af
 	ld   [wGameSubstate], a                                  ; $772a: $ea $a1 $c2

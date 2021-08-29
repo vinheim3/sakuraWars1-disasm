@@ -765,16 +765,16 @@ HandleProcessingScriptCalcStack:
 	jr   z, .CalcCode2_pushSpecialRamByte                           ; $44e5
 
 	dec  a                                           ; $44e7: $3d
-	jp   z, ScriptCalcCode3                            ; $44e8: $ca $6b $45
+	jp   z, ScriptCalcCode3_getSramByte2                            ; $44e8: $ca $6b $45
 
 	dec  a                                           ; $44eb: $3d
-	jp   z, ScriptCalcCode4                            ; $44ec: $ca $87 $45
+	jp   z, ScriptCalcCode4_CheckIfFlagSet2                            ; $44ec: $ca $87 $45
 
 	dec  a                                           ; $44ef: $3d
-	jp   z, ScriptCalcCode5                            ; $44f0: $ca $a5 $45
+	jp   z, ScriptCalcCode5_GetSramByte1                            ; $44f0: $ca $a5 $45
 
 	dec  a                                           ; $44f3: $3d
-	jp   z, ScriptCalcCode6                            ; $44f4: $ca $c1 $45
+	jp   z, ScriptCalcCode6_CheckIfFlagSet1                            ; $44f4: $ca $c1 $45
 
 ; Else return the last value in the stack
 	call PopAFromScriptStack                               ; $44f7: $cd $5b $45
@@ -867,44 +867,44 @@ PopAFromScriptStack:
 	ret                                                             ; $456a
 
 
-ScriptCalcCode3:
+ScriptCalcCode3_getSramByte2:
 	ld   h, $00                                      ; $456b: $26 $00
 	call GetNextScriptOpcodeToProcess                               ; $456d: $cd $70 $42
 	ld   l, a                                        ; $4570: $6f
 
-	M_FarCall Func_09_44d7
+	M_FarCall GetSramByte2
 
 	jr   PushAOntoScriptCalcStack                                 ; $4585: $18 $c2
 
 
-ScriptCalcCode4:
+ScriptCalcCode4_CheckIfFlagSet2:
 	call GetNextScriptOpcodeToProcess                               ; $4587: $cd $70 $42
 	ld   h, a                                        ; $458a: $67
 	call GetNextScriptOpcodeToProcess                               ; $458b: $cd $70 $42
 	ld   l, a                                        ; $458e: $6f
 
-	M_FarCall Call_009_44de
+	M_FarCall CheckIfFlagSet2
 	
 	jr   PushAOntoScriptCalcStack                                 ; $45a3: $18 $a4
 
 
-ScriptCalcCode5:
+ScriptCalcCode5_GetSramByte1:
 	ld   h, $00                                      ; $45a5: $26 $00
 	call GetNextScriptOpcodeToProcess                               ; $45a7: $cd $70 $42
 	ld   l, a                                        ; $45aa: $6f
 
-	M_FarCall GetSramByte
+	M_FarCall GetSramByte1
 
 	jr   PushAOntoScriptCalcStack                                 ; $45bf: $18 $88
 
 
-ScriptCalcCode6:
+ScriptCalcCode6_CheckIfFlagSet1:
 	call GetNextScriptOpcodeToProcess                               ; $45c1: $cd $70 $42
 	ld   h, a                                        ; $45c4: $67
 	call GetNextScriptOpcodeToProcess                               ; $45c5: $cd $70 $42
 	ld   l, a                                        ; $45c8: $6f
 
-	M_FarCall CheckIfFlagSet
+	M_FarCall CheckIfFlagSet1
 	
 	jp   PushAOntoScriptCalcStack                               ; $45dd: $c3 $49 $45
 
@@ -1737,19 +1737,19 @@ ScriptOpcode05_Main:
 	bit  7, h                                        ; $4a54: $cb $7c
 	jr   nz, jr_008_4a97                             ; $4a56: $20 $3f
 
-	M_FarCall SetSramByte
+	M_FarCall SetSramByte1
 	ret                                              ; $4a6c: $c9
 
 jr_008_4a6d:
-	M_FarCall SetOrUnsetFlag
+	M_FarCall SetOrUnsetFlag1
 	ret                                              ; $4a81: $c9
 
 jr_008_4a82:
-	M_FarCall Func_09_4530
+	M_FarCall SetSramByte2
 	ret                                              ; $4a96: $c9
 
 jr_008_4a97:
-	M_FarCall Call_009_4537
+	M_FarCall SetOrUnsetFlag2
 	ret                                              ; $4aab: $c9
 
 
@@ -3539,7 +3539,7 @@ ScriptOpcode10_Init:
 	add  hl, bc                                      ; $56be: $09
 	ld   a, $ff                                      ; $56bf: $3e $ff
 
-	M_FarCall SetOrUnsetFlag
+	M_FarCall SetOrUnsetFlag1
 	
 	pop  hl                                          ; $56d5: $e1
 	call GetNextScriptOpcodeToProcess                               ; $56d6: $cd $70 $42
@@ -4326,7 +4326,7 @@ ScriptOpcode16_Init:
 	ld   bc, $0300                                   ; $5bd8: $01 $00 $03
 	add  hl, bc                                      ; $5bdb: $09
 
-	M_FarCall SetOrUnsetFlag
+	M_FarCall SetOrUnsetFlag1
 	
 	pop  af                                          ; $5bf0: $f1
 	ld   b, $00                                      ; $5bf1: $06 $00
@@ -4797,7 +4797,7 @@ ScriptOpcode1b_Init:
 	ld   bc, $0300                                   ; $5f12: $01 $00 $03
 	add  hl, bc                                      ; $5f15: $09
 
-	M_FarCall SetOrUnsetFlag
+	M_FarCall SetOrUnsetFlag1
 	
 	pop  af                                          ; $5f2a: $f1
 	ld   h, $00                                      ; $5f2b: $26 $00
@@ -5707,7 +5707,7 @@ ScriptOpcode1a_Main:
 	ld   hl, $0014                                   ; $6597: $21 $14 $00
 	ld   a, $ff                                      ; $659a: $3e $ff
 
-	M_FarCall SetOrUnsetFlag
+	M_FarCall SetOrUnsetFlag1
 	
 	ld   a, [wGameState]                                  ; $65b0: $fa $a0 $c2
 	ld   h, a                                        ; $65b3: $67
@@ -5720,7 +5720,7 @@ ScriptOpcode1a_Main:
 	ld   hl, $0015                                   ; $65cb: $21 $15 $00
 	ld   a, $ff                                      ; $65ce: $3e $ff
 
-	M_FarCall SetOrUnsetFlag
+	M_FarCall SetOrUnsetFlag1
 	
 	ld   a, [wGameState]                                  ; $65e4: $fa $a0 $c2
 	ld   h, a                                        ; $65e7: $67
@@ -5734,7 +5734,7 @@ ScriptOpcode1a_Main:
 	ld   hl, $0016                                   ; $6600: $21 $16 $00
 	ld   a, $ff                                      ; $6603: $3e $ff
 
-	M_FarCall SetOrUnsetFlag
+	M_FarCall SetOrUnsetFlag1
 	
 	ld   a, [wGameState]                                  ; $6619: $fa $a0 $c2
 	ld   h, a                                        ; $661c: $67
@@ -5747,7 +5747,7 @@ ScriptOpcode1a_Main:
 	ld   hl, $0017                                   ; $6634: $21 $17 $00
 	ld   a, $ff                                      ; $6637: $3e $ff
 
-	M_FarCall SetOrUnsetFlag
+	M_FarCall SetOrUnsetFlag1
 	
 	ld   a, [wGameState]                                  ; $664d: $fa $a0 $c2
 	ld   h, a                                        ; $6650: $67
@@ -5760,7 +5760,7 @@ ScriptOpcode1a_Main:
 	ld   hl, $0018                                   ; $6668: $21 $18 $00
 	ld   a, $ff                                      ; $666b: $3e $ff
 
-	M_FarCall SetOrUnsetFlag
+	M_FarCall SetOrUnsetFlag1
 	
 	ld   a, [wGameState]                                  ; $6681: $fa $a0 $c2
 	ld   h, a                                        ; $6684: $67
@@ -5773,7 +5773,7 @@ ScriptOpcode1a_Main:
 	ld   hl, $0019                                   ; $669c: $21 $19 $00
 	ld   a, $ff                                      ; $669f: $3e $ff
 
-	M_FarCall SetOrUnsetFlag
+	M_FarCall SetOrUnsetFlag1
 	
 	ld   a, [wGameState]                                  ; $66b5: $fa $a0 $c2
 	ld   h, a                                        ; $66b8: $67
@@ -5786,7 +5786,7 @@ ScriptOpcode1a_Main:
 	ld   hl, $00d8                                   ; $66d0: $21 $d8 $00
 	ld   a, $ff                                      ; $66d3: $3e $ff
 
-	M_FarCall Call_009_4537
+	M_FarCall SetOrUnsetFlag2
 	
 	ld   a, [wGameState]                                  ; $66e9: $fa $a0 $c2
 	ld   h, a                                        ; $66ec: $67
@@ -5799,7 +5799,7 @@ ScriptOpcode1a_Main:
 	ld   hl, $00d7                                   ; $6704: $21 $d7 $00
 	ld   a, $ff                                      ; $6707: $3e $ff
 
-	M_FarCall Call_009_4537
+	M_FarCall SetOrUnsetFlag2
 	
 	ld   a, [wGameState]                                  ; $671d: $fa $a0 $c2
 	ld   h, a                                        ; $6720: $67
@@ -5938,7 +5938,7 @@ ScriptOpcode1d_Init:
 	ld   l, a                                        ; $67fd: $6f
 	push hl                                          ; $67fe: $e5
 
-	M_FarCall Func_09_44d7
+	M_FarCall GetSramByte2
 	
 	pop  hl                                          ; $6813: $e1
 	push af                                          ; $6814: $f5
@@ -5952,7 +5952,7 @@ ScriptOpcode1d_Init:
 
 	push hl                                          ; $681e: $e5
 
-	M_FarCall Func_09_4530
+	M_FarCall SetSramByte2
 
 	pop  hl                                          ; $6833: $e1
 	pop  bc                                          ; $6834: $c1
@@ -5964,7 +5964,7 @@ jr_008_6839:
 	push hl                                          ; $6839: $e5
 	ld   a, $08                                      ; $683a: $3e $08
 
-	M_FarCall Func_09_4530
+	M_FarCall SetSramByte2
 	
 	pop  hl                                          ; $6850: $e1
 	pop  bc                                          ; $6851: $c1
@@ -8128,7 +8128,7 @@ ScriptOpcode2f_Main:
 	ld   h, [hl]                                     ; $76f4: $66
 	ld   l, a                                        ; $76f5: $6f
 
-	M_FarCall Call_009_4537
+	M_FarCall SetOrUnsetFlag2
 	
 	pop  af                                          ; $770a: $f1
 	ld   b, $00                                      ; $770b: $06 $00
@@ -8192,5 +8192,5 @@ ScriptOpcode31_Main:
 	ld   a, $01                                      ; $7775: $3e $01
 
 jr_008_7777:
-	M_FarCall Func_09_4530
+	M_FarCall SetSramByte2
 	ret                                              ; $778b: $c9

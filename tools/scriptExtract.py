@@ -172,6 +172,7 @@ class ScriptExtractor:
         self.jumpAddresses = []
 
         self.translationMap = {}
+        self.englishMap = {}
 
     @staticmethod
     def convertEnglish(english):
@@ -508,6 +509,8 @@ class ScriptExtractor:
 
             if params == 't' and address+1 in self.translationMap:
                 textboxes = self.translationMap[address+1]
+                for line in self.englishMap[address+1].split('\n'):
+                    comps.append(f"; {line}")
                 if prompted is False:
                     comps.append("\tScriptOpt_ContinuePrompt")
                     totalBytes += 1
@@ -576,6 +579,8 @@ class ScriptExtractor:
 
                     if address + offset in self.translationMap:
                         textboxes = self.translationMap[address+offset]
+                        for line in self.englishMap[address+offset].split('\n'):
+                            comps.append(f"; {line}")
                         assert len(textboxes) == 1
                         for i, textbox in enumerate(textboxes):
                             paramStr = ','.join(f"${kanji:02x}" for kanji in textbox)
@@ -648,7 +653,7 @@ if __name__ == "__main__":
 
     # flags
     translate = True
-    compileBs = True
+    compileBs = False
 
     """Individual"""
     # scriptNum = conv(sys.argv[1])
@@ -668,7 +673,9 @@ if __name__ == "__main__":
     # exit(0)
 
     fullTranslationMap = {}
+    fullEnglishMap = {}
     doneTranslations = {}
+    doneEnglish = {}
 
     if translate:
         with open('sakura wars GB - 27:08:21.csv') as f:
@@ -678,16 +685,20 @@ if __name__ == "__main__":
                     continue
 
                 fullTranslationMap.setdefault(int(scriptNum), {})
+                fullEnglishMap.setdefault(int(scriptNum), {})
 
                 if dupe1 == 'x':
                     if orig in doneTranslations:
                         fullTranslationMap[int(scriptNum)][int(offset)] = doneTranslations[orig]
+                        fullEnglishMap[int(scriptNum)][int(offset)] = doneEnglish[orig]
                     continue
 
                 if english:
                     tbs = ScriptExtractor.convertEnglish(english)
                     doneTranslations[orig] = tbs
+                    doneEnglish[orig] = english
                     fullTranslationMap[int(scriptNum)][int(offset)] = tbs
+                    fullEnglishMap[int(scriptNum)][int(offset)] = english
 
     availableBanks = [
         0x02, 0x03,       0x2b, 0x36, 0x37, 0x38, 0x39, 
@@ -709,12 +720,14 @@ if __name__ == "__main__":
 
         if scriptNum not in fullTranslationMap:
             fullTranslationMap[scriptNum] = {}
+            fullEnglishMap[scriptNum] = {}
 
         startBank = data[baseTable+scriptNum*3+2]+0x41
         startAddr = wordIn(data, baseTable+scriptNum*3)+0x4000
 
         se = ScriptExtractor(data, bankAddr(startBank, startAddr), scriptNum)
         se.translationMap = fullTranslationMap[scriptNum]
+        se.englishMap = fullEnglishMap[scriptNum]
         comps, totalBytes = se.run()
 
         if compileBs:
