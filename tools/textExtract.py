@@ -155,7 +155,10 @@ def addToSpreadSheetComps(data, baseBank, baseAddr, scriptNum, offset, currChar,
                     i += 1
                     kanjis += letter + str(style)
                 else:
-                    kanjis += kanji_map[letter]
+                    if letter in kanji_map:
+                        kanjis += kanji_map[letter]
+                    else:
+                        kanjis == f"<{letter:03x}>"
         except:
             raise
         isDupe = ''
@@ -441,22 +444,45 @@ def get_script_screens(bank, addr, scriptNum, providedJumps=None):
 
 
 if __name__ == "__main__":
+    rom = getRom()
+
     """
-    Extract battle text
+    Instant texts
     """
-    # rom = getRom()
-    # for i in range(0x9c//2):
-    #     offset = wordIn(rom, bankAddr(0x24, 0x71b0+i*2))
-    #     try:
-    #         addToSpreadSheetComps(rom, 0x24, 0x71b0, 'battle', offset, 'Battle')
-    #     except:
-    #         print(hex(_addr), hex(i))
-    #         raise
-    # with open('temp.csv', 'w') as f:
-    #     writer = csv.writer(f)
-    #     for comp in spreadSheetComps:
-    #         writer.writerow(comp)
-    # exit(0)
+    # src bank, src address, length, script name/player
+    offsetTexts = [
+        [0x24, 0x71b0, 0x9c//2, 'battle'],
+        [0x90, 0x5087, 0x0e//2, '_90_5087'],
+        [0x90, 0x4e80, 0x36//2, '_90_4e80'],
+        [0x90, 0x5118, 0x0c//2, '_90_5118'],
+        [0x90, 0x5234, 0xec//2, '_90_5234'],
+        [0x90, 0x5ac9, 0x46//2, '_90_5ac9'],
+        [0x05, 0x579f, 0xa00//2, '_05_579f'],
+        [0x0c, 0x5ad5, 0x14//2, '_0c_5ad5'],
+        [0x30, 0x683a, 0x5a//2, '_30_683a'],
+        [0x30, 0x6e56, 0x58//2, '_30_6e56'],
+        [0x30, 0x77d4, 0x2a//2, '_30_77d4'],
+        [0x31, 0x441e, 0x2a//2, '_31_441e'],
+        [0x31, 0x595e, 0x0e//2, '_31_595e'],
+    ]
+    for _bank, _addr, _len, _scriptName in offsetTexts:
+        for i in range(_len):
+            offset = wordIn(rom, bankAddr(_bank, _addr+i*2))
+            addToSpreadSheetComps(rom, _bank, _addr, _scriptName, offset, _scriptName.upper())
+
+    for i in range(87):
+        _scriptName = '_0d_618f'
+        offset = wordIn(rom, bankAddr(0x0d, 0x5c1f+i*16))
+        addToSpreadSheetComps(rom, 0x0d, 0x618f, _scriptName, offset, _scriptName.upper())
+        offset = wordIn(rom, bankAddr(0x0d, 0x5c21+i*16))
+        addToSpreadSheetComps(rom, 0x0d, 0x618f, _scriptName, offset, _scriptName.upper())
+
+    with open('temp.csv', 'w') as f:
+        writer = csv.writer(f)
+        writer.writerow(["Script name", "Text offset", "JP", "", "EN", "Character", "Is duplicate", "Sumire name replacement"])
+        for comp in spreadSheetComps:
+            writer.writerow(comp)
+    exit(0)
 
     """
     Individual

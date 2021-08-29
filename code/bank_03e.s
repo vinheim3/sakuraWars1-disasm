@@ -1300,15 +1300,9 @@ GameState17_Settings::
 
 :	ld   a, [$c97e]                                  ; $48c0: $fa $7e $c9
 	or   a                                           ; $48c3: $b7
-	push af                                          ; $48c4: $f5
-	ld   a, $6b                                      ; $48c5: $3e $6b
-	ld   [wFarCallAddr], a                                  ; $48c7: $ea $98 $c2
-	ld   a, $42                                      ; $48ca: $3e $42
-	ld   [wFarCallAddr+1], a                                  ; $48cc: $ea $99 $c2
-	ld   a, $0a                                      ; $48cf: $3e $0a
-	ld   [wFarCallBank], a                                  ; $48d1: $ea $9a $c2
-	pop  af                                          ; $48d4: $f1
-	call nz, FarCall                                   ; $48d5: $c4 $62 $09
+
+	M_FarCall "nz", Func_0a_426b
+
 	call Call_03e_4ead                               ; $48d8: $cd $ad $4e
 	ld   a, $ff                                      ; $48db: $3e $ff
 	ld   [wInGameInputsEnabled], a                                  ; $48dd: $ea $0e $c2
@@ -2322,15 +2316,8 @@ Call_03e_4ed7:
 	ld   [$b1b8], a                                  ; $4efd: $ea $b8 $b1
 	ld   a, [$c97e]                                  ; $4f00: $fa $7e $c9
 	or   a                                           ; $4f03: $b7
-	push af                                          ; $4f04: $f5
-	ld   a, $55                                      ; $4f05: $3e $55
-	ld   [wFarCallAddr], a                                  ; $4f07: $ea $98 $c2
-	ld   a, $42                                      ; $4f0a: $3e $42
-	ld   [wFarCallAddr+1], a                                  ; $4f0c: $ea $99 $c2
-	ld   a, $0a                                      ; $4f0f: $3e $0a
-	ld   [wFarCallBank], a                                  ; $4f11: $ea $9a $c2
-	pop  af                                          ; $4f14: $f1
-	call nz, FarCall                                   ; $4f15: $c4 $62 $09
+
+	M_FarCall "nz", Func_0a_4255
 	ret                                              ; $4f18: $c9
 
 

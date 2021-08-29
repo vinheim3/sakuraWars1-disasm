@@ -7,6 +7,7 @@ INCLUDE "includes.s"
 
 SECTION "ROM Bank $00f", ROMX[$4000], BANK[$f]
 
+Func_0f_4000::
 	ld   d, $00                                      ; $4000: $16 $00
 	ld   e, a                                        ; $4002: $5f
 	ld   hl, $4030                                   ; $4003: $21 $30 $40

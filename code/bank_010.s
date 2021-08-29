@@ -2759,7 +2759,7 @@ GameState10::
 	inc  [hl]                                        ; $52c0: $34
 	ldh  a, [rKEY1]                                  ; $52c1: $f0 $4d
 	bit  7, a                                        ; $52c3: $cb $7f
-	call nz, SetDoubleSpeedMode                           ; $52c5: $c4 $f4 $53
+	call nz, UnsetDoubleSpeedMode                           ; $52c5: $c4 $f4 $53
 	ret                                              ; $52c8: $c9
 
 
@@ -2841,7 +2841,7 @@ jr_010_533f:
 
 	ldh  a, [rKEY1]                                  ; $5340: $f0 $4d
 	bit  7, a                                        ; $5342: $cb $7f
-	call z, SetDoubleSpeedMode                            ; $5344: $cc $f4 $53
+	call z, UnsetDoubleSpeedMode                            ; $5344: $cc $f4 $53
 	xor  a                                           ; $5347: $af
 	ld   [wStartingColorIdxToLoadCompDataFor], a                                  ; $5348: $ea $62 $c3
 	ld   a, $40                                      ; $534b: $3e $40
@@ -2923,25 +2923,28 @@ Call_010_53b6:
 	ret                                              ; $53f3: $c9
 
 
-SetDoubleSpeedMode:
-	ldh  a, [rIE]                                    ; $53f4: $f0 $ff
-	push af                                          ; $53f6: $f5
+UnsetDoubleSpeedMode::
+; Preserve IE, then unset double speed mode
+	ldh  a, [rIE]                                                   ; $53f4
+	push af                                                         ; $53f6
 
-	ld   a, $01                                      ; $53f7: $3e $01
-	ldh  [rKEY1], a                                  ; $53f9: $e0 $4d
+	ld   a, $01                                                     ; $53f7
+	ldh  [rKEY1], a                                                 ; $53f9
 
-	xor  a                                           ; $53fb: $af
-	ldh  [rIF], a                                    ; $53fc: $e0 $0f
-	ldh  [rIE], a                                    ; $53fe: $e0 $ff
-	ldh  a, [rP1]                                    ; $5400: $f0 $00
-	or   $30                                         ; $5402: $f6 $30
-	ldh  [rP1], a                                    ; $5404: $e0 $00
+; Disable ints, hold inputs high, then stop
+	xor  a                                                          ; $53fb
+	ldh  [rIF], a                                                   ; $53fc
+	ldh  [rIE], a                                                   ; $53fe
+	ldh  a, [rP1]                                                   ; $5400
+	or   $30                                                        ; $5402
+	ldh  [rP1], a                                                   ; $5404
 
-	stop                                             ; $5406: $10 $00
+	stop                                                            ; $5406
 	
-	pop  af                                          ; $5408: $f1
-	ldh  [rIE], a                                    ; $5409: $e0 $ff
-	ret                                              ; $540b: $c9
+; Once double speed done, restore IE
+	pop  af                                                         ; $5408
+	ldh  [rIE], a                                                   ; $5409
+	ret                                                             ; $540b
 
 
 Call_010_540c:
@@ -3281,7 +3284,7 @@ jr_010_5596:
 	inc  [hl]                                        ; $5669: $34
 	ldh  a, [rKEY1]                                  ; $566a: $f0 $4d
 	bit  7, a                                        ; $566c: $cb $7f
-	call nz, SetDoubleSpeedMode                           ; $566e: $c4 $f4 $53
+	call nz, UnsetDoubleSpeedMode                           ; $566e: $c4 $f4 $53
 	ret                                              ; $5671: $c9
 
 
@@ -3371,7 +3374,7 @@ jr_010_56eb:
 
 	ldh  a, [rKEY1]                                  ; $56ec: $f0 $4d
 	bit  7, a                                        ; $56ee: $cb $7f
-	call z, SetDoubleSpeedMode                            ; $56f0: $cc $f4 $53
+	call z, UnsetDoubleSpeedMode                            ; $56f0: $cc $f4 $53
 	xor  a                                           ; $56f3: $af
 	ld   [wStartingColorIdxToLoadCompDataFor], a                                  ; $56f4: $ea $62 $c3
 	ld   a, $20                                      ; $56f7: $3e $20
@@ -8602,7 +8605,7 @@ GameState23::
 	inc  [hl]                                        ; $77f4: $34
 	ldh  a, [rKEY1]                                  ; $77f5: $f0 $4d
 	bit  7, a                                        ; $77f7: $cb $7f
-	call nz, SetDoubleSpeedMode                           ; $77f9: $c4 $f4 $53
+	call nz, UnsetDoubleSpeedMode                           ; $77f9: $c4 $f4 $53
 	ret                                              ; $77fc: $c9
 
 
@@ -8654,7 +8657,7 @@ jr_010_7839:
 
 	ldh  a, [rKEY1]                                  ; $783a: $f0 $4d
 	bit  7, a                                        ; $783c: $cb $7f
-	call z, SetDoubleSpeedMode                            ; $783e: $cc $f4 $53
+	call z, UnsetDoubleSpeedMode                            ; $783e: $cc $f4 $53
 	xor  a                                           ; $7841: $af
 	ld   [wStartingColorIdxToLoadCompDataFor], a                                  ; $7842: $ea $62 $c3
 	ld   a, $40                                      ; $7845: $3e $40

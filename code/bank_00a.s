@@ -479,6 +479,7 @@ CheckIfFlagSet1::
 	ret                                              ; $4254: $c9
 
 
+Func_0a_4255::
 	ld   de, $a102                                   ; $4255: $11 $02 $a1
 	ld   hl, sTextSpeedBaseCounter                                   ; $4258: $21 $b3 $b1
 	ld   bc, $0006                                   ; $425b: $01 $06 $00
@@ -3283,7 +3284,7 @@ Func_0a_5b4b::
 	ld   d, $00                                      ; $5b4d: $16 $00
 	ld   e, l                                        ; $5b4f: $5d
 
-; h = triple idx into table
+; hl = triple h idx into table
 	ld   b, $00                                      ; $5b50: $06 $00
 	ld   c, h                                        ; $5b52: $4c
 	ld   hl, .table                                   ; $5b53: $21 $6b $5b

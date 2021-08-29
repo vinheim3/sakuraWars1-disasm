@@ -68,6 +68,9 @@ endc
 if MARK == "z"
     call z, FarCall
 endc
+if MARK == "nz"
+    call nz, FarCall
+endc
 endm
 
 ; --

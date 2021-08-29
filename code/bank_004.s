@@ -607,15 +607,9 @@ jr_004_4395:
 	add  hl, bc                                      ; $4399: $09
 	ld   l, [hl]                                     ; $439a: $6e
 	ld   h, $03                                      ; $439b: $26 $03
-	push af                                          ; $439d: $f5
-	ld   a, $4b                                      ; $439e: $3e $4b
-	ld   [wFarCallAddr], a                                  ; $43a0: $ea $98 $c2
-	ld   a, $5b                                      ; $43a3: $3e $5b
-	ld   [wFarCallAddr+1], a                                  ; $43a5: $ea $99 $c2
-	ld   a, $0a                                      ; $43a8: $3e $0a
-	ld   [wFarCallBank], a                                  ; $43aa: $ea $9a $c2
-	pop  af                                          ; $43ad: $f1
-	call FarCall                                       ; $43ae: $cd $62 $09
+
+	M_FarCall Func_0a_5b4b
+
 	ld   d, h                                        ; $43b1: $54
 	ld   e, l                                        ; $43b2: $5d
 	ld   hl, $d340                                   ; $43b3: $21 $40 $d3
@@ -644,18 +638,20 @@ jr_004_4395:
 	ld   [$da80], a                                  ; $43ec: $ea $80 $da
 	xor  a                                           ; $43ef: $af
 	ld   [$da84], a                                  ; $43f0: $ea $84 $da
+
+;
 	ld   hl, $da80                                   ; $43f3: $21 $80 $da
 
-jr_004_43f6:
+.loop_43f6:
 	ld   a, [hl]                                     ; $43f6: $7e
 	cp   $11                                         ; $43f7: $fe $11
-	jr   nz, jr_004_4400                             ; $43f9: $20 $05
+	jr   nz, .br_4400                             ; $43f9: $20 $05
 
 	ld   a, $10                                      ; $43fb: $3e $10
 	ld   [hl+], a                                    ; $43fd: $22
-	jr   jr_004_43f6                                 ; $43fe: $18 $f6
+	jr   .loop_43f6                                 ; $43fe: $18 $f6
 
-jr_004_4400:
+.br_4400:
 	ld   de, $da80                                   ; $4400: $11 $80 $da
 	xor  a                                           ; $4403: $af
 	ld   hl, $d340                                   ; $4404: $21 $40 $d3
@@ -705,15 +701,9 @@ Call_004_442a:
 	add  hl, bc                                      ; $4456: $09
 	ld   l, [hl]                                     ; $4457: $6e
 	ld   h, $03                                      ; $4458: $26 $03
-	push af                                          ; $445a: $f5
-	ld   a, $4b                                      ; $445b: $3e $4b
-	ld   [wFarCallAddr], a                                  ; $445d: $ea $98 $c2
-	ld   a, $5b                                      ; $4460: $3e $5b
-	ld   [wFarCallAddr+1], a                                  ; $4462: $ea $99 $c2
-	ld   a, $0a                                      ; $4465: $3e $0a
-	ld   [wFarCallBank], a                                  ; $4467: $ea $9a $c2
-	pop  af                                          ; $446a: $f1
-	call FarCall                                       ; $446b: $cd $62 $09
+
+	M_FarCall Func_0a_5b4b
+
 	ld   d, h                                        ; $446e: $54
 	ld   e, l                                        ; $446f: $5d
 	ld   hl, $d340                                   ; $4470: $21 $40 $d3
@@ -3840,15 +3830,9 @@ Call_004_570c:
 	call Call_004_5aed                               ; $574c: $cd $ed $5a
 	ld   h, $04                                      ; $574f: $26 $04
 	ld   l, a                                        ; $5751: $6f
-	push af                                          ; $5752: $f5
-	ld   a, $4b                                      ; $5753: $3e $4b
-	ld   [wFarCallAddr], a                                  ; $5755: $ea $98 $c2
-	ld   a, $5b                                      ; $5758: $3e $5b
-	ld   [wFarCallAddr+1], a                                  ; $575a: $ea $99 $c2
-	ld   a, $0a                                      ; $575d: $3e $0a
-	ld   [wFarCallBank], a                                  ; $575f: $ea $9a $c2
-	pop  af                                          ; $5762: $f1
-	call FarCall                                       ; $5763: $cd $62 $09
+
+	M_FarCall Func_0a_5b4b
+
 	ld   d, h                                        ; $5766: $54
 	ld   e, l                                        ; $5767: $5d
 	ld   hl, $d340                                   ; $5768: $21 $40 $d3
@@ -5120,15 +5104,9 @@ jr_004_5f9b:
 	add  $0b                                         ; $5f9b: $c6 $0b
 	ld   h, $04                                      ; $5f9d: $26 $04
 	ld   l, a                                        ; $5f9f: $6f
-	push af                                          ; $5fa0: $f5
-	ld   a, $4b                                      ; $5fa1: $3e $4b
-	ld   [wFarCallAddr], a                                  ; $5fa3: $ea $98 $c2
-	ld   a, $5b                                      ; $5fa6: $3e $5b
-	ld   [wFarCallAddr+1], a                                  ; $5fa8: $ea $99 $c2
-	ld   a, $0a                                      ; $5fab: $3e $0a
-	ld   [wFarCallBank], a                                  ; $5fad: $ea $9a $c2
-	pop  af                                          ; $5fb0: $f1
-	call FarCall                                       ; $5fb1: $cd $62 $09
+
+	M_FarCall Func_0a_5b4b
+
 	ld   d, h                                        ; $5fb4: $54
 	ld   e, l                                        ; $5fb5: $5d
 	ld   hl, $d340                                   ; $5fb6: $21 $40 $d3

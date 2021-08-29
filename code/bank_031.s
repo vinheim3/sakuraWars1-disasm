@@ -535,15 +535,9 @@ jr_031_437a:
 	call Call_031_45db                               ; $437e: $cd $db $45
 	ldh  a, [rKEY1]                                  ; $4381: $f0 $4d
 	bit  7, a                                        ; $4383: $cb $7f
-	push af                                          ; $4385: $f5
-	ld   a, $f4                                      ; $4386: $3e $f4
-	ld   [wFarCallAddr], a                                  ; $4388: $ea $98 $c2
-	ld   a, $53                                      ; $438b: $3e $53
-	ld   [wFarCallAddr+1], a                                  ; $438d: $ea $99 $c2
-	ld   a, $10                                      ; $4390: $3e $10
-	ld   [wFarCallBank], a                                  ; $4392: $ea $9a $c2
-	pop  af                                          ; $4395: $f1
-	call nz, FarCall                                   ; $4396: $c4 $62 $09
+
+	M_FarCall "nz", UnsetDoubleSpeedMode
+
 	push af                                          ; $4399: $f5
 	ld   a, $ee                                      ; $439a: $3e $ee
 	ld   [wFarCallAddr], a                                  ; $439c: $ea $98 $c2
@@ -555,15 +549,8 @@ jr_031_437a:
 	call FarCall                                       ; $43aa: $cd $62 $09
 	ldh  a, [rKEY1]                                  ; $43ad: $f0 $4d
 	bit  7, a                                        ; $43af: $cb $7f
-	push af                                          ; $43b1: $f5
-	ld   a, $f4                                      ; $43b2: $3e $f4
-	ld   [wFarCallAddr], a                                  ; $43b4: $ea $98 $c2
-	ld   a, $53                                      ; $43b7: $3e $53
-	ld   [wFarCallAddr+1], a                                  ; $43b9: $ea $99 $c2
-	ld   a, $10                                      ; $43bc: $3e $10
-	ld   [wFarCallBank], a                                  ; $43be: $ea $9a $c2
-	pop  af                                          ; $43c1: $f1
-	call z, FarCall                                    ; $43c2: $cc $62 $09
+
+	M_FarCall "z", UnsetDoubleSpeedMode
 	ret                                              ; $43c5: $c9
 
 
@@ -3049,15 +3036,9 @@ jr_031_5339:
 	call SetBGandOBJPaletteRangesToUpdate                                       ; $5357: $cd $aa $04
 	ld   a, [$c67e]                                  ; $535a: $fa $7e $c6
 	or   a                                           ; $535d: $b7
-	push af                                          ; $535e: $f5
-	ld   a, $02                                      ; $535f: $3e $02
-	ld   [wFarCallAddr], a                                  ; $5361: $ea $98 $c2
-	ld   a, $64                                      ; $5364: $3e $64
-	ld   [wFarCallAddr+1], a                                  ; $5366: $ea $99 $c2
-	ld   a, $0b                                      ; $5369: $3e $0b
-	ld   [wFarCallBank], a                                  ; $536b: $ea $9a $c2
-	pop  af                                          ; $536e: $f1
-	call nz, FarCall                                   ; $536f: $c4 $62 $09
+
+	M_FarCall "nz", Call_00b_6402
+
 	ld   a, [wWramBank]                                  ; $5372: $fa $93 $c2
 	push af                                          ; $5375: $f5
 	ld   a, $02                                      ; $5376: $3e $02
@@ -3311,15 +3292,9 @@ jr_031_554f:
 	call SetBGandOBJPaletteRangesToUpdate                                       ; $556d: $cd $aa $04
 	ld   a, [$c67e]                                  ; $5570: $fa $7e $c6
 	or   a                                           ; $5573: $b7
-	push af                                          ; $5574: $f5
-	ld   a, $02                                      ; $5575: $3e $02
-	ld   [wFarCallAddr], a                                  ; $5577: $ea $98 $c2
-	ld   a, $64                                      ; $557a: $3e $64
-	ld   [wFarCallAddr+1], a                                  ; $557c: $ea $99 $c2
-	ld   a, $0b                                      ; $557f: $3e $0b
-	ld   [wFarCallBank], a                                  ; $5581: $ea $9a $c2
-	pop  af                                          ; $5584: $f1
-	call nz, FarCall                                   ; $5585: $c4 $62 $09
+
+	M_FarCall "nz", Call_00b_6402
+
 	ld   a, [wWramBank]                                  ; $5588: $fa $93 $c2
 	push af                                          ; $558b: $f5
 	ld   a, $02                                      ; $558c: $3e $02

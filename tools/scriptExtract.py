@@ -183,10 +183,7 @@ class ScriptExtractor:
         boxBytes = []
         spaceLen = 3
         for word in words:
-            if word == '<name>':
-                wordLen = 5*8
-            else:
-                wordLen = ScriptExtractor.getWordLength(word)
+            wordLen = ScriptExtractor.getWordLength(word)
             if colCounter + wordLen + spaceLen >= 0x0e * 8:
                 lineCounter += 1
                 colCounter = 0
@@ -265,7 +262,20 @@ class ScriptExtractor:
     @staticmethod
     def getWordLength(word):
         total = 0
-        for char in word:
+        wordIdx = 0
+        while wordIdx < len(word):
+            if word[wordIdx:wordIdx+6] == '<name>':
+                total += 5 * 5 # 5 wide * 5 chars
+                wordIdx += 6
+                continue
+
+            if word[wordIdx] == "'":
+                if wordIdx != len(word)-1 and word[wordIdx+1] in "0123456789":
+                    wordIdx += 2
+                    continue
+
+            char = word[wordIdx]
+            wordIdx += 1
             if char.isalnum():
                 if char in "1ITt":
                     total += 4

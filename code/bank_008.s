@@ -187,15 +187,9 @@ jr_008_411d:
 Call_008_413a:
 	ld   a, [$cbb1]                                  ; $413a: $fa $b1 $cb
 	bit  7, a                                        ; $413d: $cb $7f
-	push af                                          ; $413f: $f5
-	ld   a, $02                                      ; $4140: $3e $02
-	ld   [wFarCallAddr], a                                  ; $4142: $ea $98 $c2
-	ld   a, $64                                      ; $4145: $3e $64
-	ld   [wFarCallAddr+1], a                                  ; $4147: $ea $99 $c2
-	ld   a, $0b                                      ; $414a: $3e $0b
-	ld   [wFarCallBank], a                                  ; $414c: $ea $9a $c2
-	pop  af                                          ; $414f: $f1
-	call z, FarCall                                    ; $4150: $cc $62 $09
+
+	M_FarCall "z", Call_00b_6402
+	
 	ld   a, $ff                                      ; $4153: $3e $ff
 	ld   [$cbb1], a                                  ; $4155: $ea $b1 $cb
 	ret                                              ; $4158: $c9
@@ -204,29 +198,15 @@ Call_008_413a:
 Call_008_4159:
 	ld   hl, $cbb1                                   ; $4159: $21 $b1 $cb
 	bit  7, [hl]                                     ; $415c: $cb $7e
-	push af                                          ; $415e: $f5
-	ld   a, $1a                                      ; $415f: $3e $1a
-	ld   [wFarCallAddr], a                                  ; $4161: $ea $98 $c2
-	ld   a, $64                                      ; $4164: $3e $64
-	ld   [wFarCallAddr+1], a                                  ; $4166: $ea $99 $c2
-	ld   a, $0b                                      ; $4169: $3e $0b
-	ld   [wFarCallBank], a                                  ; $416b: $ea $9a $c2
-	pop  af                                          ; $416e: $f1
-	call z, FarCall                                    ; $416f: $cc $62 $09
+
+	M_FarCall "z", Func_0b_641a
 	ret                                              ; $4172: $c9
 
 
 	ld   hl, $cbb1                                   ; $4173: $21 $b1 $cb
 	bit  7, [hl]                                     ; $4176: $cb $7e
-	push af                                          ; $4178: $f5
-	ld   a, $30                                      ; $4179: $3e $30
-	ld   [wFarCallAddr], a                                  ; $417b: $ea $98 $c2
-	ld   a, $64                                      ; $417e: $3e $64
-	ld   [wFarCallAddr+1], a                                  ; $4180: $ea $99 $c2
-	ld   a, $0b                                      ; $4183: $3e $0b
-	ld   [wFarCallBank], a                                  ; $4185: $ea $9a $c2
-	pop  af                                          ; $4188: $f1
-	call z, FarCall                                    ; $4189: $cc $62 $09
+
+	M_FarCall "z", Func_0b_6430
 	ret                                              ; $418c: $c9
 
 
@@ -1207,15 +1187,7 @@ ScriptOpcode01_DisplayText_Init:
 	or   a                                           ; $4754: $b7
 
 ;
-	push af                                          ; $4755: $f5
-	ld   a, LOW(Func_05_4000)                                      ; $4756: $3e $00
-	ld   [wFarCallAddr], a                                  ; $4758: $ea $98 $c2
-	ld   a, HIGH(Func_05_4000)                                      ; $475b: $3e $40
-	ld   [wFarCallAddr+1], a                                  ; $475d: $ea $99 $c2
-	ld   a, BANK(Func_05_4000)                                      ; $4760: $3e $05
-	ld   [wFarCallBank], a                                  ; $4762: $ea $9a $c2
-	pop  af                                          ; $4765: $f1
-	call nz, FarCall                                   ; $4766: $c4 $62 $09
+	M_FarCall "nz", Func_05_4000
 
 ; Until the null terminator is found, add a kanji to display
 	ld   de, wPlayerName                                            ; $4769
@@ -1378,15 +1350,9 @@ jr_008_47fb:
 	call MemCopy                                       ; $4825: $cd $a9 $09
 	call GetNextScriptOpcodeToProcess                               ; $4828: $cd $70 $42
 	or   a                                           ; $482b: $b7
-	push af                                          ; $482c: $f5
-	ld   a, $00                                      ; $482d: $3e $00
-	ld   [wFarCallAddr], a                                  ; $482f: $ea $98 $c2
-	ld   a, $40                                      ; $4832: $3e $40
-	ld   [wFarCallAddr+1], a                                  ; $4834: $ea $99 $c2
-	ld   a, $05                                      ; $4837: $3e $05
-	ld   [wFarCallBank], a                                  ; $4839: $ea $9a $c2
-	pop  af                                          ; $483c: $f1
-	call nz, FarCall                                   ; $483d: $c4 $62 $09
+
+	M_FarCall "nz", Func_05_4000
+
 	ld   de, wPlayerName                                   ; $4840: $11 $0e $cb
 
 jr_008_4843:
@@ -2723,30 +2689,17 @@ ScriptOpcode0e_LoadScenery_Main:
 	ld   h, a                                        ; $51ae: $67
 	ld   a, [$cba9]                                  ; $51af: $fa $a9 $cb
 	ld   l, a                                        ; $51b2: $6f
-	push af                                          ; $51b3: $f5
-	ld   a, $03                                      ; $51b4: $3e $03
-	ld   [wFarCallAddr], a                                  ; $51b6: $ea $98 $c2
-	ld   a, $59                                      ; $51b9: $3e $59
-	ld   [wFarCallAddr+1], a                                  ; $51bb: $ea $99 $c2
-	ld   a, $0b                                      ; $51be: $3e $0b
-	ld   [wFarCallBank], a                                  ; $51c0: $ea $9a $c2
-	pop  af                                          ; $51c3: $f1
-	call z, FarCall                                    ; $51c4: $cc $62 $09
+
+	M_FarCall "z", Func_0b_5903
+
 	ld   a, [$cbb1]                                  ; $51c7: $fa $b1 $cb
 	inc  a                                           ; $51ca: $3c
 	bit  2, a                                        ; $51cb: $cb $57
 	ld   a, [$cbae]                                  ; $51cd: $fa $ae $cb
 	ld   h, $00                                      ; $51d0: $26 $00
 	ld   l, a                                        ; $51d2: $6f
-	push af                                          ; $51d3: $f5
-	ld   a, $82                                      ; $51d4: $3e $82
-	ld   [wFarCallAddr], a                                  ; $51d6: $ea $98 $c2
-	ld   a, $61                                      ; $51d9: $3e $61
-	ld   [wFarCallAddr+1], a                                  ; $51db: $ea $99 $c2
-	ld   a, $0b                                      ; $51de: $3e $0b
-	ld   [wFarCallBank], a                                  ; $51e0: $ea $9a $c2
-	pop  af                                          ; $51e3: $f1
-	call nz, FarCall                                   ; $51e4: $c4 $62 $09
+
+	M_FarCall "nz", Func_0b_6182
 
 .thing1_cont_51e7:
 	pop  af                                          ; $51e7: $f1
@@ -3126,30 +3079,18 @@ todo_Opcode23Entry3:
 	ld   l, a                                        ; $546b: $6f
 	ld   a, [$cbb1]                                  ; $546c: $fa $b1 $cb
 	or   a                                           ; $546f: $b7
-	push af                                          ; $5470: $f5
-	ld   a, $03                                      ; $5471: $3e $03
-	ld   [wFarCallAddr], a                                  ; $5473: $ea $98 $c2
-	ld   a, $59                                      ; $5476: $3e $59
-	ld   [wFarCallAddr+1], a                                  ; $5478: $ea $99 $c2
-	ld   a, $0b                                      ; $547b: $3e $0b
-	ld   [wFarCallBank], a                                  ; $547d: $ea $9a $c2
-	pop  af                                          ; $5480: $f1
-	call z, FarCall                                    ; $5481: $cc $62 $09
+
+	M_FarCall "z", Func_0b_5903
+
 	ld   a, [$cbae]                                  ; $5484: $fa $ae $cb
 	ld   h, $00                                      ; $5487: $26 $00
 	ld   l, a                                        ; $5489: $6f
 	ld   a, [$cbb1]                                  ; $548a: $fa $b1 $cb
 	inc  a                                           ; $548d: $3c
 	bit  2, a                                        ; $548e: $cb $57
-	push af                                          ; $5490: $f5
-	ld   a, $82                                      ; $5491: $3e $82
-	ld   [wFarCallAddr], a                                  ; $5493: $ea $98 $c2
-	ld   a, $61                                      ; $5496: $3e $61
-	ld   [wFarCallAddr+1], a                                  ; $5498: $ea $99 $c2
-	ld   a, $0b                                      ; $549b: $3e $0b
-	ld   [wFarCallBank], a                                  ; $549d: $ea $9a $c2
-	pop  af                                          ; $54a0: $f1
-	call nz, FarCall                                   ; $54a1: $c4 $62 $09
+
+	M_FarCall "nz", Func_0b_6182
+
 	ld   hl, hScriptOpcodeParams+2                                   ; $54a4: $21 $a2 $ff
 	inc  [hl]                                        ; $54a7: $34
 	ld   a, $14                                      ; $54a8: $3e $14

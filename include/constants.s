@@ -21,6 +21,7 @@ DEF GS_TITLE_SCREEN = $36
 DEF GS_TITLE_MENU_SCREEN = $37
 ; 38 and/or 39 - explore (day)
 ; 3b - any conversation?
+; 38 and/or 3c - day status when loading a file
 DEF GS_44 = $44
 DEF GS_DORM_ROOM = $45
 DEF GS_46 = $46

@@ -4336,15 +4336,9 @@ jr_009_59fc:
 	add  hl, bc                                      ; $5a00: $09
 	ld   l, [hl]                                     ; $5a01: $6e
 	ld   h, $03                                      ; $5a02: $26 $03
-	push af                                          ; $5a04: $f5
-	ld   a, $4b                                      ; $5a05: $3e $4b
-	ld   [wFarCallAddr], a                                  ; $5a07: $ea $98 $c2
-	ld   a, $5b                                      ; $5a0a: $3e $5b
-	ld   [wFarCallAddr+1], a                                  ; $5a0c: $ea $99 $c2
-	ld   a, $0a                                      ; $5a0f: $3e $0a
-	ld   [wFarCallBank], a                                  ; $5a11: $ea $9a $c2
-	pop  af                                          ; $5a14: $f1
-	call FarCall                                       ; $5a15: $cd $62 $09
+
+	M_FarCall Func_0a_5b4b
+
 	ld   d, h                                        ; $5a18: $54
 	ld   e, l                                        ; $5a19: $5d
 	ld   hl, $d340                                   ; $5a1a: $21 $40 $d3
@@ -4394,15 +4388,9 @@ Call_009_5a40:
 	add  hl, bc                                      ; $5a6c: $09
 	ld   l, [hl]                                     ; $5a6d: $6e
 	ld   h, $03                                      ; $5a6e: $26 $03
-	push af                                          ; $5a70: $f5
-	ld   a, $4b                                      ; $5a71: $3e $4b
-	ld   [wFarCallAddr], a                                  ; $5a73: $ea $98 $c2
-	ld   a, $5b                                      ; $5a76: $3e $5b
-	ld   [wFarCallAddr+1], a                                  ; $5a78: $ea $99 $c2
-	ld   a, $0a                                      ; $5a7b: $3e $0a
-	ld   [wFarCallBank], a                                  ; $5a7d: $ea $9a $c2
-	pop  af                                          ; $5a80: $f1
-	call FarCall                                       ; $5a81: $cd $62 $09
+
+	M_FarCall Func_0a_5b4b
+
 	ld   d, h                                        ; $5a84: $54
 	ld   e, l                                        ; $5a85: $5d
 	ld   hl, $d340                                   ; $5a86: $21 $40 $d3

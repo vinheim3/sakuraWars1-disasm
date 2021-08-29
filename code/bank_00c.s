@@ -5893,15 +5893,9 @@ jr_00c_6533:
 	add  hl, bc                                      ; $6537: $09
 	ld   l, [hl]                                     ; $6538: $6e
 	ld   h, $01                                      ; $6539: $26 $01
-	push af                                          ; $653b: $f5
-	ld   a, $4b                                      ; $653c: $3e $4b
-	ld   [wFarCallAddr], a                                  ; $653e: $ea $98 $c2
-	ld   a, $5b                                      ; $6541: $3e $5b
-	ld   [wFarCallAddr+1], a                                  ; $6543: $ea $99 $c2
-	ld   a, $0a                                      ; $6546: $3e $0a
-	ld   [wFarCallBank], a                                  ; $6548: $ea $9a $c2
-	pop  af                                          ; $654b: $f1
-	call FarCall                                       ; $654c: $cd $62 $09
+
+	M_FarCall Func_0a_5b4b
+
 	ld   d, h                                        ; $654f: $54
 	ld   e, l                                        ; $6550: $5d
 	ld   hl, $d340                                   ; $6551: $21 $40 $d3
@@ -5952,15 +5946,9 @@ Call_00c_6577:
 	add  hl, bc                                      ; $65a4: $09
 	ld   l, [hl]                                     ; $65a5: $6e
 	ld   h, $01                                      ; $65a6: $26 $01
-	push af                                          ; $65a8: $f5
-	ld   a, $4b                                      ; $65a9: $3e $4b
-	ld   [wFarCallAddr], a                                  ; $65ab: $ea $98 $c2
-	ld   a, $5b                                      ; $65ae: $3e $5b
-	ld   [wFarCallAddr+1], a                                  ; $65b0: $ea $99 $c2
-	ld   a, $0a                                      ; $65b3: $3e $0a
-	ld   [wFarCallBank], a                                  ; $65b5: $ea $9a $c2
-	pop  af                                          ; $65b8: $f1
-	call FarCall                                       ; $65b9: $cd $62 $09
+
+	M_FarCall Func_0a_5b4b
+
 	ld   d, h                                        ; $65bc: $54
 	ld   e, l                                        ; $65bd: $5d
 	ld   hl, $d340                                   ; $65be: $21 $40 $d3
@@ -5997,15 +5985,9 @@ Call_00c_6577:
 	call SetCurrKanjiColAndRowToDrawOn                                       ; $65f6: $cd $34 $14
 	ld   l, $1a                                      ; $65f9: $2e $1a
 	ld   h, $01                                      ; $65fb: $26 $01
-	push af                                          ; $65fd: $f5
-	ld   a, $4b                                      ; $65fe: $3e $4b
-	ld   [wFarCallAddr], a                                  ; $6600: $ea $98 $c2
-	ld   a, $5b                                      ; $6603: $3e $5b
-	ld   [wFarCallAddr+1], a                                  ; $6605: $ea $99 $c2
-	ld   a, $0a                                      ; $6608: $3e $0a
-	ld   [wFarCallBank], a                                  ; $660a: $ea $9a $c2
-	pop  af                                          ; $660d: $f1
-	call FarCall                                       ; $660e: $cd $62 $09
+
+	M_FarCall Func_0a_5b4b
+
 	ld   d, h                                        ; $6611: $54
 	ld   e, l                                        ; $6612: $5d
 	ld   hl, $d340                                   ; $6613: $21 $40 $d3
