@@ -3471,6 +3471,7 @@ jr_004_552e:
 	jp   LCDCInterruptHandler.return                                       ; $553b: $c3 $4a $04
 
 
+Func_04_553e::
 	call Call_004_4253                               ; $553e: $cd $53 $42
 	ld   a, [$cc56]                                  ; $5541: $fa $56 $cc
 	or   a                                           ; $5544: $b7
@@ -3485,6 +3486,7 @@ jr_004_5549:
 	ret                                              ; $554a: $c9
 
 
+Func_04_554b::
 	xor  a                                           ; $554b: $af
 	call Call_004_501f                               ; $554c: $cd $1f $50
 
@@ -3527,6 +3529,7 @@ jr_004_5579:
 	ret                                              ; $557c: $c9
 
 
+Func_04_557d::
 	ld   a, h                                        ; $557d: $7c
 	ld   [$cc52], a                                  ; $557e: $ea $52 $cc
 	ld   a, l                                        ; $5581: $7d
@@ -6189,12 +6192,13 @@ DormRoomAnimationHandler18:
 	ret                                              ; $66e2: $c9
 
 
+Func_04_66e3::
 	ld   [$cc7e], a                                  ; $66e3: $ea $7e $cc
 	ld   a, h                                        ; $66e6: $7c
 	ld   [$cc7c], a                                  ; $66e7: $ea $7c $cc
 	ld   a, l                                        ; $66ea: $7d
 	ld   [$cc7d], a                                  ; $66eb: $ea $7d $cc
-	ld   a, $45                                      ; $66ee: $3e $45
+	ld   a, GS_DORM_ROOM                                      ; $66ee: $3e $45
 	ld   [wGameState], a                                  ; $66f0: $ea $a0 $c2
 	xor  a                                           ; $66f3: $af
 	ld   [wGameSubstate], a                                  ; $66f4: $ea $a1 $c2

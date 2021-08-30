@@ -13,6 +13,7 @@ DEF GS_INTRO = $02
 DEF GS_SAVE_SCREEN = $0e
 DEF GS_RESET_DATA = $12
 DEF GS_DMG = $13
+DEF GS_CINEMATRON = $14
 DEF GS_ENTER_NAME = $16
 DEF GS_SETTINGS = $17
 ; 27 - minigame when slicing away fruits
@@ -22,6 +23,7 @@ DEF GS_TITLE_MENU_SCREEN = $37
 ; 38 and/or 39 - explore (day)
 ; 3b - any conversation?
 DEF GS_FILE_LOAD_DISPLAY = $3c
+DEF GS_TREASURE_CHEST = $41
 DEF GS_44 = $44
 DEF GS_DORM_ROOM = $45
 DEF GS_46 = $46
@@ -150,6 +152,7 @@ DEF ASST_1 = $01
 
 DEF SONG_01 = $01
 DEF SONG_11 = $11
+DEF SONG_14 = $14
 
 DEF SE_20 = $20
 DEF SE_21 = $21

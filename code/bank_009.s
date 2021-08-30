@@ -29,14 +29,18 @@ GameState38::
 	ld   l, a                                        ; $402a: $6f
 	jp   hl                                          ; $402b: $e9
 
+macro DayPeriodTransition
+	db \1, \2
+	dw \3
+endm
+
 .table:
-	db $00, $00, $e0, $40
-	db $00, $00, $ea, $40
-	db $0e, $05, $4d, $41
-	db $0e, $05, $6d, $41
-	db $00, $00, $70, $41
-	db $00, $00
-	dw Func_09_4196
+	DayPeriodTransition $00, $00, DPTransition00
+	DayPeriodTransition $00, $00, DPTransition01
+	DayPeriodTransition $0e, $05, DPTransition02
+	DayPeriodTransition $0e, $05, DPTransition03
+	DayPeriodTransition $00, $00, DPTransition04
+	DayPeriodTransition $00, $00, DPTransition05
 	db $00, $00, $bb, $42
 	db $01, $01, $23, $42
 	db $02, $01, $b6, $41
@@ -77,25 +81,35 @@ GameState38::
 	db $0e, $05, $14, $44
 	db $0e, $05, $54, $44
 
-	
+
+DPTransition00:
+;
 	ld   a, $01                                      ; $40e0: $3e $01
 	ld   [sCurrDay], a                                  ; $40e2: $ea $b0 $af
+
 	ld   hl, $afb1                                   ; $40e5: $21 $b1 $af
 	inc  [hl]                                        ; $40e8: $34
 	ret                                              ; $40e9: $c9
 
 
+DPTransition01:
+;
 	ld   a, [wWramBank]                                  ; $40ea: $fa $93 $c2
 	push af                                          ; $40ed: $f5
+
 	ld   a, $02                                      ; $40ee: $3e $02
 	ld   [wWramBank], a                                  ; $40f0: $ea $93 $c2
 	ldh  [rSVBK], a                                  ; $40f3: $e0 $70
+
+;
 	ld   a, $07                                      ; $40f5: $3e $07
 	call SafeSetAudVolForMultipleChannels                                       ; $40f7: $cd $e0 $1c
+
+;
 	ld   a, [wTimeOfDay]                                  ; $40fa: $fa $20 $cb
 	call Call_009_4841                               ; $40fd: $cd $41 $48
 	or   a                                           ; $4100: $b7
-	jr   z, jr_009_4142                              ; $4101: $28 $3f
+	jr   z, .done                              ; $4101: $28 $3f
 
 	ld   a, [$dc9c]                                  ; $4103: $fa $9c $dc
 	ld   [$cb22], a                                  ; $4106: $ea $22 $cb
@@ -115,71 +129,71 @@ GameState38::
 	ld   a, [$cb22]                                  ; $4129: $fa $22 $cb
 	ld   d, a                                        ; $412c: $57
 	xor  a                                           ; $412d: $af
-	push af                                          ; $412e: $f5
-	ld   a, $20                                      ; $412f: $3e $20
-	ld   [wFarCallAddr], a                                  ; $4131: $ea $98 $c2
-	ld   a, $48                                      ; $4134: $3e $48
-	ld   [wFarCallAddr+1], a                                  ; $4136: $ea $99 $c2
-	ld   a, $09                                      ; $4139: $3e $09
-	ld   [wFarCallBank], a                                  ; $413b: $ea $9a $c2
-	pop  af                                          ; $413e: $f1
-	call FarCall                                       ; $413f: $cd $62 $09
 
-jr_009_4142:
+	M_FarCall Func_09_4820
+
+.done:
+;
 	pop  af                                          ; $4142: $f1
 	ld   [wWramBank], a                                  ; $4143: $ea $93 $c2
 	ldh  [rSVBK], a                                  ; $4146: $e0 $70
+
+;
 	ld   hl, $afb1                                   ; $4148: $21 $b1 $af
 	inc  [hl]                                        ; $414b: $34
 	ret                                              ; $414c: $c9
 
 
+DPTransition02:
 	ld   a, [$cc7e]                                  ; $414d: $fa $7e $cc
 	ld   h, $38                                      ; $4150: $26 $38
 	ld   l, $00                                      ; $4152: $2e $00
-	push af                                          ; $4154: $f5
-	ld   a, $e3                                      ; $4155: $3e $e3
-	ld   [wFarCallAddr], a                                  ; $4157: $ea $98 $c2
-	ld   a, $66                                      ; $415a: $3e $66
-	ld   [wFarCallAddr+1], a                                  ; $415c: $ea $99 $c2
-	ld   a, $04                                      ; $415f: $3e $04
-	ld   [wFarCallBank], a                                  ; $4161: $ea $9a $c2
-	pop  af                                          ; $4164: $f1
-	call FarCall                                       ; $4165: $cd $62 $09
+
+	M_FarCall Func_04_66e3
+
 	ld   hl, $afb1                                   ; $4168: $21 $b1 $af
 	inc  [hl]                                        ; $416b: $34
 	ret                                              ; $416c: $c9
 
 
+DPTransition03:
 	jp   Jump_009_42fb                               ; $416d: $c3 $fb $42
 
 
-Jump_009_4170:
+DPTransition04:
 	ld   a, [$cc1d]                                  ; $4170: $fa $1d $cc
 	or   a                                           ; $4173: $b7
-	jr   z, jr_009_4188                              ; $4174: $28 $12
+	jr   z, .setDayPassedState                              ; $4174: $28 $12
 
+; Else set file load display state
 	xor  a                                           ; $4176: $af
 	ld   [$cc1d], a                                  ; $4177: $ea $1d $cc
+
+;
 	ld   a, GS_FILE_LOAD_DISPLAY                                      ; $417a: $3e $3c
 	ld   [wGameState], a                                  ; $417c: $ea $a0 $c2
 	xor  a                                           ; $417f: $af
 	ld   [wGameSubstate], a                                  ; $4180: $ea $a1 $c2
+
+;
 	ld   hl, $afb1                                   ; $4183: $21 $b1 $af
 	inc  [hl]                                        ; $4186: $34
 	ret                                              ; $4187: $c9
 
-jr_009_4188:
+.setDayPassedState:
+;
 	ld   a, GS_DAY_PASSED                                      ; $4188: $3e $49
 	ld   [wGameState], a                                  ; $418a: $ea $a0 $c2
 	xor  a                                           ; $418d: $af
 	ld   [wGameSubstate], a                                  ; $418e: $ea $a1 $c2
+
+;
 	ld   hl, $afb1                                   ; $4191: $21 $b1 $af
 	inc  [hl]                                        ; $4194: $34
 	ret                                              ; $4195: $c9
 
 
-Func_09_4196:
+DPTransition05:
 	ld   a, [sCurrDay]                                  ; $4196: $fa $b0 $af
 	cp   32                                         ; $4199: $fe $20
 	jr   c, .notEndOfGame                              ; $419b: $38 $19
@@ -422,7 +436,7 @@ Jump_009_42fb:
 	ret                                              ; $4333: $c9
 
 
-	jp   Jump_009_4170                               ; $4334: $c3 $70 $41
+	jp   DPTransition04                               ; $4334: $c3 $70 $41
 
 
 	ld   a, [wWramBank]                                  ; $4337: $fa $93 $c2
@@ -3808,43 +3822,57 @@ jr_009_56b9:
 	jp   LCDCInterruptHandler.return                                       ; $56c5: $c3 $4a $04
 
 
-GameState41::
-	ld   a, [wGameSubstate]                                  ; $56c8: $fa $a1 $c2
-	dec  a                                           ; $56cb: $3d
-	jp   z, Jump_009_5b46                            ; $56cc: $ca $46 $5b
+GameState41_TreasureChest::
+; Branch if not init substate
+	ld   a, [wGameSubstate]                                         ; $56c8
+	dec  a                                                          ; $56cb
+	jp   z, TreasureChestSubstate1                                  ; $56cc
 
-	dec  a                                           ; $56cf: $3d
-	jp   z, Jump_009_5b63                            ; $56d0: $ca $63 $5b
+	dec  a                                                          ; $56cf
+	jp   z, TreasureChestSubstate2                                  ; $56d0
 
-	ld   a, $14                                      ; $56d3: $3e $14
-	call PlaySong                                       ; $56d5: $cd $92 $1a
-	ld   a, $07                                      ; $56d8: $3e $07
-	call SafeSetAudVolForMultipleChannels                                       ; $56da: $cd $e0 $1c
+; Play song and max aud vol
+	ld   a, SONG_14                                                 ; $56d3
+	call PlaySong                                                   ; $56d5
+
+	ld   a, $07                                                     ; $56d8
+	call SafeSetAudVolForMultipleChannels                           ; $56da
+
+;
 	xor  a                                           ; $56dd: $af
 	ld   [$cc57], a                                  ; $56de: $ea $57 $cc
 	ld   [$cc58], a                                  ; $56e1: $ea $58 $cc
 	jp   Jump_009_56e7                               ; $56e4: $c3 $e7 $56
 
-
 Jump_009_56e7:
+;
 	ld   a, [wWramBank]                                  ; $56e7: $fa $93 $c2
 	push af                                          ; $56ea: $f5
+
 	ld   a, $02                                      ; $56eb: $3e $02
 	ld   [wWramBank], a                                  ; $56ed: $ea $93 $c2
 	ldh  [rSVBK], a                                  ; $56f0: $e0 $70
+
+; Clear display regs, and turn on LCD with window enabled
 	call ClearDisplayRegsAllowVBlankInt                                       ; $56f2: $cd $59 $0b
+
 	ld   a, [wLCDC]                                  ; $56f5: $fa $03 $c2
 	and  $80                                         ; $56f8: $e6 $80
 	or   $a7                                         ; $56fa: $f6 $a7
 	ld   [wLCDC], a                                  ; $56fc: $ea $03 $c2
 	ldh  [rLCDC], a                                  ; $56ff: $e0 $40
+
+; Load all white palettes, and update hw pals
 	ld   a, $01                                      ; $5701: $3e $01
 	ld   hl, $7000                                   ; $5703: $21 $00 $70
 	ld   de, wBGPalettes                                   ; $5706: $11 $de $c2
 	ld   bc, $0080                                   ; $5709: $01 $80 $00
 	call FarMemCopy                                       ; $570c: $cd $b2 $09
+
 	ld   bc, $003f                                   ; $570f: $01 $3f $00
 	call SetBGandOBJPaletteRangesToUpdate                                       ; $5712: $cd $aa $04
+
+;
 	ld   a, $07                                      ; $5715: $3e $07
 	ld   [$c20b], a                                  ; $5717: $ea $0b $c2
 	ld   hl, $c20c                                   ; $571a: $21 $0c $c2
@@ -4526,7 +4554,7 @@ jr_009_5b44:
 	ret                                              ; $5b45: $c9
 
 
-Jump_009_5b46:
+TreasureChestSubstate1:
 	ld   a, [$c653]                                  ; $5b46: $fa $53 $c6
 	or   a                                           ; $5b49: $b7
 	jr   z, jr_009_5b56                              ; $5b4a: $28 $0a
@@ -4549,7 +4577,7 @@ jr_009_5b60:
 	jp   Jump_009_56e7                               ; $5b60: $c3 $e7 $56
 
 
-Jump_009_5b63:
+TreasureChestSubstate2:
 	ld   a, [wWramBank]                                  ; $5b63: $fa $93 $c2
 	push af                                          ; $5b66: $f5
 	ld   a, $02                                      ; $5b67: $3e $02
@@ -6732,6 +6760,7 @@ jr_009_693e:
 	jp   LCDCInterruptHandler.return                                       ; $694b: $c3 $4a $04
 
 
+Func_09_694e::
 	call Call_009_58eb                               ; $694e: $cd $eb $58
 	ld   a, [$cc56]                                  ; $6951: $fa $56 $cc
 	or   a                                           ; $6954: $b7
@@ -6740,17 +6769,17 @@ jr_009_693e:
 	xor  a                                           ; $6957: $af
 	ret                                              ; $6958: $c9
 
-
 jr_009_6959:
 	dec  a                                           ; $6959: $3d
 	ret                                              ; $695a: $c9
 
 
+SetTreasureChestState::
 	ld   a, h                                        ; $695b: $7c
 	ld   [$cc52], a                                  ; $695c: $ea $52 $cc
 	ld   a, l                                        ; $695f: $7d
 	ld   [$cc53], a                                  ; $6960: $ea $53 $cc
-	ld   a, $41                                      ; $6963: $3e $41
+	ld   a, GS_TREASURE_CHEST                                      ; $6963: $3e $41
 	ld   [wGameState], a                                  ; $6965: $ea $a0 $c2
 	xor  a                                           ; $6968: $af
 	ld   [wGameSubstate], a                                  ; $6969: $ea $a1 $c2

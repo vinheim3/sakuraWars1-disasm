@@ -814,7 +814,7 @@ Call_00a_4416:
 	ret                                              ; $4427: $c9
 
 
-Call_00a_4428:
+Call_00a_4428::
 	push af                                          ; $4428: $f5
 	call HLequAddrOfFileData                               ; $4429: $cd $a6 $43
 	ld   bc, $0217                                   ; $442c: $01 $17 $02
@@ -7050,11 +7050,11 @@ TitleMenuScreenAnimationHandlerD:
 	dw .newGame
 	dw .continue
 	dw .settings
-	dw $748b
-	dw $7521
-	dw $755c
-	dw $75a0
-	dw $75bd
+	dw .romandoShop
+	dw .treasureChest
+	dw .miniGames
+	dw .cinematron
+	dw .titleScreen
 
 .prologue:
 	xor  a                                           ; $73f7: $af
@@ -7073,15 +7073,9 @@ TitleMenuScreenAnimationHandlerD:
 	xor  a                                           ; $741c: $af
 	ld   [$cb1d], a                                  ; $741d: $ea $1d $cb
 	ld   a, $03                                      ; $7420: $3e $03
-	push af                                          ; $7422: $f5
-	ld   a, $28                                      ; $7423: $3e $28
-	ld   [wFarCallAddr], a                                  ; $7425: $ea $98 $c2
-	ld   a, $44                                      ; $7428: $3e $44
-	ld   [wFarCallAddr+1], a                                  ; $742a: $ea $99 $c2
-	ld   a, $0a                                      ; $742d: $3e $0a
-	ld   [wFarCallBank], a                                  ; $742f: $ea $9a $c2
-	pop  af                                          ; $7432: $f1
-	call FarCall                                       ; $7433: $cd $62 $09
+
+	M_FarCall Call_00a_4428
+
 	ld   a, $38                                      ; $7436: $3e $38
 	ld   [wGameState], a                                  ; $7438: $ea $a0 $c2
 	xor  a                                           ; $743b: $af
@@ -7110,86 +7104,51 @@ TitleMenuScreenAnimationHandlerD:
 	ld   h, $37                                      ; $7470: $26 $37
 	ld   l, $01                                      ; $7472: $2e $01
 	ld   b, $ff                                      ; $7474: $06 $ff
-	push af                                          ; $7476: $f5
-	ld   a, $38                                      ; $7477: $3e $38
-	ld   [wFarCallAddr], a                                  ; $7479: $ea $98 $c2
-	ld   a, $4f                                      ; $747c: $3e $4f
-	ld   [wFarCallAddr+1], a                                  ; $747e: $ea $99 $c2
-	ld   a, $3e                                      ; $7481: $3e $3e
-	ld   [wFarCallBank], a                                  ; $7483: $ea $9a $c2
-	pop  af                                          ; $7486: $f1
-	call FarCall                                       ; $7487: $cd $62 $09
+
+	M_FarCall SetSettingsState
 	ret                                              ; $748a: $c9
 
-
+.romandoShop:
 	ld   hl, $0002                                   ; $748b: $21 $02 $00
-	push af                                          ; $748e: $f5
-	ld   a, $35                                      ; $748f: $3e $35
-	ld   [wFarCallAddr], a                                  ; $7491: $ea $98 $c2
-	ld   a, $42                                      ; $7494: $3e $42
-	ld   [wFarCallAddr+1], a                                  ; $7496: $ea $99 $c2
-	ld   a, $0a                                      ; $7499: $3e $0a
-	ld   [wFarCallBank], a                                  ; $749b: $ea $9a $c2
-	pop  af                                          ; $749e: $f1
-	call FarCall                                       ; $749f: $cd $62 $09
+
+	M_FarCall CheckIfFlagSet1
+
 	or   a                                           ; $74a2: $b7
-	jr   z, jr_00a_74f0                              ; $74a3: $28 $4b
+	jr   z, .br_74f0                              ; $74a3: $28 $4b
 
-	push af                                          ; $74a5: $f5
-	ld   a, $4b                                      ; $74a6: $3e $4b
-	ld   [wFarCallAddr], a                                  ; $74a8: $ea $98 $c2
-	ld   a, $55                                      ; $74ab: $3e $55
-	ld   [wFarCallAddr+1], a                                  ; $74ad: $ea $99 $c2
-	ld   a, $04                                      ; $74b0: $3e $04
-	ld   [wFarCallBank], a                                  ; $74b2: $ea $9a $c2
-	pop  af                                          ; $74b5: $f1
-	call FarCall                                       ; $74b6: $cd $62 $09
+	M_FarCall Func_04_554b
+
 	or   a                                           ; $74b9: $b7
-	jr   nz, jr_00a_74f6                             ; $74ba: $20 $3a
+	jr   nz, .br_74f6                             ; $74ba: $20 $3a
 
-	push af                                          ; $74bc: $f5
-	ld   a, $3e                                      ; $74bd: $3e $3e
-	ld   [wFarCallAddr], a                                  ; $74bf: $ea $98 $c2
-	ld   a, $55                                      ; $74c2: $3e $55
-	ld   [wFarCallAddr+1], a                                  ; $74c4: $ea $99 $c2
-	ld   a, $04                                      ; $74c7: $3e $04
-	ld   [wFarCallBank], a                                  ; $74c9: $ea $9a $c2
-	pop  af                                          ; $74cc: $f1
-	call FarCall                                       ; $74cd: $cd $62 $09
+	M_FarCall Func_04_553e
+
 	or   a                                           ; $74d0: $b7
-	jr   nz, jr_00a_74fd                             ; $74d1: $20 $2a
+	jr   nz, .br_74fd                             ; $74d1: $20 $2a
 
 	xor  a                                           ; $74d3: $af
 	call PlaySong                                       ; $74d4: $cd $92 $1a
 	ld   h, $37                                      ; $74d7: $26 $37
 	ld   l, $02                                      ; $74d9: $2e $02
-	push af                                          ; $74db: $f5
-	ld   a, $7d                                      ; $74dc: $3e $7d
-	ld   [wFarCallAddr], a                                  ; $74de: $ea $98 $c2
-	ld   a, $55                                      ; $74e1: $3e $55
-	ld   [wFarCallAddr+1], a                                  ; $74e3: $ea $99 $c2
-	ld   a, $04                                      ; $74e6: $3e $04
-	ld   [wFarCallBank], a                                  ; $74e8: $ea $9a $c2
-	pop  af                                          ; $74eb: $f1
-	call FarCall                                       ; $74ec: $cd $62 $09
+
+	M_FarCall Func_04_557d
 	ret                                              ; $74ef: $c9
 
-
-jr_00a_74f0:
+.br_74f0:
 	xor  a                                           ; $74f0: $af
 	ld   [$b0aa], a                                  ; $74f1: $ea $aa $b0
-	jr   Jump_00a_7502                                 ; $74f4: $18 $0c
+	jr   .cont_7502                                 ; $74f4: $18 $0c
 
-jr_00a_74f6:
+.br_74f6:
 	ld   a, $02                                      ; $74f6: $3e $02
 	ld   [$b0aa], a                                  ; $74f8: $ea $aa $b0
-	jr   Jump_00a_7502                                 ; $74fb: $18 $05
+	jr   .cont_7502                                 ; $74fb: $18 $05
 
-jr_00a_74fd:
+.br_74fd:
 	ld   a, $03                                      ; $74fd: $3e $03
 	ld   [$b0aa], a                                  ; $74ff: $ea $aa $b0
 
-Jump_00a_7502:
+.cont_7502:
 	ld   bc, $0011                                   ; $7502: $01 $11 $00
 	ld   h, $37                                      ; $7505: $26 $37
 	ld   l, $02                                      ; $7507: $2e $02
@@ -7198,52 +7157,32 @@ Jump_00a_7502:
 	M_FarCall InitIntroScript
 	ret                                              ; $7520: $c9
 
+.treasureChest:
+	M_FarCall Func_09_694e
 
-	push af                                          ; $7521: $f5
-	ld   a, $4e                                      ; $7522: $3e $4e
-	ld   [wFarCallAddr], a                                  ; $7524: $ea $98 $c2
-	ld   a, $69                                      ; $7527: $3e $69
-	ld   [wFarCallAddr+1], a                                  ; $7529: $ea $99 $c2
-	ld   a, $09                                      ; $752c: $3e $09
-	ld   [wFarCallBank], a                                  ; $752e: $ea $9a $c2
-	pop  af                                          ; $7531: $f1
-	call FarCall                                       ; $7532: $cd $62 $09
 	or   a                                           ; $7535: $b7
-	jr   nz, jr_00a_7555                             ; $7536: $20 $1d
+	jr   nz, .br_7555                             ; $7536: $20 $1d
 
 	xor  a                                           ; $7538: $af
 	call PlaySong                                       ; $7539: $cd $92 $1a
 	ld   h, $37                                      ; $753c: $26 $37
 	ld   l, $02                                      ; $753e: $2e $02
-	push af                                          ; $7540: $f5
-	ld   a, $5b                                      ; $7541: $3e $5b
-	ld   [wFarCallAddr], a                                  ; $7543: $ea $98 $c2
-	ld   a, $69                                      ; $7546: $3e $69
-	ld   [wFarCallAddr+1], a                                  ; $7548: $ea $99 $c2
-	ld   a, $09                                      ; $754b: $3e $09
-	ld   [wFarCallBank], a                                  ; $754d: $ea $9a $c2
-	pop  af                                          ; $7550: $f1
-	call FarCall                                       ; $7551: $cd $62 $09
+
+	M_FarCall SetTreasureChestState
 	ret                                              ; $7554: $c9
 
-
-jr_00a_7555:
+.br_7555:
 	ld   a, $0a                                      ; $7555: $3e $0a
 	ld   [$b0aa], a                                  ; $7557: $ea $aa $b0
-	jr   Jump_00a_7502                                 ; $755a: $18 $a6
+	jr   .cont_7502                                 ; $755a: $18 $a6
 
+.miniGames:
 	ld   hl, $0002                                   ; $755c: $21 $02 $00
-	push af                                          ; $755f: $f5
-	ld   a, $35                                      ; $7560: $3e $35
-	ld   [wFarCallAddr], a                                  ; $7562: $ea $98 $c2
-	ld   a, $42                                      ; $7565: $3e $42
-	ld   [wFarCallAddr+1], a                                  ; $7567: $ea $99 $c2
-	ld   a, $0a                                      ; $756a: $3e $0a
-	ld   [wFarCallBank], a                                  ; $756c: $ea $9a $c2
-	pop  af                                          ; $756f: $f1
-	call FarCall                                       ; $7570: $cd $62 $09
+
+	M_FarCall CheckIfFlagSet1
+
 	or   a                                           ; $7573: $b7
-	jr   z, jr_00a_7598                              ; $7574: $28 $22
+	jr   z, .br_7598                              ; $7574: $28 $22
 
 	xor  a                                           ; $7576: $af
 	call PlaySong                                       ; $7577: $cd $92 $1a
@@ -7251,41 +7190,26 @@ jr_00a_7555:
 	ld   [$cb1d], a                                  ; $757c: $ea $1d $cb
 	ld   h, $37                                      ; $757f: $26 $37
 	ld   l, $02                                      ; $7581: $2e $02
-	push af                                          ; $7583: $f5
-	ld   a, $4a                                      ; $7584: $3e $4a
-	ld   [wFarCallAddr], a                                  ; $7586: $ea $98 $c2
-	ld   a, $56                                      ; $7589: $3e $56
-	ld   [wFarCallAddr+1], a                                  ; $758b: $ea $99 $c2
-	ld   a, $30                                      ; $758e: $3e $30
-	ld   [wFarCallBank], a                                  ; $7590: $ea $9a $c2
-	pop  af                                          ; $7593: $f1
-	call FarCall                                       ; $7594: $cd $62 $09
+
+	M_FarCall Func_30_564a
 	ret                                              ; $7597: $c9
 
-
-jr_00a_7598:
+.br_7598:
 	ld   a, $14                                      ; $7598: $3e $14
 	ld   [$b0aa], a                                  ; $759a: $ea $aa $b0
-	jp   Jump_00a_7502                               ; $759d: $c3 $02 $75
+	jp   .cont_7502                               ; $759d: $c3 $02 $75
 
-
+.cinematron:
 	xor  a                                           ; $75a0: $af
 	call PlaySong                                       ; $75a1: $cd $92 $1a
 	ld   h, $37                                      ; $75a4: $26 $37
 	ld   l, $02                                      ; $75a6: $2e $02
-	push af                                          ; $75a8: $f5
-	ld   a, $00                                      ; $75a9: $3e $00
-	ld   [wFarCallAddr], a                                  ; $75ab: $ea $98 $c2
-	ld   a, $67                                      ; $75ae: $3e $67
-	ld   [wFarCallAddr+1], a                                  ; $75b0: $ea $99 $c2
-	ld   a, $10                                      ; $75b3: $3e $10
-	ld   [wFarCallBank], a                                  ; $75b5: $ea $9a $c2
-	pop  af                                          ; $75b8: $f1
-	call FarCall                                       ; $75b9: $cd $62 $09
+
+	M_FarCall SetCinematronState
 	ret                                              ; $75bc: $c9
 
-
-	ld   a, $36                                      ; $75bd: $3e $36
+.titleScreen:
+	ld   a, GS_TITLE_SCREEN                                      ; $75bd: $3e $36
 	ld   [wGameState], a                                  ; $75bf: $ea $a0 $c2
 	ld   a, $01                                      ; $75c2: $3e $01
 	ld   [wGameSubstate], a                                  ; $75c4: $ea $a1 $c2

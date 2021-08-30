@@ -10,7 +10,7 @@ from util import getRom, conv, bankAddr, wordIn, getKanjiMap
 kanji_map = getKanjiMap()
 
 existingTranslations = {}
-with open('sakura wars GB - 29:08:21.csv') as f:
+with open('sakura wars GB - 30:08:21.csv') as f:
     reader = csv.reader(f)
     for row in reader:
         if row[0]:
@@ -152,16 +152,25 @@ def addToSpreadSheetComps(data, baseBank, baseAddr, scriptNum, offset, currChar,
                         kanjis += f"<{letter:03x}>"
         except:
             raise
+
+        translation = existingTranslations.get((scriptNum, offset))
+
         isDupe = ''
         if kanjis in spreadSheetCompMap:
             isDupe = 'x'
         else:
-            spreadSheetCompMap[kanjis] = None
-        isReplacement = ''
-        if bool(set(letters) & {
-                0x664, 0x5a3, 0x4bf, 0x689, 0x335, 0x34c, 0x5b8, 0x62a, 
-                0x5f2, 0x47b, 0x603, 0x572, 0x682}):
-            isReplacement = 'x'
+            # Say that this string of kanjis is 1st found on this row
+            # ie 1st row = 0 + 2 = 2, due to Title bar
+            spreadSheetCompMap[kanjis] = len(spreadSheetComps) + 2
+
+        if not translation and isDupe:
+            translation = f"=E{spreadSheetCompMap[kanjis]}"
+
+        # isReplacement = ''
+        # if bool(set(letters) & {
+        #         0x664, 0x5a3, 0x4bf, 0x689, 0x335, 0x34c, 0x5b8, 0x62a, 
+        #         0x5f2, 0x47b, 0x603, 0x572, 0x682}):
+        #     isReplacement = 'x'
 
         if choiceType:
             currChar += f" ({choiceType})"
@@ -171,7 +180,7 @@ def addToSpreadSheetComps(data, baseBank, baseAddr, scriptNum, offset, currChar,
             f"{offset}", 
             kanjis, 
             '',
-            existingTranslations.get((scriptNum, offset)),
+            translation,
             currChar, 
             isDupe,
             # isReplacement,
@@ -441,39 +450,39 @@ if __name__ == "__main__":
     Instant texts
     """
     # src bank, src address, length, script name/player
-    offsetTexts = [
-        [0x24, 0x71b0, 0x9c//2, 'battle'],
-        [0x90, 0x5087, 0x0e//2, '_90_5087'],
-        [0x90, 0x4e80, 0x36//2, '_90_4e80'],
-        [0x90, 0x5118, 0x0c//2, '_90_5118'],
-        [0x90, 0x5234, 0xec//2, '_90_5234'],
-        [0x90, 0x5ac9, 0x46//2, '_90_5ac9'],
-        [0x05, 0x579f, 0xa00//2, '_05_579f'],
-        [0x0c, 0x5ad5, 0x14//2, '_0c_5ad5'],
-        [0x30, 0x683a, 0x5a//2, '_30_683a'],
-        [0x30, 0x6e56, 0x58//2, '_30_6e56'],
-        [0x30, 0x77d4, 0x2a//2, '_30_77d4'],
-        [0x31, 0x441e, 0x2a//2, '_31_441e'],
-        [0x31, 0x595e, 0x0e//2, '_31_595e'],
-    ]
-    for _bank, _addr, _len, _scriptName in offsetTexts:
-        for i in range(_len):
-            offset = wordIn(rom, bankAddr(_bank, _addr+i*2))
-            addToSpreadSheetComps(rom, _bank, _addr, _scriptName, offset, _scriptName.upper())
+    # offsetTexts = [
+    #     [0x24, 0x71b0, 0x9c//2, 'battle'],
+    #     [0x90, 0x5087, 0x0e//2, '_90_5087'],
+    #     [0x90, 0x4e80, 0x36//2, '_90_4e80'],
+    #     [0x90, 0x5118, 0x0c//2, '_90_5118'],
+    #     [0x90, 0x5234, 0xec//2, '_90_5234'],
+    #     [0x90, 0x5ac9, 0x46//2, '_90_5ac9'],
+    #     [0x05, 0x579f, 0xa00//2, '_05_579f'],
+    #     [0x0c, 0x5ad5, 0x14//2, '_0c_5ad5'],
+    #     [0x30, 0x683a, 0x5a//2, '_30_683a'],
+    #     [0x30, 0x6e56, 0x58//2, '_30_6e56'],
+    #     [0x30, 0x77d4, 0x2a//2, '_30_77d4'],
+    #     [0x31, 0x441e, 0x2a//2, '_31_441e'],
+    #     [0x31, 0x595e, 0x0e//2, '_31_595e'],
+    # ]
+    # for _bank, _addr, _len, _scriptName in offsetTexts:
+    #     for i in range(_len):
+    #         offset = wordIn(rom, bankAddr(_bank, _addr+i*2))
+    #         addToSpreadSheetComps(rom, _bank, _addr, _scriptName, offset, _scriptName.upper())
 
-    for i in range(87):
-        _scriptName = '_0d_618f'
-        offset = wordIn(rom, bankAddr(0x0d, 0x5c1f+i*16))
-        addToSpreadSheetComps(rom, 0x0d, 0x618f, _scriptName, offset, _scriptName.upper())
-        offset = wordIn(rom, bankAddr(0x0d, 0x5c21+i*16))
-        addToSpreadSheetComps(rom, 0x0d, 0x618f, _scriptName, offset, _scriptName.upper())
+    # for i in range(87):
+    #     _scriptName = '_0d_618f'
+    #     offset = wordIn(rom, bankAddr(0x0d, 0x5c1f+i*16))
+    #     addToSpreadSheetComps(rom, 0x0d, 0x618f, _scriptName, offset, _scriptName.upper())
+    #     offset = wordIn(rom, bankAddr(0x0d, 0x5c21+i*16))
+    #     addToSpreadSheetComps(rom, 0x0d, 0x618f, _scriptName, offset, _scriptName.upper())
 
-    with open('temp.csv', 'w') as f:
-        writer = csv.writer(f)
-        writer.writerow(["Script name", "Text offset", "JP", "", "EN", "Character", "Is duplicate", "Sumire name replacement"])
-        for comp in spreadSheetComps:
-            writer.writerow(comp)
-    exit(0)
+    # with open('temp.csv', 'w') as f:
+    #     writer = csv.writer(f)
+    #     writer.writerow(["Script name", "Text offset", "JP", "", "EN", "Character", "Is duplicate", "Sumire name replacement"])
+    #     for comp in spreadSheetComps:
+    #         writer.writerow(comp)
+    # exit(0)
 
     """
     Individual
@@ -505,5 +514,9 @@ if __name__ == "__main__":
 
     with open('temp.csv', 'w') as f:
         writer = csv.writer(f)
+        writer.writerow([
+            "Script num", "Text offset", "JP", "", "EN", "Character",
+            "Is duplicate of another JP row (x)?", "Sumire Name Replacement",
+        ])
         for comp in spreadSheetComps:
             writer.writerow(comp)

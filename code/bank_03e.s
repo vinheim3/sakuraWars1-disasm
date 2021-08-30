@@ -2353,6 +2353,7 @@ jr_03e_4f36:
 	ret                                              ; $4f37: $c9
 
 
+SetSettingsState::
 	ld   [$c97d], a                                  ; $4f38: $ea $7d $c9
 	ld   a, b                                        ; $4f3b: $78
 	ld   [$c97e], a                                  ; $4f3c: $ea $7e $c9
@@ -2360,7 +2361,7 @@ jr_03e_4f36:
 	ld   [$c96c], a                                  ; $4f40: $ea $6c $c9
 	ld   a, l                                        ; $4f43: $7d
 	ld   [$c96d], a                                  ; $4f44: $ea $6d $c9
-	ld   a, $17                                      ; $4f47: $3e $17
+	ld   a, GS_SETTINGS                                      ; $4f47: $3e $17
 	ld   [wGameState], a                                  ; $4f49: $ea $a0 $c2
 	ld   a, $00                                      ; $4f4c: $3e $00
 	ld   [wGameSubstate], a                                  ; $4f4e: $ea $a1 $c2

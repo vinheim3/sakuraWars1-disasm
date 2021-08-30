@@ -703,7 +703,7 @@ if __name__ == "__main__":
                         fullEnglishMap[int(scriptNum)][int(offset)] = doneEnglish[orig]
                     continue
 
-                if english:
+                if english and english[0] != "=":
                     tbs = ScriptExtractor.convertEnglish(english)
                     doneTranslations[orig] = tbs
                     doneEnglish[orig] = english

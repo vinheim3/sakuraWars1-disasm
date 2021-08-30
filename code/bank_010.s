@@ -6037,11 +6037,12 @@ jr_010_66e9:
 	ret                                              ; $66ff: $c9
 
 
+SetCinematronState::
 	ld   a, h                                        ; $6700: $7c
 	ld   [$c922], a                                  ; $6701: $ea $22 $c9
 	ld   a, l                                        ; $6704: $7d
 	ld   [$c923], a                                  ; $6705: $ea $23 $c9
-	ld   a, $14                                      ; $6708: $3e $14
+	ld   a, GS_CINEMATRON                                      ; $6708: $3e $14
 	ld   [wGameState], a                                  ; $670a: $ea $a0 $c2
 	ld   a, $00                                      ; $670d: $3e $00
 	ld   [wGameSubstate], a                                  ; $670f: $ea $a1 $c2

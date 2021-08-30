@@ -3292,7 +3292,7 @@ HandleGameState:
 	AddrBank GameState3e
 	AddrBank GameState3f
 	AddrBank GameState40
-	AddrBank GameState41
+	AddrBank GameState41_TreasureChest
 	AddrBank GameState42
 	AddrBank GameState43
 	AddrBank GameState44
