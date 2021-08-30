@@ -12,82 +12,114 @@ SECTION "ROM Bank $001", ROMX[$4000], BANK[$1]
 	nop                                              ; $4002: $00
 
 
+; D - srite spec group
+; HL - pointer to BASE_ADDR
 AnimSpriteSpecType0Load::
-	push af                                          ; $4003: $f5
-	ld   a, d                                        ; $4004: $7a
-	and  $80                                         ; $4005: $e6 $80
-	ld   [hl+], a                                    ; $4007: $22
-	xor  a                                           ; $4008: $af
-	ld   [hl+], a                                    ; $4009: $22
-	ld   [hl+], a                                    ; $400a: $22
-	ld   [hl+], a                                    ; $400b: $22
-	pop  af                                          ; $400c: $f1
-	ret                                              ; $400d: $c9
+	push af                                                         ; $4003
+
+; Clear bit 7 (default to absolute positioning)
+	ld   a, d                                                       ; $4004
+	and  $80                                                        ; $4005
+	ld   [hl+], a                                                   ; $4007
+
+; Clear spec idx and x/y
+	xor  a                                                          ; $4008
+	ld   [hl+], a                                                   ; $4009
+	ld   [hl+], a                                                   ; $400a
+	ld   [hl+], a                                                   ; $400b
+
+	pop  af                                                         ; $400c
+	ret                                                             ; $400d
 
 
+; HL - anim sprite spec instance addr
 AnimSpriteSpecType0Update::
-	ld   a, [hl+]                                    ; $400e: $2a
-	bit  7, a                                        ; $400f: $cb $7f
-	jr   z, .br_402d                              ; $4011: $28 $1a
+; Jump if ASSI0_CTRL bit 7 clear
+	ld   a, [hl+]                                                   ; $400e
+	bit  7, a                                                       ; $400f
+	jr   z, .absolutePosition                                       ; $4011
 
-	res  7, a                                        ; $4013: $cb $bf
-	ld   [wSpriteGroup], a                                  ; $4015: $ea $1a $c2
-	ld   a, [hl+]                                    ; $4018: $2a
-	ld   e, a                                        ; $4019: $5f
-	ld   a, [$c600]                                  ; $401a: $fa $00 $c6
-	ld   b, a                                        ; $401d: $47
-	ld   a, [hl+]                                    ; $401e: $2a
-	sub  b                                           ; $401f: $90
-	ld   b, a                                        ; $4020: $47
-	ld   a, [$c601]                                  ; $4021: $fa $01 $c6
-	ld   c, a                                        ; $4024: $4f
-	ld   a, [hl+]                                    ; $4025: $2a
-	sub  c                                           ; $4026: $91
-	ld   c, a                                        ; $4027: $4f
-	ld   a, e                                        ; $4028: $7b
-	call LoadSpriteFromMainTable                                       ; $4029: $cd $16 $0e
-	ret                                              ; $402c: $c9
+; If bit 7 set, it has relative position. It's other bits determines sprite group
+	res  7, a                                                       ; $4013
+	ld   [wSpriteGroup], a                                          ; $4015
 
-.br_402d:
-	ld   [wSpriteGroup], a                                  ; $402d: $ea $1a $c2
+; 2nd byte (ASSI0_SPEC_IDX) is the sprite spec idx
+	ld   a, [hl+]                                                   ; $4018
+	ld   e, a                                                       ; $4019
 
-; 1st byte is spec idx
-	ld   a, [hl+]                                    ; $4030: $2a
-	ld   e, a                                        ; $4031: $5f
+; 3rd byte - y pos relative to = X offset (ASSI0_X)
+	ld   a, [wType0AnimSpriteXPosRelativeTo]                        ; $401a
+	ld   b, a                                                       ; $401d
 
-; Next 2 bytes are X, then Y offset
-	ld   a, [hl+]                                    ; $4032: $2a
-	ld   b, a                                        ; $4033: $47
-	ld   a, [hl]                                     ; $4034: $7e
-	ld   c, a                                        ; $4035: $4f
+	ld   a, [hl+]                                                   ; $401e
+	sub  b                                                          ; $401f
+	ld   b, a                                                       ; $4020
+
+; 4th byte - y pos relative to = Y offset (ASSI0_Y)
+	ld   a, [wType0AnimSpriteYPosRelativeTo]                        ; $4021
+	ld   c, a                                                       ; $4024
+
+	ld   a, [hl+]                                                   ; $4025
+	sub  c                                                          ; $4026
+	ld   c, a                                                       ; $4027
 
 ; Load sprite
-	ld   a, e                                        ; $4036: $7b
-	call LoadSpriteFromMainTable                                       ; $4037: $cd $16 $0e
-	ret                                              ; $403a: $c9
+	ld   a, e                                                       ; $4028
+	call LoadSpriteFromMainTable                                    ; $4029
+	ret                                                             ; $402c
+
+.absolutePosition:
+	ld   [wSpriteGroup], a                                          ; $402d
+
+; 2nd byte (ASSI0_SPEC_IDX) is spec idx
+	ld   a, [hl+]                                                   ; $4030
+	ld   e, a                                                       ; $4031
+
+; Next 2 bytes are X (ASSI0_X), then Y (ASSI0_Y) offset
+	ld   a, [hl+]                                                   ; $4032
+	ld   b, a                                                       ; $4033
+
+	ld   a, [hl]                                                    ; $4034
+	ld   c, a                                                       ; $4035
+
+; Load sprite
+	ld   a, e                                                       ; $4036
+	call LoadSpriteFromMainTable                                    ; $4037
+	ret                                                             ; $403a
 
 
 AnimSpriteSpecType0Delete::
-	ret                                              ; $403b: $c9
+	ret                                                             ; $403b
 
 
-Func_01_403c::
-	push af                                          ; $403c: $f5
-	push hl                                          ; $403d: $e5
-	ld   a, [hl]                                     ; $403e: $7e
-	and  $80                                         ; $403f: $e6 $80
-	or   d                                           ; $4041: $b2
-	ld   [hl+], a                                    ; $4042: $22
-	ld   [hl], e                                     ; $4043: $73
-	inc  hl                                          ; $4044: $23
-	ld   [hl], b                                     ; $4045: $70
-	inc  hl                                          ; $4046: $23
-	ld   [hl], c                                     ; $4047: $71
-	pop  hl                                          ; $4048: $e1
-	pop  af                                          ; $4049: $f1
-	ret                                              ; $404a: $c9
+; B - X offset
+; C - Y offset
+; D - sprite spec group
+; E - sprite spec idx
+; HL - addr of anim sprite spec instance details
+LoadType0NewAnimatedSpriteSpecDetails::
+	push af                                                         ; $403c
+	push hl                                                         ; $403d
+
+; For spec group/ctrl, clear bit 7 to use absolute positioning
+	ld   a, [hl]                                                    ; $403e
+	and  $80                                                        ; $403f
+	or   d                                                          ; $4041
+	ld   [hl+], a                                                   ; $4042
+
+; Then set ASSI0_SPEC_IDX, ASSI0_X and ASSI0_Y
+	ld   [hl], e                                                    ; $4043
+	inc  hl                                                         ; $4044
+	ld   [hl], b                                                    ; $4045
+	inc  hl                                                         ; $4046
+	ld   [hl], c                                                    ; $4047
+
+	pop  hl                                                         ; $4048
+	pop  af                                                         ; $4049
+	ret                                                             ; $404a
 
 
+;
 	push af                                          ; $404b: $f5
 	ld   a, [hl]                                     ; $404c: $7e
 	and  $80                                         ; $404d: $e6 $80
@@ -143,12 +175,15 @@ Func_01_4055::
 	ret                                              ; $4079: $c9
 
 
-Func_01_407a::
-	ld   a, b                                        ; $407a: $78
-	ld   [$c600], a                                  ; $407b: $ea $00 $c6
-	ld   a, c                                        ; $407e: $79
-	ld   [$c601], a                                  ; $407f: $ea $01 $c6
-	ret                                              ; $4082: $c9
+; B - x pos
+; C - y pos
+SetAnimSpriteType0CoordsRelativeTo::
+	ld   a, b                                                       ; $407a
+	ld   [wType0AnimSpriteXPosRelativeTo], a                        ; $407b
+	
+	ld   a, c                                                       ; $407e
+	ld   [wType0AnimSpriteYPosRelativeTo], a                        ; $407f
+	ret                                                             ; $4082
 
 
 ; A - base anim sprite spec details idx used
@@ -305,7 +340,7 @@ AnimSpriteSpecType1Delete::
 ; C - y offset
 ; DE - src addr
 ; HL - dest addr
-LoadNewAnimatedSpriteSpecDetails::
+LoadType1NewAnimatedSpriteSpecDetails::
 	push hl                                                         ; $4103
 
 ; DE = double A idx into src
@@ -363,12 +398,12 @@ Func_01_411c::
 	ret                                              ; $412e: $c9
 
 
-; B - ASSI_X
-; C - ASSI_Y
+; B - ASSI1_X
+; C - ASSI1_Y
 ; HL - addr of anim sprite spec instance
-SetAnimSpriteSpecInstanceCoords::
+SetType1AnimSpriteSpecInstanceCoords::
 	push hl                                                         ; $412f
-	ld   de, ASSI_X                                                 ; $4130
+	ld   de, ASSI1_X                                                ; $4130
 	add  hl, de                                                     ; $4133
 	ld   [hl], b                                                    ; $4134
 	inc  hl                                                         ; $4135
@@ -378,10 +413,10 @@ SetAnimSpriteSpecInstanceCoords::
 
 
 ; HL - addr of anim sprite spec instance
-; Returns ASSI_X in B and ASSI_Y in C
-BCequAnimSpriteSpecInstancesCoords::
+; Returns ASSI1_X in B and ASSI1_Y in C
+BCequType1AnimSpriteSpecInstancesCoords::
 	push hl                                                         ; $4139
-	ld   de, ASSI_X                                                 ; $413a
+	ld   de, ASSI1_X                                                ; $413a
 	add  hl, de                                                     ; $413d
 	ld   a, [hl+]                                                   ; $413e
 	ld   b, a                                                       ; $413f

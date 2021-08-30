@@ -2852,7 +2852,7 @@ Call_071_4c48:
 	dec  bc                                          ; $4c7e: $0b
 	add  b                                           ; $4c7f: $80
 	rlca                                             ; $4c80: $07
-	ld   hl, $c600                                   ; $4c81: $21 $00 $c6
+	ld   hl, wType0AnimSpriteXPosRelativeTo                                   ; $4c81: $21 $00 $c6
 	rst  $38                                         ; $4c84: $ff
 	jr   c, @+$01                                    ; $4c85: $38 $ff
 

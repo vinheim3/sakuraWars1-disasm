@@ -10,7 +10,7 @@ wc0a0:
     ds $100-$a0
 
 wAnimatedSpriteSpecInstances:: ; $c100
-    ds $20 * ASSI_SIZEOF
+    ds $c0
 
 wBaseAnimSpriteSpecDetails:: ; $c1c0
     ds NUM_ANIM_SPRITE_SPECS * BASS_SIZEOF
@@ -255,7 +255,16 @@ wDefaultKanjiTileTextStyle:: ; $c5ef
     db
 
 wc5f0:
-    ds $8bd-$5f0
+    ds $600-$5f0
+
+wType0AnimSpriteXPosRelativeTo:: ; $c600
+    db
+
+wType0AnimSpriteYPosRelativeTo:: ; $c601
+    db
+
+wc602:
+    ds $8bd-$602
 
 wContinueGameReturnState:: ; $c8bd
     db
@@ -474,7 +483,22 @@ wDayPassedMiscCounterIdx:: ; $cc19
     db
 
 wcc1a:
-    ds $74-$1a
+    ds $b-$a
+
+wFileLoadDisplayAnimationStep:: ; $cc1b
+    db
+
+wFileLoadDisplayMiscCounterIdx:: ; $cc1c
+    db
+
+wcc1d:
+    ds $e-$d
+
+wFileLoadDisplayShouldSkip:: ; $cc1e
+    db
+
+wcc1f:
+    ds $74-$1f
 
 wPostIntroScriptEngineGameState:: ; $cc74
     db
@@ -619,5 +643,13 @@ nextu
 
 wDormRoomTileDataBuffer:: ; $d000
     ds $1000
+
+nextu
+
+wFileLoadDisplayTileAttrBuffer:: ; $d000
+    ds $400
+
+wFileLoadDisplayTileMapBuffer:: ; $d400
+    ds $400
 
 endu

@@ -3451,7 +3451,7 @@ GameState3a::
 	ld   a, $04                                      ; $4fe4: $3e $04
 	ld   e, a                                        ; $4fe6: $5f
 
-	M_FarCall Func_01_403c
+	M_FarCall LoadType0NewAnimatedSpriteSpecDetails
 	
 	call Call_00d_5014                               ; $4ffb: $cd $14 $50
 	ld   [$cb4d], a                                  ; $4ffe: $ea $4d $cb

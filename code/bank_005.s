@@ -911,30 +911,42 @@ Func_05_4540::
 	push bc                                          ; $4540: $c5
 	push de                                          ; $4541: $d5
 	push hl                                          ; $4542: $e5
+
+; hl = afc2, de = afc1
 	ld   hl, $afc1                                   ; $4543: $21 $c1 $af
 	ld   d, h                                        ; $4546: $54
 	ld   e, l                                        ; $4547: $5d
 	inc  hl                                          ; $4548: $23
+
+;
 	ld   b, $02                                      ; $4549: $06 $02
 	ld   c, $01                                      ; $454b: $0e $01
 
-jr_005_454d:
+.loop:
+; anytime the lower address < the higher address..
 	ld   a, [de]                                     ; $454d: $1a
 	cp   [hl]                                        ; $454e: $be
-	jr   nc, jr_005_4554                             ; $454f: $30 $03
+	jr   nc, .cont_4554                             ; $454f: $30 $03
 
+; set the lower address to the higher one, set C to the curr counter
+; eg if afc1 < afc2, C = 2, DE = afc2, ie max()
 	ld   d, h                                        ; $4551: $54
 	ld   e, l                                        ; $4552: $5d
 	ld   c, b                                        ; $4553: $48
 
-jr_005_4554:
+.cont_4554:
+; inc array pointer and 1-idx through array
 	inc  hl                                          ; $4554: $23
 	inc  b                                           ; $4555: $04
+
+; stop when B == 7, ie when hl = afc7
 	ld   a, b                                        ; $4556: $78
 	cp   $07                                         ; $4557: $fe $07
-	jr   c, jr_005_454d                              ; $4559: $38 $f2
+	jr   c, .loop                              ; $4559: $38 $f2
 
+; todo: return the lowest val in A
 	ld   a, c                                        ; $455b: $79
+
 	pop  hl                                          ; $455c: $e1
 	pop  de                                          ; $455d: $d1
 	pop  bc                                          ; $455e: $c1

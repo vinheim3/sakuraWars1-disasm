@@ -8710,7 +8710,7 @@ jr_089_64cc:
 	nop                                              ; $6595: $00
 	ld   b, $40                                      ; $6596: $06 $40
 	nop                                              ; $6598: $00
-	ld   bc, $c600                                   ; $6599: $01 $00 $c6
+	ld   bc, wType0AnimSpriteXPosRelativeTo                                   ; $6599: $01 $00 $c6
 	nop                                              ; $659c: $00
 	sbc  b                                           ; $659d: $98
 	add  b                                           ; $659e: $80
@@ -9329,7 +9329,7 @@ jr_089_681c:
 	nop                                              ; $6838: $00
 	rst  $38                                         ; $6839: $ff
 	nop                                              ; $683a: $00
-	call nc, $c600                                   ; $683b: $d4 $00 $c6
+	call nc, wType0AnimSpriteXPosRelativeTo                                   ; $683b: $d4 $00 $c6
 	nop                                              ; $683e: $00
 	add  d                                           ; $683f: $82
 	nop                                              ; $6840: $00

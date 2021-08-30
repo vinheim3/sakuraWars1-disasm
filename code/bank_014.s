@@ -11833,7 +11833,7 @@ jr_014_738c:
 	add  l                                           ; $73ee: $85
 	nop                                              ; $73ef: $00
 	db   $10                                         ; $73f0: $10
-	jp   nz, $c600                                   ; $73f1: $c2 $00 $c6
+	jp   nz, wType0AnimSpriteXPosRelativeTo                                   ; $73f1: $c2 $00 $c6
 
 	nop                                              ; $73f4: $00
 	or   h                                           ; $73f5: $b4

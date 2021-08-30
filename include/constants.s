@@ -21,7 +21,7 @@ DEF GS_TITLE_SCREEN = $36
 DEF GS_TITLE_MENU_SCREEN = $37
 ; 38 and/or 39 - explore (day)
 ; 3b - any conversation?
-; 38 and/or 3c - day status when loading a file
+DEF GS_FILE_LOAD_DISPLAY = $3c
 DEF GS_44 = $44
 DEF GS_DORM_ROOM = $45
 DEF GS_46 = $46
@@ -101,6 +101,9 @@ DEF PNR_NUMBERS = $26
 
 ; Sprite group $2
 
+DEF SG_1 = $01
+DEF SG1_FILE_LOAD_DISPLAY_SUNDAY = $82
+
 DEF SG_2 = $02
 DEF SG2_ENTER_NAME_SMALL_CURSOR = $3a
 DEF SG2_ENTER_NAME_BIG_CURSOR = $3b
@@ -146,6 +149,7 @@ DEF ASST_1 = $01
 ; --
 
 DEF SONG_01 = $01
+DEF SONG_11 = $11
 
 DEF SE_20 = $20
 DEF SE_21 = $21

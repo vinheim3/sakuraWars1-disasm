@@ -1302,7 +1302,7 @@ Jump_0b7_4574:
 	db   $fd                                         ; $457a: $fd
 	pop  af                                          ; $457b: $f1
 	ld   de, $a11a                                   ; $457c: $11 $1a $a1
-	ld   de, $cc1b                                   ; $457f: $11 $1b $cc
+	ld   de, wFileLoadDisplayAnimationStep                                   ; $457f: $11 $1b $cc
 	ld   sp, $1a11                                   ; $4582: $31 $11 $1a
 	or   e                                           ; $4585: $b3
 	ld   b, c                                        ; $4586: $41
@@ -11132,7 +11132,7 @@ Jump_0b7_71d8:
 	adc  d                                           ; $74d6: $8a
 	add  c                                           ; $74d7: $81
 	ld   de, $1111                                   ; $74d8: $11 $11 $11
-	ld   de, $cc1e                                   ; $74db: $11 $1e $cc
+	ld   de, wFileLoadDisplayShouldSkip                                   ; $74db: $11 $1e $cc
 	rst  $38                                         ; $74de: $ff
 	rst  $38                                         ; $74df: $ff
 	db   $fd                                         ; $74e0: $fd

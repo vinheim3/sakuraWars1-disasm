@@ -5760,7 +5760,7 @@ TitleMenuScreenAnimationHandler0:
 	ld   a, $0f                                      ; $6b49: $3e $0f
 	ld   de, $7762                                   ; $6b4b: $11 $62 $77
 
-	M_FarCall LoadNewAnimatedSpriteSpecDetails
+	M_FarCall LoadType1NewAnimatedSpriteSpecDetails
 	
 	ld   a, [$cc08]                                  ; $6b62: $fa $08 $cc
 	call StartAnimatingAnimatedSpriteSpec                                       ; $6b65: $cd $14 $30

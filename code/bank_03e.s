@@ -79,7 +79,7 @@ GameState12_ResetData::
 	ldbc RESET_DATA_NO_X, $40                                       ; $4076
 	ld   de, AnimatedSpriteSpecs                                    ; $4079
 
-	M_FarCall LoadNewAnimatedSpriteSpecDetails
+	M_FarCall LoadType1NewAnimatedSpriteSpecDetails
 	
 ; Set initial palettes to white, and update all
 	ld   a, BANK(Palettes_AllWhite)                                 ; $4090
@@ -141,7 +141,7 @@ GameState12_ResetData::
 :	ld   a, [wResetDataBaseAnimSpriteSpecIdxUsed]                   ; $40fe
 	call HLequAddrOfAnimSpriteSpecDetails                           ; $4101
 
-	M_FarCall BCequAnimSpriteSpecInstancesCoords
+	M_FarCall BCequType1AnimSpriteSpecInstancesCoords
 	
 ; Check buttons pressed
 	ld   a, [wInGameButtonsPressed]                                 ; $4118
@@ -196,7 +196,7 @@ GameState12_ResetData::
 	ld   c, $40                                                     ; $4152
 	ld   de, AnimatedSpriteSpecs                                    ; $4154
 
-	M_FarCall LoadNewAnimatedSpriteSpecDetails
+	M_FarCall LoadType1NewAnimatedSpriteSpecDetails
 	
 	jr   .state1end                                                 ; $416b
 
@@ -2183,13 +2183,13 @@ SetSettingsArrowsCoords:
 	call HLequAddrOfAnimSpriteSpecDetails                                       ; $4df0: $cd $76 $30
 	call GetSettingsLeftArrowX                               ; $4df3: $cd $d1 $4d
 
-	M_FarCall SetAnimSpriteSpecInstanceCoords
+	M_FarCall SetType1AnimSpriteSpecInstanceCoords
 
 	ld   a, [$c96f]                                  ; $4e0a: $fa $6f $c9
 	call HLequAddrOfAnimSpriteSpecDetails                                       ; $4e0d: $cd $76 $30
 	call GetSettingsRightArrowXminus8                               ; $4e10: $cd $df $4d
 
-	M_FarCall SetAnimSpriteSpecInstanceCoords
+	M_FarCall SetType1AnimSpriteSpecInstanceCoords
 	ret                                              ; $4e27: $c9
 
 

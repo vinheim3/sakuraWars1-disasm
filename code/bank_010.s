@@ -451,7 +451,7 @@ endc
 	ld   [$c8b0], a                                  ; $433f: $ea $b0 $c8
 	ld   bc, $0000                                   ; $4342: $01 $00 $00
 	ld   de, $7180                                   ; $4345: $11 $80 $71
-	M_FarCall LoadNewAnimatedSpriteSpecDetails
+	M_FarCall LoadType1NewAnimatedSpriteSpecDetails
 	
 ;
 	ld   a, $01                                      ; $435c: $3e $01
@@ -465,7 +465,7 @@ endc
 	ld   a, $00                                      ; $436d: $3e $00
 	ld   bc, $0000                                   ; $436f: $01 $00 $00
 	ld   de, $7180                                   ; $4372: $11 $80 $71
-	M_FarCall LoadNewAnimatedSpriteSpecDetails
+	M_FarCall LoadType1NewAnimatedSpriteSpecDetails
 	
 ;
 	ld   a, $01                                      ; $4389: $3e $01
@@ -6173,7 +6173,7 @@ endc
 	call GetEnterNameCursorCoords                                   ; $67cf
 	ld   a, ASS_ENTER_NAME_SMALL_CURSOR                             ; $67d2
 	ld   de, AnimatedSpriteSpecs                                    ; $67d4
-	M_FarCall LoadNewAnimatedSpriteSpecDetails
+	M_FarCall LoadType1NewAnimatedSpriteSpecDetails
 
 ; Clear anim sprite spec details, and get a new one using anim type 1
 	ld   a, ASST_1                                                  ; $67eb
@@ -6187,7 +6187,7 @@ endc
 	call GetEnterNameUnderlineCoords                                ; $67fc
 	ld   a, ASS_ENTER_NAME_UNDERLINE                                ; $67ff
 	ld   de, AnimatedSpriteSpecs                                    ; $6801
-	M_FarCall LoadNewAnimatedSpriteSpecDetails
+	M_FarCall LoadType1NewAnimatedSpriteSpecDetails
 
 ; Load all white palettes, and update all
 	ld   a, BANK(Palettes_AllWhite)                                 ; $6818
@@ -6937,7 +6937,7 @@ SetEnterNameLetterCursorAnimSpriteSpecIdx:
 
 ; Overwrite current sprite spec details
 	ld   de, AnimatedSpriteSpecs                                    ; $6ca5
-	M_FarCall LoadNewAnimatedSpriteSpecDetails
+	M_FarCall LoadType1NewAnimatedSpriteSpecDetails
 	ret                                                             ; $6cbc
 
 
@@ -6946,7 +6946,7 @@ SetEnterNameUnderLineAnimSpriteSpecCoords:
 	ld   a, [wEnterNameNameUnderlineBaseAnimSpriteSpecUsed]         ; $6cbd
 	call HLequAddrOfAnimSpriteSpecDetails                           ; $6cc0
 	call GetEnterNameUnderlineCoords                                ; $6cc3
-	M_FarCall SetAnimSpriteSpecInstanceCoords
+	M_FarCall SetType1AnimSpriteSpecInstanceCoords
 	ret                                                             ; $6cda
 
 

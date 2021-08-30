@@ -10,6 +10,7 @@ SECTION "ROM Bank $009", ROMX[$4000], BANK[$9]
 GameState38::
 	M_FarCall Func_05_4540
 
+; todo: HL = ??? double idxed into table
 	ld   a, [$afb1]                                  ; $4014: $fa $b1 $af
 	ld   h, $00                                      ; $4017: $26 $00
 	ld   l, a                                        ; $4019: $6f
@@ -17,6 +18,8 @@ GameState38::
 	add  hl, hl                                      ; $401b: $29
 	ld   bc, .table                                   ; $401c: $01 $2c $40
 	add  hl, bc                                      ; $401f: $09
+
+;
 	ld   a, [hl+]                                    ; $4020: $2a
 	ld   [wTimeOfDay], a                                  ; $4021: $ea $20 $cb
 	ld   a, [hl+]                                    ; $4024: $2a
@@ -32,7 +35,8 @@ GameState38::
 	db $0e, $05, $4d, $41
 	db $0e, $05, $6d, $41
 	db $00, $00, $70, $41
-	db $00, $00, $96, $41
+	db $00, $00
+	dw Func_09_4196
 	db $00, $00, $bb, $42
 	db $01, $01, $23, $42
 	db $02, $01, $b6, $41
@@ -157,7 +161,7 @@ Jump_009_4170:
 
 	xor  a                                           ; $4176: $af
 	ld   [$cc1d], a                                  ; $4177: $ea $1d $cc
-	ld   a, $3c                                      ; $417a: $3e $3c
+	ld   a, GS_FILE_LOAD_DISPLAY                                      ; $417a: $3e $3c
 	ld   [wGameState], a                                  ; $417c: $ea $a0 $c2
 	xor  a                                           ; $417f: $af
 	ld   [wGameSubstate], a                                  ; $4180: $ea $a1 $c2
@@ -175,43 +179,41 @@ jr_009_4188:
 	ret                                              ; $4195: $c9
 
 
+Func_09_4196:
 	ld   a, [sCurrDay]                                  ; $4196: $fa $b0 $af
-	cp   $20                                         ; $4199: $fe $20
-	jr   c, jr_009_41b6                              ; $419b: $38 $19
+	cp   32                                         ; $4199: $fe $20
+	jr   c, .notEndOfGame                              ; $419b: $38 $19
 
 	ld   h, $36                                      ; $419d: $26 $36
 	ld   l, $00                                      ; $419f: $2e $00
-	push af                                          ; $41a1: $f5
-	ld   a, $57                                      ; $41a2: $3e $57
-	ld   [wFarCallAddr], a                                  ; $41a4: $ea $98 $c2
-	ld   a, $7e                                      ; $41a7: $3e $7e
-	ld   [wFarCallAddr+1], a                                  ; $41a9: $ea $99 $c2
-	ld   a, $11                                      ; $41ac: $3e $11
-	ld   [wFarCallBank], a                                  ; $41ae: $ea $9a $c2
-	pop  af                                          ; $41b1: $f1
-	call FarCall                                       ; $41b2: $cd $62 $09
+
+	M_FarCall Func_11_7e57
 	ret                                              ; $41b5: $c9
 
-
-jr_009_41b6:
+.notEndOfGame:
+;
 	ld   a, [wWramBank]                                  ; $41b6: $fa $93 $c2
 	push af                                          ; $41b9: $f5
+
+;
 	ld   a, $02                                      ; $41ba: $3e $02
 	ld   [wWramBank], a                                  ; $41bc: $ea $93 $c2
 	ldh  [rSVBK], a                                  ; $41bf: $e0 $70
+
+;
 	ld   a, [wTimeOfDay]                                  ; $41c1: $fa $20 $cb
 	call Call_009_4841                               ; $41c4: $cd $41 $48
 	or   a                                           ; $41c7: $b7
-	jr   z, jr_009_4218                              ; $41c8: $28 $4e
+	jr   z, .done                              ; $41c8: $28 $4e
 
+; B = 3 if night, else 2
 	ld   b, $03                                      ; $41ca: $06 $03
 	call ClearCarryIfNightElseSetIt                               ; $41cc: $cd $3e $45
-	jr   c, jr_009_41d3                              ; $41cf: $38 $02
-
+	jr   c, :+                              ; $41cf: $38 $02
 	ld   b, $02                                      ; $41d1: $06 $02
+:	push bc                                          ; $41d3: $c5
 
-jr_009_41d3:
-	push bc                                          ; $41d3: $c5
+;
 	ld   a, $07                                      ; $41d4: $3e $07
 	call SafeSetAudVolForMultipleChannels                                       ; $41d6: $cd $e0 $1c
 	ld   a, [$dc9c]                                  ; $41d9: $fa $9c $dc
@@ -232,25 +234,22 @@ jr_009_41d3:
 	ld   a, [$cb22]                                  ; $41ff: $fa $22 $cb
 	ld   d, a                                        ; $4202: $57
 	pop  af                                          ; $4203: $f1
-	push af                                          ; $4204: $f5
-	ld   a, $20                                      ; $4205: $3e $20
-	ld   [wFarCallAddr], a                                  ; $4207: $ea $98 $c2
-	ld   a, $48                                      ; $420a: $3e $48
-	ld   [wFarCallAddr+1], a                                  ; $420c: $ea $99 $c2
-	ld   a, $09                                      ; $420f: $3e $09
-	ld   [wFarCallBank], a                                  ; $4211: $ea $9a $c2
-	pop  af                                          ; $4214: $f1
-	call FarCall                                       ; $4215: $cd $62 $09
 
-jr_009_4218:
+	M_FarCall Func_09_4820
+
+.done:
+;
 	pop  af                                          ; $4218: $f1
 	ld   [wWramBank], a                                  ; $4219: $ea $93 $c2
 	ldh  [rSVBK], a                                  ; $421c: $e0 $70
+
+;
 	ld   hl, $afb1                                   ; $421e: $21 $b1 $af
 	inc  [hl]                                        ; $4221: $34
 	ret                                              ; $4222: $c9
 
 
+;
 	ld   a, [wWramBank]                                  ; $4223: $fa $93 $c2
 	push af                                          ; $4226: $f5
 	ld   a, $02                                      ; $4227: $3e $02
@@ -1252,6 +1251,7 @@ jr_009_47ee:
 	ret                                              ; $481f: $c9
 
 
+Func_09_4820::
 	ld   [$cb26], a                                  ; $4820: $ea $26 $cb
 	ld   a, b                                        ; $4823: $78
 	ld   [$cb25], a                                  ; $4824: $ea $25 $cb
@@ -1271,23 +1271,33 @@ jr_009_47ee:
 
 
 Call_009_4841:
+;
 	ld   a, [wWramBank]                                  ; $4841: $fa $93 $c2
 	push af                                          ; $4844: $f5
+
 	ld   a, $02                                      ; $4845: $3e $02
 	ld   [wWramBank], a                                  ; $4847: $ea $93 $c2
 	ldh  [rSVBK], a                                  ; $484a: $e0 $70
+
+;
 	ld   hl, $d340                                   ; $484c: $21 $40 $d3
 	ld   bc, $0400                                   ; $484f: $01 $00 $04
 	ld   a, $00                                      ; $4852: $3e $00
 	call MemSet                                       ; $4854: $cd $96 $09
+
+;
 	ld   hl, $dcb0                                   ; $4857: $21 $b0 $dc
 	ld   bc, $0010                                   ; $485a: $01 $10 $00
 	ld   a, $00                                      ; $485d: $3e $00
 	call MemSet                                       ; $485f: $cd $96 $09
+
+;
 	call Call_009_48c0                               ; $4862: $cd $c0 $48
 	call Call_009_4912                               ; $4865: $cd $12 $49
 	call Call_009_4aa1                               ; $4868: $cd $a1 $4a
 	ld   b, a                                        ; $486b: $47
+
+;
 	pop  af                                          ; $486c: $f1
 	ld   [wWramBank], a                                  ; $486d: $ea $93 $c2
 	ldh  [rSVBK], a                                  ; $4870: $e0 $70

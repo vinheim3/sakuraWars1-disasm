@@ -2406,7 +2406,7 @@ jr_00c_4da8:
 jr_00c_4db2:
 	ld   a, [hl+]                                    ; $4db2: $2a
 	nop                                              ; $4db3: $00
-	jr   z, jr_00c_4e17                              ; $4db4: $28 $61
+	db $28, $61
 
 	ld   l, a                                        ; $4db6: $6f
 	ccf                                              ; $4db7: $3f
@@ -2429,115 +2429,137 @@ jr_00c_4db2:
 	nop                                              ; $4dc9: $00
 
 
-GameState3c::
-	ld   a, [wGameSubstate]                                  ; $4dca: $fa $a1 $c2
-	or   a                                           ; $4dcd: $b7
-	jp   nz, Jump_00c_4f8c                           ; $4dce: $c2 $8c $4f
+GameState3c_FileLoadDisplay::
+; Jump if main substate
+	ld   a, [wGameSubstate]                                         ; $4dca
+	or   a                                                          ; $4dcd
+	jp   nz, FileLoadDisplay_Substate1                              ; $4dce
 
-	ld   a, [wWramBank]                                  ; $4dd1: $fa $93 $c2
-	push af                                          ; $4dd4: $f5
-	ld   a, $07                                      ; $4dd5: $3e $07
-	ld   [wWramBank], a                                  ; $4dd7: $ea $93 $c2
-	ldh  [rSVBK], a                                  ; $4dda: $e0 $70
-	xor  a                                           ; $4ddc: $af
-	call PlaySong                                       ; $4ddd: $cd $92 $1a
-	ld   a, $00                                      ; $4de0: $3e $00
-	call SafeSetAudVolForMultipleChannels                                       ; $4de2: $cd $e0 $1c
-	call TurnOffLCD                                       ; $4de5: $cd $e3 $08
-	call ClearDisplayRegsAllowVBlankInt                                       ; $4de8: $cd $59 $0b
-	ld   a, [wLCDC]                                  ; $4deb: $fa $03 $c2
-	and  $e0                                         ; $4dee: $e6 $e0
-	or   $07                                         ; $4df0: $f6 $07
-	ld   [wLCDC], a                                  ; $4df2: $ea $03 $c2
-	ld   a, BANK(Palettes_AllWhite)                                      ; $4df5: $3e $01
-	ld   hl, Palettes_AllWhite                                   ; $4df7: $21 $00 $70
-	ld   de, wBGPalettes                                   ; $4dfa: $11 $de $c2
-	ld   bc, $0080                                   ; $4dfd: $01 $80 $00
-	call FarMemCopy                                       ; $4e00: $cd $b2 $09
-	ld   bc, $003f                                   ; $4e03: $01 $3f $00
-	call SetBGandOBJPaletteRangesToUpdate                                       ; $4e06: $cd $aa $04
-	ld   a, $ff                                      ; $4e09: $3e $ff
-	ld   [wInGameInputsEnabled], a                                  ; $4e0b: $ea $0e $c2
-	call ClearOam                                       ; $4e0e: $cd $d7 $0d
-	call ClearBaseAnimSpriteSpecDetails                                       ; $4e11: $cd $c9 $2e
-	xor  a                                           ; $4e14: $af
-	ldh  [rVBK], a                                   ; $4e15: $e0 $4f
+; Preserve ram bank, and set it to the tile attr/map buffer's bank
+	ld   a, [wWramBank]                                             ; $4dd1
+	push af                                                         ; $4dd4
 
-jr_00c_4e17:
-	ld   a, $91                                      ; $4e17: $3e $91
-	ld   hl, $8000                                   ; $4e19: $21 $00 $80
-	ld   de, $6dc4                                   ; $4e1c: $11 $c4 $6d
-	call RLEXorCopy                                       ; $4e1f: $cd $d2 $09
-	ld   hl, $d000                                   ; $4e22: $21 $00 $d0
-	ld   a, $96                                      ; $4e25: $3e $96
-	ld   de, $7c90                                   ; $4e27: $11 $90 $7c
-	ld   bc, $1416                                   ; $4e2a: $01 $16 $14
-	call FarCopyLayout                                       ; $4e2d: $cd $2c $0b
-	ld   hl, $d400                                   ; $4e30: $21 $00 $d4
-	call FarCopyLayout                                       ; $4e33: $cd $2c $0b
-	ld   a, [sCurrDay]                                  ; $4e36: $fa $b0 $af
-	cp   $1f                                         ; $4e39: $fe $1f
-	jr   nz, jr_00c_4e75                             ; $4e3b: $20 $38
+	ld   a, BANK(wFileLoadDisplayTileAttrBuffer)                    ; $4dd5
+	ld   [wWramBank], a                                             ; $4dd7
+	ldh  [rSVBK], a                                                 ; $4dda
 
-	ld   hl, $d685                                   ; $4e3d: $21 $85 $d6
-	ld   a, [hl+]                                    ; $4e40: $2a
-	ld   [$d4c7], a                                  ; $4e41: $ea $c7 $d4
-	ld   a, [hl+]                                    ; $4e44: $2a
-	ld   [$d4c8], a                                  ; $4e45: $ea $c8 $d4
-	ld   a, [hl+]                                    ; $4e48: $2a
-	ld   [$d4c9], a                                  ; $4e49: $ea $c9 $d4
-	ld   a, [hl+]                                    ; $4e4c: $2a
-	ld   [$d4ca], a                                  ; $4e4d: $ea $ca $d4
-	ld   a, [hl+]                                    ; $4e50: $2a
-	ld   [$d4cb], a                                  ; $4e51: $ea $cb $d4
-	ld   a, [hl+]                                    ; $4e54: $2a
-	ld   [$d4cc], a                                  ; $4e55: $ea $cc $d4
-	ld   hl, $d6a5                                   ; $4e58: $21 $a5 $d6
-	ld   a, [hl+]                                    ; $4e5b: $2a
-	ld   [$d4e7], a                                  ; $4e5c: $ea $e7 $d4
-	ld   a, [hl+]                                    ; $4e5f: $2a
-	ld   [$d4e8], a                                  ; $4e60: $ea $e8 $d4
-	ld   a, [hl+]                                    ; $4e63: $2a
-	ld   [$d4e9], a                                  ; $4e64: $ea $e9 $d4
-	ld   a, [hl+]                                    ; $4e67: $2a
-	ld   [$d4ea], a                                  ; $4e68: $ea $ea $d4
-	ld   a, [hl+]                                    ; $4e6b: $2a
-	ld   [$d4eb], a                                  ; $4e6c: $ea $eb $d4
-	ld   a, [hl+]                                    ; $4e6f: $2a
-	ld   [$d4ec], a                                  ; $4e70: $ea $ec $d4
-	jr   jr_00c_4eae                                 ; $4e73: $18 $39
+; Mute sound, and minimize audvol
+	xor  a                                                          ; $4ddc
+	call PlaySong                                                   ; $4ddd
 
-jr_00c_4e75:
-	ld   a, $00                                      ; $4e75: $3e $00
-	ld   hl, $0000                                   ; $4e77: $21 $00 $00
-	ld   d, h                                        ; $4e7a: $54
-	ld   e, l                                        ; $4e7b: $5d
-	call ReserveBaseAnimSpriteSpecAndInstance                                       ; $4e7c: $cd $4b $2f
-	call StartAnimatingAnimatedSpriteSpec                                       ; $4e7f: $cd $14 $30
-	call HLequAddrOfAnimSpriteSpecDetails                                       ; $4e82: $cd $76 $30
-	push hl                                          ; $4e85: $e5
-	ld   a, [sCurrDay]                                  ; $4e86: $fa $b0 $af
-	dec  a                                           ; $4e89: $3d
-	ld   h, a                                        ; $4e8a: $67
-	ld   l, $07                                      ; $4e8b: $2e $07
-	call HLequHdivModL                                       ; $4e8d: $cd $fb $0b
-	ld   a, $82                                      ; $4e90: $3e $82
-	add  l                                           ; $4e92: $85
-	ld   bc, $4038                                   ; $4e93: $01 $38 $40
-	ld   d, $01                                      ; $4e96: $16 $01
-	ld   e, a                                        ; $4e98: $5f
-	pop  hl                                          ; $4e99: $e1
-	push af                                          ; $4e9a: $f5
-	ld   a, $3c                                      ; $4e9b: $3e $3c
-	ld   [wFarCallAddr], a                                  ; $4e9d: $ea $98 $c2
-	ld   a, $40                                      ; $4ea0: $3e $40
-	ld   [wFarCallAddr+1], a                                  ; $4ea2: $ea $99 $c2
-	ld   a, $01                                      ; $4ea5: $3e $01
-	ld   [wFarCallBank], a                                  ; $4ea7: $ea $9a $c2
-	pop  af                                          ; $4eaa: $f1
-	call FarCall                                       ; $4eab: $cd $62 $09
+	ld   a, $00                                                     ; $4de0
+	call SafeSetAudVolForMultipleChannels                           ; $4de2
 
-jr_00c_4eae:
+; Turn off LCD, clear display regs, and enable BG+OBJ display
+	call TurnOffLCD                                                 ; $4de5
+	call ClearDisplayRegsAllowVBlankInt                             ; $4de8
+
+	ld   a, [wLCDC]                                                 ; $4deb
+	and  LCDCF_ON|LCDCF_WIN9C00|LCDCF_WINON                         ; $4dee
+	or   LCDCF_OBJ16|LCDCF_OBJON|LCDCF_BGON                         ; $4df0
+	ld   [wLCDC], a                                                 ; $4df2
+
+; Load all white palettes, and update hw pals
+	ld   a, BANK(Palettes_AllWhite)                                 ; $4df5
+	ld   hl, Palettes_AllWhite                                      ; $4df7
+	ld   de, wBGPalettes                                            ; $4dfa
+	ld   bc, NUM_PALETTE_BYTES * 2                                  ; $4dfd
+	call FarMemCopy                                                 ; $4e00
+
+	ldbc $00, $3f                                                   ; $4e03
+	call SetBGandOBJPaletteRangesToUpdate                           ; $4e06
+
+; Allow all inputs, clear oam and base anim sprite details
+	ld   a, $ff                                                     ; $4e09
+	ld   [wInGameInputsEnabled], a                                  ; $4e0b
+
+	call ClearOam                                                   ; $4e0e
+	call ClearBaseAnimSpriteSpecDetails                             ; $4e11
+
+; Decompress tile data into vram
+	xor  a                                                          ; $4e14
+	ldh  [rVBK], a                                                  ; $4e15
+	ld   a, BANK(RleXorTileData_FileLoadDisplay)                    ; $4e17
+	ld   hl, _VRAM                                                  ; $4e19
+	ld   de, RleXorTileData_FileLoadDisplay                         ; $4e1c
+	call RLEXorCopy                                                 ; $4e1f
+
+; Layout copy into tile attr, then TileMap_FileLoadDisplay into map buffer
+	ld   hl, wFileLoadDisplayTileAttrBuffer                         ; $4e22
+	ld   a, BANK(TileAttr_FileLoadDisplay)                          ; $4e25
+	ld   de, TileAttr_FileLoadDisplay                               ; $4e27
+	ldbc SCRN_X_B, $16                                              ; $4e2a
+	call FarCopyLayout                                              ; $4e2d
+
+	ld   hl, wFileLoadDisplayTileMapBuffer                          ; $4e30
+	call FarCopyLayout                                              ; $4e33
+
+; Jump if not the last day
+	ld   a, [sCurrDay]                                              ; $4e36
+	cp   31                                                         ; $4e39
+	jr   nz, .notLastDay                                            ; $4e3b
+
+; Last day - copy last day kanji top row, from off-screen to on-screen
+	ld   hl, wFileLoadDisplayTileMapBuffer+$285                     ; $4e3d
+	ld   a, [hl+]                                                   ; $4e40
+	ld   [wFileLoadDisplayTileMapBuffer+$c7], a                     ; $4e41
+	ld   a, [hl+]                                                   ; $4e44
+	ld   [wFileLoadDisplayTileMapBuffer+$c8], a                     ; $4e45
+	ld   a, [hl+]                                                   ; $4e48
+	ld   [wFileLoadDisplayTileMapBuffer+$c9], a                     ; $4e49
+	ld   a, [hl+]                                                   ; $4e4c
+	ld   [wFileLoadDisplayTileMapBuffer+$ca], a                     ; $4e4d
+	ld   a, [hl+]                                                   ; $4e50
+	ld   [wFileLoadDisplayTileMapBuffer+$cb], a                     ; $4e51
+	ld   a, [hl+]                                                   ; $4e54
+	ld   [wFileLoadDisplayTileMapBuffer+$cc], a                     ; $4e55
+
+; Copy bottom row
+	ld   hl, wFileLoadDisplayTileMapBuffer+$2a5                     ; $4e58
+	ld   a, [hl+]                                                   ; $4e5b
+	ld   [wFileLoadDisplayTileMapBuffer+$e7], a                     ; $4e5c
+	ld   a, [hl+]                                                   ; $4e5f
+	ld   [wFileLoadDisplayTileMapBuffer+$e8], a                     ; $4e60
+	ld   a, [hl+]                                                   ; $4e63
+	ld   [wFileLoadDisplayTileMapBuffer+$e9], a                     ; $4e64
+	ld   a, [hl+]                                                   ; $4e67
+	ld   [wFileLoadDisplayTileMapBuffer+$ea], a                     ; $4e68
+	ld   a, [hl+]                                                   ; $4e6b
+	ld   [wFileLoadDisplayTileMapBuffer+$eb], a                     ; $4e6c
+	ld   a, [hl+]                                                   ; $4e6f
+	ld   [wFileLoadDisplayTileMapBuffer+$ec], a                     ; $4e70
+	jr   .afterDayBranch                                            ; $4e73
+
+.notLastDay:
+; Create an animatable type-0 sprite spec, and return its details addr in HL
+	ld   a, $00                                                     ; $4e75
+	ld   hl, $0000                                                  ; $4e77
+	ld   d, h                                                       ; $4e7a
+	ld   e, l                                                       ; $4e7b
+	call ReserveBaseAnimSpriteSpecAndInstance                       ; $4e7c
+	call StartAnimatingAnimatedSpriteSpec                           ; $4e7f
+	call HLequAddrOfAnimSpriteSpecDetails                           ; $4e82
+
+; L = day of the week, from Sunday
+	push hl                                                         ; $4e85
+	ld   a, [sCurrDay]                                              ; $4e86
+	dec  a                                                          ; $4e89
+	ld   h, a                                                       ; $4e8a
+	ld   l, $07                                                     ; $4e8b
+	call HLequHdivModL                                              ; $4e8d
+
+; E (sprite spec idx) = day of week offsetted from Sunday's val, load rest of sprite's details
+	ld   a, SG1_FILE_LOAD_DISPLAY_SUNDAY                            ; $4e90
+	add  l                                                          ; $4e92
+	ldbc $40, $38                                                   ; $4e93
+	ld   d, SG_1                                                    ; $4e96
+	ld   e, a                                                       ; $4e98
+	pop  hl                                                         ; $4e99
+
+	M_FarCall LoadType0NewAnimatedSpriteSpecDetails
+
+.afterDayBranch:
+; todo: sprite for curr day 10's digit
 	ld   a, [sCurrDay]                                  ; $4eae: $fa $b0 $af
 	cp   $0a                                         ; $4eb1: $fe $0a
 	ld   a, $00                                      ; $4eb3: $3e $00
@@ -2558,15 +2580,10 @@ jr_00c_4eae:
 	ld   d, $01                                      ; $4ed3: $16 $01
 	ld   e, a                                        ; $4ed5: $5f
 	pop  hl                                          ; $4ed6: $e1
-	push af                                          ; $4ed7: $f5
-	ld   a, $3c                                      ; $4ed8: $3e $3c
-	ld   [wFarCallAddr], a                                  ; $4eda: $ea $98 $c2
-	ld   a, $40                                      ; $4edd: $3e $40
-	ld   [wFarCallAddr+1], a                                  ; $4edf: $ea $99 $c2
-	ld   a, $01                                      ; $4ee2: $3e $01
-	ld   [wFarCallBank], a                                  ; $4ee4: $ea $9a $c2
-	pop  af                                          ; $4ee7: $f1
-	call FarCall                                       ; $4ee8: $cd $62 $09
+
+	M_FarCall LoadType0NewAnimatedSpriteSpecDetails
+	
+; todo: sprite for curr day 1's digit
 	ld   a, $00                                      ; $4eeb: $3e $00
 	ld   hl, $0000                                   ; $4eed: $21 $00 $00
 	ld   d, h                                        ; $4ef0: $54
@@ -2585,15 +2602,10 @@ jr_00c_4eae:
 	ld   d, $01                                      ; $4f0b: $16 $01
 	ld   e, a                                        ; $4f0d: $5f
 	pop  hl                                          ; $4f0e: $e1
-	push af                                          ; $4f0f: $f5
-	ld   a, $3c                                      ; $4f10: $3e $3c
-	ld   [wFarCallAddr], a                                  ; $4f12: $ea $98 $c2
-	ld   a, $40                                      ; $4f15: $3e $40
-	ld   [wFarCallAddr+1], a                                  ; $4f17: $ea $99 $c2
-	ld   a, $01                                      ; $4f1a: $3e $01
-	ld   [wFarCallBank], a                                  ; $4f1c: $ea $9a $c2
-	pop  af                                          ; $4f1f: $f1
-	call FarCall                                       ; $4f20: $cd $62 $09
+
+	M_FarCall LoadType0NewAnimatedSpriteSpecDetails
+
+; todo: title logo misc sprites for filling in color clashes
 	ld   a, $00                                      ; $4f23: $3e $00
 	ld   hl, $0000                                   ; $4f25: $21 $00 $00
 	ld   d, h                                        ; $4f28: $54
@@ -2605,259 +2617,311 @@ jr_00c_4eae:
 	ld   d, $01                                      ; $4f36: $16 $01
 	ld   a, $77                                      ; $4f38: $3e $77
 	ld   e, a                                        ; $4f3a: $5f
-	push af                                          ; $4f3b: $f5
-	ld   a, $3c                                      ; $4f3c: $3e $3c
-	ld   [wFarCallAddr], a                                  ; $4f3e: $ea $98 $c2
-	ld   a, $40                                      ; $4f41: $3e $40
-	ld   [wFarCallAddr+1], a                                  ; $4f43: $ea $99 $c2
-	ld   a, $01                                      ; $4f46: $3e $01
-	ld   [wFarCallBank], a                                  ; $4f48: $ea $9a $c2
-	pop  af                                          ; $4f4b: $f1
-	call FarCall                                       ; $4f4c: $cd $62 $09
-	ld   c, $81                                      ; $4f4f: $0e $81
-	ld   de, $9800                                   ; $4f51: $11 $00 $98
-	ld   a, $07                                      ; $4f54: $3e $07
-	ld   hl, $d000                                   ; $4f56: $21 $00 $d0
-	ld   b, $40                                      ; $4f59: $06 $40
-	call EnqueueHDMATransfer                                       ; $4f5b: $cd $7c $02
-	ld   c, $80                                      ; $4f5e: $0e $80
-	ld   de, $9800                                   ; $4f60: $11 $00 $98
-	ld   a, $07                                      ; $4f63: $3e $07
-	ld   hl, $d400                                   ; $4f65: $21 $00 $d4
-	ld   b, $40                                      ; $4f68: $06 $40
-	call EnqueueHDMATransfer                                       ; $4f6a: $cd $7c $02
-	call TurnOnLCD                                       ; $4f6d: $cd $09 $09
-	ld   a, $11                                      ; $4f70: $3e $11
-	call PlaySong                                       ; $4f72: $cd $92 $1a
-	ld   a, $07                                      ; $4f75: $3e $07
-	call SafeSetAudVolForMultipleChannels                                       ; $4f77: $cd $e0 $1c
-	xor  a                                           ; $4f7a: $af
-	ld   [$cc1b], a                                  ; $4f7b: $ea $1b $cc
-	ld   [$cc1c], a                                  ; $4f7e: $ea $1c $cc
-	ld   hl, wGameSubstate                                   ; $4f81: $21 $a1 $c2
-	inc  [hl]                                        ; $4f84: $34
-	pop  af                                          ; $4f85: $f1
-	ld   [wWramBank], a                                  ; $4f86: $ea $93 $c2
-	ldh  [rSVBK], a                                  ; $4f89: $e0 $70
-	ret                                              ; $4f8b: $c9
+
+	M_FarCall LoadType0NewAnimatedSpriteSpecDetails
+
+; Enqueue tile attr, then tile map from ram buffer
+	ld   c, $81                                                     ; $4f4f
+	ld   de, _SCRN0                                                 ; $4f51
+	ld   a, BANK(wFileLoadDisplayTileAttrBuffer)                    ; $4f54
+	ld   hl, wFileLoadDisplayTileAttrBuffer                         ; $4f56
+	ld   b, $400/$10                                                ; $4f59
+	call EnqueueHDMATransfer                                        ; $4f5b
+
+	ld   c, $80                                                     ; $4f5e
+	ld   de, _SCRN0                                                 ; $4f60
+	ld   a, BANK(wFileLoadDisplayTileMapBuffer)                     ; $4f63
+	ld   hl, wFileLoadDisplayTileMapBuffer                          ; $4f65
+	ld   b, $400/$10                                                ; $4f68
+	call EnqueueHDMATransfer                                        ; $4f6a
+
+; Turn on LCD, play sound and max aud vol
+	call TurnOnLCD                                                  ; $4f6d
+
+	ld   a, SONG_11                                                 ; $4f70
+	call PlaySong                                                   ; $4f72
+
+	ld   a, $07                                                     ; $4f75
+	call SafeSetAudVolForMultipleChannels                           ; $4f77
+
+; Init anim step and misc counter idx
+	xor  a                                                          ; $4f7a
+	ld   [wFileLoadDisplayAnimationStep], a                         ; $4f7b
+	ld   [wFileLoadDisplayMiscCounterIdx], a                        ; $4f7e
+
+; Inc to main substate, and restore ram bank
+	ld   hl, wGameSubstate                                          ; $4f81
+	inc  [hl]                                                       ; $4f84
+
+	pop  af                                                         ; $4f85
+	ld   [wWramBank], a                                             ; $4f86
+	ldh  [rSVBK], a                                                 ; $4f89
+	ret                                                             ; $4f8b
 
 
-Jump_00c_4f8c:
-	call ClearOam                                       ; $4f8c: $cd $d7 $0d
-	xor  a                                           ; $4f8f: $af
-	ld   [$cc1e], a                                  ; $4f90: $ea $1e $cc
-	ld   a, [wInGameButtonsHeld]                                  ; $4f93: $fa $0f $c2
-	bit  1, a                                        ; $4f96: $cb $4f
-	jr   z, jr_00c_4f9f                              ; $4f98: $28 $05
+FileLoadDisplay_Substate1:
+	call ClearOam                                                   ; $4f8c
 
-	ld   a, $ff                                      ; $4f9a: $3e $ff
-	ld   [$cc1e], a                                  ; $4f9c: $ea $1e $cc
+; Don't skip unless B held
+	xor  a                                                          ; $4f8f
+	ld   [wFileLoadDisplayShouldSkip], a                            ; $4f90
 
-jr_00c_4f9f:
-	ld   bc, $4fb2                                   ; $4f9f: $01 $b2 $4f
-	push bc                                          ; $4fa2: $c5
-	ld   a, [$cc1b]                                  ; $4fa3: $fa $1b $cc
-	ld   b, $00                                      ; $4fa6: $06 $00
-	ld   c, a                                        ; $4fa8: $4f
-	ld   hl, $4fb6                                   ; $4fa9: $21 $b6 $4f
-	add  hl, bc                                      ; $4fac: $09
-	add  hl, bc                                      ; $4fad: $09
-	ld   a, [hl+]                                    ; $4fae: $2a
-	ld   h, [hl]                                     ; $4faf: $66
-	ld   l, a                                        ; $4fb0: $6f
-	jp   hl                                          ; $4fb1: $e9
+	ld   a, [wInGameButtonsHeld]                                    ; $4f93
+	bit  PADB_B, a                                                  ; $4f96
+	jr   z, :+                                                      ; $4f98
 
+	ld   a, $ff                                                     ; $4f9a
+	ld   [wFileLoadDisplayShouldSkip], a                            ; $4f9c
 
-	call AnimateAllAnimatedSpriteSpecs                                       ; $4fb2: $cd $d3 $2e
-	ret                                              ; $4fb5: $c9
+; Push return address to ret to after handler
+:	ld   bc, .return                                                ; $4f9f
+	push bc                                                         ; $4fa2
 
+; HL = anim step double idxed into table
+	ld   a, [wFileLoadDisplayAnimationStep]                         ; $4fa3
+	ld   b, $00                                                     ; $4fa6
+	ld   c, a                                                       ; $4fa8
+	ld   hl, .animationHandlers                                     ; $4fa9
+	add  hl, bc                                                     ; $4fac
+	add  hl, bc                                                     ; $4fad
 
-	ret  nz                                          ; $4fb6: $c0
+; Jump to the step's handler
+	ld   a, [hl+]                                                   ; $4fae
+	ld   h, [hl]                                                    ; $4faf
+	ld   l, a                                                       ; $4fb0
+	jp   hl                                                         ; $4fb1
 
-	ld   c, a                                        ; $4fb7: $4f
-	rst  $10                                         ; $4fb8: $d7
-	ld   c, a                                        ; $4fb9: $4f
-	jr   nc, jr_00c_500c                             ; $4fba: $30 $50
+.return:
+; Finally animate all sprites
+	call AnimateAllAnimatedSpriteSpecs                              ; $4fb2
+	ret                                                             ; $4fb5
 
-	ld   d, h                                        ; $4fbc: $54
-	ld   d, b                                        ; $4fbd: $50
-	cp   [hl]                                        ; $4fbe: $be
-	ld   d, b                                        ; $4fbf: $50
-	ld   a, [$cc1e]                                  ; $4fc0: $fa $1e $cc
-	or   a                                           ; $4fc3: $b7
-	jr   nz, jr_00c_4fce                             ; $4fc4: $20 $08
-
-	ld   hl, $cc1c                                   ; $4fc6: $21 $1c $cc
-	ld   a, [hl]                                     ; $4fc9: $7e
-	inc  [hl]                                        ; $4fca: $34
-	cp   $1e                                         ; $4fcb: $fe $1e
-	ret  nc                                          ; $4fcd: $d0
-
-jr_00c_4fce:
-	ld   hl, $cc1b                                   ; $4fce: $21 $1b $cc
-	inc  [hl]                                        ; $4fd1: $34
-	xor  a                                           ; $4fd2: $af
-	ld   [$cc1c], a                                  ; $4fd3: $ea $1c $cc
-	ret                                              ; $4fd6: $c9
+.animationHandlers:
+	dw FileLoadDisplayAnimationHandler0_Wait
+	dw FileLoadDisplayAnimationHandler1_FadeIn
+	dw FileLoadDisplayAnimationHandler2_PlaySound
+	dw FileLoadDisplayAnimationHandler3_FadeOut
+	dw FileLoadDisplayAnimationHandler4_ToNextState
 
 
-	ld   a, [$cc1c]                                  ; $4fd7: $fa $1c $cc
-	or   a                                           ; $4fda: $b7
-	jr   nz, jr_00c_4ff5                             ; $4fdb: $20 $18
+FileLoadDisplayAnimationHandler0_Wait:
+; If should skip, go to step 1
+	ld   a, [wFileLoadDisplayShouldSkip]                            ; $4fc0
+	or   a                                                          ; $4fc3
+	jr   nz, .toNextStep                                            ; $4fc4
 
-	xor  a                                           ; $4fdd: $af
-	ld   [wStartingColorIdxToLoadCompDataFor], a                                  ; $4fde: $ea $62 $c3
-	ld   a, $40                                      ; $4fe1: $3e $40
-	ld   [wNumPaletteColorsToLoadCompDataFor], a                                  ; $4fe3: $ea $63 $c3
-	ld   a, $03                                      ; $4fe6: $3e $03
-	ld   b, $00                                      ; $4fe8: $06 $00
-	ld   hl, wBGPalettes                                   ; $4fea: $21 $de $c2
-	ld   c, $a3                                      ; $4fed: $0e $a3
-	ld   de, $6fcc                                   ; $4fef: $11 $cc $6f
-	call FarLoadPaletteValsFadeToValsAndSetFadeSpeed                                       ; $4ff2: $cd $48 $07
+; Inc counter idx, continuing once >= $1e (bug: should ret c)
+	ld   hl, wFileLoadDisplayMiscCounterIdx                         ; $4fc6
+	ld   a, [hl]                                                    ; $4fc9
+	inc  [hl]                                                       ; $4fca
+	cp   $1e                                                        ; $4fcb
+	ret  nc                                                         ; $4fcd
 
-jr_00c_4ff5:
-	ld   hl, $cc1c                                   ; $4ff5: $21 $1c $cc
-	ld   a, [$cc1e]                                  ; $4ff8: $fa $1e $cc
-	or   a                                           ; $4ffb: $b7
-	jr   z, jr_00c_5004                              ; $4ffc: $28 $06
+.toNextStep:
+; Inc anim step and clear counter
+	ld   hl, wFileLoadDisplayAnimationStep                          ; $4fce
+	inc  [hl]                                                       ; $4fd1
 
-	ld   a, [hl]                                     ; $4ffe: $7e
-	add  $07                                         ; $4fff: $c6 $07
-	and  $f8                                         ; $5001: $e6 $f8
-	ld   [hl], a                                     ; $5003: $77
-
-jr_00c_5004:
-	ld   a, [hl]                                     ; $5004: $7e
-	inc  [hl]                                        ; $5005: $34
-	cp   $3f                                         ; $5006: $fe $3f
-	jr   nc, jr_00c_5013                             ; $5008: $30 $09
-
-	and  $07                                         ; $500a: $e6 $07
-
-jr_00c_500c:
-	ret  nz                                          ; $500c: $c0
-
-	ld   bc, $0040                                   ; $500d: $01 $40 $00
-	jp   FadePalettesAndSetRangeToUpdate                                       ; $5010: $c3 $32 $08
+	xor  a                                                          ; $4fd2
+	ld   [wFileLoadDisplayMiscCounterIdx], a                        ; $4fd3
+	ret                                                             ; $4fd6
 
 
-jr_00c_5013:
-	ld   a, $a3                                      ; $5013: $3e $a3
-	ld   hl, $6fcc                                   ; $5015: $21 $cc $6f
-	ld   de, wBGPalettes                                   ; $5018: $11 $de $c2
-	ld   bc, $0080                                   ; $501b: $01 $80 $00
-	call FarMemCopy                                       ; $501e: $cd $b2 $09
-	ld   bc, $003f                                   ; $5021: $01 $3f $00
-	call SetBGandOBJPaletteRangesToUpdate                                       ; $5024: $cd $aa $04
-	ld   hl, $cc1b                                   ; $5027: $21 $1b $cc
-	inc  [hl]                                        ; $502a: $34
-	xor  a                                           ; $502b: $af
-	ld   [$cc1c], a                                  ; $502c: $ea $1c $cc
-	ret                                              ; $502f: $c9
+FileLoadDisplayAnimationHandler1_FadeIn:
+; Jump if already loaded below
+	ld   a, [wFileLoadDisplayMiscCounterIdx]                        ; $4fd7
+	or   a                                                          ; $4fda
+	jr   nz, .afterInit                                             ; $4fdb
+
+; Load palettes to fade to, and set to fade at 1/8th speed
+	xor  a                                                          ; $4fdd
+	ld   [wStartingColorIdxToLoadCompDataFor], a                    ; $4fde
+	ld   a, $40                                                     ; $4fe1
+	ld   [wNumPaletteColorsToLoadCompDataFor], a                    ; $4fe3
+
+	ld   a, $03                                                     ; $4fe6
+	ld   b, $00                                                     ; $4fe8
+	ld   hl, wBGPalettes                                            ; $4fea
+	ld   c, BANK(Palettes_FileLoadDisplay)                          ; $4fed
+	ld   de, Palettes_FileLoadDisplay                               ; $4fef
+	call FarLoadPaletteValsFadeToValsAndSetFadeSpeed                ; $4ff2
+
+.afterInit:
+	ld   hl, wFileLoadDisplayMiscCounterIdx                         ; $4ff5
+
+; Jump if we shouldn't skip
+	ld   a, [wFileLoadDisplayShouldSkip]                            ; $4ff8
+	or   a                                                          ; $4ffb
+	jr   z, .afterSkipCheck                                         ; $4ffc
+
+; Else go to next fade counter below, mult of 8 means we fade immediately
+	ld   a, [hl]                                                    ; $4ffe
+	add  $07                                                        ; $4fff
+	and  $f8                                                        ; $5001
+	ld   [hl], a                                                    ; $5003
+
+.afterSkipCheck:
+; Jump once counter >= $3f
+	ld   a, [hl]                                                    ; $5004
+	inc  [hl]                                                       ; $5005
+	cp   $3f                                                        ; $5006
+	jr   nc, .afterAllFaded                                         ; $5008
+
+; Else every 8 frames, fade all palettes
+	and  $07                                                        ; $500a
+	ret  nz                                                         ; $500c
+
+	ldbc $00, $40                                                   ; $500d
+	jp   FadePalettesAndSetRangeToUpdate                            ; $5010
+
+.afterAllFaded:
+; Update all palettes to the final colors
+	ld   a, BANK(Palettes_FileLoadDisplay)                          ; $5013
+	ld   hl, Palettes_FileLoadDisplay                               ; $5015
+	ld   de, wBGPalettes                                            ; $5018
+	ld   bc, NUM_PALETTE_BYTES * 2                                  ; $501b
+	call FarMemCopy                                                 ; $501e
+
+	ldbc $00, $3f                                                   ; $5021
+	call SetBGandOBJPaletteRangesToUpdate                           ; $5024
+
+; Inc anim step and clear misc counter
+	ld   hl, wFileLoadDisplayAnimationStep                          ; $5027
+	inc  [hl]                                                       ; $502a
+
+	xor  a                                                          ; $502b
+	ld   [wFileLoadDisplayMiscCounterIdx], a                        ; $502c
+	ret                                                             ; $502f
 
 
-	ld   a, [$cc1e]                                  ; $5030: $fa $1e $cc
-	or   a                                           ; $5033: $b7
-	jr   nz, jr_00c_504b                             ; $5034: $20 $15
+FileLoadDisplayAnimationHandler2_PlaySound:
+; If should skip, go to next step
+	ld   a, [wFileLoadDisplayShouldSkip]                            ; $5030
+	or   a                                                          ; $5033
+	jr   nz, .toNextStep                                            ; $5034
 
-	ld   a, [wInGameButtonsPressed]                                  ; $5036: $fa $10 $c2
-	and  $03                                         ; $5039: $e6 $03
-	jr   nz, jr_00c_504b                             ; $503b: $20 $0e
+; If B or A pressed, go to next step
+	ld   a, [wInGameButtonsPressed]                                 ; $5036
+	and  PADF_B|PADF_A                                              ; $5039
+	jr   nz, .toNextStep                                            ; $503b
 
+;
 	ld   a, [$c653]                                  ; $503d: $fa $53 $c6
-	call $1d30                                       ; $5040: $cd $30 $1d
+	call Func_1d30                                       ; $5040: $cd $30 $1d
 	or   a                                           ; $5043: $b7
 	ret  nz                                          ; $5044: $c0
 
-	xor  a                                           ; $5045: $af
-	call PlaySong                                       ; $5046: $cd $92 $1a
-	jr   jr_00c_504b                                 ; $5049: $18 $00
+; Clear sound and go to next step
+	xor  a                                                          ; $5045
+	call PlaySong                                                   ; $5046
+	jr   .toNextStep                                                ; $5049
 
-jr_00c_504b:
-	ld   hl, $cc1b                                   ; $504b: $21 $1b $cc
-	inc  [hl]                                        ; $504e: $34
-	xor  a                                           ; $504f: $af
-	ld   [$cc1c], a                                  ; $5050: $ea $1c $cc
-	ret                                              ; $5053: $c9
+.toNextStep:
+; Inc anim step and clear misc counter
+	ld   hl, wFileLoadDisplayAnimationStep                          ; $504b
+	inc  [hl]                                                       ; $504e
 
-
-	ld   a, [$cc1c]                                  ; $5054: $fa $1c $cc
-	or   a                                           ; $5057: $b7
-	jr   nz, jr_00c_5072                             ; $5058: $20 $18
-
-	xor  a                                           ; $505a: $af
-	ld   [wStartingColorIdxToLoadCompDataFor], a                                  ; $505b: $ea $62 $c3
-	ld   a, $40                                      ; $505e: $3e $40
-	ld   [wNumPaletteColorsToLoadCompDataFor], a                                  ; $5060: $ea $63 $c3
-	ld   a, $03                                      ; $5063: $3e $03
-	ld   b, $00                                      ; $5065: $06 $00
-	ld   hl, wBGPalettes                                   ; $5067: $21 $de $c2
-	ld   c, $01                                      ; $506a: $0e $01
-	ld   de, $7000                                   ; $506c: $11 $00 $70
-	call FarLoadPaletteValsFadeToValsAndSetFadeSpeed                                       ; $506f: $cd $48 $07
-
-jr_00c_5072:
-	ld   hl, $cc1c                                   ; $5072: $21 $1c $cc
-	ld   a, [$cc1e]                                  ; $5075: $fa $1e $cc
-	or   a                                           ; $5078: $b7
-	jr   z, jr_00c_5081                              ; $5079: $28 $06
-
-	ld   a, [hl]                                     ; $507b: $7e
-	add  $07                                         ; $507c: $c6 $07
-	and  $f8                                         ; $507e: $e6 $f8
-	ld   [hl], a                                     ; $5080: $77
-
-jr_00c_5081:
-	ld   a, [hl]                                     ; $5081: $7e
-	cpl                                              ; $5082: $2f
-	srl  a                                           ; $5083: $cb $3f
-	srl  a                                           ; $5085: $cb $3f
-	srl  a                                           ; $5087: $cb $3f
-	and  $07                                         ; $5089: $e6 $07
-	call SafeSetAudVolForMultipleChannels                                       ; $508b: $cd $e0 $1c
-	ld   a, [hl]                                     ; $508e: $7e
-	inc  [hl]                                        ; $508f: $34
-	cp   $3f                                         ; $5090: $fe $3f
-	jr   nc, jr_00c_509d                             ; $5092: $30 $09
-
-	and  $07                                         ; $5094: $e6 $07
-	ret  nz                                          ; $5096: $c0
-
-	ld   bc, $0040                                   ; $5097: $01 $40 $00
-	jp   FadePalettesAndSetRangeToUpdate                                       ; $509a: $c3 $32 $08
+	xor  a                                                          ; $504f
+	ld   [wFileLoadDisplayMiscCounterIdx], a                        ; $5050
+	ret                                                             ; $5053
 
 
-jr_00c_509d:
-	ld   a, BANK(Palettes_AllWhite)                                      ; $509d: $3e $01
-	ld   hl, Palettes_AllWhite                                   ; $509f: $21 $00 $70
-	ld   de, wBGPalettes                                   ; $50a2: $11 $de $c2
-	ld   bc, $0080                                   ; $50a5: $01 $80 $00
-	call FarMemCopy                                       ; $50a8: $cd $b2 $09
-	ld   bc, $003f                                   ; $50ab: $01 $3f $00
-	call SetBGandOBJPaletteRangesToUpdate                                       ; $50ae: $cd $aa $04
-	xor  a                                           ; $50b1: $af
-	call PlaySong                                       ; $50b2: $cd $92 $1a
-	ld   hl, $cc1b                                   ; $50b5: $21 $1b $cc
-	inc  [hl]                                        ; $50b8: $34
-	xor  a                                           ; $50b9: $af
-	ld   [$cc1c], a                                  ; $50ba: $ea $1c $cc
-	ret                                              ; $50bd: $c9
+FileLoadDisplayAnimationHandler3_FadeOut:
+; Jump if already loaded below
+	ld   a, [wFileLoadDisplayMiscCounterIdx]                        ; $5054
+	or   a                                                          ; $5057
+	jr   nz, .afterInit                                             ; $5058
+
+; Load white palettes to fade to, and set to fade at 1/8th speed
+	xor  a                                                          ; $505a
+	ld   [wStartingColorIdxToLoadCompDataFor], a                    ; $505b
+	ld   a, $40                                                     ; $505e
+	ld   [wNumPaletteColorsToLoadCompDataFor], a                    ; $5060
+
+	ld   a, $03                                                     ; $5063
+	ld   b, $00                                                     ; $5065
+	ld   hl, wBGPalettes                                            ; $5067
+	ld   c, BANK(Palettes_AllWhite)                                 ; $506a
+	ld   de, Palettes_AllWhite                                      ; $506c
+	call FarLoadPaletteValsFadeToValsAndSetFadeSpeed                ; $506f
+
+.afterInit:
+	ld   hl, wFileLoadDisplayMiscCounterIdx                         ; $5072
+
+; Jump if we shouldn't skip
+	ld   a, [wFileLoadDisplayShouldSkip]                            ; $5075
+	or   a                                                          ; $5078
+	jr   z, .afterSkipCheck                                         ; $5079
+
+; Else go to next fade counter below, mult of 8 means we fade immediately
+	ld   a, [hl]                                                    ; $507b
+	add  $07                                                        ; $507c
+	and  $f8                                                        ; $507e
+	ld   [hl], a                                                    ; $5080
+
+.afterSkipCheck:
+; Have vol fade down as palettes fade down
+	ld   a, [hl]                                                    ; $5081
+	cpl                                                             ; $5082
+	srl  a                                                          ; $5083
+	srl  a                                                          ; $5085
+	srl  a                                                          ; $5087
+	and  $07                                                        ; $5089
+	call SafeSetAudVolForMultipleChannels                           ; $508b
+
+; Jump once counter >= $3f
+	ld   a, [hl]                                                    ; $508e
+	inc  [hl]                                                       ; $508f
+	cp   $3f                                                        ; $5090
+	jr   nc, .afterAllFaded                                         ; $5092
+
+; Else every 8 frames, fade all palettes
+	and  $07                                                        ; $5094
+	ret  nz                                                         ; $5096
+
+	ldbc $00, $40                                                   ; $5097
+	jp   FadePalettesAndSetRangeToUpdate                            ; $509a
+
+.afterAllFaded:
+; Update all palettes to the final colors
+	ld   a, BANK(Palettes_AllWhite)                                 ; $509d
+	ld   hl, Palettes_AllWhite                                      ; $509f
+	ld   de, wBGPalettes                                            ; $50a2
+	ld   bc, NUM_PALETTE_BYTES * 2                                  ; $50a5
+	call FarMemCopy                                                 ; $50a8
+
+	ldbc $00, $3f                                                   ; $50ab
+	call SetBGandOBJPaletteRangesToUpdate                           ; $50ae
+
+; Mute sound, inc anim step and clear misc counter
+	xor  a                                                          ; $50b1
+	call PlaySong                                                   ; $50b2
+
+	ld   hl, wFileLoadDisplayAnimationStep                          ; $50b5
+	inc  [hl]                                                       ; $50b8
+
+	xor  a                                                          ; $50b9
+	ld   [wFileLoadDisplayMiscCounterIdx], a                        ; $50ba
+	ret                                                             ; $50bd
 
 
-	ld   a, [$cc1e]                                  ; $50be: $fa $1e $cc
-	or   a                                           ; $50c1: $b7
-	jr   nz, jr_00c_50cc                             ; $50c2: $20 $08
+FileLoadDisplayAnimationHandler4_ToNextState:
+; Go to next state if we should skip..
+	ld   a, [wFileLoadDisplayShouldSkip]                            ; $50be
+	or   a                                                          ; $50c1
+	jr   nz, .toNextState                                           ; $50c2
 
-	ld   hl, $cc1c                                   ; $50c4: $21 $1c $cc
-	ld   a, [hl]                                     ; $50c7: $7e
-	inc  [hl]                                        ; $50c8: $34
-	cp   $1e                                         ; $50c9: $fe $1e
-	ret  nc                                          ; $50cb: $d0
+; Else inc misc counter, returning if >= $1e (bug: should be ret c)
+	ld   hl, wFileLoadDisplayMiscCounterIdx                         ; $50c4
+	ld   a, [hl]                                                    ; $50c7
+	inc  [hl]                                                       ; $50c8
+	cp   $1e                                                        ; $50c9
+	ret  nc                                                         ; $50cb
 
-jr_00c_50cc:
+.toNextState:
 	ld   a, $38                                      ; $50cc: $3e $38
 	ld   [wGameState], a                                  ; $50ce: $ea $a0 $c2
+
 	xor  a                                           ; $50d1: $af
 	ld   [wGameSubstate], a                                  ; $50d2: $ea $a1 $c2
 	ret                                              ; $50d5: $c9
@@ -8194,7 +8258,7 @@ GameState44::
 
 ;
 	ld   bc, $0000                                   ; $73b3: $01 $00 $00
-	M_FarCall Func_01_407a
+	M_FarCall SetAnimSpriteType0CoordsRelativeTo
 	M_FarCall Func_0a_426b
 	M_FarCall Func_08_4000
 	
@@ -8635,7 +8699,7 @@ GameState47_Prologue::
 	
 ;
 	ld   bc, $0000                                   ; $778e: $01 $00 $00
-	M_FarCall Func_01_407a
+	M_FarCall SetAnimSpriteType0CoordsRelativeTo
 	
 ;
 	M_FarCall Func_0a_426b

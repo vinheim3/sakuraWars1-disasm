@@ -7991,7 +7991,7 @@ jr_032_5fdb:
 
 	nop                                              ; $5fee: $00
 	ldh  a, [rP1]                                    ; $5fef: $f0 $00
-	call c, $c600                                    ; $5ff1: $dc $00 $c6
+	call c, wType0AnimSpriteXPosRelativeTo                                    ; $5ff1: $dc $00 $c6
 	nop                                              ; $5ff4: $00
 	ret  nz                                          ; $5ff5: $c0
 
@@ -9554,7 +9554,7 @@ jr_032_655f:
 
 	nop                                              ; $65ee: $00
 	ldh  a, [rP1]                                    ; $65ef: $f0 $00
-	call c, $c600                                    ; $65f1: $dc $00 $c6
+	call c, wType0AnimSpriteXPosRelativeTo                                    ; $65f1: $dc $00 $c6
 	nop                                              ; $65f4: $00
 	ret  nz                                          ; $65f5: $c0
 
@@ -10083,7 +10083,7 @@ jr_032_67bf:
 
 	nop                                              ; $67ee: $00
 	ldh  a, [rP1]                                    ; $67ef: $f0 $00
-	call c, $c600                                    ; $67f1: $dc $00 $c6
+	call c, wType0AnimSpriteXPosRelativeTo                                    ; $67f1: $dc $00 $c6
 	nop                                              ; $67f4: $00
 	ret  nz                                          ; $67f5: $c0
 

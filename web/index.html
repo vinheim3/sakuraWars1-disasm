@@ -660,6 +660,19 @@
                             rowsShown: 32,
                             canvasHeight: 32 * 8,
                         },
+                        {
+                            name: "File load display (gs $3c)",
+                            sources: [
+                                ['rleXorCopy', 0x91, 0x6dc4, 0x8000],
+                                ['screenCopy', 0x96, 0x7c90, 0xd000, 'rom', 'memory', 0x14, 0x16],
+                                ['screenCopy', 0x96, 0x7e48, 0xd400, 'rom', 'memory', 0x14, 0x16],
+                                ['simpleCopy', 0x00, 0xd000, 0x1800, 0x400, 'memory', 'vram1'],
+                                ['simpleCopy', 0x00, 0xd400, 0x9800, 0x400, 'memory', 'memory'],
+                                ['simpleCopy', 0xa3, 0x6fcc, 0x0000, 0x40, 'rom', 'bgPalettes'],
+                            ],
+                            isGBC: true,
+                            showTileData: true,
+                        },
                     ],
                 },
                 methods: {

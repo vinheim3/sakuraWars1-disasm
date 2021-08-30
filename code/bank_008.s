@@ -3804,7 +3804,7 @@ Jump_008_5883:
 	ld   de, $7762                                   ; $58fd: $11 $62 $77
 	ld   a, $1a                                      ; $5900: $3e $1a
 
-	M_FarCall LoadNewAnimatedSpriteSpecDetails
+	M_FarCall LoadType1NewAnimatedSpriteSpecDetails
 	
 	ld   a, $97                                      ; $5916: $3e $97
 	ld   hl, $7ff8                                   ; $5918: $21 $f8 $7f
@@ -3880,7 +3880,7 @@ Jump_008_5883:
 	ldh  a, [$a6]                                    ; $59b5: $f0 $a6
 	call HLequAddrOfAnimSpriteSpecDetails                                       ; $59b7: $cd $76 $30
 
-	M_FarCall Func_01_403c
+	M_FarCall LoadType0NewAnimatedSpriteSpecDetails
 	
 	ld   a, e                                        ; $59ce: $7b
 	or   a                                           ; $59cf: $b7
@@ -7845,7 +7845,7 @@ Jump_008_753b:
 	ld   b, a                                        ; $754b: $47
 	ld   c, $00                                      ; $754c: $0e $00
 
-	M_FarCall Func_01_407a
+	M_FarCall SetAnimSpriteType0CoordsRelativeTo
 	
 	ld   hl, hScriptOpcodeParams+2                                   ; $7562: $21 $a2 $ff
 	ld   a, [hl]                                     ; $7565: $7e
@@ -7969,7 +7969,7 @@ jr_008_7633:
 	ld   b, a                                        ; $763f: $47
 	ld   c, $00                                      ; $7640: $0e $00
 
-	M_FarCall Func_01_407a
+	M_FarCall SetAnimSpriteType0CoordsRelativeTo
 	
 	ld   hl, hScriptOpcodeParams+2                                   ; $7656: $21 $a2 $ff
 	ld   a, [hl]                                     ; $7659: $7e
@@ -7979,7 +7979,7 @@ jr_008_7633:
 
 	ld   bc, $0000                                   ; $7660: $01 $00 $00
 
-	M_FarCall Func_01_407a
+	M_FarCall SetAnimSpriteType0CoordsRelativeTo
 	
 	ld   a, [wLCDC]                                  ; $7677: $fa $03 $c2
 	and  $97                                         ; $767a: $e6 $97

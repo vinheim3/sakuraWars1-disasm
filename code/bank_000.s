@@ -3287,7 +3287,7 @@ HandleGameState:
 	AddrBank GameState39
 	AddrBank GameState3a
 	AddrBank GameState3b
-	AddrBank GameState3c
+	AddrBank GameState3c_FileLoadDisplay
 	AddrBank GameState3d
 	AddrBank GameState3e
 	AddrBank GameState3f
@@ -5990,6 +5990,7 @@ jr_000_1d2b:
 	ret                                              ; $1d2f: $c9
 
 
+Func_1d30::
 	push bc                                          ; $1d30: $c5
 	push de                                          ; $1d31: $d5
 	push hl                                          ; $1d32: $e5
@@ -9426,7 +9427,7 @@ AnimateAllAnimatedSpriteSpecs::
 	ld   [wRomBank], a                                              ; $2f12
 	ld   [rROMB0], a                                                ; $2f15
 
-; 1st word after is the update func to ret to
+; ; Push 1st word to ret to (Update function)
 	ld   a, [hl+]                                                   ; $2f18
 	ld   e, a                                                       ; $2f19
 	ld   d, [hl]                                                    ; $2f1a
@@ -9581,7 +9582,7 @@ ReserveBaseAnimSpriteSpecAndInstance::
 	ld   [wRomBank], a                                              ; $2f96
 	ld   [rROMB0], a                                                ; $2f99
 
-; Push 2nd word to ret to
+; Push 2nd word to ret to (Load function)
 	inc  l                                                          ; $2f9c
 	inc  l                                                          ; $2f9d
 	ld   a, [hl+]                                                   ; $2f9e
@@ -9655,7 +9656,7 @@ DeleteAnimatedSpriteSpec::
 	ld   [wRomBank], a                                              ; $2fe2
 	ld   [rROMB0], a                                                ; $2fe5
 
-; Push 3rd word to ret to
+; Push 3rd word to ret to (Delete)
 	inc  l                                                          ; $2fe8
 	inc  l                                                          ; $2fe9
 	inc  l                                                          ; $2fea
@@ -9678,9 +9679,9 @@ CheckIfAnimatedSpriteSpecIsAnimating::
 ; HL points to base anim sprite spec details ctrl
 	sla  a                                                          ; $2ff9
 	sla  a                                                          ; $2ffb
-	add  LOW(wBaseAnimSpriteSpecDetails+BASS_CTRL)                  ; $2ffd
+	add  LOW(wBaseAnimSpriteSpecDetails+BASS_CTRL)                 ; $2ffd
 	ld   l, a                                                       ; $2fff
-	ld   h, HIGH(wBaseAnimSpriteSpecDetails+BASS_CTRL)              ; $3000
+	ld   h, HIGH(wBaseAnimSpriteSpecDetails+BASS_CTRL)             ; $3000
 
 ; Check of animatable bit set
 	ld   a, [hl]                                                    ; $3002
@@ -10289,7 +10290,7 @@ endc
 SECTION "Bank $00, $3e00", ROM0[$3e00]
 
 AnimatedSpriteSpecTypeDetails:
-	db $00 ; num sprite spec struct bytes
+	db $00 ; num sprite spec struct bytes (incorrect, it uses 4)
 	db $01 ; rom bank of the below
 	dw AnimSpriteSpecType0Update
 	dw AnimSpriteSpecType0Load

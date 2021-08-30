@@ -10325,6 +10325,7 @@ jr_011_7e56:
 	ret                                              ; $7e56: $c9
 
 
+Func_11_7e57::
 	ld   a, h                                        ; $7e57: $7c
 	ld   [$ca01], a                                  ; $7e58: $ea $01 $ca
 	ld   a, l                                        ; $7e5b: $7d

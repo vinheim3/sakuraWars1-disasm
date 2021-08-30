@@ -5659,7 +5659,7 @@ Jump_0dd_56d9:
 	ei                                               ; $592d: $fb
 	inc  sp                                          ; $592e: $33
 	ld   hl, $1111                                   ; $592f: $21 $11 $11
-	ld   de, $cc1c                                   ; $5932: $11 $1c $cc
+	ld   de, wFileLoadDisplayMiscCounterIdx                                   ; $5932: $11 $1c $cc
 	rst  $38                                         ; $5935: $ff
 	rst  $38                                         ; $5936: $ff
 	rst  $38                                         ; $5937: $ff

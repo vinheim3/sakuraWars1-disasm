@@ -1126,7 +1126,7 @@ jr_09f_44a0:
 
 	nop                                              ; $44a4: $00
 	dec  b                                           ; $44a5: $05
-	ld   bc, $c600                                   ; $44a6: $01 $00 $c6
+	ld   bc, wType0AnimSpriteXPosRelativeTo                                   ; $44a6: $01 $00 $c6
 	ld   bc, $08c9                                   ; $44a9: $01 $c9 $08
 	add  b                                           ; $44ac: $80
 	jr   jr_09f_44b5                                 ; $44ad: $18 $06

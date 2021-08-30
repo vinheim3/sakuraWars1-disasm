@@ -1830,7 +1830,7 @@ jr_09e_47c6:
 	db   $fd                                         ; $47dd: $fd
 	dec  b                                           ; $47de: $05
 	rlca                                             ; $47df: $07
-	ld   bc, $c600                                   ; $47e0: $01 $00 $c6
+	ld   bc, wType0AnimSpriteXPosRelativeTo                                   ; $47e0: $01 $00 $c6
 	nop                                              ; $47e3: $00
 	ld   hl, sp-$7f                                  ; $47e4: $f8 $81
 	ret  nz                                          ; $47e6: $c0

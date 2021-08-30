@@ -8820,7 +8820,7 @@ DayPassedAnimationStep4:
 	jp   nz, IncDayPassedAnimStep                           ; $7706: $c2 $b8 $73
 
 	ld   a, [$c653]                                  ; $7709: $fa $53 $c6
-	call $1d30                                       ; $770c: $cd $30 $1d
+	call Func_1d30                                       ; $770c: $cd $30 $1d
 	or   a                                           ; $770f: $b7
 	ret  nz                                          ; $7710: $c0
 

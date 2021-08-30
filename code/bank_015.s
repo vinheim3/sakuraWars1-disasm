@@ -4328,7 +4328,7 @@ jr_015_5291:
 	jr   nz, @+$42                                   ; $529f: $20 $40
 
 	add  b                                           ; $52a1: $80
-	ld   bc, $c600                                   ; $52a2: $01 $00 $c6
+	ld   bc, wType0AnimSpriteXPosRelativeTo                                   ; $52a2: $01 $00 $c6
 	inc  b                                           ; $52a5: $04
 	ld   c, h                                        ; $52a6: $4c
 	nop                                              ; $52a7: $00

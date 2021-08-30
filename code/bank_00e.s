@@ -175,7 +175,6 @@ SpriteGroup1Pointers::
 	dw Data_0e_4944
 	dw Data_0e_4948
 	dw Data_0e_494c ; title menu screen - arrow end
-
 	dw $4950
 	dw $498c
 	dw $4994

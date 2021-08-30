@@ -23,9 +23,18 @@ BASS_TYPE rb 1 ; 3
 BASS_SIZEOF rb
 
 rsreset
-ASSI_ADDR rw 1 ; 0
-ASSI_CURR_FRAME_CTR rb 1 ; 2
-ASSI_COND_LOOP_CTR rb 1 ; 3
-ASSI_X rb 1 ; 4
-ASSI_Y rb 1 ; 5
-ASSI_SIZEOF rb
+; bit 7 set - relative position
+; bit 7 clear - absolute position
+; non-bit 7 bits - sprite group
+ASSI0_CTRL rb ; 0
+ASSI0_SPEC_IDX rb ; 1
+ASSI0_X rb ; 2
+ASSI0_Y rb ; 3
+
+rsreset
+ASSI1_ADDR rw 1 ; 0
+ASSI1_CURR_FRAME_CTR rb 1 ; 2
+ASSI1_COND_LOOP_CTR rb 1 ; 3
+ASSI1_X rb 1 ; 4
+ASSI1_Y rb 1 ; 5
+ASSI1_SIZEOF rb

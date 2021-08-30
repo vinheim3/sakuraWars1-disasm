@@ -10751,7 +10751,7 @@ jr_070_6f39:
 	ld   h, e                                        ; $6f7f: $63
 	dec  sp                                          ; $6f80: $3b
 	add  b                                           ; $6f81: $80
-	jp   z, $c601                                    ; $6f82: $ca $01 $c6
+	jp   z, wType0AnimSpriteYPosRelativeTo                                    ; $6f82: $ca $01 $c6
 
 	ld   h, a                                        ; $6f85: $67
 	add  b                                           ; $6f86: $80

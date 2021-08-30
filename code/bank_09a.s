@@ -5222,7 +5222,7 @@ jr_09a_6081:
 	and  d                                           ; $6087: $a2
 	sub  h                                           ; $6088: $94
 	add  h                                           ; $6089: $84
-	ld   sp, $1d30                                   ; $608a: $31 $30 $1d
+	ld   sp, Func_1d30                                   ; $608a: $31 $30 $1d
 	sbc  b                                           ; $608d: $98
 	adc  d                                           ; $608e: $8a
 	adc  h                                           ; $608f: $8c
@@ -6053,7 +6053,7 @@ jr_09a_643b:
 	adc  e                                           ; $6457: $8b
 	nop                                              ; $6458: $00
 	dec  de                                          ; $6459: $1b
-	ld   bc, $c600                                   ; $645a: $01 $00 $c6
+	ld   bc, wType0AnimSpriteXPosRelativeTo                                   ; $645a: $01 $00 $c6
 	nop                                              ; $645d: $00
 	ld   hl, sp-$3f                                  ; $645e: $f8 $c1
 	dec  a                                           ; $6460: $3d
@@ -7630,7 +7630,7 @@ jr_09a_6b29:
 	ld   e, $00                                      ; $6b29: $1e $00
 	ld   [de], a                                     ; $6b2b: $12
 	nop                                              ; $6b2c: $00
-	call z, $c600                                    ; $6b2d: $cc $00 $c6
+	call z, wType0AnimSpriteXPosRelativeTo                                    ; $6b2d: $cc $00 $c6
 	add  d                                           ; $6b30: $82
 	jr   nz, jr_09a_6b34                             ; $6b31: $20 $01
 
