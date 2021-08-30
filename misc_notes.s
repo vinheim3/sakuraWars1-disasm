@@ -36,3 +36,6 @@
 
 ; script banks
 ; 0x41 - 0x6a
+
+; IMPORTANT
+; When adding new characters, add map+width in scriptExtract, and width in getCharWidth

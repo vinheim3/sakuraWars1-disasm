@@ -9941,6 +9941,9 @@ GetCharWidth1:
 	cp   $12 ; >
 	ret  z
 
+	cp   $1c ; *
+	ret  z
+
 ; Regular kanji takes up 8 pixels
 	ld   b, $08
 	ret

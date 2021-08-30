@@ -246,7 +246,7 @@ class ScriptExtractor:
         if char == ">": return [0x01, 0x12]
         if char == "(": return [0x01, 0x03]
         if char == ")": return [0x01, 0x04]
-        if char == "*": return [0x01, 0x0b] # todo: x
+        if char == "*": return [0x01, 0x1c]
         if char == "=": return [0x01, 0x0d]
         if char == ":": return [0x01, 0x15]
         if char == "%": return [0x01, 0x0e]
@@ -291,7 +291,7 @@ class ScriptExtractor:
                 total += 4
             elif char in "èóé":
                 total += 5
-            elif char in '"-+<>=/':
+            elif char in '"-+<>=/*':
                 total += 6
             else:
                 total += 8
