@@ -7,7 +7,7 @@ INCLUDE "includes.s"
 
 SECTION "ROM Bank $00c", ROMX[$4000], BANK[$c]
 
-GameState39::
+GameState39_Explore::
 	ld   a, [wGameSubstate]                                  ; $4000: $fa $a1 $c2
 	bit  7, a                                        ; $4003: $cb $7f
 	jp   nz, Jump_00c_451d                           ; $4005: $c2 $1d $45
@@ -2532,7 +2532,7 @@ GameState3c_FileLoadDisplay::
 
 .notLastDay:
 ; Create an animatable type-0 sprite spec, and return its details addr in HL
-	ld   a, $00                                                     ; $4e75
+	ld   a, ASST_0                                                  ; $4e75
 	ld   hl, $0000                                                  ; $4e77
 	ld   d, h                                                       ; $4e7a
 	ld   e, l                                                       ; $4e7b

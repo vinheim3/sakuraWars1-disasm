@@ -113,33 +113,48 @@ GameState2f_Battle::
 	nop                                              ; $40af: $00
 
 
-InitBattle::
+; A -
+; B -
+; H - return state
+; L - return substate
+SetBattleState::
 	ld   [$ca6f], a                                  ; $40b0: $ea $6f $ca
 	ld   a, b                                        ; $40b3: $78
 	ld   [$ca70], a                                  ; $40b4: $ea $70 $ca
-	ld   a, h                                        ; $40b7: $7c
-	ld   [$ca50], a                                  ; $40b8: $ea $50 $ca
-	ld   a, l                                        ; $40bb: $7d
-	ld   [$ca51], a                                  ; $40bc: $ea $51 $ca
+
+; Set return state/substate
+	ld   a, h                                                       ; $40b7
+	ld   [wBattleReturnState], a                                    ; $40b8
+	ld   a, l                                                       ; $40bb
+	ld   [wBattleReturnSubstate], a                                 ; $40bc
+
+;
 	xor  a                                           ; $40bf: $af
 	ld   [$ca9f], a                                  ; $40c0: $ea $9f $ca
+
+;
 	ld   a, [$ca70]                                  ; $40c3: $fa $70 $ca
 	cp   $07                                         ; $40c6: $fe $07
-	jr   c, .cont_40da                              ; $40c8: $38 $10
+	jr   c, .setState                              ; $40c8: $38 $10
 
+;
 	ld   a, [$ca70]                                  ; $40ca: $fa $70 $ca
 	sub  $03                                         ; $40cd: $d6 $03
 	ld   [$ca70], a                                  ; $40cf: $ea $70 $ca
+
+;
 	ld   a, $01                                      ; $40d2: $3e $01
 	ld   [$ca9f], a                                  ; $40d4: $ea $9f $ca
 	call Call_024_5ec9                               ; $40d7: $cd $c9 $5e
 
-.cont_40da:
-	ld   a, GS_BATTLE                                      ; $40da: $3e $2f
-	ld   [wGameState], a                                  ; $40dc: $ea $a0 $c2
-	ld   a, $00                                      ; $40df: $3e $00
-	ld   [wGameSubstate], a                                  ; $40e1: $ea $a1 $c2
-	ret                                              ; $40e4: $c9
+.setState:
+; To battle state
+	ld   a, GS_BATTLE                                               ; $40da
+	ld   [wGameState], a                                            ; $40dc
+
+	ld   a, $00                                                     ; $40df
+	ld   [wGameSubstate], a                                         ; $40e1
+	ret                                                             ; $40e4
 
 
 BattleSubstate00:
@@ -185,34 +200,14 @@ BattleSubstate00:
 	ldh  [rSVBK], a                                  ; $414c: $e0 $70
 	ld   a, $01                                      ; $414e: $3e $01
 	ld   [$ca71], a                                  ; $4150: $ea $71 $ca
-	push af                                          ; $4153: $f5
-	ld   a, $1a                                      ; $4154: $3e $1a
-	ld   [wFarCallAddr], a                                  ; $4156: $ea $98 $c2
-	ld   a, $48                                      ; $4159: $3e $48
-	ld   [wFarCallAddr+1], a                                  ; $415b: $ea $99 $c2
-	ld   a, $0a                                      ; $415e: $3e $0a
-	ld   [wFarCallBank], a                                  ; $4160: $ea $9a $c2
-	pop  af                                          ; $4163: $f1
-	call FarCall                                       ; $4164: $cd $62 $09
+
+	M_FarCall todo_ClearsAndLoadsGfxForConvoScreens
+
 	ld   a, $00                                      ; $4167: $3e $00
-	push af                                          ; $4169: $f5
-	ld   a, $30                                      ; $416a: $3e $30
-	ld   [wFarCallAddr], a                                  ; $416c: $ea $98 $c2
-	ld   a, $49                                      ; $416f: $3e $49
-	ld   [wFarCallAddr+1], a                                  ; $4171: $ea $99 $c2
-	ld   a, $0a                                      ; $4174: $3e $0a
-	ld   [wFarCallBank], a                                  ; $4176: $ea $9a $c2
-	pop  af                                          ; $4179: $f1
-	call FarCall                                       ; $417a: $cd $62 $09
-	push af                                          ; $417d: $f5
-	ld   a, $34                                      ; $417e: $3e $34
-	ld   [wFarCallAddr], a                                  ; $4180: $ea $98 $c2
-	ld   a, $49                                      ; $4183: $3e $49
-	ld   [wFarCallAddr+1], a                                  ; $4185: $ea $99 $c2
-	ld   a, $0a                                      ; $4188: $3e $0a
-	ld   [wFarCallBank], a                                  ; $418a: $ea $9a $c2
-	pop  af                                          ; $418d: $f1
-	call FarCall                                       ; $418e: $cd $62 $09
+
+	M_FarCall Func_0a_4930
+	M_FarCall Func_0a_4934
+
 	xor  a                                           ; $4191: $af
 	ld   [$ca96], a                                  ; $4192: $ea $96 $ca
 	ld   a, [$ca9f]                                  ; $4195: $fa $9f $ca
@@ -228,15 +223,9 @@ BattleSubstate00:
 	ld   a, [hl+]                                    ; $41a7: $2a
 	ld   h, [hl]                                     ; $41a8: $66
 	ld   l, a                                        ; $41a9: $6f
-	push af                                          ; $41aa: $f5
-	ld   a, $de                                      ; $41ab: $3e $de
-	ld   [wFarCallAddr], a                                  ; $41ad: $ea $98 $c2
-	ld   a, $44                                      ; $41b0: $3e $44
-	ld   [wFarCallAddr+1], a                                  ; $41b2: $ea $99 $c2
-	ld   a, $09                                      ; $41b5: $3e $09
-	ld   [wFarCallBank], a                                  ; $41b7: $ea $9a $c2
-	pop  af                                          ; $41ba: $f1
-	call FarCall                                       ; $41bb: $cd $62 $09
+
+	M_FarCall CheckIfFlagSet2
+
 	jr   jr_024_41c2                                 ; $41be: $18 $02
 
 jr_024_41c0:
@@ -261,26 +250,14 @@ jr_024_41d5:
 	ld   a, $64                                      ; $41d6: $3e $64
 	ld   b, a                                        ; $41d8: $47
 	ld   a, [$ca7b]                                  ; $41d9: $fa $7b $ca
-	push af                                          ; $41dc: $f5
-	ld   a, $6a                                      ; $41dd: $3e $6a
-	ld   [wFarCallAddr], a                                  ; $41df: $ea $98 $c2
-	ld   a, $64                                      ; $41e2: $3e $64
-	ld   [wFarCallAddr+1], a                                  ; $41e4: $ea $99 $c2
-	ld   a, $3e                                      ; $41e7: $3e $3e
-	ld   [wFarCallBank], a                                  ; $41e9: $ea $9a $c2
-	pop  af                                          ; $41ec: $f1
-	call FarCall                                       ; $41ed: $cd $62 $09
+
+	M_FarCall Call_03e_646a
+
 	ld   b, $00                                      ; $41f0: $06 $00
 	ld   c, $01                                      ; $41f2: $0e $01
-	push af                                          ; $41f4: $f5
-	ld   a, $ba                                      ; $41f5: $3e $ba
-	ld   [wFarCallAddr], a                                  ; $41f7: $ea $98 $c2
-	ld   a, $54                                      ; $41fa: $3e $54
-	ld   [wFarCallAddr+1], a                                  ; $41fc: $ea $99 $c2
-	ld   a, $0a                                      ; $41ff: $3e $0a
-	ld   [wFarCallBank], a                                  ; $4201: $ea $9a $c2
-	pop  af                                          ; $4204: $f1
-	call FarCall                                       ; $4205: $cd $62 $09
+
+	M_FarCall Func_0a_54ba
+
 	ld   a, $0c                                      ; $4208: $3e $0c
 	call PlaySong                                       ; $420a: $cd $92 $1a
 	ld   a, $07                                      ; $420d: $3e $07
@@ -3769,15 +3746,15 @@ Jump_024_5947:
 	or   a                                           ; $5952: $b7
 	jr   nz, jr_024_5974                             ; $5953: $20 $1f
 
-	ld   a, [$ca50]                                  ; $5955: $fa $50 $ca
+	ld   a, [wBattleReturnState]                                  ; $5955: $fa $50 $ca
 	ld   [wGameState], a                                  ; $5958: $ea $a0 $c2
-	ld   a, [$ca51]                                  ; $595b: $fa $51 $ca
+	ld   a, [wBattleReturnSubstate]                                  ; $595b: $fa $51 $ca
 	ld   [wGameSubstate], a                                  ; $595e: $ea $a1 $c2
 	ld   a, [$ca85]                                  ; $5961: $fa $85 $ca
 	ld   [wBattleWon], a                                  ; $5964: $ea $21 $cb
-	ld   a, [$ca50]                                  ; $5967: $fa $50 $ca
+	ld   a, [wBattleReturnState]                                  ; $5967: $fa $50 $ca
 	ld   [wGameState], a                                  ; $596a: $ea $a0 $c2
-	ld   a, [$ca51]                                  ; $596d: $fa $51 $ca
+	ld   a, [wBattleReturnSubstate]                                  ; $596d: $fa $51 $ca
 	ld   [wGameSubstate], a                                  ; $5970: $ea $a1 $c2
 	ret                                              ; $5973: $c9
 
@@ -3785,15 +3762,15 @@ Jump_024_5947:
 jr_024_5974:
 	ld   h, $2f                                      ; $5974: $26 $2f
 	ld   l, $00                                      ; $5976: $2e $00
-	ld   a, [$ca50]                                  ; $5978: $fa $50 $ca
+	ld   a, [wBattleReturnState]                                  ; $5978: $fa $50 $ca
 	ld   d, a                                        ; $597b: $57
-	ld   a, [$ca51]                                  ; $597c: $fa $51 $ca
+	ld   a, [wBattleReturnSubstate]                                  ; $597c: $fa $51 $ca
 	ld   e, a                                        ; $597f: $5f
 	ld   a, [$ca85]                                  ; $5980: $fa $85 $ca
 	ld   [wBattleWon], a                                  ; $5983: $ea $21 $cb
-	ld   a, [$ca50]                                  ; $5986: $fa $50 $ca
+	ld   a, [wBattleReturnState]                                  ; $5986: $fa $50 $ca
 	ld   [wGameState], a                                  ; $5989: $ea $a0 $c2
-	ld   a, [$ca51]                                  ; $598c: $fa $51 $ca
+	ld   a, [wBattleReturnSubstate]                                  ; $598c: $fa $51 $ca
 	ld   [wGameSubstate], a                                  ; $598f: $ea $a1 $c2
 	ret                                              ; $5992: $c9
 

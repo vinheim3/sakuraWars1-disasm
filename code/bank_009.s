@@ -855,8 +855,8 @@ GameState3b::
 	or   $87                                         ; $4579: $f6 $87
 	ld   [wLCDC], a                                  ; $457b: $ea $03 $c2
 	ldh  [rLCDC], a                                  ; $457e: $e0 $40
-	ld   a, $01                                      ; $4580: $3e $01
-	ld   hl, $7000                                   ; $4582: $21 $00 $70
+	ld   a, BANK(Palettes_AllWhite)                                      ; $4580: $3e $01
+	ld   hl, Palettes_AllWhite                                   ; $4582: $21 $00 $70
 	ld   de, wBGPalettes                                   ; $4585: $11 $de $c2
 	ld   bc, $0080                                   ; $4588: $01 $80 $00
 	call FarMemCopy                                       ; $458b: $cd $b2 $09
@@ -1094,8 +1094,8 @@ GameState3b_substate1:
 	or   $87                                         ; $46db: $f6 $87
 	ld   [wLCDC], a                                  ; $46dd: $ea $03 $c2
 	ldh  [rLCDC], a                                  ; $46e0: $e0 $40
-	ld   a, $01                                      ; $46e2: $3e $01
-	ld   hl, $7000                                   ; $46e4: $21 $00 $70
+	ld   a, BANK(Palettes_AllWhite)                                      ; $46e2: $3e $01
+	ld   hl, Palettes_AllWhite                                   ; $46e4: $21 $00 $70
 	ld   de, wBGPalettes                                   ; $46e7: $11 $de $c2
 	ld   bc, $0080                                   ; $46ea: $01 $80 $00
 	call FarMemCopy                                       ; $46ed: $cd $b2 $09
@@ -1220,8 +1220,8 @@ jr_009_4730:
 	ld   a, $03                                      ; $47cd: $3e $03
 	ld   b, $00                                      ; $47cf: $06 $00
 	ld   hl, wBGPalettes                                   ; $47d1: $21 $de $c2
-	ld   c, $01                                      ; $47d4: $0e $01
-	ld   de, $7000                                   ; $47d6: $11 $00 $70
+	ld   c, BANK(Palettes_AllWhite)                                      ; $47d4: $0e $01
+	ld   de, Palettes_AllWhite                                   ; $47d6: $11 $00 $70
 	call FarLoadPaletteValsFadeToValsAndSetFadeSpeed                                       ; $47d9: $cd $48 $07
 
 jr_009_47dc:
@@ -1238,8 +1238,8 @@ jr_009_47dc:
 
 
 jr_009_47ee:
-	ld   a, $01                                      ; $47ee: $3e $01
-	ld   hl, $7000                                   ; $47f0: $21 $00 $70
+	ld   a, BANK(Palettes_AllWhite)                                      ; $47ee: $3e $01
+	ld   hl, Palettes_AllWhite                                   ; $47f0: $21 $00 $70
 	ld   de, wBGPalettes                                   ; $47f3: $11 $de $c2
 	ld   bc, $0080                                   ; $47f6: $01 $80 $00
 	call FarMemCopy                                       ; $47f9: $cd $b2 $09
@@ -3854,43 +3854,54 @@ Jump_009_56e7:
 	ldh  [rSVBK], a                                  ; $56f0: $e0 $70
 
 ; Clear display regs, and turn on LCD with window enabled
-	call ClearDisplayRegsAllowVBlankInt                                       ; $56f2: $cd $59 $0b
+	call ClearDisplayRegsAllowVBlankInt                             ; $56f2
 
-	ld   a, [wLCDC]                                  ; $56f5: $fa $03 $c2
-	and  $80                                         ; $56f8: $e6 $80
-	or   $a7                                         ; $56fa: $f6 $a7
-	ld   [wLCDC], a                                  ; $56fc: $ea $03 $c2
-	ldh  [rLCDC], a                                  ; $56ff: $e0 $40
+	ld   a, [wLCDC]                                                 ; $56f5
+	and  LCDCF_ON                                                   ; $56f8
+	or   LCDCF_ON|LCDCF_WINON|LCDCF_OBJ16|LCDCF_OBJON|LCDCF_BGON    ; $56fa
+	ld   [wLCDC], a                                                 ; $56fc
+	ldh  [rLCDC], a                                                 ; $56ff
 
 ; Load all white palettes, and update hw pals
-	ld   a, $01                                      ; $5701: $3e $01
-	ld   hl, $7000                                   ; $5703: $21 $00 $70
-	ld   de, wBGPalettes                                   ; $5706: $11 $de $c2
-	ld   bc, $0080                                   ; $5709: $01 $80 $00
-	call FarMemCopy                                       ; $570c: $cd $b2 $09
+	ld   a, BANK(Palettes_AllWhite)                                 ; $5701
+	ld   hl, Palettes_AllWhite                                      ; $5703
+	ld   de, wBGPalettes                                            ; $5706
+	ld   bc, NUM_PALETTE_BYTES * 2                                  ; $5709
+	call FarMemCopy                                                 ; $570c
 
-	ld   bc, $003f                                   ; $570f: $01 $3f $00
-	call SetBGandOBJPaletteRangesToUpdate                                       ; $5712: $cd $aa $04
+	ldbc $00, $3f                                                   ; $570f
+	call SetBGandOBJPaletteRangesToUpdate                           ; $5712
 
 ;
 	ld   a, $07                                      ; $5715: $3e $07
 	ld   [$c20b], a                                  ; $5717: $ea $0b $c2
+
+;
 	ld   hl, $c20c                                   ; $571a: $21 $0c $c2
 	set  6, [hl]                                     ; $571d: $cb $f6
-	ld   hl, wIE                                   ; $571f: $21 $0d $c2
-	set  1, [hl]                                     ; $5722: $cb $ce
-	ld   a, $0a                                      ; $5724: $3e $0a
-	ld   [wLCDCIntFuncIdx], a                                  ; $5726: $ea $8d $c2
-	ld   a, $70                                      ; $5729: $3e $70
-	ld   [wSCY], a                                  ; $572b: $ea $08 $c2
-	ld   a, $07                                      ; $572e: $3e $07
-	ld   [wWX], a                                  ; $5730: $ea $09 $c2
-	ld   a, $68                                      ; $5733: $3e $68
-	ld   [wWY], a                                  ; $5735: $ea $0a $c2
-	ld   a, $ff                                      ; $5738: $3e $ff
-	ld   [wInGameInputsEnabled], a                                  ; $573a: $ea $0e $c2
-	call ClearOam                                       ; $573d: $cd $d7 $0d
-	call ClearBaseAnimSpriteSpecDetails                                       ; $5740: $cd $c9 $2e
+
+; Allow LCDC interrupts, and set starting params
+	ld   hl, wIE                                                    ; $571f
+	set  1, [hl]                                                    ; $5722
+
+	ld   a, LCDINT_0a                                               ; $5724
+	ld   [wLCDCIntFuncIdx], a                                       ; $5726
+	
+	ld   a, $70                                                     ; $5729
+	ld   [wSCY], a                                                  ; $572b
+	ld   a, $07                                                     ; $572e
+	ld   [wWX], a                                                   ; $5730
+	ld   a, $68                                                     ; $5733
+	ld   [wWY], a                                                   ; $5735
+
+; Allow all inputs, clear oam and base anim sprite spec details
+	ld   a, $ff                                                     ; $5738
+	ld   [wInGameInputsEnabled], a                                  ; $573a
+
+	call ClearOam                                                   ; $573d
+	call ClearBaseAnimSpriteSpecDetails                             ; $5740
+
+;
 	ld   a, $08                                      ; $5743: $3e $08
 	ld   [$cc5b], a                                  ; $5745: $ea $5b $cc
 	ld   a, [$cc57]                                  ; $5748: $fa $57 $cc
@@ -3905,6 +3916,8 @@ Jump_009_56e7:
 	call Call_009_5a40                               ; $5760: $cd $40 $5a
 	xor  a                                           ; $5763: $af
 	ld   [$cc5c], a                                  ; $5764: $ea $5c $cc
+
+;
 	ld   a, $00                                      ; $5767: $3e $00
 	ld   hl, $0000                                   ; $5769: $21 $00 $00
 	ld   d, h                                        ; $576c: $54
@@ -3918,15 +3931,10 @@ Jump_009_56e7:
 	dec  a                                           ; $577f: $3d
 	add  $0a                                         ; $5780: $c6 $0a
 	ld   e, a                                        ; $5782: $5f
-	push af                                          ; $5783: $f5
-	ld   a, $3c                                      ; $5784: $3e $3c
-	ld   [wFarCallAddr], a                                  ; $5786: $ea $98 $c2
-	ld   a, $40                                      ; $5789: $3e $40
-	ld   [wFarCallAddr+1], a                                  ; $578b: $ea $99 $c2
-	ld   a, $01                                      ; $578e: $3e $01
-	ld   [wFarCallBank], a                                  ; $5790: $ea $9a $c2
-	pop  af                                          ; $5793: $f1
-	call FarCall                                       ; $5794: $cd $62 $09
+
+	M_FarCall LoadType0NewAnimatedSpriteSpecDetails
+
+;
 	ld   a, $00                                      ; $5797: $3e $00
 	ld   hl, $0000                                   ; $5799: $21 $00 $00
 	ld   d, h                                        ; $579c: $54
@@ -3935,29 +3943,28 @@ Jump_009_56e7:
 	ld   [$cc5e], a                                  ; $57a1: $ea $5e $cc
 	call StartAnimatingAnimatedSpriteSpec                                       ; $57a4: $cd $14 $30
 	call HLequAddrOfAnimSpriteSpecDetails                                       ; $57a7: $cd $76 $30
-	ld   bc, $8808                                   ; $57aa: $01 $08 $88
+	ldbc $88, $08                                   ; $57aa: $01 $08 $88
 	ld   d, $09                                      ; $57ad: $16 $09
 	ld   a, $19                                      ; $57af: $3e $19
 	ld   e, a                                        ; $57b1: $5f
-	push af                                          ; $57b2: $f5
-	ld   a, $3c                                      ; $57b3: $3e $3c
-	ld   [wFarCallAddr], a                                  ; $57b5: $ea $98 $c2
-	ld   a, $40                                      ; $57b8: $3e $40
-	ld   [wFarCallAddr+1], a                                  ; $57ba: $ea $99 $c2
-	ld   a, $01                                      ; $57bd: $3e $01
-	ld   [wFarCallBank], a                                  ; $57bf: $ea $9a $c2
-	pop  af                                          ; $57c2: $f1
-	call FarCall                                       ; $57c3: $cd $62 $09
+
+	M_FarCall LoadType0NewAnimatedSpriteSpecDetails
+
+;
 	xor  a                                           ; $57c6: $af
 	ld   [$cc66], a                                  ; $57c7: $ea $66 $cc
 	ld   [$cc50], a                                  ; $57ca: $ea $50 $cc
 	ld   [$cc51], a                                  ; $57cd: $ea $51 $cc
-	ld   a, $02                                      ; $57d0: $3e $02
-	ld   [wGameSubstate], a                                  ; $57d2: $ea $a1 $c2
-	pop  af                                          ; $57d5: $f1
-	ld   [wWramBank], a                                  ; $57d6: $ea $93 $c2
-	ldh  [rSVBK], a                                  ; $57d9: $e0 $70
-	ret                                              ; $57db: $c9
+
+; Go to substate 2
+	ld   a, $02                                                     ; $57d0
+	ld   [wGameSubstate], a                                         ; $57d2
+
+; Restore ram bank
+	pop  af                                                         ; $57d5
+	ld   [wWramBank], a                                             ; $57d6
+	ldh  [rSVBK], a                                                 ; $57d9
+	ret                                                             ; $57db
 
 
 Call_009_57dc:
@@ -5973,8 +5980,8 @@ jr_009_6403:
 	ld   a, $03                                      ; $641a: $3e $03
 	ld   b, $00                                      ; $641c: $06 $00
 	ld   hl, wBGPalettes                                   ; $641e: $21 $de $c2
-	ld   c, $01                                      ; $6421: $0e $01
-	ld   de, $7000                                   ; $6423: $11 $00 $70
+	ld   c, BANK(Palettes_AllWhite)                                      ; $6421: $0e $01
+	ld   de, Palettes_AllWhite                                   ; $6423: $11 $00 $70
 	call FarLoadPaletteValsFadeToValsAndSetFadeSpeed                                       ; $6426: $cd $48 $07
 
 jr_009_6429:
@@ -5992,8 +5999,8 @@ jr_009_6429:
 
 
 jr_009_643b:
-	ld   a, $01                                      ; $643b: $3e $01
-	ld   hl, $7000                                   ; $643d: $21 $00 $70
+	ld   a, BANK(Palettes_AllWhite)                                     ; $643b: $3e $01
+	ld   hl, Palettes_AllWhite                                   ; $643d: $21 $00 $70
 	ld   de, wBGPalettes                                   ; $6440: $11 $de $c2
 	ld   bc, $0080                                   ; $6443: $01 $80 $00
 	call FarMemCopy                                       ; $6446: $cd $b2 $09
@@ -6737,24 +6744,28 @@ jr_009_6731:
 
 
 LCDCFunc0a::
+;
 	ld   hl, $c20b                                   ; $692c: $21 $0b $c2
 	ldh  a, [rLY]                                    ; $692f: $f0 $44
 	cp   [hl]                                        ; $6931: $be
 	jp   nz, LCDCInterruptHandler.return                                   ; $6932: $c2 $4a $04
 
-	ld   hl, $ff40                                   ; $6935: $21 $40 $ff
+	ld   hl, rLCDC                                   ; $6935: $21 $40 $ff
 
-jr_009_6938:
-	ldh  a, [rSTAT]                                  ; $6938: $f0 $41
+; Wait until out of hblank
+:	ldh  a, [rSTAT]                                  ; $6938: $f0 $41
 	and  $03                                         ; $693a: $e6 $03
-	jr   z, jr_009_6938                              ; $693c: $28 $fa
+	jr   z, :-                              ; $693c: $28 $fa
 
-jr_009_693e:
-	ldh  a, [rSTAT]                                  ; $693e: $f0 $41
+; Wait until in hblank
+:	ldh  a, [rSTAT]                                  ; $693e: $f0 $41
 	and  $03                                         ; $6940: $e6 $03
-	jr   nz, jr_009_693e                             ; $6942: $20 $fa
+	jr   nz, :-                             ; $6942: $20 $fa
 
+; Set LCDCF_BG9C00
 	set  3, [hl]                                     ; $6944: $cb $de
+
+;
 	ld   a, [$cc5a]                                  ; $6946: $fa $5a $cc
 	ldh  [rSCY], a                                   ; $6949: $e0 $42
 	jp   LCDCInterruptHandler.return                                       ; $694b: $c3 $4a $04

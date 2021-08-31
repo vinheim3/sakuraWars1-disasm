@@ -264,12 +264,24 @@ wType0AnimSpriteYPosRelativeTo:: ; $c601
     db
 
 wc602:
-    ds $8bd-$602
+    ds $8af-$602
 
-wContinueGameReturnState:: ; $c8bd
+wSaveScreenPopUpBottomRowSpriteSpecIdxUsed:: ; $c8af
     db
 
-wContinueGameReturnSubstate:: ; $c8be
+wc8b0:
+    ds 1-0
+
+wSaveScreenPopUpTopRowSpriteSpecIdxUsed:: ; $c8b1
+    db
+
+wc8b2:
+    ds $d-2
+
+wSaveScreenReturnState:: ; $c8bd
+    db
+
+wSaveScreenReturnSubstate:: ; $c8be
     db
 
 wc8bf:
@@ -285,7 +297,16 @@ wResetSaveDataReturnSubstate:: ; $c918
     db
 
 wc919:
-    ds $46-$19
+    ds $22-$19
+
+wCinematronReturnState:: ; $c922
+    db
+
+wCinematronReturnSubstate:: ; $c923
+    db
+
+wc924:
+    ds $46-$24
 
 wEnterNameReturnState:: ; $c946
     db
@@ -349,7 +370,16 @@ wSettingsScreenFaceIconShown:: ; $c97b
     db
 
 wc97c:
-    ds $b0e-$97c
+    ds $a50-$97c
+
+wBattleReturnState:: ; $ca50
+    db
+
+wBattleReturnSubstate:: ; $ca51
+    db
+
+wca52:
+    ds $b0e-$a52
 
 wPlayerName:: ; $cb0e
     ds 6

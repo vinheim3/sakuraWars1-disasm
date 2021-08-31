@@ -7130,7 +7130,7 @@ jr_07f_5ec4:
 	ld   b, [hl]                                     ; $5ee0: $46
 	ld   b, e                                        ; $5ee1: $43
 	inc  hl                                          ; $5ee2: $23
-	ld   bc, $c8b1                                   ; $5ee3: $01 $b1 $c8
+	ld   bc, wSaveScreenPopUpTopRowSpriteSpecIdxUsed                                   ; $5ee3: $01 $b1 $c8
 	ret  c                                           ; $5ee6: $d8
 
 	inc  l                                           ; $5ee7: $2c

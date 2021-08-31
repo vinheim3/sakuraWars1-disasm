@@ -17,10 +17,11 @@ DEF GS_CINEMATRON = $14
 DEF GS_ENTER_NAME = $16
 DEF GS_SETTINGS = $17
 ; 27 - minigame when slicing away fruits
+; 2d - napping state
 DEF GS_BATTLE = $2f
 DEF GS_TITLE_SCREEN = $36
 DEF GS_TITLE_MENU_SCREEN = $37
-; 38 and/or 39 - explore (day)
+; 38 - some kind of day/period transition decider
 ; 3b - any conversation?
 DEF GS_FILE_LOAD_DISPLAY = $3c
 DEF GS_TREASURE_CHEST = $41
@@ -36,6 +37,12 @@ DEF GS_DAY_PASSED = $49
 
 DEF KANJI_TILE_DATA_BANK = $06
 DEF SCRIPT_DATA_BANK = $41
+
+; --
+; -- LCDC int handlers
+; --
+
+DEF LCDINT_0a = $0a
 
 ; --
 ; -- Script opts
@@ -139,11 +146,16 @@ DEF SGC_TITLE_SCREEN_GIRL_EYES3 = $56
 ; --
 ; -- Animated sprite specs
 ; --
+
+DEF ASS_SAVE_SCREEN_POPUP_YES_SELECTED = $0f
+DEF ASS_SAVE_SCREEN_POPUP_NO_SELECTED = $10
+DEF ASS_SAVE_SCREEN_POPUP_LOAD = $16
 DEF ASS_MENU_CURSOR = $1f
 DEF ASS_ENTER_NAME_SMALL_CURSOR = $2d
 DEF ASS_ENTER_NAME_BIG_CURSOR = $2e
 DEF ASS_ENTER_NAME_UNDERLINE = $2f
 
+DEF ASST_0 = $00
 DEF ASST_1 = $01
 
 ; --
@@ -157,6 +169,7 @@ DEF SONG_14 = $14
 DEF SE_20 = $20
 DEF SE_21 = $21
 DEF SE_22 = $22
+DEF SE_23 = $23
 
 ; --
 ; -- Misc

@@ -218,7 +218,7 @@ AnimSpriteSpecType1Update::
 	or   e                                                          ; $409d
 	ret  z                                                          ; $409e
 
-; Continue processing if dec'd counter is now 0
+; If counter was set to 0, don't progress past animation
 	ldh  a, [hAnimSpriteSpecCurrFrameCounter]                       ; $409f
 	or   a                                                          ; $40a1
 	jr   z, .loadSprite                                             ; $40a2
@@ -339,7 +339,7 @@ AnimSpriteSpecType1Delete::
 ; B - x offset
 ; C - y offset
 ; DE - src addr
-; HL - dest addr
+; HL - dest addr of anim sprite spec instance details
 LoadType1NewAnimatedSpriteSpecDetails::
 	push hl                                                         ; $4103
 
@@ -378,24 +378,36 @@ LoadType1NewAnimatedSpriteSpecDetails::
 	ret                                                             ; $411b
 
 
-Func_01_411c::
-	push hl                                          ; $411c: $e5
-	ld   h, $00                                      ; $411d: $26 $00
-	ld   l, a                                        ; $411f: $6f
-	add  hl, hl                                      ; $4120: $29
-	add  hl, de                                      ; $4121: $19
-	ld   d, h                                        ; $4122: $54
-	ld   e, l                                        ; $4123: $5d
-	pop  hl                                          ; $4124: $e1
-	ld   a, [de]                                     ; $4125: $1a
-	inc  de                                          ; $4126: $13
-	ld   [hl+], a                                    ; $4127: $22
-	ld   a, [de]                                     ; $4128: $1a
-	ld   [hl+], a                                    ; $4129: $22
-	ld   a, $01                                      ; $412a: $3e $01
-	ld   [hl-], a                                    ; $412c: $32
-	dec  hl                                          ; $412d: $2b
-	ret                                              ; $412e: $c9
+; A - anim sprite idx
+; DE - src addr
+; HL - dest addr of anim sprite spec instance details
+LoadType1NewAnimatedSpriteSpecAddress::
+	push hl                                                         ; $411c
+
+; DE = double anim sprite idxed into src table
+	ld   h, $00                                                     ; $411d
+	ld   l, a                                                       ; $411f
+	add  hl, hl                                                     ; $4120
+	add  hl, de                                                     ; $4121
+	ld   d, h                                                       ; $4122
+	ld   e, l                                                       ; $4123
+	pop  hl                                                         ; $4124
+
+; Store anim spec addr in dest
+	ld   a, [de]                                                    ; $4125
+	inc  de                                                         ; $4126
+	ld   [hl+], a                                                   ; $4127
+
+	ld   a, [de]                                                    ; $4128
+	ld   [hl+], a                                                   ; $4129
+
+; Set frame counter to 1, so we immediately jump 3 bytes ahead for next animation
+	ld   a, $01                                                     ; $412a
+	ld   [hl-], a                                                   ; $412c
+
+; Preserve orig hl
+	dec  hl                                                         ; $412d
+	ret                                                             ; $412e
 
 
 ; B - ASSI1_X
@@ -425,16 +437,21 @@ BCequType1AnimSpriteSpecInstancesCoords::
 	ret                                                             ; $4142
 
 
+; HL - addr of anim sprite spec instance
 Func_01_4143::
+; DE = ASSI1_ADDR
 	ld   a, [hl+]                                    ; $4143: $2a
 	ld   e, a                                        ; $4144: $5f
 	ld   a, [hl-]                                    ; $4145: $3a
 	ld   d, a                                        ; $4146: $57
+
+; Return anim byte in B if bit 7 set
 	ld   a, [de]                                     ; $4147: $1a
 	ld   b, a                                        ; $4148: $47
 	bit  7, a                                        ; $4149: $cb $7f
 	ret  nz                                          ; $414b: $c0
 
+; Else return the byte after above in C
 	inc  de                                          ; $414c: $13
 	ld   a, [de]                                     ; $414d: $1a
 	ld   c, a                                        ; $414e: $4f
@@ -482,7 +499,7 @@ AnimSpriteSpecType2Load::
 	ld   d, a                                        ; $4187: $57
 	ld   a, [bc]                                     ; $4188: $0a
 
-	M_FarCall Func_01_411c
+	M_FarCall LoadType1NewAnimatedSpriteSpecAddress
 	
 	jr   .copyFromHram                                 ; $419d: $18 $0c
 
@@ -1201,8 +1218,8 @@ Palettes_AllBlack::
 SECTION "Bank $01, $7180", ROMX[$7180], BANK[$1]
 
 AnimatedSpriteSpecs::
-	dw $7261
-	dw $7264
+	dw .spriteSpec00-3
+	dw .spriteSpec01-3
 	dw $7276
 	dw $726d
 	dw $7282
@@ -1216,16 +1233,16 @@ AnimatedSpriteSpecs::
 	dw $72a0
 	dw $72a6
 	dw $72cd
-	dw $72d6
-	dw $72e8
-	dw $72dc
-	dw $72e5
-	dw $72ee
+	dw AnimatedSpriteSpec_0f-3
+	dw AnimatedSpriteSpec_10-3
+	dw AnimatedSpriteSpec_11-3
+	dw AnimatedSpriteSpec_12-3
+	dw AnimatedSpriteSpec_13-3
 	dw $72f7
 	dw $72fd
-	dw $7303
-	dw $7309
-	dw $730f
+	dw AnimatedSpriteSpec_16-3
+	dw AnimatedSpriteSpec_17-3
+	dw AnimatedSpriteSpec_18-3
 	dw $7315
 	dw $731b
 	dw $7321
@@ -1316,10 +1333,12 @@ AnimatedSpriteSpecs::
 	dw $76ff
 	dw $76f9
 
-
+.spriteSpec00:
 	add  b                                           ; $7264: $80
 	nop                                              ; $7265: $00
 	nop                                              ; $7266: $00
+
+.spriteSpec01:
 	ld   [bc], a                                     ; $7267: $02
 	reti                                             ; $7268: $d9
 
@@ -1426,38 +1445,38 @@ jr_001_72ba:
 jr_001_72d2:
 	ld   [bc], a                                     ; $72d2: $02
 	ld   [bc], a                                     ; $72d3: $02
-	ld   hl, $8002                                   ; $72d4: $21 $02 $80
+	db $21, $02
+	
+	
+
+	db $80
 	nop                                              ; $72d7: $00
 	nop                                              ; $72d8: $00
-	ld   [bc], a                                     ; $72d9: $02
-	ld   hl, $0202                                   ; $72da: $21 $02 $02
-	ld   [hl+], a                                    ; $72dd: $22
-	ld   [bc], a                                     ; $72de: $02
-	ld   [bc], a                                     ; $72df: $02
-	daa                                              ; $72e0: $27
-	db   $10                                         ; $72e1: $10
-	ld   [bc], a                                     ; $72e2: $02
-	add  hl, hl                                      ; $72e3: $29
-	db   $10                                         ; $72e4: $10
-	add  d                                           ; $72e5: $82
-	rst  JumpTable                                         ; $72e6: $df
-	ld   [hl], d                                     ; $72e7: $72
-	ld   [bc], a                                     ; $72e8: $02
-	daa                                              ; $72e9: $27
-	nop                                              ; $72ea: $00
-	ld   [bc], a                                     ; $72eb: $02
-	ld   hl, $0202                                   ; $72ec: $21 $02 $02
-	ld   [hl+], a                                    ; $72ef: $22
-	ld   [bc], a                                     ; $72f0: $02
-	ld   [bc], a                                     ; $72f1: $02
-	jr   z, jr_001_7304                              ; $72f2: $28 $10
 
-	ld   [bc], a                                     ; $72f4: $02
-	add  hl, hl                                      ; $72f5: $29
-	db   $10                                         ; $72f6: $10
-	add  d                                           ; $72f7: $82
-	pop  af                                          ; $72f8: $f1
-	ld   [hl], d                                     ; $72f9: $72
+
+AnimatedSpriteSpec_0f:
+	db $02, $21, $02
+	db $02, $22, $02
+
+AnimatedSpriteSpec_11:
+:	db $02, $27, $10
+	db $02, $29, $10
+	AnimJump :-
+
+
+AnimatedSpriteSpec_12:
+	db $02, $27, $00
+
+AnimatedSpriteSpec_10:
+	db $02, $21, $02
+	db $02, $22, $02
+
+AnimatedSpriteSpec_13:
+:	db $02, $28, $10
+	db $02, $29, $10
+	AnimJump :-
+
+
 	add  b                                           ; $72fa: $80
 	inc  b                                           ; $72fb: $04
 	nop                                              ; $72fc: $00
@@ -1471,24 +1490,21 @@ jr_001_72d2:
 jr_001_7304:
 	nop                                              ; $7304: $00
 	nop                                              ; $7305: $00
-	add  b                                           ; $7306: $80
-	inc  b                                           ; $7307: $04
-	nop                                              ; $7308: $00
-	ld   [bc], a                                     ; $7309: $02
-	inc  h                                           ; $730a: $24
-	nop                                              ; $730b: $00
-	ld   [bc], a                                     ; $730c: $02
-	inc  h                                           ; $730d: $24
-	jr   z, @-$7e                                    ; $730e: $28 $80
 
-	nop                                              ; $7310: $00
-	nop                                              ; $7311: $00
-	add  b                                           ; $7312: $80
-	inc  b                                           ; $7313: $04
-	nop                                              ; $7314: $00
-	ld   [bc], a                                     ; $7315: $02
-	dec  h                                           ; $7316: $25
-	nop                                              ; $7317: $00
+
+AnimatedSpriteSpec_16:
+	db $80, $04, $00
+	db $02, $24, $00
+
+AnimatedSpriteSpec_17:
+	db $02, $24, $28
+	db $80, $00, $00
+
+AnimatedSpriteSpec_18:
+	db $80, $04, $00
+	db $02, $25, $00
+
+
 	ld   [bc], a                                     ; $7318: $02
 	dec  h                                           ; $7319: $25
 	jr   z, jr_001_729c                              ; $731a: $28 $80

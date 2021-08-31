@@ -181,8 +181,8 @@ jr_010_411f:
 
 
 GameState0e_SaveScreen::
-	ld   a, [wGameSubstate]                                  ; $4180: $fa $a1 $c2
-	rst  JumpTable                                         ; $4183: $df
+	ld   a, [wGameSubstate]                                         ; $4180
+	rst  JumpTable                                                  ; $4183
 	dw .substate0
 	dw .substate1
 	dw .substate2
@@ -200,6 +200,7 @@ GameState0e_SaveScreen::
 ; eg from title menu screen
 	ld   a, $01                                      ; $4199: $3e $01
 	ld   [$c8b6], a                                  ; $419b: $ea $b6 $c8
+
 	ld   a, $02                                      ; $419e: $3e $02
 	ld   [wGameSubstate], a                                  ; $41a0: $ea $a1 $c2
 	ret                                              ; $41a3: $c9
@@ -227,13 +228,13 @@ GameState0e_SaveScreen::
 	ld   [wWramBank], a                                             ; $41c4
 	ldh  [rSVBK], a                                                 ; $41c7
 
-;
-	ld   a, $1b                                      ; $41c9: $3e $1b
+; Decompress tile data from vram bank 0, $8000-$87ff into ram
+	ld   a, BANK(RleXorTileData_SaveScreenBank0_8000)                                      ; $41c9: $3e $1b
 	ld   hl, $d000                                   ; $41cb: $21 $00 $d0
-	ld   de, $450c                                   ; $41ce: $11 $0c $45
+	ld   de, RleXorTileData_SaveScreenBank0_8000                                   ; $41ce: $11 $0c $45
 	call RLEXorCopy                                       ; $41d1: $cd $d2 $09
 
-;
+; VBlank enqueue that tile data
 	ld   c, $80                                      ; $41d4: $0e $80
 	ld   de, $8000                                   ; $41d6: $11 $00 $80
 	ld   a, $03                                      ; $41d9: $3e $03
@@ -242,7 +243,6 @@ GameState0e_SaveScreen::
 	call EnqueueHDMATransfer                                       ; $41e0: $cd $7c $02
 	rst  WaitUntilVBlankIntHandledIfLCDOn                                         ; $41e3: $cf
 
-;
 	ld   c, $80                                      ; $41e4: $0e $80
 	ld   de, $8400                                   ; $41e6: $11 $00 $84
 	ld   a, $03                                      ; $41e9: $3e $03
@@ -251,17 +251,17 @@ GameState0e_SaveScreen::
 	call EnqueueHDMATransfer                                       ; $41f0: $cd $7c $02
 	rst  WaitUntilVBlankIntHandledIfLCDOn                                         ; $41f3: $cf
 
-;
-	ld   a, $14                                      ; $41f4: $3e $14
+; Decompress tile data from vram bank 0, $8800-$97ff into ram
+	ld   a, BANK(RleXorTileData_SaveScreenBank0_8800)                                      ; $41f4: $3e $14
 	ld   hl, $d000                                   ; $41f6: $21 $00 $d0
-	ld   de, $6e31                                   ; $41f9: $11 $31 $6e
+	ld   de, RleXorTileData_SaveScreenBank0_8800                                   ; $41f9: $11 $31 $6e
 if def(VWF)
 	call SaveScreenTileDataBank0_8800h_hook
 else
 	call RLEXorCopy                                       ; $41fc: $cd $d2 $09
 endc
 
-;
+; VBlank enqueue that tile data
 	ld   c, $80                                      ; $41ff: $0e $80
 	ld   de, $8800                                   ; $4201: $11 $00 $88
 	ld   a, $03                                      ; $4204: $3e $03
@@ -270,7 +270,6 @@ endc
 	call EnqueueHDMATransfer                                       ; $420b: $cd $7c $02
 	rst  WaitUntilVBlankIntHandledIfLCDOn                                         ; $420e: $cf
 
-;
 	ld   c, $80                                      ; $420f: $0e $80
 	ld   de, $8c00                                   ; $4211: $11 $00 $8c
 	ld   a, $03                                      ; $4214: $3e $03
@@ -279,7 +278,6 @@ endc
 	call EnqueueHDMATransfer                                       ; $421b: $cd $7c $02
 	rst  WaitUntilVBlankIntHandledIfLCDOn                                         ; $421e: $cf
 
-;
 	ld   c, $80                                      ; $421f: $0e $80
 	ld   de, $9200                                   ; $4221: $11 $00 $92
 	ld   a, $03                                      ; $4224: $3e $03
@@ -288,17 +286,17 @@ endc
 	call EnqueueHDMATransfer                                       ; $422b: $cd $7c $02
 	rst  WaitUntilVBlankIntHandledIfLCDOn                                         ; $422e: $cf
 
-;
-	ld   a, $19                                      ; $422f: $3e $19
+; Decompress tile data from vram bank 1, $8800-$8fff into ram
+	ld   a, BANK(RleXorTileData_SaveScreenBank1_8800)                                      ; $422f: $3e $19
 	ld   hl, $d000                                   ; $4231: $21 $00 $d0
-	ld   de, $5fb2                                   ; $4234: $11 $b2 $5f
+	ld   de, RleXorTileData_SaveScreenBank1_8800                                   ; $4234: $11 $b2 $5f
 if def(VWF)
 	call SaveScreenTileDataBank1_8800h_hook
 else
 	call RLEXorCopy                                       ; $4237: $cd $d2 $09
 endc
 
-;
+; VBlank enqueue that tile data
 	ld   c, $81                                      ; $423a: $0e $81
 	ld   de, $8800                                   ; $423c: $11 $00 $88
 	ld   a, $03                                      ; $423f: $3e $03
@@ -307,7 +305,6 @@ endc
 	call EnqueueHDMATransfer                                       ; $4246: $cd $7c $02
 	rst  WaitUntilVBlankIntHandledIfLCDOn                                         ; $4249: $cf
 
-;
 	ld   c, $81                                      ; $424a: $0e $81
 	ld   de, $8c00                                   ; $424c: $11 $00 $8c
 	ld   a, $03                                      ; $424f: $3e $03
@@ -316,17 +313,17 @@ endc
 	call EnqueueHDMATransfer                                       ; $4256: $cd $7c $02
 	rst  WaitUntilVBlankIntHandledIfLCDOn                                         ; $4259: $cf
 
-;
-	ld   a, $1c                                      ; $425a: $3e $1c
+; Decompress tile map into ram
+	ld   a, BANK(RleXorTileMap_SaveScreen)                                      ; $425a: $3e $1c
 	ld   hl, $d400                                   ; $425c: $21 $00 $d4
-	ld   de, $79a7                                   ; $425f: $11 $a7 $79
+	ld   de, RleXorTileMap_SaveScreen                                   ; $425f: $11 $a7 $79
 if def(VWF)
 	call SaveScreenTileMap_hook
 else
 	call RLEXorCopy                                       ; $4262: $cd $d2 $09
 endc
 
-;
+; VBlank enqueue that tile map
 	ld   c, $80                                      ; $4265: $0e $80
 	ld   de, $9800                                   ; $4267: $11 $00 $98
 	ld   a, $03                                      ; $426a: $3e $03
@@ -335,17 +332,17 @@ endc
 	call EnqueueHDMATransfer                                       ; $4271: $cd $7c $02
 	rst  WaitUntilVBlankIntHandledIfLCDOn                                         ; $4274: $cf
 
-;
-	ld   a, $1d                                      ; $4275: $3e $1d
+; Decompress tile attr into ram
+	ld   a, BANK(RleXorTileAttr_SaveScreen)                                      ; $4275: $3e $1d
 	ld   hl, $d000                                   ; $4277: $21 $00 $d0
-	ld   de, $750b                                   ; $427a: $11 $0b $75
+	ld   de, RleXorTileAttr_SaveScreen                                   ; $427a: $11 $0b $75
 if def(VWF)
 	call SaveScreenTileAttr_hook
 else
 	call RLEXorCopy                                       ; $427d: $cd $d2 $09
 endc
 
-;
+; VBlank enqueue that tile attr
 	ld   c, $81                                      ; $4280: $0e $81
 	ld   de, $9800                                   ; $4282: $11 $00 $98
 	ld   a, $03                                      ; $4285: $3e $03
@@ -441,7 +438,7 @@ endc
 	ld   a, $01                                      ; $432c: $3e $01
 	ld   hl, $0000                                   ; $432e: $21 $00 $00
 	call ReserveBaseAnimSpriteSpecAndInstance                                       ; $4331: $cd $4b $2f
-	ld   [$c8af], a                                  ; $4334: $ea $af $c8
+	ld   [wSaveScreenPopUpBottomRowSpriteSpecIdxUsed], a                                  ; $4334: $ea $af $c8
 
 ;
 	call StartAnimatingAnimatedSpriteSpec                                       ; $4337: $cd $14 $30
@@ -450,21 +447,21 @@ endc
 	ld   a, $00                                      ; $433d: $3e $00
 	ld   [$c8b0], a                                  ; $433f: $ea $b0 $c8
 	ld   bc, $0000                                   ; $4342: $01 $00 $00
-	ld   de, $7180                                   ; $4345: $11 $80 $71
+	ld   de, AnimatedSpriteSpecs                                   ; $4345: $11 $80 $71
 	M_FarCall LoadType1NewAnimatedSpriteSpecDetails
 	
 ;
 	ld   a, $01                                      ; $435c: $3e $01
 	ld   hl, $0000                                   ; $435e: $21 $00 $00
 	call ReserveBaseAnimSpriteSpecAndInstance                                       ; $4361: $cd $4b $2f
-	ld   [$c8b1], a                                  ; $4364: $ea $b1 $c8
+	ld   [wSaveScreenPopUpTopRowSpriteSpecIdxUsed], a                                  ; $4364: $ea $b1 $c8
 
 ;
 	call StartAnimatingAnimatedSpriteSpec                                       ; $4367: $cd $14 $30
 	call HLequAddrOfAnimSpriteSpecDetails                                       ; $436a: $cd $76 $30
 	ld   a, $00                                      ; $436d: $3e $00
 	ld   bc, $0000                                   ; $436f: $01 $00 $00
-	ld   de, $7180                                   ; $4372: $11 $80 $71
+	ld   de, AnimatedSpriteSpecs                                   ; $4372: $11 $80 $71
 	M_FarCall LoadType1NewAnimatedSpriteSpecDetails
 	
 ;
@@ -521,7 +518,7 @@ endc
 	ret                                              ; $43f2: $c9
 
 .substate3:
-	ld   a, [$c8af]                                  ; $43f3: $fa $af $c8
+	ld   a, [wSaveScreenPopUpBottomRowSpriteSpecIdxUsed]                                  ; $43f3: $fa $af $c8
 	call HLequAddrOfAnimSpriteSpecDetails                                       ; $43f6: $cd $76 $30
 
 	M_FarCall Func_01_4143
@@ -534,26 +531,26 @@ endc
 	jr   z, .thing_2bh                              ; $4414: $28 $64
 
 	cp   $21                                         ; $4416: $fe $21
-	jp   z, .thing_other                            ; $4418: $ca $90 $44
+	jp   z, .substate3end                            ; $4418: $ca $90 $44
 
 	cp   $22                                         ; $441b: $fe $22
-	jp   z, .thing_other                            ; $441d: $ca $90 $44
+	jp   z, .substate3end                            ; $441d: $ca $90 $44
 
 	ld   a, [$c8b0]                                  ; $4420: $fa $b0 $c8
 	cp   $1c                                         ; $4423: $fe $1c
-	jp   z, .thing_other                            ; $4425: $ca $90 $44
+	jp   z, .substate3end                            ; $4425: $ca $90 $44
 
 	call Call_010_4588                               ; $4428: $cd $88 $45
 	call Call_010_461b                               ; $442b: $cd $1b $46
 	call Call_010_4571                               ; $442e: $cd $71 $45
-	call Call_010_486d                               ; $4431: $cd $6d $48
+	call HandleSaveScreenAPressed                               ; $4431: $cd $6d $48
 	call Call_010_498c                               ; $4434: $cd $8c $49
-	jr   .thing_other                                 ; $4437: $18 $57
+	jr   .substate3end                                 ; $4437: $18 $57
 
 .thing_2ah:
 	ld   a, [wInGameButtonsPressed]                                  ; $4439: $fa $10 $c2
 	and  $03                                         ; $443c: $e6 $03
-	jr   z, .thing_other                              ; $443e: $28 $50
+	jr   z, .substate3end                              ; $443e: $28 $50
 
 	ld   a, [$c8b6]                                  ; $4440: $fa $b6 $c8
 	bit  0, a                                        ; $4443: $cb $47
@@ -565,7 +562,7 @@ endc
 	call Call_010_4d50                               ; $444c: $cd $50 $4d
 	ld   a, $21                                      ; $444f: $3e $21
 	call PlaySoundEffect                                       ; $4451: $cd $df $1a
-	jr   .thing_other                                 ; $4454: $18 $3a
+	jr   .substate3end                                 ; $4454: $18 $3a
 
 .br_4456:
 	ld   hl, $c8b6                                   ; $4456: $21 $b6 $c8
@@ -573,7 +570,7 @@ endc
 	jr   nz, .br_4462                             ; $445b: $20 $05
 
 	call Call_010_4992                               ; $445d: $cd $92 $49
-	jr   .thing_other                                 ; $4460: $18 $2e
+	jr   .substate3end                                 ; $4460: $18 $2e
 
 .br_4462:
 	call Call_010_49ea                               ; $4462: $cd $ea $49
@@ -584,12 +581,12 @@ endc
 	call Call_010_4588                               ; $446f: $cd $88 $45
 	call Call_010_478e                               ; $4472: $cd $8e $47
 	call Call_010_4b82                               ; $4475: $cd $82 $4b
-	jr   .thing_other                                 ; $4478: $18 $16
+	jr   .substate3end                                 ; $4478: $18 $16
 
 .thing_2bh:
 	ld   a, [wInGameButtonsPressed]                                  ; $447a: $fa $10 $c2
 	and  $03                                         ; $447d: $e6 $03
-	jr   z, .thing_other                              ; $447f: $28 $0f
+	jr   z, .substate3end                              ; $447f: $28 $0f
 
 	ld   hl, $c8b6                                   ; $4481: $21 $b6 $c8
 	set  7, [hl]                                     ; $4484: $cb $fe
@@ -598,8 +595,8 @@ endc
 	ld   a, $22                                      ; $448b: $3e $22
 	call PlaySoundEffect                                       ; $448d: $cd $df $1a
 
-.thing_other:
-	call Call_010_454f                               ; $4490: $cd $4f $45
+.substate3end:
+	call todo_SaveScreenPalettePulseRelated                               ; $4490: $cd $4f $45
 	call ClearOam                                       ; $4493: $cd $d7 $0d
 	call AnimateAllAnimatedSpriteSpecs                                       ; $4496: $cd $d3 $2e
 	ret                                              ; $4499: $c9
@@ -668,10 +665,10 @@ endc
 
 .returnToPrevState:
 ; Set specified state and substate
-	ld   a, [wContinueGameReturnState]                                  ; $4515: $fa $bd $c8
+	ld   a, [wSaveScreenReturnState]                                  ; $4515: $fa $bd $c8
 	ld   [wGameState], a                                  ; $4518: $ea $a0 $c2
 
-	ld   a, [wContinueGameReturnSubstate]                                  ; $451b: $fa $be $c8
+	ld   a, [wSaveScreenReturnSubstate]                                  ; $451b: $fa $be $c8
 	ld   [wGameSubstate], a                                  ; $451e: $ea $a1 $c2
 
 .done:
@@ -716,10 +713,10 @@ Call_010_4536:
 	ret                                              ; $454e: $c9
 
 
-Call_010_454f:
+todo_SaveScreenPalettePulseRelated:
 	ld   hl, $c8b5                                   ; $454f: $21 $b5 $c8
 	dec  [hl]                                        ; $4552: $35
-	jr   nz, jr_010_4570                             ; $4553: $20 $1b
+	jr   nz, .done                             ; $4553: $20 $1b
 
 	ld   a, $01                                      ; $4555: $3e $01
 	ld   [hl], a                                     ; $4557: $77
@@ -728,7 +725,7 @@ Call_010_454f:
 	call FadePalettesAndSetRangeToUpdate                                       ; $455c: $cd $32 $08
 	ld   hl, $c8b4                                   ; $455f: $21 $b4 $c8
 	dec  [hl]                                        ; $4562: $35
-	jr   nz, jr_010_4570                             ; $4563: $20 $0b
+	jr   nz, .done                             ; $4563: $20 $0b
 
 	ld   a, $10                                      ; $4565: $3e $10
 	ld   [hl], a                                     ; $4567: $77
@@ -736,7 +733,7 @@ Call_010_454f:
 	ld   [$c8b5], a                                  ; $456a: $ea $b5 $c8
 	call Call_010_4a54                               ; $456d: $cd $54 $4a
 
-jr_010_4570:
+.done:
 	ret                                              ; $4570: $c9
 
 
@@ -1058,44 +1055,30 @@ jr_010_46f4:
 
 
 Call_010_46f6:
-	ld   a, [$c8af]                                  ; $46f6: $fa $af $c8
+	ld   a, [wSaveScreenPopUpBottomRowSpriteSpecIdxUsed]                                  ; $46f6: $fa $af $c8
 	call HLequAddrOfAnimSpriteSpecDetails                                       ; $46f9: $cd $76 $30
 	ld   a, $11                                      ; $46fc: $3e $11
 	ld   [$c8b0], a                                  ; $46fe: $ea $b0 $c8
-	ld   de, $7180                                   ; $4701: $11 $80 $71
-	push af                                          ; $4704: $f5
-	ld   a, $1c                                      ; $4705: $3e $1c
-	ld   [wFarCallAddr], a                                  ; $4707: $ea $98 $c2
-	ld   a, $41                                      ; $470a: $3e $41
-	ld   [wFarCallAddr+1], a                                  ; $470c: $ea $99 $c2
-	ld   a, $01                                      ; $470f: $3e $01
-	ld   [wFarCallBank], a                                  ; $4711: $ea $9a $c2
-	pop  af                                          ; $4714: $f1
-	call FarCall                                       ; $4715: $cd $62 $09
+	ld   de, AnimatedSpriteSpecs                                   ; $4701: $11 $80 $71
+
+	M_FarCall LoadType1NewAnimatedSpriteSpecAddress
 	ret                                              ; $4718: $c9
 
 
 Call_010_4719:
-	ld   a, [$c8af]                                  ; $4719: $fa $af $c8
+	ld   a, [wSaveScreenPopUpBottomRowSpriteSpecIdxUsed]                                  ; $4719: $fa $af $c8
 	call HLequAddrOfAnimSpriteSpecDetails                                       ; $471c: $cd $76 $30
 	ld   a, $13                                      ; $471f: $3e $13
 	ld   [$c8b0], a                                  ; $4721: $ea $b0 $c8
-	ld   de, $7180                                   ; $4724: $11 $80 $71
-	push af                                          ; $4727: $f5
-	ld   a, $1c                                      ; $4728: $3e $1c
-	ld   [wFarCallAddr], a                                  ; $472a: $ea $98 $c2
-	ld   a, $41                                      ; $472d: $3e $41
-	ld   [wFarCallAddr+1], a                                  ; $472f: $ea $99 $c2
-	ld   a, $01                                      ; $4732: $3e $01
-	ld   [wFarCallBank], a                                  ; $4734: $ea $9a $c2
-	pop  af                                          ; $4737: $f1
-	call FarCall                                       ; $4738: $cd $62 $09
+	ld   de, AnimatedSpriteSpecs                                   ; $4724: $11 $80 $71
+
+	M_FarCall LoadType1NewAnimatedSpriteSpecAddress
 	ret                                              ; $473b: $c9
 
 
 Call_010_473c:
 	call Call_010_4536                               ; $473c: $cd $36 $45
-	ld   a, [$c8af]                                  ; $473f: $fa $af $c8
+	ld   a, [wSaveScreenPopUpBottomRowSpriteSpecIdxUsed]                                  ; $473f: $fa $af $c8
 	call HLequAddrOfAnimSpriteSpecDetails                                       ; $4742: $cd $76 $30
 	push hl                                          ; $4745: $e5
 	ld   a, [$c8b2]                                  ; $4746: $fa $b2 $c8
@@ -1117,7 +1100,7 @@ Call_010_473c:
 	ld   [wFarCallBank], a                                  ; $4762: $ea $9a $c2
 	pop  af                                          ; $4765: $f1
 	call FarCall                                       ; $4766: $cd $62 $09
-	ld   a, [$c8b1]                                  ; $4769: $fa $b1 $c8
+	ld   a, [wSaveScreenPopUpTopRowSpriteSpecIdxUsed]                                  ; $4769: $fa $b1 $c8
 	call HLequAddrOfAnimSpriteSpecDetails                                       ; $476c: $cd $76 $30
 	push af                                          ; $476f: $f5
 	ld   a, $2f                                      ; $4770: $3e $2f
@@ -1230,21 +1213,15 @@ Call_010_47f5:
 Call_010_4810:
 	ld   hl, $c8b6                                   ; $4810: $21 $b6 $c8
 	set  6, [hl]                                     ; $4813: $cb $f6
-	ld   a, [$c8af]                                  ; $4815: $fa $af $c8
+	ld   a, [wSaveScreenPopUpBottomRowSpriteSpecIdxUsed]                                  ; $4815: $fa $af $c8
 	call HLequAddrOfAnimSpriteSpecDetails                                       ; $4818: $cd $76 $30
 	ld   a, $1c                                      ; $481b: $3e $1c
 	ld   [$c8b0], a                                  ; $481d: $ea $b0 $c8
-	ld   de, $7180                                   ; $4820: $11 $80 $71
-	push af                                          ; $4823: $f5
-	ld   a, $1c                                      ; $4824: $3e $1c
-	ld   [wFarCallAddr], a                                  ; $4826: $ea $98 $c2
-	ld   a, $41                                      ; $4829: $3e $41
-	ld   [wFarCallAddr+1], a                                  ; $482b: $ea $99 $c2
-	ld   a, $01                                      ; $482e: $3e $01
-	ld   [wFarCallBank], a                                  ; $4830: $ea $9a $c2
-	pop  af                                          ; $4833: $f1
-	call FarCall                                       ; $4834: $cd $62 $09
-	ld   a, [$c8b1]                                  ; $4837: $fa $b1 $c8
+	ld   de, AnimatedSpriteSpecs                                   ; $4820: $11 $80 $71
+
+	M_FarCall LoadType1NewAnimatedSpriteSpecAddress
+
+	ld   a, [wSaveScreenPopUpTopRowSpriteSpecIdxUsed]                                  ; $4837: $fa $b1 $c8
 	call HLequAddrOfAnimSpriteSpecDetails                                       ; $483a: $cd $76 $30
 	ld   b, $19                                      ; $483d: $06 $19
 	ld   a, [$c8b6]                                  ; $483f: $fa $b6 $c8
@@ -1263,95 +1240,87 @@ Call_010_4810:
 
 jr_010_4854:
 	ld   a, b                                        ; $4854: $78
-	ld   de, $7180                                   ; $4855: $11 $80 $71
-	push af                                          ; $4858: $f5
-	ld   a, $1c                                      ; $4859: $3e $1c
-	ld   [wFarCallAddr], a                                  ; $485b: $ea $98 $c2
-	ld   a, $41                                      ; $485e: $3e $41
-	ld   [wFarCallAddr+1], a                                  ; $4860: $ea $99 $c2
-	ld   a, $01                                      ; $4863: $3e $01
-	ld   [wFarCallBank], a                                  ; $4865: $ea $9a $c2
-	pop  af                                          ; $4868: $f1
-	call FarCall                                       ; $4869: $cd $62 $09
+	ld   de, AnimatedSpriteSpecs                                   ; $4855: $11 $80 $71
+
+	M_FarCall LoadType1NewAnimatedSpriteSpecAddress
 	ret                                              ; $486c: $c9
 
 
-Call_010_486d:
+HandleSaveScreenAPressed:
+; Return if A not pressed
 	ld   a, [wInGameButtonsPressed]                                  ; $486d: $fa $10 $c2
-	bit  0, a                                        ; $4870: $cb $47
+	bit  PADB_A, a                                        ; $4870: $cb $47
 	ret  z                                           ; $4872: $c8
 
+;
 	ld   a, [$c8b6]                                  ; $4873: $fa $b6 $c8
 	bit  5, a                                        ; $4876: $cb $6f
-	jr   nz, jr_010_48ac                             ; $4878: $20 $32
+	jr   nz, .br_48ac                             ; $4878: $20 $32
 
 	bit  4, a                                        ; $487a: $cb $67
-	jr   z, jr_010_48b0                              ; $487c: $28 $32
+	jr   z, .br_48b0                              ; $487c: $28 $32
 
-	ld   a, $21                                      ; $487e: $3e $21
+	ld   a, SE_21                                      ; $487e: $3e $21
 	call PlaySoundEffect                                       ; $4880: $cd $df $1a
 	ld   a, [$c8b6]                                  ; $4883: $fa $b6 $c8
 	bit  2, a                                        ; $4886: $cb $57
-	jr   nz, jr_010_4897                             ; $4888: $20 $0d
+	jr   nz, .br_4897                             ; $4888: $20 $0d
 
 	bit  3, a                                        ; $488a: $cb $5f
-	jr   nz, jr_010_489c                             ; $488c: $20 $0e
+	jr   nz, .br_489c                             ; $488c: $20 $0e
 
 	bit  0, a                                        ; $488e: $cb $47
-	jr   nz, jr_010_48a3                             ; $4890: $20 $11
+	jr   nz, .br_48a3                             ; $4890: $20 $11
 
 	call Call_010_47f5                               ; $4892: $cd $f5 $47
-	jr   jr_010_489f                                 ; $4895: $18 $08
+	jr   .br_489f                                 ; $4895: $18 $08
 
-jr_010_4897:
+.br_4897:
 	call Call_010_479f                               ; $4897: $cd $9f $47
-	jr   jr_010_489f                                 ; $489a: $18 $03
+	jr   .br_489f                                 ; $489a: $18 $03
 
-jr_010_489c:
+.br_489c:
 	call Call_010_47bf                               ; $489c: $cd $bf $47
 
-jr_010_489f:
+.br_489f:
 	call Call_010_4810                               ; $489f: $cd $10 $48
 	ret                                              ; $48a2: $c9
 
-
-jr_010_48a3:
+.br_48a3:
 	call Call_010_47da                               ; $48a3: $cd $da $47
 	ld   a, $04                                      ; $48a6: $3e $04
 	ld   [wGameSubstate], a                                  ; $48a8: $ea $a1 $c2
 	ret                                              ; $48ab: $c9
 
-
-jr_010_48ac:
+.br_48ac:
 	call Call_010_4992                               ; $48ac: $cd $92 $49
 	ret                                              ; $48af: $c9
 
-
-jr_010_48b0:
+.br_48b0:
 	ld   a, [$c8b2]                                  ; $48b0: $fa $b2 $c8
 	cp   $03                                         ; $48b3: $fe $03
-	jr   z, jr_010_48c8                              ; $48b5: $28 $11
+	jr   z, .br_48c8                              ; $48b5: $28 $11
 
 	cp   $04                                         ; $48b7: $fe $04
-	jr   nz, jr_010_48d5                             ; $48b9: $20 $1a
+	jr   nz, .br_48d5                             ; $48b9: $20 $1a
 
 	call Call_010_459f                               ; $48bb: $cd $9f $45
 	ld   hl, $c8b6                                   ; $48be: $21 $b6 $c8
 	set  3, [hl]                                     ; $48c1: $cb $de
 	call Call_010_4ad8                               ; $48c3: $cd $d8 $4a
-	jr   jr_010_48ef                                 ; $48c6: $18 $27
+	jr   .cont_48ef                                 ; $48c6: $18 $27
 
-jr_010_48c8:
+.br_48c8:
 	call Call_010_459f                               ; $48c8: $cd $9f $45
 	ld   hl, $c8b6                                   ; $48cb: $21 $b6 $c8
 	set  1, [hl]                                     ; $48ce: $cb $ce
 	call Call_010_4b1c                               ; $48d0: $cd $1c $4b
-	jr   jr_010_48ef                                 ; $48d3: $18 $1a
+	jr   .cont_48ef                                 ; $48d3: $18 $1a
 
-jr_010_48d5:
+.br_48d5:
 	ld   a, [$c8b6]                                  ; $48d5: $fa $b6 $c8
 	bit  1, a                                        ; $48d8: $cb $4f
-	jr   z, jr_010_48fd                              ; $48da: $28 $21
+	jr   z, .br_48fd                              ; $48da: $28 $21
 
 	ld   a, [$c8b2]                                  ; $48dc: $fa $b2 $c8
 	ld   [$c8b7], a                                  ; $48df: $ea $b7 $c8
@@ -1361,85 +1330,66 @@ jr_010_48d5:
 	set  2, [hl]                                     ; $48ea: $cb $d6
 	call Call_010_4afa                               ; $48ec: $cd $fa $4a
 
-jr_010_48ef:
+.cont_48ef:
 	call Call_010_478e                               ; $48ef: $cd $8e $47
 	call Call_010_473c                               ; $48f2: $cd $3c $47
 	ld   a, $21                                      ; $48f5: $3e $21
 	call PlaySoundEffect                                       ; $48f7: $cd $df $1a
-	jp   Jump_010_498b                               ; $48fa: $c3 $8b $49
+	jp   .done                               ; $48fa: $c3 $8b $49
 
-
-jr_010_48fd:
+.br_48fd:
 	ld   b, $18                                      ; $48fd: $06 $18
 	bit  3, a                                        ; $48ff: $cb $5f
-	jr   nz, jr_010_493d                             ; $4901: $20 $3a
+	jr   nz, .br_493d                             ; $4901: $20 $3a
 
 	ld   b, $1a                                      ; $4903: $06 $1a
 	bit  2, a                                        ; $4905: $cb $57
-	jr   nz, jr_010_493d                             ; $4907: $20 $34
+	jr   nz, .br_493d                             ; $4907: $20 $34
 
 	ld   b, $14                                      ; $4909: $06 $14
 	bit  0, a                                        ; $490b: $cb $47
-	jr   z, jr_010_493d                              ; $490d: $28 $2e
+	jr   z, .br_493d                              ; $490d: $28 $2e
 
 	ld   hl, $c8b6                                   ; $490f: $21 $b6 $c8
 	set  4, [hl]                                     ; $4912: $cb $e6
-	ld   a, [$c8b1]                                  ; $4914: $fa $b1 $c8
+	ld   a, [wSaveScreenPopUpTopRowSpriteSpecIdxUsed]                                  ; $4914: $fa $b1 $c8
 	call HLequAddrOfAnimSpriteSpecDetails                                       ; $4917: $cd $76 $30
-	ld   a, $16                                      ; $491a: $3e $16
-	ld   de, $7180                                   ; $491c: $11 $80 $71
-	push af                                          ; $491f: $f5
-	ld   a, $1c                                      ; $4920: $3e $1c
-	ld   [wFarCallAddr], a                                  ; $4922: $ea $98 $c2
-	ld   a, $41                                      ; $4925: $3e $41
-	ld   [wFarCallAddr+1], a                                  ; $4927: $ea $99 $c2
-	ld   a, $01                                      ; $492a: $3e $01
-	ld   [wFarCallBank], a                                  ; $492c: $ea $9a $c2
-	pop  af                                          ; $492f: $f1
-	call FarCall                                       ; $4930: $cd $62 $09
-	ld   a, [$c8af]                                  ; $4933: $fa $af $c8
-	call HLequAddrOfAnimSpriteSpecDetails                                       ; $4936: $cd $76 $30
-	ld   a, $0f                                      ; $4939: $3e $0f
-	jr   jr_010_4969                                 ; $493b: $18 $2c
+	ld   a, ASS_SAVE_SCREEN_POPUP_LOAD                                      ; $491a: $3e $16
+	ld   de, AnimatedSpriteSpecs                                   ; $491c: $11 $80 $71
 
-jr_010_493d:
+	M_FarCall LoadType1NewAnimatedSpriteSpecAddress
+	
+	ld   a, [wSaveScreenPopUpBottomRowSpriteSpecIdxUsed]                                  ; $4933: $fa $af $c8
+	call HLequAddrOfAnimSpriteSpecDetails                                       ; $4936: $cd $76 $30
+	ld   a, ASS_SAVE_SCREEN_POPUP_YES_SELECTED                                      ; $4939: $3e $0f
+	jr   .cont_4969                                 ; $493b: $18 $2c
+
+.br_493d:
 	ld   hl, $c8b6                                   ; $493d: $21 $b6 $c8
 	set  5, [hl]                                     ; $4940: $cb $ee
 	push bc                                          ; $4942: $c5
-	ld   a, [$c8b1]                                  ; $4943: $fa $b1 $c8
+	ld   a, [wSaveScreenPopUpTopRowSpriteSpecIdxUsed]                                  ; $4943: $fa $b1 $c8
 	call HLequAddrOfAnimSpriteSpecDetails                                       ; $4946: $cd $76 $30
 	pop  af                                          ; $4949: $f1
-	ld   de, $7180                                   ; $494a: $11 $80 $71
-	push af                                          ; $494d: $f5
-	ld   a, $1c                                      ; $494e: $3e $1c
-	ld   [wFarCallAddr], a                                  ; $4950: $ea $98 $c2
-	ld   a, $41                                      ; $4953: $3e $41
-	ld   [wFarCallAddr+1], a                                  ; $4955: $ea $99 $c2
-	ld   a, $01                                      ; $4958: $3e $01
-	ld   [wFarCallBank], a                                  ; $495a: $ea $9a $c2
-	pop  af                                          ; $495d: $f1
-	call FarCall                                       ; $495e: $cd $62 $09
-	ld   a, [$c8af]                                  ; $4961: $fa $af $c8
-	call HLequAddrOfAnimSpriteSpecDetails                                       ; $4964: $cd $76 $30
-	ld   a, $10                                      ; $4967: $3e $10
+	ld   de, AnimatedSpriteSpecs                                   ; $494a: $11 $80 $71
 
-jr_010_4969:
+	M_FarCall LoadType1NewAnimatedSpriteSpecAddress
+	
+	ld   a, [wSaveScreenPopUpBottomRowSpriteSpecIdxUsed]                                  ; $4961: $fa $af $c8
+	call HLequAddrOfAnimSpriteSpecDetails                                       ; $4964: $cd $76 $30
+	ld   a, ASS_SAVE_SCREEN_POPUP_NO_SELECTED                                      ; $4967: $3e $10
+
+.cont_4969:
 	ld   [$c8b0], a                                  ; $4969: $ea $b0 $c8
-	ld   de, $7180                                   ; $496c: $11 $80 $71
-	push af                                          ; $496f: $f5
-	ld   a, $1c                                      ; $4970: $3e $1c
-	ld   [wFarCallAddr], a                                  ; $4972: $ea $98 $c2
-	ld   a, $41                                      ; $4975: $3e $41
-	ld   [wFarCallAddr+1], a                                  ; $4977: $ea $99 $c2
-	ld   a, $01                                      ; $497a: $3e $01
-	ld   [wFarCallBank], a                                  ; $497c: $ea $9a $c2
-	pop  af                                          ; $497f: $f1
-	call FarCall                                       ; $4980: $cd $62 $09
+	ld   de, AnimatedSpriteSpecs                                   ; $496c: $11 $80 $71
+
+	M_FarCall LoadType1NewAnimatedSpriteSpecAddress
+	
 	call Call_010_473c                               ; $4983: $cd $3c $47
-	ld   a, $23                                      ; $4986: $3e $23
+	ld   a, SE_23                                      ; $4986: $3e $23
 	call PlaySoundEffect                                       ; $4988: $cd $df $1a
 
-Jump_010_498b:
+.done:
 	ret                                              ; $498b: $c9
 
 
@@ -1512,7 +1462,7 @@ jr_010_49e9:
 
 
 Call_010_49ea:
-	ld   a, [$c8af]                                  ; $49ea: $fa $af $c8
+	ld   a, [wSaveScreenPopUpBottomRowSpriteSpecIdxUsed]                                  ; $49ea: $fa $af $c8
 	call HLequAddrOfAnimSpriteSpecDetails                                       ; $49ed: $cd $76 $30
 	ld   c, $0e                                      ; $49f0: $0e $0e
 	ld   a, [$c8b6]                                  ; $49f2: $fa $b6 $c8
@@ -1524,29 +1474,17 @@ Call_010_49ea:
 jr_010_49fb:
 	ld   a, c                                        ; $49fb: $79
 	ld   [$c8b0], a                                  ; $49fc: $ea $b0 $c8
-	ld   de, $7180                                   ; $49ff: $11 $80 $71
-	push af                                          ; $4a02: $f5
-	ld   a, $1c                                      ; $4a03: $3e $1c
-	ld   [wFarCallAddr], a                                  ; $4a05: $ea $98 $c2
-	ld   a, $41                                      ; $4a08: $3e $41
-	ld   [wFarCallAddr+1], a                                  ; $4a0a: $ea $99 $c2
-	ld   a, $01                                      ; $4a0d: $3e $01
-	ld   [wFarCallBank], a                                  ; $4a0f: $ea $9a $c2
-	pop  af                                          ; $4a12: $f1
-	call FarCall                                       ; $4a13: $cd $62 $09
-	ld   a, [$c8b1]                                  ; $4a16: $fa $b1 $c8
+	ld   de, AnimatedSpriteSpecs                                   ; $49ff: $11 $80 $71
+
+	M_FarCall LoadType1NewAnimatedSpriteSpecAddress
+	
+	ld   a, [wSaveScreenPopUpTopRowSpriteSpecIdxUsed]                                  ; $4a16: $fa $b1 $c8
 	call HLequAddrOfAnimSpriteSpecDetails                                       ; $4a19: $cd $76 $30
 	ld   a, $00                                      ; $4a1c: $3e $00
-	ld   de, $7180                                   ; $4a1e: $11 $80 $71
-	push af                                          ; $4a21: $f5
-	ld   a, $1c                                      ; $4a22: $3e $1c
-	ld   [wFarCallAddr], a                                  ; $4a24: $ea $98 $c2
-	ld   a, $41                                      ; $4a27: $3e $41
-	ld   [wFarCallAddr+1], a                                  ; $4a29: $ea $99 $c2
-	ld   a, $01                                      ; $4a2c: $3e $01
-	ld   [wFarCallBank], a                                  ; $4a2e: $ea $9a $c2
-	pop  af                                          ; $4a31: $f1
-	call FarCall                                       ; $4a32: $cd $62 $09
+	ld   de, AnimatedSpriteSpecs                                   ; $4a1e: $11 $80 $71
+
+	M_FarCall LoadType1NewAnimatedSpriteSpecAddress
+	
 	ld   hl, $c8b6                                   ; $4a35: $21 $b6 $c8
 	ld   a, [hl]                                     ; $4a38: $7e
 	and  $8f                                         ; $4a39: $e6 $8f
@@ -2039,20 +1977,13 @@ endc
 
 
 Call_010_4d50:
-	ld   a, [$c8af]                                  ; $4d50: $fa $af $c8
+	ld   a, [wSaveScreenPopUpBottomRowSpriteSpecIdxUsed]                                  ; $4d50: $fa $af $c8
 	call HLequAddrOfAnimSpriteSpecDetails                                       ; $4d53: $cd $76 $30
 	ld   a, $1e                                      ; $4d56: $3e $1e
 	ld   [$c8b0], a                                  ; $4d58: $ea $b0 $c8
-	ld   de, $7180                                   ; $4d5b: $11 $80 $71
-	push af                                          ; $4d5e: $f5
-	ld   a, $1c                                      ; $4d5f: $3e $1c
-	ld   [wFarCallAddr], a                                  ; $4d61: $ea $98 $c2
-	ld   a, $41                                      ; $4d64: $3e $41
-	ld   [wFarCallAddr+1], a                                  ; $4d66: $ea $99 $c2
-	ld   a, $01                                      ; $4d69: $3e $01
-	ld   [wFarCallBank], a                                  ; $4d6b: $ea $9a $c2
-	pop  af                                          ; $4d6e: $f1
-	call FarCall                                       ; $4d6f: $cd $62 $09
+	ld   de, AnimatedSpriteSpecs                                   ; $4d5b: $11 $80 $71
+
+	M_FarCall LoadType1NewAnimatedSpriteSpecAddress
 	ret                                              ; $4d72: $c9
 
 
@@ -2077,24 +2008,17 @@ Call_010_4d73:
 
 
 Call_010_4d8e:
-	ld   a, [$c8af]                                  ; $4d8e: $fa $af $c8
+	ld   a, [wSaveScreenPopUpBottomRowSpriteSpecIdxUsed]                                  ; $4d8e: $fa $af $c8
 	call HLequAddrOfAnimSpriteSpecDetails                                       ; $4d91: $cd $76 $30
 	ld   a, $12                                      ; $4d94: $3e $12
-	ld   de, $7180                                   ; $4d96: $11 $80 $71
-	push af                                          ; $4d99: $f5
-	ld   a, $1c                                      ; $4d9a: $3e $1c
-	ld   [wFarCallAddr], a                                  ; $4d9c: $ea $98 $c2
-	ld   a, $41                                      ; $4d9f: $3e $41
-	ld   [wFarCallAddr+1], a                                  ; $4da1: $ea $99 $c2
-	ld   a, $01                                      ; $4da4: $3e $01
-	ld   [wFarCallBank], a                                  ; $4da6: $ea $9a $c2
-	pop  af                                          ; $4da9: $f1
-	call FarCall                                       ; $4daa: $cd $62 $09
+	ld   de, AnimatedSpriteSpecs                                   ; $4d96: $11 $80 $71
+
+	M_FarCall LoadType1NewAnimatedSpriteSpecAddress
 
 jr_010_4dad:
 	call ClearOam                                       ; $4dad: $cd $d7 $0d
 	call AnimateAllAnimatedSpriteSpecs                                       ; $4db0: $cd $d3 $2e
-	call Call_010_454f                               ; $4db3: $cd $4f $45
+	call todo_SaveScreenPalettePulseRelated                               ; $4db3: $cd $4f $45
 	rst  WaitUntilVBlankIntHandledIfLCDOn                                         ; $4db6: $cf
 	ld   a, [$c8b3]                                  ; $4db7: $fa $b3 $c8
 	or   a                                           ; $4dba: $b7
@@ -2143,48 +2067,29 @@ jr_010_4df9:
 	add  hl, bc                                      ; $4dfb: $09
 	ld   a, [hl]                                     ; $4dfc: $7e
 	call $1b64                                       ; $4dfd: $cd $64 $1b
-	ld   a, [$c8af]                                  ; $4e00: $fa $af $c8
+	ld   a, [wSaveScreenPopUpBottomRowSpriteSpecIdxUsed]                                  ; $4e00: $fa $af $c8
 	call HLequAddrOfAnimSpriteSpecDetails                                       ; $4e03: $cd $76 $30
 	ld   a, $0e                                      ; $4e06: $3e $0e
-	ld   de, $7180                                   ; $4e08: $11 $80 $71
-	push af                                          ; $4e0b: $f5
-	ld   a, $1c                                      ; $4e0c: $3e $1c
-	ld   [wFarCallAddr], a                                  ; $4e0e: $ea $98 $c2
-	ld   a, $41                                      ; $4e11: $3e $41
-	ld   [wFarCallAddr+1], a                                  ; $4e13: $ea $99 $c2
-	ld   a, $01                                      ; $4e16: $3e $01
-	ld   [wFarCallBank], a                                  ; $4e18: $ea $9a $c2
-	pop  af                                          ; $4e1b: $f1
-	call FarCall                                       ; $4e1c: $cd $62 $09
-	ld   a, [$c8b1]                                  ; $4e1f: $fa $b1 $c8
+	ld   de, AnimatedSpriteSpecs                                   ; $4e08: $11 $80 $71
+
+	M_FarCall LoadType1NewAnimatedSpriteSpecAddress
+	
+	ld   a, [wSaveScreenPopUpTopRowSpriteSpecIdxUsed]                                  ; $4e1f: $fa $b1 $c8
 	call HLequAddrOfAnimSpriteSpecDetails                                       ; $4e22: $cd $76 $30
 	ld   a, $00                                      ; $4e25: $3e $00
-	ld   de, $7180                                   ; $4e27: $11 $80 $71
-	push af                                          ; $4e2a: $f5
-	ld   a, $1c                                      ; $4e2b: $3e $1c
-	ld   [wFarCallAddr], a                                  ; $4e2d: $ea $98 $c2
-	ld   a, $41                                      ; $4e30: $3e $41
-	ld   [wFarCallAddr+1], a                                  ; $4e32: $ea $99 $c2
-	ld   a, $01                                      ; $4e35: $3e $01
-	ld   [wFarCallBank], a                                  ; $4e37: $ea $9a $c2
-	pop  af                                          ; $4e3a: $f1
-	call FarCall                                       ; $4e3b: $cd $62 $09
+	ld   de, AnimatedSpriteSpecs                                   ; $4e27: $11 $80 $71
+
+	M_FarCall LoadType1NewAnimatedSpriteSpecAddress
 
 jr_010_4e3e:
 	call ClearOam                                       ; $4e3e: $cd $d7 $0d
 	call AnimateAllAnimatedSpriteSpecs                                       ; $4e41: $cd $d3 $2e
 	rst  WaitUntilVBlankIntHandledIfLCDOn                                         ; $4e44: $cf
-	ld   a, [$c8af]                                  ; $4e45: $fa $af $c8
+	ld   a, [wSaveScreenPopUpBottomRowSpriteSpecIdxUsed]                                  ; $4e45: $fa $af $c8
 	call HLequAddrOfAnimSpriteSpecDetails                                       ; $4e48: $cd $76 $30
-	push af                                          ; $4e4b: $f5
-	ld   a, $43                                      ; $4e4c: $3e $43
-	ld   [wFarCallAddr], a                                  ; $4e4e: $ea $98 $c2
-	ld   a, $41                                      ; $4e51: $3e $41
-	ld   [wFarCallAddr+1], a                                  ; $4e53: $ea $99 $c2
-	ld   a, $01                                      ; $4e56: $3e $01
-	ld   [wFarCallBank], a                                  ; $4e58: $ea $9a $c2
-	pop  af                                          ; $4e5b: $f1
-	call FarCall                                       ; $4e5c: $cd $62 $09
+
+	M_FarCall Func_01_4143
+
 	ld   a, b                                        ; $4e5f: $78
 	cp   $80                                         ; $4e60: $fe $80
 	jr   c, jr_010_4e3e                              ; $4e62: $38 $da
@@ -2228,15 +2133,15 @@ jr_010_4e3e:
 	ld   h, l                                        ; $4e88: $65
 
 
-SetContinueGameState::
+SetSaveScreenState::
 	ld   a, h                                        ; $4e89: $7c
 	ld   [$c8bb], a                                  ; $4e8a: $ea $bb $c8
 	ld   a, l                                        ; $4e8d: $7d
 	ld   [$c8bc], a                                  ; $4e8e: $ea $bc $c8
 	ld   a, d                                        ; $4e91: $7a
-	ld   [wContinueGameReturnState], a                                  ; $4e92: $ea $bd $c8
+	ld   [wSaveScreenReturnState], a                                  ; $4e92: $ea $bd $c8
 	ld   a, e                                        ; $4e95: $7b
-	ld   [wContinueGameReturnSubstate], a                                  ; $4e96: $ea $be $c8
+	ld   [wSaveScreenReturnSubstate], a                                  ; $4e96: $ea $be $c8
 	ld   a, GS_SAVE_SCREEN                                      ; $4e99: $3e $0e
 	ld   [wGameState], a                                  ; $4e9b: $ea $a0 $c2
 	ld   a, $01                                      ; $4e9e: $3e $01
@@ -4324,22 +4229,25 @@ Call_010_5c01:
 	jp   Jump_010_5b12                               ; $5c03: $c3 $12 $5b
 
 
-GameState14::
-	ld   a, [wGameSubstate]                                  ; $5c06: $fa $a1 $c2
-	rst  JumpTable                                         ; $5c09: $df
-	inc  d                                           ; $5c0a: $14
-	ld   e, h                                        ; $5c0b: $5c
-	ld   hl, $e85c                                   ; $5c0c: $21 $5c $e8
-	ld   e, l                                        ; $5c0f: $5d
-	ld   a, a                                        ; $5c10: $7f
-	ld   h, c                                        ; $5c11: $61
-	ld   [$3e5e], sp                                 ; $5c12: $08 $5e $3e
-	inc  bc                                          ; $5c15: $03
+GameState14_Cinematron::
+	ld   a, [wGameSubstate]                                         ; $5c06
+	rst  JumpTable                                                  ; $5c09
+	dw CinematronSubstate0
+	dw CinematronSubstate1
+	dw CinematronSubstate2
+	dw CinematronSubstate3
+	dw CinematronSubstate4
+	
+	
+CinematronSubstate0:
+	ld   a, $03; $5c14: $3e $03
 	ld   [$c91d], a                                  ; $5c16: $ea $1d $c9
 	xor  a                                           ; $5c19: $af
 	ld   [$c941], a                                  ; $5c1a: $ea $41 $c9
 	ld   hl, wGameSubstate                                   ; $5c1d: $21 $a1 $c2
 	inc  [hl]                                        ; $5c20: $34
+
+CinematronSubstate1:
 	di                                               ; $5c21: $f3
 	call Call_010_58f2                               ; $5c22: $cd $f2 $58
 	ei                                               ; $5c25: $fb
@@ -4440,7 +4348,7 @@ jr_010_5c37:
 	call HLequAddrOfAnimSpriteSpecDetails                                       ; $5d05: $cd $76 $30
 	ld   a, $20                                      ; $5d08: $3e $20
 	ld   bc, $0808                                   ; $5d0a: $01 $08 $08
-	ld   de, $7180                                   ; $5d0d: $11 $80 $71
+	ld   de, AnimatedSpriteSpecs                                   ; $5d0d: $11 $80 $71
 	push af                                          ; $5d10: $f5
 	ld   a, $03                                      ; $5d11: $3e $03
 	ld   [wFarCallAddr], a                                  ; $5d13: $ea $98 $c2
@@ -4466,7 +4374,7 @@ jr_010_5c37:
 
 jr_010_5d42:
 	ld   a, d                                        ; $5d42: $7a
-	ld   de, $7180                                   ; $5d43: $11 $80 $71
+	ld   de, AnimatedSpriteSpecs                                   ; $5d43: $11 $80 $71
 	push af                                          ; $5d46: $f5
 	ld   a, $03                                      ; $5d47: $3e $03
 	ld   [wFarCallAddr], a                                  ; $5d49: $ea $98 $c2
@@ -4484,7 +4392,7 @@ jr_010_5d42:
 	call HLequAddrOfAnimSpriteSpecDetails                                       ; $5d68: $cd $76 $30
 	ld   a, $00                                      ; $5d6b: $3e $00
 	ld   bc, $2c77                                   ; $5d6d: $01 $77 $2c
-	ld   de, $7180                                   ; $5d70: $11 $80 $71
+	ld   de, AnimatedSpriteSpecs                                   ; $5d70: $11 $80 $71
 	push af                                          ; $5d73: $f5
 	ld   a, $03                                      ; $5d74: $3e $03
 	ld   [wFarCallAddr], a                                  ; $5d76: $ea $98 $c2
@@ -4538,46 +4446,38 @@ jr_010_5de7:
 	ret                                              ; $5de7: $c9
 
 
+CinematronSubstate2:
 	call ClearOam                                       ; $5de8: $cd $d7 $0d
 	call AnimateAllAnimatedSpriteSpecs                                       ; $5deb: $cd $d3 $2e
 	call Call_010_61f3                               ; $5dee: $cd $f3 $61
 	call Call_010_5eb3                               ; $5df1: $cd $b3 $5e
 	ld   a, [$c919]                                  ; $5df4: $fa $19 $c9
 	rst  JumpTable                                         ; $5df7: $df
-	ld   d, c                                        ; $5df8: $51
-	ld   h, c                                        ; $5df9: $61
-	dec  sp                                          ; $5dfa: $3b
-	ld   e, [hl]                                     ; $5dfb: $5e
-	add  $5e                                         ; $5dfc: $c6 $5e
-	ldh  a, [c]                                      ; $5dfe: $f2
-	ld   e, [hl]                                     ; $5dff: $5e
-	inc  bc                                          ; $5e00: $03
-	ld   e, a                                        ; $5e01: $5f
-	ld   a, a                                        ; $5e02: $7f
-	ld   e, a                                        ; $5e03: $5f
-	adc  [hl]                                        ; $5e04: $8e
-	ld   e, a                                        ; $5e05: $5f
-	or   l                                           ; $5e06: $b5
-	ld   e, a                                        ; $5e07: $5f
+	dw $6151
+	dw $5e3b
+	dw $5ec6
+	dw $5ef2
+	dw $5f03
+	dw $5f7f
+	dw $5f8e
+	dw $5fb5
+
+
+CinematronSubstate4:
 	call ClearOam                                       ; $5e08: $cd $d7 $0d
 	call AnimateAllAnimatedSpriteSpecs                                       ; $5e0b: $cd $d3 $2e
 	call Call_010_61f3                               ; $5e0e: $cd $f3 $61
 	call Call_010_5eb3                               ; $5e11: $cd $b3 $5e
 	ld   a, [$c919]                                  ; $5e14: $fa $19 $c9
 	rst  JumpTable                                         ; $5e17: $df
-	jp   hl                                          ; $5e18: $e9
+	dw $5fe9
+	dw $6151
+	dw $5ff1
+	dw $610b
+	dw $612e
+	dw $5e24
 
 
-	ld   e, a                                        ; $5e19: $5f
-	ld   d, c                                        ; $5e1a: $51
-	ld   h, c                                        ; $5e1b: $61
-	pop  af                                          ; $5e1c: $f1
-	ld   e, a                                        ; $5e1d: $5f
-	dec  bc                                          ; $5e1e: $0b
-	ld   h, c                                        ; $5e1f: $61
-	ld   l, $61                                      ; $5e20: $2e $61
-	inc  h                                           ; $5e22: $24
-	ld   e, [hl]                                     ; $5e23: $5e
 	ld   hl, $c920                                   ; $5e24: $21 $20 $c9
 	dec  [hl]                                        ; $5e27: $35
 	jr   nz, jr_010_5e3a                             ; $5e28: $20 $10
@@ -4636,16 +4536,9 @@ jr_010_5e83:
 	ld   a, [$c91c]                                  ; $5e83: $fa $1c $c9
 	call HLequAddrOfAnimSpriteSpecDetails                                       ; $5e86: $cd $76 $30
 	ld   a, $29                                      ; $5e89: $3e $29
-	ld   de, $7180                                   ; $5e8b: $11 $80 $71
-	push af                                          ; $5e8e: $f5
-	ld   a, $1c                                      ; $5e8f: $3e $1c
-	ld   [wFarCallAddr], a                                  ; $5e91: $ea $98 $c2
-	ld   a, $41                                      ; $5e94: $3e $41
-	ld   [wFarCallAddr+1], a                                  ; $5e96: $ea $99 $c2
-	ld   a, $01                                      ; $5e99: $3e $01
-	ld   [wFarCallBank], a                                  ; $5e9b: $ea $9a $c2
-	pop  af                                          ; $5e9e: $f1
-	call FarCall                                       ; $5e9f: $cd $62 $09
+	ld   de, AnimatedSpriteSpecs                                   ; $5e8b: $11 $80 $71
+
+	M_FarCall LoadType1NewAnimatedSpriteSpecAddress
 
 jr_010_5ea2:
 	ret                                              ; $5ea2: $c9
@@ -4689,15 +4582,9 @@ jr_010_5ec5:
 
 	ld   a, [$c91a]                                  ; $5ec6: $fa $1a $c9
 	call HLequAddrOfAnimSpriteSpecDetails                                       ; $5ec9: $cd $76 $30
-	push af                                          ; $5ecc: $f5
-	ld   a, $43                                      ; $5ecd: $3e $43
-	ld   [wFarCallAddr], a                                  ; $5ecf: $ea $98 $c2
-	ld   a, $41                                      ; $5ed2: $3e $41
-	ld   [wFarCallAddr+1], a                                  ; $5ed4: $ea $99 $c2
-	ld   a, $01                                      ; $5ed7: $3e $01
-	ld   [wFarCallBank], a                                  ; $5ed9: $ea $9a $c2
-	pop  af                                          ; $5edc: $f1
-	call FarCall                                       ; $5edd: $cd $62 $09
+
+	M_FarCall Func_01_4143
+
 	ld   a, c                                        ; $5ee0: $79
 	cp   $69                                         ; $5ee1: $fe $69
 	jr   c, jr_010_5ef1                              ; $5ee3: $38 $0c
@@ -4777,16 +4664,10 @@ jr_010_5f4b:
 	ld   a, [$c91a]                                  ; $5f50: $fa $1a $c9
 	call HLequAddrOfAnimSpriteSpecDetails                                       ; $5f53: $cd $76 $30
 	ld   a, $26                                      ; $5f56: $3e $26
-	ld   de, $7180                                   ; $5f58: $11 $80 $71
-	push af                                          ; $5f5b: $f5
-	ld   a, $1c                                      ; $5f5c: $3e $1c
-	ld   [wFarCallAddr], a                                  ; $5f5e: $ea $98 $c2
-	ld   a, $41                                      ; $5f61: $3e $41
-	ld   [wFarCallAddr+1], a                                  ; $5f63: $ea $99 $c2
-	ld   a, $01                                      ; $5f66: $3e $01
-	ld   [wFarCallBank], a                                  ; $5f68: $ea $9a $c2
-	pop  af                                          ; $5f6b: $f1
-	call FarCall                                       ; $5f6c: $cd $62 $09
+	ld   de, AnimatedSpriteSpecs                                   ; $5f58: $11 $80 $71
+
+	M_FarCall LoadType1NewAnimatedSpriteSpecAddress
+
 	call Call_010_6474                               ; $5f6f: $cd $74 $64
 	call Call_010_6562                               ; $5f72: $cd $62 $65
 	ld   hl, $c919                                   ; $5f75: $21 $19 $c9
@@ -5150,19 +5031,18 @@ jr_010_617e:
 	ret                                              ; $617e: $c9
 
 
+CinematronSubstate3:
 	call TurnOffLCD                                       ; $617f: $cd $e3 $08
 	ld   a, $00                                      ; $6182: $3e $00
 	call PlaySong                                       ; $6184: $cd $92 $1a
 	ld   a, [$c91d]                                  ; $6187: $fa $1d $c9
 	rst  JumpTable                                         ; $618a: $df
-	sub  e                                           ; $618b: $93
-	ld   h, c                                        ; $618c: $61
-	sbc  e                                           ; $618d: $9b
-	ld   h, c                                        ; $618e: $61
-	and  e                                           ; $618f: $a3
-	ld   h, c                                        ; $6190: $61
-	xor  e                                           ; $6191: $ab
-	ld   h, c                                        ; $6192: $61
+	dw $6193
+	dw $619b
+	dw $61a3
+	dw $61ab
+
+
 	ld   h, $14                                      ; $6193: $26 $14
 	ld   l, $01                                      ; $6195: $2e $01
 	call Call_010_556b                               ; $6197: $cd $6b $55
@@ -5181,9 +5061,9 @@ jr_010_617e:
 	ret                                              ; $61aa: $c9
 
 
-	ld   a, [$c922]                                  ; $61ab: $fa $22 $c9
+	ld   a, [wCinematronReturnState]                                  ; $61ab: $fa $22 $c9
 	ld   [wGameState], a                                  ; $61ae: $ea $a0 $c2
-	ld   a, [$c923]                                  ; $61b1: $fa $23 $c9
+	ld   a, [wCinematronReturnSubstate]                                  ; $61b1: $fa $23 $c9
 	ld   [wGameSubstate], a                                  ; $61b4: $ea $a1 $c2
 	ret                                              ; $61b7: $c9
 
@@ -5245,7 +5125,7 @@ Call_010_61fa:
 	call HLequAddrOfAnimSpriteSpecDetails                                       ; $61fd: $cd $76 $30
 	call Call_010_625e                               ; $6200: $cd $5e $62
 	ld   a, $28                                      ; $6203: $3e $28
-	ld   de, $7180                                   ; $6205: $11 $80 $71
+	ld   de, AnimatedSpriteSpecs                                   ; $6205: $11 $80 $71
 	push af                                          ; $6208: $f5
 	ld   a, $03                                      ; $6209: $3e $03
 	ld   [wFarCallAddr], a                                  ; $620b: $ea $98 $c2
@@ -5262,7 +5142,7 @@ Call_010_61fa:
 	call HLequAddrOfAnimSpriteSpecDetails                                       ; $6220: $cd $76 $30
 	call Call_010_625e                               ; $6223: $cd $5e $62
 	ld   a, $00                                      ; $6226: $3e $00
-	ld   de, $7180                                   ; $6228: $11 $80 $71
+	ld   de, AnimatedSpriteSpecs                                   ; $6228: $11 $80 $71
 	push af                                          ; $622b: $f5
 	ld   a, $03                                      ; $622c: $3e $03
 	ld   [wFarCallAddr], a                                  ; $622e: $ea $98 $c2
@@ -5586,16 +5466,9 @@ Call_010_6444:
 	ld   a, [$c91a]                                  ; $6450: $fa $1a $c9
 	call HLequAddrOfAnimSpriteSpecDetails                                       ; $6453: $cd $76 $30
 	pop  af                                          ; $6456: $f1
-	ld   de, $7180                                   ; $6457: $11 $80 $71
-	push af                                          ; $645a: $f5
-	ld   a, $1c                                      ; $645b: $3e $1c
-	ld   [wFarCallAddr], a                                  ; $645d: $ea $98 $c2
-	ld   a, $41                                      ; $6460: $3e $41
-	ld   [wFarCallAddr+1], a                                  ; $6462: $ea $99 $c2
-	ld   a, $01                                      ; $6465: $3e $01
-	ld   [wFarCallBank], a                                  ; $6467: $ea $9a $c2
-	pop  af                                          ; $646a: $f1
-	call FarCall                                       ; $646b: $cd $62 $09
+	ld   de, AnimatedSpriteSpecs                                   ; $6457: $11 $80 $71
+
+	M_FarCall LoadType1NewAnimatedSpriteSpecAddress
 	ret                                              ; $646e: $c9
 
 
@@ -5742,16 +5615,9 @@ Call_010_6562:
 	ld   a, [$c91b]                                  ; $6562: $fa $1b $c9
 	call HLequAddrOfAnimSpriteSpecDetails                                       ; $6565: $cd $76 $30
 	ld   a, $00                                      ; $6568: $3e $00
-	ld   de, $7180                                   ; $656a: $11 $80 $71
-	push af                                          ; $656d: $f5
-	ld   a, $1c                                      ; $656e: $3e $1c
-	ld   [wFarCallAddr], a                                  ; $6570: $ea $98 $c2
-	ld   a, $41                                      ; $6573: $3e $41
-	ld   [wFarCallAddr+1], a                                  ; $6575: $ea $99 $c2
-	ld   a, $01                                      ; $6578: $3e $01
-	ld   [wFarCallBank], a                                  ; $657a: $ea $9a $c2
-	pop  af                                          ; $657d: $f1
-	call FarCall                                       ; $657e: $cd $62 $09
+	ld   de, AnimatedSpriteSpecs                                   ; $656a: $11 $80 $71
+
+	M_FarCall LoadType1NewAnimatedSpriteSpecAddress
 	ret                                              ; $6581: $c9
 
 
@@ -5763,7 +5629,7 @@ Call_010_6584:
 	call HLequAddrOfAnimSpriteSpecDetails                                       ; $6587: $cd $76 $30
 	ld   a, $25                                      ; $658a: $3e $25
 	ld   c, $77                                      ; $658c: $0e $77
-	ld   de, $7180                                   ; $658e: $11 $80 $71
+	ld   de, AnimatedSpriteSpecs                                   ; $658e: $11 $80 $71
 	push af                                          ; $6591: $f5
 	ld   a, $03                                      ; $6592: $3e $03
 	ld   [wFarCallAddr], a                                  ; $6594: $ea $98 $c2
@@ -6037,16 +5903,21 @@ jr_010_66e9:
 	ret                                              ; $66ff: $c9
 
 
+; H - return state
+; L - return substate
 SetCinematronState::
-	ld   a, h                                        ; $6700: $7c
-	ld   [$c922], a                                  ; $6701: $ea $22 $c9
-	ld   a, l                                        ; $6704: $7d
-	ld   [$c923], a                                  ; $6705: $ea $23 $c9
-	ld   a, GS_CINEMATRON                                      ; $6708: $3e $14
-	ld   [wGameState], a                                  ; $670a: $ea $a0 $c2
-	ld   a, $00                                      ; $670d: $3e $00
-	ld   [wGameSubstate], a                                  ; $670f: $ea $a1 $c2
-	ret                                              ; $6712: $c9
+; Save return state
+	ld   a, h                                                       ; $6700
+	ld   [wCinematronReturnState], a                                ; $6701
+	ld   a, l                                                       ; $6704
+	ld   [wCinematronReturnSubstate], a                             ; $6705
+
+; Set new state
+	ld   a, GS_CINEMATRON                                           ; $6708
+	ld   [wGameState], a                                            ; $670a
+	ld   a, $00                                                     ; $670d
+	ld   [wGameSubstate], a                                         ; $670f
+	ret                                                             ; $6712
 
 
 GameState16_EnterName::
@@ -6099,7 +5970,11 @@ GameState16_EnterName::
 	ld   a, BANK(RleXorTileData_EnterName)                          ; $675e
 	ld   hl, wEnterNameTileDataOrLayoutBuffer                       ; $6760
 	ld   de, RleXorTileData_EnterName                               ; $6763
+if def(VWF)
+	call EnterNameTileDataHook
+else
 	call RLEXorCopy                                                 ; $6766
+endc
 
 ; Enqueue tile data transfer
 	ld   c, $81                                                     ; $6769
@@ -7746,7 +7621,7 @@ jr_010_6f98:
 	call HLequAddrOfAnimSpriteSpecDetails                                       ; $7177: $cd $76 $30
 	ld   a, $00                                      ; $717a: $3e $00
 	ld   bc, $0000                                   ; $717c: $01 $00 $00
-	ld   de, $7180                                   ; $717f: $11 $80 $71
+	ld   de, AnimatedSpriteSpecs                                   ; $717f: $11 $80 $71
 	push af                                          ; $7182: $f5
 	ld   a, $03                                      ; $7183: $3e $03
 	ld   [wFarCallAddr], a                                  ; $7185: $ea $98 $c2
@@ -7987,15 +7862,9 @@ jr_010_7303:
 
 	ld   a, [$c9f6]                                  ; $7314: $fa $f6 $c9
 	call HLequAddrOfAnimSpriteSpecDetails                                       ; $7317: $cd $76 $30
-	push af                                          ; $731a: $f5
-	ld   a, $43                                      ; $731b: $3e $43
-	ld   [wFarCallAddr], a                                  ; $731d: $ea $98 $c2
-	ld   a, $41                                      ; $7320: $3e $41
-	ld   [wFarCallAddr+1], a                                  ; $7322: $ea $99 $c2
-	ld   a, $01                                      ; $7325: $3e $01
-	ld   [wFarCallBank], a                                  ; $7327: $ea $9a $c2
-	pop  af                                          ; $732a: $f1
-	call FarCall                                       ; $732b: $cd $62 $09
+
+	M_FarCall Func_01_4143
+
 	ld   a, c                                        ; $732e: $79
 	cp   $56                                         ; $732f: $fe $56
 	ret  nz                                          ; $7331: $c0
@@ -8098,15 +7967,9 @@ Call_010_73d9:
 	call LoadSpriteFromMainTable                                       ; $73e3: $cd $16 $0e
 	ld   a, [$c9ee]                                  ; $73e6: $fa $ee $c9
 	call HLequAddrOfAnimSpriteSpecDetails                                       ; $73e9: $cd $76 $30
-	push af                                          ; $73ec: $f5
-	ld   a, $43                                      ; $73ed: $3e $43
-	ld   [wFarCallAddr], a                                  ; $73ef: $ea $98 $c2
-	ld   a, $41                                      ; $73f2: $3e $41
-	ld   [wFarCallAddr+1], a                                  ; $73f4: $ea $99 $c2
-	ld   a, $01                                      ; $73f7: $3e $01
-	ld   [wFarCallBank], a                                  ; $73f9: $ea $9a $c2
-	pop  af                                          ; $73fc: $f1
-	call FarCall                                       ; $73fd: $cd $62 $09
+
+	M_FarCall Func_01_4143
+
 	ld   a, b                                        ; $7400: $78
 	cp   $80                                         ; $7401: $fe $80
 	jr   c, jr_010_7412                              ; $7403: $38 $0d
@@ -8125,16 +7988,9 @@ Call_010_7413:
 	ld   a, [$c9f6]                                  ; $7413: $fa $f6 $c9
 	call HLequAddrOfAnimSpriteSpecDetails                                       ; $7416: $cd $76 $30
 	ld   a, $00                                      ; $7419: $3e $00
-	ld   de, $7180                                   ; $741b: $11 $80 $71
-	push af                                          ; $741e: $f5
-	ld   a, $1c                                      ; $741f: $3e $1c
-	ld   [wFarCallAddr], a                                  ; $7421: $ea $98 $c2
-	ld   a, $41                                      ; $7424: $3e $41
-	ld   [wFarCallAddr+1], a                                  ; $7426: $ea $99 $c2
-	ld   a, $01                                      ; $7429: $3e $01
-	ld   [wFarCallBank], a                                  ; $742b: $ea $9a $c2
-	pop  af                                          ; $742e: $f1
-	call FarCall                                       ; $742f: $cd $62 $09
+	ld   de, AnimatedSpriteSpecs                                   ; $741b: $11 $80 $71
+
+	M_FarCall LoadType1NewAnimatedSpriteSpecAddress
 	ret                                              ; $7432: $c9
 
 
@@ -8173,7 +8029,7 @@ jr_010_7453:
 	ld   a, [$c9f6]                                  ; $745a: $fa $f6 $c9
 	call HLequAddrOfAnimSpriteSpecDetails                                       ; $745d: $cd $76 $30
 	ld   a, $69                                      ; $7460: $3e $69
-	ld   de, $7180                                   ; $7462: $11 $80 $71
+	ld   de, AnimatedSpriteSpecs                                   ; $7462: $11 $80 $71
 	push af                                          ; $7465: $f5
 	ld   a, $03                                      ; $7466: $3e $03
 	ld   [wFarCallAddr], a                                  ; $7468: $ea $98 $c2
@@ -9209,6 +9065,7 @@ SetEnterNameEnCoords:
 EnterNameTileMapHook:
 	call RLEXorCopy
 
+; Hide kana options
 	ld   a, $81
 	ld   [wEnterNameTileDataOrLayoutBuffer+$1e2], a
 	ld   [wEnterNameTileDataOrLayoutBuffer+$1e3], a
@@ -9218,5 +9075,67 @@ EnterNameTileMapHook:
 	ld   [wEnterNameTileDataOrLayoutBuffer+$203], a
 	ld   [wEnterNameTileDataOrLayoutBuffer+$206], a
 	ld   [wEnterNameTileDataOrLayoutBuffer+$207], a
+
+; Your name
+	ld   a, $d0
+	ld   b, $dc
+	ld   c, 6
+	ld   de, wEnterNameTileDataOrLayoutBuffer+$02
+	ld   hl, wEnterNameTileDataOrLayoutBuffer+$22
+:	ld   [de], a
+	ld   [hl], b
+	inc  de
+	inc  a
+	inc  hl
+	inc  b
+	dec  c
+	jr   nz, :-
+
+; Back space
+	ld   a, $d6
+	ld   b, $e2
+	ld   c, 3
+	ld   de, wEnterNameTileDataOrLayoutBuffer+$1e9
+	ld   hl, wEnterNameTileDataOrLayoutBuffer+$209
+:	ld   [de], a
+	ld   [hl], b
+	inc  de
+	inc  a
+	inc  hl
+	inc  b
+	dec  c
+	jr   nz, :-
+
+; Done
+	ld   a, $d9
+	ld   b, $e5
+	ld   c, 3
+	ld   de, wEnterNameTileDataOrLayoutBuffer+$1f0
+	ld   hl, wEnterNameTileDataOrLayoutBuffer+$210
+:	ld   [de], a
+	ld   [hl], b
+	inc  de
+	inc  a
+	inc  hl
+	inc  b
+	dec  c
+	jr   nz, :-
+
 	ret
+
+
+EnterNameTileDataHook:
+	call RLEXorCopy
+
+	ld   bc, Gfx_EnEnterName.end-Gfx_EnEnterName
+	ld   de, $d500
+	ld   hl, Gfx_EnEnterName
+	call MemCopy
+
+	ret
+
+
+Gfx_EnEnterName:
+	INCBIN "en_enterName.2bpp"
+.end:
 endc

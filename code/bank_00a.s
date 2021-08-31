@@ -1648,6 +1648,9 @@ todo_ClearsAndLoadsGfxForConvoScreens::
 	inc  c                                           ; $492d: $0c
 	nop                                              ; $492e: $00
 	nop                                              ; $492f: $00
+
+
+Func_0a_4930::
 	ld   [$cbd7], a                                  ; $4930: $ea $d7 $cb
 	ret                                              ; $4933: $c9
 
@@ -7094,7 +7097,7 @@ TitleMenuScreenAnimationHandlerD:
 	ld   d, $37                                      ; $7451: $16 $37
 	ld   e, $01                                      ; $7453: $1e $01
 
-	M_FarCall SetContinueGameState
+	M_FarCall SetSaveScreenState
 	ret                                              ; $7469: $c9
 
 .settings:
@@ -7202,7 +7205,7 @@ TitleMenuScreenAnimationHandlerD:
 .cinematron:
 	xor  a                                           ; $75a0: $af
 	call PlaySong                                       ; $75a1: $cd $92 $1a
-	ld   h, $37                                      ; $75a4: $26 $37
+	ld   h, GS_TITLE_MENU_SCREEN                                      ; $75a4: $26 $37
 	ld   l, $02                                      ; $75a6: $2e $02
 
 	M_FarCall SetCinematronState

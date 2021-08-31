@@ -13333,7 +13333,7 @@ Call_0d8_7998:
 	adc  h                                           ; $7ab7: $8c
 	cp   $ec                                         ; $7ab8: $fe $ec
 	sbc  c                                           ; $7aba: $99
-	call z, wContinueGameReturnState                                    ; $7abb: $cc $bd $c8
+	call z, wSaveScreenReturnState                                    ; $7abb: $cc $bd $c8
 	xor  h                                           ; $7abe: $ac
 	cp   d                                           ; $7abf: $ba
 	xor  b                                           ; $7ac0: $a8

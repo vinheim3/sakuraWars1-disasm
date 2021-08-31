@@ -5609,7 +5609,7 @@ jr_03e_6469:
 	ret                                              ; $6469: $c9
 
 
-Call_03e_646a:
+Call_03e_646a::
 	push af                                          ; $646a: $f5
 	push bc                                          ; $646b: $c5
 	ld   a, d                                        ; $646c: $7a

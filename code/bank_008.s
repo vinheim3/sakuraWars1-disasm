@@ -3972,7 +3972,7 @@ jr_008_59fe:
 	ld   de, $7762                                   ; $5a5d: $11 $62 $77
 	ld   a, $1b                                      ; $5a60: $3e $1b
 
-	M_FarCall Func_01_411c
+	M_FarCall LoadType1NewAnimatedSpriteSpecAddress
 	
 	ldh  a, [$a6]                                    ; $5a76: $f0 $a6
 	call DeleteAnimatedSpriteSpec                                       ; $5a78: $cd $bb $2f
@@ -6767,8 +6767,11 @@ ScriptOpcode27_Battle_Init:
 
 
 ScriptOpcode27_Battle_Main:
+; Don't process opcodes after this
 	xor  a                                           ; $6e0f: $af
 	ld   [wScriptEngineContsRunningThisMainLoop], a                                  ; $6e10: $ea $52 $cb
+
+;
 	ld   a, [$cbc2]                                  ; $6e13: $fa $c2 $cb
 	dec  a                                           ; $6e16: $3d
 	push hl                                          ; $6e17: $e5
@@ -6783,7 +6786,7 @@ ScriptOpcode27_Battle_Main:
 	ld   h, [hl]                                     ; $6e26: $66
 	ld   l, $01                                      ; $6e27: $2e $01
 
-	M_FarCall InitBattle
+	M_FarCall SetBattleState
 
 	call DequeueAScriptOpcode                               ; $6e3d: $cd $bc $40
 	ld   a, SO_02                                      ; $6e40: $3e $02

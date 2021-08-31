@@ -3247,7 +3247,7 @@ HandleGameState:
 	AddrBank GameState11
 	AddrBank GameState12_ResetData
 	AddrBank GameState13_DMG
-	AddrBank GameState14
+	AddrBank GameState14_Cinematron
 	AddrBank GameState15
 	AddrBank GameState16_EnterName
 	AddrBank GameState17_Settings
@@ -3284,7 +3284,7 @@ HandleGameState:
 	AddrBank GameState36_TitleScreen
 	AddrBank GameState37_TitleMenuScreen
 	AddrBank GameState38
-	AddrBank GameState39
+	AddrBank GameState39_Explore
 	AddrBank GameState3a
 	AddrBank GameState3b
 	AddrBank GameState3c_FileLoadDisplay
@@ -9804,7 +9804,7 @@ CopyAnimSpriteSpecDetailsFromHramBasedOnAnimType::
 	ret                                                             ; $3075
 
 
-; A - idx of animate sprite spec in base struct
+; A - idx of animate sprite spec instance struct
 HLequAddrOfAnimSpriteSpecDetails::
 ; BASS_SIZEOF = 4
 	sla  a                                                          ; $3076
