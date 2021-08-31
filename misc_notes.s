@@ -28,6 +28,7 @@
 ; rgbgfx -o en_dormRoomOpts.2bpp -h en_dormRoomOpts.png
 ; rgbgfx -o en_dormRoomDayDetails.2bpp -h en_dormRoomDayDetails.png
 ; rgbgfx -o en_enterName.2bpp en_enterName.png
+; rgbgfx -o en_battleKanjis.2bpp en_battleKanjis.png
 ; tools/gfx.py 1bpp newLetters.png --from=png --interleave
 
 ; empty banks

@@ -4148,7 +4148,7 @@ GameState1a::
 	ld   c, a                                        ; $5b14: $4f
 	ld   [$c9d0], a                                  ; $5b15: $ea $d0 $c9
 	ld   d, $00                                      ; $5b18: $16 $00
-	call Call_03e_646a                               ; $5b1a: $cd $6a $64
+	call LoadBattleScreen                               ; $5b1a: $cd $6a $64
 	ld   a, $01                                      ; $5b1d: $3e $01
 	ld   hl, $7000                                   ; $5b1f: $21 $00 $70
 	ld   de, wBGPalettes                                   ; $5b22: $11 $de $c2
@@ -5609,9 +5609,12 @@ jr_03e_6469:
 	ret                                              ; $6469: $c9
 
 
-Call_03e_646a::
+; D -
+LoadBattleScreen::
 	push af                                          ; $646a: $f5
 	push bc                                          ; $646b: $c5
+
+;
 	ld   a, d                                        ; $646c: $7a
 	ld   [$c9b1], a                                  ; $646d: $ea $b1 $c9
 	ld   a, $01                                      ; $6470: $3e $01
@@ -5629,7 +5632,11 @@ Call_03e_646a::
 	ld   a, $1c                                      ; $648d: $3e $1c
 	ld   hl, $9000                                   ; $648f: $21 $00 $90
 	ld   de, $6a3b                                   ; $6492: $11 $3b $6a
+if def(VWF)
+	call BattleTileDataHook
+else
 	call RLEXorCopy                                       ; $6495: $cd $d2 $09
+endc
 	ld   a, $16                                      ; $6498: $3e $16
 	ld   hl, $9800                                   ; $649a: $21 $00 $98
 	ld   de, $7fea                                   ; $649d: $11 $ea $7f
@@ -9440,6 +9447,13 @@ SettingsTileAttrHook:
 	call RLEXorCopy
 
 	M_FarCall ChangeSettingsTileAttr
+	ret
+
+
+BattleTileDataHook:
+	call RLEXorCopy
+
+	M_FarCall LoadEnBattleTileData
 	ret
 
 endc

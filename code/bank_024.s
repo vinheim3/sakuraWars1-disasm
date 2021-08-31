@@ -11,95 +11,87 @@ GameState2f_Battle::
 	ld   a, [wGameSubstate]                                  ; $4000: $fa $a1 $c2
 	rst  JumpTable                                         ; $4003: $df
 	dw BattleSubstate00
-	dw $42a8
-	dw $4302
-	dw $438a
-	dw $4400
-	dw $442d
-	dw $44a8
-	dw $44b3
-	dw $45b6
-	dw $45d9
-	dw $4604
-	dw $4686
-	dw $46ec
-	dw $47d0
-	dw $482f
-	dw $48e9
-	dw $4924
-	dw $4952
-	dw $49c8
-	dw $4a52
-	dw $4ac8
-	dw $4b2c
-	dw $4b8b
-	dw $4bad
-	dw $4bfe
-	dw $4c3e
-	dw $4c60
-	dw $4cc5
-	dw $4d14
-	dw $4d99
-	dw $4e13
-	dw $4e89
-	dw $4ea1
-	dw $4ec3
-	dw $4ef8
-	dw $51af
-	dw $51fb
-	dw $51a0
-	dw $5226
-	dw $5269
-	dw $528a
-	dw $5301
-	dw $5367
-	dw $5444
-	dw $5495
-	dw $54f3
-	dw $552c
-	dw $554f
-	dw $5587
-	dw $55f6
-	dw $5676
-	dw $56c4
-	dw $570a
-	dw $5782
-	dw $57b6
-	dw $57d1
-	dw $57ff
-	dw $581f
-	dw $5840
-	dw $586e
-	dw $58e4
-	dw $5993
-	dw $59a6
-	dw $59f0
-	dw $5a66
-	dw $5a7a
-	dw $5af0
-	dw $5b09
-	dw $5b2b
-	dw $5b4b
-	dw $5bc1
-	dw $5c30
-	dw $5cdf
-	dw $5d52
-	dw $5e08
-	dw $5e80
-	dw $5ea1
-
-
-
-	inc  a                                           ; $409e: $3c
-	ld   d, b                                        ; $409f: $50
-	ld   h, a                                        ; $40a0: $67
-	ld   d, b                                        ; $40a1: $50
-	sbc  $50                                         ; $40a2: $de $50
-	nop                                              ; $40a4: $00
-	ld   d, c                                        ; $40a5: $51
-	ret  nz                                          ; $40a6: $c0
-
-	ld   e, [hl]                                     ; $40a7: $5e
+	dw BattleSubstate01
+	dw BattleSubstate02
+	dw BattleSubstate03
+	dw BattleSubstate04
+	dw BattleSubstate05
+	dw BattleSubstate06
+	dw BattleSubstate07
+	dw BattleSubstate08
+	dw BattleSubstate09
+	dw BattleSubstate0a
+	dw BattleSubstate0b
+	dw BattleSubstate0c
+	dw BattleSubstate0d
+	dw BattleSubstate0e
+	dw BattleSubstate0f
+	dw BattleSubstate10
+	dw BattleSubstate11
+	dw BattleSubstate12
+	dw BattleSubstate13
+	dw BattleSubstate14
+	dw BattleSubstate15
+	dw BattleSubstate16
+	dw BattleSubstate17
+	dw BattleSubstate18
+	dw BattleSubstate19
+	dw BattleSubstate1a
+	dw BattleSubstate1b
+	dw BattleSubstate1c
+	dw BattleSubstate1d
+	dw BattleSubstate1e
+	dw BattleSubstate1f
+	dw BattleSubstate20
+	dw BattleSubstate21
+	dw BattleSubstate22
+	dw BattleSubstate23
+	dw BattleSubstate24
+	dw BattleSubstate25
+	dw BattleSubstate26
+	dw BattleSubstate27
+	dw BattleSubstate28
+	dw BattleSubstate29
+	dw BattleSubstate2a
+	dw BattleSubstate2b
+	dw BattleSubstate2c
+	dw BattleSubstate2d
+	dw BattleSubstate2e
+	dw BattleSubstate2f
+	dw BattleSubstate30
+	dw BattleSubstate31
+	dw BattleSubstate32
+	dw BattleSubstate33
+	dw BattleSubstate34
+	dw BattleSubstate35
+	dw BattleSubstate36
+	dw BattleSubstate37
+	dw BattleSubstate38
+	dw BattleSubstate39
+	dw BattleSubstate3a
+	dw BattleSubstate3b
+	dw BattleSubstate3c
+	dw BattleSubstate3d
+	dw BattleSubstate3e
+	dw BattleSubstate3f
+	dw BattleSubstate40
+	dw BattleSubstate41
+	dw BattleSubstate42
+	dw BattleSubstate43
+	dw BattleSubstate44
+	dw BattleSubstate45
+	dw BattleSubstate46
+	dw BattleSubstate47
+	dw BattleSubstate48
+	dw BattleSubstate49
+	dw BattleSubstate4a
+	dw BattleSubstate4b
+	dw BattleSubstate4c
+	dw BattleSubstate4d
+	dw BattleSubstate4e
+	dw BattleSubstate4f
+	dw BattleSubstate50
+	dw BattleSubstate51
 
 
 	
@@ -251,7 +243,7 @@ jr_024_41d5:
 	ld   b, a                                        ; $41d8: $47
 	ld   a, [$ca7b]                                  ; $41d9: $fa $7b $ca
 
-	M_FarCall Call_03e_646a
+	M_FarCall LoadBattleScreen
 
 	ld   b, $00                                      ; $41f0: $06 $00
 	ld   c, $01                                      ; $41f2: $0e $01
@@ -335,6 +327,9 @@ jr_024_427e:
 	inc  c                                           ; $42a5: $0c
 	nop                                              ; $42a6: $00
 	nop                                              ; $42a7: $00
+
+
+BattleSubstate01:
 	call ClearOam                                       ; $42a8: $cd $d7 $0d
 	call AnimateAllAnimatedSpriteSpecs                                       ; $42ab: $cd $d3 $2e
 	ld   a, [$ca9f]                                  ; $42ae: $fa $9f $ca
@@ -396,6 +391,7 @@ jr_024_42fd:
 	ret                                              ; $4301: $c9
 
 
+BattleSubstate02:
 	call ClearOam                                       ; $4302: $cd $d7 $0d
 	call AnimateAllAnimatedSpriteSpecs                                       ; $4305: $cd $d3 $2e
 	call Call_024_6c6d                               ; $4308: $cd $6d $6c
@@ -469,6 +465,7 @@ jr_024_4384:
 	ret                                              ; $4389: $c9
 
 
+BattleSubstate03:
 	call ClearOam                                       ; $438a: $cd $d7 $0d
 	call AnimateAllAnimatedSpriteSpecs                                       ; $438d: $cd $d3 $2e
 	call Call_024_6c6d                               ; $4390: $cd $6d $6c
@@ -530,6 +527,7 @@ jr_024_43ed:
 	ret                                              ; $43ff: $c9
 
 
+BattleSubstate04:
 	ld   a, [$ca6f]                                  ; $4400: $fa $6f $ca
 	cp   $00                                         ; $4403: $fe $00
 	jr   z, jr_024_441b                              ; $4405: $28 $14
@@ -567,6 +565,7 @@ jr_024_4425:
 	ret                                              ; $442c: $c9
 
 
+BattleSubstate05:
 	call ClearOam                                       ; $442d: $cd $d7 $0d
 	call AnimateAllAnimatedSpriteSpecs                                       ; $4430: $cd $d3 $2e
 	call Call_024_6c6d                               ; $4433: $cd $6d $6c
@@ -630,6 +629,7 @@ jr_024_4490:
 	ret                                              ; $44a7: $c9
 
 
+BattleSubstate06:
 	call ClearOam                                       ; $44a8: $cd $d7 $0d
 	call AnimateAllAnimatedSpriteSpecs                                       ; $44ab: $cd $d3 $2e
 	ld   hl, wGameSubstate                                   ; $44ae: $21 $a1 $c2
@@ -637,6 +637,7 @@ jr_024_4490:
 	ret                                              ; $44b2: $c9
 
 
+BattleSubstate07:
 	call ClearOam                                       ; $44b3: $cd $d7 $0d
 	call AnimateAllAnimatedSpriteSpecs                                       ; $44b6: $cd $d3 $2e
 	call Call_024_7731                               ; $44b9: $cd $31 $77
@@ -816,6 +817,7 @@ jr_024_45ac:
 	ret                                              ; $45b5: $c9
 
 
+BattleSubstate08:
 	call ClearOam                                       ; $45b6: $cd $d7 $0d
 	call AnimateAllAnimatedSpriteSpecs                                       ; $45b9: $cd $d3 $2e
 	ld   b, $00                                      ; $45bc: $06 $00
@@ -834,6 +836,7 @@ jr_024_45ac:
 	ret                                              ; $45d8: $c9
 
 
+BattleSubstate09:
 	call ClearOam                                       ; $45d9: $cd $d7 $0d
 	call AnimateAllAnimatedSpriteSpecs                                       ; $45dc: $cd $d3 $2e
 	ld   a, [$ca76]                                  ; $45df: $fa $76 $ca
@@ -861,6 +864,7 @@ jr_024_4603:
 	ret                                              ; $4603: $c9
 
 
+BattleSubstate0a:
 	call ClearOam                                       ; $4604: $cd $d7 $0d
 	call AnimateAllAnimatedSpriteSpecs                                       ; $4607: $cd $d3 $2e
 	call Call_024_6c6d                               ; $460a: $cd $6d $6c
@@ -929,8 +933,11 @@ jr_024_4667:
 	inc  b                                           ; $4682: $04
 	inc  bc                                          ; $4683: $03
 	ld   [bc], a                                     ; $4684: $02
-	ld   bc, $d7cd                                   ; $4685: $01 $cd $d7
-	dec  c                                           ; $4688: $0d
+	db $01 
+	
+	
+BattleSubstate0b:
+	call ClearOam ; $4686: $cd $d7 $0d
 	call AnimateAllAnimatedSpriteSpecs                                       ; $4689: $cd $d3 $2e
 	ld   a, [$cbe5]                                  ; $468c: $fa $e5 $cb
 	or   a                                           ; $468f: $b7
@@ -997,6 +1004,9 @@ jr_024_46d3:
 	ld   a, a                                        ; $46e9: $7f
 	rst  $38                                         ; $46ea: $ff
 	ld   a, a                                        ; $46eb: $7f
+
+
+BattleSubstate0c:
 	call ClearOam                                       ; $46ec: $cd $d7 $0d
 	call AnimateAllAnimatedSpriteSpecs                                       ; $46ef: $cd $d3 $2e
 	push af                                          ; $46f2: $f5
@@ -1151,6 +1161,8 @@ jr_024_4793:
 	ld   l, $03                                      ; $47cc: $2e $03
 	jr   nz, jr_024_47d3                             ; $47ce: $20 $03
 
+
+BattleSubstate0d:
 	call ClearOam                                       ; $47d0: $cd $d7 $0d
 
 jr_024_47d3:
@@ -1204,6 +1216,9 @@ jr_024_4820:
 	ld   hl, $4613                                   ; $4826: $21 $13 $46
 	ld   bc, $0008                                   ; $4829: $01 $08 $00
 	call FarMemCopy                                       ; $482c: $cd $b2 $09
+
+
+BattleSubstate0e:
 	call ClearOam                                       ; $482f: $cd $d7 $0d
 	call AnimateAllAnimatedSpriteSpecs                                       ; $4832: $cd $d3 $2e
 	ld   a, [$cbe5]                                  ; $4835: $fa $e5 $cb
@@ -1328,6 +1343,9 @@ Jump_024_48d8:
 	nop                                              ; $48e6: $00
 	nop                                              ; $48e7: $00
 	nop                                              ; $48e8: $00
+
+
+BattleSubstate0f:
 	call ClearOam                                       ; $48e9: $cd $d7 $0d
 	call AnimateAllAnimatedSpriteSpecs                                       ; $48ec: $cd $d3 $2e
 	ld   bc, $0001                                   ; $48ef: $01 $01 $00
@@ -1363,6 +1381,7 @@ jr_024_491e:
 	ret                                              ; $4923: $c9
 
 
+BattleSubstate10:
 	call ClearOam                                       ; $4924: $cd $d7 $0d
 	call AnimateAllAnimatedSpriteSpecs                                       ; $4927: $cd $d3 $2e
 	ld   a, $03                                      ; $492a: $3e $03
@@ -1395,6 +1414,7 @@ jr_024_494a:
 	ret                                              ; $4951: $c9
 
 
+BattleSubstate11:
 	call ClearOam                                       ; $4952: $cd $d7 $0d
 	call AnimateAllAnimatedSpriteSpecs                                       ; $4955: $cd $d3 $2e
 	call Call_024_6c6d                               ; $4958: $cd $6d $6c
@@ -1456,6 +1476,7 @@ jr_024_49b5:
 	ret                                              ; $49c7: $c9
 
 
+BattleSubstate12:
 	call ClearOam                                       ; $49c8: $cd $d7 $0d
 	call AnimateAllAnimatedSpriteSpecs                                       ; $49cb: $cd $d3 $2e
 	xor  a                                           ; $49ce: $af
@@ -1549,6 +1570,7 @@ jr_024_4a4c:
 	ret                                              ; $4a51: $c9
 
 
+BattleSubstate13:
 	call ClearOam                                       ; $4a52: $cd $d7 $0d
 	call AnimateAllAnimatedSpriteSpecs                                       ; $4a55: $cd $d3 $2e
 	call Call_024_6c6d                               ; $4a58: $cd $6d $6c
@@ -1610,6 +1632,7 @@ jr_024_4ab5:
 	ret                                              ; $4ac7: $c9
 
 
+BattleSubstate14:
 	call ClearOam                                       ; $4ac8: $cd $d7 $0d
 	call AnimateAllAnimatedSpriteSpecs                                       ; $4acb: $cd $d3 $2e
 	ld   a, [$ca75]                                  ; $4ace: $fa $75 $ca
@@ -1660,6 +1683,7 @@ jr_024_4afe:
 	ret                                              ; $4b2b: $c9
 
 
+BattleSubstate15:
 	ld   a, $01                                      ; $4b2c: $3e $01
 	ld   [$ca8a], a                                  ; $4b2e: $ea $8a $ca
 	ld   a, [$ca87]                                  ; $4b31: $fa $87 $ca
@@ -1714,6 +1738,7 @@ jr_024_4b84:
 	ret                                              ; $4b8a: $c9
 
 
+BattleSubstate16:
 	call ClearOam                                       ; $4b8b: $cd $d7 $0d
 	call AnimateAllAnimatedSpriteSpecs                                       ; $4b8e: $cd $d3 $2e
 	ld   a, [$ca75]                                  ; $4b91: $fa $75 $ca
@@ -1731,6 +1756,7 @@ jr_024_4b84:
 	ret                                              ; $4bac: $c9
 
 
+BattleSubstate17:
 	push af                                          ; $4bad: $f5
 	ld   a, $ae                                      ; $4bae: $3e $ae
 	ld   [wFarCallAddr], a                                  ; $4bb0: $ea $98 $c2
@@ -1773,6 +1799,7 @@ jr_024_4bf7:
 	ret                                              ; $4bfd: $c9
 
 
+BattleSubstate18:
 	call ClearOam                                       ; $4bfe: $cd $d7 $0d
 	call AnimateAllAnimatedSpriteSpecs                                       ; $4c01: $cd $d3 $2e
 	push af                                          ; $4c04: $f5
@@ -1811,6 +1838,7 @@ jr_024_4c3d:
 	ret                                              ; $4c3d: $c9
 
 
+BattleSubstate19:
 	call ClearOam                                       ; $4c3e: $cd $d7 $0d
 	call AnimateAllAnimatedSpriteSpecs                                       ; $4c41: $cd $d3 $2e
 	ld   bc, $0001                                   ; $4c44: $01 $01 $00
@@ -1828,6 +1856,7 @@ jr_024_4c3d:
 	ret                                              ; $4c5f: $c9
 
 
+BattleSubstate1a:
 	call ClearOam                                       ; $4c60: $cd $d7 $0d
 	call AnimateAllAnimatedSpriteSpecs                                       ; $4c63: $cd $d3 $2e
 	ld   a, [$ca79]                                  ; $4c66: $fa $79 $ca
@@ -1892,6 +1921,7 @@ jr_024_4cb9:
 	ret                                              ; $4cc4: $c9
 
 
+BattleSubstate1b:
 	call ClearOam                                       ; $4cc5: $cd $d7 $0d
 	call AnimateAllAnimatedSpriteSpecs                                       ; $4cc8: $cd $d3 $2e
 	ld   a, [$ca8c]                                  ; $4ccb: $fa $8c $ca
@@ -1943,6 +1973,7 @@ jr_024_4d0a:
 	ret                                              ; $4d13: $c9
 
 
+BattleSubstate1c:
 	call ClearOam                                       ; $4d14: $cd $d7 $0d
 	call AnimateAllAnimatedSpriteSpecs                                       ; $4d17: $cd $d3 $2e
 	ld   a, [$ca87]                                  ; $4d1a: $fa $87 $ca
@@ -2014,6 +2045,7 @@ jr_024_4d86:
 	ret                                              ; $4d98: $c9
 
 
+BattleSubstate1d:
 	call ClearOam                                       ; $4d99: $cd $d7 $0d
 	call AnimateAllAnimatedSpriteSpecs                                       ; $4d9c: $cd $d3 $2e
 	ld   a, [$ca98]                                  ; $4d9f: $fa $98 $ca
@@ -2116,6 +2148,9 @@ jr_024_4df1:
 	pop  hl                                          ; $4e0e: $e1
 	ld   d, $c6                                      ; $4e0f: $16 $c6
 	ld   d, $c6                                      ; $4e11: $16 $c6
+
+
+BattleSubstate1e:
 	call ClearOam                                       ; $4e13: $cd $d7 $0d
 	call AnimateAllAnimatedSpriteSpecs                                       ; $4e16: $cd $d3 $2e
 	call Call_024_6c6d                               ; $4e19: $cd $6d $6c
@@ -2177,6 +2212,7 @@ jr_024_4e76:
 	ret                                              ; $4e88: $c9
 
 
+BattleSubstate1f:
 	call ClearOam                                       ; $4e89: $cd $d7 $0d
 	call AnimateAllAnimatedSpriteSpecs                                       ; $4e8c: $cd $d3 $2e
 	ld   d, $04                                      ; $4e8f: $16 $04
@@ -2193,6 +2229,7 @@ jr_024_4e9a:
 	ret                                              ; $4ea0: $c9
 
 
+BattleSubstate20:
 	call ClearOam                                       ; $4ea1: $cd $d7 $0d
 	call AnimateAllAnimatedSpriteSpecs                                       ; $4ea4: $cd $d3 $2e
 	ld   a, [$ca7e]                                  ; $4ea7: $fa $7e $ca
@@ -2210,6 +2247,7 @@ jr_024_4e9a:
 	ret                                              ; $4ec2: $c9
 
 
+BattleSubstate21:
 	call ClearOam                                       ; $4ec3: $cd $d7 $0d
 	call AnimateAllAnimatedSpriteSpecs                                       ; $4ec6: $cd $d3 $2e
 	ld   a, [$ca9a]                                  ; $4ec9: $fa $9a $ca
@@ -2242,6 +2280,7 @@ jr_024_4ef7:
 	ret                                              ; $4ef7: $c9
 
 
+BattleSubstate22:
 	call ClearOam                                       ; $4ef8: $cd $d7 $0d
 	call AnimateAllAnimatedSpriteSpecs                                       ; $4efb: $cd $d3 $2e
 	ld   a, [$caa0]                                  ; $4efe: $fa $a0 $ca
@@ -2423,6 +2462,7 @@ jr_024_5019:
 	ret                                              ; $503b: $c9
 
 
+BattleSubstate4d:
 	call ClearOam                                       ; $503c: $cd $d7 $0d
 	call AnimateAllAnimatedSpriteSpecs                                       ; $503f: $cd $d3 $2e
 	ld   a, [$ca76]                                  ; $5042: $fa $76 $ca
@@ -2450,6 +2490,7 @@ jr_024_5066:
 	ret                                              ; $5066: $c9
 
 
+BattleSubstate4e:
 	call ClearOam                                       ; $5067: $cd $d7 $0d
 	call AnimateAllAnimatedSpriteSpecs                                       ; $506a: $cd $d3 $2e
 	call Call_024_6c6d                               ; $506d: $cd $6d $6c
@@ -2511,6 +2552,7 @@ jr_024_50ca:
 	ret                                              ; $50dd: $c9
 
 
+BattleSubstate4f:
 	call ClearOam                                       ; $50de: $cd $d7 $0d
 	call AnimateAllAnimatedSpriteSpecs                                       ; $50e1: $cd $d3 $2e
 	push af                                          ; $50e4: $f5
@@ -2531,6 +2573,7 @@ jr_024_50ff:
 	ret                                              ; $50ff: $c9
 
 
+BattleSubstate50:
 	call ClearOam                                       ; $5100: $cd $d7 $0d
 	call AnimateAllAnimatedSpriteSpecs                                       ; $5103: $cd $d3 $2e
 	call Call_024_6c6d                               ; $5106: $cd $6d $6c
@@ -2611,6 +2654,7 @@ jr_024_5163:
 	ret                                              ; $519f: $c9
 
 
+BattleSubstate25:
 	call ClearOam                                       ; $51a0: $cd $d7 $0d
 	call AnimateAllAnimatedSpriteSpecs                                       ; $51a3: $cd $d3 $2e
 	call Call_024_6c6d                               ; $51a6: $cd $6d $6c
@@ -2621,6 +2665,7 @@ jr_024_5163:
 	ret                                              ; $51ae: $c9
 
 
+BattleSubstate23:
 	call ClearOam                                       ; $51af: $cd $d7 $0d
 	call AnimateAllAnimatedSpriteSpecs                                       ; $51b2: $cd $d3 $2e
 	ld   a, [$ca89]                                  ; $51b5: $fa $89 $ca
@@ -2669,6 +2714,7 @@ jr_024_51e0:
 	ret                                              ; $51fa: $c9
 
 
+BattleSubstate24:
 	call ClearOam                                       ; $51fb: $cd $d7 $0d
 	call AnimateAllAnimatedSpriteSpecs                                       ; $51fe: $cd $d3 $2e
 	ld   a, [$ca76]                                  ; $5201: $fa $76 $ca
@@ -2696,6 +2742,7 @@ jr_024_5225:
 	ret                                              ; $5225: $c9
 
 
+BattleSubstate26:
 	call ClearOam                                       ; $5226: $cd $d7 $0d
 	call AnimateAllAnimatedSpriteSpecs                                       ; $5229: $cd $d3 $2e
 	ld   a, [$ca71]                                  ; $522c: $fa $71 $ca
@@ -2733,6 +2780,7 @@ jr_024_524e:
 	ret                                              ; $5268: $c9
 
 
+BattleSubstate27:
 	push af                                          ; $5269: $f5
 	ld   a, $ae                                      ; $526a: $3e $ae
 	ld   [wFarCallAddr], a                                  ; $526c: $ea $98 $c2
@@ -2753,6 +2801,7 @@ jr_024_5283:
 	ret                                              ; $5289: $c9
 
 
+BattleSubstate28:
 	call ClearOam                                       ; $528a: $cd $d7 $0d
 	call AnimateAllAnimatedSpriteSpecs                                       ; $528d: $cd $d3 $2e
 	ld   c, $01                                      ; $5290: $0e $01
@@ -2814,6 +2863,7 @@ jr_024_5300:
 	ret                                              ; $5300: $c9
 
 
+BattleSubstate29:
 	call ClearOam                                       ; $5301: $cd $d7 $0d
 	call AnimateAllAnimatedSpriteSpecs                                       ; $5304: $cd $d3 $2e
 	ld   a, [$cbe5]                                  ; $5307: $fa $e5 $cb
@@ -2881,6 +2931,9 @@ jr_024_534e:
 	ld   a, a                                        ; $5364: $7f
 	rst  $38                                         ; $5365: $ff
 	ld   a, a                                        ; $5366: $7f
+
+
+BattleSubstate2a:
 	call ClearOam                                       ; $5367: $cd $d7 $0d
 	call AnimateAllAnimatedSpriteSpecs                                       ; $536a: $cd $d3 $2e
 	call ClearTextBoxDimensionsAndSetDefaultTextStyle                                       ; $536d: $cd $09 $14
@@ -3032,6 +3085,8 @@ jr_024_5407:
 	ld   l, $03                                      ; $5440: $2e $03
 	jr   nz, jr_024_5447                             ; $5442: $20 $03
 
+
+BattleSubstate2b:
 	call ClearOam                                       ; $5444: $cd $d7 $0d
 
 jr_024_5447:
@@ -3080,6 +3135,7 @@ jr_024_5494:
 	ret                                              ; $5494: $c9
 
 
+BattleSubstate2c:
 	call ClearOam                                       ; $5495: $cd $d7 $0d
 	call AnimateAllAnimatedSpriteSpecs                                       ; $5498: $cd $d3 $2e
 	ld   a, [$cbe5]                                  ; $549b: $fa $e5 $cb
@@ -3139,6 +3195,9 @@ jr_024_54e2:
 	nop                                              ; $54f0: $00
 	nop                                              ; $54f1: $00
 	nop                                              ; $54f2: $00
+
+
+BattleSubstate2d:
 	call ClearOam                                       ; $54f3: $cd $d7 $0d
 	call AnimateAllAnimatedSpriteSpecs                                       ; $54f6: $cd $d3 $2e
 	call Call_024_6723                               ; $54f9: $cd $23 $67
@@ -3170,6 +3229,7 @@ jr_024_5520:
 	ret                                              ; $552b: $c9
 
 
+BattleSubstate2e:
 	call ClearOam                                       ; $552c: $cd $d7 $0d
 	call AnimateAllAnimatedSpriteSpecs                                       ; $552f: $cd $d3 $2e
 	ld   bc, $0001                                   ; $5532: $01 $01 $00
@@ -3187,6 +3247,7 @@ jr_024_5520:
 	ret                                              ; $554e: $c9
 
 
+BattleSubstate2f:
 	call ClearOam                                       ; $554f: $cd $d7 $0d
 	call AnimateAllAnimatedSpriteSpecs                                       ; $5552: $cd $d3 $2e
 	ld   d, $04                                      ; $5555: $16 $04
@@ -3220,6 +3281,7 @@ jr_024_556b:
 	ret                                              ; $5586: $c9
 
 
+BattleSubstate30:
 	push af                                          ; $5587: $f5
 	ld   a, $ae                                      ; $5588: $3e $ae
 	ld   [wFarCallAddr], a                                  ; $558a: $ea $98 $c2
@@ -3277,6 +3339,7 @@ jr_024_55ef:
 	ret                                              ; $55f5: $c9
 
 
+BattleSubstate31:
 	call ClearOam                                       ; $55f6: $cd $d7 $0d
 	call AnimateAllAnimatedSpriteSpecs                                       ; $55f9: $cd $d3 $2e
 	ld   a, [$ca76]                                  ; $55fc: $fa $76 $ca
@@ -3343,6 +3406,7 @@ jr_024_5663:
 	ret                                              ; $5675: $c9
 
 
+BattleSubstate32:
 	call ClearOam                                       ; $5676: $cd $d7 $0d
 	call AnimateAllAnimatedSpriteSpecs                                       ; $5679: $cd $d3 $2e
 	push af                                          ; $567c: $f5
@@ -3384,6 +3448,7 @@ jr_024_56c3:
 	ret                                              ; $56c3: $c9
 
 
+BattleSubstate33:
 	call ClearOam                                       ; $56c4: $cd $d7 $0d
 	call AnimateAllAnimatedSpriteSpecs                                       ; $56c7: $cd $d3 $2e
 	ld   a, [$ca9a]                                  ; $56ca: $fa $9a $ca
@@ -3428,6 +3493,7 @@ jr_024_5704:
 	ret                                              ; $5709: $c9
 
 
+BattleSubstate34:
 	call ClearOam                                       ; $570a: $cd $d7 $0d
 	call AnimateAllAnimatedSpriteSpecs                                       ; $570d: $cd $d3 $2e
 	ld   a, [$ca7b]                                  ; $5710: $fa $7b $ca
@@ -3502,6 +3568,7 @@ jr_024_577c:
 	ret                                              ; $5781: $c9
 
 
+BattleSubstate35:
 	call ClearOam                                       ; $5782: $cd $d7 $0d
 	call AnimateAllAnimatedSpriteSpecs                                       ; $5785: $cd $d3 $2e
 	push af                                          ; $5788: $f5
@@ -3527,6 +3594,7 @@ jr_024_577c:
 	ret                                              ; $57b5: $c9
 
 
+BattleSubstate36:
 	ld   a, [$ca86]                                  ; $57b6: $fa $86 $ca
 	inc  a                                           ; $57b9: $3c
 	ld   [$ca86], a                                  ; $57ba: $ea $86 $ca
@@ -3544,6 +3612,7 @@ jr_024_57ca:
 	ret                                              ; $57d0: $c9
 
 
+BattleSubstate37:
 	ld   a, [$ca86]                                  ; $57d1: $fa $86 $ca
 	inc  a                                           ; $57d4: $3c
 	ld   [$ca86], a                                  ; $57d5: $ea $86 $ca
@@ -3570,6 +3639,7 @@ jr_024_57e4:
 	ret                                              ; $57fe: $c9
 
 
+BattleSubstate38:
 	call ClearOam                                       ; $57ff: $cd $d7 $0d
 	call AnimateAllAnimatedSpriteSpecs                                       ; $5802: $cd $d3 $2e
 	ld   a, [$ca85]                                  ; $5805: $fa $85 $ca
@@ -3591,6 +3661,7 @@ jr_024_5819:
 	ret                                              ; $581e: $c9
 
 
+BattleSubstate39:
 	call ClearOam                                       ; $581f: $cd $d7 $0d
 	call AnimateAllAnimatedSpriteSpecs                                       ; $5822: $cd $d3 $2e
 	ld   a, $0f                                      ; $5825: $3e $0f
@@ -3608,6 +3679,7 @@ jr_024_5819:
 	ret                                              ; $583f: $c9
 
 
+BattleSubstate3a:
 	push af                                          ; $5840: $f5
 	ld   a, $ae                                      ; $5841: $3e $ae
 	ld   [wFarCallAddr], a                                  ; $5843: $ea $98 $c2
@@ -3634,6 +3706,7 @@ jr_024_5867:
 	ret                                              ; $586d: $c9
 
 
+BattleSubstate3b:
 	call ClearOam                                       ; $586e: $cd $d7 $0d
 	call AnimateAllAnimatedSpriteSpecs                                       ; $5871: $cd $d3 $2e
 	call Call_024_6c6d                               ; $5874: $cd $6d $6c
@@ -3695,6 +3768,7 @@ jr_024_58d1:
 	ret                                              ; $58e3: $c9
 
 
+BattleSubstate3c:
 	call ClearOam                                       ; $58e4: $cd $d7 $0d
 	call AnimateAllAnimatedSpriteSpecs                                       ; $58e7: $cd $d3 $2e
 	ld   a, [wWramBank]                                  ; $58ea: $fa $93 $c2
@@ -3775,6 +3849,7 @@ jr_024_5974:
 	ret                                              ; $5992: $c9
 
 
+BattleSubstate3d:
 	call ClearOam                                       ; $5993: $cd $d7 $0d
 	call AnimateAllAnimatedSpriteSpecs                                       ; $5996: $cd $d3 $2e
 	ld   d, $30                                      ; $5999: $16 $30
@@ -3785,6 +3860,7 @@ jr_024_5974:
 	ret                                              ; $59a5: $c9
 
 
+BattleSubstate3e:
 	ld   b, $00                                      ; $59a6: $06 $00
 	ld   c, $01                                      ; $59a8: $0e $01
 	push af                                          ; $59aa: $f5
@@ -3838,6 +3914,7 @@ jr_024_59ea:
 	ret                                              ; $59ef: $c9
 
 
+BattleSubstate3f:
 	call ClearOam                                       ; $59f0: $cd $d7 $0d
 	call AnimateAllAnimatedSpriteSpecs                                       ; $59f3: $cd $d3 $2e
 	call Call_024_6c6d                               ; $59f6: $cd $6d $6c
@@ -3899,6 +3976,7 @@ jr_024_5a53:
 	ret                                              ; $5a65: $c9
 
 
+BattleSubstate40:
 	call ClearOam                                       ; $5a66: $cd $d7 $0d
 	call AnimateAllAnimatedSpriteSpecs                                       ; $5a69: $cd $d3 $2e
 	ld   a, [$ca6f]                                  ; $5a6c: $fa $6f $ca
@@ -3910,6 +3988,7 @@ jr_024_5a53:
 	ret                                              ; $5a79: $c9
 
 
+BattleSubstate41:
 	call ClearOam                                       ; $5a7a: $cd $d7 $0d
 	call AnimateAllAnimatedSpriteSpecs                                       ; $5a7d: $cd $d3 $2e
 	call Call_024_6c6d                               ; $5a80: $cd $6d $6c
@@ -3971,6 +4050,7 @@ jr_024_5add:
 	ret                                              ; $5aef: $c9
 
 
+BattleSubstate42:
 	call ClearOam                                       ; $5af0: $cd $d7 $0d
 	call AnimateAllAnimatedSpriteSpecs                                       ; $5af3: $cd $d3 $2e
 	ld   a, $01                                      ; $5af6: $3e $01
@@ -3984,6 +4064,7 @@ jr_024_5add:
 	ret                                              ; $5b08: $c9
 
 
+BattleSubstate43:
 	call ClearOam                                       ; $5b09: $cd $d7 $0d
 	call AnimateAllAnimatedSpriteSpecs                                       ; $5b0c: $cd $d3 $2e
 	ld   a, [$ca6f]                                  ; $5b0f: $fa $6f $ca
@@ -4001,6 +4082,7 @@ jr_024_5add:
 	ret                                              ; $5b2a: $c9
 
 
+BattleSubstate44:
 	call ClearOam                                       ; $5b2b: $cd $d7 $0d
 	call AnimateAllAnimatedSpriteSpecs                                       ; $5b2e: $cd $d3 $2e
 	push af                                          ; $5b31: $f5
@@ -4019,6 +4101,7 @@ jr_024_5add:
 	ret                                              ; $5b4a: $c9
 
 
+BattleSubstate45:
 	call ClearOam                                       ; $5b4b: $cd $d7 $0d
 	call AnimateAllAnimatedSpriteSpecs                                       ; $5b4e: $cd $d3 $2e
 	call Call_024_6c6d                               ; $5b51: $cd $6d $6c
@@ -4080,6 +4163,7 @@ jr_024_5bae:
 	ret                                              ; $5bc0: $c9
 
 
+BattleSubstate46:
 	call ClearOam                                       ; $5bc1: $cd $d7 $0d
 	call AnimateAllAnimatedSpriteSpecs                                       ; $5bc4: $cd $d3 $2e
 	ld   a, [$ca6f]                                  ; $5bc7: $fa $6f $ca
@@ -4137,6 +4221,7 @@ jr_024_5be7:
 	ret                                              ; $5c2f: $c9
 
 
+BattleSubstate47:
 	ld   a, [$ca6f]                                  ; $5c30: $fa $6f $ca
 	cp   $03                                         ; $5c33: $fe $03
 	jr   z, jr_024_5c4d                              ; $5c35: $28 $16
@@ -4230,6 +4315,7 @@ jr_024_5cd8:
 	ret                                              ; $5cde: $c9
 
 
+BattleSubstate48:
 	ld   a, [$ca6f]                                  ; $5cdf: $fa $6f $ca
 	cp   $03                                         ; $5ce2: $fe $03
 	jr   z, jr_024_5d35                              ; $5ce4: $28 $4f
@@ -4291,6 +4377,7 @@ jr_024_5d35:
 	ret                                              ; $5d51: $c9
 
 
+BattleSubstate49:
 	xor  a                                           ; $5d52: $af
 	ld   [$ca78], a                                  ; $5d53: $ea $78 $ca
 	ld   a, [$ca79]                                  ; $5d56: $fa $79 $ca
@@ -4379,6 +4466,7 @@ jr_024_5df4:
 	ret                                              ; $5e07: $c9
 
 
+BattleSubstate4a:
 	call ClearOam                                       ; $5e08: $cd $d7 $0d
 	call AnimateAllAnimatedSpriteSpecs                                       ; $5e0b: $cd $d3 $2e
 	call Call_024_6c6d                               ; $5e0e: $cd $6d $6c
@@ -4441,6 +4529,7 @@ jr_024_5e6d:
 	ret                                              ; $5e7f: $c9
 
 
+BattleSubstate4b:
 	call ClearOam                                       ; $5e80: $cd $d7 $0d
 	call AnimateAllAnimatedSpriteSpecs                                       ; $5e83: $cd $d3 $2e
 	push af                                          ; $5e86: $f5
@@ -4461,6 +4550,7 @@ jr_024_5ea0:
 	ret                                              ; $5ea0: $c9
 
 
+BattleSubstate4c:
 	push af                                          ; $5ea1: $f5
 	ld   a, $33                                      ; $5ea2: $3e $33
 	ld   [wFarCallAddr], a                                  ; $5ea4: $ea $98 $c2
@@ -4479,6 +4569,7 @@ jr_024_5ea0:
 	ret                                              ; $5ebf: $c9
 
 
+BattleSubstate51:
 	call ClearOam                                       ; $5ec0: $cd $d7 $0d
 	call AnimateAllAnimatedSpriteSpecs                                       ; $5ec3: $cd $d3 $2e
 	jp   Jump_024_5947                               ; $5ec6: $c3 $47 $59

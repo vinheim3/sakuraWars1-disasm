@@ -133,6 +133,43 @@ ChangeSettingsTileAttr::
 	ret
 
 
+LoadEnBattleTileData::
+	ld   bc, $30
+	ld   de, $9000
+	ld   hl, Gfx_EnBattle
+	call MemCopy
+
+	ld   bc, $30
+	ld   de, $9100
+	ld   hl, Gfx_EnBattle+$30
+	call MemCopy
+
+	ld   bc, $10
+	ld   de, $9150
+	ld   hl, Gfx_EnBattle+$60
+	call MemCopy
+
+	ld   bc, $20
+	ld   de, $9230
+	ld   hl, Gfx_EnBattle+$70
+	call MemCopy
+
+	ld   bc, $30
+	ld   de, $9280
+	ld   hl, Gfx_EnBattle+$90
+	call MemCopy
+
+	ld   bc, $30
+	ld   de, $92e0
+	ld   hl, Gfx_EnBattle+$c0
+	call MemCopy
+	ret
+
+
+Gfx_EnBattle:
+	INCBIN "en_battleKanjis.2bpp"
+
+
 Gfx_EnSaveScreen::
 	INCBIN "en_saveScreen.2bpp"
 
