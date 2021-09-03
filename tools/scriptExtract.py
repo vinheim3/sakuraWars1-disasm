@@ -200,7 +200,7 @@ class ScriptExtractor:
             # Add word
             wordIdx = 0
             while wordIdx < len(word):
-                if word[wordIdx:wordIdx+6] == '<name>':
+                if word[wordIdx:wordIdx+6] in ('<name>', '<player>', '<Player>'):
                     boxBytes.extend([0x08, 0x00])
                     wordIdx += 6
                     continue
@@ -264,7 +264,7 @@ class ScriptExtractor:
         total = 0
         wordIdx = 0
         while wordIdx < len(word):
-            if word[wordIdx:wordIdx+6] == '<name>':
+            if word[wordIdx:wordIdx+6] == '<name>' or word[wordIdx:wordIdx+8] in ('<Player>', '<player>'):
                 total += 5 * 5 # 5 wide * 5 chars
                 wordIdx += 6
                 continue
