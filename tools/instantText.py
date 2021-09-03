@@ -6,10 +6,22 @@ import clipboard
 from scriptExtract import ScriptExtractor
 from util import getKanjiMap, stringB
 
+"""
+scriptName - eg battle (1st column of spreadsheet to check against)
+tableName - table prefix to use in asm
+"""
+
 scriptName = sys.argv[1]
 tableName = sys.argv[2]
 kanji_map = getKanjiMap()
 prefix = f"{tableName}entry"
+
+def is_timed(_scriptName, idx):
+    if _scriptName == 'battle':
+        if 53-2 <= idx <= 63-2:
+            return True
+
+    return False
 
 tableItems = []
 with open('sakura wars GB - misc 29:08:21.csv') as f:
@@ -26,6 +38,17 @@ for i in range(len(tableItems)):
 comps.append("")
 
 for i, tableItem in enumerate(tableItems):
+    # Calculate if any lines breached limit
+    limit = 112
+    if is_timed(scriptName, i):
+        limit = 128
+    lines = tableItem.split('\n')
+    for line in lines:
+        textboxes = ScriptExtractor.convertEnglish(line, limit)
+        assert len(textboxes) <= 1
+        if textboxes and 0x0d in textboxes[0]:
+            print(i, line, 'breached')
+
     comps.append(f"{prefix}{i:02x}:")
     bs = []
     for char in tableItem:
