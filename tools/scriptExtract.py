@@ -171,20 +171,20 @@ class ScriptExtractor:
         self.instructions = {}
         self.jumpAddresses = []
 
-        self.translationMap = {}
         self.englishMap = {}
 
     @staticmethod
-    def convertEnglish(english):
+    def convertEnglish(english, limit=112):
         words = english.split()
         textboxes = []
         lineCounter = 0
         colCounter = 0
         boxBytes = []
         spaceLen = 3
+
         for word in words:
             wordLen = ScriptExtractor.getWordLength(word)
-            if colCounter + wordLen + spaceLen >= 0x0e * 8:
+            if colCounter + wordLen + spaceLen >= limit:
                 lineCounter += 1
                 colCounter = 0
                 if lineCounter >= 3:
@@ -500,7 +500,7 @@ class ScriptExtractor:
         totalBytes = 0
         prompted = True # if a new textbox has started
 
-        comps = ["\tStartScript", "", f"Script_{scriptNum:03x}::"]
+        comps = ["\tStartScript", "", f"Script_{self.scriptNum:03x}::"]
         addresses = sorted(self.instructions.keys())
         retainedRefs = set(self.jumpAddresses)
         for address in addresses:
@@ -517,8 +517,9 @@ class ScriptExtractor:
             if name in ('ScriptOpt_ContinuePrompt', 'ScriptOpt_Jump'):
                 prompted = True
 
-            if params == 't' and address+1 in self.translationMap:
-                textboxes = self.translationMap[address+1]
+            if params == 't' and address+1 in self.englishMap:
+                english = self.englishMap[address+1]
+                textboxes = self.convertEnglish(english)
                 for line in self.englishMap[address+1].split('\n'):
                     comps.append(f"; {line}")
                 if prompted is False:
@@ -587,11 +588,19 @@ class ScriptExtractor:
                     text_comps = []
                     param_comps.append(f"; {address+offset}")
 
-                    if address + offset in self.translationMap:
-                        textboxes = self.translationMap[address+offset]
+                    if address + offset in self.englishMap:
+                        english = self.englishMap[address+offset]
+                        limit = 112
+                        if name == 'ScriptOpt_TimedQuestion':
+                            limit = 128
+                        textboxes = self.convertEnglish(english, limit)
+                        assert len(textboxes) == 1
+                        if 0x0d in textboxes[0]:
+                            print(self.scriptNum, address+offset)
+
                         for line in self.englishMap[address+offset].split('\n'):
                             comps.append(f"; {line}")
-                        assert len(textboxes) == 1
+                        
                         for i, textbox in enumerate(textboxes):
                             paramStr = ','.join(f"${kanji:02x}" for kanji in textbox)
                             extra_comps.append(f"\t\tTEXT {paramStr}")
@@ -682,9 +691,7 @@ if __name__ == "__main__":
 
     # exit(0)
 
-    fullTranslationMap = {}
     fullEnglishMap = {}
-    doneTranslations = {}
     doneEnglish = {}
 
     if translate:
@@ -694,21 +701,16 @@ if __name__ == "__main__":
                 if not scriptNum:
                     continue
 
-                fullTranslationMap.setdefault(int(scriptNum), {})
                 fullEnglishMap.setdefault(int(scriptNum), {})
 
+                if english and english[0] != "=":
+                    doneEnglish[orig] = english
+                    fullEnglishMap[int(scriptNum)][int(offset)] = english
+
                 if dupe1 == 'x':
-                    if orig in doneTranslations:
-                        fullTranslationMap[int(scriptNum)][int(offset)] = doneTranslations[orig]
+                    if orig in doneEnglish:
                         fullEnglishMap[int(scriptNum)][int(offset)] = doneEnglish[orig]
                     continue
-
-                if english and english[0] != "=":
-                    tbs = ScriptExtractor.convertEnglish(english)
-                    doneTranslations[orig] = tbs
-                    doneEnglish[orig] = english
-                    fullTranslationMap[int(scriptNum)][int(offset)] = tbs
-                    fullEnglishMap[int(scriptNum)][int(offset)] = english
 
     availableBanks = [
         0x02, 0x03,       0x2b, 0x36, 0x37, 0x38, 0x39, 
@@ -728,15 +730,13 @@ if __name__ == "__main__":
         if 0x13 <= scriptNum < 0x100:
             continue
 
-        if scriptNum not in fullTranslationMap:
-            fullTranslationMap[scriptNum] = {}
+        if scriptNum not in fullEnglishMap:
             fullEnglishMap[scriptNum] = {}
 
         startBank = data[baseTable+scriptNum*3+2]+0x41
         startAddr = wordIn(data, baseTable+scriptNum*3)+0x4000
 
         se = ScriptExtractor(data, bankAddr(startBank, startAddr), scriptNum)
-        se.translationMap = fullTranslationMap[scriptNum]
         se.englishMap = fullEnglishMap[scriptNum]
         comps, totalBytes = se.run()
 
