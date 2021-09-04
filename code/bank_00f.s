@@ -48,6 +48,7 @@ jr_00f_4011:
 	ret                                              ; $402f: $c9
 
 
+SpriteGroup9Pointers::
 	adc  $40                                         ; $4030: $ce $40
 	sub  $40                                         ; $4032: $d6 $40
 	or   $40                                         ; $4034: $f6 $40
@@ -1791,6 +1792,9 @@ jr_00f_492f:
 
 	ret  nc                                          ; $4938: $d0
 
+
+
+
 	nop                                              ; $4939: $00
 	jr   nc, jr_00f_494c                             ; $493a: $30 $10
 
@@ -2813,6 +2817,9 @@ jr_00f_4d90:
 jr_00f_4da0:
 	or   h                                           ; $4da0: $b4
 	db   $10                                         ; $4da1: $10
+
+
+SpriteGroup8Pointers::
 	ld   [hl], b                                     ; $4da2: $70
 	ld   l, l                                        ; $4da3: $6d
 
@@ -2864,6 +2871,9 @@ jr_00f_4da8:
 	ld   [hl], b                                     ; $4dcf: $70
 	call nz, $0070                                   ; $4dd0: $c4 $70 $00
 	ld   [hl], c                                     ; $4dd3: $71
+
+
+SpriteGroup7Pointers::
 	ld   a, b                                        ; $4dd4: $78
 	ld   c, a                                        ; $4dd5: $4f
 	db   $e4                                         ; $4dd6: $e4
@@ -7891,7 +7901,11 @@ jr_00f_6462:
 	ld   c, h                                        ; $64aa: $4c
 	ld   bc, $0008                                   ; $64ab: $01 $08 $00
 	ld   c, d                                        ; $64ae: $4a
-	ld   de, $652c                                   ; $64af: $11 $2c $65
+	db $11 
+	
+	
+SpriteGroupEPointers::
+	db $2c, $65
 	and  b                                           ; $64b2: $a0
 	ld   h, l                                        ; $64b3: $65
 	xor  h                                           ; $64b4: $ac

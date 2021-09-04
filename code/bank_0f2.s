@@ -459,7 +459,7 @@ Jump_0f2_41da:
 	rst  $38                                         ; $4280: $ff
 	ld   b, c                                        ; $4281: $41
 	pop  bc                                          ; $4282: $c1
-	ld   de, $bfff                                   ; $4283: $11 $ff $bf
+	ld   de, sRandomSeed                                   ; $4283: $11 $ff $bf
 	cp   $4d                                         ; $4286: $fe $4d
 	or   a                                           ; $4288: $b7
 	ld   de, $1f11                                   ; $4289: $11 $11 $1f
@@ -613,7 +613,7 @@ jr_0f2_4310:
 	ld   de, $cf11                                   ; $4365: $11 $11 $cf
 	rra                                              ; $4368: $1f
 	ld   a, [$c151]                                  ; $4369: $fa $51 $c1
-	ld   de, $bfff                                   ; $436c: $11 $ff $bf
+	ld   de, sRandomSeed                                   ; $436c: $11 $ff $bf
 	cp   $4a                                         ; $436f: $fe $4a
 
 jr_0f2_4371:
@@ -11998,7 +11998,7 @@ jr_0f2_7d10:
 	rst  $38                                         ; $7d6f: $ff
 	db   $fc                                         ; $7d70: $fc
 	ld   d, c                                        ; $7d71: $51
-	ld   de, $bfff                                   ; $7d72: $11 $ff $bf
+	ld   de, sRandomSeed                                   ; $7d72: $11 $ff $bf
 	rst  $38                                         ; $7d75: $ff
 	ld   b, d                                        ; $7d76: $42
 	ld   a, [hl]                                     ; $7d77: $7e
@@ -12018,7 +12018,7 @@ jr_0f2_7d10:
 	rst  $38                                         ; $7d8b: $ff
 	db   $fd                                         ; $7d8c: $fd
 	ld   d, c                                        ; $7d8d: $51
-	ld   de, $bfff                                   ; $7d8e: $11 $ff $bf
+	ld   de, sRandomSeed                                   ; $7d8e: $11 $ff $bf
 	rst  $38                                         ; $7d91: $ff
 	ld   b, c                                        ; $7d92: $41
 	adc  [hl]                                        ; $7d93: $8e
@@ -12028,7 +12028,7 @@ jr_0f2_7d10:
 	rst  $38                                         ; $7d99: $ff
 	db   $fd                                         ; $7d9a: $fd
 	ld   h, c                                        ; $7d9b: $61
-	ld   de, $bfff                                   ; $7d9c: $11 $ff $bf
+	ld   de, sRandomSeed                                   ; $7d9c: $11 $ff $bf
 	rst  $38                                         ; $7d9f: $ff
 	ld   b, e                                        ; $7da0: $43
 	ld   a, h                                        ; $7da1: $7c

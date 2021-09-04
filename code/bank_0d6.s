@@ -9174,7 +9174,7 @@ jr_0d6_6a6f:
 	sbc  d                                           ; $6a8d: $9a
 	add  a                                           ; $6a8e: $87
 	ld   de, $1111                                   ; $6a8f: $11 $11 $11
-	ld   de, $bfff                                   ; $6a92: $11 $ff $bf
+	ld   de, sRandomSeed                                   ; $6a92: $11 $ff $bf
 	rst  $38                                         ; $6a95: $ff
 	di                                               ; $6a96: $f3
 

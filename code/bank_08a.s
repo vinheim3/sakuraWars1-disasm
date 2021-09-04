@@ -4325,7 +4325,7 @@ jr_08a_5233:
 
 jr_08a_5290:
 	rst  $38                                         ; $5290: $ff
-	ld   [$bfff], sp                                 ; $5291: $08 $ff $bf
+	ld   [sRandomSeed], sp                                 ; $5291: $08 $ff $bf
 	ld   h, b                                        ; $5294: $60
 	and  b                                           ; $5295: $a0
 	ret  nz                                          ; $5296: $c0

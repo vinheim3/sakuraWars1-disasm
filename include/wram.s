@@ -264,7 +264,16 @@ wType0AnimSpriteYPosRelativeTo:: ; $c601
     db
 
 wc602:
-    ds $8af-$602
+    ds $99-2
+
+wMiniGamesReturnState:: ; $c699
+    db
+
+wMiniGamesReturnSubstate:: ; $c69a
+    db
+
+wc69b:
+    ds $8af-$69b
 
 wSaveScreenPopUpBottomRowSpriteSpecIdxUsed:: ; $c8af
     db

@@ -41,3 +41,49 @@
 
 ; IMPORTANT
 ; When adding new characters, add map+width in scriptExtract, and width in getCharWidth
+
+; Iris mini-game
+; Help and start of main = gs $22, then main goes to gs $04
+; Kanna mini-game
+; Help and start of main = gs $25, then main goes to gs $0b
+
+
+; ..
+; 1) Minigame selection - GameState03_MiniGames - Substate1
+; 2) Minigame results - GameState18_MiniGameResults - Substate0
+; 3) Sakura title screen
+;   GameState1e_SakuraMiniGameTitleScreen - Substate0
+;   Char sprites - LoadSakuraInMiniGameTitleScreenSprites
+; 4) Sakura help screen
+;   GameState0c_SakuraMiniGameMain - Substate0
+;   Popup boxes - Call_011_6b56
+; 5) Sakura main screen - GameState0c_SakuraMiniGameMain - Substate3
+; 6) Sumire title screen
+;   GameState1d_SumireMiniGameTitleScreen - Substate0
+;   Char sprites - Call_010_73d9
+; 7) Sumire help screen 
+;   GameState26_SumireMiniGameMain - Substate0
+;   Popup boxes - Call_010_74d5
+; 8) Sumire main screen ready text
+;   GameState26_SumireMiniGameMain - Substate3
+;   Sprites - Call_020_43ac (tiles 0:$8d40+)
+; 9) Sumire main screen finished text
+;   GameState26_SumireMiniGameMain - Substate3
+;   Winner prites - Call_020_55ab (tiles 1:$8000+)
+;   Loser prites - Call_020_55bf (tiles 1:$8200+)
+; 10) Maria title screen - GameState0d_MariaMiniGame - Substate0
+; 11) Maria help screen - GameState0d_MariaMiniGame - Substate6
+; 12) Maria main screen - GameState0d_MariaMiniGame - Substate9
+; 13) Iris title screen - GameState1c_IrisMiniGameTitleScreen - Substate0
+; 14) Iris help screen - GameState22_IrisMiniGameHelpScreen - Substate0
+; 15) Iris main screen - GameState04_IrisMiniGameMain - Substate0
+; 16) Kohran title screen - GameState1b_KohranMiniGameTitleScreen - Substate0
+; 17) Kohran help screen - GameState25_KohranMiniGameMain - Substate0
+; 18) Kohran main screen
+;   GameState25_KohranMiniGameMain - Substate3
+;   Top left box - Call_020_6f72
+;   Top right box - Call_020_7028
+; 19) Kanna title screen - GameState1f_KannaMiniGameTitleScreen - Substate0
+; 20) Kanna help screen - GameState21_KannaMiniGameHelpScreen - Substate0
+; 21) Kanna main screen - GameState0b_KannaMiniGameMain - Substate1
+; ..

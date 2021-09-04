@@ -7,27 +7,21 @@ INCLUDE "includes.s"
 
 SECTION "ROM Bank $020", ROMX[$4000], BANK[$20]
 
-GameState26::
+GameState26_SumireMiniGameMain::
 	ld   a, [wGameSubstate]                                  ; $4000: $fa $a1 $c2
 	rst  JumpTable                                         ; $4003: $df
-	ld   b, l                                        ; $4004: $45
-	ld   b, b                                        ; $4005: $40
-	rst  $20                                         ; $4006: $e7
-	ld   b, b                                        ; $4007: $40
-	di                                               ; $4008: $f3
-	ld   b, b                                        ; $4009: $40
-	or   d                                           ; $400a: $b2
-	ld   b, c                                        ; $400b: $41
-	inc  d                                           ; $400c: $14
-	ld   b, h                                        ; $400d: $44
-	ld   [$0f41], sp                                 ; $400e: $08 $41 $0f
-	ld   d, e                                        ; $4011: $53
-	inc  d                                           ; $4012: $14
-	ld   d, e                                        ; $4013: $53
-	inc  h                                           ; $4014: $24
-	ld   d, e                                        ; $4015: $53
-	db   $e4                                         ; $4016: $e4
-	ld   d, a                                        ; $4017: $57
+	dw SumireMiniGameMainSubstate0
+	dw SumireMiniGameMainSubstate1
+	dw SumireMiniGameMainSubstate2
+	dw SumireMiniGameMainSubstate3
+	dw SumireMiniGameMainSubstate4
+	dw $4108
+	dw SumireMiniGameMainSubstate6
+	dw SumireMiniGameMainSubstate7
+	dw SumireMiniGameMainSubstate8
+	dw $57e4
+
+
 	ld   [$ca61], a                                  ; $4018: $ea $61 $ca
 	ld   a, c                                        ; $401b: $79
 	ld   [$ca71], a                                  ; $401c: $ea $71 $ca
@@ -53,6 +47,7 @@ GameState26::
 	ret                                              ; $4044: $c9
 
 
+SumireMiniGameMainSubstate0:
 	ld   a, $ff                                      ; $4045: $3e $ff
 	ld   [wInGameInputsEnabled], a                                  ; $4047: $ea $0e $c2
 	call ClearOam                                       ; $404a: $cd $d7 $0d
@@ -65,10 +60,14 @@ GameState26::
 	ld   a, $07                                      ; $405b: $3e $07
 	ld   [wWramBank], a                                  ; $405d: $ea $93 $c2
 	ldh  [rSVBK], a                                  ; $4060: $e0 $70
+
+;
 	ld   a, $2f                                      ; $4062: $3e $2f
 	ld   hl, $d000                                   ; $4064: $21 $00 $d0
 	ld   de, $6309                                   ; $4067: $11 $09 $63
 	call RLEXorCopy                                       ; $406a: $cd $d2 $09
+
+;
 	ld   c, $81                                      ; $406d: $0e $81
 	ld   de, $9800                                   ; $406f: $11 $00 $98
 	ld   a, $07                                      ; $4072: $3e $07
@@ -76,10 +75,14 @@ GameState26::
 	ld   b, $24                                      ; $4077: $06 $24
 	call EnqueueHDMATransfer                                       ; $4079: $cd $7c $02
 	rst  WaitUntilVBlankIntHandledIfLCDOn                                         ; $407c: $cf
+
+;
 	ld   a, $2f                                      ; $407d: $3e $2f
 	ld   hl, $d000                                   ; $407f: $21 $00 $d0
 	ld   de, $5a66                                   ; $4082: $11 $66 $5a
 	call RLEXorCopy                                       ; $4085: $cd $d2 $09
+
+;
 	ld   c, $80                                      ; $4088: $0e $80
 	ld   de, $9800                                   ; $408a: $11 $00 $98
 	ld   a, $07                                      ; $408d: $3e $07
@@ -87,11 +90,15 @@ GameState26::
 	ld   b, $24                                      ; $4092: $06 $24
 	call EnqueueHDMATransfer                                       ; $4094: $cd $7c $02
 	rst  WaitUntilVBlankIntHandledIfLCDOn                                         ; $4097: $cf
+
+;
 	ld   a, $2d                                      ; $4098: $3e $2d
 	ld   hl, $d000                                   ; $409a: $21 $00 $d0
 	ld   de, $4000                                   ; $409d: $11 $00 $40
 	call RLEXorCopy                                       ; $40a0: $cd $d2 $09
 	rst  WaitUntilVBlankIntHandledIfLCDOn                                         ; $40a3: $cf
+
+;
 	ld   c, $80                                      ; $40a4: $0e $80
 	ld   de, $8800                                   ; $40a6: $11 $00 $88
 	ld   a, $07                                      ; $40a9: $3e $07
@@ -99,6 +106,8 @@ GameState26::
 	ld   b, $40                                      ; $40ae: $06 $40
 	call EnqueueHDMATransfer                                       ; $40b0: $cd $7c $02
 	rst  WaitUntilVBlankIntHandledIfLCDOn                                         ; $40b3: $cf
+
+;
 	ld   c, $80                                      ; $40b4: $0e $80
 	ld   de, $8c00                                   ; $40b6: $11 $00 $8c
 	ld   a, $07                                      ; $40b9: $3e $07
@@ -106,6 +115,8 @@ GameState26::
 	ld   b, $60                                      ; $40be: $06 $60
 	call EnqueueHDMATransfer                                       ; $40c0: $cd $7c $02
 	rst  WaitUntilVBlankIntHandledIfLCDOn                                         ; $40c3: $cf
+
+;
 	ld   c, $80                                      ; $40c4: $0e $80
 	ld   de, $9200                                   ; $40c6: $11 $00 $92
 	ld   a, $07                                      ; $40c9: $3e $07
@@ -113,6 +124,8 @@ GameState26::
 	ld   b, $60                                      ; $40ce: $06 $60
 	call EnqueueHDMATransfer                                       ; $40d0: $cd $7c $02
 	rst  WaitUntilVBlankIntHandledIfLCDOn                                         ; $40d3: $cf
+
+;
 	pop  af                                          ; $40d4: $f1
 	ld   [wWramBank], a                                  ; $40d5: $ea $93 $c2
 	ldh  [rSVBK], a                                  ; $40d8: $e0 $70
@@ -124,6 +137,7 @@ GameState26::
 	ret                                              ; $40e6: $c9
 
 
+SumireMiniGameMainSubstate1:
 	ld   a, [wInGameButtonsPressed]                                  ; $40e7: $fa $10 $c2
 	and  $03                                         ; $40ea: $e6 $03
 	jr   z, jr_020_40f2                              ; $40ec: $28 $04
@@ -135,6 +149,7 @@ jr_020_40f2:
 	ret                                              ; $40f2: $c9
 
 
+SumireMiniGameMainSubstate2:
 	ld   b, $2c                                      ; $40f3: $06 $2c
 	ld   hl, $7f72                                   ; $40f5: $21 $72 $7f
 	call Call_020_573a                               ; $40f8: $cd $3a $57
@@ -262,6 +277,7 @@ jr_020_41b0:
 	ret                                              ; $41b1: $c9
 
 
+SumireMiniGameMainSubstate3:
 	ld   a, $ff                                      ; $41b2: $3e $ff
 	ld   [wInGameInputsEnabled], a                                  ; $41b4: $ea $0e $c2
 	call TurnOffLCD                                       ; $41b7: $cd $e3 $08
@@ -277,28 +293,30 @@ jr_020_41b0:
 	ldh  [rVBK], a                                   ; $41d0: $e0 $4f
 	ld   a, [$ca71]                                  ; $41d2: $fa $71 $ca
 	cp   $00                                         ; $41d5: $fe $00
-	jr   nz, jr_020_41e9                             ; $41d7: $20 $10
+	jr   nz, .br_41e9                             ; $41d7: $20 $10
 
 	ld   a, $29                                      ; $41d9: $3e $29
 	ld   de, $9800                                   ; $41db: $11 $00 $98
 	ld   hl, $6000                                   ; $41de: $21 $00 $60
 	ld   bc, $0400                                   ; $41e1: $01 $00 $04
 	call FarMemCopy                                       ; $41e4: $cd $b2 $09
-	jr   jr_020_41f7                                 ; $41e7: $18 $0e
+	jr   .cont_41f7                                 ; $41e7: $18 $0e
 
-jr_020_41e9:
+.br_41e9:
 	ld   a, $29                                      ; $41e9: $3e $29
 	ld   de, $9800                                   ; $41eb: $11 $00 $98
 	ld   hl, $5800                                   ; $41ee: $21 $00 $58
 	ld   bc, $0400                                   ; $41f1: $01 $00 $04
 	call FarMemCopy                                       ; $41f4: $cd $b2 $09
 
-jr_020_41f7:
+.cont_41f7:
 	ld   a, $29                                      ; $41f7: $3e $29
 	ld   de, $9c00                                   ; $41f9: $11 $00 $9c
 	ld   hl, $6800                                   ; $41fc: $21 $00 $68
 	ld   bc, $0400                                   ; $41ff: $01 $00 $04
 	call FarMemCopy                                       ; $4202: $cd $b2 $09
+
+;
 	ld   a, $25                                      ; $4205: $3e $25
 	ld   de, $8000                                   ; $4207: $11 $00 $80
 	ld   hl, $5800                                   ; $420a: $21 $00 $58
@@ -308,28 +326,30 @@ jr_020_41f7:
 	ldh  [rVBK], a                                   ; $4214: $e0 $4f
 	ld   a, [$ca71]                                  ; $4216: $fa $71 $ca
 	cp   $00                                         ; $4219: $fe $00
-	jr   nz, jr_020_422d                             ; $421b: $20 $10
+	jr   nz, .br_422d                             ; $421b: $20 $10
 
 	ld   a, $29                                      ; $421d: $3e $29
 	ld   de, $9800                                   ; $421f: $11 $00 $98
 	ld   hl, $6400                                   ; $4222: $21 $00 $64
 	ld   bc, $0400                                   ; $4225: $01 $00 $04
 	call FarMemCopy                                       ; $4228: $cd $b2 $09
-	jr   jr_020_423b                                 ; $422b: $18 $0e
+	jr   .cont_423b                                 ; $422b: $18 $0e
 
-jr_020_422d:
+.br_422d:
 	ld   a, $29                                      ; $422d: $3e $29
 	ld   de, $9800                                   ; $422f: $11 $00 $98
 	ld   hl, $5c00                                   ; $4232: $21 $00 $5c
 	ld   bc, $0400                                   ; $4235: $01 $00 $04
 	call FarMemCopy                                       ; $4238: $cd $b2 $09
 
-jr_020_423b:
+.cont_423b:
 	ld   a, $29                                      ; $423b: $3e $29
 	ld   de, $9c00                                   ; $423d: $11 $00 $9c
 	ld   hl, $6c00                                   ; $4240: $21 $00 $6c
 	ld   bc, $0400                                   ; $4243: $01 $00 $04
 	call FarMemCopy                                       ; $4246: $cd $b2 $09
+
+;
 	ld   a, $25                                      ; $4249: $3e $25
 	ld   de, $8000                                   ; $424b: $11 $00 $80
 	ld   hl, $4000                                   ; $424e: $21 $00 $40
@@ -395,7 +415,7 @@ jr_020_423b:
 	ld   [wWX], a                                  ; $42c4: $ea $09 $c2
 	ld   a, [$ca71]                                  ; $42c7: $fa $71 $ca
 	cp   $00                                         ; $42ca: $fe $00
-	jr   nz, jr_020_42e0                             ; $42cc: $20 $12
+	jr   nz, .br_42e0                             ; $42cc: $20 $12
 
 	ld   a, $35                                      ; $42ce: $3e $35
 	ld   [wSCX], a                                  ; $42d0: $ea $07 $c2
@@ -403,9 +423,9 @@ jr_020_423b:
 	ld   a, $90                                      ; $42d6: $3e $90
 	ld   [wSCY], a                                  ; $42d8: $ea $08 $c2
 	ld   [$ca6e], a                                  ; $42db: $ea $6e $ca
-	jr   jr_020_42f0                                 ; $42de: $18 $10
+	jr   .cont_42f0                                 ; $42de: $18 $10
 
-jr_020_42e0:
+.br_42e0:
 	ld   a, $48                                      ; $42e0: $3e $48
 	ld   [wSCX], a                                  ; $42e2: $ea $07 $c2
 	ld   [$ca6d], a                                  ; $42e5: $ea $6d $ca
@@ -413,7 +433,7 @@ jr_020_42e0:
 	ld   [wSCY], a                                  ; $42ea: $ea $08 $c2
 	ld   [$ca6e], a                                  ; $42ed: $ea $6e $ca
 
-jr_020_42f0:
+.cont_42f0:
 	xor  a                                           ; $42f0: $af
 	ld   [$ca47], a                                  ; $42f1: $ea $47 $ca
 	ld   a, $08                                      ; $42f4: $3e $08
@@ -518,21 +538,18 @@ Call_020_43ac:
 	inc  a                                           ; $43e0: $3c
 	ld   [$ca86], a                                  ; $43e1: $ea $86 $ca
 	cp   $0a                                         ; $43e4: $fe $0a
-	jr   c, jr_020_43f8                              ; $43e6: $38 $10
+	jr   c, .cont_43f8                              ; $43e6: $38 $10
 
 	xor  a                                           ; $43e8: $af
 	ld   [$ca86], a                                  ; $43e9: $ea $86 $ca
 	ld   a, [$ca85]                                  ; $43ec: $fa $85 $ca
 	inc  a                                           ; $43ef: $3c
 	cp   $04                                         ; $43f0: $fe $04
-	jr   c, jr_020_43f5                              ; $43f2: $38 $01
-
+	jr   c, :+                              ; $43f2: $38 $01
 	xor  a                                           ; $43f4: $af
+:	ld   [$ca85], a                                  ; $43f5: $ea $85 $ca
 
-jr_020_43f5:
-	ld   [$ca85], a                                  ; $43f5: $ea $85 $ca
-
-jr_020_43f8:
+.cont_43f8:
 	ld   a, $03                                      ; $43f8: $3e $03
 	ld   [wSpriteGroup], a                                  ; $43fa: $ea $1a $c2
 	ld   a, [$caa1]                                  ; $43fd: $fa $a1 $ca
@@ -549,6 +566,7 @@ jr_020_43f8:
 	ret                                              ; $4413: $c9
 
 
+SumireMiniGameMainSubstate4:
 	call ClearOam                                       ; $4414: $cd $d7 $0d
 	call Call_020_56d1                               ; $4417: $cd $d1 $56
 	call Call_020_4f83                               ; $441a: $cd $83 $4f
@@ -2761,14 +2779,13 @@ Call_020_508c:
 
 
 Call_020_50bf:
-	ld   hl, $510b                                   ; $50bf: $21 $0b $51
-	jr   jr_020_50c7                                 ; $50c2: $18 $03
+	ld   hl, Table_20_510b                                   ; $50bf: $21 $0b $51
+	jr   :+                                 ; $50c2: $18 $03
 
 Call_020_50c4:
-	ld   hl, $512b                                   ; $50c4: $21 $2b $51
+	ld   hl, Table_20_512b                                   ; $50c4: $21 $2b $51
 
-jr_020_50c7:
-	ld   a, [$ca99]                                  ; $50c7: $fa $99 $ca
+:	ld   a, [$ca99]                                  ; $50c7: $fa $99 $ca
 	and  $0f                                         ; $50ca: $e6 $0f
 	ld   b, a                                        ; $50cc: $47
 	ld   a, $0a                                      ; $50cd: $3e $0a
@@ -2814,70 +2831,45 @@ jr_020_50e5:
 	ret                                              ; $510a: $c9
 
 
-	ld   l, e                                        ; $510b: $6b
-	ld   d, c                                        ; $510c: $51
-	ld   l, a                                        ; $510d: $6f
-	ld   d, c                                        ; $510e: $51
-	ld   [hl], e                                     ; $510f: $73
-	ld   d, c                                        ; $5110: $51
-	ld   [hl], a                                     ; $5111: $77
-	ld   d, c                                        ; $5112: $51
-	ld   a, e                                        ; $5113: $7b
-	ld   d, c                                        ; $5114: $51
-	ld   a, a                                        ; $5115: $7f
-	ld   d, c                                        ; $5116: $51
-	add  e                                           ; $5117: $83
-	ld   d, c                                        ; $5118: $51
-	add  a                                           ; $5119: $87
-	ld   d, c                                        ; $511a: $51
-	ld   c, e                                        ; $511b: $4b
-	ld   d, c                                        ; $511c: $51
-	ld   c, a                                        ; $511d: $4f
-	ld   d, c                                        ; $511e: $51
-	ld   d, e                                        ; $511f: $53
-	ld   d, c                                        ; $5120: $51
-	ld   d, a                                        ; $5121: $57
-	ld   d, c                                        ; $5122: $51
-	ld   e, e                                        ; $5123: $5b
-	ld   d, c                                        ; $5124: $51
-	ld   e, a                                        ; $5125: $5f
-	ld   d, c                                        ; $5126: $51
-	ld   h, e                                        ; $5127: $63
-	ld   d, c                                        ; $5128: $51
-	ld   h, a                                        ; $5129: $67
-	ld   d, c                                        ; $512a: $51
-	xor  e                                           ; $512b: $ab
-	ld   d, c                                        ; $512c: $51
-	xor  a                                           ; $512d: $af
-	ld   d, c                                        ; $512e: $51
-	or   e                                           ; $512f: $b3
-	ld   d, c                                        ; $5130: $51
-	or   a                                           ; $5131: $b7
-	ld   d, c                                        ; $5132: $51
-	cp   e                                           ; $5133: $bb
-	ld   d, c                                        ; $5134: $51
-	cp   a                                           ; $5135: $bf
-	ld   d, c                                        ; $5136: $51
-	jp   $c751                                       ; $5137: $c3 $51 $c7
+Table_20_510b:
+	dw $516b
+	dw $516f
+	dw $5173
+	dw $5177
+	dw $517b
+	dw $517f
+	dw $5183
+	dw $5187
+	dw $514b
+	dw $514f
+	dw $5153
+	dw $5157
+	dw $515b
+	dw $515f
+	dw $5163
+	dw $5167
 
 
-	ld   d, c                                        ; $513a: $51
-	adc  e                                           ; $513b: $8b
-	ld   d, c                                        ; $513c: $51
-	adc  a                                           ; $513d: $8f
-	ld   d, c                                        ; $513e: $51
-	sub  e                                           ; $513f: $93
-	ld   d, c                                        ; $5140: $51
-	sub  a                                           ; $5141: $97
-	ld   d, c                                        ; $5142: $51
-	sbc  e                                           ; $5143: $9b
-	ld   d, c                                        ; $5144: $51
-	sbc  a                                           ; $5145: $9f
-	ld   d, c                                        ; $5146: $51
-	and  e                                           ; $5147: $a3
-	ld   d, c                                        ; $5148: $51
-	and  a                                           ; $5149: $a7
-	ld   d, c                                        ; $514a: $51
+Table_20_512b:
+	dw $51ab
+	dw $51af
+	dw $51b3
+	dw $51b7
+	dw $51bb
+	dw $51bf
+	dw $51c3
+	dw $51c7
+	dw $518b
+	dw $518f
+	dw $5193
+	dw $5197
+	dw $519b
+	dw $519f
+	dw $51a3
+	dw $51a7
+
+
+
 	ld   c, e                                        ; $514b: $4b
 	ld   c, h                                        ; $514c: $4c
 	ld   c, e                                        ; $514d: $4b
@@ -3006,6 +2998,8 @@ jr_020_50e5:
 	ld   a, c                                        ; $51c8: $79
 	ld   a, b                                        ; $51c9: $78
 	ld   a, d                                        ; $51ca: $7a
+
+
 
 Call_020_51cb:
 	ld   a, [hl+]                                    ; $51cb: $2a
@@ -3235,8 +3229,13 @@ jr_020_52ff:
 	rlca                                             ; $530c: $07
 	ld   c, b                                        ; $530d: $48
 	nop                                              ; $530e: $00
+
+
+SumireMiniGameMainSubstate6:
 	ld   hl, $ca4a                                   ; $530f: $21 $4a $ca
 	ld   [hl], $05                                   ; $5312: $36 $05
+
+SumireMiniGameMainSubstate7:
 	ld   hl, $ca49                                   ; $5314: $21 $49 $ca
 	ld   [hl], $01                                   ; $5317: $36 $01
 	ld   a, $2e                                      ; $5319: $3e $2e
@@ -3246,6 +3245,7 @@ jr_020_52ff:
 	ret                                              ; $5323: $c9
 
 
+SumireMiniGameMainSubstate8:
 	call ClearOam                                       ; $5324: $cd $d7 $0d
 	call Call_020_43ac                               ; $5327: $cd $ac $43
 	call Call_020_56d1                               ; $532a: $cd $d1 $56
@@ -3676,6 +3676,7 @@ jr_020_557d:
 
 	ret  nc                                          ; $55aa: $d0
 
+	
 Call_020_55ab:
 	ld   a, $03                                      ; $55ab: $3e $03
 	ld   [wSpriteGroup], a                                  ; $55ad: $ea $1a $c2
@@ -6260,31 +6261,22 @@ jr_020_61cb:
 	db $01, $ff 
 	
 	
-GameState25::
-	db $fa
-	and  c                                           ; $6215: $a1
-	jp   nz, Jump_020_5bdf                           ; $6216: $c2 $df $5b
+GameState25_KohranMiniGameMain::
+	ld   a, [wGameSubstate] ; $6214: $fa $a1 $c2
+	rst  JumpTable                           ; $6217: $df
+	dw KohranMiniGameMainSubstate0
+	dw $62f3
+	dw $62ff
+	dw KohranMiniGameMainSubstate3
+	dw KohranMiniGameMainSubstate4
+	dw KohranMiniGameMainSubstate5
+	dw KohranMiniGameMainSubstate6
+	dw KohranMiniGameMainSubstate7
+	dw KohranMiniGameMainSubstate8
+	dw $7906
+	dw $6314
 
-	ld   h, d                                        ; $6219: $62
-	di                                               ; $621a: $f3
-	ld   h, d                                        ; $621b: $62
-	rst  $38                                         ; $621c: $ff
-	ld   h, d                                        ; $621d: $62
-	ld   [de], a                                     ; $621e: $12
-	ld   h, h                                        ; $621f: $64
-	adc  l                                           ; $6220: $8d
-	ld   h, h                                        ; $6221: $64
-	adc  b                                           ; $6222: $88
-	ld   h, [hl]                                     ; $6223: $66
-	db   $fc                                         ; $6224: $fc
-	ld   h, [hl]                                     ; $6225: $66
-	ld   l, [hl]                                     ; $6226: $6e
-	ld   h, a                                        ; $6227: $67
-	cp   h                                           ; $6228: $bc
-	ld   h, a                                        ; $6229: $67
-	ld   b, $79                                      ; $622a: $06 $79
-	inc  d                                           ; $622c: $14
-	ld   h, e                                        ; $622d: $63
+
 	ld   [$ca62], a                                  ; $622e: $ea $62 $ca
 	ld   a, c                                        ; $6231: $79
 	ld   [$cad1], a                                  ; $6232: $ea $d1 $ca
@@ -6310,6 +6302,7 @@ GameState25::
 	ret                                              ; $625a: $c9
 
 
+KohranMiniGameMainSubstate0:
 	ld   a, $ff                                      ; $625b: $3e $ff
 	ld   [wInGameInputsEnabled], a                                  ; $625d: $ea $0e $c2
 	call ClearOam                                       ; $6260: $cd $d7 $0d
@@ -6318,10 +6311,14 @@ GameState25::
 	ld   a, $07                                      ; $6267: $3e $07
 	ld   [wWramBank], a                                  ; $6269: $ea $93 $c2
 	ldh  [rSVBK], a                                  ; $626c: $e0 $70
+
+;
 	ld   a, $2f                                      ; $626e: $3e $2f
 	ld   hl, $d000                                   ; $6270: $21 $00 $d0
 	ld   de, $6122                                   ; $6273: $11 $22 $61
 	call RLEXorCopy                                       ; $6276: $cd $d2 $09
+
+;
 	ld   c, $81                                      ; $6279: $0e $81
 	ld   de, $9800                                   ; $627b: $11 $00 $98
 	ld   a, $07                                      ; $627e: $3e $07
@@ -6329,10 +6326,14 @@ GameState25::
 	ld   b, $24                                      ; $6283: $06 $24
 	call EnqueueHDMATransfer                                       ; $6285: $cd $7c $02
 	rst  WaitUntilVBlankIntHandledIfLCDOn                                         ; $6288: $cf
+
+;
 	ld   a, $2f                                      ; $6289: $3e $2f
 	ld   hl, $d000                                   ; $628b: $21 $00 $d0
 	ld   de, $58e6                                   ; $628e: $11 $e6 $58
 	call RLEXorCopy                                       ; $6291: $cd $d2 $09
+
+;
 	ld   c, $80                                      ; $6294: $0e $80
 	ld   de, $9800                                   ; $6296: $11 $00 $98
 	ld   a, $07                                      ; $6299: $3e $07
@@ -6340,11 +6341,15 @@ GameState25::
 	ld   b, $24                                      ; $629e: $06 $24
 	call EnqueueHDMATransfer                                       ; $62a0: $cd $7c $02
 	rst  WaitUntilVBlankIntHandledIfLCDOn                                         ; $62a3: $cf
+
+;
 	ld   a, $2d                                      ; $62a4: $3e $2d
 	ld   hl, $d000                                   ; $62a6: $21 $00 $d0
 	ld   de, $5ca0                                   ; $62a9: $11 $a0 $5c
 	call RLEXorCopy                                       ; $62ac: $cd $d2 $09
 	rst  WaitUntilVBlankIntHandledIfLCDOn                                         ; $62af: $cf
+
+;
 	ld   c, $80                                      ; $62b0: $0e $80
 	ld   de, $8800                                   ; $62b2: $11 $00 $88
 	ld   a, $07                                      ; $62b5: $3e $07
@@ -6352,6 +6357,8 @@ GameState25::
 	ld   b, $40                                      ; $62ba: $06 $40
 	call EnqueueHDMATransfer                                       ; $62bc: $cd $7c $02
 	rst  WaitUntilVBlankIntHandledIfLCDOn                                         ; $62bf: $cf
+
+;
 	ld   c, $80                                      ; $62c0: $0e $80
 	ld   de, $8c00                                   ; $62c2: $11 $00 $8c
 	ld   a, $07                                      ; $62c5: $3e $07
@@ -6359,6 +6366,8 @@ GameState25::
 	ld   b, $60                                      ; $62ca: $06 $60
 	call EnqueueHDMATransfer                                       ; $62cc: $cd $7c $02
 	rst  WaitUntilVBlankIntHandledIfLCDOn                                         ; $62cf: $cf
+
+;
 	ld   c, $80                                      ; $62d0: $0e $80
 	ld   de, $9200                                   ; $62d2: $11 $00 $92
 	ld   a, $07                                      ; $62d5: $3e $07
@@ -6366,6 +6375,8 @@ GameState25::
 	ld   b, $60                                      ; $62da: $06 $60
 	call EnqueueHDMATransfer                                       ; $62dc: $cd $7c $02
 	rst  WaitUntilVBlankIntHandledIfLCDOn                                         ; $62df: $cf
+
+;
 	pop  af                                          ; $62e0: $f1
 	ld   [wWramBank], a                                  ; $62e1: $ea $93 $c2
 	ldh  [rSVBK], a                                  ; $62e4: $e0 $70
@@ -6579,6 +6590,7 @@ jr_020_6410:
 	ret                                              ; $6411: $c9
 
 
+KohranMiniGameMainSubstate3:
 	call TurnOffLCD                                       ; $6412: $cd $e3 $08
 	ld   a, $ff                                      ; $6415: $3e $ff
 	ld   [wInGameInputsEnabled], a                                  ; $6417: $ea $0e $c2
@@ -6594,6 +6606,8 @@ jr_020_6410:
 	and  $e0                                         ; $6431: $e6 $e0
 	or   $67                                         ; $6433: $f6 $67
 	ld   [wLCDC], a                                  ; $6435: $ea $03 $c2
+
+;
 	ld   a, $01                                      ; $6438: $3e $01
 	ldh  [rVBK], a                                   ; $643a: $e0 $4f
 	ld   a, $2a                                      ; $643c: $3e $2a
@@ -6601,11 +6615,15 @@ jr_020_6410:
 	ld   hl, $5c00                                   ; $6441: $21 $00 $5c
 	ld   bc, $0400                                   ; $6444: $01 $00 $04
 	call FarMemCopy                                       ; $6447: $cd $b2 $09
+
+;
 	ld   a, $26                                      ; $644a: $3e $26
 	ld   de, $8800                                   ; $644c: $11 $00 $88
 	ld   hl, $5800                                   ; $644f: $21 $00 $58
 	ld   bc, $1000                                   ; $6452: $01 $00 $10
 	call FarMemCopy                                       ; $6455: $cd $b2 $09
+
+;
 	xor  a                                           ; $6458: $af
 	ldh  [rVBK], a                                   ; $6459: $e0 $4f
 	ld   a, $2a                                      ; $645b: $3e $2a
@@ -6613,11 +6631,15 @@ jr_020_6410:
 	ld   hl, $5800                                   ; $6460: $21 $00 $58
 	ld   bc, $0400                                   ; $6463: $01 $00 $04
 	call FarMemCopy                                       ; $6466: $cd $b2 $09
+
+;
 	ld   a, $26                                      ; $6469: $3e $26
 	ld   de, $8000                                   ; $646b: $11 $00 $80
 	ld   hl, $4000                                   ; $646e: $21 $00 $40
 	ld   bc, $1800                                   ; $6471: $01 $00 $18
 	call FarMemCopy                                       ; $6474: $cd $b2 $09
+
+;
 	ld   a, $07                                      ; $6477: $3e $07
 	ld   [wWX], a                                  ; $6479: $ea $09 $c2
 	ld   a, $90                                      ; $647c: $3e $90
@@ -6630,6 +6652,7 @@ jr_020_6410:
 	ret                                              ; $648c: $c9
 
 
+KohranMiniGameMainSubstate4:
 	ld   a, $01                                      ; $648d: $3e $01
 	ldh  [rVBK], a                                   ; $648f: $e0 $4f
 	ld   a, $2a                                      ; $6491: $3e $2a
@@ -6935,6 +6958,9 @@ jr_020_6667:
 	cp   $00                                         ; $6684: $fe $00
 	nop                                              ; $6686: $00
 	nop                                              ; $6687: $00
+
+
+KohranMiniGameMainSubstate5:
 	call ClearOam                                       ; $6688: $cd $d7 $0d
 	call Call_020_6b8f                               ; $668b: $cd $8f $6b
 	call Call_020_7407                               ; $668e: $cd $07 $74
@@ -6991,6 +7017,7 @@ jr_020_66b2:
 	ret                                              ; $66fb: $c9
 
 
+KohranMiniGameMainSubstate6:
 	call ClearOam                                       ; $66fc: $cd $d7 $0d
 	call Call_020_6b8f                               ; $66ff: $cd $8f $6b
 	call Call_020_7407                               ; $6702: $cd $07 $74
@@ -7061,6 +7088,7 @@ jr_020_6765:
 	ret                                              ; $676d: $c9
 
 
+KohranMiniGameMainSubstate7:
 	call ClearOam                                       ; $676e: $cd $d7 $0d
 	call Call_020_6b8f                               ; $6771: $cd $8f $6b
 	call Call_020_7407                               ; $6774: $cd $07 $74
@@ -7108,6 +7136,7 @@ jr_020_67b8:
 	ret                                              ; $67bb: $c9
 
 
+KohranMiniGameMainSubstate8:
 	call ClearOam                                       ; $67bc: $cd $d7 $0d
 	call Call_020_6b8f                               ; $67bf: $cd $8f $6b
 	call Call_020_7407                               ; $67c2: $cd $07 $74

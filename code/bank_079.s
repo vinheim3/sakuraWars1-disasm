@@ -10160,7 +10160,7 @@ jr_079_6c03:
 	cp   e                                           ; $6cae: $bb
 	xor  c                                           ; $6caf: $a9
 	cpl                                              ; $6cb0: $2f
-	jp   $bfff                                       ; $6cb1: $c3 $ff $bf
+	jp   sRandomSeed                                       ; $6cb1: $c3 $ff $bf
 
 
 	add  c                                           ; $6cb4: $81

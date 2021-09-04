@@ -7,6 +7,7 @@ INCLUDE "includes.s"
 
 SECTION "ROM Bank $023", ROMX[$4000], BANK[$23]
 
+SpriteGroup4Pointers::
 	ret  nz                                          ; $4000: $c0
 
 	ld   b, c                                        ; $4001: $41
@@ -6079,6 +6080,9 @@ jr_023_5a7e:
 	ld   [$1478], sp                                 ; $5a89: $08 $78 $14
 	db   $10                                         ; $5a8c: $10
 	ld   [$1094], sp                                 ; $5a8d: $08 $94 $10
+
+
+SpriteGroupDPointers::
 	and  h                                           ; $5a90: $a4
 	ld   e, e                                        ; $5a91: $5b
 	ret  z                                           ; $5a92: $c8

@@ -14,9 +14,9 @@ AlterPlayerNameIntoWram::
 	ld   bc, $0006                                                  ; $4006
 	call MemCopy                                                    ; $4009
 	
-; copy name 2nd letter to before player name
-	ld   a, [wPlayerName+1]                                  ; $400c: $fa $0f $cb
-	ld   [$cb0d], a                                  ; $400f: $ea $0d $cb
+; Copy name 2nd letter to before player name (for special cases checking previous letter)
+	ld   a, [wPlayerName+1]                                         ; $400c
+	ld   [wPlayerName-1], a                                         ; $400f
 
 ; Set random num range up to player name's length
 	ld   hl, wPlayerName                                            ; $4012

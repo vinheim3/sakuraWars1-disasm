@@ -9016,7 +9016,7 @@ jr_09d_676c:
 	add  c                                           ; $67af: $81
 	nop                                              ; $67b0: $00
 	add  hl, bc                                      ; $67b1: $09
-	ld   sp, $bfff                                   ; $67b2: $31 $ff $bf
+	ld   sp, sRandomSeed                                   ; $67b2: $31 $ff $bf
 	rst  $38                                         ; $67b5: $ff
 	ld   c, a                                        ; $67b6: $4f
 	rst  $38                                         ; $67b7: $ff

@@ -301,7 +301,7 @@ jr_0ee_4088:
 	rst  $38                                         ; $418c: $ff
 	cp   $cf                                         ; $418d: $fe $cf
 	ld   de, $81fe                                   ; $418f: $11 $fe $81
-	ld   de, $bfff                                   ; $4192: $11 $ff $bf
+	ld   de, sRandomSeed                                   ; $4192: $11 $ff $bf
 	rst  $38                                         ; $4195: $ff
 	ld   a, [$1ff5]                                  ; $4196: $fa $f5 $1f
 	ld   hl, sp+$11                                  ; $4199: $f8 $11
@@ -313,7 +313,7 @@ jr_0ee_4088:
 	ld   b, c                                        ; $41a0: $41
 	rst  $38                                         ; $41a1: $ff
 	and  c                                           ; $41a2: $a1
-	ld   de, $bfff                                   ; $41a3: $11 $ff $bf
+	ld   de, sRandomSeed                                   ; $41a3: $11 $ff $bf
 	rst  $38                                         ; $41a6: $ff
 	ld   hl, sp-$0c                                  ; $41a7: $f8 $f4
 	rra                                              ; $41a9: $1f

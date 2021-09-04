@@ -3401,11 +3401,10 @@ jr_00a_5bdd:
 	
 	
 GameState35::
-	db $fa, $a1
-	jp   nz, $ca3d                                   ; $5bee: $c2 $3d $ca
+	ld  a, [wGameSubstate] ; $5bec: $fa, $a1, $c2
+	dec  a                                   ; $5bef: $3d
+	jp   z, Jump_00a_5cfb                                   ; $5bf0: $ca $fb $5c
 
-	ei                                               ; $5bf1: $fb
-	ld   e, h                                        ; $5bf2: $5c
 	dec  a                                           ; $5bf3: $3d
 	jp   z, Jump_00a_5d06                            ; $5bf4: $ca $06 $5d
 
@@ -3539,6 +3538,7 @@ jr_00a_5cdb:
 	ret                                              ; $5cfa: $c9
 
 
+Jump_00a_5cfb:
 	call Call_00a_5bf7                               ; $5cfb: $cd $f7 $5b
 	xor  a                                           ; $5cfe: $af
 	ld   [wTitleScreenAnimationStep], a                                  ; $5cff: $ea $02 $cc
@@ -3960,7 +3960,7 @@ jr_00a_5fc2:
 	cp   $37                                         ; $5fd9: $fe $37
 	jr   nz, jr_00a_5fe7                             ; $5fdb: $20 $0a
 
-	ld   a, $37                                      ; $5fdd: $3e $37
+	ld   a, GS_TITLE_MENU_SCREEN                                      ; $5fdd: $3e $37
 	ld   [wGameState], a                                  ; $5fdf: $ea $a0 $c2
 	xor  a                                           ; $5fe2: $af
 	ld   [wGameSubstate], a                                  ; $5fe3: $ea $a1 $c2
@@ -4988,7 +4988,7 @@ TitleScreenAnimationHandler4_FadeOut:
 	cp   $37                                         ; $6635: $fe $37
 	jr   nz, .br_6643                             ; $6637: $20 $0a
 
-	ld   a, $37                                      ; $6639: $3e $37
+	ld   a, GS_TITLE_MENU_SCREEN                                      ; $6639: $3e $37
 	ld   [wGameState], a                                  ; $663b: $ea $a0 $c2
 	xor  a                                           ; $663e: $af
 	ld   [wGameSubstate], a                                  ; $663f: $ea $a1 $c2
@@ -4997,7 +4997,7 @@ TitleScreenAnimationHandler4_FadeOut:
 .br_6643:
 	xor  a                                           ; $6643: $af
 	call PlaySong                                       ; $6644: $cd $92 $1a
-	ld   h, $36                                      ; $6647: $26 $36
+	ld   h, GS_TITLE_SCREEN                                      ; $6647: $26 $36
 	ld   l, $01                                      ; $6649: $2e $01
 	ld   bc, $0006                                   ; $664b: $01 $06 $00
 	xor  a                                           ; $664e: $af
@@ -7191,10 +7191,10 @@ TitleMenuScreenAnimationHandlerD:
 	call PlaySong                                       ; $7577: $cd $92 $1a
 	ld   a, $01                                      ; $757a: $3e $01
 	ld   [$cb1d], a                                  ; $757c: $ea $1d $cb
-	ld   h, $37                                      ; $757f: $26 $37
+	ld   h, GS_TITLE_MENU_SCREEN                                      ; $757f: $26 $37
 	ld   l, $02                                      ; $7581: $2e $02
 
-	M_FarCall Func_30_564a
+	M_FarCall SetMiniGamesState
 	ret                                              ; $7597: $c9
 
 .br_7598:

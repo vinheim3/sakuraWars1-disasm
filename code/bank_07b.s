@@ -7042,7 +7042,7 @@ jr_07b_5ed2:
 	rst  $38                                         ; $5f04: $ff
 	add  l                                           ; $5f05: $85
 	nop                                              ; $5f06: $00
-	ld   [$bfff], sp                                 ; $5f07: $08 $ff $bf
+	ld   [sRandomSeed], sp                                 ; $5f07: $08 $ff $bf
 	ld   e, b                                        ; $5f0a: $58
 	sbc  d                                           ; $5f0b: $9a
 	sbc  a                                           ; $5f0c: $9f
@@ -10222,7 +10222,7 @@ jr_07b_6cd9:
 	nop                                              ; $6d26: $00
 	ld   a, [hl+]                                    ; $6d27: $2a
 	add  c                                           ; $6d28: $81
-	ld   [wtodo_VisitedTitleScreen], a                                  ; $6d29: $ea $01 $c2
+	ld   [$c201], a                                  ; $6d29: $ea $01 $c2
 	ld   [bc], a                                     ; $6d2c: $02
 	add  b                                           ; $6d2d: $80
 	ld   hl, sp-$80                                  ; $6d2e: $f8 $80

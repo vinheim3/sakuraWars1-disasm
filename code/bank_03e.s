@@ -2368,25 +2368,19 @@ SetSettingsState::
 	ret                                              ; $4f51: $c9
 
 
-GameState18::
+GameState18_MiniGameResults::
 	ld   a, [wGameSubstate]                                  ; $4f52: $fa $a1 $c2
 	rst  JumpTable                                         ; $4f55: $df
-	ld   h, h                                        ; $4f56: $64
-	ld   c, a                                        ; $4f57: $4f
-	reti                                             ; $4f58: $d9
+	dw MiniGameResultsSubstate0
+	dw $50d9
+	dw $513a
+	dw $5100
+	dw $5154
+	dw $5196
+	dw $520b
 
 
-	ld   d, b                                        ; $4f59: $50
-	ld   a, [hl-]                                    ; $4f5a: $3a
-	ld   d, c                                        ; $4f5b: $51
-	nop                                              ; $4f5c: $00
-	ld   d, c                                        ; $4f5d: $51
-	ld   d, h                                        ; $4f5e: $54
-	ld   d, c                                        ; $4f5f: $51
-	sub  [hl]                                        ; $4f60: $96
-	ld   d, c                                        ; $4f61: $51
-	dec  bc                                          ; $4f62: $0b
-	ld   d, d                                        ; $4f63: $52
+MiniGameResultsSubstate0:
 	call Call_03e_5470                               ; $4f64: $cd $70 $54
 	push af                                          ; $4f67: $f5
 	ld   a, $4e                                      ; $4f68: $3e $4e
@@ -2421,23 +2415,31 @@ GameState18::
 	ld   a, $03                                      ; $4faf: $3e $03
 	ld   [wWramBank], a                                  ; $4fb1: $ea $93 $c2
 	ldh  [rSVBK], a                                  ; $4fb4: $e0 $70
+
+;
 	ld   a, $01                                      ; $4fb6: $3e $01
 	ldh  [rVBK], a                                   ; $4fb8: $e0 $4f
 	ld   a, $1e                                      ; $4fba: $3e $1e
 	ld   hl, $9800                                   ; $4fbc: $21 $00 $98
 	ld   de, $4af5                                   ; $4fbf: $11 $f5 $4a
 	call RLEXorCopy                                       ; $4fc2: $cd $d2 $09
+
+;
 	xor  a                                           ; $4fc5: $af
 	ldh  [rVBK], a                                   ; $4fc6: $e0 $4f
 	ld   a, $19                                      ; $4fc8: $3e $19
 	ld   hl, $9800                                   ; $4fca: $21 $00 $98
 	ld   de, $7dc5                                   ; $4fcd: $11 $c5 $7d
 	call RLEXorCopy                                       ; $4fd0: $cd $d2 $09
+
+;
 	ld   a, $18                                      ; $4fd3: $3e $18
 	ld   hl, $8000                                   ; $4fd5: $21 $00 $80
 	ld   de, $46f7                                   ; $4fd8: $11 $f7 $46
 	call RLEXorCopy                                       ; $4fdb: $cd $d2 $09
-	call $530f                                       ; $4fde: $cd $0f $53
+
+;
+	call Func_3e_530f                                       ; $4fde: $cd $0f $53
 	call Call_03e_5332                               ; $4fe1: $cd $32 $53
 	ld   hl, $9960                                   ; $4fe4: $21 $60 $99
 	ld   de, $d000                                   ; $4fe7: $11 $00 $d0
@@ -2903,11 +2905,11 @@ jr_03e_52f1:
 	nop                                              ; $530a: $00
 	dec  b                                           ; $530b: $05
 	nop                                              ; $530c: $00
-	ld   bc, $fa00                                   ; $530d: $01 $00 $fa
-	add  h                                           ; $5310: $84
-	ret                                              ; $5311: $c9
-
-
+	db $01, $00 
+	
+	
+Func_3e_530f:
+	ld   a, [$c984] ; $530f: $fa $84 $c9
 	ld   c, a                                        ; $5312: $4f
 	ld   b, $00                                      ; $5313: $06 $00
 	ld   hl, $532c                                   ; $5315: $21 $2c $53
@@ -7009,20 +7011,18 @@ jr_03e_6d03:
 	nop                                              ; $6d0a: $00
 
 
-GameState1b::
+GameState1b_KohranMiniGameTitleScreen::
 	ld   a, [wGameSubstate]                                  ; $6d0b: $fa $a1 $c2
 	rst  JumpTable                                         ; $6d0e: $df
-	dec  de                                          ; $6d0f: $1b
-	ld   l, l                                        ; $6d10: $6d
-	ld   [hl+], a                                    ; $6d11: $22
-	ld   l, l                                        ; $6d12: $6d
-	ret  c                                           ; $6d13: $d8
+	dw KohranMiniGameTitleScreenSubstate0
+	dw $6d22
+	dw $6fd8
+	dw $7021
+	dw $708b
+	dw $70d3
 
-	ld   l, a                                        ; $6d14: $6f
-	ld   hl, $8b70                                   ; $6d15: $21 $70 $8b
-	ld   [hl], b                                     ; $6d18: $70
-	db   $d3                                         ; $6d19: $d3
-	ld   [hl], b                                     ; $6d1a: $70
+
+KohranMiniGameTitleScreenSubstate0:
 	xor  a                                           ; $6d1b: $af
 	ld   [$c9d3], a                                  ; $6d1c: $ea $d3 $c9
 	ld   [$c9da], a                                  ; $6d1f: $ea $da $c9
@@ -7067,10 +7067,14 @@ jr_03e_6d54:
 	ld   a, $03                                      ; $6d72: $3e $03
 	ld   [wWramBank], a                                  ; $6d74: $ea $93 $c2
 	ldh  [rSVBK], a                                  ; $6d77: $e0 $70
+
+;
 	ld   a, $15                                      ; $6d79: $3e $15
 	ld   hl, $d000                                   ; $6d7b: $21 $00 $d0
 	ld   de, $73c3                                   ; $6d7e: $11 $c3 $73
 	call RLEXorCopy                                       ; $6d81: $cd $d2 $09
+
+;
 	ld   c, $81                                      ; $6d84: $0e $81
 	ld   de, $8800                                   ; $6d86: $11 $00 $88
 	ld   a, $03                                      ; $6d89: $3e $03
@@ -7078,6 +7082,8 @@ jr_03e_6d54:
 	ld   b, $40                                      ; $6d8e: $06 $40
 	call EnqueueHDMATransfer                                       ; $6d90: $cd $7c $02
 	rst  WaitUntilVBlankIntHandledIfLCDOn                                         ; $6d93: $cf
+
+;
 	ld   c, $81                                      ; $6d94: $0e $81
 	ld   de, $8c00                                   ; $6d96: $11 $00 $8c
 	ld   a, $03                                      ; $6d99: $3e $03
@@ -7085,6 +7091,8 @@ jr_03e_6d54:
 	ld   b, $60                                      ; $6d9e: $06 $60
 	call EnqueueHDMATransfer                                       ; $6da0: $cd $7c $02
 	rst  WaitUntilVBlankIntHandledIfLCDOn                                         ; $6da3: $cf
+
+;
 	ld   c, $81                                      ; $6da4: $0e $81
 	ld   de, $9200                                   ; $6da6: $11 $00 $92
 	ld   a, $03                                      ; $6da9: $3e $03
@@ -7092,10 +7100,14 @@ jr_03e_6d54:
 	ld   b, $60                                      ; $6dae: $06 $60
 	call EnqueueHDMATransfer                                       ; $6db0: $cd $7c $02
 	rst  WaitUntilVBlankIntHandledIfLCDOn                                         ; $6db3: $cf
+
+;
 	ld   a, $13                                      ; $6db4: $3e $13
 	ld   hl, $d000                                   ; $6db6: $21 $00 $d0
 	ld   de, $7d86                                   ; $6db9: $11 $86 $7d
 	call RLEXorCopy                                       ; $6dbc: $cd $d2 $09
+
+;
 	ld   c, $80                                      ; $6dbf: $0e $80
 	ld   de, $8000                                   ; $6dc1: $11 $00 $80
 	ld   a, $03                                      ; $6dc4: $3e $03
@@ -7103,6 +7115,8 @@ jr_03e_6d54:
 	ld   b, $40                                      ; $6dc9: $06 $40
 	call EnqueueHDMATransfer                                       ; $6dcb: $cd $7c $02
 	rst  WaitUntilVBlankIntHandledIfLCDOn                                         ; $6dce: $cf
+
+;
 	ld   c, $80                                      ; $6dcf: $0e $80
 	ld   de, $8400                                   ; $6dd1: $11 $00 $84
 	ld   a, $03                                      ; $6dd4: $3e $03
@@ -7110,10 +7124,14 @@ jr_03e_6d54:
 	ld   b, $40                                      ; $6dd9: $06 $40
 	call EnqueueHDMATransfer                                       ; $6ddb: $cd $7c $02
 	rst  WaitUntilVBlankIntHandledIfLCDOn                                         ; $6dde: $cf
+
+;
 	ld   a, $16                                      ; $6ddf: $3e $16
 	ld   hl, $d000                                   ; $6de1: $21 $00 $d0
 	ld   de, $4c65                                   ; $6de4: $11 $65 $4c
 	call RLEXorCopy                                       ; $6de7: $cd $d2 $09
+
+;
 	ld   c, $80                                      ; $6dea: $0e $80
 	ld   de, $8800                                   ; $6dec: $11 $00 $88
 	ld   a, $03                                      ; $6def: $3e $03
@@ -7121,6 +7139,8 @@ jr_03e_6d54:
 	ld   b, $40                                      ; $6df4: $06 $40
 	call EnqueueHDMATransfer                                       ; $6df6: $cd $7c $02
 	rst  WaitUntilVBlankIntHandledIfLCDOn                                         ; $6df9: $cf
+
+;
 	ld   c, $80                                      ; $6dfa: $0e $80
 	ld   de, $8c00                                   ; $6dfc: $11 $00 $8c
 	ld   a, $03                                      ; $6dff: $3e $03
@@ -7128,6 +7148,8 @@ jr_03e_6d54:
 	ld   b, $60                                      ; $6e04: $06 $60
 	call EnqueueHDMATransfer                                       ; $6e06: $cd $7c $02
 	rst  WaitUntilVBlankIntHandledIfLCDOn                                         ; $6e09: $cf
+
+;
 	ld   c, $80                                      ; $6e0a: $0e $80
 	ld   de, $9200                                   ; $6e0c: $11 $00 $92
 	ld   a, $03                                      ; $6e0f: $3e $03
@@ -7135,14 +7157,19 @@ jr_03e_6d54:
 	ld   b, $60                                      ; $6e14: $06 $60
 	call EnqueueHDMATransfer                                       ; $6e16: $cd $7c $02
 	rst  WaitUntilVBlankIntHandledIfLCDOn                                         ; $6e19: $cf
+
+;
 	ld   a, $1d                                      ; $6e1a: $3e $1d
 	ld   de, $42d8                                   ; $6e1c: $11 $d8 $42
 	ld   hl, $dc40                                   ; $6e1f: $21 $40 $dc
 	ld   bc, $1412                                   ; $6e22: $01 $12 $14
 	call FarCopyLayout                                       ; $6e25: $cd $2c $0b
+
 	ld   a, $1d                                      ; $6e28: $3e $1d
 	ld   hl, $da00                                   ; $6e2a: $21 $00 $da
 	call FarCopyLayout                                       ; $6e2d: $cd $2c $0b
+
+;
 	ld   c, $81                                      ; $6e30: $0e $81
 	ld   de, $9800                                   ; $6e32: $11 $00 $98
 	ld   a, $03                                      ; $6e35: $3e $03
@@ -7204,14 +7231,19 @@ jr_03e_6d54:
 	ld   a, $1e                                      ; $6ed5: $3e $1e
 	ld   hl, $d10c                                   ; $6ed7: $21 $0c $d1
 	call FarCopyLayout                                       ; $6eda: $cd $2c $0b
+
+; Popup box
 	ld   a, $1e                                      ; $6edd: $3e $1e
 	ld   de, $7b0e                                   ; $6edf: $11 $0e $7b
 	ld   hl, $d32c                                   ; $6ee2: $21 $2c $d3
 	ld   bc, $0804                                   ; $6ee5: $01 $04 $08
 	call FarCopyLayout                                       ; $6ee8: $cd $2c $0b
+
 	ld   a, $1e                                      ; $6eeb: $3e $1e
 	ld   hl, $d02c                                   ; $6eed: $21 $2c $d0
 	call FarCopyLayout                                       ; $6ef0: $cd $2c $0b
+
+;
 	ld   a, $1e                                      ; $6ef3: $3e $1e
 	ld   de, $7db1                                   ; $6ef5: $11 $b1 $7d
 	ld   hl, $d70e                                   ; $6ef8: $21 $0e $d7
@@ -7795,22 +7827,23 @@ Func_3e_7301::
 	ret                                              ; $7313: $c9
 
 
-GameState1c::
+GameState1c_IrisMiniGameTitleScreen::
 	ld   a, [wGameSubstate]                                  ; $7314: $fa $a1 $c2
 	rst  JumpTable                                         ; $7317: $df
-	inc  h                                           ; $7318: $24
-	ld   [hl], e                                     ; $7319: $73
-	dec  hl                                          ; $731a: $2b
-	ld   [hl], e                                     ; $731b: $73
-	pop  de                                          ; $731c: $d1
-	ld   [hl], l                                     ; $731d: $75
-	ld   a, [de]                                     ; $731e: $1a
-	halt                                             ; $731f: $76
-	add  h                                           ; $7320: $84
-	halt                                             ; $7321: $76
-	call z, $af76                                    ; $7322: $cc $76 $af
+	dw IrisMiniGameTitleScreenSubstate0
+	dw IrisMiniGameTitleScreenSubstate1
+	dw $75d1
+	dw $761a
+	dw $7684
+	dw $76cc
+
+
+IrisMiniGameTitleScreenSubstate0:
+	xor  a                                    ; $7324: $af
 	ld   [$c9db], a                                  ; $7325: $ea $db $c9
 	ld   [$c9e0], a                                  ; $7328: $ea $e0 $c9
+
+IrisMiniGameTitleScreenSubstate1:
 	call TurnOnLCD                                       ; $732b: $cd $09 $09
 	ld   a, $07                                      ; $732e: $3e $07
 	call SafeSetAudVolForMultipleChannels                                       ; $7330: $cd $e0 $1c
@@ -7852,10 +7885,14 @@ jr_03e_735d:
 	ld   a, $03                                      ; $737b: $3e $03
 	ld   [wWramBank], a                                  ; $737d: $ea $93 $c2
 	ldh  [rSVBK], a                                  ; $7380: $e0 $70
+
+;
 	ld   a, $18                                      ; $7382: $3e $18
 	ld   hl, $d000                                   ; $7384: $21 $00 $d0
 	ld   de, $4000                                   ; $7387: $11 $00 $40
 	call RLEXorCopy                                       ; $738a: $cd $d2 $09
+
+;
 	ld   c, $81                                      ; $738d: $0e $81
 	ld   de, $9000                                   ; $738f: $11 $00 $90
 	ld   a, $03                                      ; $7392: $3e $03
@@ -7863,6 +7900,8 @@ jr_03e_735d:
 	ld   b, $40                                      ; $7397: $06 $40
 	call EnqueueHDMATransfer                                       ; $7399: $cd $7c $02
 	rst  WaitUntilVBlankIntHandledIfLCDOn                                         ; $739c: $cf
+
+;
 	ld   c, $81                                      ; $739d: $0e $81
 	ld   de, $9400                                   ; $739f: $11 $00 $94
 	ld   a, $03                                      ; $73a2: $3e $03
@@ -7870,10 +7909,14 @@ jr_03e_735d:
 	ld   b, $40                                      ; $73a7: $06 $40
 	call EnqueueHDMATransfer                                       ; $73a9: $cd $7c $02
 	rst  WaitUntilVBlankIntHandledIfLCDOn                                         ; $73ac: $cf
+
+;
 	ld   a, $1c                                      ; $73ad: $3e $1c
 	ld   hl, $d000                                   ; $73af: $21 $00 $d0
 	ld   de, $5276                                   ; $73b2: $11 $76 $52
 	call RLEXorCopy                                       ; $73b5: $cd $d2 $09
+
+;
 	ld   c, $80                                      ; $73b8: $0e $80
 	ld   de, $8000                                   ; $73ba: $11 $00 $80
 	ld   a, $03                                      ; $73bd: $3e $03
@@ -7881,6 +7924,8 @@ jr_03e_735d:
 	ld   b, $40                                      ; $73c2: $06 $40
 	call EnqueueHDMATransfer                                       ; $73c4: $cd $7c $02
 	rst  WaitUntilVBlankIntHandledIfLCDOn                                         ; $73c7: $cf
+
+;
 	ld   c, $80                                      ; $73c8: $0e $80
 	ld   de, $8400                                   ; $73ca: $11 $00 $84
 	ld   a, $03                                      ; $73cd: $3e $03
@@ -7888,10 +7933,14 @@ jr_03e_735d:
 	ld   b, $40                                      ; $73d2: $06 $40
 	call EnqueueHDMATransfer                                       ; $73d4: $cd $7c $02
 	rst  WaitUntilVBlankIntHandledIfLCDOn                                         ; $73d7: $cf
+
+;
 	ld   a, $16                                      ; $73d8: $3e $16
 	ld   hl, $d000                                   ; $73da: $21 $00 $d0
 	ld   de, $6cd6                                   ; $73dd: $11 $d6 $6c
 	call RLEXorCopy                                       ; $73e0: $cd $d2 $09
+
+;
 	ld   c, $80                                      ; $73e3: $0e $80
 	ld   de, $8800                                   ; $73e5: $11 $00 $88
 	ld   a, $03                                      ; $73e8: $3e $03
@@ -7899,6 +7948,8 @@ jr_03e_735d:
 	ld   b, $40                                      ; $73ed: $06 $40
 	call EnqueueHDMATransfer                                       ; $73ef: $cd $7c $02
 	rst  WaitUntilVBlankIntHandledIfLCDOn                                         ; $73f2: $cf
+
+;
 	ld   c, $80                                      ; $73f3: $0e $80
 	ld   de, $8c00                                   ; $73f5: $11 $00 $8c
 	ld   a, $03                                      ; $73f8: $3e $03
@@ -7906,6 +7957,8 @@ jr_03e_735d:
 	ld   b, $60                                      ; $73fd: $06 $60
 	call EnqueueHDMATransfer                                       ; $73ff: $cd $7c $02
 	rst  WaitUntilVBlankIntHandledIfLCDOn                                         ; $7402: $cf
+
+;
 	ld   c, $80                                      ; $7403: $0e $80
 	ld   de, $9200                                   ; $7405: $11 $00 $92
 	ld   a, $03                                      ; $7408: $3e $03
@@ -7913,14 +7966,20 @@ jr_03e_735d:
 	ld   b, $60                                      ; $740d: $06 $60
 	call EnqueueHDMATransfer                                       ; $740f: $cd $7c $02
 	rst  WaitUntilVBlankIntHandledIfLCDOn                                         ; $7412: $cf
+
+;
 	ld   a, $1d                                      ; $7413: $3e $1d
 	ld   de, $45a8                                   ; $7415: $11 $a8 $45
 	ld   hl, $dc40                                   ; $7418: $21 $40 $dc
 	ld   bc, $1412                                   ; $741b: $01 $12 $14
 	call FarCopyLayout                                       ; $741e: $cd $2c $0b
+
+;
 	ld   a, $1d                                      ; $7421: $3e $1d
 	ld   hl, $da00                                   ; $7423: $21 $00 $da
 	call FarCopyLayout                                       ; $7426: $cd $2c $0b
+
+;
 	ld   c, $81                                      ; $7429: $0e $81
 	ld   de, $9800                                   ; $742b: $11 $00 $98
 	ld   a, $03                                      ; $742e: $3e $03
@@ -7982,14 +8041,19 @@ jr_03e_735d:
 	ld   a, $1e                                      ; $74ce: $3e $1e
 	ld   hl, $d102                                   ; $74d0: $21 $02 $d1
 	call FarCopyLayout                                       ; $74d3: $cd $2c $0b
+
+; Popup box
 	ld   a, $1e                                      ; $74d6: $3e $1e
 	ld   de, $7b4e                                   ; $74d8: $11 $4e $7b
 	ld   hl, $d322                                   ; $74db: $21 $22 $d3
 	ld   bc, $0804                                   ; $74de: $01 $04 $08
 	call FarCopyLayout                                       ; $74e1: $cd $2c $0b
+
 	ld   a, $1e                                      ; $74e4: $3e $1e
 	ld   hl, $d022                                   ; $74e6: $21 $22 $d0
 	call FarCopyLayout                                       ; $74e9: $cd $2c $0b
+
+;
 	ld   a, $1e                                      ; $74ec: $3e $1e
 	ld   de, $7e69                                   ; $74ee: $11 $69 $7e
 	ld   hl, $d702                                   ; $74f1: $21 $02 $d7
@@ -8639,19 +8703,18 @@ Func_3e_794b::
 	ret                                              ; $795d: $c9
 
 
-GameState1e::
+GameState1e_SakuraMiniGameTitleScreen::
 	ld   a, [wGameSubstate]                                  ; $795e: $fa $a1 $c2
 	rst  JumpTable                                         ; $7961: $df
-	ld   l, [hl]                                     ; $7962: $6e
-	ld   a, c                                        ; $7963: $79
-	ld   [hl], l                                     ; $7964: $75
-	ld   a, c                                        ; $7965: $79
-	dec  de                                          ; $7966: $1b
-	ld   a, h                                        ; $7967: $7c
-	ld   h, h                                        ; $7968: $64
-	ld   a, h                                        ; $7969: $7c
-	adc  $7c                                         ; $796a: $ce $7c
-	ld   d, $7d                                      ; $796c: $16 $7d
+	dw SakuraMiniGameTitleScreenSubstate0
+	dw $7975
+	dw $7c1b
+	dw $7c64
+	dw $7cce
+	dw $7d16
+
+
+SakuraMiniGameTitleScreenSubstate0:
 	xor  a                                           ; $796e: $af
 	ld   [$c9e3], a                                  ; $796f: $ea $e3 $c9
 	ld   [$c9e8], a                                  ; $7972: $ea $e8 $c9
@@ -8696,10 +8759,14 @@ jr_03e_79a7:
 	ld   a, $03                                      ; $79c5: $3e $03
 	ld   [wWramBank], a                                  ; $79c7: $ea $93 $c2
 	ldh  [rSVBK], a                                  ; $79ca: $e0 $70
+
+;
 	ld   a, $19                                      ; $79cc: $3e $19
 	ld   hl, $d000                                   ; $79ce: $21 $00 $d0
 	ld   de, $71e2                                   ; $79d1: $11 $e2 $71
 	call RLEXorCopy                                       ; $79d4: $cd $d2 $09
+
+;
 	ld   c, $81                                      ; $79d7: $0e $81
 	ld   de, $8800                                   ; $79d9: $11 $00 $88
 	ld   a, $03                                      ; $79dc: $3e $03
@@ -8707,6 +8774,8 @@ jr_03e_79a7:
 	ld   b, $40                                      ; $79e1: $06 $40
 	call EnqueueHDMATransfer                                       ; $79e3: $cd $7c $02
 	rst  WaitUntilVBlankIntHandledIfLCDOn                                         ; $79e6: $cf
+
+;
 	ld   c, $81                                      ; $79e7: $0e $81
 	ld   de, $8c00                                   ; $79e9: $11 $00 $8c
 	ld   a, $03                                      ; $79ec: $3e $03
@@ -8714,10 +8783,14 @@ jr_03e_79a7:
 	ld   b, $40                                      ; $79f1: $06 $40
 	call EnqueueHDMATransfer                                       ; $79f3: $cd $7c $02
 	rst  WaitUntilVBlankIntHandledIfLCDOn                                         ; $79f6: $cf
+
+;
 	ld   a, $1c                                      ; $79f7: $3e $1c
 	ld   hl, $d000                                   ; $79f9: $21 $00 $d0
 	ld   de, $5600                                   ; $79fc: $11 $00 $56
 	call RLEXorCopy                                       ; $79ff: $cd $d2 $09
+
+;
 	ld   c, $80                                      ; $7a02: $0e $80
 	ld   de, $8000                                   ; $7a04: $11 $00 $80
 	ld   a, $03                                      ; $7a07: $3e $03
@@ -8725,6 +8798,8 @@ jr_03e_79a7:
 	ld   b, $40                                      ; $7a0c: $06 $40
 	call EnqueueHDMATransfer                                       ; $7a0e: $cd $7c $02
 	rst  WaitUntilVBlankIntHandledIfLCDOn                                         ; $7a11: $cf
+
+;
 	ld   c, $80                                      ; $7a12: $0e $80
 	ld   de, $8400                                   ; $7a14: $11 $00 $84
 	ld   a, $03                                      ; $7a17: $3e $03
@@ -8732,10 +8807,14 @@ jr_03e_79a7:
 	ld   b, $40                                      ; $7a1c: $06 $40
 	call EnqueueHDMATransfer                                       ; $7a1e: $cd $7c $02
 	rst  WaitUntilVBlankIntHandledIfLCDOn                                         ; $7a21: $cf
+
+;
 	ld   a, $15                                      ; $7a22: $3e $15
 	ld   hl, $d000                                   ; $7a24: $21 $00 $d0
 	ld   de, $6759                                   ; $7a27: $11 $59 $67
 	call RLEXorCopy                                       ; $7a2a: $cd $d2 $09
+
+;
 	ld   c, $80                                      ; $7a2d: $0e $80
 	ld   de, $8800                                   ; $7a2f: $11 $00 $88
 	ld   a, $03                                      ; $7a32: $3e $03
@@ -8743,6 +8822,8 @@ jr_03e_79a7:
 	ld   b, $40                                      ; $7a37: $06 $40
 	call EnqueueHDMATransfer                                       ; $7a39: $cd $7c $02
 	rst  WaitUntilVBlankIntHandledIfLCDOn                                         ; $7a3c: $cf
+
+;
 	ld   c, $80                                      ; $7a3d: $0e $80
 	ld   de, $8c00                                   ; $7a3f: $11 $00 $8c
 	ld   a, $03                                      ; $7a42: $3e $03
@@ -8750,6 +8831,8 @@ jr_03e_79a7:
 	ld   b, $60                                      ; $7a47: $06 $60
 	call EnqueueHDMATransfer                                       ; $7a49: $cd $7c $02
 	rst  WaitUntilVBlankIntHandledIfLCDOn                                         ; $7a4c: $cf
+
+;
 	ld   c, $80                                      ; $7a4d: $0e $80
 	ld   de, $9200                                   ; $7a4f: $11 $00 $92
 	ld   a, $03                                      ; $7a52: $3e $03
@@ -8757,14 +8840,19 @@ jr_03e_79a7:
 	ld   b, $60                                      ; $7a57: $06 $60
 	call EnqueueHDMATransfer                                       ; $7a59: $cd $7c $02
 	rst  WaitUntilVBlankIntHandledIfLCDOn                                         ; $7a5c: $cf
+
+; Main layout
 	ld   a, $1d                                      ; $7a5d: $3e $1d
 	ld   de, $4878                                   ; $7a5f: $11 $78 $48
 	ld   hl, $dc40                                   ; $7a62: $21 $40 $dc
 	ld   bc, $1412                                   ; $7a65: $01 $12 $14
 	call FarCopyLayout                                       ; $7a68: $cd $2c $0b
+
 	ld   a, $1d                                      ; $7a6b: $3e $1d
 	ld   hl, $da00                                   ; $7a6d: $21 $00 $da
 	call FarCopyLayout                                       ; $7a70: $cd $2c $0b
+
+;
 	ld   de, $d600                                   ; $7a73: $11 $00 $d6
 	ld   hl, $db80                                   ; $7a76: $21 $80 $db
 	ld   bc, $00c0                                   ; $7a79: $01 $c0 $00
@@ -8834,14 +8922,19 @@ jr_03e_79a7:
 	ld   a, $1e                                      ; $7b2e: $3e $1e
 	ld   hl, $d106                                   ; $7b30: $21 $06 $d1
 	call FarCopyLayout                                       ; $7b33: $cd $2c $0b
+
+; Popup menu
 	ld   a, $1e                                      ; $7b36: $3e $1e
 	ld   de, $7b8e                                   ; $7b38: $11 $8e $7b
 	ld   hl, $d326                                   ; $7b3b: $21 $26 $d3
-	ld   bc, $0804                                   ; $7b3e: $01 $04 $08
+	ldbc $08, $04                                   ; $7b3e: $01 $04 $08
 	call FarCopyLayout                                       ; $7b41: $cd $2c $0b
+
 	ld   a, $1e                                      ; $7b44: $3e $1e
 	ld   hl, $d026                                   ; $7b46: $21 $26 $d0
 	call FarCopyLayout                                       ; $7b49: $cd $2c $0b
+
+;
 	ld   a, $1e                                      ; $7b4c: $3e $1e
 	ld   de, $75e0                                   ; $7b4e: $11 $e0 $75
 	ld   hl, $d906                                   ; $7b51: $21 $06 $d9
@@ -8859,7 +8952,9 @@ jr_03e_79a7:
 	ld   [wSCX], a                                  ; $7b6f: $ea $07 $c2
 	ld   [wSCY], a                                  ; $7b72: $ea $08 $c2
 	call ClearBaseAnimSpriteSpecDetails                                       ; $7b75: $cd $c9 $2e
-	ld   a, $01                                      ; $7b78: $3e $01
+
+;
+	ld   a, ASST_1                                      ; $7b78: $3e $01
 	ld   hl, $0000                                   ; $7b7a: $21 $00 $00
 	call ReserveBaseAnimSpriteSpecAndInstance                                       ; $7b7d: $cd $4b $2f
 	ld   [$c9e6], a                                  ; $7b80: $ea $e6 $c9
@@ -8867,16 +8962,10 @@ jr_03e_79a7:
 	call HLequAddrOfAnimSpriteSpecDetails                                       ; $7b86: $cd $76 $30
 	ld   a, $00                                      ; $7b89: $3e $00
 	ld   bc, $0000                                   ; $7b8b: $01 $00 $00
-	ld   de, $7180                                   ; $7b8e: $11 $80 $71
-	push af                                          ; $7b91: $f5
-	ld   a, $03                                      ; $7b92: $3e $03
-	ld   [wFarCallAddr], a                                  ; $7b94: $ea $98 $c2
-	ld   a, $41                                      ; $7b97: $3e $41
-	ld   [wFarCallAddr+1], a                                  ; $7b99: $ea $99 $c2
-	ld   a, $01                                      ; $7b9c: $3e $01
-	ld   [wFarCallBank], a                                  ; $7b9e: $ea $9a $c2
-	pop  af                                          ; $7ba1: $f1
-	call FarCall                                       ; $7ba2: $cd $62 $09
+	ld   de, AnimatedSpriteSpecs                                   ; $7b8e: $11 $80 $71
+
+	M_FarCall LoadType1NewAnimatedSpriteSpecDetails
+
 	ld   a, $01                                      ; $7ba5: $3e $01
 	ld   hl, $7000                                   ; $7ba7: $21 $00 $70
 	ld   de, wBGPalettes                                   ; $7baa: $11 $de $c2
@@ -8911,16 +9000,10 @@ jr_03e_7be7:
 	ld   [wGameSubstate], a                                  ; $7bec: $ea $a1 $c2
 
 jr_03e_7bef:
-	call Call_03e_7dde                               ; $7bef: $cd $de $7d
-	push af                                          ; $7bf2: $f5
-	ld   a, $43                                      ; $7bf3: $3e $43
-	ld   [wFarCallAddr], a                                  ; $7bf5: $ea $98 $c2
-	ld   a, $6a                                      ; $7bf8: $3e $6a
-	ld   [wFarCallAddr+1], a                                  ; $7bfa: $ea $99 $c2
-	ld   a, $11                                      ; $7bfd: $3e $11
-	ld   [wFarCallBank], a                                  ; $7bff: $ea $9a $c2
-	pop  af                                          ; $7c02: $f1
-	call FarCall                                       ; $7c03: $cd $62 $09
+	call HandleSakuraMiniGameTitleScreenSprites                               ; $7bef: $cd $de $7d
+
+	M_FarCall Call_011_6a43
+
 	ld   a, $1e                                      ; $7c06: $3e $1e
 	ld   hl, $6bfc                                   ; $7c08: $21 $fc $6b
 	ld   de, wBGPalettes                                   ; $7c0b: $11 $de $c2
@@ -8968,7 +9051,7 @@ jr_03e_7c47:
 	call PlaySoundEffect                                       ; $7c5d: $cd $df $1a
 
 jr_03e_7c60:
-	call Call_03e_7dde                               ; $7c60: $cd $de $7d
+	call HandleSakuraMiniGameTitleScreenSprites                               ; $7c60: $cd $de $7d
 	ret                                              ; $7c63: $c9
 
 
@@ -9041,7 +9124,7 @@ jr_03e_7ca7:
 	ld   [wGameSubstate], a                                  ; $7cc7: $ea $a1 $c2
 
 jr_03e_7cca:
-	call Call_03e_7dde                               ; $7cca: $cd $de $7d
+	call HandleSakuraMiniGameTitleScreenSprites                               ; $7cca: $cd $de $7d
 	ret                                              ; $7ccd: $c9
 
 
@@ -9094,11 +9177,11 @@ jr_03e_7d05:
 	inc  [hl]                                        ; $7d11: $34
 
 jr_03e_7d12:
-	call Call_03e_7dde                               ; $7d12: $cd $de $7d
+	call HandleSakuraMiniGameTitleScreenSprites                               ; $7d12: $cd $de $7d
 	ret                                              ; $7d15: $c9
 
 
-	call Call_03e_7dde                               ; $7d16: $cd $de $7d
+	call HandleSakuraMiniGameTitleScreenSprites                               ; $7d16: $cd $de $7d
 	ld   a, [$c9e3]                                  ; $7d19: $fa $e3 $c9
 	or   a                                           ; $7d1c: $b7
 	jr   z, jr_03e_7d47                              ; $7d1d: $28 $28
@@ -9204,25 +9287,28 @@ jr_03e_7ddd:
 	ret                                              ; $7ddd: $c9
 
 
-Call_03e_7dde:
-	call ClearOam                                       ; $7dde: $cd $d7 $0d
-	call AnimateAllAnimatedSpriteSpecs                                       ; $7de1: $cd $d3 $2e
-	call Call_03e_7de8                               ; $7de4: $cd $e8 $7d
-	ret                                              ; $7de7: $c9
+HandleSakuraMiniGameTitleScreenSprites:
+	call ClearOam                                                   ; $7dde
+	call AnimateAllAnimatedSpriteSpecs                              ; $7de1
+	call LoadSakuraInMiniGameTitleScreenSprites                     ; $7de4
+	ret                                                             ; $7de7
 
 
-Call_03e_7de8:
-	ld   bc, $5020                                   ; $7de8: $01 $20 $50
-	ld   a, $0a                                      ; $7deb: $3e $0a
-	ld   [wSpriteGroup], a                                  ; $7ded: $ea $1a $c2
-	ld   a, $47                                      ; $7df0: $3e $47
-	call LoadSpriteFromMainTable                                       ; $7df2: $cd $16 $0e
-	ld   bc, $5020                                   ; $7df5: $01 $20 $50
-	ld   a, $0a                                      ; $7df8: $3e $0a
-	ld   [wSpriteGroup], a                                  ; $7dfa: $ea $1a $c2
-	ld   a, $48                                      ; $7dfd: $3e $48
-	call LoadSpriteFromMainTable                                       ; $7dff: $cd $16 $0e
-	ret                                              ; $7e02: $c9
+LoadSakuraInMiniGameTitleScreenSprites:
+; _1 has the majority of sprites
+	ldbc $50, $20                                                   ; $7de8
+	ld   a, SG_A                                                    ; $7deb
+	ld   [wSpriteGroup], a                                          ; $7ded
+	ld   a, SGA_SAKURA_IN_MINIGAME_TITLE_SCREEN_1                   ; $7df0
+	call LoadSpriteFromMainTable                                    ; $7df2
+
+; _2 has the spear head and 1 bit of hair
+	ldbc $50, $20                                                   ; $7df5
+	ld   a, SG_A                                                    ; $7df8
+	ld   [wSpriteGroup], a                                          ; $7dfa
+	ld   a, SGA_SAKURA_IN_MINIGAME_TITLE_SCREEN_2                   ; $7dfd
+	call LoadSpriteFromMainTable                                    ; $7dff
+	ret                                                             ; $7e02
 
 
 Call_03e_7e03:
@@ -9347,7 +9433,7 @@ Call_03e_7ec5:
 	call Call_03e_7e2d                               ; $7ec5: $cd $2d $7e
 	ld   a, [$cb1d]                                  ; $7ec8: $fa $1d $cb
 	or   a                                           ; $7ecb: $b7
-	jr   nz, jr_03e_7eee                             ; $7ecc: $20 $20
+	jr   nz, .enqueueShowingPopup                             ; $7ecc: $20 $20
 
 	ld   c, $80                                      ; $7ece: $0e $80
 	ld   de, $9980                                   ; $7ed0: $11 $80 $99
@@ -9361,9 +9447,9 @@ Call_03e_7ec5:
 	ld   hl, $d400                                   ; $7ee4: $21 $00 $d4
 	ld   b, $0c                                      ; $7ee7: $06 $0c
 	call EnqueueHDMATransfer                                       ; $7ee9: $cd $7c $02
-	jr   jr_03e_7f0c                                 ; $7eec: $18 $1e
+	jr   .done                                 ; $7eec: $18 $1e
 
-jr_03e_7eee:
+.enqueueShowingPopup:
 	ld   c, $80                                      ; $7eee: $0e $80
 	ld   de, $9980                                   ; $7ef0: $11 $80 $99
 	ld   a, $03                                      ; $7ef3: $3e $03
@@ -9377,7 +9463,7 @@ jr_03e_7eee:
 	ld   b, $0c                                      ; $7f07: $06 $0c
 	call EnqueueHDMATransfer                                       ; $7f09: $cd $7c $02
 
-jr_03e_7f0c:
+.done:
 	ret                                              ; $7f0c: $c9
 
 

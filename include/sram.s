@@ -17,3 +17,9 @@ safb1:
 
 sTextSpeedBaseCounter:: ; $b1b3
     db
+
+sb1b4:
+    ds $fff-$1b4
+
+sRandomSeed:: ; $bfff
+    db

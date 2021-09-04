@@ -3104,24 +3104,19 @@ FadeBGPalsBetween2Pals_LoadOBJPals:
 	ret                                                             ; $508f
 
 
-GameState03::
+GameState03_MiniGames::
 	ld   a, [wGameSubstate]                                  ; $5090: $fa $a1 $c2
 	rst  JumpTable                                         ; $5093: $df
-	and  d                                           ; $5094: $a2
-	ld   d, b                                        ; $5095: $50
-	or   c                                           ; $5096: $b1
-	ld   d, b                                        ; $5097: $50
-	ld   h, l                                        ; $5098: $65
-	ld   d, d                                        ; $5099: $52
-	sbc  d                                           ; $509a: $9a
-	ld   d, e                                        ; $509b: $53
-	pop  bc                                          ; $509c: $c1
-	ld   d, e                                        ; $509d: $53
-	ret  z                                           ; $509e: $c8
+	dw MiniGamesSubstate0
+	dw MiniGamesSubstate1
+	dw $5265
+	dw $539a
+	dw $53c1
+	dw $53c8
+	dw $548f
 
-	ld   d, e                                        ; $509f: $53
-	adc  a                                           ; $50a0: $8f
-	ld   d, h                                        ; $50a1: $54
+
+MiniGamesSubstate0:
 	xor  a                                           ; $50a2: $af
 	ld   [$c69e], a                                  ; $50a3: $ea $9e $c6
 	ld   [$c6a1], a                                  ; $50a6: $ea $a1 $c6
@@ -3131,6 +3126,7 @@ GameState03::
 	ret                                              ; $50b0: $c9
 
 
+MiniGamesSubstate1:
 	call TurnOffLCD                                       ; $50b1: $cd $e3 $08
 	call ClearDisplayRegsAllowVBlankInt                                       ; $50b4: $cd $59 $0b
 	ld   a, LCDCF_OFF|LCDCF_WIN9C00|LCDCF_WINON|LCDCF_OBJON|LCDCF_BGON                                      ; $50b7: $3e $63
@@ -3153,30 +3149,40 @@ GameState03::
 	ld   [wLCDCIntFuncIdx], a                                  ; $50e1: $ea $8d $c2
 	ld   a, $ff                                      ; $50e4: $3e $ff
 	ld   [wInGameInputsEnabled], a                                  ; $50e6: $ea $0e $c2
+
+;
 	xor  a                                           ; $50e9: $af
 	ldh  [rVBK], a                                   ; $50ea: $e0 $4f
 	ld   a, $33                                      ; $50ec: $3e $33
 	ld   hl, $8000                                   ; $50ee: $21 $00 $80
 	ld   de, $552d                                   ; $50f1: $11 $2d $55
 	call RLEXorCopy                                       ; $50f4: $cd $d2 $09
+
+;
 	ld   a, $01                                      ; $50f7: $3e $01
 	ldh  [rVBK], a                                   ; $50f9: $e0 $4f
 	ld   a, $33                                      ; $50fb: $3e $33
 	ld   hl, $9000                                   ; $50fd: $21 $00 $90
 	ld   de, $7577                                   ; $5100: $11 $77 $75
 	call RLEXorCopy                                       ; $5103: $cd $d2 $09
+
+;
 	ld   a, $01                                      ; $5106: $3e $01
 	ldh  [rVBK], a                                   ; $5108: $e0 $4f
 	ld   hl, _SCRN0                                   ; $510a: $21 $00 $98
 	ld   a, $34                                      ; $510d: $3e $34
 	ld   de, $5522                                   ; $510f: $11 $22 $55
-	ld   bc, ClearKanjiIdxInConvoAndTextBox                                   ; $5112: $01 $1c $14
+	ldbc $14, $1c                                   ; $5112: $01 $1c $14
 	call FarCopyLayout                                       ; $5115: $cd $2c $0b
+
+;
 	xor  a                                           ; $5118: $af
 	ldh  [rVBK], a                                   ; $5119: $e0 $4f
 	ld   hl, _SCRN0                                   ; $511b: $21 $00 $98
 	ld   a, $34                                      ; $511e: $3e $34
 	call FarCopyLayout                                       ; $5120: $cd $2c $0b
+
+;
 	ld   a, $01                                      ; $5123: $3e $01
 	ldh  [rVBK], a                                   ; $5125: $e0 $4f
 	ld   hl, $9c00                                   ; $5127: $21 $00 $9c
@@ -3694,9 +3700,9 @@ jr_030_5391:
 	call PlaySong                                       ; $54a7: $cd $92 $1a
 	ld   hl, wIE                                   ; $54aa: $21 $0d $c2
 	res  1, [hl]                                     ; $54ad: $cb $8e
-	ld   a, [$c699]                                  ; $54af: $fa $99 $c6
+	ld   a, [wMiniGamesReturnState]                                  ; $54af: $fa $99 $c6
 	ld   [wGameState], a                                  ; $54b2: $ea $a0 $c2
-	ld   a, [$c69a]                                  ; $54b5: $fa $9a $c6
+	ld   a, [wMiniGamesReturnSubstate]                                  ; $54b5: $fa $9a $c6
 	ld   [wGameSubstate], a                                  ; $54b8: $ea $a1 $c2
 	ret                                              ; $54bb: $c9
 
@@ -3999,16 +4005,21 @@ jr_030_5621:
 	ld   bc, $2a28                                   ; $5647: $01 $28 $2a
 
 
-Func_30_564a::
-	ld   a, h                                        ; $564a: $7c
-	ld   [$c699], a                                  ; $564b: $ea $99 $c6
-	ld   a, l                                        ; $564e: $7d
-	ld   [$c69a], a                                  ; $564f: $ea $9a $c6
-	ld   a, $03                                      ; $5652: $3e $03
-	ld   [wGameState], a                                  ; $5654: $ea $a0 $c2
-	ld   a, $00                                      ; $5657: $3e $00
-	ld   [wGameSubstate], a                                  ; $5659: $ea $a1 $c2
-	ret                                              ; $565c: $c9
+; H - return state
+; L - return substate
+SetMiniGamesState::
+; Set state to return to
+	ld   a, h                                                       ; $564a
+	ld   [wMiniGamesReturnState], a                                 ; $564b
+	ld   a, l                                                       ; $564e
+	ld   [wMiniGamesReturnSubstate], a                              ; $564f
+
+; Then set mini-games state
+	ld   a, GS_MINI_GAMES                                           ; $5652
+	ld   [wGameState], a                                            ; $5654
+	ld   a, $00                                                     ; $5657
+	ld   [wGameSubstate], a                                         ; $5659
+	ret                                                             ; $565c
 
 
 Call_030_565d:
@@ -4057,38 +4068,42 @@ Call_030_567a:
 	ld   b, b                                        ; $569e: $40
 
 
-GameState04::
+GameState04_IrisMiniGameMain::
 	ld   a, [wGameSubstate]                                  ; $569f: $fa $a1 $c2
 	rst  JumpTable                                         ; $56a2: $df
-	xor  a                                           ; $56a3: $af
-	ld   d, [hl]                                     ; $56a4: $56
-	and  e                                           ; $56a5: $a3
-	ld   d, a                                        ; $56a6: $57
-	cp   l                                           ; $56a7: $bd
-	ld   d, a                                        ; $56a8: $57
-	db   $ec                                         ; $56a9: $ec
-	ld   d, a                                        ; $56aa: $57
-	ld   d, $58                                      ; $56ab: $16 $58
-	ccf                                              ; $56ad: $3f
-	ld   e, b                                        ; $56ae: $58
+	dw IrisMiniGameMainSubstate0
+	dw $57a3
+	dw $57bd
+	dw $57ec
+	dw $5816
+	dw $583f
+
+
+IrisMiniGameMainSubstate0:
 	call TurnOffLCD                                       ; $56af: $cd $e3 $08
 	call ClearDisplayRegsAllowVBlankInt                                       ; $56b2: $cd $59 $0b
 	ld   a, LCDCF_OFF|LCDCF_OBJ16|LCDCF_OBJON|LCDCF_BGON                                      ; $56b5: $3e $07
 	ld   [wLCDC], a                                  ; $56b7: $ea $03 $c2
 	ld   a, $ff                                      ; $56ba: $3e $ff
 	ld   [wInGameInputsEnabled], a                                  ; $56bc: $ea $0e $c2
+
+;
 	xor  a                                           ; $56bf: $af
 	ldh  [rVBK], a                                   ; $56c0: $e0 $4f
 	ld   a, $33                                      ; $56c2: $3e $33
 	ld   hl, $8000                                   ; $56c4: $21 $00 $80
 	ld   de, $4000                                   ; $56c7: $11 $00 $40
 	call RLEXorCopy                                       ; $56ca: $cd $d2 $09
+
+;
 	ld   a, $01                                      ; $56cd: $3e $01
 	ldh  [rVBK], a                                   ; $56cf: $e0 $4f
 	ld   a, $33                                      ; $56d1: $3e $33
 	ld   hl, $8000                                   ; $56d3: $21 $00 $80
 	ld   de, $6948                                   ; $56d6: $11 $48 $69
 	call RLEXorCopy                                       ; $56d9: $cd $d2 $09
+
+;
 	ld   a, $01                                      ; $56dc: $3e $01
 	ldh  [rVBK], a                                   ; $56de: $e0 $4f
 	ld   hl, $9800                                   ; $56e0: $21 $00 $98
@@ -4096,11 +4111,15 @@ GameState04::
 	ld   de, $5982                                   ; $56e5: $11 $82 $59
 	ld   bc, $141b                                   ; $56e8: $01 $1b $14
 	call FarCopyLayout                                       ; $56eb: $cd $2c $0b
+
+;
 	xor  a                                           ; $56ee: $af
 	ldh  [rVBK], a                                   ; $56ef: $e0 $4f
 	ld   hl, $9800                                   ; $56f1: $21 $00 $98
 	ld   a, $34                                      ; $56f4: $3e $34
 	call FarCopyLayout                                       ; $56f6: $cd $2c $0b
+
+;
 	ld   a, [wWramBank]                                  ; $56f9: $fa $93 $c2
 	push af                                          ; $56fc: $f5
 	ld   a, $05                                      ; $56fd: $3e $05

@@ -9515,7 +9515,7 @@ Call_0f1_6dfa:
 	pop  af                                          ; $6f61: $f1
 	ld   de, $ff1f                                   ; $6f62: $11 $1f $ff
 	pop  af                                          ; $6f65: $f1
-	ld   de, $bfff                                   ; $6f66: $11 $ff $bf
+	ld   de, sRandomSeed                                   ; $6f66: $11 $ff $bf
 	rst  $38                                         ; $6f69: $ff
 	pop  af                                          ; $6f6a: $f1
 	ld   de, $ff1f                                   ; $6f6b: $11 $1f $ff

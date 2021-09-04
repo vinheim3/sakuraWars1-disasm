@@ -3049,7 +3049,7 @@ Jump_0df_4ac9:
 	cp   a                                           ; $4f2f: $bf
 	ld   h, a                                        ; $4f30: $67
 	ld   a, [$ff8f]                                  ; $4f31: $fa $8f $ff
-	ld   a, [$bfff]                                  ; $4f34: $fa $ff $bf
+	ld   a, [sRandomSeed]                                  ; $4f34: $fa $ff $bf
 	rst  $28                                         ; $4f37: $ef
 	rst  $38                                         ; $4f38: $ff
 	ld   sp, hl                                      ; $4f39: $f9

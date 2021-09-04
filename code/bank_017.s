@@ -12260,7 +12260,7 @@ Call_017_7400:
 	ld   [$ff50], sp                                 ; $74ee: $08 $50 $ff
 	and  e                                           ; $74f1: $a3
 	rst  $38                                         ; $74f2: $ff
-	call z, $bfff                                    ; $74f3: $cc $ff $bf
+	call z, sRandomSeed                                    ; $74f3: $cc $ff $bf
 	rst  $38                                         ; $74f6: $ff
 	add  b                                           ; $74f7: $80
 	add  l                                           ; $74f8: $85

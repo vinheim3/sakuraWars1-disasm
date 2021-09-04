@@ -141,7 +141,8 @@
                     return this.vram1.slice(base-0x8000, base+16-0x8000);
                 }
 
-                rleXorCopy(addr, dest) {
+                rleXorCopy(addr, dest, destLoc) {
+                    destLoc = destLoc || 'memory';
                     let lastByte = 0;
                     let numCopies = wordIn(this.rom, addr);
                     let offset = 2;
@@ -154,14 +155,14 @@
                             let copyByte = this.rom[addr+offset++];
                             for (let j = 0; j < count; j++) {
                                 lastByte ^= copyByte;
-                                this.memory[dest+destOffset++] = lastByte;
+                                this[destLoc][dest+destOffset++] = lastByte;
                             }
                         } else {
                             let count = specByte+1;
                             let lastCopied = lastByte;
                             for (let j = 0; j < count; j++) {
                                 lastByte ^= this.rom[addr+offset++];
-                                this.memory[dest+destOffset++] = lastByte;
+                                this[destLoc][dest+destOffset++] = lastByte;
                             }
                         }
                     }
@@ -671,6 +672,333 @@
                                 ['simpleCopy', 0xa3, 0x6fcc, 0x0000, 0x40, 'rom', 'bgPalettes'],
                             ],
                             isGBC: true,
+                        },
+                        {
+                            name: "Mini Games (gs $03)",
+                            sources: [
+                                ['rleXorCopy', 0x33, 0x552d, 0xd000],
+                                ['simpleCopy', 0x00, 0xd000, 0x8000, 0x1800, 'memory', 'memory'],
+                                ['rleXorCopy', 0x33, 0x7577, 0xd000],
+                                ['simpleCopy', 0x00, 0xd000, 0x1000, 0x800, 'memory', 'vram1'],
+                                ['screenCopy', 0x34, 0x5522, 0x1800, 'rom', 'vram1', 0x14, 0x1c],
+                                ['screenCopy', 0x34, 0x5752, 0x9800, 'rom', 'memory', 0x14, 0x1c],
+                                ['simpleCopy', 0x35, 0x4888, 0x0000, 0x40, 'rom', 'bgPalettes'],
+                            ],
+                            isGBC: true,
+                            rowsShown: 0x1c,
+                            canvasHeight: 0x1c * 8,
+                        },
+                        {
+                            name: "Minigame results (gs $18)",
+                            sources: [
+                                ['rleXorCopy', 0x1e, 0x4af5, 0x1800, 'vram1'],
+                                ['rleXorCopy', 0x19, 0x7dc5, 0x9800],
+                                ['rleXorCopy', 0x18, 0x46f7, 0x8000],
+                                ['simpleCopy', 0x1e, 0x67fc, 0x0000, 0x40, 'rom', 'bgPalettes'],
+                            ],
+                            isGBC: true,
+                            rowsShown: 32,
+                            canvasHeight: 32*8,
+                        },
+                        {
+                            name: "Sakura Mini Game Title Screen (gs $1e)",
+                            sources: [
+                                ['rleXorCopy', 0x19, 0x71e2, 0x800, 'vram1'],
+                                ['rleXorCopy', 0x1c, 0x5600, 0x8000],
+                                ['rleXorCopy', 0x15, 0x6759, 0x8800],
+                                
+                                ['screenCopy', 0x1d, 0x4878, 0xdc40, 'rom', 'memory', 0x14, 0x12],
+                                ['screenCopy', 0x1d, 0x49e0, 0xda00, 'rom', 'memory', 0x14, 0x12],
+                                ['screenCopy', 0x1e, 0x7b8e, 0xd326, 'rom', 'memory', 8, 4],
+                                ['screenCopy', 0x1e, 0x7bae, 0xd026, 'rom', 'memory', 8, 4],
+
+                                ['simpleCopy', 0x00, 0xdc40, 0x1800, 0x240, 'memory', 'vram1'],
+                                ['simpleCopy', 0x00, 0xda00, 0x9800, 0x240, 'memory', 'memory'],
+
+                                //['simpleCopy', 0x00, 0xd300, 0x1980, 0xc0, 'memory', 'vram1'],
+                                //['simpleCopy', 0x00, 0xd000, 0x9980, 0xc0, 'memory', 'memory'],
+
+                                ['simpleCopy', 0x1e, 0x6bfc, 0x0000, 0x40, 'rom', 'bgPalettes'],
+                            ],
+                            isGBC: true,
+                        },
+                        {
+                            name: "Sakura Mini Game Main - help screen (gs $0c)",
+                            sources: [
+                                ['rleXorCopy', 0x15, 0x7f25, 0x1800, 'vram1'],
+                                ['rleXorCopy', 0x1e, 0x4604, 0x9800],
+                                ['rleXorCopy', 0x1a, 0x6257, 0x8800],
+                                ['simpleCopy', 0x1e, 0x798e, 0x0000, 0x40, 'rom', 'bgPalettes'],
+                            ],
+                            isGBC: true,
+                        },
+                        {
+                            name: "Sakura Mini Game Main - main (gs $0c)",
+                            sources: [
+                                ['rleXorCopy', 0x1d, 0x6d99, 0x1800, 'vram1'],
+                                ['rleXorCopy', 0x17, 0x4000, 0x800, 'vram1'],
+                                ['rleXorCopy', 0x1d, 0x53b8, 0x9800],
+                                ['rleXorCopy', 0x12, 0x6a00, 0x8000],
+                                ['simpleCopy', 0x1e, 0x64fc, 0x0000, 0x40, 'rom', 'bgPalettes'],
+                            ],
+                            isGBC: true,
+                            rowsShown: 32,
+                            canvasHeight: 32*8,
+                        },
+                        {
+                            name: "Sumire Mini Game Title Screen (gs $1d)",
+                            sources: [
+                                ['rleXorCopy', 0x17, 0x5763, 0x1000, 'vram1'],
+                                ['rleXorCopy', 0x1c, 0x70a5, 0x8000],
+                                ['rleXorCopy', 0x14, 0x5298, 0x8800],
+                                
+                                ['screenCopy', 0x1d, 0x4e18, 0xdc40, 'rom', 'memory', 0x14, 0x12],
+                                ['screenCopy', 0x1d, 0x4f80, 0xda00, 'rom', 'memory', 0x14, 0x12],
+                                ['screenCopy', 0x1e, 0x7c0e, 0xd326, 'rom', 'memory', 8, 4],
+                                ['screenCopy', 0x1e, 0x7c2e, 0xd026, 'rom', 'memory', 8, 4],
+                                ['screenCopy', 0x1e, 0x7700, 0xd406, 'rom', 'memory', 8, 6],
+                                ['screenCopy', 0x1e, 0x7730, 0xd106, 'rom', 'memory', 8, 6],
+
+                                ['simpleCopy', 0x00, 0xdc40, 0x1800, 0x240, 'memory', 'vram1'],
+                                ['simpleCopy', 0x00, 0xda00, 0x9800, 0x240, 'memory', 'memory'],
+
+                                //['simpleCopy', 0x00, 0xd300, 0x18e0, 0xc0, 'memory', 'vram1'],
+                                //['simpleCopy', 0x00, 0xd000, 0x98e0, 0xc0, 'memory', 'memory'],
+                                //['simpleCopy', 0x00, 0xd400, 0x18e0, 0xc0, 'memory', 'vram1'],
+                                //['simpleCopy', 0x00, 0xd100, 0x98e0, 0xc0, 'memory', 'memory'],
+
+                                ['simpleCopy', 0x1e, 0x6cfc, 0x0000, 0x40, 'rom', 'bgPalettes'],
+                            ],
+                            isGBC: true,
+                        },
+                        {
+                            name: "Sumire Mini Game Main - help screen (gs $26)",
+                            sources: [
+                                ['rleXorCopy', 0x2f, 0x6309, 0x1800, 'vram1'],
+                                ['rleXorCopy', 0x2f, 0x5a66, 0x9800],
+                                ['rleXorCopy', 0x2d, 0x4000, 0x8800],
+                                ['simpleCopy', 0x2c, 0x7f72, 0x0000, 0x40, 'rom', 'bgPalettes'],
+                            ],
+                            isGBC: true,
+                        },
+                        {
+                            name: "Sumire Mini Game Main - main BG (gs $26)",
+                            sources: [
+                                ['simpleCopy', 0x29, 0x6000, 0x1800, 0x400, 'rom', 'vram1'],
+                                //['simpleCopy', 0x29, 0x5800, 0x1800, 0x400, 'rom', 'vram1'],
+                                ['simpleCopy', 0x25, 0x5800, 0x0000, 0x1800, 'rom', 'vram1'],
+                                ['simpleCopy', 0x29, 0x6400, 0x9800, 0x400, 'rom', 'memory'],
+                                //['simpleCopy', 0x29, 0x5c00, 0x9800, 0x400, 'rom', 'memory'],
+                                ['simpleCopy', 0x25, 0x4000, 0x8000, 0x1800, 'rom', 'memory'],
+                                ['simpleCopy', 0x2a, 0x6000, 0x0000, 0x40, 'rom', 'bgPalettes'],
+                            ],
+                            isGBC: true,
+                            rowsShown: 32,
+                            canvasHeight: 32*8,
+                            colsShown: 32,
+                            canvasWidth: 32*8,
+                        },
+                        {
+                            name: "Sumire Mini Game Main - main OBJ (gs $26)",
+                            sources: [
+                                ['simpleCopy', 0x25, 0x5800, 0x0000, 0x1800, 'rom', 'vram1'],
+                                ['simpleCopy', 0x25, 0x4000, 0x8000, 0x1800, 'rom', 'memory'],
+                                ['fillScreen', 0, 0xdf, 0],
+                                ['spriteCopy', 0x22, 0x4ef4, 0x9800, true, 0x00, 0x00],
+                                ['spriteCopy', 0x22, 0x4f0c, 0x9840, true, 0x00, 0x00],
+                                ['spriteCopy', 0x22, 0x4f24, 0x9880, true, 0x00, 0x00],
+                                ['spriteCopy', 0x22, 0x4f3c, 0x98c0, true, 0x00, 0x00],
+                                ['spriteCopy', 0x22, 0x4f54, 0x9808, true, 0x00, 0x20],
+                                ['spriteCopy', 0x22, 0x4f84, 0x980c, true, 0x00, 0x20],
+                                ['simpleCopy', 0x2a, 0x6040, 0x0000, 0x40, 'rom', 'bgPalettes'],
+                            ],
+                            isGBC: true,
+                            is8000: true
+                        },
+                        {
+                            name: "Maria Mini Game Title Screen (gs $0d)",
+                            sources: [
+                                ['rleXorCopy', 0x1a, 0x4bbe, 0x800, 'vram1'],
+                                ['rleXorCopy', 0x19, 0x532a, 0x8000],
+                                
+                                ['screenCopy', 0x1a, 0x7d30, 0xdc40, 'rom', 'memory', 0x14, 0x12],
+                                ['screenCopy', 0x1a, 0x7d30+0x168, 0xda00, 'rom', 'memory', 0x14, 0x12],
+                                ['screenCopy', 0x1e, 0x7ace, 0xd329, 'rom', 'memory', 8, 4],
+                                ['screenCopy', 0x1e, 0x7aee, 0xd029, 'rom', 'memory', 8, 4],
+
+                                ['simpleCopy', 0x00, 0xdc40, 0x1800, 0x240, 'memory', 'vram1'],
+                                ['simpleCopy', 0x00, 0xda00, 0x9800, 0x240, 'memory', 'memory'],
+
+                                //['simpleCopy', 0x00, 0xd300, 0x18e0, 0xc0, 'memory', 'vram1'],
+                                //['simpleCopy', 0x00, 0xd000, 0x98e0, 0xc0, 'memory', 'memory'],
+
+                                ['simpleCopy', 0x1e, 0x6a7c, 0x0000, 0x40, 'rom', 'bgPalettes'],
+                            ],
+                            isGBC: true,
+                        },
+                        {
+                            name: "Maria Mini Game - help screen (gs $0d)",
+                            sources: [
+                                ['rleXorCopy', 0x1e, 0x4d0f, 0x1800, 'vram1'],
+                                ['rleXorCopy', 0x1e, 0x4769, 0x9800],
+                                ['rleXorCopy', 0x19, 0x5972, 0x8800],
+                                ['simpleCopy', 0x1e, 0x79ce, 0x0000, 0x40, 'rom', 'bgPalettes'],
+                            ],
+                            isGBC: true,
+                        },
+                        {
+                            name: "Maria Mini Game - main (gs $0d)",
+                            sources: [
+                                ['rleXorCopy', 0x1d, 0x6f7d, 0x1800, 'vram1'],
+                                ['rleXorCopy', 0x17, 0x7b8e, 0x0000, 'vram1'],
+                                ['rleXorCopy', 0x18, 0x5b56, 0x0800, 'vram1'],
+                                ['rleXorCopy', 0x1d, 0x4000, 0x9800],
+                                ['rleXorCopy', 0x14, 0x4000, 0x8000],
+                                ['simpleCopy', 0x1e, 0x657c, 0x0000, 0x40, 'rom', 'bgPalettes'],
+                            ],
+                            isGBC: true,
+                        },
+                        {
+                            name: "Iris Mini Game Title Screen (gs $1c)",
+                            sources: [
+                                ['rleXorCopy', 0x18, 0x4000, 0x1000, 'vram1'],
+                                ['rleXorCopy', 0x1c, 0x5276, 0x8000],
+                                ['rleXorCopy', 0x16, 0x6cd6, 0x8800],
+                                
+                                ['screenCopy', 0x1d, 0x45a8, 0xdc40, 'rom', 'memory', 0x14, 0x12],
+                                ['screenCopy', 0x1d, 0x45a8+0x168, 0xda00, 'rom', 'memory', 0x14, 0x12],
+                                ['screenCopy', 0x1e, 0x7b4e, 0xd322, 'rom', 'memory', 8, 4],
+                                ['screenCopy', 0x1e, 0x7b6e, 0xd022, 'rom', 'memory', 8, 4],
+
+                                ['simpleCopy', 0x00, 0xdc40, 0x1800, 0x240, 'memory', 'vram1'],
+                                ['simpleCopy', 0x00, 0xda00, 0x9800, 0x240, 'memory', 'memory'],
+
+                                //['simpleCopy', 0x00, 0xd300, 0x1980, 0xc0, 'memory', 'vram1'],
+                                //['simpleCopy', 0x00, 0xd000, 0x9980, 0xc0, 'memory', 'memory'],
+
+                                ['simpleCopy', 0x1e, 0x6b7c, 0x0000, 0x40, 'rom', 'bgPalettes'],
+                            ],
+                            isGBC: true,
+                        },
+                        {
+                            name: "Iris Mini Game - help screen (gs $22)",
+                            sources: [
+                                ['rleXorCopy', 0x19, 0x6bd7, 0x8800],
+                                ['screenCopy', 0x1d, 0x50e8, 0x1800, 'rom', 'vram1', 0x14, 0x12],
+                                ['screenCopy', 0x1d, 0x50e8+0x168, 0x9800, 'rom', 'memory', 0x14, 0x12],
+                                ['simpleCopy', 0x1e, 0x7c8e, 0x0000, 0x40, 'rom', 'bgPalettes'],
+                            ],
+                            isGBC: true,
+                        },
+                        {
+                            name: "Iris Mini Game - main (gs $04)",
+                            sources: [
+                                ['rleXorCopy', 0x33, 0x4000, 0x8000],
+                                ['rleXorCopy', 0x33, 0x6948, 0x0000, 'vram1'],
+                                ['screenCopy', 0x34, 0x5982, 0x1800, 'rom', 'vram1', 0x14, 0x1b],
+                                ['screenCopy', 0x34, 0x5982+0x14*0x1b, 0x9800, 'rom', 'memory', 0x14, 0x1b],
+                                ['simpleCopy', 0x35, 0x4808, 0x0000, 0x40, 'rom', 'bgPalettes'],
+                            ],
+                            isGBC: true,
+                            rowsShown: 0x1b,
+                            canvasHeight: 0x1b*8,
+                        },
+                        {
+                            name: "Kohran Mini Game Title Screen (gs $1b)",
+                            sources: [
+                                ['rleXorCopy', 0x15, 0x73c3, 0x800, 'vram1'],
+                                ['rleXorCopy', 0x13, 0x7d86, 0x8000],
+                                ['rleXorCopy', 0x16, 0x4c65, 0x8800],
+                                
+                                ['screenCopy', 0x1d, 0x42d8, 0xdc40, 'rom', 'memory', 0x14, 0x12],
+                                ['screenCopy', 0x1d, 0x42d8+0x168, 0xda00, 'rom', 'memory', 0x14, 0x12],
+                                ['screenCopy', 0x1e, 0x7b0e, 0xd32c, 'rom', 'memory', 8, 4],
+                                ['screenCopy', 0x1e, 0x7b2e, 0xd02c, 'rom', 'memory', 8, 4],
+
+                                ['simpleCopy', 0x00, 0xdc40, 0x1800, 0x240, 'memory', 'vram1'],
+                                ['simpleCopy', 0x00, 0xda00, 0x9800, 0x240, 'memory', 'memory'],
+
+                                //['simpleCopy', 0x00, 0xd300, 0x1980, 0xc0, 'memory', 'vram1'],
+                                //['simpleCopy', 0x00, 0xd000, 0x9980, 0xc0, 'memory', 'memory'],
+
+                                ['simpleCopy', 0x1e, 0x6afc, 0x0000, 0x40, 'rom', 'bgPalettes'],
+                            ],
+                            isGBC: true,
+                        },
+                        {
+                            name: "Kohran Mini Game - help screen (gs $25)",
+                            sources: [
+                                ['rleXorCopy', 0x2f, 0x6122, 0x1800, 'vram1'],
+                                ['rleXorCopy', 0x2f, 0x58e6, 0x9800],
+                                ['rleXorCopy', 0x2d, 0x5ca0, 0x8800],
+                                ['simpleCopy', 0x2f, 0x6ae3, 0x0000, 0x40, 'rom', 'bgPalettes'],
+                            ],
+                            isGBC: true,
+                        },
+                        {
+                            name: "Kohran Mini Game - main screen (gs $25)",
+                            sources: [
+                                ['simpleCopy', 0x2a, 0x5c00, 0x1800, 0x400, 'rom', 'vram1'],
+                                ['simpleCopy', 0x26, 0x5800, 0x0800, 0x1000, 'rom', 'vram1'],
+                                ['simpleCopy', 0x2a, 0x5800, 0x9800, 0x400, 'rom', 'memory'],
+                                ['simpleCopy', 0x26, 0x4000, 0x8000, 0x1800, 'rom', 'memory'],
+
+                                ['simpleCopy', 0x2a, 0x6080, 0x0000, 0x40, 'rom', 'bgPalettes'],
+                                ...(new Array(0x0c)).fill(0).map((_, i)=>['simpleCopy', 0x2a, 0x4800+i*0x20, 0x9800+i*0x20, 4]),
+                                ...(new Array(0x0c)).fill(0).map((_, i)=>['simpleCopy', 0x2a, 0x4c00+i*0x20, 0x1800+i*0x20, 4, 'rom', 'vram1']),
+                                ...(new Array(0x0c)).fill(0).map((_, i)=>['simpleCopy', 0x2a, 0x4980+i*0x20, 0x9810+i*0x20, 4]),
+                                ...(new Array(0x0c)).fill(0).map((_, i)=>['simpleCopy', 0x2a, 0x4d80+i*0x20, 0x1810+i*0x20, 4, 'rom', 'vram1']),
+                            ],
+                            isGBC: true,
+                        },
+                        {
+                            name: "Kanna Mini Game Title Screen (gs $1f)",
+                            sources: [
+                                ['rleXorCopy', 0x1a, 0x518b, 0x800, 'vram1'],
+                                ['rleXorCopy', 0x1c, 0x7c89, 0x8000],
+                                ['rleXorCopy', 0x15, 0x5a54, 0x8800],
+                                
+                                ['screenCopy', 0x1d, 0x4b48, 0xdc40, 'rom', 'memory', 0x14, 0x12],
+                                ['screenCopy', 0x1d, 0x4b48+0x168, 0xda00, 'rom', 'memory', 0x14, 0x12],
+                                ['screenCopy', 0x1e, 0x7bce, 0xd32c, 'rom', 'memory', 8, 4],
+                                ['screenCopy', 0x1e, 0x7bee, 0xd02c, 'rom', 'memory', 8, 4],
+
+                                ['simpleCopy', 0x00, 0xdc40, 0x1800, 0x240, 'memory', 'vram1'],
+                                ['simpleCopy', 0x00, 0xda00, 0x9800, 0x240, 'memory', 'memory'],
+
+                                //['simpleCopy', 0x00, 0xd300, 0x1980, 0xc0, 'memory', 'vram1'],
+                                //['simpleCopy', 0x00, 0xd000, 0x9980, 0xc0, 'memory', 'memory'],
+
+                                ['simpleCopy', 0x1e, 0x6c7c, 0x0000, 0x40, 'rom', 'bgPalettes'],
+                            ],
+                            isGBC: true,
+                        },
+                        {
+                            name: "Kanna Mini Game - help screen (gs $21)",
+                            sources: [
+                                ['rleXorCopy', 0x1e, 0x4c0c, 0x1800, 'vram1'],
+                                ['rleXorCopy', 0x1e, 0x449c, 0x9800],
+                                ['rleXorCopy', 0x1a, 0x5728, 0x8800],
+                                ['simpleCopy', 0x1e, 0x647c, 0x0000, 0x40, 'rom', 'bgPalettes'],
+                            ],
+                            isGBC: true,
+                        },
+                        {
+                            name: "Kanna Mini Game - main screen (gs $0b)",
+                            sources: [
+                                ['rleXorCopy', 0x1d, 0x7340, 0x1800, 'vram1'],
+                                ['rleXorCopy', 0x1d, 0x5e9f, 0x0400, 'vram1'],
+                                ['rleXorCopy', 0x1b, 0x6ed5, 0x1000, 'vram1'],
+                                ['rleXorCopy', 0x1c, 0x73b8, 0x9800],
+                                ['rleXorCopy', 0x1d, 0x6570, 0x8000],
+                                ['rleXorCopy', 0x15, 0x4d2b, 0x8800],
+                                ['simpleCopy', 0x1e, 0x63fc, 0x0000, 0x40, 'rom', 'bgPalettes'],
+                            ],
+                            isGBC: true,
+                            colsShown: 32,
+                            canvasWidth: 32*8,
+                            rowsShown: 32,
+                            canvasHeight: 32*8,
                         },
                     ],
                 },

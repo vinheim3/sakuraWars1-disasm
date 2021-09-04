@@ -12146,7 +12146,7 @@ Call_0bc_77b9:
 	rst  $38                                         ; $77bb: $ff
 	ld   [$1131], a                                  ; $77bc: $ea $31 $11
 	ld   de, $1111                                   ; $77bf: $11 $11 $11
-	ld   de, $bfff                                   ; $77c2: $11 $ff $bf
+	ld   de, sRandomSeed                                   ; $77c2: $11 $ff $bf
 	rst  $38                                         ; $77c5: $ff
 	sbc  a                                           ; $77c6: $9f
 	db   $fc                                         ; $77c7: $fc

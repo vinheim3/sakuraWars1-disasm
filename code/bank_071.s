@@ -12128,7 +12128,7 @@ jr_071_7681:
 	add  e                                           ; $7690: $83
 	db   $fc                                         ; $7691: $fc
 	inc  bc                                          ; $7692: $03
-	jp   $bfff                                       ; $7693: $c3 $ff $bf
+	jp   sRandomSeed                                       ; $7693: $c3 $ff $bf
 
 
 	rst  $38                                         ; $7696: $ff

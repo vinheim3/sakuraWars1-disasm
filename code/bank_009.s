@@ -840,13 +840,13 @@ rept 4
 endr
 
 
-GameState3b::
+GameState3b_MainConvo::
 	ld   a, [wGameSubstate]                                  ; $4564: $fa $a1 $c2
 	cp   $02                                         ; $4567: $fe $02
-	jp   z, GameState3b_substate2                            ; $4569: $ca $22 $47
+	jp   z, GameState3b_MainConvo_substate2                            ; $4569: $ca $22 $47
 
 	cp   $01                                         ; $456c: $fe $01
-	jp   z, GameState3b_substate1                            ; $456e: $ca $d3 $46
+	jp   z, GameState3b_MainConvo_substate1                            ; $456e: $ca $d3 $46
 
 ; Substate 0
 	call ClearDisplayRegsAllowVBlankInt                                       ; $4571: $cd $59 $0b
@@ -1087,7 +1087,7 @@ jr_009_465b:
 	ld   e, e                                        ; $46d1: $5b
 	add  b                                           ; $46d2: $80
 
-GameState3b_substate1:
+GameState3b_MainConvo_substate1:
 	call ClearDisplayRegsAllowVBlankInt                                       ; $46d3: $cd $59 $0b
 	ld   a, [wLCDC]                                  ; $46d6: $fa $03 $c2
 	and  $e0                                         ; $46d9: $e6 $e0
@@ -1122,7 +1122,7 @@ GameState3b_substate1:
 	ret                                              ; $4721: $c9
 
 
-GameState3b_substate2:
+GameState3b_MainConvo_substate2:
 	call ClearOam                                       ; $4722: $cd $d7 $0d
 	ld   bc, $4738                                   ; $4725: $01 $38 $47
 	push bc                                          ; $4728: $c5

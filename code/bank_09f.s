@@ -4416,7 +4416,7 @@ jr_09f_523b:
 	inc  b                                           ; $532b: $04
 	db   $fd                                         ; $532c: $fd
 	rst  $38                                         ; $532d: $ff
-	jp   $bfff                                       ; $532e: $c3 $ff $bf
+	jp   sRandomSeed                                       ; $532e: $c3 $ff $bf
 
 
 	add  c                                           ; $5331: $81

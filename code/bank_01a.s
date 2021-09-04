@@ -2686,7 +2686,7 @@ jr_01a_4bc2:
 	rst  JumpTable                                         ; $4c20: $df
 	sbc  a                                           ; $4c21: $9f
 	ld   bc, $2321                                   ; $4c22: $01 $21 $23
-	jp   $bfff                                       ; $4c25: $c3 $ff $bf
+	jp   sRandomSeed                                       ; $4c25: $c3 $ff $bf
 
 
 	add  b                                           ; $4c28: $80

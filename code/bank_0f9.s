@@ -9908,7 +9908,7 @@ jr_0f9_70a0:
 	ld   sp, $f131                                   ; $715f: $31 $31 $f1
 	rra                                              ; $7162: $1f
 	rra                                              ; $7163: $1f
-	call nz, $bfff                                   ; $7164: $c4 $ff $bf
+	call nz, sRandomSeed                                   ; $7164: $c4 $ff $bf
 	rst  $38                                         ; $7167: $ff
 	ld   l, a                                        ; $7168: $6f
 	ld   hl, sp+$21                                  ; $7169: $f8 $21

@@ -14245,7 +14245,7 @@ jr_074_7f53:
 	ld   bc, $feff                                   ; $7f95: $01 $ff $fe
 	rst  $38                                         ; $7f98: $ff
 	cp   $ff                                         ; $7f99: $fe $ff
-	ld   bc, $bfff                                   ; $7f9b: $01 $ff $bf
+	ld   bc, sRandomSeed                                   ; $7f9b: $01 $ff $bf
 	ldh  a, [$30]                                    ; $7f9e: $f0 $30
 	ldh  a, [$30]                                    ; $7fa0: $f0 $30
 	ldh  a, [hScriptOpcodeParams]                                    ; $7fa2: $f0 $a0

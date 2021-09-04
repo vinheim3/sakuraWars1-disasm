@@ -509,7 +509,7 @@ jr_073_4010:
 	ret  c                                           ; $4253: $d8
 
 	rst  $38                                         ; $4254: $ff
-	call $bfff                                       ; $4255: $cd $ff $bf
+	call sRandomSeed                                       ; $4255: $cd $ff $bf
 	rst  $38                                         ; $4258: $ff
 	or   [hl]                                        ; $4259: $b6
 	cp   a                                           ; $425a: $bf
@@ -14328,7 +14328,7 @@ jr_073_7f66:
 	rst  ToBoot                                         ; $7fca: $c7
 	ld   e, [hl]                                     ; $7fcb: $5e
 	ccf                                              ; $7fcc: $3f
-	ld   hl, $bfff                                   ; $7fcd: $21 $ff $bf
+	ld   hl, sRandomSeed                                   ; $7fcd: $21 $ff $bf
 	push de                                          ; $7fd0: $d5
 	inc  d                                           ; $7fd1: $14
 	rst  $10                                         ; $7fd2: $d7

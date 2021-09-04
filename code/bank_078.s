@@ -3659,7 +3659,7 @@ jr_078_4c98:
 	inc  b                                           ; $4fd8: $04
 	sub  d                                           ; $4fd9: $92
 	rst  $38                                         ; $4fda: $ff
-	jp   nc, $bfff                                   ; $4fdb: $d2 $ff $bf
+	jp   nc, sRandomSeed                                   ; $4fdb: $d2 $ff $bf
 
 	add  a                                           ; $4fde: $87
 	rst  $38                                         ; $4fdf: $ff

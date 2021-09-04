@@ -3232,6 +3232,9 @@ jr_00e_4fce:
 	rrca                                             ; $4feb: $0f
 	ld   [$00d9], sp                                 ; $4fec: $08 $d9 $00
 	rra                                              ; $4fef: $1f
+
+
+SpriteGroup6Pointers::
 	ldh  a, [$50]                                    ; $4ff0: $f0 $50
 	ld   d, b                                        ; $4ff2: $50
 	ld   d, c                                        ; $4ff3: $51
@@ -10468,6 +10471,9 @@ jr_00e_6e92:
 	ld   e, d                                        ; $70c6: $5a
 	ld   b, $10                                      ; $70c7: $06 $10
 	ld   de, $1658                                   ; $70c9: $11 $58 $16
+
+
+SpriteGroupFPointers::
 	ld   a, $71                                      ; $70cc: $3e $71
 	ld   d, [hl]                                     ; $70ce: $56
 	ld   [hl], c                                     ; $70cf: $71

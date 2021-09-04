@@ -6174,7 +6174,7 @@ Jump_0c5_5bba:
 	dec  de                                          ; $5c21: $1b
 	xor  b                                           ; $5c22: $a8
 	ld   d, c                                        ; $5c23: $51
-	ld   de, $bfff                                   ; $5c24: $11 $ff $bf
+	ld   de, sRandomSeed                                   ; $5c24: $11 $ff $bf
 	rst  $38                                         ; $5c27: $ff
 	ld   de, $ff1f                                   ; $5c28: $11 $1f $ff
 	rst  $38                                         ; $5c2b: $ff

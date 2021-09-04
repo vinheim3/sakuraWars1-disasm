@@ -3267,7 +3267,7 @@ jr_02c_4e2a:
 	rst  ToBoot                                         ; $4e4a: $c7
 	inc  a                                           ; $4e4b: $3c
 	rst  $38                                         ; $4e4c: $ff
-	jp   $bfff                                       ; $4e4d: $c3 $ff $bf
+	jp   sRandomSeed                                       ; $4e4d: $c3 $ff $bf
 
 
 	rst  WaitUntilVBlankIntHandledIfLCDOn                                         ; $4e50: $cf

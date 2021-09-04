@@ -7033,7 +7033,7 @@ Jump_0e2_5fd7:
 	sub  $83                                         ; $609d: $d6 $83
 	ld   de, $1111                                   ; $609f: $11 $11 $11
 	ld   de, $2111                                   ; $60a2: $11 $11 $21
-	ld   de, $bfff                                   ; $60a5: $11 $ff $bf
+	ld   de, sRandomSeed                                   ; $60a5: $11 $ff $bf
 	rst  $38                                         ; $60a8: $ff
 	rst  $38                                         ; $60a9: $ff
 	rst  $38                                         ; $60aa: $ff

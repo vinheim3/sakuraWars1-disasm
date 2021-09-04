@@ -13384,7 +13384,7 @@ Jump_0dc_7987:
 	db   $eb                                         ; $7acd: $eb
 	ld   d, e                                        ; $7ace: $53
 	ld   de, $1111                                   ; $7acf: $11 $11 $11
-	ld   de, $bfff                                   ; $7ad2: $11 $ff $bf
+	ld   de, sRandomSeed                                   ; $7ad2: $11 $ff $bf
 	rst  $38                                         ; $7ad5: $ff
 	reti                                             ; $7ad6: $d9
 

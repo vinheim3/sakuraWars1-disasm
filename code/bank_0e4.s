@@ -3509,7 +3509,7 @@ jr_0e4_50bd:
 	ld   sp, $1161                                   ; $5182: $31 $61 $11
 	ld   de, $1111                                   ; $5185: $11 $11 $11
 	ld   de, $1111                                   ; $5188: $11 $11 $11
-	ld   de, $bfff                                   ; $518b: $11 $ff $bf
+	ld   de, sRandomSeed                                   ; $518b: $11 $ff $bf
 	rst  $38                                         ; $518e: $ff
 	rst  $38                                         ; $518f: $ff
 	rst  $38                                         ; $5190: $ff
@@ -9505,7 +9505,7 @@ jr_0e4_6bc9:
 	jr   @-$1f                                       ; $6ce2: $18 $df
 
 	rst  $38                                         ; $6ce4: $ff
-	ld   a, [$bfff]                                  ; $6ce5: $fa $ff $bf
+	ld   a, [sRandomSeed]                                  ; $6ce5: $fa $ff $bf
 	rst  $38                                         ; $6ce8: $ff
 	rst  $38                                         ; $6ce9: $ff
 	rst  $38                                         ; $6cea: $ff

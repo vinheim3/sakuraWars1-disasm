@@ -69,7 +69,7 @@ SECTION "ROM Bank $0f3", ROMX[$4000], BANK[$f3]
 	xor  a                                           ; $4056: $af
 	jp   c, $1161                                    ; $4057: $da $61 $11
 
-	ld   de, $bfff                                   ; $405a: $11 $ff $bf
+	ld   de, sRandomSeed                                   ; $405a: $11 $ff $bf
 	rst  $38                                         ; $405d: $ff
 	pop  af                                          ; $405e: $f1
 	ld   de, $1713                                   ; $405f: $11 $13 $17

@@ -261,19 +261,19 @@ SpriteGroupDataPointers:
 	db $00, $00, $00
 	AddrBank SpriteGroup1Pointers
 	AddrBank SpriteGroup2Pointers
-	db $00, $40, $22
-	db $00, $40, $23
+	AddrBank SpriteGroup3Pointers
+	AddrBank SpriteGroup4Pointers
 	AddrBank SpriteGroup5Pointers
-	db $f0, $4f, $0e
-	db $d4, $4d, $0f
-	db $a2, $4d, $0f
-	db $30, $40, $0f
-	db $00, $65, $3f
+	AddrBank SpriteGroup6Pointers
+	AddrBank SpriteGroup7Pointers
+	AddrBank SpriteGroup8Pointers
+	AddrBank SpriteGroup9Pointers
+	AddrBank SpriteGroupAPointers
 	AddrBank SpriteGroupBPointers
 	AddrBank SpriteGroupCPointers
-	db $90, $5a, $23
-	db $b0, $64, $0f
-	db $cc, $70, $0e
+	AddrBank SpriteGroupDPointers
+	AddrBank SpriteGroupEPointers
+	AddrBank SpriteGroupFPointers
 
 
 CopyOamDmaFunc:
@@ -2639,7 +2639,7 @@ Func_0c50::
 
 UpdateSramRandomSeed::
 	ld   d, $80                                      ; $0c70: $16 $80
-	ld   a, [$bfff]                                  ; $0c72: $fa $ff $bf
+	ld   a, [sRandomSeed]                                  ; $0c72: $fa $ff $bf
 
 .loopAbs:
 	cp   d                                           ; $0c75: $ba
@@ -2682,7 +2682,7 @@ UpdateSramRandomSeed::
 	call UpdateRandomNumbers                                       ; $0ca7: $cd $ea $0c
 	call UpdateRandomNumbers                                       ; $0caa: $cd $ea $0c
 	call GetRandomNumInPreSpecifiedRange                               ; $0cad: $cd $10 $0d
-	ld   [$bfff], a                                  ; $0cb0: $ea $ff $bf
+	ld   [sRandomSeed], a                                  ; $0cb0: $ea $ff $bf
 	ret                                              ; $0cb3: $c9
 
 .structIdxes:
@@ -3167,7 +3167,8 @@ jr_000_0ec0:
 	ret                                              ; $0ecb: $c9
 
 
-UnusedClearSpriteGroup:
+; A - sprite group
+UnusedSetSpriteGroup:
 	ld   [wSpriteGroup], a                                          ; $0ecc
 	ret                                                             ; $0ecf
 
@@ -3230,17 +3231,17 @@ HandleGameState:
 	AddrBank GameState00_Init
 	AddrBank GameState01
 	AddrBank GameState02_Intro
-	AddrBank GameState03
-	AddrBank GameState04
+	AddrBank GameState03_MiniGames
+	AddrBank GameState04_IrisMiniGameMain
 	AddrBank GameState05
 	AddrBank GameState06
 	AddrBank GameState07
 	AddrBank GameState08
 	AddrBank GameState09
 	AddrBank GameState0a
-	AddrBank GameState0b
-	AddrBank GameState0c
-	AddrBank GameState0d
+	AddrBank GameState0b_KannaMiniGameMain
+	AddrBank GameState0c_SakuraMiniGameMain
+	AddrBank GameState0d_MariaMiniGame
 	AddrBank GameState0e_SaveScreen
 	AddrBank GameState0f
 	AddrBank GameState10
@@ -3251,21 +3252,21 @@ HandleGameState:
 	AddrBank GameState15
 	AddrBank GameState16_EnterName
 	AddrBank GameState17_Settings
-	AddrBank GameState18
+	AddrBank GameState18_MiniGameResults
 	AddrBank GameState19
 	AddrBank GameState1a
-	AddrBank GameState1b
-	AddrBank GameState1c
-	AddrBank GameState1d
-	AddrBank GameState1e
-	AddrBank GameState1f
+	AddrBank GameState1b_KohranMiniGameTitleScreen
+	AddrBank GameState1c_IrisMiniGameTitleScreen
+	AddrBank GameState1d_SumireMiniGameTitleScreen
+	AddrBank GameState1e_SakuraMiniGameTitleScreen
+	AddrBank GameState1f_KannaMiniGameTitleScreen
 	AddrBank GameState20
-	AddrBank GameState21
-	AddrBank GameState22
+	AddrBank GameState21_KannaMiniGameHelpScreen
+	AddrBank GameState22_IrisMiniGameHelpScreen
 	AddrBank GameState23
 	AddrBank GameState24
-	AddrBank GameState25
-	AddrBank GameState26
+	AddrBank GameState25_KohranMiniGameMain
+	AddrBank GameState26_SumireMiniGameMain
 	AddrBank GameState27
 	AddrBank GameState28
 	AddrBank GameState29
@@ -3286,7 +3287,7 @@ HandleGameState:
 	AddrBank GameState38
 	AddrBank GameState39_Explore
 	AddrBank GameState3a
-	AddrBank GameState3b
+	AddrBank GameState3b_MainConvo
 	AddrBank GameState3c_FileLoadDisplay
 	AddrBank GameState3d
 	AddrBank GameState3e

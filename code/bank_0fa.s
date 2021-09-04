@@ -502,7 +502,7 @@ Call_0fa_41fb:
 	ccf                                              ; $42be: $3f
 	ld   l, a                                        ; $42bf: $6f
 	and  c                                           ; $42c0: $a1
-	ld   de, $bfff                                   ; $42c1: $11 $ff $bf
+	ld   de, sRandomSeed                                   ; $42c1: $11 $ff $bf
 	sbc  a                                           ; $42c4: $9f
 	rst  JumpTable                                         ; $42c5: $df
 	pop  bc                                          ; $42c6: $c1

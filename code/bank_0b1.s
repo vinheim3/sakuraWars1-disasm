@@ -5817,7 +5817,7 @@ Call_0b1_5786:
 	inc  de                                          ; $5a25: $13
 	ld   de, $1251                                   ; $5a26: $11 $51 $12
 	ld   h, $7a                                      ; $5a29: $26 $7a
-	call c, $bfff                                    ; $5a2b: $dc $ff $bf
+	call c, sRandomSeed                                    ; $5a2b: $dc $ff $bf
 	rst  $38                                         ; $5a2e: $ff
 	rst  $38                                         ; $5a2f: $ff
 	db   $fc                                         ; $5a30: $fc

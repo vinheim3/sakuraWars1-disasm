@@ -4828,7 +4828,7 @@ jr_0c4_541b:
 	add  sp, $7c                                     ; $5483: $e8 $7c
 	ld   de, $f311                                   ; $5485: $11 $11 $f3
 	ld   de, $b16f                                   ; $5488: $11 $6f $b1
-	ld   a, [$bfff]                                  ; $548b: $fa $ff $bf
+	ld   a, [sRandomSeed]                                  ; $548b: $fa $ff $bf
 	rra                                              ; $548e: $1f
 	pop  af                                          ; $548f: $f1
 	ld   de, $4fbc                                   ; $5490: $11 $bc $4f
@@ -8347,7 +8347,7 @@ jr_0c4_6676:
 	adc  e                                           ; $6683: $8b
 	call $11c5                                       ; $6684: $cd $c5 $11
 	rra                                              ; $6687: $1f
-	ld   hl, $bfff                                   ; $6688: $21 $ff $bf
+	ld   hl, sRandomSeed                                   ; $6688: $21 $ff $bf
 	rst  JumpTable                                         ; $668b: $df
 	di                                               ; $668c: $f3
 	adc  a                                           ; $668d: $8f
