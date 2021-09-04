@@ -701,6 +701,28 @@ if __name__ == "__main__":
                 if not scriptNum:
                     continue
 
+                if (int(scriptNum), int(offset)) in (
+                    (368, 864),
+                    (457, 242),
+                    (469, 927),
+                    (469, 1208),
+                    (621, 547),
+                    (621, 756),
+                    (621, 961),
+                    (694, 709),
+                    (723, 3147),
+                ):
+                    if english and english[0] != "=" and english[0] != " ":
+                        english = f" {english}"
+                elif (int(scriptNum), int(offset)) in (
+                    (18, 117),
+                    (18, 694),
+                    (262, 101),
+                    (733, 2605),
+                ):
+                    if english and english[0] != "=" and english[0] != " ":
+                        english = f"        {english}"
+
                 fullEnglishMap.setdefault(int(scriptNum), {})
 
                 if english and english[0] != "=":
