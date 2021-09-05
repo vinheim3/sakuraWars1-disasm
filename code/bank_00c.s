@@ -4407,13 +4407,13 @@ Call_00c_5ac0:
 	sla  a                                           ; $5ac0: $cb $27
 	ld   e, a                                        ; $5ac2: $5f
 	ld   d, $00                                      ; $5ac3: $16 $00
-	ld   hl, .table                                   ; $5ac5: $21 $d5 $5a
+	ld   hl, Data_0c_5ad5                                   ; $5ac5: $21 $d5 $5a
 	add  hl, de                                      ; $5ac8: $19
 
 	ld   a, [hl+]                                    ; $5ac9: $2a
 	ld   d, [hl]                                     ; $5aca: $56
 	ld   e, a                                        ; $5acb: $5f
-	ld   hl, .table                                   ; $5acc: $21 $d5 $5a
+	ld   hl, Data_0c_5ad5                                   ; $5acc: $21 $d5 $5a
 	add  hl, de                                      ; $5acf: $19
 	
 	ld   d, h                                        ; $5ad0: $54
@@ -4421,7 +4421,10 @@ Call_00c_5ac0:
 	ld   a, $0c                                      ; $5ad2: $3e $0c
 	ret                                              ; $5ad4: $c9
 
-.table:
+if def(VWF)
+else
+Data_0c_5ad5:
+endc
 	inc  d                                           ; $5ad5: $14
 	nop                                              ; $5ad6: $00
 	inc  h                                           ; $5ad7: $24
@@ -8940,3 +8943,39 @@ SetPrologueScriptState::
 	xor  a                                                          ; $7948
 	ld   [wGameSubstate], a                                         ; $7949
 	ret                                                             ; $794c
+
+
+if def(VWF)
+Data_0c_5ad5::
+	dw Data_0c_5ad5entry00-Data_0c_5ad5
+	dw Data_0c_5ad5entry01-Data_0c_5ad5
+	dw Data_0c_5ad5entry02-Data_0c_5ad5
+	dw Data_0c_5ad5entry03-Data_0c_5ad5
+	dw Data_0c_5ad5entry04-Data_0c_5ad5
+	dw Data_0c_5ad5entry05-Data_0c_5ad5
+	dw Data_0c_5ad5entry06-Data_0c_5ad5
+	dw Data_0c_5ad5entry07-Data_0c_5ad5
+	dw Data_0c_5ad5entry08-Data_0c_5ad5
+	dw Data_0c_5ad5entry09-Data_0c_5ad5
+
+Data_0c_5ad5entry00:
+	db $1f, $42, $48, $39, $46, $10, $4d, $43, $49, $46, $10, $47, $37, $3c, $39, $38, $49, $40, $39, $00
+Data_0c_5ad5entry01:
+	db $2c, $39, $37, $39, $3d, $4a, $39, $10, $48, $46, $35, $3d, $42, $3d, $42, $3b, $10, $3a, $46, $43, $41, $10, $2d, $35, $3f, $49, $46, $35, $00
+Data_0c_5ad5entry02:
+	db $2c, $39, $37, $39, $3d, $4a, $39, $10, $48, $46, $35, $3d, $42, $3d, $42, $3b, $10, $3a, $46, $43, $41, $10, $2d, $49, $41, $3d, $46, $39, $00
+Data_0c_5ad5entry03:
+	db $2c, $39, $37, $39, $3d, $4a, $39, $10, $48, $46, $35, $3d, $42, $3d, $42, $3b, $10, $3a, $46, $43, $41, $10, $27, $35, $46, $3d, $35, $00
+Data_0c_5ad5entry04:
+	db $2c, $39, $37, $39, $3d, $4a, $39, $10, $48, $46, $35, $3d, $42, $3d, $42, $3b, $10, $3a, $46, $43, $41, $10, $23, $46, $3d, $47, $00
+Data_0c_5ad5entry05:
+	db $2c, $39, $37, $39, $3d, $4a, $39, $10, $48, $46, $35, $3d, $42, $3d, $42, $3b, $10, $3a, $46, $43, $41, $10, $25, $43, $3c, $46, $35, $42, $00
+Data_0c_5ad5entry06:
+	db $2c, $39, $37, $39, $3d, $4a, $39, $10, $48, $46, $35, $3d, $42, $3d, $42, $3b, $10, $3a, $46, $43, $41, $10, $25, $35, $42, $42, $35, $00
+Data_0c_5ad5entry07:
+	db $2c, $39, $47, $48, $10, $35, $42, $38, $10, $46, $39, $37, $43, $4a, $39, $46, $10, $47, $48, $35, $41, $3d, $42, $35, $00
+Data_0c_5ad5entry08:
+	db $2f, $42, $35, $36, $40, $39, $10, $48, $43, $10, $47, $39, $40, $39, $37, $48, $00
+Data_0c_5ad5entry09:
+	db $2d, $37, $3c, $39, $38, $49, $40, $39, $10, $37, $43, $42, $3a, $3d, $46, $41, $39, $38, $00
+endc

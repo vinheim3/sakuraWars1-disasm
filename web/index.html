@@ -1000,6 +1000,15 @@
                             rowsShown: 32,
                             canvasHeight: 32*8,
                         },
+                        {
+                            name: "Cinematron (todo) (gs $14)",
+                            sources: [
+                                ['rleXorCopy', 0x14, 0x60df, 0x0000, 'vram1'],
+                                ['simpleCopy', 0x1e, 0x647c, 0x0000, 0x40, 'rom', 'bgPalettes'],
+                            ],
+                            isGBC: true,
+                            showTileData: true,
+                        },
                     ],
                 },
                 methods: {

@@ -672,7 +672,7 @@ if __name__ == "__main__":
 
     # flags
     translate = True
-    compileBs = True
+    compileBs = False
 
     """Individual"""
     # scriptNum = conv(sys.argv[1])
@@ -695,7 +695,7 @@ if __name__ == "__main__":
     doneEnglish = {}
 
     if translate:
-        with open('sakura wars GB - 31:08:21.csv') as f:
+        with open('sakura wars GB - 04:09:21.csv') as f:
             reader = csv.reader(f)
             for scriptNum, offset, orig, blank, english, char, dupe1, dupe2 in reader:
                 if not scriptNum:
@@ -721,7 +721,7 @@ if __name__ == "__main__":
                     (733, 2605),
                 ):
                     if english and english[0] != "=" and english[0] != " ":
-                        english = f"        {english}"
+                        english = " "*8+english
 
                 fullEnglishMap.setdefault(int(scriptNum), {})
 

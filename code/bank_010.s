@@ -4303,27 +4303,49 @@ jr_010_5c37:
 	ld   a, $03                                      ; $5c60: $3e $03
 	ld   [wWramBank], a                                  ; $5c62: $ea $93 $c2
 	ldh  [rSVBK], a                                  ; $5c65: $e0 $70
+
+;
 	ld   a, $1d                                      ; $5c67: $3e $1d
 	ld   hl, $d000                                   ; $5c69: $21 $00 $d0
 	ld   de, $60f4                                   ; $5c6c: $11 $f4 $60
+if def(VWF)
+	call CinematronTileAttrHook
+else
 	call RLEXorCopy                                       ; $5c6f: $cd $d2 $09
+endc
+
+;
 	ld   a, $1c                                      ; $5c72: $3e $1c
 	ld   hl, $d400                                   ; $5c74: $21 $00 $d4
 	ld   de, $66fd                                   ; $5c77: $11 $fd $66
+if def(VWF)
+	call CinematronTileMapHook
+else
 	call RLEXorCopy                                       ; $5c7a: $cd $d2 $09
-	call Call_010_6473                               ; $5c7d: $cd $73 $64
+endc
+
+;
+	call Stub_10_6473                               ; $5c7d: $cd $73 $64
 	call Call_010_62fd                               ; $5c80: $cd $fd $62
 	call Call_010_6388                               ; $5c83: $cd $88 $63
-	call $66a8                                       ; $5c86: $cd $a8 $66
+	call Func_10_66a8                                       ; $5c86: $cd $a8 $66
 	pop  af                                          ; $5c89: $f1
 	ld   [wWramBank], a                                  ; $5c8a: $ea $93 $c2
 	ldh  [rSVBK], a                                  ; $5c8d: $e0 $70
+
+;
 	ld   a, $01                                      ; $5c8f: $3e $01
 	ldh  [rVBK], a                                   ; $5c91: $e0 $4f
 	ld   a, $14                                      ; $5c93: $3e $14
 	ld   hl, $8000                                   ; $5c95: $21 $00 $80
 	ld   de, $60df                                   ; $5c98: $11 $df $60
+if def(VWF)
+	call CinematronTileDataHook_1_8000h
+else
 	call RLEXorCopy                                       ; $5c9b: $cd $d2 $09
+endc
+
+;
 	xor  a                                           ; $5c9e: $af
 	ldh  [rVBK], a                                   ; $5c9f: $e0 $4f
 	ld   a, $13                                      ; $5ca1: $3e $13
@@ -5495,7 +5517,7 @@ Call_010_6444:
 	ld   hl, $2322                                   ; $646f: $21 $22 $23
 	inc  h                                           ; $6472: $24
 
-Call_010_6473:
+Stub_10_6473:
 	ret                                              ; $6473: $c9
 
 
@@ -5545,7 +5567,7 @@ Call_010_6493:
 	ld   h, [hl]                                     ; $64cd: $66
 	ld   l, a                                        ; $64ce: $6f
 	ld   de, $dda2                                   ; $64cf: $11 $a2 $dd
-	call Call_010_652a                               ; $64d2: $cd $2a $65
+	call Copy2RowsOf10hBytes                               ; $64d2: $cd $2a $65
 	pop  bc                                          ; $64d5: $c1
 	ld   hl, $6522                                   ; $64d6: $21 $22 $65
 	add  hl, bc                                      ; $64d9: $09
@@ -5553,13 +5575,13 @@ Call_010_6493:
 	ld   h, [hl]                                     ; $64db: $66
 	ld   l, a                                        ; $64dc: $6f
 	ld   de, $de62                                   ; $64dd: $11 $62 $de
-	call Call_010_652a                               ; $64e0: $cd $2a $65
+	call Copy2RowsOf10hBytes                               ; $64e0: $cd $2a $65
 	ld   hl, $d740                                   ; $64e3: $21 $40 $d7
 	ld   de, $dde2                                   ; $64e6: $11 $e2 $dd
-	call Call_010_652a                               ; $64e9: $cd $2a $65
+	call Copy2RowsOf10hBytes                               ; $64e9: $cd $2a $65
 	ld   hl, $d340                                   ; $64ec: $21 $40 $d3
 	ld   de, $dea2                                   ; $64ef: $11 $a2 $de
-	call Call_010_652a                               ; $64f2: $cd $2a $65
+	call Copy2RowsOf10hBytes                               ; $64f2: $cd $2a $65
 
 jr_010_64f5:
 	pop  af                                          ; $64f5: $f1
@@ -5599,20 +5621,30 @@ jr_010_64f5:
 	db   $10                                         ; $6528: $10
 	db   $d3                                         ; $6529: $d3
 
-Call_010_652a:
-	ld   bc, $0010                                   ; $652a: $01 $10 $00
-	call MemCopy                                       ; $652d: $cd $a9 $09
-	ld   bc, $0010                                   ; $6530: $01 $10 $00
-	add  hl, bc                                      ; $6533: $09
-	push hl                                          ; $6534: $e5
-	ld   hl, $0010                                   ; $6535: $21 $10 $00
-	add  hl, de                                      ; $6538: $19
-	ld   e, l                                        ; $6539: $5d
-	ld   d, h                                        ; $653a: $54
-	pop  hl                                          ; $653b: $e1
-	ld   bc, $0010                                   ; $653c: $01 $10 $00
-	call MemCopy                                       ; $653f: $cd $a9 $09
-	ret                                              ; $6542: $c9
+
+; DE - dest addr
+; HL - src addr
+Copy2RowsOf10hBytes:
+; Copy $10 bytes
+	ld   bc, $0010                                                  ; $652a
+	call MemCopy                                                    ; $652d
+
+; Push HL+$10 (orig HL+$20)
+	ld   bc, $0010                                                  ; $6530
+	add  hl, bc                                                     ; $6533
+	push hl                                                         ; $6534
+
+; DE += $10 (orig DE+$20)
+	ld   hl, $0010                                                  ; $6535
+	add  hl, de                                                     ; $6538
+	ld   e, l                                                       ; $6539
+	ld   d, h                                                       ; $653a
+
+; Copy another $10 bytes
+	pop  hl                                                         ; $653b
+	ld   bc, $0010                                                  ; $653c
+	call MemCopy                                                    ; $653f
+	ret                                                             ; $6542
 
 
 Call_010_6543:
@@ -5850,10 +5882,11 @@ jr_010_6699:
 	inc  b                                           ; $66a4: $04
 	inc  bc                                          ; $66a5: $03
 	ld   [bc], a                                     ; $66a6: $02
-	ld   bc, $24fa                                   ; $66a7: $01 $fa $24
-	ret                                              ; $66aa: $c9
-
-
+	db $01 
+	
+	
+Func_10_66a8:
+	ld   a, [$c924] ; $66a8: $fa $24 $c9
 	or   a                                           ; $66ab: $b7
 	jr   z, jr_010_66d2                              ; $66ac: $28 $24
 
@@ -9207,4 +9240,65 @@ EnterNameTileDataHook:
 Gfx_EnEnterName:
 	INCBIN "en_enterName.2bpp"
 .end:
+
+
+CinematronTileDataHook_1_8000h:
+	call RLEXorCopy
+	ret
+
+	ld   a, BANK(Gfx_EnCinematron)
+	ld   bc, Gfx_EnCinematron.end-Gfx_EnCinematron
+	ld   de, $8800
+	ld   hl, Gfx_EnCinematron
+	call FarMemCopy
+	ret
+
+
+CinematronTileMapHook:
+	call RLEXorCopy
+	ret
+
+	ld   a, BANK(.topLayout)
+	ldbc 6, 4
+	ld   de, .topLayout
+	ld   hl, $d400+$4e
+	call FarCopyLayout
+
+	ld   a, BANK(.bottomLayout)
+	ldbc 6, 2
+	ld   de, .bottomLayout
+	ld   hl, $d400+$12e
+	call FarCopyLayout
+
+	ret
+
+.topLayout:
+	db $80, $81, $82, $83, $84, $85
+	db $86, $87, $88, $89, $8a, $8b
+	db $8c, $8d, $8e, $8f, $90, $91
+	db $92, $93, $94, $95, $96, $97
+.bottomLayout:
+	db $98, $99, $9a, $9b, $9c, $9d
+	db $9e, $9f, $a0, $a1, $a2, $a3
+
+
+CinematronTileAttrHook:
+	call RLEXorCopy
+	ret
+
+	ld   a, [$d000+$12e]
+	res  3, a
+	ld   [$d000+$12e], a
+	ld   a, [$d000+$12f]
+	res  3, a
+	ld   [$d000+$12f], a
+	ld   a, [$d000+$14e]
+	res  3, a
+	ld   [$d000+$14e], a
+	ld   a, [$d000+$14f]
+	res  3, a
+	ld   [$d000+$14f], a
+
+	ret
+
 endc

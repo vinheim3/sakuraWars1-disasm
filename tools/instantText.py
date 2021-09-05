@@ -24,28 +24,33 @@ def is_timed(_scriptName, idx):
     return False
 
 tableItems = []
-with open('sakura wars GB - misc 29:08:21.csv') as f:
+existing_map = {}
+with open('sakura wars GB - misc 05:09:21.csv') as f:
     reader = csv.reader(f)
     for row in reader:
+        if row[2] not in existing_map:
+            existing_map[row[2]] = row[4]
+
         if row[0] != scriptName:
             continue
 
-        tableItems.append(row[4])
+        tableItems.append(row[2])
 
-comps = []
+comps = [f"{tableName}::"]
 for i in range(len(tableItems)):
     comps.append(f"\tdw {prefix}{i:02x}-{tableName}")
 comps.append("")
 
-for i, tableItem in enumerate(tableItems):
-    # Calculate if any lines breached limit
+for i, jp in enumerate(tableItems):
+    tableItem = existing_map[jp]
+
+    # Calculate if any lines breached limit (doesn't actually use conversion)
     limit = 112
     if is_timed(scriptName, i):
         limit = 128
     lines = tableItem.split('\n')
     for line in lines:
         textboxes = ScriptExtractor.convertEnglish(line, limit)
-        assert len(textboxes) <= 1
         if textboxes and 0x0d in textboxes[0]:
             print(i, line, 'breached')
 

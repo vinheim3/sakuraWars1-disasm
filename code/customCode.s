@@ -9,6 +9,11 @@ Gfx_EnTitleMenuScreenOpts::
 	INCBIN "en_titleMenuScreenOpts.2bpp"
 
 
+Gfx_EnCinematron::
+	INCBIN "en_cinematron.2bpp"
+.end::
+
+
 LoadSettingsEnTileData::
 	ld   bc, $c0
 	ld   de, $d1a0

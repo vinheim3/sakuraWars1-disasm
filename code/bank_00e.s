@@ -11898,7 +11898,7 @@ SpriteGroupC_Idx2dh_DormRoomThursday:
 
 SpriteGroupC_Idx2eh_DormRoomFriday:
 	db $10, $08, $2e, $0f
-	db $10, $18, $30, $1f
+	db $10, $10, $30, $1f
 
 
 SpriteGroupC_Idx2fh_DormRoomSaturday:
