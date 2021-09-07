@@ -3549,7 +3549,7 @@ jr_04c_4eb9:
 	ld   d, d                                        ; $4fa5: $52
 	ld   a, h                                        ; $4fa6: $7c
 	ld   [bc], a                                     ; $4fa7: $02
-	jp   $0d7d                                       ; $4fa8: $c3 $7d $0d
+	jp   ConvertAintoBCD                                       ; $4fa8: $c3 $7d $0d
 
 
 	ld   [bc], a                                     ; $4fab: $02

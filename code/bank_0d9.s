@@ -7328,7 +7328,7 @@ Call_0d9_5652:
 	push hl                                          ; $5fbe: $e5
 	ld   de, $ff18                                   ; $5fbf: $11 $18 $ff
 	and  h                                           ; $5fc2: $a4
-	ld   de, $cb26                                   ; $5fc3: $11 $26 $cb
+	ld   de, wMainConvoScriptSong                                   ; $5fc3: $11 $26 $cb
 	ld   d, c                                        ; $5fc6: $51
 	ld   de, $db49                                   ; $5fc7: $11 $49 $db
 	ld   b, d                                        ; $5fca: $42

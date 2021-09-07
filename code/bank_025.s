@@ -10286,7 +10286,7 @@ jr_025_6afe:
 	nop                                              ; $6b51: $00
 	and  d                                           ; $6b52: $a2
 	nop                                              ; $6b53: $00
-	call nc, $a100                                   ; $6b54: $d4 $00 $a1
+	call nc, sCurrPoints                                   ; $6b54: $d4 $00 $a1
 	nop                                              ; $6b57: $00
 	rst  $10                                         ; $6b58: $d7
 	nop                                              ; $6b59: $00

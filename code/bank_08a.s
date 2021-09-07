@@ -2782,7 +2782,7 @@ jr_08a_4b4f:
 	add  b                                           ; $4bcc: $80
 	jr   jr_08a_4b4f                                 ; $4bcd: $18 $80
 
-	ld   [$a080], sp                                 ; $4bcf: $08 $80 $a0
+	ld   [sGlobalFlags1], sp                                 ; $4bcf: $08 $80 $a0
 	add  b                                           ; $4bd2: $80
 	sub  b                                           ; $4bd3: $90
 	rst  $38                                         ; $4bd4: $ff
@@ -7654,7 +7654,7 @@ jr_08a_60b5:
 	add  b                                           ; $60fe: $80
 	jr   jr_08a_6081                                 ; $60ff: $18 $80
 
-	ld   [$a080], sp                                 ; $6101: $08 $80 $a0
+	ld   [sGlobalFlags1], sp                                 ; $6101: $08 $80 $a0
 	add  b                                           ; $6104: $80
 	sub  b                                           ; $6105: $90
 	rst  $38                                         ; $6106: $ff

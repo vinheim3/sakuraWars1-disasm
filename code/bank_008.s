@@ -7,7 +7,7 @@ INCLUDE "includes.s"
 
 SECTION "ROM Bank $008", ROMX[$4000], BANK[$8]
 
-Func_08_4000::
+InitScriptEngine::
 	xor  a                                           ; $4000: $af
 	ld   [wScriptEngineIsRunning], a                                  ; $4001: $ea $51 $cb
 	ld   [wIdxInScriptOpcodeStructForCurrOpcode], a                                  ; $4004: $ea $53 $cb
@@ -22,7 +22,7 @@ Func_08_4000::
 	ld   [$b0af], a                                  ; $401f: $ea $af $b0
 	ld   a, [sTextSpeedBaseCounter]                                  ; $4022: $fa $b3 $b1
 	ld   [wTextSpeedBaseCounter], a                                  ; $4025: $ea $90 $cb
-	ld   [$cbc8], a                                  ; $4028: $ea $c8 $cb
+	ld   [wScriptSongToPlay], a                                  ; $4028: $ea $c8 $cb
 	ld   a, $03                                      ; $402b: $3e $03
 	ld   [$cba7], a                                  ; $402d: $ea $a7 $cb
 	ld   a, $01                                      ; $4030: $3e $01
@@ -684,7 +684,7 @@ ScriptEngineTable:
 	ScriptOpData ScriptOpcode23, $03
 	;
 	ScriptOpData ScriptOpcode24, $03
-	ScriptOpData ScriptOpcode25, $00
+	ScriptOpData ScriptOpcode25_NapOrTrain, $00
 	ScriptOpData ScriptOpcode26, $00
 	;
 	ScriptOpData ScriptOpcode27_Battle, $01
@@ -1422,7 +1422,7 @@ ScriptOpcode32_Main:
 
 
 ScriptOpcode02_Init:
-	ld   a, [$cbc8]                                  ; $48a3: $fa $c8 $cb
+	ld   a, [wScriptSongToPlay]                                  ; $48a3: $fa $c8 $cb
 	call PlaySong                                       ; $48a6: $cd $92 $1a
 	ld   a, $07                                      ; $48a9: $3e $07
 	call SafeSetAudVolForMultipleChannels                                       ; $48ab: $cd $e0 $1c
@@ -4049,7 +4049,7 @@ ScriptOpcode13_Init:
 	bit  7, a                                        ; $5acd: $cb $7f
 	jr   nz, jr_008_5adf                             ; $5acf: $20 $0e
 
-	ld   [$cbc8], a                                  ; $5ad1: $ea $c8 $cb
+	ld   [wScriptSongToPlay], a                                  ; $5ad1: $ea $c8 $cb
 	ld   b, a                                        ; $5ad4: $47
 	ld   a, [$cbc7]                                  ; $5ad5: $fa $c7 $cb
 	or   a                                           ; $5ad8: $b7
@@ -4093,7 +4093,7 @@ ScriptOpcode13_Main:
 	jr   nz, .safeSetAudVol                             ; $5b09: $20 $0b
 
 	ld   a, b                                        ; $5b0b: $78
-	ld   [$cbc8], a                                  ; $5b0c: $ea $c8 $cb
+	ld   [wScriptSongToPlay], a                                  ; $5b0c: $ea $c8 $cb
 	call PlaySong                                       ; $5b0f: $cd $92 $1a
 	or   a                                           ; $5b12: $b7
 	jr   z, .smth0                              ; $5b13: $28 $05
@@ -4212,7 +4212,7 @@ ScriptOpcode15_Main:
 	ld   bc, $5ba1                                   ; $5b98: $01 $a1 $5b
 	add  hl, bc                                      ; $5b9b: $09
 	ld   a, [hl]                                     ; $5b9c: $7e
-	call $1b64                                       ; $5b9d: $cd $64 $1b
+	call PlaySampledSound                                       ; $5b9d: $cd $64 $1b
 	ret                                              ; $5ba0: $c9
 
 
@@ -6324,7 +6324,7 @@ ScriptOpcode1f_Main:
 	xor  a                                           ; $6b1c: $af
 	ld   [wScriptEngineContsRunningThisMainLoop], a                                  ; $6b1d: $ea $52 $cb
 	ld   a, [hl]                                     ; $6b20: $7e
-	ld   h, $3b                                      ; $6b21: $26 $3b
+	ld   h, GS_MAIN_CONVO                                      ; $6b21: $26 $3b
 	ld   l, $01                                      ; $6b23: $2e $01
 
 	M_FarCall Func_0c_534e
@@ -6376,7 +6376,7 @@ ScriptOpcode21_EnterName_Main:
 	ld   [$cba6], a                                  ; $6b7a: $ea $a6 $cb
 
 ;
-	ld   h, $3b                                      ; $6b7d: $26 $3b
+	ld   h, GS_MAIN_CONVO                                      ; $6b7d: $26 $3b
 	ld   l, $01                                      ; $6b7f: $2e $01
 	ld   de, sPlayerName                                   ; $6b81: $11 $aa $af
 	ldbc $00, $05                                   ; $6b84: $01 $05 $00
@@ -6618,7 +6618,7 @@ jr_008_6cf8:
 	call EnqueueHDMATransfer                                       ; $6d2d: $cd $7c $02
 	call Call_008_413a                               ; $6d30: $cd $3a $41
 	call DequeueAScriptOpcode                               ; $6d33: $cd $bc $40
-	ld   a, $05                                      ; $6d36: $3e $05
+	ld   a, GS_CREDITS                                      ; $6d36: $3e $05
 	ld   [wGameState], a                                  ; $6d38: $ea $a0 $c2
 	xor  a                                           ; $6d3b: $af
 	ld   [wGameSubstate], a                                  ; $6d3c: $ea $a1 $c2
@@ -6686,7 +6686,7 @@ Jump_008_6d40:
 	and  e                                           ; $6d85: $a3
 
 
-ScriptOpcode25_Init:
+ScriptOpcode25_NapOrTrain_Init:
 	ld   a, $25                                      ; $6d86: $3e $25
 	call EnqueueAScriptOpcode                               ; $6d88: $cd $97 $40
 	ld   a, SO_03                                      ; $6d8b: $3e $03
@@ -6716,15 +6716,15 @@ ScriptOpcode25_Init:
 	ret                                              ; $6db3: $c9
 
 
-ScriptOpcode25_Main:
+ScriptOpcode25_NapOrTrain_Main:
 	xor  a                                           ; $6db4: $af
 	ld   [wScriptEngineContsRunningThisMainLoop], a                                  ; $6db5: $ea $52 $cb
 	call DequeueAScriptOpcode                               ; $6db8: $cd $bc $40
 	call GetNextScriptOpcodeToProcess                               ; $6dbb: $cd $70 $42
-	ld   h, $3b                                      ; $6dbe: $26 $3b
+	ld   h, GS_MAIN_CONVO                                      ; $6dbe: $26 $3b
 	ld   l, $01                                      ; $6dc0: $2e $01
 
-	M_FarCall Call_021_4000
+	M_FarCall SetNapOrTrainState
 	
 	ld   a, SO_02                                      ; $6dd6: $3e $02
 	call AddInterruptScriptOpcode                               ; $6dd8: $cd $ba $42
@@ -6747,7 +6747,7 @@ ScriptOpcode26_Main:
 	ld   [wScriptEngineContsRunningThisMainLoop], a                                  ; $6ded: $ea $52 $cb
 	xor  a                                           ; $6df0: $af
 	call PlaySong                                       ; $6df1: $cd $92 $1a
-	ld   a, $3f                                      ; $6df4: $3e $3f
+	ld   a, GS_GAME_OVER                                      ; $6df4: $3e $3f
 	ld   [wGameState], a                                  ; $6df6: $ea $a0 $c2
 	xor  a                                           ; $6df9: $af
 	ld   [wGameSubstate], a                                  ; $6dfa: $ea $a1 $c2
@@ -7682,7 +7682,7 @@ ScriptOpcode2b_Main:
 	ld   c, a                                        ; $7425: $4f
 	ld   b, [hl]                                     ; $7426: $46
 	ld   a, c                                        ; $7427: $79
-	ld   h, $3b                                      ; $7428: $26 $3b
+	ld   h, GS_MAIN_CONVO                                      ; $7428: $26 $3b
 	ld   l, $02                                      ; $742a: $2e $02
 
 	M_FarCall Call_021_7080
@@ -8075,7 +8075,7 @@ ScriptOpcode2f_Main:
 	
 	pop  af                                          ; $770a: $f1
 	ld   b, $00                                      ; $770b: $06 $00
-	ld   h, $3b                                      ; $770d: $26 $3b
+	ld   h, GS_MAIN_CONVO                                      ; $770d: $26 $3b
 	ld   l, $02                                      ; $770f: $2e $02
 
 	M_FarCall Call_021_75c1
@@ -8108,7 +8108,7 @@ ScriptOpcode30_Init:
 ScriptOpcode30_Main:
 	xor  a                                           ; $7741: $af
 	ld   [wScriptEngineContsRunningThisMainLoop], a                                  ; $7742: $ea $52 $cb
-	ld   h, $3b                                      ; $7745: $26 $3b
+	ld   h, GS_MAIN_CONVO                                      ; $7745: $26 $3b
 	ld   l, $01                                      ; $7747: $2e $01
 
 	M_FarCall Func_0c_5a33

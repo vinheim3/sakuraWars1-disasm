@@ -504,7 +504,7 @@ jr_078_421b:
 	adc  l                                           ; $422e: $8d
 
 jr_078_422f:
-	ld   bc, $a100                                   ; $422f: $01 $00 $a1
+	ld   bc, sCurrPoints                                   ; $422f: $01 $00 $a1
 	adc  b                                           ; $4232: $88
 	ldh  [$80], a                                    ; $4233: $e0 $80
 	rst  $38                                         ; $4235: $ff
@@ -679,7 +679,7 @@ jr_078_42de:
 	nop                                              ; $42ec: $00
 	rst  $38                                         ; $42ed: $ff
 	adc  l                                           ; $42ee: $8d
-	ld   bc, $a100                                   ; $42ef: $01 $00 $a1
+	ld   bc, sCurrPoints                                   ; $42ef: $01 $00 $a1
 	add  [hl]                                        ; $42f2: $86
 	ldh  [$80], a                                    ; $42f3: $e0 $80
 	rst  $38                                         ; $42f5: $ff
@@ -873,7 +873,7 @@ jr_078_4388:
 jr_078_43c3:
 	rst  $38                                         ; $43c3: $ff
 	adc  l                                           ; $43c4: $8d
-	ld   bc, $a100                                   ; $43c5: $01 $00 $a1
+	ld   bc, sCurrPoints                                   ; $43c5: $01 $00 $a1
 	add  d                                           ; $43c8: $82
 	ldh  [$80], a                                    ; $43c9: $e0 $80
 	rst  $38                                         ; $43cb: $ff
@@ -12084,7 +12084,7 @@ jr_078_74ba:
 	add  b                                           ; $751e: $80
 	ld   a, [bc]                                     ; $751f: $0a
 	add  b                                           ; $7520: $80
-	ld   de, $a080                                   ; $7521: $11 $80 $a0
+	ld   de, sGlobalFlags1                                   ; $7521: $11 $80 $a0
 	add  b                                           ; $7524: $80
 	ld   b, c                                        ; $7525: $41
 	add  b                                           ; $7526: $80
@@ -12266,7 +12266,7 @@ jr_078_75f4:
 	add  b                                           ; $75f4: $80
 	ld   a, [bc]                                     ; $75f5: $0a
 	add  b                                           ; $75f6: $80
-	ld   de, $a080                                   ; $75f7: $11 $80 $a0
+	ld   de, sGlobalFlags1                                   ; $75f7: $11 $80 $a0
 	add  b                                           ; $75fa: $80
 	ld   b, c                                        ; $75fb: $41
 	add  b                                           ; $75fc: $80

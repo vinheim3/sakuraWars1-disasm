@@ -4271,7 +4271,7 @@ jr_01a_5268:
 	ccf                                              ; $5288: $3f
 	add  e                                           ; $5289: $83
 	nop                                              ; $528a: $00
-	ld   bc, $a080                                   ; $528b: $01 $80 $a0
+	ld   bc, sGlobalFlags1                                   ; $528b: $01 $80 $a0
 	add  c                                           ; $528e: $81
 	ret  nz                                          ; $528f: $c0
 

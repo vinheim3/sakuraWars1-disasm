@@ -6191,7 +6191,7 @@ jr_09f_5b07:
 	add  b                                           ; $5b07: $80
 	add  b                                           ; $5b08: $80
 	nop                                              ; $5b09: $00
-	ld   bc, $a080                                   ; $5b0a: $01 $80 $a0
+	ld   bc, sGlobalFlags1                                   ; $5b0a: $01 $80 $a0
 	add  l                                           ; $5b0d: $85
 	ret  nz                                          ; $5b0e: $c0
 

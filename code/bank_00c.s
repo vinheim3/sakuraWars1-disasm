@@ -911,7 +911,7 @@ jr_00c_4613:
 	inc  [hl]                                        ; $462a: $34
 	xor  a                                           ; $462b: $af
 	ld   [$cb2c], a                                  ; $462c: $ea $2c $cb
-	ld   a, $39                                      ; $462f: $3e $39
+	ld   a, GS_EXPLORE                                      ; $462f: $3e $39
 	ld   [$cb2d], a                                  ; $4631: $ea $2d $cb
 	ret                                              ; $4634: $c9
 
@@ -932,7 +932,7 @@ jr_00c_4635:
 	inc  [hl]                                        ; $464d: $34
 	xor  a                                           ; $464e: $af
 	ld   [$cb2c], a                                  ; $464f: $ea $2c $cb
-	ld   a, $39                                      ; $4652: $3e $39
+	ld   a, GS_EXPLORE                                      ; $4652: $3e $39
 	ld   [$cb2d], a                                  ; $4654: $ea $2d $cb
 	ret                                              ; $4657: $c9
 
@@ -1345,7 +1345,7 @@ jr_00c_4848:
 	inc  [hl]                                        ; $4895: $34
 	xor  a                                           ; $4896: $af
 	ld   [$cb2c], a                                  ; $4897: $ea $2c $cb
-	ld   a, $39                                      ; $489a: $3e $39
+	ld   a, GS_EXPLORE                                      ; $489a: $3e $39
 	ld   [$cb2d], a                                  ; $489c: $ea $2d $cb
 	ld   a, $21                                      ; $489f: $3e $21
 	call PlaySoundEffect                                       ; $48a1: $cd $df $1a
@@ -1367,15 +1367,15 @@ jr_00c_48a5:
 
 	ld   [$cb23], a                                  ; $48b8: $ea $23 $cb
 	ld   a, [hl+]                                    ; $48bb: $2a
-	ld   [$cb24], a                                  ; $48bc: $ea $24 $cb
+	ld   [wMainConvoScriptIdx], a                                  ; $48bc: $ea $24 $cb
 	ld   a, [hl]                                     ; $48bf: $7e
 	and  $03                                         ; $48c0: $e6 $03
-	ld   [$cb25], a                                  ; $48c2: $ea $25 $cb
+	ld   [wMainConvoScriptIdx+1], a                                  ; $48c2: $ea $25 $cb
 	ld   hl, $cb2b                                   ; $48c5: $21 $2b $cb
 	inc  [hl]                                        ; $48c8: $34
 	xor  a                                           ; $48c9: $af
 	ld   [$cb2c], a                                  ; $48ca: $ea $2c $cb
-	ld   a, $3b                                      ; $48cd: $3e $3b
+	ld   a, GS_MAIN_CONVO                                      ; $48cd: $3e $3b
 	ld   [$cb2d], a                                  ; $48cf: $ea $2d $cb
 	ld   a, $21                                      ; $48d2: $3e $21
 	call PlaySoundEffect                                       ; $48d4: $cd $df $1a
@@ -1509,7 +1509,7 @@ jr_00c_4965:
 
 
 	ld   a, [$cb2d]                                  ; $4982: $fa $2d $cb
-	cp   $3b                                         ; $4985: $fe $3b
+	cp   GS_MAIN_CONVO                                         ; $4985: $fe $3b
 	jr   z, jr_00c_4991                              ; $4987: $28 $08
 
 	ld   [wGameState], a                                  ; $4989: $ea $a0 $c2
@@ -1521,9 +1521,9 @@ jr_00c_4965:
 jr_00c_4991:
 	ld   h, $38                                      ; $4991: $26 $38
 	ld   l, $00                                      ; $4993: $2e $00
-	ld   a, [$cb24]                                  ; $4995: $fa $24 $cb
+	ld   a, [wMainConvoScriptIdx]                                  ; $4995: $fa $24 $cb
 	ld   c, a                                        ; $4998: $4f
-	ld   a, [$cb25]                                  ; $4999: $fa $25 $cb
+	ld   a, [wMainConvoScriptIdx+1]                                  ; $4999: $fa $25 $cb
 	ld   b, a                                        ; $499c: $47
 	ld   a, [$cb22]                                  ; $499d: $fa $22 $cb
 	ld   d, a                                        ; $49a0: $57
@@ -2919,7 +2919,7 @@ FileLoadDisplayAnimationHandler4_ToNextState:
 	ret  nc                                                         ; $50cb
 
 .toNextState:
-	ld   a, $38                                      ; $50cc: $3e $38
+	ld   a, GS_DAY_PERIOD_TRANSITION                                      ; $50cc: $3e $38
 	ld   [wGameState], a                                  ; $50ce: $ea $a0 $c2
 
 	xor  a                                           ; $50d1: $af
@@ -3294,7 +3294,7 @@ Func_0c_534e::
 	ld   [$cc21], a                                  ; $5352: $ea $21 $cc
 	ld   a, l                                        ; $5355: $7d
 	ld   [$cc22], a                                  ; $5356: $ea $22 $cc
-	ld   a, $3d                                      ; $5359: $3e $3d
+	ld   a, GS_3d                                      ; $5359: $3e $3d
 	ld   [wGameState], a                                  ; $535b: $ea $a0 $c2
 	xor  a                                           ; $535e: $af
 	ld   [wGameSubstate], a                                  ; $535f: $ea $a1 $c2
@@ -3453,7 +3453,7 @@ Call_00c_53fd:
 	ret                                              ; $540e: $c9
 
 
-GameState3e::
+GameState3e_Schedule::
 	ld   a, [wGameSubstate]                                  ; $540f: $fa $a1 $c2
 	or   a                                           ; $5412: $b7
 	jp   nz, Jump_00c_55ac                           ; $5413: $c2 $ac $55
@@ -4311,7 +4311,7 @@ Func_0c_5a33::
 	ld   [$cc2a], a                                  ; $5a34: $ea $2a $cc
 	ld   a, l                                        ; $5a37: $7d
 	ld   [$cc2b], a                                  ; $5a38: $ea $2b $cc
-	ld   a, $3e                                      ; $5a3b: $3e $3e
+	ld   a, GS_SCHEDULE                                      ; $5a3b: $3e $3e
 	ld   [wGameState], a                                  ; $5a3d: $ea $a0 $c2
 	xor  a                                           ; $5a40: $af
 	ld   [wGameSubstate], a                                  ; $5a41: $ea $a1 $c2
@@ -4914,7 +4914,7 @@ jr_00c_5c2f:
 	ld   [bc], a                                     ; $5e1b: $02
 
 
-GameState3f::
+GameState3f_GameOver::
 	ld   a, [wGameSubstate]                                  ; $5e1c: $fa $a1 $c2
 	or   a                                           ; $5e1f: $b7
 	jp   nz, Jump_00c_5ffc                           ; $5e20: $c2 $fc $5f
@@ -5428,7 +5428,7 @@ jr_00c_61c7:
 	ret                                              ; $61fc: $c9
 
 
-GameState40::
+GameState40_Inventory::
 	ld   a, [wGameSubstate]                                  ; $61fd: $fa $a1 $c2
 	dec  a                                           ; $6200: $3d
 	jp   z, Jump_00c_670d                            ; $6201: $ca $0d $67
@@ -7924,7 +7924,6 @@ Func_0c_71a2::
 	xor  a                                           ; $71ab: $af
 	ret                                              ; $71ac: $c9
 
-
 jr_00c_71ad:
 	dec  a                                           ; $71ad: $3d
 	ret                                              ; $71ae: $c9
@@ -7934,7 +7933,7 @@ jr_00c_71ad:
 	ld   [$cc52], a                                  ; $71b0: $ea $52 $cc
 	ld   a, l                                        ; $71b3: $7d
 	ld   [$cc53], a                                  ; $71b4: $ea $53 $cc
-	ld   a, $40                                      ; $71b7: $3e $40
+	ld   a, GS_INVENTORY                                      ; $71b7: $3e $40
 	ld   [wGameState], a                                  ; $71b9: $ea $a0 $c2
 	xor  a                                           ; $71bc: $af
 	ld   [wGameSubstate], a                                  ; $71bd: $ea $a1 $c2
@@ -7944,17 +7943,9 @@ jr_00c_71ad:
 	ret                                              ; $71c1: $c9
 
 
-Call_00c_71c2:
-	push af                                          ; $71c2: $f5
-	ld   a, $35                                      ; $71c3: $3e $35
-	ld   [wFarCallAddr], a                                  ; $71c5: $ea $98 $c2
-	ld   a, $42                                      ; $71c8: $3e $42
-	ld   [wFarCallAddr+1], a                                  ; $71ca: $ea $99 $c2
-	ld   a, $0a                                      ; $71cd: $3e $0a
-	ld   [wFarCallBank], a                                  ; $71cf: $ea $9a $c2
-	pop  af                                          ; $71d2: $f1
-	call FarCall                                       ; $71d3: $cd $62 $09
-	ret                                              ; $71d6: $c9
+JpCheckIfFlagSet1::
+	M_FarCall CheckIfFlagSet1
+	ret                                                             ; $71d6
 
 
 Call_00c_71d7:
@@ -7966,15 +7957,8 @@ Call_00c_71d7:
 	ret                                              ; $71ed: $c9
 
 
-	push af                                          ; $71ee: $f5
-	ld   a, $de                                      ; $71ef: $3e $de
-	ld   [wFarCallAddr], a                                  ; $71f1: $ea $98 $c2
-	ld   a, $41                                      ; $71f4: $3e $41
-	ld   [wFarCallAddr+1], a                                  ; $71f6: $ea $99 $c2
-	ld   a, $0a                                      ; $71f9: $3e $0a
-	ld   [wFarCallBank], a                                  ; $71fb: $ea $9a $c2
-	pop  af                                          ; $71fe: $f1
-	call FarCall                                       ; $71ff: $cd $62 $09
+JpSetOrUnsetFlag1::
+	M_FarCall SetOrUnsetFlag1
 	ret                                              ; $7202: $c9
 
 
@@ -8020,7 +8004,7 @@ jr_00c_722f:
 	or   l                                           ; $7235: $b5
 	ret  z                                           ; $7236: $c8
 
-	call Call_00c_71c2                               ; $7237: $cd $c2 $71
+	call JpCheckIfFlagSet1                               ; $7237: $cd $c2 $71
 	or   a                                           ; $723a: $b7
 	jr   z, jr_00c_722f                              ; $723b: $28 $f2
 
@@ -8263,11 +8247,11 @@ GameState44::
 	ld   bc, $0000                                   ; $73b3: $01 $00 $00
 	M_FarCall SetAnimSpriteType0CoordsRelativeTo
 	M_FarCall Func_0a_426b
-	M_FarCall Func_08_4000
+	M_FarCall InitScriptEngine
 	
 ;
 	ld   a, [$cc78]                                  ; $73f2: $fa $78 $cc
-	ld   [$cbc8], a                                  ; $73f5: $ea $c8 $cb
+	ld   [wScriptSongToPlay], a                                  ; $73f5: $ea $c8 $cb
 	xor  a                                           ; $73f8: $af
 	ld   [$cba6], a                                  ; $73f9: $ea $a6 $cb
 	ld   [$cba8], a                                  ; $73fc: $ea $a8 $cb
@@ -8281,6 +8265,7 @@ GameState44::
 	ld   c, a                                                       ; $740c
 	ld   a, [wIntroScriptIdx+1]                                     ; $740d
 	ld   b, a                                                       ; $7410
+
 	ld   hl, ScriptSources                                          ; $7411
 	add  hl, bc                                                     ; $7414
 	add  hl, bc                                                     ; $7415
@@ -8714,11 +8699,11 @@ GameState47_Prologue::
 	ld   [$b1b4], a                                  ; $77bf: $ea $b4 $b1
 
 ;
-	M_FarCall Func_08_4000
+	M_FarCall InitScriptEngine
 
 ;
 	ld   a, [$cc9e]                                  ; $77d6: $fa $9e $cc
-	ld   [$cbc8], a                                  ; $77d9: $ea $c8 $cb
+	ld   [wScriptSongToPlay], a                                  ; $77d9: $ea $c8 $cb
 	xor  a                                           ; $77dc: $af
 	ld   [$cba6], a                                  ; $77dd: $ea $a6 $cb
 	ld   [$cba8], a                                  ; $77e0: $ea $a8 $cb
@@ -8732,6 +8717,7 @@ GameState47_Prologue::
 	ld   c, a                                                       ; $77f0
 	ld   a, [wPrologueScriptIdx+1]                                  ; $77f1
 	ld   b, a                                                       ; $77f4
+
 	ld   hl, ScriptSources                                          ; $77f5
 	add  hl, bc                                                     ; $77f8
 	add  hl, bc                                                     ; $77f9

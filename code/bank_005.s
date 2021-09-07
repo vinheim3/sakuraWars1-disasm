@@ -11163,7 +11163,7 @@ jr_005_7836:
 	ld   [$cc69], a                                  ; $785c: $ea $69 $cc
 	ld   a, l                                        ; $785f: $7d
 	ld   [$cc6a], a                                  ; $7860: $ea $6a $cc
-	ld   a, $43                                      ; $7863: $3e $43
+	ld   a, GS_43                                      ; $7863: $3e $43
 	ld   [wGameState], a                                  ; $7865: $ea $a0 $c2
 	xor  a                                           ; $7868: $af
 	ld   [wGameSubstate], a                                  ; $7869: $ea $a1 $c2

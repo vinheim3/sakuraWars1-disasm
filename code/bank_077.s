@@ -7677,7 +7677,7 @@ jr_077_6109:
 	rst  ToBoot                                         ; $61ee: $c7
 	ld   bc, $ea15                                   ; $61ef: $01 $15 $ea
 	add  b                                           ; $61f2: $80
-	call nc, $a080                                   ; $61f3: $d4 $80 $a0
+	call nc, sGlobalFlags1                                   ; $61f3: $d4 $80 $a0
 	add  b                                           ; $61f6: $80
 	ret  nz                                          ; $61f7: $c0
 

@@ -6892,7 +6892,7 @@ jr_098_5e39:
 	add  b                                           ; $5e5f: $80
 	add  b                                           ; $5e60: $80
 	nop                                              ; $5e61: $00
-	ld   bc, $a080                                   ; $5e62: $01 $80 $a0
+	ld   bc, sGlobalFlags1                                   ; $5e62: $01 $80 $a0
 	add  c                                           ; $5e65: $81
 	ret  nz                                          ; $5e66: $c0
 

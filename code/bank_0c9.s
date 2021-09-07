@@ -5248,7 +5248,7 @@ Call_0c9_59b6:
 	xor  d                                           ; $59d6: $aa
 	adc  d                                           ; $59d7: $8a
 	add  h                                           ; $59d8: $84
-	ld   de, $ca6d                                   ; $59d9: $11 $6d $ca
+	ld   de, wNapOrTrainIdx                                   ; $59d9: $11 $6d $ca
 	cp   l                                           ; $59dc: $bd
 	and  l                                           ; $59dd: $a5
 	ld   h, a                                        ; $59de: $67

@@ -1889,7 +1889,7 @@ jr_04f_4821:
 	ld   d, d                                        ; $490d: $52
 	ld   a, h                                        ; $490e: $7c
 	ld   [bc], a                                     ; $490f: $02
-	jp   $0d7d                                       ; $4910: $c3 $7d $0d
+	jp   ConvertAintoBCD                                       ; $4910: $c3 $7d $0d
 
 
 	ld   [bc], a                                     ; $4913: $02

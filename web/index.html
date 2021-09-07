@@ -1009,6 +1009,34 @@
                             isGBC: true,
                             showTileData: true,
                         },
+                        {
+                            name: "TV Comms (gs $11)",
+                            sources: [
+                                ['rleXorCopy', 0x1d, 0x7160, 0x1800, 'vram1'],
+                                ['rleXorCopy', 0x1d, 0x5937, 0x9800],
+
+                                ['rleXorCopy', 0x1d, 0x5937, 0xd000],
+                                ['rleXorCopy', 0x1d, 0x7160, 0xd400],
+
+                                // $5743
+                                //['simpleCopy', 0x00, 0xd380, 0x98e0, 0x80, 'memory', 'memory'],
+                                //['simpleCopy', 0x00, 0xd780, 0x18e0, 0x80, 'memory', 'vram1'],
+
+                                // $5762
+                                //['simpleCopy', 0x00, 0xd300, 0x99c0, 0x80, 'memory', 'memory'],
+                                //['simpleCopy', 0x00, 0xd700, 0x19c0, 0x80, 'memory', 'vram1'],
+
+                                // $5781
+                                //['simpleCopy', 0x00, 0xd240, 0x98c0, 0xc0, 'memory', 'memory'],
+                                //['simpleCopy', 0x00, 0xd640, 0x18c0, 0xc0, 'memory', 'vram1'],
+
+                                ['rleXorCopy', 0x16, 0x628a, 0x8800],
+                                ['simpleCopy', 0x1e, 0x7a0e, 0x0000, 0x40, 'rom', 'bgPalettes'],
+                            ],
+                            isGBC: true,
+                            rowsShown: 32,
+                            canvasHeight: 32*8,
+                        },
                     ],
                 },
                 methods: {

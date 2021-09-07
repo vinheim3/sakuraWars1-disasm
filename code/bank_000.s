@@ -2849,50 +2849,68 @@ GetRandomNumFromStruct:
 	ret                                                             ; $0d7c
 
 
+; Returns 1s in A, 10s in stack, then 100s in stack after
+; First of 100s, then 10s, that is 0, is set to 10 instead
+ConvertAintoBCD::
+; DE = return address
+	pop  de                                                         ; $0d7d
+	ld   bc, $0000                                                  ; $0d7e
+
+; C = num 100s
+.loop100:
+	cp   100                                                        ; $0d81
+	jr   c, .loop10                                                 ; $0d83
+
+	sub  100                                                        ; $0d85
+	inc  c                                                          ; $0d87
+	jr   .loop100                                                   ; $0d88
+
+; B = num 10s, A = num 1s
+.loop10:
+	cp   10                                                         ; $0d8a
+	jr   c, .done1s                                                 ; $0d8c
+
+	sub  10                                                         ; $0d8e
+	inc  b                                                          ; $0d90
+	jr   .loop10                                                    ; $0d91
+
+.done1s:
+; L = 1s
+	ld   l, a                                                       ; $0d93
+
+; Jump if num 100s > 0
+	ld   a, c                                                       ; $0d94
+	and  a                                                          ; $0d95
+	jr   nz, .end                                                   ; $0d96
+
+; Else num for 100s = 10
+	ld   c, 10                                                      ; $0d98
+
+; Jump if num 10s > 0
+	ld   a, b                                                       ; $0d9a
+	and  a                                                          ; $0d9b
+	jr   nz, .end                                                   ; $0d9c
+
+; Else num for 10s = 10
+	ld   b, 10                                                      ; $0d9e
+
+.end:
+; Push 100s
+	ld   a, c                                                       ; $0da0
+	push af                                                         ; $0da1
+
+; Push 10s
+	ld   a, b                                                       ; $0da2
+	push af                                                         ; $0da3
+
+; A = 1s, jump to return address
+	ld   a, l                                                       ; $0da4
+	ld   h, d                                                       ; $0da5
+	ld   l, e                                                       ; $0da6
+	jp   hl                                                         ; $0da7
+
+
 ;
-	pop  de                                          ; $0d7d: $d1
-	ld   bc, $0000                                   ; $0d7e: $01 $00 $00
-
-jr_000_0d81:
-	cp   $64                                         ; $0d81: $fe $64
-	jr   c, jr_000_0d8a                              ; $0d83: $38 $05
-
-	sub  $64                                         ; $0d85: $d6 $64
-	inc  c                                           ; $0d87: $0c
-	jr   jr_000_0d81                                 ; $0d88: $18 $f7
-
-jr_000_0d8a:
-	cp   $0a                                         ; $0d8a: $fe $0a
-	jr   c, jr_000_0d93                              ; $0d8c: $38 $05
-
-	sub  $0a                                         ; $0d8e: $d6 $0a
-	inc  b                                           ; $0d90: $04
-	jr   jr_000_0d8a                                 ; $0d91: $18 $f7
-
-jr_000_0d93:
-	ld   l, a                                        ; $0d93: $6f
-	ld   a, c                                        ; $0d94: $79
-	and  a                                           ; $0d95: $a7
-	jr   nz, jr_000_0da0                             ; $0d96: $20 $08
-
-	ld   c, $0a                                      ; $0d98: $0e $0a
-	ld   a, b                                        ; $0d9a: $78
-	and  a                                           ; $0d9b: $a7
-	jr   nz, jr_000_0da0                             ; $0d9c: $20 $02
-
-	ld   b, $0a                                      ; $0d9e: $06 $0a
-
-jr_000_0da0:
-	ld   a, c                                        ; $0da0: $79
-	push af                                          ; $0da1: $f5
-	ld   a, b                                        ; $0da2: $78
-	push af                                          ; $0da3: $f5
-	ld   a, l                                        ; $0da4: $7d
-	ld   h, d                                        ; $0da5: $62
-	ld   l, e                                        ; $0da6: $6b
-	jp   hl                                          ; $0da7: $e9
-
-
 	pop  de                                          ; $0da8: $d1
 	ld   bc, $fc18                                   ; $0da9: $01 $18 $fc
 	xor  a                                           ; $0dac: $af
@@ -3229,78 +3247,78 @@ HandleGameState:
 
 .gameStates:
 	AddrBank GameState00_Init
-	AddrBank GameState01
+	AddrBank GameState01_Stub
 	AddrBank GameState02_Intro
 	AddrBank GameState03_MiniGames
 	AddrBank GameState04_IrisMiniGameMain
-	AddrBank GameState05
-	AddrBank GameState06
-	AddrBank GameState07
-	AddrBank GameState08
-	AddrBank GameState09
-	AddrBank GameState0a
+	AddrBank GameState05_Credits
+	AddrBank GameState06_SoundMode
+	AddrBank GameState07_SceneryImages
+	AddrBank GameState08_GirlImages
+	AddrBank GameState09_GirlVoiceSounds
+	AddrBank GameState0a ; like sound mode but bugged
 	AddrBank GameState0b_KannaMiniGameMain
 	AddrBank GameState0c_SakuraMiniGameMain
 	AddrBank GameState0d_MariaMiniGame
 	AddrBank GameState0e_SaveScreen
-	AddrBank GameState0f
-	AddrBank GameState10
-	AddrBank GameState11
+	AddrBank GameState0f_GameBoyComms
+	AddrBank GameState10_PocketSakuraComms
+	AddrBank GameState11_TVComms
 	AddrBank GameState12_ResetData
 	AddrBank GameState13_DMG
 	AddrBank GameState14_Cinematron
-	AddrBank GameState15
+	AddrBank GameState15_RedLightGreenLight
 	AddrBank GameState16_EnterName
 	AddrBank GameState17_Settings
 	AddrBank GameState18_MiniGameResults
-	AddrBank GameState19
-	AddrBank GameState1a
+	AddrBank GameState19_PushUps
+	AddrBank GameState1a_MockBattle
 	AddrBank GameState1b_KohranMiniGameTitleScreen
 	AddrBank GameState1c_IrisMiniGameTitleScreen
 	AddrBank GameState1d_SumireMiniGameTitleScreen
 	AddrBank GameState1e_SakuraMiniGameTitleScreen
 	AddrBank GameState1f_KannaMiniGameTitleScreen
-	AddrBank GameState20
+	AddrBank GameState20_GameResults
 	AddrBank GameState21_KannaMiniGameHelpScreen
 	AddrBank GameState22_IrisMiniGameHelpScreen
-	AddrBank GameState23
-	AddrBank GameState24
+	AddrBank GameState23 ; like pocket sakura comms
+	AddrBank GameState24_MiniGameDebugMenu
 	AddrBank GameState25_KohranMiniGameMain
 	AddrBank GameState26_SumireMiniGameMain
-	AddrBank GameState27
-	AddrBank GameState28
-	AddrBank GameState29
-	AddrBank GameState2a
-	AddrBank GameState2b
-	AddrBank GameState2c
-	AddrBank GameState2d
-	AddrBank GameState2e
+	AddrBank GameState27_SakuraTraining
+	AddrBank GameState28_SumireTraining
+	AddrBank GameState29_KohranTraining
+	AddrBank GameState2a_IrisTraining
+	AddrBank GameState2b_KannaTraining
+	AddrBank GameState2c_MariaTraining
+	AddrBank GameState2d_Nap
+	AddrBank GameState2e_TrainingDebugMenu
 	AddrBank GameState2f_Battle
-	AddrBank GameState30
-	AddrBank GameState31
-	AddrBank GameState32
-	AddrBank GameState33
-	AddrBank GameState34
-	AddrBank GameState35
+	AddrBank GameState30 ; bugged
+	AddrBank GameState31_SpecialAnimsDebugMenu
+	AddrBank GameState32_BattleDebugMenu
+	AddrBank GameState33_PlayerSpecialAnims
+	AddrBank GameState34_GirlSpecialAnims
+	AddrBank GameState35_AltTitleScreen
 	AddrBank GameState36_TitleScreen
 	AddrBank GameState37_TitleMenuScreen
-	AddrBank GameState38
+	AddrBank GameState38_DayPeriodTransition
 	AddrBank GameState39_Explore
-	AddrBank GameState3a
+	AddrBank GameState3a_Items
 	AddrBank GameState3b_MainConvo
 	AddrBank GameState3c_FileLoadDisplay
-	AddrBank GameState3d
-	AddrBank GameState3e
-	AddrBank GameState3f
-	AddrBank GameState40
+	AddrBank GameState3d ; bugged
+	AddrBank GameState3e_Schedule
+	AddrBank GameState3f_GameOver
+	AddrBank GameState40_Inventory
 	AddrBank GameState41_TreasureChest
-	AddrBank GameState42
-	AddrBank GameState43
-	AddrBank GameState44
+	AddrBank GameState42_RomandoShop
+	AddrBank GameState43 ; can set various variables/flags?
+	AddrBank GameState44 ; intro script?
 	AddrBank GameState45_DormRoom
-	AddrBank GameState46
+	AddrBank GameState46 ; transitions to intro scripts
 	AddrBank GameState47_Prologue
-	AddrBank GameState48
+	AddrBank GameState48 ; bugged
 	AddrBank GameState49_DayPassed
 
 
@@ -4638,7 +4656,12 @@ endr
 	ret                                                             ; $15cc
 
 .isGBC:
+;DEF TV_HACK = $01
+if def(TV_HACK)
+	call HackHook
+else
 	ld   a, [wtodo_VisitedTitleScreen]                                  ; $15cd: $fa $01 $c2
+endc
 	or   a                                           ; $15d0: $b7
 	jr   nz, jr_000_15dd                             ; $15d1: $20 $0a
 
@@ -4657,7 +4680,7 @@ jr_000_15dd:
 	ret                                              ; $15e6: $c9
 
 
-GameState01:
+GameState01_Stub:
 	ret                                                             ; $15e7
 
 
@@ -5531,7 +5554,7 @@ Call_000_1b0a:
 	inc  [hl]                                        ; $1b34: $34
 	dec  [hl]                                        ; $1b35: $35
 	ld   [hl], $37                                   ; $1b36: $36 $37
-	jr   c, jr_000_1b72                              ; $1b38: $38 $38
+	db $38, $38
 
 	add  hl, sp                                      ; $1b3a: $39
 	ld   a, [hl-]                                    ; $1b3b: $3a
@@ -5578,343 +5601,170 @@ jr_000_1b53:
 
 jr_000_1b63:
 	ld   h, d                                        ; $1b63: $62
-	push af                                          ; $1b64: $f5
-	push bc                                          ; $1b65: $c5
-	push de                                          ; $1b66: $d5
-	push hl                                          ; $1b67: $e5
-	cp   $6d                                         ; $1b68: $fe $6d
-	jr   nc, jr_000_1b8d                             ; $1b6a: $30 $21
 
-	ld   d, $00                                      ; $1b6c: $16 $00
-	ld   e, a                                        ; $1b6e: $5f
-	ld   hl, $1b92                                   ; $1b6f: $21 $92 $1b
 
-jr_000_1b72:
-	add  hl, de                                      ; $1b72: $19
-	add  hl, de                                      ; $1b73: $19
-	add  hl, de                                      ; $1b74: $19
-	ld   a, [hl+]                                    ; $1b75: $2a
-	ld   e, a                                        ; $1b76: $5f
-	ld   a, [hl+]                                    ; $1b77: $2a
-	ld   d, a                                        ; $1b78: $57
-	ld   c, [hl]                                     ; $1b79: $4e
-	ld   b, $0f                                      ; $1b7a: $06 $0f
-	ld   h, d                                        ; $1b7c: $62
-	ld   l, e                                        ; $1b7d: $6b
+; A - sound idx
+PlaySampledSound::
+	push af                                                         ; $1b64
+	push bc                                                         ; $1b65
+	push de                                                         ; $1b66
+	push hl                                                         ; $1b67
 
-	di                                               ; $1b7e: $f3
-	call Call_000_2df9                               ; $1b7f: $cd $f9 $2d
+; Ignore below code if past the highest sound idx
+	cp   NUM_SAMPLED_SOUNDS                                         ; $1b68
+	jr   nc, .done                                                  ; $1b6a
+
+; HL = triple sound idxed into below table
+	ld   d, $00                                                     ; $1b6c
+	ld   e, a                                                       ; $1b6e
+	ld   hl, .sampleSources                                         ; $1b6f
+	add  hl, de                                                     ; $1b72
+	add  hl, de                                                     ; $1b73
+	add  hl, de                                                     ; $1b74
+
+; DE = 1st word in table entry
+	ld   a, [hl+]                                                   ; $1b75
+	ld   e, a                                                       ; $1b76
+	ld   a, [hl+]                                                   ; $1b77
+	ld   d, a                                                       ; $1b78
+
+; C = src bank after above word, HL = src word, B = $0f (all channels used)
+	ld   c, [hl]                                                    ; $1b79
+	ld   b, $0f                                                     ; $1b7a
+	ld   h, d                                                       ; $1b7c
+	ld   l, e                                                       ; $1b7d
+
+; Wait until sample done
+	di                                                              ; $1b7e
+	call _PlaySampledSound                                          ; $1b7f
+
+;
 	call InitSound                               ; $1b82: $cd $4a $1d
 	xor  a                                           ; $1b85: $af
 	ld   [$c653], a                                  ; $1b86: $ea $53 $c6
 	ld   [$c654], a                                  ; $1b89: $ea $54 $c6
 	ei                                               ; $1b8c: $fb
 
-jr_000_1b8d:
-	pop  hl                                          ; $1b8d: $e1
-	pop  de                                          ; $1b8e: $d1
-	pop  bc                                          ; $1b8f: $c1
-	pop  af                                          ; $1b90: $f1
-	ret                                              ; $1b91: $c9
+.done:
+	pop  hl                                                         ; $1b8d
+	pop  de                                                         ; $1b8e
+	pop  bc                                                         ; $1b8f
+	pop  af                                                         ; $1b90
+	ret                                                             ; $1b91
+
+.sampleSources:
+	db $00, $40, $a5
+	db $ec, $6a, $a6
+	db $98, $62, $a9
+	db $04, $49, $ac
+	db $f0, $73, $ac
+	db $1c, $73, $ad
+	db $08, $43, $b0
+	db $34, $7c, $b0
+	db $60, $7b, $b1
+	db $0c, $6c, $b2
+	db $b8, $46, $b3
+	db $a4, $74, $b3
+	db $d0, $60, $b4
+	db $7c, $4b, $b5
+	db $68, $51, $b6
+	db $54, $62, $b7
+	db $c0, $63, $b8
+	db $ac, $45, $ba
+	db $18, $54, $bb
+	db $44, $5b, $bc
+	db $b0, $5c, $bd
+	db $5c, $68, $be
+	db $08, $67, $bf
+	db $74, $67, $c0
+	db $60, $67, $c1
+	db $cc, $63, $c2
+	db $b8, $77, $c2
+	db $64, $49, $c3
+	db $90, $52, $c3
+	db $fc, $69, $c3
+	db $28, $79, $c3
+	db $54, $57, $c4
+	db $40, $64, $c5
+	db $ac, $63, $c7
+	db $18, $59, $c9
+	db $04, $4e, $cb
+	db $30, $61, $cd
+	db $1c, $7a, $ce
+	db $08, $5d, $cf
+	db $b4, $7a, $cf
+	db $60, $5c, $d0
+	db $cc, $7e, $d0
+	db $f8, $59, $d1
+	db $64, $59, $d2
+	db $90, $74, $d2
+	db $bc, $5d, $d3
+	db $a8, $7f, $d3
+	db $54, $61, $d4
+	db $40, $42, $d5
+	db $2c, $58, $d5
+	db $18, $7b, $d5
+	db $44, $5b, $d6
+	db $f0, $49, $d7
+	db $dc, $78, $d7
+	db $c8, $79, $d8
+	db $34, $4b, $da
+	db $a0, $74, $da
+	db $0c, $5f, $db
+	db $f8, $4d, $dc
+	db $24, $42, $dd
+	db $90, $6d, $dd
+	db $bc, $4e, $de
+	db $a8, $63, $de
+	db $d4, $78, $de
+	db $00, $5b, $df
+	db $2c, $41, $e0
+	db $d8, $64, $e0
+	db $c4, $72, $e1
+	db $70, $41, $e2
+	db $5c, $67, $e2
+	db $08, $43, $e3
+	db $b4, $5f, $e3
+	db $20, $47, $e4
+	db $4c, $72, $e4
+	db $f8, $51, $e5
+	db $a4, $7f, $e5
+	db $50, $60, $e6
+	db $3c, $64, $e7
+	db $28, $4f, $e8
+	db $54, $46, $e9
+	db $80, $6d, $e9
+	db $2c, $5b, $ea
+	db $58, $40, $eb
+	db $44, $5e, $eb
+	db $f0, $67, $ec
+	db $9c, $5e, $ed
+	db $c8, $44, $ee
+	db $b4, $6b, $ee
+	db $a0, $4c, $ef
+	db $8c, $42, $f0
+	db $b8, $63, $f0
+	db $a4, $68, $f1
+	db $90, $4a, $f2
+	db $fc, $42, $f3
+	db $68, $63, $f3
+	db $94, $41, $f4
+	db $80, $68, $f4
+	db $2c, $4a, $f5
+	db $58, $66, $f5
+	db $04, $4a, $f6
+	db $70, $6a, $f6
+	db $dc, $4b, $f7
+	db $48, $74, $f7
+	db $34, $6b, $f8
+	db $a0, $45, $f9
+	db $cc, $68, $f9
+	db $78, $7f, $f9
+	db $a4, $65, $fa
+	db $d0, $42, $fb
 
 
-	nop                                              ; $1b92: $00
-	ld   b, b                                        ; $1b93: $40
-	and  l                                           ; $1b94: $a5
-	db   $ec                                         ; $1b95: $ec
-	ld   l, d                                        ; $1b96: $6a
-	and  [hl]                                        ; $1b97: $a6
-	sbc  b                                           ; $1b98: $98
-	ld   h, d                                        ; $1b99: $62
-	xor  c                                           ; $1b9a: $a9
-	inc  b                                           ; $1b9b: $04
-	ld   c, c                                        ; $1b9c: $49
-	xor  h                                           ; $1b9d: $ac
-	ldh  a, [$73]                                    ; $1b9e: $f0 $73
-	xor  h                                           ; $1ba0: $ac
-	inc  e                                           ; $1ba1: $1c
-	ld   [hl], e                                     ; $1ba2: $73
-	xor  l                                           ; $1ba3: $ad
-	ld   [$b043], sp                                 ; $1ba4: $08 $43 $b0
-	inc  [hl]                                        ; $1ba7: $34
-	ld   a, h                                        ; $1ba8: $7c
-	or   b                                           ; $1ba9: $b0
-	ld   h, b                                        ; $1baa: $60
-	ld   a, e                                        ; $1bab: $7b
-	or   c                                           ; $1bac: $b1
-	inc  c                                           ; $1bad: $0c
-	ld   l, h                                        ; $1bae: $6c
-	or   d                                           ; $1baf: $b2
-	cp   b                                           ; $1bb0: $b8
-	ld   b, [hl]                                     ; $1bb1: $46
-	or   e                                           ; $1bb2: $b3
-	and  h                                           ; $1bb3: $a4
-	ld   [hl], h                                     ; $1bb4: $74
-	or   e                                           ; $1bb5: $b3
-	ret  nc                                          ; $1bb6: $d0
-
-	ld   h, b                                        ; $1bb7: $60
-	or   h                                           ; $1bb8: $b4
-	ld   a, h                                        ; $1bb9: $7c
-	ld   c, e                                        ; $1bba: $4b
-	or   l                                           ; $1bbb: $b5
-	ld   l, b                                        ; $1bbc: $68
-	ld   d, c                                        ; $1bbd: $51
-	or   [hl]                                        ; $1bbe: $b6
-	ld   d, h                                        ; $1bbf: $54
-	ld   h, d                                        ; $1bc0: $62
-	or   a                                           ; $1bc1: $b7
-	ret  nz                                          ; $1bc2: $c0
-
-	ld   h, e                                        ; $1bc3: $63
-	cp   b                                           ; $1bc4: $b8
-	xor  h                                           ; $1bc5: $ac
-	ld   b, l                                        ; $1bc6: $45
-	cp   d                                           ; $1bc7: $ba
-	jr   jr_000_1c1e                                 ; $1bc8: $18 $54
-
-	cp   e                                           ; $1bca: $bb
-	ld   b, h                                        ; $1bcb: $44
-	ld   e, e                                        ; $1bcc: $5b
-	cp   h                                           ; $1bcd: $bc
-	or   b                                           ; $1bce: $b0
-	ld   e, h                                        ; $1bcf: $5c
-	cp   l                                           ; $1bd0: $bd
-	ld   e, h                                        ; $1bd1: $5c
-	ld   l, b                                        ; $1bd2: $68
-	cp   [hl]                                        ; $1bd3: $be
-	ld   [$bf67], sp                                 ; $1bd4: $08 $67 $bf
-	ld   [hl], h                                     ; $1bd7: $74
-	ld   h, a                                        ; $1bd8: $67
-	ret  nz                                          ; $1bd9: $c0
-
-	ld   h, b                                        ; $1bda: $60
-	ld   h, a                                        ; $1bdb: $67
-	pop  bc                                          ; $1bdc: $c1
-	call z, $c263                                    ; $1bdd: $cc $63 $c2
-	cp   b                                           ; $1be0: $b8
-	ld   [hl], a                                     ; $1be1: $77
-	jp   nz, $4964                                   ; $1be2: $c2 $64 $49
-
-	jp   $5290                                       ; $1be5: $c3 $90 $52
-
-
-	jp   $69fc                                       ; $1be8: $c3 $fc $69
-
-
-	jp   $7928                                       ; $1beb: $c3 $28 $79
-
-
-	jp   $5754                                       ; $1bee: $c3 $54 $57
-
-
-	call nz, $6440                                   ; $1bf1: $c4 $40 $64
-	push bc                                          ; $1bf4: $c5
-	xor  h                                           ; $1bf5: $ac
-	ld   h, e                                        ; $1bf6: $63
-	rst  ToBoot                                         ; $1bf7: $c7
-	jr   jr_000_1c53                                 ; $1bf8: $18 $59
-
-	ret                                              ; $1bfa: $c9
-
-
-	inc  b                                           ; $1bfb: $04
-	ld   c, [hl]                                     ; $1bfc: $4e
-	swap b                                           ; $1bfd: $cb $30
-	ld   h, c                                        ; $1bff: $61
-	call $7a1c                                       ; $1c00: $cd $1c $7a
-	adc  $08                                         ; $1c03: $ce $08
-	ld   e, l                                        ; $1c05: $5d
-	rst  WaitUntilVBlankIntHandledIfLCDOn                                         ; $1c06: $cf
-	or   h                                           ; $1c07: $b4
-	ld   a, d                                        ; $1c08: $7a
-	rst  WaitUntilVBlankIntHandledIfLCDOn                                         ; $1c09: $cf
-	ld   h, b                                        ; $1c0a: $60
-	ld   e, h                                        ; $1c0b: $5c
-	ret  nc                                          ; $1c0c: $d0
-
-	call z, $d07e                                    ; $1c0d: $cc $7e $d0
-	ld   hl, sp+$59                                  ; $1c10: $f8 $59
-	pop  de                                          ; $1c12: $d1
-	ld   h, h                                        ; $1c13: $64
-	ld   e, c                                        ; $1c14: $59
-	jp   nc, $7490                                   ; $1c15: $d2 $90 $74
-
-	jp   nc, $5dbc                                   ; $1c18: $d2 $bc $5d
-
-	db   $d3                                         ; $1c1b: $d3
-	xor  b                                           ; $1c1c: $a8
-	ld   a, a                                        ; $1c1d: $7f
-
-jr_000_1c1e:
-	db   $d3                                         ; $1c1e: $d3
-	ld   d, h                                        ; $1c1f: $54
-	ld   h, c                                        ; $1c20: $61
-	call nc, $4240                                   ; $1c21: $d4 $40 $42
-	push de                                          ; $1c24: $d5
-	inc  l                                           ; $1c25: $2c
-	ld   e, b                                        ; $1c26: $58
-	push de                                          ; $1c27: $d5
-	jr   jr_000_1ca5                                 ; $1c28: $18 $7b
-
-	push de                                          ; $1c2a: $d5
-	ld   b, h                                        ; $1c2b: $44
-	ld   e, e                                        ; $1c2c: $5b
-	sub  $f0                                         ; $1c2d: $d6 $f0
-	ld   c, c                                        ; $1c2f: $49
-	rst  $10                                         ; $1c30: $d7
-	call c, $d778                                    ; $1c31: $dc $78 $d7
-	ret  z                                           ; $1c34: $c8
-
-	ld   a, c                                        ; $1c35: $79
-	ret  c                                           ; $1c36: $d8
-
-	inc  [hl]                                        ; $1c37: $34
-	ld   c, e                                        ; $1c38: $4b
-	jp   c, $74a0                                    ; $1c39: $da $a0 $74
-
-	jp   c, $5f0c                                    ; $1c3c: $da $0c $5f
-
-	db   $db                                         ; $1c3f: $db
-	ld   hl, sp+$4d                                  ; $1c40: $f8 $4d
-	call c, $4224                                    ; $1c42: $dc $24 $42
-	db   $dd                                         ; $1c45: $dd
-	sub  b                                           ; $1c46: $90
-	ld   l, l                                        ; $1c47: $6d
-	db   $dd                                         ; $1c48: $dd
-	cp   h                                           ; $1c49: $bc
-	ld   c, [hl]                                     ; $1c4a: $4e
-	sbc  $a8                                         ; $1c4b: $de $a8
-	ld   h, e                                        ; $1c4d: $63
-	sbc  $d4                                         ; $1c4e: $de $d4
-	ld   a, b                                        ; $1c50: $78
-	sbc  $00                                         ; $1c51: $de $00
-
-jr_000_1c53:
-	ld   e, e                                        ; $1c53: $5b
-	rst  JumpTable                                         ; $1c54: $df
-	inc  l                                           ; $1c55: $2c
-	ld   b, c                                        ; $1c56: $41
-	ldh  [$d8], a                                    ; $1c57: $e0 $d8
-	ld   h, h                                        ; $1c59: $64
-	ldh  [$c4], a                                    ; $1c5a: $e0 $c4
-	ld   [hl], d                                     ; $1c5c: $72
-	pop  hl                                          ; $1c5d: $e1
-	ld   [hl], b                                     ; $1c5e: $70
-	ld   b, c                                        ; $1c5f: $41
-	ldh  [c], a                                      ; $1c60: $e2
-	ld   e, h                                        ; $1c61: $5c
-	ld   h, a                                        ; $1c62: $67
-	ldh  [c], a                                      ; $1c63: $e2
-	ld   [$e343], sp                                 ; $1c64: $08 $43 $e3
-	or   h                                           ; $1c67: $b4
-	ld   e, a                                        ; $1c68: $5f
-	db   $e3                                         ; $1c69: $e3
-	jr   nz, jr_000_1cb3                             ; $1c6a: $20 $47
-
-	db   $e4                                         ; $1c6c: $e4
-	ld   c, h                                        ; $1c6d: $4c
-	ld   [hl], d                                     ; $1c6e: $72
-	db   $e4                                         ; $1c6f: $e4
-	ld   hl, sp+$51                                  ; $1c70: $f8 $51
-	push hl                                          ; $1c72: $e5
-	and  h                                           ; $1c73: $a4
-	ld   a, a                                        ; $1c74: $7f
-	push hl                                          ; $1c75: $e5
-	ld   d, b                                        ; $1c76: $50
-	ld   h, b                                        ; $1c77: $60
-	and  $3c                                         ; $1c78: $e6 $3c
-	ld   h, h                                        ; $1c7a: $64
-	rst  $20                                         ; $1c7b: $e7
-	jr   z, jr_000_1ccd                              ; $1c7c: $28 $4f
-
-	add  sp, $54                                     ; $1c7e: $e8 $54
-	ld   b, [hl]                                     ; $1c80: $46
-	jp   hl                                          ; $1c81: $e9
-
-
-	add  b                                           ; $1c82: $80
-	ld   l, l                                        ; $1c83: $6d
-	jp   hl                                          ; $1c84: $e9
-
-
-	inc  l                                           ; $1c85: $2c
-	ld   e, e                                        ; $1c86: $5b
-	ld   [$4058], a                                  ; $1c87: $ea $58 $40
-	db   $eb                                         ; $1c8a: $eb
-	ld   b, h                                        ; $1c8b: $44
-	ld   e, [hl]                                     ; $1c8c: $5e
-	db   $eb                                         ; $1c8d: $eb
-	ldh  a, [$67]                                    ; $1c8e: $f0 $67
-	db   $ec                                         ; $1c90: $ec
-	sbc  h                                           ; $1c91: $9c
-	ld   e, [hl]                                     ; $1c92: $5e
-	db   $ed                                         ; $1c93: $ed
-	ret  z                                           ; $1c94: $c8
-
-	ld   b, h                                        ; $1c95: $44
-	xor  $b4                                         ; $1c96: $ee $b4
-	ld   l, e                                        ; $1c98: $6b
-	xor  $a0                                         ; $1c99: $ee $a0
-	ld   c, h                                        ; $1c9b: $4c
-	rst  $28                                         ; $1c9c: $ef
-	adc  h                                           ; $1c9d: $8c
-	ld   b, d                                        ; $1c9e: $42
-	ldh  a, [$b8]                                    ; $1c9f: $f0 $b8
-	ld   h, e                                        ; $1ca1: $63
-	ldh  a, [hScriptOpcodeParams+4]                                    ; $1ca2: $f0 $a4
-	ld   l, b                                        ; $1ca4: $68
-
-jr_000_1ca5:
-	pop  af                                          ; $1ca5: $f1
-	sub  b                                           ; $1ca6: $90
-	ld   c, d                                        ; $1ca7: $4a
-	ldh  a, [c]                                      ; $1ca8: $f2
-	db   $fc                                         ; $1ca9: $fc
-	ld   b, d                                        ; $1caa: $42
-	di                                               ; $1cab: $f3
-	ld   l, b                                        ; $1cac: $68
-	ld   h, e                                        ; $1cad: $63
-	di                                               ; $1cae: $f3
-	sub  h                                           ; $1caf: $94
-	ld   b, c                                        ; $1cb0: $41
-	db   $f4                                         ; $1cb1: $f4
-	add  b                                           ; $1cb2: $80
-
-jr_000_1cb3:
-	ld   l, b                                        ; $1cb3: $68
-	db   $f4                                         ; $1cb4: $f4
-	inc  l                                           ; $1cb5: $2c
-	ld   c, d                                        ; $1cb6: $4a
-	push af                                          ; $1cb7: $f5
-	ld   e, b                                        ; $1cb8: $58
-	ld   h, [hl]                                     ; $1cb9: $66
-	push af                                          ; $1cba: $f5
-	inc  b                                           ; $1cbb: $04
-	ld   c, d                                        ; $1cbc: $4a
-	or   $70                                         ; $1cbd: $f6 $70
-	ld   l, d                                        ; $1cbf: $6a
-	or   $dc                                         ; $1cc0: $f6 $dc
-	ld   c, e                                        ; $1cc2: $4b
-	rst  $30                                         ; $1cc3: $f7
-	ld   c, b                                        ; $1cc4: $48
-	ld   [hl], h                                     ; $1cc5: $74
-	rst  $30                                         ; $1cc6: $f7
-	inc  [hl]                                        ; $1cc7: $34
-	ld   l, e                                        ; $1cc8: $6b
-	ld   hl, sp-$60                                  ; $1cc9: $f8 $a0
-	ld   b, l                                        ; $1ccb: $45
-	ld   sp, hl                                      ; $1ccc: $f9
-
-jr_000_1ccd:
-	call z, $f968                                    ; $1ccd: $cc $68 $f9
-	ld   a, b                                        ; $1cd0: $78
-	ld   a, a                                        ; $1cd1: $7f
-	ld   sp, hl                                      ; $1cd2: $f9
-	and  h                                           ; $1cd3: $a4
-	ld   h, l                                        ; $1cd4: $65
-	ld   a, [$42d0]                                  ; $1cd5: $fa $d0 $42
-	ei                                               ; $1cd8: $fb
+Func_1cd9::
 	call Call_000_1b0a                               ; $1cd9: $cd $0a $1b
 	call Call_000_2cea                               ; $1cdc: $cd $ea $2c
 	ret                                              ; $1cdf: $c9
@@ -9219,139 +9069,168 @@ jr_000_2d94:
 	xor  b                                           ; $2df7: $a8
 	inc  hl                                          ; $2df8: $23
 
-Call_000_2df9:
-	xor  a                                           ; $2df9: $af
-	ld   [rAUDENA], a                                  ; $2dfa: $ea $26 $ff
-	ld   a, $80                                      ; $2dfd: $3e $80
-	ld   [rAUDENA], a                                  ; $2dff: $ea $26 $ff
-	ld   a, [wRomBank]                                  ; $2e02: $fa $92 $c2
-	push af                                          ; $2e05: $f5
-	ld   a, c                                        ; $2e06: $79
-	ld   [wRomBank], a                                  ; $2e07: $ea $92 $c2
-	ld   [rROMB0], a                                  ; $2e0a: $ea $00 $20
-	ld   e, c                                        ; $2e0d: $59
-	push de                                          ; $2e0e: $d5
-	push hl                                          ; $2e0f: $e5
-	ld   a, $ff                                      ; $2e10: $3e $ff
-	ld   hl, _AUD3WAVERAM                                   ; $2e12: $21 $30 $ff
-	ld   e, $10                                      ; $2e15: $1e $10
 
-jr_000_2e17:
-	ld   [hl+], a                                    ; $2e17: $22
-	dec  e                                           ; $2e18: $1d
-	jr   nz, jr_000_2e17                             ; $2e19: $20 $fc
+; B - bits set for sound channels in use
+; C - src bank
+; HL - src address
+_PlaySampledSound:
+; Reset sound
+	xor  a                                                          ; $2df9
+	ld   [rAUDENA], a                                               ; $2dfa
+	ld   a, $80                                                     ; $2dfd
+	ld   [rAUDENA], a                                               ; $2dff
 
-	pop  hl                                          ; $2e1b: $e1
-	pop  de                                          ; $2e1c: $d1
-	xor  a                                           ; $2e1d: $af
-	ld   [rAUDVOL], a                                  ; $2e1e: $ea $24 $ff
-	ld   [rAUDTERM], a                                  ; $2e21: $ea $25 $ff
-	ld   a, $08                                      ; $2e24: $3e $08
-	ld   [rAUD1ENV], a                                  ; $2e26: $ea $12 $ff
-	ld   [rAUD2ENV], a                                  ; $2e29: $ea $17 $ff
-	ld   [rAUD4ENV], a                                  ; $2e2c: $ea $21 $ff
-	ld   a, $80                                      ; $2e2f: $3e $80
-	ld   [rAUD1HIGH], a                                  ; $2e31: $ea $14 $ff
-	ld   [rAUD2HIGH], a                                  ; $2e34: $ea $19 $ff
-	ld   [rAUD4GO], a                                  ; $2e37: $ea $23 $ff
-	ld   a, $20                                      ; $2e3a: $3e $20
-	ld   [rAUD3LEVEL], a                                  ; $2e3c: $ea $1c $ff
-	ld   a, $ff                                      ; $2e3f: $3e $ff
-	ld   [rAUD3LOW], a                                  ; $2e41: $ea $1d $ff
-	ld   a, $87                                      ; $2e44: $3e $87
-	ld   [rAUD3HIGH], a                                  ; $2e46: $ea $1e $ff
-	ld   a, $80                                      ; $2e49: $3e $80
-	ld   [rAUD3ENA], a                                  ; $2e4b: $ea $1a $ff
-	ld   a, b                                        ; $2e4e: $78
-	swap b                                           ; $2e4f: $cb $30
-	or   b                                           ; $2e51: $b0
-	ld   [rAUDTERM], a                                  ; $2e52: $ea $25 $ff
+; Preserve rom bank, and set it to src of sample
+	ld   a, [wRomBank]                                              ; $2e02
+	push af                                                         ; $2e05
 
-jr_000_2e55:
-	ld   a, [hl]                                     ; $2e55: $7e
-	and  $f0                                         ; $2e56: $e6 $f0
-	call Call_000_2e90                               ; $2e58: $cd $90 $2e
-	call Call_000_2eaf                               ; $2e5b: $cd $af $2e
-	ld   a, [wIsDoubleSpeed]                                  ; $2e5e: $fa $02 $c2
-	and  a                                           ; $2e61: $a7
-	jr   z, jr_000_2e6d                              ; $2e62: $28 $09
+	ld   a, c                                                       ; $2e06
+	ld   [wRomBank], a                                              ; $2e07
+	ld   [rROMB0], a                                                ; $2e0a
 
-	ld   a, [hl]                                     ; $2e64: $7e
-	and  $f0                                         ; $2e65: $e6 $f0
-	call Call_000_2e90                               ; $2e67: $cd $90 $2e
-	call Call_000_2eaf                               ; $2e6a: $cd $af $2e
+; Preserve that bank in E (unused)
+	ld   e, c                                                       ; $2e0d
 
-jr_000_2e6d:
-	ld   a, [hl]                                     ; $2e6d: $7e
-	swap a                                           ; $2e6e: $cb $37
-	and  $f0                                         ; $2e70: $e6 $f0
-	jr   z, jr_000_2eba                              ; $2e72: $28 $46
+; Fill wav ram with $ff
+	push de                                                         ; $2e0e
+	push hl                                                         ; $2e0f
 
-	call Call_000_2e90                               ; $2e74: $cd $90 $2e
-	call Call_000_2eaf                               ; $2e77: $cd $af $2e
-	ld   a, [wIsDoubleSpeed]                                  ; $2e7a: $fa $02 $c2
-	and  a                                           ; $2e7d: $a7
-	jr   z, jr_000_2e8d                              ; $2e7e: $28 $0d
+	ld   a, $ff                                                     ; $2e10
+	ld   hl, _AUD3WAVERAM                                           ; $2e12
+	ld   e, $10                                                     ; $2e15
+:	ld   [hl+], a                                                   ; $2e17
+	dec  e                                                          ; $2e18
+	jr   nz, :-                                                     ; $2e19
 
-	ld   a, [hl]                                     ; $2e80: $7e
-	swap a                                           ; $2e81: $cb $37
-	and  $f0                                         ; $2e83: $e6 $f0
-	jr   z, jr_000_2eba                              ; $2e85: $28 $33
+	pop  hl                                                         ; $2e1b
+	pop  de                                                         ; $2e1c
 
-	call Call_000_2e90                               ; $2e87: $cd $90 $2e
-	call Call_000_2eaf                               ; $2e8a: $cd $af $2e
+; Set some sound hw reg defaults while bitbanging audvol
+	xor  a                                                          ; $2e1d
+	ld   [rAUDVOL], a                                               ; $2e1e
+	ld   [rAUDTERM], a                                              ; $2e21
+	ld   a, $08                                                     ; $2e24
+	ld   [rAUD1ENV], a                                              ; $2e26
+	ld   [rAUD2ENV], a                                              ; $2e29
+	ld   [rAUD4ENV], a                                              ; $2e2c
+	ld   a, $80                                                     ; $2e2f
+	ld   [rAUD1HIGH], a                                             ; $2e31
+	ld   [rAUD2HIGH], a                                             ; $2e34
+	ld   [rAUD4GO], a                                               ; $2e37
+	ld   a, $20                                                     ; $2e3a
+	ld   [rAUD3LEVEL], a                                            ; $2e3c
+	ld   a, $ff                                                     ; $2e3f
+	ld   [rAUD3LOW], a                                              ; $2e41
+	ld   a, $87                                                     ; $2e44
+	ld   [rAUD3HIGH], a                                             ; $2e46
+	ld   a, $80                                                     ; $2e49
+	ld   [rAUD3ENA], a                                              ; $2e4b
 
-jr_000_2e8d:
-	inc  hl                                          ; $2e8d: $23
-	jr   jr_000_2e55                                 ; $2e8e: $18 $c5
+; Mirror SO1 onto SO2 using B param
+	ld   a, b                                                       ; $2e4e
+	swap b                                                          ; $2e4f
+	or   b                                                          ; $2e51
+	ld   [rAUDTERM], a                                              ; $2e52
 
-Call_000_2e90:
-	srl  a                                           ; $2e90: $cb $3f
-	and  $f0                                         ; $2e92: $e6 $f0
-	ld   e, a                                        ; $2e94: $5f
-	swap e                                           ; $2e95: $cb $33
-	or   e                                           ; $2e97: $b3
-	ld   [rAUDVOL], a                                  ; $2e98: $ea $24 $ff
-	bit  7, h                                        ; $2e9b: $cb $7c
-	jr   nz, jr_000_2ea3                             ; $2e9d: $20 $04
+.nextSample:
+; Get high nybble of sample, and set audvol
+	ld   a, [hl]                                                    ; $2e55
+	and  $f0                                                        ; $2e56
+	call SetAudVolForSampledSound                                   ; $2e58
+	call Burn45cyclesIncludingCall                                  ; $2e5b
 
-	push hl                                          ; $2e9f: $e5
-	pop  hl                                          ; $2ea0: $e1
-	nop                                              ; $2ea1: $00
-	ret                                              ; $2ea2: $c9
+; If double speed, repeat the above
+	ld   a, [wIsDoubleSpeed]                                        ; $2e5e
+	and  a                                                          ; $2e61
+	jr   z, .afterHighNybble                                        ; $2e62
 
+	ld   a, [hl]                                                    ; $2e64
+	and  $f0                                                        ; $2e65
+	call SetAudVolForSampledSound                                   ; $2e67
+	call Burn45cyclesIncludingCall                                  ; $2e6a
 
-jr_000_2ea3:
-	inc  c                                           ; $2ea3: $0c
-	ld   a, c                                        ; $2ea4: $79
-	ld   [wRomBank], a                                  ; $2ea5: $ea $92 $c2
-	ld   [rROMB0], a                                  ; $2ea8: $ea $00 $20
-	ld   hl, $4000                                   ; $2eab: $21 $00 $40
-	ret                                              ; $2eae: $c9
+.afterHighNybble:
+; Repeat with low nybble of sample, ending the sample if it equals 0
+	ld   a, [hl]                                                    ; $2e6d
+	swap a                                                          ; $2e6e
+	and  $f0                                                        ; $2e70
+	jr   z, EndSampledSound                                         ; $2e72
+
+	call SetAudVolForSampledSound                                   ; $2e74
+	call Burn45cyclesIncludingCall                                  ; $2e77
+
+; If double speed, repeat the above
+	ld   a, [wIsDoubleSpeed]                                        ; $2e7a
+	and  a                                                          ; $2e7d
+	jr   z, .toNextSample                                           ; $2e7e
+
+	ld   a, [hl]                                                    ; $2e80
+	swap a                                                          ; $2e81
+	and  $f0                                                        ; $2e83
+	jr   z, EndSampledSound                                         ; $2e85
+
+	call SetAudVolForSampledSound                                   ; $2e87
+	call Burn45cyclesIncludingCall                                  ; $2e8a
+
+.toNextSample:
+	inc  hl                                                         ; $2e8d
+	jr   .nextSample                                                ; $2e8e
 
 
-Call_000_2eaf:
-	push hl                                          ; $2eaf: $e5
-	pop  hl                                          ; $2eb0: $e1
-	push hl                                          ; $2eb1: $e5
-	pop  hl                                          ; $2eb2: $e1
-	push hl                                          ; $2eb3: $e5
-	pop  hl                                          ; $2eb4: $e1
-	push hl                                          ; $2eb5: $e5
-	pop  hl                                          ; $2eb6: $e1
-	push hl                                          ; $2eb7: $e5
-	pop  hl                                          ; $2eb8: $e1
-	ret                                              ; $2eb9: $c9
+; A - vol in upper 3 bits
+; C - src rom bank
+; HL - next src address
+SetAudVolForSampledSound:
+; Get vol in lower 3 bits of upper nybble
+	srl  a                                                          ; $2e90
+	and  $f0                                                        ; $2e92
+
+; Mirror for SO1, and set aud vol
+	ld   e, a                                                       ; $2e94
+	swap e                                                          ; $2e95
+	or   e                                                          ; $2e97
+	ld   [rAUDVOL], a                                               ; $2e98
+
+; Jump if next address has overrun bank
+	bit  7, h                                                       ; $2e9b
+	jr   nz, .nextBank                                              ; $2e9d
+
+; Else burn 4 + 3 + 1 = 8 cycles excluding ret
+	push hl                                                         ; $2e9f
+	pop  hl                                                         ; $2ea0
+	nop                                                             ; $2ea1
+	ret                                                             ; $2ea2
+
+.nextBank:
+; Burn 1 (jump taken) + 1 + 1 + 4 + 4 + 3 = 14 cycles excluding ret
+	inc  c                                                          ; $2ea3
+	ld   a, c                                                       ; $2ea4
+	ld   [wRomBank], a                                              ; $2ea5
+	ld   [rROMB0], a                                                ; $2ea8
+	ld   hl, $4000                                                  ; $2eab
+	ret                                                             ; $2eae
 
 
-jr_000_2eba:
-	pop  af                                          ; $2eba: $f1
-	ld   [wRomBank], a                                  ; $2ebb: $ea $92 $c2
-	ld   [rROMB0], a                                  ; $2ebe: $ea $00 $20
-	xor  a                                           ; $2ec1: $af
-	ld   [rAUDTERM], a                                  ; $2ec2: $ea $25 $ff
-	ld   [rAUDENA], a                                  ; $2ec5: $ea $26 $ff
-	ret                                              ; $2ec8: $c9
+Burn45cyclesIncludingCall:
+; push + pop = 7 cycles, call = 6, ret = 4
+rept 5
+	push hl                                                         ; $2eaf
+	pop  hl                                                         ; $2eb0
+endr
+	ret                                                             ; $2eb9
+
+
+EndSampledSound:
+; Restore rom bank
+	pop  af                                                         ; $2eba
+	ld   [wRomBank], a                                              ; $2ebb
+	ld   [rROMB0], a                                                ; $2ebe
+
+; Clear sound output and disable sound
+	xor  a                                                          ; $2ec1
+	ld   [rAUDTERM], a                                              ; $2ec2
+	ld   [rAUDENA], a                                               ; $2ec5
+	ret                                                             ; $2ec8
 
 
 ClearBaseAnimSpriteSpecDetails::
@@ -10287,6 +10166,211 @@ ClearVwfTileBuffers:
 
 	pop  hl
 	pop  af
+	ret
+endc
+
+if def(TV_HACK)
+HackHook:
+	ld   hl, $20
+	ld   a, $ff
+	M_FarCall SetOrUnsetFlag1
+	ld   hl, $21
+	ld   a, $ff
+	M_FarCall SetOrUnsetFlag1
+	ld   hl, $22
+	ld   a, $ff
+	M_FarCall SetOrUnsetFlag1
+	ld   hl, $23
+	ld   a, $ff
+	M_FarCall SetOrUnsetFlag1
+	ld   hl, $24
+	ld   a, $ff
+	M_FarCall SetOrUnsetFlag1
+	ld   hl, $25
+	ld   a, $ff
+	M_FarCall SetOrUnsetFlag1
+	ld   hl, $26
+	ld   a, $ff
+	M_FarCall SetOrUnsetFlag1
+	ld   hl, $27
+	ld   a, $ff
+	M_FarCall SetOrUnsetFlag1
+	ld   hl, $28
+	ld   a, $ff
+	M_FarCall SetOrUnsetFlag1
+	ld   hl, $29
+	ld   a, $ff
+	M_FarCall SetOrUnsetFlag1
+	ld   hl, $2a
+	ld   a, $ff
+	M_FarCall SetOrUnsetFlag1
+	ld   hl, $2b
+	ld   a, $ff
+	M_FarCall SetOrUnsetFlag1
+	ld   hl, $0204
+	ld   a, $ff
+	M_FarCall SetOrUnsetFlag1
+	ld   hl, $0188
+	ld   a, $ff
+	M_FarCall SetOrUnsetFlag1
+	ld   hl, $01e8
+	ld   a, $ff
+	M_FarCall SetOrUnsetFlag1
+	ld   hl, $01ec
+	ld   a, $ff
+	M_FarCall SetOrUnsetFlag1
+	ld   hl, $01f0
+	ld   a, $ff
+	M_FarCall SetOrUnsetFlag1
+	ld   hl, $01f4
+	ld   a, $ff
+	M_FarCall SetOrUnsetFlag1
+	ld   hl, $01f8
+	ld   a, $ff
+	M_FarCall SetOrUnsetFlag1
+	ld   hl, $018c
+	ld   a, $ff
+	M_FarCall SetOrUnsetFlag1
+	ld   hl, $0148
+	ld   a, $ff
+	M_FarCall SetOrUnsetFlag1
+	ld   hl, $014c
+	ld   a, $ff
+	M_FarCall SetOrUnsetFlag1
+	ld   hl, $0150
+	ld   a, $ff
+	M_FarCall SetOrUnsetFlag1
+	ld   hl, $0154
+	ld   a, $ff
+	M_FarCall SetOrUnsetFlag1
+	ld   hl, $0158
+	ld   a, $ff
+	M_FarCall SetOrUnsetFlag1
+	ld   hl, $015c
+	ld   a, $ff
+	M_FarCall SetOrUnsetFlag1
+	ld   hl, $0118
+	ld   a, $ff
+	M_FarCall SetOrUnsetFlag1
+	ld   hl, $011c
+	ld   a, $ff
+	M_FarCall SetOrUnsetFlag1
+	ld   hl, $0120
+	ld   a, $ff
+	M_FarCall SetOrUnsetFlag1
+	ld   hl, $0124
+	ld   a, $ff
+	M_FarCall SetOrUnsetFlag1
+	ld   hl, $0128
+	ld   a, $ff
+	M_FarCall SetOrUnsetFlag1
+	ld   hl, $012c
+	ld   a, $ff
+	M_FarCall SetOrUnsetFlag1
+	ld   hl, $01ac
+	ld   a, $ff
+	M_FarCall SetOrUnsetFlag1
+	ld   hl, $01b0
+	ld   a, $ff
+	M_FarCall SetOrUnsetFlag1
+	ld   hl, $0160
+	ld   a, $ff
+	M_FarCall SetOrUnsetFlag1
+	ld   hl, $0161
+	ld   a, $ff
+	M_FarCall SetOrUnsetFlag1
+	ld   hl, $0162
+	ld   a, $ff
+	M_FarCall SetOrUnsetFlag1
+	ld   hl, $0163
+	ld   a, $ff
+	M_FarCall SetOrUnsetFlag1
+	ld   hl, $0164
+	ld   a, $ff
+	M_FarCall SetOrUnsetFlag1
+	ld   hl, $0165
+	ld   a, $ff
+	M_FarCall SetOrUnsetFlag1
+	ld   hl, $0166
+	ld   a, $ff
+	M_FarCall SetOrUnsetFlag1
+	ld   hl, $0167
+	ld   a, $ff
+	M_FarCall SetOrUnsetFlag1
+	ld   hl, $0168
+	ld   a, $ff
+	M_FarCall SetOrUnsetFlag1
+	ld   hl, $0169
+	ld   a, $ff
+	M_FarCall SetOrUnsetFlag1
+	ld   hl, $016a
+	ld   a, $ff
+	M_FarCall SetOrUnsetFlag1
+	ld   hl, $016b
+	ld   a, $ff
+	M_FarCall SetOrUnsetFlag1
+	ld   hl, $016c
+	ld   a, $ff
+	M_FarCall SetOrUnsetFlag1
+	ld   hl, $016d
+	ld   a, $ff
+	M_FarCall SetOrUnsetFlag1
+	ld   hl, $016e
+	ld   a, $ff
+	M_FarCall SetOrUnsetFlag1
+	ld   hl, $016f
+	ld   a, $ff
+	M_FarCall SetOrUnsetFlag1
+	ld   hl, $0170
+	ld   a, $ff
+	M_FarCall SetOrUnsetFlag1
+	ld   hl, $0171
+	ld   a, $ff
+	M_FarCall SetOrUnsetFlag1
+	ld   hl, $0172
+	ld   a, $ff
+	M_FarCall SetOrUnsetFlag1
+	ld   hl, $0173
+	ld   a, $ff
+	M_FarCall SetOrUnsetFlag1
+	ld   hl, $0174
+	ld   a, $ff
+	M_FarCall SetOrUnsetFlag1
+	ld   hl, $0175
+	ld   a, $ff
+	M_FarCall SetOrUnsetFlag1
+	ld   hl, $0176
+	ld   a, $ff
+	M_FarCall SetOrUnsetFlag1
+	ld   hl, $0177
+	ld   a, $ff
+	M_FarCall SetOrUnsetFlag1
+	ld   hl, $0178
+	ld   a, $ff
+	M_FarCall SetOrUnsetFlag1
+	ld   hl, $0179
+	ld   a, $ff
+	M_FarCall SetOrUnsetFlag1
+	ld   hl, $017a
+	ld   a, $ff
+	M_FarCall SetOrUnsetFlag1
+	ld   hl, $017b
+	ld   a, $ff
+	M_FarCall SetOrUnsetFlag1
+	ld   hl, $017c
+	ld   a, $ff
+	M_FarCall SetOrUnsetFlag1
+	ld   hl, $017d
+	ld   a, $ff
+	M_FarCall SetOrUnsetFlag1
+	ld   hl, $017e
+	ld   a, $ff
+	M_FarCall SetOrUnsetFlag1
+	ld   hl, $017f
+	ld   a, $ff
+	M_FarCall SetOrUnsetFlag1
+
+	ld   a, [wtodo_VisitedTitleScreen]
 	ret
 endc
 

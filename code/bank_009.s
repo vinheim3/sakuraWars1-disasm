@@ -7,89 +7,92 @@ INCLUDE "includes.s"
 
 SECTION "ROM Bank $009", ROMX[$4000], BANK[$9]
 
-GameState38::
+GameState38_DayPeriodTransition::
+; todo:
 	M_FarCall Func_05_4540
 
-; todo: HL = ??? double idxed into table
-	ld   a, [$afb1]                                  ; $4014: $fa $b1 $af
-	ld   h, $00                                      ; $4017: $26 $00
-	ld   l, a                                        ; $4019: $6f
-	add  hl, hl                                      ; $401a: $29
-	add  hl, hl                                      ; $401b: $29
-	ld   bc, .table                                   ; $401c: $01 $2c $40
-	add  hl, bc                                      ; $401f: $09
+; HL = day period double idxed into table
+	ld   a, [sDayPeriodIdx]                                         ; $4014
+	ld   h, $00                                                     ; $4017
+	ld   l, a                                                       ; $4019
+	add  hl, hl                                                     ; $401a
+	add  hl, hl                                                     ; $401b
+	ld   bc, .dayPeriodTransitions                                  ; $401c
+	add  hl, bc                                                     ; $401f
 
-;
-	ld   a, [hl+]                                    ; $4020: $2a
-	ld   [wTimeOfDay], a                                  ; $4021: $ea $20 $cb
-	ld   a, [hl+]                                    ; $4024: $2a
-	ld   [$cc7e], a                                  ; $4025: $ea $7e $cc
-	ld   a, [hl+]                                    ; $4028: $2a
-	ld   h, [hl]                                     ; $4029: $66
-	ld   l, a                                        ; $402a: $6f
-	jp   hl                                          ; $402b: $e9
+; First 2 bytes determine time of day, and dorm room opts setup idx
+	ld   a, [hl+]                                                   ; $4020
+	ld   [wTimeOfDay], a                                            ; $4021
+	ld   a, [hl+]                                                   ; $4024
+	ld   [wDormRoomOptionsSetupIdx], a                              ; $4025
+
+; Word after is the handler for the day+period
+	ld   a, [hl+]                                                   ; $4028
+	ld   h, [hl]                                                    ; $4029
+	ld   l, a                                                       ; $402a
+	jp   hl                                                         ; $402b
 
 macro DayPeriodTransition
 	db \1, \2
 	dw \3
 endm
 
-.table:
-	DayPeriodTransition $00, $00, DPTransition00
-	DayPeriodTransition $00, $00, DPTransition01
-	DayPeriodTransition $0e, $05, DPTransition02
-	DayPeriodTransition $0e, $05, DPTransition03
-	DayPeriodTransition $00, $00, DPTransition04
-	DayPeriodTransition $00, $00, DPTransition05
-	db $00, $00, $bb, $42
-	db $01, $01, $23, $42
-	db $02, $01, $b6, $41
-	db $02, $01, $7c, $42
-	db $03, $01, $b6, $41
-	db $04, $01, $b6, $41
-	db $05, $01, $b6, $41
-	db $05, $02, $bb, $42
-	db $06, $02, $23, $42
-	db $07, $02, $b6, $41
-	db $08, $03, $b6, $41
-	db $09, $03, $b6, $41
-	db $09, $03, $96, $42
-	db $0a, $03, $b6, $41
-	db $0b, $03, $b6, $41
-	db $0c, $03, $b6, $41
-	db $0c, $04, $bb, $42
-	db $0d, $04, $23, $42
-	db $0e, $04, $b6, $41
-	db $0e, $05, $bb, $42
-	db $0e, $05, $fb, $42
-	db $00, $00, $34, $43
-	db $00, $00, $37, $43
-	db $00, $00, $14, $44
-	db $01, $01, $a4, $43
-	db $02, $01, $37, $43
-	db $02, $01, $fd, $43
-	db $03, $01, $37, $43
-	db $04, $01, $37, $43
-	db $09, $01, $37, $43
-	db $09, $06, $0f, $44
-	db $0a, $06, $37, $43
-	db $0b, $06, $37, $43
-	db $0c, $06, $37, $43
-	db $0c, $04, $14, $44
-	db $0d, $04, $a4, $43
-	db $0e, $04, $37, $43
-	db $0e, $05, $14, $44
-	db $0e, $05, $54, $44
+.dayPeriodTransitions:
+	DayPeriodTransition $00, DROS_EXPLORE_DAY_FOCUS_1, DPTransition00_SetDay1
+	DayPeriodTransition $00, DROS_EXPLORE_DAY_FOCUS_1, DPTransition01
+	DayPeriodTransition $0e, DROS_SAVE_SLEEP,          DPTransition02_SetDormRoomState
+	DayPeriodTransition $0e, DROS_SAVE_SLEEP,          DPTransition03
+	DayPeriodTransition $00, DROS_EXPLORE_DAY_FOCUS_1, DPTransition04_DisplayCurrDate
+	DayPeriodTransition $00, DROS_EXPLORE_DAY_FOCUS_1, DPTransition05
+	DayPeriodTransition $00, DROS_EXPLORE_DAY_FOCUS_1, DPTransition06
+	DayPeriodTransition $01, DROS_TRAIN_NAP_1,         DPTransition07
+	DayPeriodTransition $02, DROS_TRAIN_NAP_1,         DPTransition08
+	DayPeriodTransition $02, DROS_TRAIN_NAP_1,         DPTransition09
+	DayPeriodTransition $03, DROS_TRAIN_NAP_1,         DPTransition0a
+	DayPeriodTransition $04, DROS_TRAIN_NAP_1,         DPTransition0b
+	DayPeriodTransition $05, DROS_TRAIN_NAP_1,         DPTransition0c
+	DayPeriodTransition $05, DROS_EXPLORE_DAY_FOCUS_2, DPTransition0d
+	DayPeriodTransition $06, DROS_EXPLORE_DAY_FOCUS_2, DPTransition0e
+	DayPeriodTransition $07, DROS_EXPLORE_DAY_FOCUS_2, DPTransition0f
+	DayPeriodTransition $08, DROS_TRAIN_NAP_2,         DPTransition10
+	DayPeriodTransition $09, DROS_TRAIN_NAP_2,         DPTransition11
+	DayPeriodTransition $09, DROS_TRAIN_NAP_2,         DPTransition12
+	DayPeriodTransition $0a, DROS_TRAIN_NAP_2,         DPTransition13
+	DayPeriodTransition $0b, DROS_TRAIN_NAP_2,         DPTransition14
+	DayPeriodTransition $0c, DROS_TRAIN_NAP_2,         DPTransition15
+	DayPeriodTransition $0c, DROS_EXPLORE_NIGHT,       DPTransition16
+	DayPeriodTransition $0d, DROS_EXPLORE_NIGHT,       DPTransition17
+	DayPeriodTransition $0e, DROS_EXPLORE_NIGHT,       DPTransition18
+	DayPeriodTransition $0e, DROS_SAVE_SLEEP,          DPTransition19
+	DayPeriodTransition $0e, DROS_SAVE_SLEEP,          DPTransition1a
+	DayPeriodTransition $00, DROS_EXPLORE_DAY_FOCUS_1, DPTransition1b
+	DayPeriodTransition $00, DROS_EXPLORE_DAY_FOCUS_1, DPTransition1c
+	DayPeriodTransition $00, DROS_EXPLORE_DAY_FOCUS_1, DPTransition1d
+	DayPeriodTransition $01, DROS_TRAIN_NAP_1,         DPTransition1e
+	DayPeriodTransition $02, DROS_TRAIN_NAP_1,         DPTransition1f
+	DayPeriodTransition $02, DROS_TRAIN_NAP_1,         DPTransition20
+	DayPeriodTransition $03, DROS_TRAIN_NAP_1,         DPTransition21
+	DayPeriodTransition $04, DROS_TRAIN_NAP_1,         DPTransition22
+	DayPeriodTransition $09, DROS_TRAIN_NAP_1,         DPTransition23
+	DayPeriodTransition $09, DROS_EXAM,                DPTransition24
+	DayPeriodTransition $0a, DROS_EXAM,                DPTransition25
+	DayPeriodTransition $0b, DROS_EXAM,                DPTransition26
+	DayPeriodTransition $0c, DROS_EXAM,                DPTransition27
+	DayPeriodTransition $0c, DROS_EXPLORE_NIGHT,       DPTransition28
+	DayPeriodTransition $0d, DROS_EXPLORE_NIGHT,       DPTransition29
+	DayPeriodTransition $0e, DROS_EXPLORE_NIGHT,       DPTransition2a
+	DayPeriodTransition $0e, DROS_SAVE_SLEEP,          DPTransition2b
+	DayPeriodTransition $0e, DROS_SAVE_SLEEP,          DPTransition2c
 
 
-DPTransition00:
-;
-	ld   a, $01                                      ; $40e0: $3e $01
-	ld   [sCurrDay], a                                  ; $40e2: $ea $b0 $af
+DPTransition00_SetDay1:
+; Set day to 1, then go to next dp idx
+	ld   a, $01                                                     ; $40e0
+	ld   [sCurrDay], a                                              ; $40e2
 
-	ld   hl, $afb1                                   ; $40e5: $21 $b1 $af
-	inc  [hl]                                        ; $40e8: $34
-	ret                                              ; $40e9: $c9
+	ld   hl, sDayPeriodIdx                                          ; $40e5
+	inc  [hl]                                                       ; $40e8
+	ret                                                             ; $40e9
 
 
 DPTransition01:
@@ -116,21 +119,21 @@ DPTransition01:
 	ld   a, [$dc9d]                                  ; $4109: $fa $9d $dc
 	ld   [$cb23], a                                  ; $410c: $ea $23 $cb
 	ld   a, [$dc9e]                                  ; $410f: $fa $9e $dc
-	ld   [$cb24], a                                  ; $4112: $ea $24 $cb
+	ld   [wMainConvoScriptIdx], a                                  ; $4112: $ea $24 $cb
 	ld   a, [$dc9f]                                  ; $4115: $fa $9f $dc
 	and  $03                                         ; $4118: $e6 $03
-	ld   [$cb25], a                                  ; $411a: $ea $25 $cb
+	ld   [wMainConvoScriptIdx+1], a                                  ; $411a: $ea $25 $cb
 	ld   h, $38                                      ; $411d: $26 $38
 	ld   l, $00                                      ; $411f: $2e $00
-	ld   a, [$cb24]                                  ; $4121: $fa $24 $cb
+	ld   a, [wMainConvoScriptIdx]                                  ; $4121: $fa $24 $cb
 	ld   c, a                                        ; $4124: $4f
-	ld   a, [$cb25]                                  ; $4125: $fa $25 $cb
+	ld   a, [wMainConvoScriptIdx+1]                                  ; $4125: $fa $25 $cb
 	ld   b, a                                        ; $4128: $47
 	ld   a, [$cb22]                                  ; $4129: $fa $22 $cb
 	ld   d, a                                        ; $412c: $57
 	xor  a                                           ; $412d: $af
 
-	M_FarCall Func_09_4820
+	M_FarCall SetMainConvoState
 
 .done:
 ;
@@ -139,28 +142,30 @@ DPTransition01:
 	ldh  [rSVBK], a                                  ; $4146: $e0 $70
 
 ;
-	ld   hl, $afb1                                   ; $4148: $21 $b1 $af
+	ld   hl, sDayPeriodIdx                                   ; $4148: $21 $b1 $af
 	inc  [hl]                                        ; $414b: $34
 	ret                                              ; $414c: $c9
 
 
-DPTransition02:
-	ld   a, [$cc7e]                                  ; $414d: $fa $7e $cc
-	ld   h, $38                                      ; $4150: $26 $38
-	ld   l, $00                                      ; $4152: $2e $00
+DPTransition02_SetDormRoomState:
+; Use unchanged setup idx and set state
+	ld   a, [wDormRoomOptionsSetupIdx]                              ; $414d
+	ld   h, GS_DAY_PERIOD_TRANSITION                                ; $4150
+	ld   l, $00                                                     ; $4152
 
-	M_FarCall Func_04_66e3
+	M_FarCall SetDormRoomState
 
-	ld   hl, $afb1                                   ; $4168: $21 $b1 $af
-	inc  [hl]                                        ; $416b: $34
-	ret                                              ; $416c: $c9
+; Go to next dp idx
+	ld   hl, sDayPeriodIdx                                          ; $4168
+	inc  [hl]                                                       ; $416b
+	ret                                                             ; $416c
 
 
 DPTransition03:
-	jp   Jump_009_42fb                               ; $416d: $c3 $fb $42
+	jp   DPTransition1a                               ; $416d: $c3 $fb $42
 
 
-DPTransition04:
+DPTransition04_DisplayCurrDate:
 	ld   a, [$cc1d]                                  ; $4170: $fa $1d $cc
 	or   a                                           ; $4173: $b7
 	jr   z, .setDayPassedState                              ; $4174: $28 $12
@@ -169,28 +174,26 @@ DPTransition04:
 	xor  a                                           ; $4176: $af
 	ld   [$cc1d], a                                  ; $4177: $ea $1d $cc
 
-;
-	ld   a, GS_FILE_LOAD_DISPLAY                                      ; $417a: $3e $3c
-	ld   [wGameState], a                                  ; $417c: $ea $a0 $c2
-	xor  a                                           ; $417f: $af
-	ld   [wGameSubstate], a                                  ; $4180: $ea $a1 $c2
+; Set file load display state, and inc dp idx
+	ld   a, GS_FILE_LOAD_DISPLAY                                    ; $417a
+	ld   [wGameState], a                                            ; $417c
+	xor  a                                                          ; $417f
+	ld   [wGameSubstate], a                                         ; $4180
 
-;
-	ld   hl, $afb1                                   ; $4183: $21 $b1 $af
-	inc  [hl]                                        ; $4186: $34
-	ret                                              ; $4187: $c9
+	ld   hl, sDayPeriodIdx                                          ; $4183
+	inc  [hl]                                                       ; $4186
+	ret                                                             ; $4187
 
 .setDayPassedState:
-;
-	ld   a, GS_DAY_PASSED                                      ; $4188: $3e $49
-	ld   [wGameState], a                                  ; $418a: $ea $a0 $c2
-	xor  a                                           ; $418d: $af
-	ld   [wGameSubstate], a                                  ; $418e: $ea $a1 $c2
+; Set file day passed state, and inc dp idx
+	ld   a, GS_DAY_PASSED                                           ; $4188
+	ld   [wGameState], a                                            ; $418a
+	xor  a                                                          ; $418d
+	ld   [wGameSubstate], a                                         ; $418e
 
-;
-	ld   hl, $afb1                                   ; $4191: $21 $b1 $af
-	inc  [hl]                                        ; $4194: $34
-	ret                                              ; $4195: $c9
+	ld   hl, sDayPeriodIdx                                          ; $4191
+	inc  [hl]                                                       ; $4194
+	ret                                                             ; $4195
 
 
 DPTransition05:
@@ -205,7 +208,17 @@ DPTransition05:
 	ret                                              ; $41b5: $c9
 
 .notEndOfGame:
-;
+DPTransition08:
+DPTransition0a:
+DPTransition0b:
+DPTransition0c:
+DPTransition0f:
+DPTransition10:
+DPTransition11:
+DPTransition13:
+DPTransition14:
+DPTransition15:
+DPTransition18:
 	ld   a, [wWramBank]                                  ; $41b6: $fa $93 $c2
 	push af                                          ; $41b9: $f5
 
@@ -235,21 +248,21 @@ DPTransition05:
 	ld   a, [$dc9d]                                  ; $41df: $fa $9d $dc
 	ld   [$cb23], a                                  ; $41e2: $ea $23 $cb
 	ld   a, [$dc9e]                                  ; $41e5: $fa $9e $dc
-	ld   [$cb24], a                                  ; $41e8: $ea $24 $cb
+	ld   [wMainConvoScriptIdx], a                                  ; $41e8: $ea $24 $cb
 	ld   a, [$dc9f]                                  ; $41eb: $fa $9f $dc
 	and  $03                                         ; $41ee: $e6 $03
-	ld   [$cb25], a                                  ; $41f0: $ea $25 $cb
+	ld   [wMainConvoScriptIdx+1], a                                  ; $41f0: $ea $25 $cb
 	ld   h, $38                                      ; $41f3: $26 $38
 	ld   l, $00                                      ; $41f5: $2e $00
-	ld   a, [$cb24]                                  ; $41f7: $fa $24 $cb
+	ld   a, [wMainConvoScriptIdx]                                  ; $41f7: $fa $24 $cb
 	ld   c, a                                        ; $41fa: $4f
-	ld   a, [$cb25]                                  ; $41fb: $fa $25 $cb
+	ld   a, [wMainConvoScriptIdx+1]                                  ; $41fb: $fa $25 $cb
 	ld   b, a                                        ; $41fe: $47
 	ld   a, [$cb22]                                  ; $41ff: $fa $22 $cb
 	ld   d, a                                        ; $4202: $57
 	pop  af                                          ; $4203: $f1
 
-	M_FarCall Func_09_4820
+	M_FarCall SetMainConvoState
 
 .done:
 ;
@@ -258,12 +271,14 @@ DPTransition05:
 	ldh  [rSVBK], a                                  ; $421c: $e0 $70
 
 ;
-	ld   hl, $afb1                                   ; $421e: $21 $b1 $af
+	ld   hl, sDayPeriodIdx                                   ; $421e: $21 $b1 $af
 	inc  [hl]                                        ; $4221: $34
 	ret                                              ; $4222: $c9
 
 
-;
+DPTransition07:
+DPTransition0e:
+DPTransition17:
 	ld   a, [wWramBank]                                  ; $4223: $fa $93 $c2
 	push af                                          ; $4226: $f5
 	ld   a, $02                                      ; $4227: $3e $02
@@ -298,7 +313,7 @@ jr_009_4246:
 	ld   [$cb37], a                                  ; $425b: $ea $37 $cb
 	ld   a, $18                                      ; $425e: $3e $18
 	ld   [$cb39], a                                  ; $4260: $ea $39 $cb
-	ld   a, $39                                      ; $4263: $3e $39
+	ld   a, GS_EXPLORE                                      ; $4263: $3e $39
 	ld   [wGameState], a                                  ; $4265: $ea $a0 $c2
 	xor  a                                           ; $4268: $af
 	ld   [wGameSubstate], a                                  ; $4269: $ea $a1 $c2
@@ -312,11 +327,12 @@ jr_009_4271:
 	pop  af                                          ; $4271: $f1
 	ld   [wWramBank], a                                  ; $4272: $ea $93 $c2
 	ldh  [rSVBK], a                                  ; $4275: $e0 $70
-	ld   hl, $afb1                                   ; $4277: $21 $b1 $af
+	ld   hl, sDayPeriodIdx                                   ; $4277: $21 $b1 $af
 	inc  [hl]                                        ; $427a: $34
 	ret                                              ; $427b: $c9
 
 
+DPTransition09:
 	ld   a, [sCurrDay]                                  ; $427c: $fa $b0 $af
 	dec  a                                           ; $427f: $3d
 	dec  a                                           ; $4280: $3d
@@ -329,12 +345,13 @@ jr_009_4271:
 	cp   $07                                         ; $428c: $fe $07
 	jr   nz, jr_009_42bb                             ; $428e: $20 $2b
 
-	ld   hl, $afb1                                   ; $4290: $21 $b1 $af
+	ld   hl, sDayPeriodIdx                                   ; $4290: $21 $b1 $af
 	inc  [hl]                                        ; $4293: $34
 	inc  [hl]                                        ; $4294: $34
 	ret                                              ; $4295: $c9
 
 
+DPTransition12:
 	ld   a, [sCurrDay]                                  ; $4296: $fa $b0 $af
 	dec  a                                           ; $4299: $3d
 	dec  a                                           ; $429a: $3d
@@ -348,7 +365,7 @@ jr_009_4271:
 	cp   $06                                         ; $42a6: $fe $06
 	jr   nz, jr_009_42b0                             ; $42a8: $20 $06
 
-	ld   hl, $afb1                                   ; $42aa: $21 $b1 $af
+	ld   hl, sDayPeriodIdx                                   ; $42aa: $21 $b1 $af
 	inc  [hl]                                        ; $42ad: $34
 	inc  [hl]                                        ; $42ae: $34
 	ret                                              ; $42af: $c9
@@ -363,15 +380,18 @@ jr_009_42b6:
 	ld   a, $09                                      ; $42b6: $3e $09
 	ld   [$cb1e], a                                  ; $42b8: $ea $1e $cb
 
+
+DPTransition06:
+DPTransition0d:
+DPTransition16:
+DPTransition19:
 jr_009_42bb:
+;
 	ld   b, $03                                      ; $42bb: $06 $03
 	call ClearCarryIfNightElseSetIt                               ; $42bd: $cd $3e $45
-	jr   c, jr_009_42c4                              ; $42c0: $38 $02
-
+	jr   c, :+                              ; $42c0: $38 $02
 	ld   b, $02                                      ; $42c2: $06 $02
-
-jr_009_42c4:
-	ld   a, b                                        ; $42c4: $78
+:	ld   a, b                                        ; $42c4: $78
 	call PlaySong                                       ; $42c5: $cd $92 $1a
 	ld   a, $07                                      ; $42c8: $3e $07
 	call SafeSetAudVolForMultipleChannels                                       ; $42ca: $cd $e0 $1c
@@ -381,24 +401,20 @@ jr_009_42c4:
 	ld   [$cb37], a                                  ; $42d3: $ea $37 $cb
 	ld   a, $18                                      ; $42d6: $3e $18
 	ld   [$cb39], a                                  ; $42d8: $ea $39 $cb
-	ld   a, [$cc7e]                                  ; $42db: $fa $7e $cc
-	ld   h, $38                                      ; $42de: $26 $38
+
+;
+	ld   a, [wDormRoomOptionsSetupIdx]                                  ; $42db: $fa $7e $cc
+	ld   h, GS_DAY_PERIOD_TRANSITION                                      ; $42de: $26 $38
 	ld   l, $00                                      ; $42e0: $2e $00
-	push af                                          ; $42e2: $f5
-	ld   a, $e3                                      ; $42e3: $3e $e3
-	ld   [wFarCallAddr], a                                  ; $42e5: $ea $98 $c2
-	ld   a, $66                                      ; $42e8: $3e $66
-	ld   [wFarCallAddr+1], a                                  ; $42ea: $ea $99 $c2
-	ld   a, $04                                      ; $42ed: $3e $04
-	ld   [wFarCallBank], a                                  ; $42ef: $ea $9a $c2
-	pop  af                                          ; $42f2: $f1
-	call FarCall                                       ; $42f3: $cd $62 $09
-	ld   hl, $afb1                                   ; $42f6: $21 $b1 $af
+
+	M_FarCall SetDormRoomState
+
+	ld   hl, sDayPeriodIdx                                   ; $42f6: $21 $b1 $af
 	inc  [hl]                                        ; $42f9: $34
 	ret                                              ; $42fa: $c9
 
 
-Jump_009_42fb:
+DPTransition1a:
 	ld   hl, sCurrDay                                   ; $42fb: $21 $b0 $af
 	inc  [hl]                                        ; $42fe: $34
 	ld   h, [hl]                                     ; $42ff: $66
@@ -423,7 +439,7 @@ Jump_009_42fb:
 	ld   l, $43                                      ; $431a: $2e $43
 	ld   l, $43                                      ; $431c: $2e $43
 	ld   a, $1b                                      ; $431e: $3e $1b
-	ld   [$afb1], a                                  ; $4320: $ea $b1 $af
+	ld   [sDayPeriodIdx], a                                  ; $4320: $ea $b1 $af
 	ret                                              ; $4323: $c9
 
 
@@ -432,13 +448,23 @@ Jump_009_42fb:
 	ld   a, $7f                                      ; $4329: $3e $7f
 	ld   [$b0ad], a                                  ; $432b: $ea $ad $b0
 	ld   a, $04                                      ; $432e: $3e $04
-	ld   [$afb1], a                                  ; $4330: $ea $b1 $af
+	ld   [sDayPeriodIdx], a                                  ; $4330: $ea $b1 $af
 	ret                                              ; $4333: $c9
 
 
-	jp   DPTransition04                               ; $4334: $c3 $70 $41
+DPTransition1b:
+	jp   DPTransition04_DisplayCurrDate                               ; $4334: $c3 $70 $41
 
 
+DPTransition1c:
+DPTransition1f:
+DPTransition21:
+DPTransition22:
+DPTransition23:
+DPTransition25:
+DPTransition26:
+DPTransition27:
+DPTransition2a:
 	ld   a, [wWramBank]                                  ; $4337: $fa $93 $c2
 	push af                                          ; $433a: $f5
 	ld   a, $02                                      ; $433b: $3e $02
@@ -464,15 +490,15 @@ jr_009_4354:
 	ld   a, [$dc9d]                                  ; $4360: $fa $9d $dc
 	ld   [$cb23], a                                  ; $4363: $ea $23 $cb
 	ld   a, [$dc9e]                                  ; $4366: $fa $9e $dc
-	ld   [$cb24], a                                  ; $4369: $ea $24 $cb
+	ld   [wMainConvoScriptIdx], a                                  ; $4369: $ea $24 $cb
 	ld   a, [$dc9f]                                  ; $436c: $fa $9f $dc
 	and  $03                                         ; $436f: $e6 $03
-	ld   [$cb25], a                                  ; $4371: $ea $25 $cb
+	ld   [wMainConvoScriptIdx+1], a                                  ; $4371: $ea $25 $cb
 	ld   h, $38                                      ; $4374: $26 $38
 	ld   l, $00                                      ; $4376: $2e $00
-	ld   a, [$cb24]                                  ; $4378: $fa $24 $cb
+	ld   a, [wMainConvoScriptIdx]                                  ; $4378: $fa $24 $cb
 	ld   c, a                                        ; $437b: $4f
-	ld   a, [$cb25]                                  ; $437c: $fa $25 $cb
+	ld   a, [wMainConvoScriptIdx+1]                                  ; $437c: $fa $25 $cb
 	ld   b, a                                        ; $437f: $47
 	ld   a, [$cb22]                                  ; $4380: $fa $22 $cb
 	ld   d, a                                        ; $4383: $57
@@ -491,11 +517,13 @@ jr_009_4399:
 	pop  af                                          ; $4399: $f1
 	ld   [wWramBank], a                                  ; $439a: $ea $93 $c2
 	ldh  [rSVBK], a                                  ; $439d: $e0 $70
-	ld   hl, $afb1                                   ; $439f: $21 $b1 $af
+	ld   hl, sDayPeriodIdx                                   ; $439f: $21 $b1 $af
 	inc  [hl]                                        ; $43a2: $34
 	ret                                              ; $43a3: $c9
 
 
+DPTransition1e:
+DPTransition29:
 	ld   a, [wWramBank]                                  ; $43a4: $fa $93 $c2
 	push af                                          ; $43a7: $f5
 	ld   a, $02                                      ; $43a8: $3e $02
@@ -530,7 +558,7 @@ jr_009_43c7:
 	ld   [$cb37], a                                  ; $43dc: $ea $37 $cb
 	ld   a, $18                                      ; $43df: $3e $18
 	ld   [$cb39], a                                  ; $43e1: $ea $39 $cb
-	ld   a, $39                                      ; $43e4: $3e $39
+	ld   a, GS_EXPLORE                                      ; $43e4: $3e $39
 	ld   [wGameState], a                                  ; $43e6: $ea $a0 $c2
 	xor  a                                           ; $43e9: $af
 	ld   [wGameSubstate], a                                  ; $43ea: $ea $a1 $c2
@@ -544,11 +572,12 @@ jr_009_43f2:
 	pop  af                                          ; $43f2: $f1
 	ld   [wWramBank], a                                  ; $43f3: $ea $93 $c2
 	ldh  [rSVBK], a                                  ; $43f6: $e0 $70
-	ld   hl, $afb1                                   ; $43f8: $21 $b1 $af
+	ld   hl, sDayPeriodIdx                                   ; $43f8: $21 $b1 $af
 	inc  [hl]                                        ; $43fb: $34
 	ret                                              ; $43fc: $c9
 
 
+DPTransition20:
 	ld   a, [sCurrDay]                                  ; $43fd: $fa $b0 $af
 	dec  a                                           ; $4400: $3d
 	dec  a                                           ; $4401: $3d
@@ -560,10 +589,16 @@ jr_009_43f2:
 	ld   [$cb1e], a                                  ; $440a: $ea $1e $cb
 	jr   jr_009_4414                                 ; $440d: $18 $05
 
+
+DPTransition24:
 	ld   a, $09                                      ; $440f: $3e $09
 	ld   [$cb1e], a                                  ; $4411: $ea $1e $cb
 
 jr_009_4414:
+
+DPTransition1d:
+DPTransition28:
+DPTransition2b:
 	ld   b, $03                                      ; $4414: $06 $03
 	call ClearCarryIfNightElseSetIt                               ; $4416: $cd $3e $45
 	jr   c, jr_009_441d                              ; $4419: $38 $02
@@ -581,24 +616,19 @@ jr_009_441d:
 	ld   [$cb37], a                                  ; $442c: $ea $37 $cb
 	ld   a, $18                                      ; $442f: $3e $18
 	ld   [$cb39], a                                  ; $4431: $ea $39 $cb
-	ld   a, [$cc7e]                                  ; $4434: $fa $7e $cc
-	ld   h, $38                                      ; $4437: $26 $38
+	ld   a, [wDormRoomOptionsSetupIdx]                                  ; $4434: $fa $7e $cc
+	ld   h, GS_DAY_PERIOD_TRANSITION                                      ; $4437: $26 $38
 	ld   l, $00                                      ; $4439: $2e $00
-	push af                                          ; $443b: $f5
-	ld   a, $e3                                      ; $443c: $3e $e3
-	ld   [wFarCallAddr], a                                  ; $443e: $ea $98 $c2
-	ld   a, $66                                      ; $4441: $3e $66
-	ld   [wFarCallAddr+1], a                                  ; $4443: $ea $99 $c2
-	ld   a, $04                                      ; $4446: $3e $04
-	ld   [wFarCallBank], a                                  ; $4448: $ea $9a $c2
-	pop  af                                          ; $444b: $f1
-	call FarCall                                       ; $444c: $cd $62 $09
-	ld   hl, $afb1                                   ; $444f: $21 $b1 $af
+
+	M_FarCall SetDormRoomState
+
+	ld   hl, sDayPeriodIdx                                   ; $444f: $21 $b1 $af
 	inc  [hl]                                        ; $4452: $34
 	ret                                              ; $4453: $c9
 
 
-	jp   Jump_009_42fb                               ; $4454: $c3 $fb $42
+DPTransition2c:
+	jp   DPTransition1a                               ; $4454: $c3 $fb $42
 
 
 Func_09_4457::
@@ -621,7 +651,7 @@ jr_009_446c:
 	ld   bc, $447e                                   ; $446c: $01 $7e $44
 	add  hl, bc                                      ; $446f: $09
 	ld   a, [hl]                                     ; $4470: $7e
-	ld   [$afb1], a                                  ; $4471: $ea $b1 $af
+	ld   [sDayPeriodIdx], a                                  ; $4471: $ea $b1 $af
 	ret                                              ; $4474: $c9
 
 
@@ -629,7 +659,7 @@ jr_009_4475:
 	ld   bc, $4488                                   ; $4475: $01 $88 $44
 	add  hl, bc                                      ; $4478: $09
 	ld   a, [hl]                                     ; $4479: $7e
-	ld   [$afb1], a                                  ; $447a: $ea $b1 $af
+	ld   [sDayPeriodIdx], a                                  ; $447a: $ea $b1 $af
 	ret                                              ; $447d: $c9
 
 
@@ -841,55 +871,51 @@ endr
 
 
 GameState3b_MainConvo::
-	ld   a, [wGameSubstate]                                  ; $4564: $fa $a1 $c2
-	cp   $02                                         ; $4567: $fe $02
-	jp   z, GameState3b_MainConvo_substate2                            ; $4569: $ca $22 $47
+; Branch based on substate
+	ld   a, [wGameSubstate]                                         ; $4564
+	cp   $02                                                        ; $4567
+	jp   z, MainConvoSubstate2                                      ; $4569
 
-	cp   $01                                         ; $456c: $fe $01
-	jp   z, GameState3b_MainConvo_substate1                            ; $456e: $ca $d3 $46
+	cp   $01                                                        ; $456c
+	jp   z, MainConvoSubstate1                                      ; $456e
 
-; Substate 0
+; Substate 0 - clear display regs, then turn on LCD
 	call ClearDisplayRegsAllowVBlankInt                                       ; $4571: $cd $59 $0b
+
 	ld   a, [wLCDC]                                  ; $4574: $fa $03 $c2
 	and  $e0                                         ; $4577: $e6 $e0
 	or   $87                                         ; $4579: $f6 $87
 	ld   [wLCDC], a                                  ; $457b: $ea $03 $c2
 	ldh  [rLCDC], a                                  ; $457e: $e0 $40
+
+;
 	ld   a, BANK(Palettes_AllWhite)                                      ; $4580: $3e $01
 	ld   hl, Palettes_AllWhite                                   ; $4582: $21 $00 $70
 	ld   de, wBGPalettes                                   ; $4585: $11 $de $c2
 	ld   bc, $0080                                   ; $4588: $01 $80 $00
 	call FarMemCopy                                       ; $458b: $cd $b2 $09
+
 	ld   bc, $003f                                   ; $458e: $01 $3f $00
 	call SetBGandOBJPaletteRangesToUpdate                                       ; $4591: $cd $aa $04
+
+;
 	ld   a, $ff                                      ; $4594: $3e $ff
 	ld   [wInGameInputsEnabled], a                                  ; $4596: $ea $0e $c2
+
 	call ClearOam                                       ; $4599: $cd $d7 $0d
 	call ClearBaseAnimSpriteSpecDetails                                       ; $459c: $cd $c9 $2e
+
+;
 	ld   bc, $0000                                   ; $459f: $01 $00 $00
-	push af                                          ; $45a2: $f5
-	ld   a, $7a                                      ; $45a3: $3e $7a
-	ld   [wFarCallAddr], a                                  ; $45a5: $ea $98 $c2
-	ld   a, $40                                      ; $45a8: $3e $40
-	ld   [wFarCallAddr+1], a                                  ; $45aa: $ea $99 $c2
-	ld   a, $01                                      ; $45ad: $3e $01
-	ld   [wFarCallBank], a                                  ; $45af: $ea $9a $c2
-	pop  af                                          ; $45b2: $f1
-	call FarCall                                       ; $45b3: $cd $62 $09
-	push af                                          ; $45b6: $f5
-	ld   a, $00                                      ; $45b7: $3e $00
-	ld   [wFarCallAddr], a                                  ; $45b9: $ea $98 $c2
-	ld   a, $40                                      ; $45bc: $3e $40
-	ld   [wFarCallAddr+1], a                                  ; $45be: $ea $99 $c2
-	ld   a, $08                                      ; $45c1: $3e $08
-	ld   [wFarCallBank], a                                  ; $45c3: $ea $9a $c2
-	pop  af                                          ; $45c6: $f1
-	call FarCall                                       ; $45c7: $cd $62 $09
+
+	M_FarCall SetAnimSpriteType0CoordsRelativeTo
+	M_FarCall InitScriptEngine
+
 	ld   a, [$cb22]                                  ; $45ca: $fa $22 $cb
 	call Call_009_4643                               ; $45cd: $cd $43 $46
 	ld   [$cba6], a                                  ; $45d0: $ea $a6 $cb
-	ld   a, [$cb26]                                  ; $45d3: $fa $26 $cb
-	ld   [$cbc8], a                                  ; $45d6: $ea $c8 $cb
+	ld   a, [wMainConvoScriptSong]                                  ; $45d3: $fa $26 $cb
+	ld   [wScriptSongToPlay], a                                  ; $45d6: $ea $c8 $cb
 	xor  a                                           ; $45d9: $af
 	ld   [$cba8], a                                  ; $45da: $ea $a8 $cb
 	ld   [$cbaa], a                                  ; $45dd: $ea $aa $cb
@@ -897,15 +923,16 @@ GameState3b_MainConvo::
 	inc  a                                           ; $45e3: $3c
 	ld   [$cbab], a                                  ; $45e4: $ea $ab $cb
 
-;
-	ld   a, [$cb24]                                  ; $45e7: $fa $24 $cb
-	ld   c, a                                        ; $45ea: $4f
-	ld   a, [$cb25]                                  ; $45eb: $fa $25 $cb
-	ld   b, a                                        ; $45ee: $47
-	ld   hl, ScriptSources                                   ; $45ef: $21 $28 $57
-	add  hl, bc                                      ; $45f2: $09
-	add  hl, bc                                      ; $45f3: $09
-	add  hl, bc                                      ; $45f4: $09
+; Script idx is a triple idx into the script sources table
+	ld   a, [wMainConvoScriptIdx]                                   ; $45e7
+	ld   c, a                                                       ; $45ea
+	ld   a, [wMainConvoScriptIdx+1]                                 ; $45eb
+	ld   b, a                                                       ; $45ee
+
+	ld   hl, ScriptSources                                          ; $45ef
+	add  hl, bc                                                     ; $45f2
+	add  hl, bc                                                     ; $45f3
+	add  hl, bc                                                     ; $45f4
 
 ; Copy the 3 bytes (addr, then bank)
 	ld   a, BANK(ScriptSources)                                     ; $45f5
@@ -928,9 +955,9 @@ GameState3b_MainConvo::
 	M_FarCall StartRunningScript
 	
 ;
-	ld   a, [$cb24]                                  ; $4625: $fa $24 $cb
+	ld   a, [wMainConvoScriptIdx]                                  ; $4625: $fa $24 $cb
 	ld   l, a                                        ; $4628: $6f
-	ld   a, [$cb25]                                  ; $4629: $fa $25 $cb
+	ld   a, [wMainConvoScriptIdx+1]                                  ; $4629: $fa $25 $cb
 	and  $03                                         ; $462c: $e6 $03
 	set  2, a                                        ; $462e: $cb $d7
 	ld   h, a                                        ; $4630: $67
@@ -950,232 +977,162 @@ GameState3b_MainConvo::
 	ret                                              ; $4642: $c9
 
 
+; A -
 Call_009_4643:
-	ld   hl, $465d                                   ; $4643: $21 $5d $46
+	ld   hl, .table                                   ; $4643: $21 $5d $46
 
-jr_009_4646:
+.nextEntry:
+; Return 0 once we've reached the end of the table
 	bit  7, [hl]                                     ; $4646: $cb $7e
-	jr   nz, jr_009_465b                             ; $4648: $20 $11
+	jr   nz, .return0                             ; $4648: $20 $11
 
+; Ignore table entry if the 1st byte does not match param
 	cp   [hl]                                        ; $464a: $be
-	jr   nz, jr_009_4656                             ; $464b: $20 $09
+	jr   nz, .toNextEntry                             ; $464b: $20 $09
 
+; Return 2nd byte if day, else 3rd byte
 	inc  hl                                          ; $464d: $23
 	call ClearCarryIfNightElseSetIt                               ; $464e: $cd $3e $45
-	jr   c, jr_009_4654                              ; $4651: $38 $01
-
+	jr   c, :+                              ; $4651: $38 $01
 	inc  hl                                          ; $4653: $23
-
-jr_009_4654:
-	ld   a, [hl]                                     ; $4654: $7e
+:	ld   a, [hl]                                     ; $4654: $7e
 	ret                                              ; $4655: $c9
 
-
-jr_009_4656:
+.toNextEntry:
 	inc  hl                                          ; $4656: $23
 	inc  hl                                          ; $4657: $23
 	inc  hl                                          ; $4658: $23
-	jr   jr_009_4646                                 ; $4659: $18 $eb
+	jr   .nextEntry                                 ; $4659: $18 $eb
 
-jr_009_465b:
+.return0:
 	xor  a                                           ; $465b: $af
 	ret                                              ; $465c: $c9
 
+.table:
+	db $01, $01, $02
+	db $02, $22, $24
+	db $03, $1e, $20
+	db $04, $19, $1a
+	db $05, $15, $15
+	db $08, $2d, $2e
+	db $09, $29, $2b
+	db $0a, $1b, $1d
+	db $0b, $5a, $5b
+	db $0c, $9d, $b0
+	db $0d, $2f, $30
+	db $0e, $88, $89
+	db $0f, $26, $28
+	db $10, $13, $14
+	db $12, $07, $09
+	db $13, $04, $06
+	db $14, $3d, $3e
+	db $15, $4c, $4c
+	db $16, $48, $48
+	db $17, $46, $46
+	db $19, $5e, $5e
+	db $1a, $42, $42
+	db $1b, $4a, $4a
+	db $1c, $44, $44
+	db $1d, $36, $38
+	db $1e, $5e, $5e
+	db $1f, $33, $35
+	db $20, $3f, $40
+	db $22, $31, $32
+	db $23, $72, $72
+	db $24, $64, $64
+	db $25, $71, $71
+	db $26, $7b, $7b
+	db $28, $6e, $6e
+	db $29, $66, $66
+	db $2a, $65, $65
+	db $2b, $78, $78
+	db $2c, $63, $63
+	db $2d, $5a, $5b
+	db $80
 
-	ld   bc, $0201                                   ; $465d: $01 $01 $02
-	ld   [bc], a                                     ; $4660: $02
-	ld   [hl+], a                                    ; $4661: $22
-	inc  h                                           ; $4662: $24
-	inc  bc                                          ; $4663: $03
-	ld   e, $20                                      ; $4664: $1e $20
-	inc  b                                           ; $4666: $04
-	add  hl, de                                      ; $4667: $19
-	ld   a, [de]                                     ; $4668: $1a
-	dec  b                                           ; $4669: $05
-	dec  d                                           ; $466a: $15
-	dec  d                                           ; $466b: $15
-	ld   [$2e2d], sp                                 ; $466c: $08 $2d $2e
-	add  hl, bc                                      ; $466f: $09
-	add  hl, hl                                      ; $4670: $29
-	dec  hl                                          ; $4671: $2b
-	ld   a, [bc]                                     ; $4672: $0a
-	dec  de                                          ; $4673: $1b
-	dec  e                                           ; $4674: $1d
-	dec  bc                                          ; $4675: $0b
-	ld   e, d                                        ; $4676: $5a
-	ld   e, e                                        ; $4677: $5b
-	inc  c                                           ; $4678: $0c
-	sbc  l                                           ; $4679: $9d
-	or   b                                           ; $467a: $b0
-	dec  c                                           ; $467b: $0d
-	cpl                                              ; $467c: $2f
-	jr   nc, @+$10                                   ; $467d: $30 $0e
 
-	adc  b                                           ; $467f: $88
-	adc  c                                           ; $4680: $89
-	rrca                                             ; $4681: $0f
-	ld   h, $28                                      ; $4682: $26 $28
-	db   $10                                         ; $4684: $10
-	inc  de                                          ; $4685: $13
-	inc  d                                           ; $4686: $14
-	ld   [de], a                                     ; $4687: $12
-	rlca                                             ; $4688: $07
-	add  hl, bc                                      ; $4689: $09
-	inc  de                                          ; $468a: $13
-	inc  b                                           ; $468b: $04
-	ld   b, $14                                      ; $468c: $06 $14
-	dec  a                                           ; $468e: $3d
-	ld   a, $15                                      ; $468f: $3e $15
-	ld   c, h                                        ; $4691: $4c
-	ld   c, h                                        ; $4692: $4c
-	ld   d, $48                                      ; $4693: $16 $48
-	ld   c, b                                        ; $4695: $48
-	rla                                              ; $4696: $17
-	ld   b, [hl]                                     ; $4697: $46
-	ld   b, [hl]                                     ; $4698: $46
-	add  hl, de                                      ; $4699: $19
-	ld   e, [hl]                                     ; $469a: $5e
-	ld   e, [hl]                                     ; $469b: $5e
-	ld   a, [de]                                     ; $469c: $1a
-	ld   b, d                                        ; $469d: $42
-	ld   b, d                                        ; $469e: $42
-	dec  de                                          ; $469f: $1b
-	ld   c, d                                        ; $46a0: $4a
-	ld   c, d                                        ; $46a1: $4a
-	inc  e                                           ; $46a2: $1c
-	ld   b, h                                        ; $46a3: $44
-	ld   b, h                                        ; $46a4: $44
-	dec  e                                           ; $46a5: $1d
-	ld   [hl], $38                                   ; $46a6: $36 $38
-	ld   e, $5e                                      ; $46a8: $1e $5e
-	ld   e, [hl]                                     ; $46aa: $5e
-	rra                                              ; $46ab: $1f
-	inc  sp                                          ; $46ac: $33
-	dec  [hl]                                        ; $46ad: $35
-	jr   nz, @+$41                                   ; $46ae: $20 $3f
-
-	ld   b, b                                        ; $46b0: $40
-	ld   [hl+], a                                    ; $46b1: $22
-	ld   sp, $2332                                   ; $46b2: $31 $32 $23
-	ld   [hl], d                                     ; $46b5: $72
-	ld   [hl], d                                     ; $46b6: $72
-	inc  h                                           ; $46b7: $24
-	ld   h, h                                        ; $46b8: $64
-	ld   h, h                                        ; $46b9: $64
-	dec  h                                           ; $46ba: $25
-	ld   [hl], c                                     ; $46bb: $71
-	ld   [hl], c                                     ; $46bc: $71
-	ld   h, $7b                                      ; $46bd: $26 $7b
-	ld   a, e                                        ; $46bf: $7b
-	jr   z, jr_009_4730                              ; $46c0: $28 $6e
-
-	ld   l, [hl]                                     ; $46c2: $6e
-	add  hl, hl                                      ; $46c3: $29
-	ld   h, [hl]                                     ; $46c4: $66
-	ld   h, [hl]                                     ; $46c5: $66
-	ld   a, [hl+]                                    ; $46c6: $2a
-	ld   h, l                                        ; $46c7: $65
-	ld   h, l                                        ; $46c8: $65
-	dec  hl                                          ; $46c9: $2b
-	ld   a, b                                        ; $46ca: $78
-	ld   a, b                                        ; $46cb: $78
-	inc  l                                           ; $46cc: $2c
-	ld   h, e                                        ; $46cd: $63
-	ld   h, e                                        ; $46ce: $63
-	dec  l                                           ; $46cf: $2d
-	ld   e, d                                        ; $46d0: $5a
-	ld   e, e                                        ; $46d1: $5b
-	add  b                                           ; $46d2: $80
-
-GameState3b_MainConvo_substate1:
+MainConvoSubstate1:
+;
 	call ClearDisplayRegsAllowVBlankInt                                       ; $46d3: $cd $59 $0b
+
 	ld   a, [wLCDC]                                  ; $46d6: $fa $03 $c2
 	and  $e0                                         ; $46d9: $e6 $e0
 	or   $87                                         ; $46db: $f6 $87
 	ld   [wLCDC], a                                  ; $46dd: $ea $03 $c2
 	ldh  [rLCDC], a                                  ; $46e0: $e0 $40
+
+;
 	ld   a, BANK(Palettes_AllWhite)                                      ; $46e2: $3e $01
 	ld   hl, Palettes_AllWhite                                   ; $46e4: $21 $00 $70
 	ld   de, wBGPalettes                                   ; $46e7: $11 $de $c2
 	ld   bc, $0080                                   ; $46ea: $01 $80 $00
 	call FarMemCopy                                       ; $46ed: $cd $b2 $09
+
 	ld   bc, $003f                                   ; $46f0: $01 $3f $00
 	call SetBGandOBJPaletteRangesToUpdate                                       ; $46f3: $cd $aa $04
+
+;
 	ld   a, $ff                                      ; $46f6: $3e $ff
 	ld   [wInGameInputsEnabled], a                                  ; $46f8: $ea $0e $c2
+
 	call ClearOam                                       ; $46fb: $cd $d7 $0d
 	call ClearBaseAnimSpriteSpecDetails                                       ; $46fe: $cd $c9 $2e
-	push af                                          ; $4701: $f5
-	ld   a, $45                                      ; $4702: $3e $45
-	ld   [wFarCallAddr], a                                  ; $4704: $ea $98 $c2
-	ld   a, $40                                      ; $4707: $3e $40
-	ld   [wFarCallAddr+1], a                                  ; $4709: $ea $99 $c2
-	ld   a, $08                                      ; $470c: $3e $08
-	ld   [wFarCallBank], a                                  ; $470e: $ea $9a $c2
-	pop  af                                          ; $4711: $f1
-	call FarCall                                       ; $4712: $cd $62 $09
+
+	M_FarCall Func_08_4045
+	
+;
 	xor  a                                           ; $4715: $af
 	ld   [$cb27], a                                  ; $4716: $ea $27 $cb
 	ld   [$cb28], a                                  ; $4719: $ea $28 $cb
+
 	ld   a, $02                                      ; $471c: $3e $02
 	ld   [wGameSubstate], a                                  ; $471e: $ea $a1 $c2
 	ret                                              ; $4721: $c9
 
 
-GameState3b_MainConvo_substate2:
+MainConvoSubstate2:
+;
 	call ClearOam                                       ; $4722: $cd $d7 $0d
-	ld   bc, $4738                                   ; $4725: $01 $38 $47
+
+	ld   bc, .return                                   ; $4725: $01 $38 $47
 	push bc                                          ; $4728: $c5
+
+;
 	ld   a, [$cb27]                                  ; $4729: $fa $27 $cb
 	ld   h, $00                                      ; $472c: $26 $00
 	ld   l, a                                        ; $472e: $6f
 	add  hl, hl                                      ; $472f: $29
-
-jr_009_4730:
-	ld   bc, $473c                                   ; $4730: $01 $3c $47
+	ld   bc, .table                                   ; $4730: $01 $3c $47
 	add  hl, bc                                      ; $4733: $09
+
+;
 	ld   a, [hl+]                                    ; $4734: $2a
 	ld   h, [hl]                                     ; $4735: $66
 	ld   l, a                                        ; $4736: $6f
 	jp   hl                                          ; $4737: $e9
 
-
+.return:
 	call AnimateAllAnimatedSpriteSpecs                                       ; $4738: $cd $d3 $2e
 	ret                                              ; $473b: $c9
 
+.table:
+	dw .entry0
+	dw .entry1
+	dw .entry2
+	dw .entry3
 
-	ld   b, h                                        ; $473c: $44
-	ld   b, a                                        ; $473d: $47
-	adc  b                                           ; $473e: $88
-	ld   b, a                                        ; $473f: $47
-	xor  d                                           ; $4740: $aa
-	ld   b, a                                        ; $4741: $47
-	dec  bc                                          ; $4742: $0b
-	ld   c, b                                        ; $4743: $48
+.entry0:
 	ld   hl, $cb28                                   ; $4744: $21 $28 $cb
 	ld   a, [hl]                                     ; $4747: $7e
 	inc  [hl]                                        ; $4748: $34
-	push af                                          ; $4749: $f5
-	ld   a, $1a                                      ; $474a: $3e $1a
-	ld   [wFarCallAddr], a                                  ; $474c: $ea $98 $c2
-	ld   a, $48                                      ; $474f: $3e $48
-	ld   [wFarCallAddr+1], a                                  ; $4751: $ea $99 $c2
-	ld   a, $0a                                      ; $4754: $3e $0a
-	ld   [wFarCallBank], a                                  ; $4756: $ea $9a $c2
-	pop  af                                          ; $4759: $f1
-	call FarCall                                       ; $475a: $cd $62 $09
+
+	M_FarCall todo_ClearsAndLoadsGfxForConvoScreens
+
 	or   a                                           ; $475d: $b7
 	ret  nz                                          ; $475e: $c0
 
-	push af                                          ; $475f: $f5
-	ld   a, $34                                      ; $4760: $3e $34
-	ld   [wFarCallAddr], a                                  ; $4762: $ea $98 $c2
-	ld   a, $49                                      ; $4765: $3e $49
-	ld   [wFarCallAddr+1], a                                  ; $4767: $ea $99 $c2
-	ld   a, $0a                                      ; $476a: $3e $0a
-	ld   [wFarCallBank], a                                  ; $476c: $ea $9a $c2
-	pop  af                                          ; $476f: $f1
-	call FarCall                                       ; $4770: $cd $62 $09
+	M_FarCall Func_0a_4934
+
 	ld   hl, wBGPalettes                                   ; $4773: $21 $de $c2
 	ld   bc, $0004                                   ; $4776: $01 $04 $00
 	ld   de, $7fff                                   ; $4779: $11 $ff $7f
@@ -1186,8 +1143,7 @@ jr_009_4730:
 	ld   [$cb28], a                                  ; $4784: $ea $28 $cb
 	ret                                              ; $4787: $c9
 
-
-; $4788
+.entry1:
 	M_FarCall HandleScriptEngine
 	ld   a, [wScriptEngineIsRunning]                                  ; $479c: $fa $51 $cb
 	or   a                                           ; $479f: $b7
@@ -1199,19 +1155,12 @@ jr_009_4730:
 	ld   [$cb28], a                                  ; $47a6: $ea $28 $cb
 	ret                                              ; $47a9: $c9
 
+.entry2:
+	M_FarCall HandleScriptEngine
 
-	push af                                          ; $47aa: $f5
-	ld   a, $40                                      ; $47ab: $3e $40
-	ld   [wFarCallAddr], a                                  ; $47ad: $ea $98 $c2
-	ld   a, $43                                      ; $47b0: $3e $43
-	ld   [wFarCallAddr+1], a                                  ; $47b2: $ea $99 $c2
-	ld   a, $08                                      ; $47b5: $3e $08
-	ld   [wFarCallBank], a                                  ; $47b7: $ea $9a $c2
-	pop  af                                          ; $47ba: $f1
-	call FarCall                                       ; $47bb: $cd $62 $09
 	ld   a, [$cb28]                                  ; $47be: $fa $28 $cb
 	or   a                                           ; $47c1: $b7
-	jr   nz, jr_009_47dc                             ; $47c2: $20 $18
+	jr   nz, .cont_47dc                             ; $47c2: $20 $18
 
 	xor  a                                           ; $47c4: $af
 	ld   [wStartingColorIdxToLoadCompDataFor], a                                  ; $47c5: $ea $62 $c3
@@ -1224,20 +1173,19 @@ jr_009_4730:
 	ld   de, Palettes_AllWhite                                   ; $47d6: $11 $00 $70
 	call FarLoadPaletteValsFadeToValsAndSetFadeSpeed                                       ; $47d9: $cd $48 $07
 
-jr_009_47dc:
+.cont_47dc:
 	ld   hl, $cb28                                   ; $47dc: $21 $28 $cb
 	ld   a, [hl]                                     ; $47df: $7e
 	inc  [hl]                                        ; $47e0: $34
 	cp   $3f                                         ; $47e1: $fe $3f
-	jr   nc, jr_009_47ee                             ; $47e3: $30 $09
+	jr   nc, .br_47ee                             ; $47e3: $30 $09
 
 	and  $07                                         ; $47e5: $e6 $07
 	ld   bc, $0040                                   ; $47e7: $01 $40 $00
 	call z, FadePalettesAndSetRangeToUpdate                                    ; $47ea: $cc $32 $08
 	ret                                              ; $47ed: $c9
 
-
-jr_009_47ee:
+.br_47ee:
 	ld   a, BANK(Palettes_AllWhite)                                      ; $47ee: $3e $01
 	ld   hl, Palettes_AllWhite                                   ; $47f0: $21 $00 $70
 	ld   de, wBGPalettes                                   ; $47f3: $11 $de $c2
@@ -1251,37 +1199,51 @@ jr_009_47ee:
 	ld   [$cb28], a                                  ; $4807: $ea $28 $cb
 	ret                                              ; $480a: $c9
 
-
+.entry3:
 	ld   hl, $cb28                                   ; $480b: $21 $28 $cb
 	ld   a, [hl]                                     ; $480e: $7e
 	inc  [hl]                                        ; $480f: $34
 	cp   $0f                                         ; $4810: $fe $0f
 	ret  c                                           ; $4812: $d8
 
-	ld   a, [$cb29]                                  ; $4813: $fa $29 $cb
-	ld   [wGameState], a                                  ; $4816: $ea $a0 $c2
-	ld   a, [$cb2a]                                  ; $4819: $fa $2a $cb
-	ld   [wGameSubstate], a                                  ; $481c: $ea $a1 $c2
-	ret                                              ; $481f: $c9
+; Return to state before this
+	ld   a, [wMainConvoReturnState]                                 ; $4813
+	ld   [wGameState], a                                            ; $4816
+	ld   a, [wMainConvoReturnSubstate]                              ; $4819
+	ld   [wGameSubstate], a                                         ; $481c
+	ret                                                             ; $481f
 
 
-Func_09_4820::
-	ld   [$cb26], a                                  ; $4820: $ea $26 $cb
-	ld   a, b                                        ; $4823: $78
-	ld   [$cb25], a                                  ; $4824: $ea $25 $cb
-	ld   a, c                                        ; $4827: $79
-	ld   [$cb24], a                                  ; $4828: $ea $24 $cb
+; A - song to play during convo
+; BC - script idx
+; D -
+; H - return state
+; L - return substate
+SetMainConvoState::
+; Set song to play during convo, then script idx
+	ld   [wMainConvoScriptSong], a                                  ; $4820
+
+	ld   a, b                                                       ; $4823
+	ld   [wMainConvoScriptIdx+1], a                                 ; $4824
+	ld   a, c                                                       ; $4827
+	ld   [wMainConvoScriptIdx], a                                   ; $4828
+
+;
 	ld   a, d                                        ; $482b: $7a
 	ld   [$cb22], a                                  ; $482c: $ea $22 $cb
-	ld   a, h                                        ; $482f: $7c
-	ld   [$cb29], a                                  ; $4830: $ea $29 $cb
-	ld   a, l                                        ; $4833: $7d
-	ld   [$cb2a], a                                  ; $4834: $ea $2a $cb
-	ld   a, $3b                                      ; $4837: $3e $3b
-	ld   [wGameState], a                                  ; $4839: $ea $a0 $c2
-	xor  a                                           ; $483c: $af
-	ld   [wGameSubstate], a                                  ; $483d: $ea $a1 $c2
-	ret                                              ; $4840: $c9
+
+; Set return state/substate
+	ld   a, h                                                       ; $482f
+	ld   [wMainConvoReturnState], a                                 ; $4830
+	ld   a, l                                                       ; $4833
+	ld   [wMainConvoReturnSubstate], a                              ; $4834
+
+; Then set main convo state
+	ld   a, GS_MAIN_CONVO                                           ; $4837
+	ld   [wGameState], a                                            ; $4839
+	xor  a                                                          ; $483c
+	ld   [wGameSubstate], a                                         ; $483d
+	ret                                                             ; $4840
 
 
 Call_009_4841:
@@ -3283,7 +3245,7 @@ jr_009_5346:
 	ret  z                                           ; $5349: $c8
 
 	push hl                                          ; $534a: $e5
-	call $1cd9                                       ; $534b: $cd $d9 $1c
+	call Func_1cd9                                       ; $534b: $cd $d9 $1c
 	pop  hl                                          ; $534e: $e1
 	jr   jr_009_5346                                 ; $534f: $18 $f5
 

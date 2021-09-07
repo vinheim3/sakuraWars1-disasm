@@ -343,7 +343,7 @@ jr_011_4254:
 	jr   c, jr_011_425c                              ; $4255: $38 $05
 
 	ld   a, $68                                      ; $4257: $3e $68
-	call $1b64                                       ; $4259: $cd $64 $1b
+	call PlaySampledSound                                       ; $4259: $cd $64 $1b
 
 jr_011_425c:
 	xor  a                                           ; $425c: $af
@@ -1985,7 +1985,7 @@ jr_011_4bd5:
 	ld   [$c809], a                                  ; $4bfb: $ea $09 $c8
 	ld   a, l                                        ; $4bfe: $7d
 	ld   [$c80a], a                                  ; $4bff: $ea $0a $c8
-	ld   a, $0b                                      ; $4c02: $3e $0b
+	ld   a, GS_KANNA_MINI_GAME_MAIN                                      ; $4c02: $3e $0b
 	ld   [wGameState], a                                  ; $4c04: $ea $a0 $c2
 	ld   a, $00                                      ; $4c07: $3e $00
 	ld   [wGameSubstate], a                                  ; $4c09: $ea $a1 $c2
@@ -2981,7 +2981,7 @@ jr_011_51d4:
 	jr   c, jr_011_51df                              ; $51d8: $38 $05
 
 	ld   a, $2c                                      ; $51da: $3e $2c
-	call $1b64                                       ; $51dc: $cd $64 $1b
+	call PlaySampledSound                                       ; $51dc: $cd $64 $1b
 
 jr_011_51df:
 	xor  a                                           ; $51df: $af
@@ -3731,7 +3731,7 @@ jr_011_56b7:
 
 Call_011_56e5:
 	ld   a, [$c82a]                                  ; $56e5: $fa $2a $c8
-	call $0d7d                                       ; $56e8: $cd $7d $0d
+	call ConvertAintoBCD                                       ; $56e8: $cd $7d $0d
 	ld   c, $02                                      ; $56eb: $0e $02
 	ld   hl, $c81f                                   ; $56ed: $21 $1f $c8
 	ld   de, $0004                                   ; $56f0: $11 $04 $00
@@ -4065,7 +4065,7 @@ jr_011_5897:
 	ld   [$c837], a                                  ; $589c: $ea $37 $c8
 	ld   a, l                                        ; $589f: $7d
 	ld   [$c838], a                                  ; $58a0: $ea $38 $c8
-	ld   a, $0c                                      ; $58a3: $3e $0c
+	ld   a, GS_SAKURA_MINI_GAME_MAIN                                      ; $58a3: $3e $0c
 	ld   [wGameState], a                                  ; $58a5: $ea $a0 $c2
 	ld   a, $03                                      ; $58a8: $3e $03
 	ld   [wGameSubstate], a                                  ; $58aa: $ea $a1 $c2
@@ -4076,7 +4076,7 @@ jr_011_5897:
 	ld   [$c837], a                                  ; $58af: $ea $37 $c8
 	ld   a, l                                        ; $58b2: $7d
 	ld   [$c838], a                                  ; $58b3: $ea $38 $c8
-	ld   a, $0c                                      ; $58b6: $3e $0c
+	ld   a, GS_SAKURA_MINI_GAME_MAIN                                      ; $58b6: $3e $0c
 	ld   [wGameState], a                                  ; $58b8: $ea $a0 $c2
 	ld   a, $00                                      ; $58bb: $3e $00
 	ld   [wGameSubstate], a                                  ; $58bd: $ea $a1 $c2
@@ -4575,7 +4575,7 @@ jr_011_5c4f:
 
 	rst  WaitUntilVBlankIntHandledIfLCDOn                                         ; $5c7e: $cf
 	ld   a, $43                                      ; $5c7f: $3e $43
-	call $1b64                                       ; $5c81: $cd $64 $1b
+	call PlaySampledSound                                       ; $5c81: $cd $64 $1b
 
 jr_011_5c84:
 	xor  a                                           ; $5c84: $af
@@ -5162,7 +5162,7 @@ jr_011_60ea:
 	jr   c, jr_011_60f2                              ; $60eb: $38 $05
 
 	ld   a, $44                                      ; $60ed: $3e $44
-	call $1b64                                       ; $60ef: $cd $64 $1b
+	call PlaySampledSound                                       ; $60ef: $cd $64 $1b
 
 jr_011_60f2:
 	ld   hl, wGameSubstate                                   ; $60f2: $21 $a1 $c2
@@ -6590,7 +6590,7 @@ Call_011_68e0:
 
 Call_011_690b:
 	ld   a, [$c85d]                                  ; $690b: $fa $5d $c8
-	call $0d7d                                       ; $690e: $cd $7d $0d
+	call ConvertAintoBCD                                       ; $690e: $cd $7d $0d
 	ld   c, a                                        ; $6911: $4f
 	ld   b, $00                                      ; $6912: $06 $00
 	ld   hl, $6964                                   ; $6914: $21 $64 $69
@@ -7155,7 +7155,7 @@ Call_011_6c52:
 	jr   jr_011_6c9e                                 ; $6c70: $18 $2c
 
 jr_011_6c72:
-	call $0d7d                                       ; $6c72: $cd $7d $0d
+	call ConvertAintoBCD                                       ; $6c72: $cd $7d $0d
 	push af                                          ; $6c75: $f5
 	ld   a, [$c8a8]                                  ; $6c76: $fa $a8 $c8
 	call Call_011_6c9f                               ; $6c79: $cd $9f $6c
@@ -7385,7 +7385,7 @@ Func_11_6d9e::
 	ld   [$c8ad], a                                  ; $6d9f: $ea $ad $c8
 	ld   a, l                                        ; $6da2: $7d
 	ld   [$c8ae], a                                  ; $6da3: $ea $ae $c8
-	ld   a, $0d                                      ; $6da6: $3e $0d
+	ld   a, GS_MARIA_MINI_GAME_MAIN                                      ; $6da6: $3e $0d
 	ld   [wGameState], a                                  ; $6da8: $ea $a0 $c2
 	ld   a, $00                                      ; $6dab: $3e $00
 	ld   [wGameSubstate], a                                  ; $6dad: $ea $a1 $c2
@@ -7465,7 +7465,7 @@ HandleDMG::
 	ret                                                             ; $6e18
 
 
-GameState20::
+GameState20_GameResults::
 	ld   a, [wGameSubstate]                                  ; $6e19: $fa $a1 $c2
 	rst  JumpTable                                         ; $6e1c: $df
 	adc  [hl]                                        ; $6e1d: $8e
@@ -10445,7 +10445,7 @@ Func_11_7e57::
 	ld   [$ca01], a                                  ; $7e58: $ea $01 $ca
 	ld   a, l                                        ; $7e5b: $7d
 	ld   [$ca02], a                                  ; $7e5c: $ea $02 $ca
-	ld   a, $20                                      ; $7e5f: $3e $20
+	ld   a, GS_GAME_RESULTS                                     ; $7e5f: $3e $20
 	ld   [wGameState], a                                  ; $7e61: $ea $a0 $c2
 	ld   a, $00                                      ; $7e64: $3e $00
 	ld   [wGameSubstate], a                                  ; $7e66: $ea $a1 $c2

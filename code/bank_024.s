@@ -1030,7 +1030,7 @@ BattleSubstate0c:
 	ld   a, $02                                      ; $471f: $3e $02
 	ld   [wWramBank], a                                  ; $4721: $ea $93 $c2
 	ldh  [rSVBK], a                                  ; $4724: $e0 $70
-	ld   a, [$ca6d]                                  ; $4726: $fa $6d $ca
+	ld   a, [wNapOrTrainIdx]                                  ; $4726: $fa $6d $ca
 	sla  a                                           ; $4729: $cb $27
 	ld   b, $00                                      ; $472b: $06 $00
 	ld   c, a                                        ; $472d: $4f
@@ -5001,7 +5001,7 @@ Call_024_6055:
 
 jr_024_60a9:
 	ld   a, b                                        ; $60a9: $78
-	ld   [$ca6d], a                                  ; $60aa: $ea $6d $ca
+	ld   [wNapOrTrainIdx], a                                  ; $60aa: $ea $6d $ca
 	ld   [$ca6e], a                                  ; $60ad: $ea $6e $ca
 	xor  a                                           ; $60b0: $af
 	ld   [$ca95], a                                  ; $60b1: $ea $95 $ca

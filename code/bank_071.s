@@ -12598,7 +12598,7 @@ jr_071_7854:
 	add  b                                           ; $78ab: $80
 	db   $ec                                         ; $78ac: $ec
 	add  b                                           ; $78ad: $80
-	call nc, $a080                                   ; $78ae: $d4 $80 $a0
+	call nc, sGlobalFlags1                                   ; $78ae: $d4 $80 $a0
 	add  b                                           ; $78b1: $80
 	ret  nc                                          ; $78b2: $d0
 

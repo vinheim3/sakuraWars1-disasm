@@ -2611,7 +2611,7 @@ jr_088_49fd:
 	add  b                                           ; $4b81: $80
 	ret  nz                                          ; $4b82: $c0
 
-	ld   bc, $a080                                   ; $4b83: $01 $80 $a0
+	ld   bc, sGlobalFlags1                                   ; $4b83: $01 $80 $a0
 	add  e                                           ; $4b86: $83
 	nop                                              ; $4b87: $00
 	inc  b                                           ; $4b88: $04
@@ -8048,7 +8048,7 @@ jr_088_6292:
 
 	add  b                                           ; $62c0: $80
 	nop                                              ; $62c1: $00
-	ld   bc, $a080                                   ; $62c2: $01 $80 $a0
+	ld   bc, sGlobalFlags1                                   ; $62c2: $01 $80 $a0
 	add  b                                           ; $62c5: $80
 
 jr_088_62c6:

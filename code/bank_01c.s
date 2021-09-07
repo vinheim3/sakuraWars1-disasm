@@ -4907,7 +4907,7 @@ jr_01c_58de:
 
 jr_01c_58df:
 	nop                                              ; $58df: $00
-	ld   bc, $a100                                   ; $58e0: $01 $00 $a1
+	ld   bc, sCurrPoints                                   ; $58e0: $01 $00 $a1
 	add  c                                           ; $58e3: $81
 	nop                                              ; $58e4: $00
 	inc  c                                           ; $58e5: $0c

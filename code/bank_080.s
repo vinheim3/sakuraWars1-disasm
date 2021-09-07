@@ -8184,7 +8184,7 @@ jr_080_62e1:
 	rrca                                             ; $6365: $0f
 	ld   bc, $e010                                   ; $6366: $01 $10 $e0
 	add  b                                           ; $6369: $80
-	call nc, $a080                                   ; $636a: $d4 $80 $a0
+	call nc, sGlobalFlags1                                   ; $636a: $d4 $80 $a0
 	add  b                                           ; $636d: $80
 	add  b                                           ; $636e: $80
 	add  b                                           ; $636f: $80

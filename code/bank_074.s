@@ -761,7 +761,7 @@ jr_074_4330:
 	and  b                                           ; $4345: $a0
 	add  b                                           ; $4346: $80
 	ld   h, b                                        ; $4347: $60
-	ld   bc, $a080                                   ; $4348: $01 $80 $a0
+	ld   bc, sGlobalFlags1                                   ; $4348: $01 $80 $a0
 	add  b                                           ; $434b: $80
 	ld   b, b                                        ; $434c: $40
 	adc  b                                           ; $434d: $88
@@ -13933,7 +13933,7 @@ jr_074_7dbc:
 	ld   a, b                                        ; $7e40: $78
 	cp   $7b                                         ; $7e41: $fe $7b
 	ld   bc, $de3f                                   ; $7e43: $01 $3f $de
-	jp   nc, $cc83                                   ; $7e46: $d2 $83 $cc
+	jp   nc, wDormRoomButtonsDisplayed                                   ; $7e46: $d2 $83 $cc
 
 	ld   l, c                                        ; $7e49: $69
 	nop                                              ; $7e4a: $00

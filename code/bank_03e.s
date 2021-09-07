@@ -279,7 +279,7 @@ SetResetDataState::
 	ret                                                             ; $41f1
 
 
-GameState15::
+GameState15_RedLightGreenLight::
 	ld   a, [wGameSubstate]                                  ; $41f2: $fa $a1 $c2
 	rst  JumpTable                                         ; $41f5: $df
 	ld   b, $42                                      ; $41f6: $06 $42
@@ -1262,7 +1262,7 @@ Func_3e_4863::
 	ld   [$c93b], a                                  ; $4864: $ea $3b $c9
 	ld   a, l                                        ; $4867: $7d
 	ld   [$c93c], a                                  ; $4868: $ea $3c $c9
-	ld   a, $15                                      ; $486b: $3e $15
+	ld   a, GS_RED_LIGHT_GREEN_LIGHT                                      ; $486b: $3e $15
 	ld   [wGameState], a                                  ; $486d: $ea $a0 $c2
 	ld   a, $00                                      ; $4870: $3e $00
 	ld   [wGameSubstate], a                                  ; $4872: $ea $a1 $c2
@@ -2986,7 +2986,7 @@ Call_03e_5375:
 	ld   a, d                                        ; $537b: $7a
 	ld   [$c98f], a                                  ; $537c: $ea $8f $c9
 	pop  af                                          ; $537f: $f1
-	call $0d7d                                       ; $5380: $cd $7d $0d
+	call ConvertAintoBCD                                       ; $5380: $cd $7d $0d
 	push af                                          ; $5383: $f5
 	ld   a, [$c98e]                                  ; $5384: $fa $8e $c9
 	ld   l, a                                        ; $5387: $6f
@@ -3313,14 +3313,14 @@ jr_03e_5524:
 	ld   [$c984], a                                  ; $5550: $ea $84 $c9
 	ld   a, c                                        ; $5553: $79
 	ld   [$c985], a                                  ; $5554: $ea $85 $c9
-	ld   a, $18                                      ; $5557: $3e $18
+	ld   a, GS_MINI_GAME_RESULTS                                      ; $5557: $3e $18
 	ld   [wGameState], a                                  ; $5559: $ea $a0 $c2
 	ld   a, $00                                      ; $555c: $3e $00
 	ld   [wGameSubstate], a                                  ; $555e: $ea $a1 $c2
 	ret                                              ; $5561: $c9
 
 
-GameState19::
+GameState19_PushUps::
 	ld   a, [wGameSubstate]                                  ; $5562: $fa $a1 $c2
 	rst  JumpTable                                         ; $5565: $df
 	ld   [hl], b                                     ; $5566: $70
@@ -4057,14 +4057,14 @@ Func_3e_5a6d::
 	ld   [$c9a5], a                                  ; $5a6e: $ea $a5 $c9
 	ld   a, l                                        ; $5a71: $7d
 	ld   [$c9a6], a                                  ; $5a72: $ea $a6 $c9
-	ld   a, $19                                      ; $5a75: $3e $19
+	ld   a, GS_PUSH_UPS                                      ; $5a75: $3e $19
 	ld   [wGameState], a                                  ; $5a77: $ea $a0 $c2
 	ld   a, $00                                      ; $5a7a: $3e $00
 	ld   [wGameSubstate], a                                  ; $5a7c: $ea $a1 $c2
 	ret                                              ; $5a7f: $c9
 
 
-GameState1a::
+GameState1a_MockBattle::
 	ld   a, [wGameSubstate]                                  ; $5a80: $fa $a1 $c2
 	rst  JumpTable                                         ; $5a83: $df
 	and  d                                           ; $5a84: $a2
@@ -4539,7 +4539,7 @@ jr_03e_5da3:
 	ld   [$c9af], a                                  ; $5dbe: $ea $af $c9
 	ld   a, l                                        ; $5dc1: $7d
 	ld   [$c9b0], a                                  ; $5dc2: $ea $b0 $c9
-	ld   a, $1a                                      ; $5dc5: $3e $1a
+	ld   a, GS_MOCK_BATTLE                                      ; $5dc5: $3e $1a
 	ld   [wGameState], a                                  ; $5dc7: $ea $a0 $c2
 	ld   a, $00                                      ; $5dca: $3e $00
 	ld   [wGameSubstate], a                                  ; $5dcc: $ea $a1 $c2
@@ -7533,7 +7533,7 @@ jr_03e_70cf:
 
 	rst  WaitUntilVBlankIntHandledIfLCDOn                                         ; $70fe: $cf
 	ld   a, $5b                                      ; $70ff: $3e $5b
-	call $1b64                                       ; $7101: $cd $64 $1b
+	call PlaySampledSound                                       ; $7101: $cd $64 $1b
 
 jr_03e_7104:
 	xor  a                                           ; $7104: $af
@@ -7820,7 +7820,7 @@ Func_3e_7301::
 	ld   [$c9d7], a                                  ; $7302: $ea $d7 $c9
 	ld   a, l                                        ; $7305: $7d
 	ld   [$c9d8], a                                  ; $7306: $ea $d8 $c9
-	ld   a, $1b                                      ; $7309: $3e $1b
+	ld   a, GS_KOHRAN_MINI_GAME_TITLE_SCREEN                                      ; $7309: $3e $1b
 	ld   [wGameState], a                                  ; $730b: $ea $a0 $c2
 	ld   a, $00                                      ; $730e: $3e $00
 	ld   [wGameSubstate], a                                  ; $7310: $ea $a1 $c2
@@ -8343,7 +8343,7 @@ jr_03e_76c8:
 
 	rst  WaitUntilVBlankIntHandledIfLCDOn                                         ; $76f7: $cf
 	ld   a, $4f                                      ; $76f8: $3e $4f
-	call $1b64                                       ; $76fa: $cd $64 $1b
+	call PlaySampledSound                                       ; $76fa: $cd $64 $1b
 
 jr_03e_76fd:
 	xor  a                                           ; $76fd: $af
@@ -8696,7 +8696,7 @@ Func_3e_794b::
 	ld   [$c9e1], a                                  ; $794c: $ea $e1 $c9
 	ld   a, l                                        ; $794f: $7d
 	ld   [$c9e2], a                                  ; $7950: $ea $e2 $c9
-	ld   a, $1c                                      ; $7953: $3e $1c
+	ld   a, GS_IRIS_MINI_GAME_TITLE_SCREEN                                      ; $7953: $3e $1c
 	ld   [wGameState], a                                  ; $7955: $ea $a0 $c2
 	ld   a, $00                                      ; $7958: $3e $00
 	ld   [wGameSubstate], a                                  ; $795a: $ea $a1 $c2
@@ -9206,7 +9206,7 @@ jr_03e_7d12:
 
 	rst  WaitUntilVBlankIntHandledIfLCDOn                                         ; $7d41: $cf
 	ld   a, $2b                                      ; $7d42: $3e $2b
-	call $1b64                                       ; $7d44: $cd $64 $1b
+	call PlaySampledSound                                       ; $7d44: $cd $64 $1b
 
 jr_03e_7d47:
 	xor  a                                           ; $7d47: $af
@@ -9506,7 +9506,7 @@ Func_3e_7f51::
 	ld   [$c9e9], a                                  ; $7f52: $ea $e9 $c9
 	ld   a, l                                        ; $7f55: $7d
 	ld   [$c9ea], a                                  ; $7f56: $ea $ea $c9
-	ld   a, $1e                                      ; $7f59: $3e $1e
+	ld   a, GS_SAKURA_MINI_GAME_TITLE_SCREEN                                      ; $7f59: $3e $1e
 	ld   [wGameState], a                                  ; $7f5b: $ea $a0 $c2
 	ld   a, $00                                      ; $7f5e: $3e $00
 	ld   [wGameSubstate], a                                  ; $7f60: $ea $a1 $c2

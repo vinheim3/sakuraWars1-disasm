@@ -1,7 +1,7 @@
 from io import BytesIO
 from flask import Flask, render_template, jsonify, send_file
-from .textExtract import get_script_screens
-from .util import getRom, bankAddr, wordIn
+from textExtract import get_script_screens
+from util import getRom, bankAddr, wordIn
 
 
 app = Flask(__name__)

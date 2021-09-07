@@ -536,7 +536,7 @@ jr_031_437a:
 	ldh  a, [rKEY1]                                  ; $4381: $f0 $4d
 	bit  7, a                                        ; $4383: $cb $7f
 
-	M_FarCall "nz", UnsetDoubleSpeedMode
+	M_FarCall "nz", ToggleDoubleSpeedMode
 
 	push af                                          ; $4399: $f5
 	ld   a, $ee                                      ; $439a: $3e $ee
@@ -550,7 +550,7 @@ jr_031_437a:
 	ldh  a, [rKEY1]                                  ; $43ad: $f0 $4d
 	bit  7, a                                        ; $43af: $cb $7f
 
-	M_FarCall "z", UnsetDoubleSpeedMode
+	M_FarCall "z", ToggleDoubleSpeedMode
 	ret                                              ; $43c5: $c9
 
 
@@ -954,7 +954,7 @@ endc
 	ld   [$c68c], a                                  ; $4594: $ea $8c $c6
 	ld   a, l                                        ; $4597: $7d
 	ld   [$c68d], a                                  ; $4598: $ea $8d $c6
-	ld   a, $0a                                      ; $459b: $3e $0a
+	ld   a, GS_0a                                      ; $459b: $3e $0a
 	ld   [wGameState], a                                  ; $459d: $ea $a0 $c2
 	ld   a, $00                                      ; $45a0: $3e $00
 	ld   [wGameSubstate], a                                  ; $45a2: $ea $a1 $c2
@@ -1057,7 +1057,7 @@ jr_031_4620:
 	nop                                              ; $4632: $00
 
 
-GameState07::
+GameState07_SceneryImages::
 	ld   a, [wGameSubstate]                                  ; $4633: $fa $a1 $c2
 	rst  JumpTable                                         ; $4636: $df
 	dec  a                                           ; $4637: $3d
@@ -2170,7 +2170,7 @@ Call_031_4dad:
 	ld   [$c683], a                                  ; $4dbd: $ea $83 $c6
 	ld   a, l                                        ; $4dc0: $7d
 	ld   [$c684], a                                  ; $4dc1: $ea $84 $c6
-	ld   a, $07                                      ; $4dc4: $3e $07
+	ld   a, GS_SCENERY_IMAGES                                      ; $4dc4: $3e $07
 	ld   [wGameState], a                                  ; $4dc6: $ea $a0 $c2
 	xor  a                                           ; $4dc9: $af
 	ld   [wGameSubstate], a                                  ; $4dca: $ea $a1 $c2
@@ -2478,7 +2478,7 @@ jr_031_4f51:
 	rst  $10                                         ; $4f89: $d7
 
 
-GameState08::
+GameState08_GirlImages::
 	ld   a, [wGameSubstate]                                  ; $4f8a: $fa $a1 $c2
 	rst  JumpTable                                         ; $4f8d: $df
 	sub  h                                           ; $4f8e: $94
@@ -3589,7 +3589,7 @@ Jump_031_5798:
 	ld   [$c678], a                                  ; $57d1: $ea $78 $c6
 	ld   a, l                                        ; $57d4: $7d
 	ld   [$c679], a                                  ; $57d5: $ea $79 $c6
-	ld   a, $08                                      ; $57d8: $3e $08
+	ld   a, GS_GIRL_IMAGES                                      ; $57d8: $3e $08
 	ld   [wGameState], a                                  ; $57da: $ea $a0 $c2
 	xor  a                                           ; $57dd: $af
 	ld   [wGameSubstate], a                                  ; $57de: $ea $a1 $c2

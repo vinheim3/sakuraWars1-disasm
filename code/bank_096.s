@@ -5862,7 +5862,7 @@ jr_096_599b:
 	add  e                                           ; $59a3: $83
 	nop                                              ; $59a4: $00
 	add  hl, bc                                      ; $59a5: $09
-	ld   bc, $a100                                   ; $59a6: $01 $00 $a1
+	ld   bc, sCurrPoints                                   ; $59a6: $01 $00 $a1
 	nop                                              ; $59a9: $00
 	ld   b, b                                        ; $59aa: $40
 	add  b                                           ; $59ab: $80

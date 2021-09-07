@@ -9388,7 +9388,7 @@ jr_063_699f:
 	ld   [bc], a                                     ; $6a2b: $02
 	rst  WaitUntilVBlankIntHandledIfLCDOn                                         ; $6a2c: $cf
 	inc  bc                                          ; $6a2d: $03
-	jp   $0d7d                                       ; $6a2e: $c3 $7d $0d
+	jp   ConvertAintoBCD                                       ; $6a2e: $c3 $7d $0d
 
 
 	ld   d, d                                        ; $6a31: $52

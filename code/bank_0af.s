@@ -13156,7 +13156,7 @@ Call_0af_75a9:
 	ld   [hl], l                                     ; $786b: $75
 	call z, $df99                                    ; $786c: $cc $99 $df
 	ld   [hl], c                                     ; $786f: $71
-	ld   de, $c91d                                   ; $7870: $11 $1d $c9
+	ld   de, wCinematronChosenOption                                   ; $7870: $11 $1d $c9
 	cp   a                                           ; $7873: $bf
 	rst  $38                                         ; $7874: $ff
 	rst  $30                                         ; $7875: $f7

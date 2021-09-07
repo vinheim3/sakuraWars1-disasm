@@ -7,32 +7,45 @@ INCLUDE "includes.s"
 
 SECTION "ROM Bank $021", ROMX[$4000], BANK[$21]
 
-Call_021_4000::
-	ld   [$ca6d], a                                  ; $4000: $ea $6d $ca
-	push hl                                          ; $4003: $e5
-	ld   hl, $401d                                   ; $4004: $21 $1d $40
-	ld   d, $00                                      ; $4007: $16 $00
-	ld   e, a                                        ; $4009: $5f
-	add  hl, de                                      ; $400a: $19
-	ld   a, [hl]                                     ; $400b: $7e
-	ld   [wGameState], a                                  ; $400c: $ea $a0 $c2
-	xor  a                                           ; $400f: $af
-	ld   [wGameSubstate], a                                  ; $4010: $ea $a1 $c2
-	pop  hl                                          ; $4013: $e1
-	ld   a, h                                        ; $4014: $7c
-	ld   [$ca4c], a                                  ; $4015: $ea $4c $ca
-	ld   a, l                                        ; $4018: $7d
-	ld   [$ca4d], a                                  ; $4019: $ea $4d $ca
-	ret                                              ; $401c: $c9
+; A - nap or train idx
+; H - return state
+; L - return substate
+SetNapOrTrainState::
+; Save idx used for table below
+	ld   [wNapOrTrainIdx], a                                        ; $4000
+	push hl                                                         ; $4003
+
+; HL points to a relevant game state based on idx 
+	ld   hl, .states                                                ; $4004
+	ld   d, $00                                                     ; $4007
+	ld   e, a                                                       ; $4009
+	add  hl, de                                                     ; $400a
+
+; Set state from table, with substate 0
+	ld   a, [hl]                                                    ; $400b
+	ld   [wGameState], a                                            ; $400c
+	xor  a                                                          ; $400f
+	ld   [wGameSubstate], a                                         ; $4010
+
+; Get orig HL and set return state/substate
+	pop  hl                                                         ; $4013
+	ld   a, h                                                       ; $4014
+	ld   [wNapOrTrainReturnState], a                                ; $4015
+	ld   a, l                                                       ; $4018
+	ld   [wNapOrTrainReturnSubstate], a                             ; $4019
+	ret                                                             ; $401c
+
+.states:
+	db GS_NAP
+	db GS_SAKURA_TRAINING
+	db GS_SUMIRE_TRAINING
+	db GS_MARIA_TRAINING
+	db GS_IRIS_TRAINING
+	db GS_KOHRAN_TRAINING
+	db GS_KANNA_TRAINING
 
 
-	dec  l                                           ; $401d: $2d
-	daa                                              ; $401e: $27
-	jr   z, @+$2e                                    ; $401f: $28 $2c
-
-	ld   a, [hl+]                                    ; $4021: $2a
-	add  hl, hl                                      ; $4022: $29
-	dec  hl                                          ; $4023: $2b
+;
 	call ClearTextBoxDimensionsAndSetDefaultTextStyle                                       ; $4024: $cd $09 $14
 	ld   bc, $1001                                   ; $4027: $01 $01 $10
 	call SetKanjiTextBoxDimensions                                       ; $402a: $cd $24 $14
@@ -51,7 +64,7 @@ Call_021_4000::
 	ld   a, [hl+]                                    ; $4048: $2a
 	ld   h, [hl]                                     ; $4049: $66
 	ld   l, a                                        ; $404a: $6f
-	ld   a, [$ca6d]                                  ; $404b: $fa $6d $ca
+	ld   a, [wNapOrTrainIdx]                                  ; $404b: $fa $6d $ca
 	ld   c, a                                        ; $404e: $4f
 	ld   b, $00                                      ; $404f: $06 $00
 	add  hl, bc                                      ; $4051: $09
@@ -76,6 +89,8 @@ Call_021_4000::
 	ld   b, b                                        ; $4069: $40
 	ld   a, d                                        ; $406a: $7a
 	ld   b, b                                        ; $406b: $40
+
+
 	ld   [de], a                                     ; $406c: $12
 	inc  c                                           ; $406d: $0c
 	dec  c                                           ; $406e: $0d
@@ -85,11 +100,15 @@ Call_021_4000::
 	rlca                                             ; $4075: $07
 	ld   [$0a09], sp                                 ; $4076: $08 $09 $0a
 	dec  bc                                          ; $4079: $0b
+
+
 	nop                                              ; $407a: $00
 	nop                                              ; $407b: $00
 	ld   bc, $0302                                   ; $407c: $01 $02 $03
 	inc  b                                           ; $407f: $04
 	dec  b                                           ; $4080: $05
+
+
 	ld   h, $00                                      ; $4081: $26 $00
 	ld   a, [hl+]                                    ; $4083: $2a
 	nop                                              ; $4084: $00
@@ -125,6 +144,8 @@ Call_021_4000::
 	nop                                              ; $40a4: $00
 	ld   a, a                                        ; $40a5: $7f
 	nop                                              ; $40a6: $00
+
+
 	ld   h, a                                        ; $40a7: $67
 	ld   h, d                                        ; $40a8: $62
 	ld   d, d                                        ; $40a9: $52
@@ -235,7 +256,6 @@ Call_021_4000::
 	scf                                              ; $4116: $37
 	ret                                              ; $4117: $c9
 
-
 jr_021_4118:
 	jp   HDMAEnqueueNextTextBoxKanji                                       ; $4118: $c3 $55 $10
 
@@ -323,7 +343,7 @@ jr_021_414c:
 
 
 Call_021_416b:
-	ld   a, [$ca6d]                                  ; $416b: $fa $6d $ca
+	ld   a, [wNapOrTrainIdx]                                  ; $416b: $fa $6d $ca
 	sla  a                                           ; $416e: $cb $27
 	ld   b, $00                                      ; $4170: $06 $00
 	ld   c, a                                        ; $4172: $4f
@@ -350,7 +370,7 @@ Call_021_416b:
 	ld   [$ca9c], a                                  ; $4198: $ea $9c $ca
 	ld   [$ca9e], a                                  ; $419b: $ea $9e $ca
 	push hl                                          ; $419e: $e5
-	ld   a, [$ca6d]                                  ; $419f: $fa $6d $ca
+	ld   a, [wNapOrTrainIdx]                                  ; $419f: $fa $6d $ca
 	dec  a                                           ; $41a2: $3d
 	sla  a                                           ; $41a3: $cb $27
 	ld   hl, $42ae                                   ; $41a5: $21 $ae $42
@@ -389,7 +409,7 @@ jr_021_41d9:
 	ld   [$ca86], a                                  ; $41db: $ea $86 $ca
 
 jr_021_41de:
-	ld   a, [$ca6d]                                  ; $41de: $fa $6d $ca
+	ld   a, [wNapOrTrainIdx]                                  ; $41de: $fa $6d $ca
 	dec  a                                           ; $41e1: $3d
 	sla  a                                           ; $41e2: $cb $27
 	ld   b, $00                                      ; $41e4: $06 $00
@@ -424,7 +444,7 @@ jr_021_4212:
 
 jr_021_4214:
 	push bc                                          ; $4214: $c5
-	ld   a, [$ca6d]                                  ; $4215: $fa $6d $ca
+	ld   a, [wNapOrTrainIdx]                                  ; $4215: $fa $6d $ca
 	dec  a                                           ; $4218: $3d
 	sla  a                                           ; $4219: $cb $27
 	ld   hl, $42ba                                   ; $421b: $21 $ba $42
@@ -1017,7 +1037,7 @@ jr_021_4593:
 	ret                                              ; $4593: $c9
 
 
-GameState29::
+GameState29_KohranTraining::
 	ld   a, [wGameSubstate]                                  ; $4594: $fa $a1 $c2
 	rst  JumpTable                                         ; $4597: $df
 	and  b                                           ; $4598: $a0
@@ -1622,14 +1642,14 @@ jr_021_49d7:
 	ld   b, $2e                                      ; $49d7: $06 $2e
 	ld   hl, $7f6a                                   ; $49d9: $21 $6a $7f
 	call Call_021_4484                               ; $49dc: $cd $84 $44
-	ld   a, [$ca4c]                                  ; $49df: $fa $4c $ca
+	ld   a, [wNapOrTrainReturnState]                                  ; $49df: $fa $4c $ca
 	ld   [wGameState], a                                  ; $49e2: $ea $a0 $c2
-	ld   a, [$ca4d]                                  ; $49e5: $fa $4d $ca
+	ld   a, [wNapOrTrainReturnSubstate]                                  ; $49e5: $fa $4d $ca
 	ld   [wGameSubstate], a                                  ; $49e8: $ea $a1 $c2
 	ret                                              ; $49eb: $c9
 
 
-GameState28::
+GameState28_SumireTraining::
 	ld   a, [wGameSubstate]                                  ; $49ec: $fa $a1 $c2
 	rst  JumpTable                                         ; $49ef: $df
 	ld   hl, sp+$49                                  ; $49f0: $f8 $49
@@ -2247,14 +2267,14 @@ jr_021_4e5c:
 	ld   b, $2f                                      ; $4e5c: $06 $2f
 	ld   hl, $66e3                                   ; $4e5e: $21 $e3 $66
 	call Call_021_4484                               ; $4e61: $cd $84 $44
-	ld   a, [$ca4c]                                  ; $4e64: $fa $4c $ca
+	ld   a, [wNapOrTrainReturnState]                                  ; $4e64: $fa $4c $ca
 	ld   [wGameState], a                                  ; $4e67: $ea $a0 $c2
-	ld   a, [$ca4d]                                  ; $4e6a: $fa $4d $ca
+	ld   a, [wNapOrTrainReturnSubstate]                                  ; $4e6a: $fa $4d $ca
 	ld   [wGameSubstate], a                                  ; $4e6d: $ea $a1 $c2
 	ret                                              ; $4e70: $c9
 
 
-GameState27::
+GameState27_SakuraTraining::
 	ld   a, [wGameSubstate]                                  ; $4e71: $fa $a1 $c2
 	rst  JumpTable                                         ; $4e74: $df
 	ld   a, l                                        ; $4e75: $7d
@@ -3071,14 +3091,14 @@ jr_021_5403:
 	ld   b, $2f                                      ; $5403: $06 $2f
 	ld   hl, $67e3                                   ; $5405: $21 $e3 $67
 	call Call_021_4484                               ; $5408: $cd $84 $44
-	ld   a, [$ca4c]                                  ; $540b: $fa $4c $ca
+	ld   a, [wNapOrTrainReturnState]                                  ; $540b: $fa $4c $ca
 	ld   [wGameState], a                                  ; $540e: $ea $a0 $c2
-	ld   a, [$ca4d]                                  ; $5411: $fa $4d $ca
+	ld   a, [wNapOrTrainReturnSubstate]                                  ; $5411: $fa $4d $ca
 	ld   [wGameSubstate], a                                  ; $5414: $ea $a1 $c2
 	ret                                              ; $5417: $c9
 
 
-GameState2a::
+GameState2a_IrisTraining::
 	ld   a, [wGameSubstate]                                  ; $5418: $fa $a1 $c2
 	rst  JumpTable                                         ; $541b: $df
 	inc  h                                           ; $541c: $24
@@ -3885,14 +3905,14 @@ jr_021_59a3:
 	ld   b, $2f                                      ; $59a3: $06 $2f
 	ld   hl, $6763                                   ; $59a5: $21 $63 $67
 	call Call_021_4484                               ; $59a8: $cd $84 $44
-	ld   a, [$ca4c]                                  ; $59ab: $fa $4c $ca
+	ld   a, [wNapOrTrainReturnState]                                  ; $59ab: $fa $4c $ca
 	ld   [wGameState], a                                  ; $59ae: $ea $a0 $c2
-	ld   a, [$ca4d]                                  ; $59b1: $fa $4d $ca
+	ld   a, [wNapOrTrainReturnSubstate]                                  ; $59b1: $fa $4d $ca
 	ld   [wGameSubstate], a                                  ; $59b4: $ea $a1 $c2
 	ret                                              ; $59b7: $c9
 
 
-GameState2c::
+GameState2c_MariaTraining::
 	ld   a, [wGameSubstate]                                  ; $59b8: $fa $a1 $c2
 	rst  JumpTable                                         ; $59bb: $df
 	call nz, $af59                                   ; $59bc: $c4 $59 $af
@@ -4594,20 +4614,23 @@ jr_021_5eac:
 	ld   b, $2f                                      ; $5eac: $06 $2f
 	ld   hl, $6863                                   ; $5eae: $21 $63 $68
 	call Call_021_4484                               ; $5eb1: $cd $84 $44
-	ld   a, [$ca4c]                                  ; $5eb4: $fa $4c $ca
+	ld   a, [wNapOrTrainReturnState]                                  ; $5eb4: $fa $4c $ca
 	ld   [wGameState], a                                  ; $5eb7: $ea $a0 $c2
-	ld   a, [$ca4d]                                  ; $5eba: $fa $4d $ca
+	ld   a, [wNapOrTrainReturnSubstate]                                  ; $5eba: $fa $4d $ca
 	ld   [wGameSubstate], a                                  ; $5ebd: $ea $a1 $c2
 	ret                                              ; $5ec0: $c9
 
 
-GameState2b::
+GameState2b_KannaTraining::
 	ld   a, [wGameSubstate]                                  ; $5ec1: $fa $a1 $c2
 	rst  JumpTable                                         ; $5ec4: $df
-	call $eb5e                                       ; $5ec5: $cd $5e $eb
-	ld   h, b                                        ; $5ec8: $60
-	ld   d, $63                                      ; $5ec9: $16 $63
-	sub  $63                                         ; $5ecb: $d6 $63
+	dw KannaTrainingSubstate0
+	dw $60eb
+	dw $6316
+	dw $63d6
+
+
+KannaTrainingSubstate0:
 	call TurnOnLCD                                       ; $5ecd: $cd $09 $09
 	ld   a, $ff                                      ; $5ed0: $3e $ff
 	ld   [wInGameInputsEnabled], a                                  ; $5ed2: $ea $0e $c2
@@ -5343,23 +5366,23 @@ jr_021_63f5:
 	ld   b, $2f                                      ; $63f5: $06 $2f
 	ld   hl, $68e3                                   ; $63f7: $21 $e3 $68
 	call Call_021_4484                               ; $63fa: $cd $84 $44
-	ld   a, [$ca4c]                                  ; $63fd: $fa $4c $ca
+	ld   a, [wNapOrTrainReturnState]                                  ; $63fd: $fa $4c $ca
 	ld   [wGameState], a                                  ; $6400: $ea $a0 $c2
-	ld   a, [$ca4d]                                  ; $6403: $fa $4d $ca
+	ld   a, [wNapOrTrainReturnSubstate]                                  ; $6403: $fa $4d $ca
 	ld   [wGameSubstate], a                                  ; $6406: $ea $a1 $c2
 	ret                                              ; $6409: $c9
 
 
-GameState2d::
+GameState2d_Nap::
 	ld   a, [wGameSubstate]                                  ; $640a: $fa $a1 $c2
 	rst  JumpTable                                         ; $640d: $df
-	ld   d, $64                                      ; $640e: $16 $64
-	ld   [bc], a                                     ; $6410: $02
-	ld   h, [hl]                                     ; $6411: $66
-	or   b                                           ; $6412: $b0
-	ld   h, [hl]                                     ; $6413: $66
-	ld   e, b                                        ; $6414: $58
-	ld   h, a                                        ; $6415: $67
+	dw NapSubstate0
+	dw $6602
+	dw $66b0
+	dw $6758
+
+
+NapSubstate0:
 	call TurnOnLCD                                       ; $6416: $cd $09 $09
 	ld   a, $ff                                      ; $6419: $3e $ff
 	ld   [wInGameInputsEnabled], a                                  ; $641b: $ea $0e $c2
@@ -5783,14 +5806,14 @@ jr_021_6777:
 	ld   b, $2f                                      ; $6777: $06 $2f
 	ld   hl, $6963                                   ; $6779: $21 $63 $69
 	call Call_021_4484                               ; $677c: $cd $84 $44
-	ld   a, [$ca4c]                                  ; $677f: $fa $4c $ca
+	ld   a, [wNapOrTrainReturnState]                                  ; $677f: $fa $4c $ca
 	ld   [wGameState], a                                  ; $6782: $ea $a0 $c2
-	ld   a, [$ca4d]                                  ; $6785: $fa $4d $ca
+	ld   a, [wNapOrTrainReturnSubstate]                                  ; $6785: $fa $4d $ca
 	ld   [wGameSubstate], a                                  ; $6788: $ea $a1 $c2
 	ret                                              ; $678b: $c9
 
 
-GameState2e::
+GameState2e_TrainingDebugMenu::
 	ld   a, [wGameSubstate]                                  ; $678c: $fa $a1 $c2
 	rst  JumpTable                                         ; $678f: $df
 	sub  [hl]                                        ; $6790: $96
@@ -5886,7 +5909,7 @@ jr_021_683e:
 	ld   a, [wGameSubstate]                                  ; $684a: $fa $a1 $c2
 	ld   l, $00                                      ; $684d: $2e $00
 	ld   a, $01                                      ; $684f: $3e $01
-	call Call_021_4000                               ; $6851: $cd $00 $40
+	call SetNapOrTrainState                               ; $6851: $cd $00 $40
 	ret                                              ; $6854: $c9
 
 
@@ -5899,7 +5922,7 @@ jr_021_6855:
 	ld   a, [wGameSubstate]                                  ; $6861: $fa $a1 $c2
 	ld   l, $00                                      ; $6864: $2e $00
 	ld   a, $02                                      ; $6866: $3e $02
-	call Call_021_4000                               ; $6868: $cd $00 $40
+	call SetNapOrTrainState                               ; $6868: $cd $00 $40
 	ret                                              ; $686b: $c9
 
 
@@ -5912,7 +5935,7 @@ Jump_021_686c:
 	ld   a, [wGameSubstate]                                  ; $6878: $fa $a1 $c2
 	ld   l, $00                                      ; $687b: $2e $00
 	ld   a, $04                                      ; $687d: $3e $04
-	call Call_021_4000                               ; $687f: $cd $00 $40
+	call SetNapOrTrainState                               ; $687f: $cd $00 $40
 	ret                                              ; $6882: $c9
 
 
@@ -5925,7 +5948,7 @@ Jump_021_6883:
 	ld   a, [wGameSubstate]                                  ; $688f: $fa $a1 $c2
 	ld   l, $00                                      ; $6892: $2e $00
 	ld   a, $03                                      ; $6894: $3e $03
-	call Call_021_4000                               ; $6896: $cd $00 $40
+	call SetNapOrTrainState                               ; $6896: $cd $00 $40
 	ret                                              ; $6899: $c9
 
 
@@ -5938,7 +5961,7 @@ Jump_021_689a:
 	ld   a, [wGameSubstate]                                  ; $68a6: $fa $a1 $c2
 	ld   l, $00                                      ; $68a9: $2e $00
 	ld   a, $06                                      ; $68ab: $3e $06
-	call Call_021_4000                               ; $68ad: $cd $00 $40
+	call SetNapOrTrainState                               ; $68ad: $cd $00 $40
 	ret                                              ; $68b0: $c9
 
 
@@ -5951,7 +5974,7 @@ Jump_021_68b1:
 	ld   a, [wGameSubstate]                                  ; $68bd: $fa $a1 $c2
 	ld   l, $00                                      ; $68c0: $2e $00
 	ld   a, $05                                      ; $68c2: $3e $05
-	call Call_021_4000                               ; $68c4: $cd $00 $40
+	call SetNapOrTrainState                               ; $68c4: $cd $00 $40
 	ret                                              ; $68c7: $c9
 
 
@@ -5964,12 +5987,12 @@ Jump_021_68c8:
 	ld   a, [wGameSubstate]                                  ; $68d4: $fa $a1 $c2
 	ld   l, $00                                      ; $68d7: $2e $00
 	ld   a, $00                                      ; $68d9: $3e $00
-	call Call_021_4000                               ; $68db: $cd $00 $40
+	call SetNapOrTrainState                               ; $68db: $cd $00 $40
 	ret                                              ; $68de: $c9
 
 
 Jump_021_68df:
-	ld   a, $31                                      ; $68df: $3e $31
+	ld   a, GS_SPECIAL_ANIMS_DEBUG_MENU                                      ; $68df: $3e $31
 	ld   [wGameState], a                                  ; $68e1: $ea $a0 $c2
 	ld   a, $00                                      ; $68e4: $3e $00
 	ld   [wGameSubstate], a                                  ; $68e6: $ea $a1 $c2
@@ -6099,7 +6122,7 @@ jr_021_69aa:
 
 Call_021_69b3:
 	ld   a, [$ca66]                                  ; $69b3: $fa $66 $ca
-	call $0d7d                                       ; $69b6: $cd $7d $0d
+	call ConvertAintoBCD                                       ; $69b6: $cd $7d $0d
 	ld   c, a                                        ; $69b9: $4f
 	ld   a, $86                                      ; $69ba: $3e $86
 	add  c                                           ; $69bc: $81
@@ -6121,7 +6144,7 @@ jr_021_69cd:
 	call Call_021_698e                               ; $69d0: $cd $8e $69
 	pop  af                                          ; $69d3: $f1
 	ld   a, [$ca65]                                  ; $69d4: $fa $65 $ca
-	call $0d7d                                       ; $69d7: $cd $7d $0d
+	call ConvertAintoBCD                                       ; $69d7: $cd $7d $0d
 	ld   c, a                                        ; $69da: $4f
 	ld   a, $86                                      ; $69db: $3e $86
 	add  c                                           ; $69dd: $81
@@ -6141,7 +6164,7 @@ jr_021_69ea:
 	call Call_021_698e                               ; $69f1: $cd $8e $69
 	pop  af                                          ; $69f4: $f1
 	ld   a, [$ca67]                                  ; $69f5: $fa $67 $ca
-	call $0d7d                                       ; $69f8: $cd $7d $0d
+	call ConvertAintoBCD                                       ; $69f8: $cd $7d $0d
 	ld   c, a                                        ; $69fb: $4f
 	ld   a, $86                                      ; $69fc: $3e $86
 	add  c                                           ; $69fe: $81
@@ -6201,7 +6224,7 @@ jr_021_6a0b:
 
 
 	call TurnOffLCD                                       ; $6a5e: $cd $e3 $08
-	ld   a, $35                                      ; $6a61: $3e $35
+	ld   a, GS_ALT_TITLE_SCREEN                                      ; $6a61: $3e $35
 	ld   [wGameState], a                                  ; $6a63: $ea $a0 $c2
 	xor  a                                           ; $6a66: $af
 	ld   [wGameSubstate], a                                  ; $6a67: $ea $a1 $c2
@@ -6353,7 +6376,7 @@ jr_021_6b11:
 
 jr_021_6b18:
 	ld   a, [$ca67]                                  ; $6b18: $fa $67 $ca
-	call $1b64                                       ; $6b1b: $cd $64 $1b
+	call PlaySampledSound                                       ; $6b1b: $cd $64 $1b
 	ret                                              ; $6b1e: $c9
 
 
@@ -6450,7 +6473,7 @@ jr_021_6b3e:
 	ld   a, a                                        ; $6b8d: $7f
 
 
-GameState31::
+GameState31_SpecialAnimsDebugMenu::
 	ld   a, [wGameSubstate]                                  ; $6b8e: $fa $a1 $c2
 	rst  JumpTable                                         ; $6b91: $df
 	sbc  b                                           ; $6b92: $98
@@ -6621,7 +6644,7 @@ Jump_021_6cb8:
 	ld   a, $00                                      ; $6cb8: $3e $00
 	call SafeSetAudVolForMultipleChannels                                       ; $6cba: $cd $e0 $1c
 	call TurnOffLCD                                       ; $6cbd: $cd $e3 $08
-	ld   a, $32                                      ; $6cc0: $3e $32
+	ld   a, GS_BATTLE_DEBUG_MENU                                      ; $6cc0: $3e $32
 	ld   [wGameState], a                                  ; $6cc2: $ea $a0 $c2
 	ld   a, $00                                      ; $6cc5: $3e $00
 	ld   [wGameSubstate], a                                  ; $6cc7: $ea $a1 $c2
@@ -6635,7 +6658,7 @@ Jump_021_6ccb:
 	ret                                              ; $6ccc: $c9
 
 
-GameState32::
+GameState32_BattleDebugMenu::
 	ld   a, [wGameSubstate]                                  ; $6ccd: $fa $a1 $c2
 	rst  JumpTable                                         ; $6cd0: $df
 	push de                                          ; $6cd1: $d5
@@ -6797,7 +6820,7 @@ Jump_021_6de8:
 	call TurnOffLCD                                       ; $6de8: $cd $e3 $08
 	ld   a, $00                                      ; $6deb: $3e $00
 	call SafeSetAudVolForMultipleChannels                                       ; $6ded: $cd $e0 $1c
-	ld   a, $24                                      ; $6df0: $3e $24
+	ld   a, GS_MINI_GAME_DEBUG_MENU                                      ; $6df0: $3e $24
 	ld   [wGameState], a                                  ; $6df2: $ea $a0 $c2
 	xor  a                                           ; $6df5: $af
 	ld   [wGameSubstate], a                                  ; $6df6: $ea $a1 $c2
@@ -7337,7 +7360,7 @@ jr_021_6fd2:
 	adc  a                                           ; $7071: $8f
 
 
-GameState33::
+GameState33_PlayerSpecialAnims::
 	ld   a, [wGameSubstate]                                  ; $7072: $fa $a1 $c2
 	rst  JumpTable                                         ; $7075: $df
 	sbc  c                                           ; $7076: $99
@@ -7352,17 +7375,17 @@ GameState33::
 	ld   [hl], l                                     ; $707f: $75
 
 Call_021_7080::
-	ld   [$ca6d], a                                  ; $7080: $ea $6d $ca
+	ld   [wNapOrTrainIdx], a                                  ; $7080: $ea $6d $ca
 	ld   a, b                                        ; $7083: $78
 	ld   [$ca86], a                                  ; $7084: $ea $86 $ca
-	ld   a, $33                                      ; $7087: $3e $33
+	ld   a, GS_PLAYER_SPECIAL_ANIMS                                      ; $7087: $3e $33
 	ld   [wGameState], a                                  ; $7089: $ea $a0 $c2
 	xor  a                                           ; $708c: $af
 	ld   [wGameSubstate], a                                  ; $708d: $ea $a1 $c2
 	ld   a, h                                        ; $7090: $7c
-	ld   [$ca4c], a                                  ; $7091: $ea $4c $ca
+	ld   [wNapOrTrainReturnState], a                                  ; $7091: $ea $4c $ca
 	ld   a, l                                        ; $7094: $7d
-	ld   [$ca4d], a                                  ; $7095: $ea $4d $ca
+	ld   [wNapOrTrainReturnSubstate], a                                  ; $7095: $ea $4d $ca
 	ret                                              ; $7098: $c9
 
 
@@ -7374,7 +7397,7 @@ Call_021_7080::
 	ld   [wBaseRepeatedStickyCounter], a                                  ; $70a5: $ea $14 $c2
 	call ClearBaseAnimSpriteSpecDetails                                       ; $70a8: $cd $c9 $2e
 	call ClearOam                                       ; $70ab: $cd $d7 $0d
-	ld   a, [$ca6d]                                  ; $70ae: $fa $6d $ca
+	ld   a, [wNapOrTrainIdx]                                  ; $70ae: $fa $6d $ca
 	cp   $00                                         ; $70b1: $fe $00
 	jr   z, jr_021_7124                              ; $70b3: $28 $6f
 
@@ -7461,7 +7484,7 @@ jr_021_7135:
 	ret                                              ; $714c: $c9
 
 
-	ld   a, [$ca6d]                                  ; $714d: $fa $6d $ca
+	ld   a, [wNapOrTrainIdx]                                  ; $714d: $fa $6d $ca
 	cp   $00                                         ; $7150: $fe $00
 	jp   z, Jump_021_7227                            ; $7152: $ca $27 $72
 
@@ -7584,7 +7607,7 @@ Jump_021_724a:
 	ret                                              ; $7254: $c9
 
 
-	ld   a, [$ca6d]                                  ; $7255: $fa $6d $ca
+	ld   a, [wNapOrTrainIdx]                                  ; $7255: $fa $6d $ca
 	cp   $00                                         ; $7258: $fe $00
 	jp   z, Jump_021_72cb                            ; $725a: $ca $cb $72
 
@@ -7666,7 +7689,7 @@ Jump_021_72da:
 
 
 Call_021_72e5:
-	ld   a, [$ca6d]                                  ; $72e5: $fa $6d $ca
+	ld   a, [wNapOrTrainIdx]                                  ; $72e5: $fa $6d $ca
 	sla  a                                           ; $72e8: $cb $27
 	ld   hl, $7327                                   ; $72ea: $21 $27 $73
 	ld   b, $00                                      ; $72ed: $06 $00
@@ -7684,7 +7707,7 @@ Call_021_72e5:
 	ld   [$ca72], a                                  ; $72fe: $ea $72 $ca
 	ld   a, [hl]                                     ; $7301: $7e
 	ld   [$ca73], a                                  ; $7302: $ea $73 $ca
-	ld   a, [$ca6d]                                  ; $7305: $fa $6d $ca
+	ld   a, [wNapOrTrainIdx]                                  ; $7305: $fa $6d $ca
 	sla  a                                           ; $7308: $cb $27
 	ld   hl, $73d5                                   ; $730a: $21 $d5 $73
 	ld   b, $00                                      ; $730d: $06 $00
@@ -7797,7 +7820,7 @@ jr_021_7386:
 
 
 Call_021_738b:
-	ld   a, [$ca6d]                                  ; $738b: $fa $6d $ca
+	ld   a, [wNapOrTrainIdx]                                  ; $738b: $fa $6d $ca
 	sla  a                                           ; $738e: $cb $27
 	ld   hl, $73d5                                   ; $7390: $21 $d5 $73
 	ld   b, $00                                      ; $7393: $06 $00
@@ -8154,9 +8177,9 @@ jr_021_7541:
 
 	xor  a                                           ; $7553: $af
 	ld   [$ca96], a                                  ; $7554: $ea $96 $ca
-	ld   a, [$ca4c]                                  ; $7557: $fa $4c $ca
+	ld   a, [wNapOrTrainReturnState]                                  ; $7557: $fa $4c $ca
 	ld   [wGameState], a                                  ; $755a: $ea $a0 $c2
-	ld   a, [$ca4d]                                  ; $755d: $fa $4d $ca
+	ld   a, [wNapOrTrainReturnSubstate]                                  ; $755d: $fa $4d $ca
 	ld   [wGameSubstate], a                                  ; $7560: $ea $a1 $c2
 	ret                                              ; $7563: $c9
 
@@ -8234,7 +8257,7 @@ jr_021_758e:
 	ret                                              ; $75ac: $c9
 
 
-GameState34::
+GameState34_GirlSpecialAnims::
 	ld   a, [wGameSubstate]                                  ; $75ad: $fa $a1 $c2
 	rst  JumpTable                                         ; $75b0: $df
 	db   $db                                         ; $75b1: $db
@@ -8256,17 +8279,17 @@ GameState34::
 
 Call_021_75c1::
 	dec  a                                           ; $75c1: $3d
-	ld   [$ca6d], a                                  ; $75c2: $ea $6d $ca
+	ld   [wNapOrTrainIdx], a                                  ; $75c2: $ea $6d $ca
 	ld   a, b                                        ; $75c5: $78
 	ld   [$ca86], a                                  ; $75c6: $ea $86 $ca
-	ld   a, $34                                      ; $75c9: $3e $34
+	ld   a, GS_GIRL_SPECIAL_ANIMS                                      ; $75c9: $3e $34
 	ld   [wGameState], a                                  ; $75cb: $ea $a0 $c2
 	xor  a                                           ; $75ce: $af
 	ld   [wGameSubstate], a                                  ; $75cf: $ea $a1 $c2
 	ld   a, h                                        ; $75d2: $7c
-	ld   [$ca4c], a                                  ; $75d3: $ea $4c $ca
+	ld   [wNapOrTrainReturnState], a                                  ; $75d3: $ea $4c $ca
 	ld   a, l                                        ; $75d6: $7d
-	ld   [$ca4d], a                                  ; $75d7: $ea $4d $ca
+	ld   [wNapOrTrainReturnSubstate], a                                  ; $75d7: $ea $4d $ca
 	ret                                              ; $75da: $c9
 
 
@@ -8278,7 +8301,7 @@ Call_021_75c1::
 	ld   [wBaseRepeatedStickyCounter], a                                  ; $75e7: $ea $14 $c2
 	call ClearBaseAnimSpriteSpecDetails                                       ; $75ea: $cd $c9 $2e
 	call ClearOam                                       ; $75ed: $cd $d7 $0d
-	ld   a, [$ca6d]                                  ; $75f0: $fa $6d $ca
+	ld   a, [wNapOrTrainIdx]                                  ; $75f0: $fa $6d $ca
 	cp   $00                                         ; $75f3: $fe $00
 	jr   z, jr_021_7666                              ; $75f5: $28 $6f
 
@@ -8367,7 +8390,7 @@ jr_021_7677:
 	ret                                              ; $7694: $c9
 
 
-	ld   a, [$ca6d]                                  ; $7695: $fa $6d $ca
+	ld   a, [wNapOrTrainIdx]                                  ; $7695: $fa $6d $ca
 	cp   $00                                         ; $7698: $fe $00
 	jp   z, Jump_021_776f                            ; $769a: $ca $6f $77
 
@@ -8490,7 +8513,7 @@ Jump_021_7792:
 	ret                                              ; $779c: $c9
 
 
-	ld   a, [$ca6d]                                  ; $779d: $fa $6d $ca
+	ld   a, [wNapOrTrainIdx]                                  ; $779d: $fa $6d $ca
 	cp   $00                                         ; $77a0: $fe $00
 	jp   z, Jump_021_7813                            ; $77a2: $ca $13 $78
 
@@ -8569,7 +8592,7 @@ Jump_021_7822:
 	ret                                              ; $7826: $c9
 
 
-	ld   a, [$ca6d]                                  ; $7827: $fa $6d $ca
+	ld   a, [wNapOrTrainIdx]                                  ; $7827: $fa $6d $ca
 	cp   $00                                         ; $782a: $fe $00
 	jp   z, Jump_021_789d                            ; $782c: $ca $9d $78
 
@@ -8648,7 +8671,7 @@ Jump_021_78ac:
 	ret                                              ; $78b0: $c9
 
 
-	ld   a, [$ca6d]                                  ; $78b1: $fa $6d $ca
+	ld   a, [wNapOrTrainIdx]                                  ; $78b1: $fa $6d $ca
 	cp   $00                                         ; $78b4: $fe $00
 	jp   z, Jump_021_7927                            ; $78b6: $ca $27 $79
 
@@ -8727,7 +8750,7 @@ Jump_021_7936:
 	ret                                              ; $793a: $c9
 
 
-	ld   a, [$ca6d]                                  ; $793b: $fa $6d $ca
+	ld   a, [wNapOrTrainIdx]                                  ; $793b: $fa $6d $ca
 	cp   $00                                         ; $793e: $fe $00
 	jp   z, Jump_021_79b1                            ; $7940: $ca $b1 $79
 
@@ -8807,7 +8830,7 @@ Jump_021_79c0:
 
 
 Call_021_79c5:
-	ld   a, [$ca6d]                                  ; $79c5: $fa $6d $ca
+	ld   a, [wNapOrTrainIdx]                                  ; $79c5: $fa $6d $ca
 	sla  a                                           ; $79c8: $cb $27
 	ld   hl, $7a07                                   ; $79ca: $21 $07 $7a
 	ld   b, $00                                      ; $79cd: $06 $00
@@ -8825,7 +8848,7 @@ Call_021_79c5:
 	ld   [$ca72], a                                  ; $79de: $ea $72 $ca
 	ld   a, [hl]                                     ; $79e1: $7e
 	ld   [$ca73], a                                  ; $79e2: $ea $73 $ca
-	ld   a, [$ca6d]                                  ; $79e5: $fa $6d $ca
+	ld   a, [wNapOrTrainIdx]                                  ; $79e5: $fa $6d $ca
 	sla  a                                           ; $79e8: $cb $27
 	ld   hl, $7aeb                                   ; $79ea: $21 $eb $7a
 	ld   b, $00                                      ; $79ed: $06 $00
@@ -8876,7 +8899,7 @@ Call_021_79c5:
 
 	call ClearOam                                       ; $7a27: $cd $d7 $0d
 	call AnimateAllAnimatedSpriteSpecs                                       ; $7a2a: $cd $d3 $2e
-	ld   a, [$ca6d]                                  ; $7a2d: $fa $6d $ca
+	ld   a, [wNapOrTrainIdx]                                  ; $7a2d: $fa $6d $ca
 	ld   b, $00                                      ; $7a30: $06 $00
 	ld   c, a                                        ; $7a32: $4f
 	ld   hl, $7a9b                                   ; $7a33: $21 $9b $7a
@@ -8954,7 +8977,7 @@ Jump_021_7a96:
 	dec  bc                                          ; $7aa0: $0b
 
 Call_021_7aa1:
-	ld   a, [$ca6d]                                  ; $7aa1: $fa $6d $ca
+	ld   a, [wNapOrTrainIdx]                                  ; $7aa1: $fa $6d $ca
 	sla  a                                           ; $7aa4: $cb $27
 	ld   hl, $7aeb                                   ; $7aa6: $21 $eb $7a
 	ld   b, $00                                      ; $7aa9: $06 $00
@@ -9240,9 +9263,9 @@ jr_021_7c0a:
 
 Jump_021_7c2c:
 jr_021_7c2c:
-	ld   a, [$ca4c]                                  ; $7c2c: $fa $4c $ca
+	ld   a, [wNapOrTrainReturnState]                                  ; $7c2c: $fa $4c $ca
 	ld   [wGameState], a                                  ; $7c2f: $ea $a0 $c2
-	ld   a, [$ca4d]                                  ; $7c32: $fa $4d $ca
+	ld   a, [wNapOrTrainReturnSubstate]                                  ; $7c32: $fa $4d $ca
 	ld   [wGameSubstate], a                                  ; $7c35: $ea $a1 $c2
 	ret                                              ; $7c38: $c9
 

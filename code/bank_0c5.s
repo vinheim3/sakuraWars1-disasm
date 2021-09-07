@@ -7303,7 +7303,7 @@ Call_0c5_6111:
 	rst  $38                                         ; $61d9: $ff
 	db   $fd                                         ; $61da: $fd
 	and  h                                           ; $61db: $a4
-	ld   de, $1b64                                   ; $61dc: $11 $64 $1b
+	ld   de, PlaySampledSound                                   ; $61dc: $11 $64 $1b
 	ld   [hl], d                                     ; $61df: $72
 	dec  de                                          ; $61e0: $1b
 	rst  $20                                         ; $61e1: $e7

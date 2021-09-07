@@ -3413,7 +3413,7 @@ jr_00d_4db9:
 	nop                                              ; $4f8f: $00
 
 
-GameState3a::
+GameState3a_Items::
 	ld   a, [wGameSubstate]                                  ; $4f90: $fa $a1 $c2
 	or   a                                           ; $4f93: $b7
 	jp   nz, Jump_00d_525c                           ; $4f94: $c2 $5c $52
@@ -6889,7 +6889,7 @@ jr_00d_6500:
 	ld   [$cb46], a                                  ; $6788: $ea $46 $cb
 	ld   a, l                                        ; $678b: $7d
 	ld   [$cb47], a                                  ; $678c: $ea $47 $cb
-	ld   a, $3a                                      ; $678f: $3e $3a
+	ld   a, GS_ITEMS                                      ; $678f: $3e $3a
 	ld   [wGameState], a                                  ; $6791: $ea $a0 $c2
 	xor  a                                           ; $6794: $af
 	ld   [wGameSubstate], a                                  ; $6795: $ea $a1 $c2

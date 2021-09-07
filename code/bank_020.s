@@ -29,7 +29,7 @@ GameState26_SumireMiniGameMain::
 	ld   [$ca4e], a                                  ; $4020: $ea $4e $ca
 	ld   a, l                                        ; $4023: $7d
 	ld   [$ca4f], a                                  ; $4024: $ea $4f $ca
-	ld   a, $26                                      ; $4027: $3e $26
+	ld   a, GS_SUMIRE_MINI_GAME_MAIN                                      ; $4027: $3e $26
 	ld   [wGameState], a                                  ; $4029: $ea $a0 $c2
 	ld   a, $03                                      ; $402c: $3e $03
 	ld   [wGameSubstate], a                                  ; $402e: $ea $a1 $c2
@@ -40,7 +40,7 @@ GameState26_SumireMiniGameMain::
 	ld   [$ca4e], a                                  ; $4033: $ea $4e $ca
 	ld   a, l                                        ; $4036: $7d
 	ld   [$ca4f], a                                  ; $4037: $ea $4f $ca
-	ld   a, $26                                      ; $403a: $3e $26
+	ld   a, GS_SUMIRE_MINI_GAME_MAIN                                      ; $403a: $3e $26
 	ld   [wGameState], a                                  ; $403c: $ea $a0 $c2
 	ld   a, $00                                      ; $403f: $3e $00
 	ld   [wGameSubstate], a                                  ; $4041: $ea $a1 $c2
@@ -419,7 +419,7 @@ SumireMiniGameMainSubstate3:
 
 	ld   a, $35                                      ; $42ce: $3e $35
 	ld   [wSCX], a                                  ; $42d0: $ea $07 $c2
-	ld   [$ca6d], a                                  ; $42d3: $ea $6d $ca
+	ld   [wNapOrTrainIdx], a                                  ; $42d3: $ea $6d $ca
 	ld   a, $90                                      ; $42d6: $3e $90
 	ld   [wSCY], a                                  ; $42d8: $ea $08 $c2
 	ld   [$ca6e], a                                  ; $42db: $ea $6e $ca
@@ -428,7 +428,7 @@ SumireMiniGameMainSubstate3:
 .br_42e0:
 	ld   a, $48                                      ; $42e0: $3e $48
 	ld   [wSCX], a                                  ; $42e2: $ea $07 $c2
-	ld   [$ca6d], a                                  ; $42e5: $ea $6d $ca
+	ld   [wNapOrTrainIdx], a                                  ; $42e5: $ea $6d $ca
 	ld   a, $00                                      ; $42e8: $3e $00
 	ld   [wSCY], a                                  ; $42ea: $ea $08 $c2
 	ld   [$ca6e], a                                  ; $42ed: $ea $6e $ca
@@ -654,11 +654,11 @@ jr_020_44a1:
 	ld   a, [wInGameButtonsHeld]                                  ; $44a1: $fa $0f $c2
 	ld   [$ca74], a                                  ; $44a4: $ea $74 $ca
 	ld   a, [$caa3]                                  ; $44a7: $fa $a3 $ca
-	ld   hl, $ca6d                                   ; $44aa: $21 $6d $ca
+	ld   hl, wNapOrTrainIdx                                   ; $44aa: $21 $6d $ca
 	add  [hl]                                        ; $44ad: $86
 	ld   d, a                                        ; $44ae: $57
 	ld   a, [$cad9]                                  ; $44af: $fa $d9 $ca
-	ld   hl, $ca6d                                   ; $44b2: $21 $6d $ca
+	ld   hl, wNapOrTrainIdx                                   ; $44b2: $21 $6d $ca
 	add  [hl]                                        ; $44b5: $86
 	cp   d                                           ; $44b6: $ba
 	jr   nc, jr_020_44c1                             ; $44b7: $30 $08
@@ -753,7 +753,7 @@ jr_020_452d:
 	ld   a, $04                                      ; $454a: $3e $04
 	ld   [$ca5e], a                                  ; $454c: $ea $5e $ca
 	ld   a, $38                                      ; $454f: $3e $38
-	call $1b64                                       ; $4551: $cd $64 $1b
+	call PlaySampledSound                                       ; $4551: $cd $64 $1b
 
 jr_020_4554:
 	jr   jr_020_458f                                 ; $4554: $18 $39
@@ -788,7 +788,7 @@ jr_020_456f:
 	jr   nz, jr_020_4583                             ; $457c: $20 $05
 
 	ld   a, $38                                      ; $457e: $3e $38
-	call $1b64                                       ; $4580: $cd $64 $1b
+	call PlaySampledSound                                       ; $4580: $cd $64 $1b
 
 jr_020_4583:
 	ld   a, [$ca7b]                                  ; $4583: $fa $7b $ca
@@ -1047,7 +1047,7 @@ jr_020_46fe:
 Call_020_470b:
 	ld   a, [$caa1]                                  ; $470b: $fa $a1 $ca
 	ld   b, a                                        ; $470e: $47
-	ld   a, [$ca6d]                                  ; $470f: $fa $6d $ca
+	ld   a, [wNapOrTrainIdx]                                  ; $470f: $fa $6d $ca
 	add  b                                           ; $4712: $80
 	ld   b, a                                        ; $4713: $47
 	ld   a, [$caa3]                                  ; $4714: $fa $a3 $ca
@@ -1556,7 +1556,7 @@ jr_020_49cf:
 	ld   l, a                                        ; $49db: $6f
 	add  hl, de                                      ; $49dc: $19
 	ld   b, h                                        ; $49dd: $44
-	ld   a, [$ca6d]                                  ; $49de: $fa $6d $ca
+	ld   a, [wNapOrTrainIdx]                                  ; $49de: $fa $6d $ca
 	ld   d, a                                        ; $49e1: $57
 	ld   a, b                                        ; $49e2: $78
 	add  d                                           ; $49e3: $82
@@ -2180,7 +2180,7 @@ Call_020_4d1a:
 	ld   b, a                                        ; $4d1d: $47
 	ld   a, [$caa3]                                  ; $4d1e: $fa $a3 $ca
 	ld   c, a                                        ; $4d21: $4f
-	ld   a, [$ca6d]                                  ; $4d22: $fa $6d $ca
+	ld   a, [wNapOrTrainIdx]                                  ; $4d22: $fa $6d $ca
 	ld   d, a                                        ; $4d25: $57
 	ld   a, b                                        ; $4d26: $78
 	add  d                                           ; $4d27: $82
@@ -2674,7 +2674,7 @@ Call_020_4ff3:
 	ld   a, [wSCX]                                  ; $4ff3: $fa $07 $c2
 	dec  a                                           ; $4ff6: $3d
 	ld   [wSCX], a                                  ; $4ff7: $ea $07 $c2
-	ld   [$ca6d], a                                  ; $4ffa: $ea $6d $ca
+	ld   [wNapOrTrainIdx], a                                  ; $4ffa: $ea $6d $ca
 	ld   hl, $caa1                                   ; $4ffd: $21 $a1 $ca
 	inc  [hl]                                        ; $5000: $34
 	ld   hl, $cad7                                   ; $5001: $21 $d7 $ca
@@ -2728,7 +2728,7 @@ Call_020_5059:
 	ld   a, [wSCX]                                  ; $5059: $fa $07 $c2
 	inc  a                                           ; $505c: $3c
 	ld   [wSCX], a                                  ; $505d: $ea $07 $c2
-	ld   [$ca6d], a                                  ; $5060: $ea $6d $ca
+	ld   [wNapOrTrainIdx], a                                  ; $5060: $ea $6d $ca
 	ld   hl, $caa1                                   ; $5063: $21 $a1 $ca
 	dec  [hl]                                        ; $5066: $35
 	ld   hl, $cad7                                   ; $5067: $21 $d7 $ca
@@ -6284,7 +6284,7 @@ GameState25_KohranMiniGameMain::
 	ld   [$ca4e], a                                  ; $6236: $ea $4e $ca
 	ld   a, l                                        ; $6239: $7d
 	ld   [$ca4f], a                                  ; $623a: $ea $4f $ca
-	ld   a, $25                                      ; $623d: $3e $25
+	ld   a, GS_KOHRAN_MINI_GAME_MAIN                                      ; $623d: $3e $25
 	ld   [wGameState], a                                  ; $623f: $ea $a0 $c2
 	ld   a, $03                                      ; $6242: $3e $03
 	ld   [wGameSubstate], a                                  ; $6244: $ea $a1 $c2
@@ -6295,7 +6295,7 @@ GameState25_KohranMiniGameMain::
 	ld   [$ca4e], a                                  ; $6249: $ea $4e $ca
 	ld   a, l                                        ; $624c: $7d
 	ld   [$ca4f], a                                  ; $624d: $ea $4f $ca
-	ld   a, $25                                      ; $6250: $3e $25
+	ld   a, GS_KOHRAN_MINI_GAME_MAIN                                      ; $6250: $3e $25
 	ld   [wGameState], a                                  ; $6252: $ea $a0 $c2
 	ld   a, $00                                      ; $6255: $3e $00
 	ld   [wGameSubstate], a                                  ; $6257: $ea $a1 $c2
@@ -7662,7 +7662,7 @@ Jump_020_6ad4:
 	ld   hl, $cacd                                   ; $6aec: $21 $cd $ca
 	inc  [hl]                                        ; $6aef: $34
 	ld   a, $5c                                      ; $6af0: $3e $5c
-	call $1b64                                       ; $6af2: $cd $64 $1b
+	call PlaySampledSound                                       ; $6af2: $cd $64 $1b
 	ld   a, [$cb1d]                                  ; $6af5: $fa $1d $cb
 	or   a                                           ; $6af8: $b7
 	jr   nz, jr_020_6b02                             ; $6af9: $20 $07
@@ -7710,7 +7710,7 @@ Jump_020_6b28:
 	jr   z, jr_020_6b4e                              ; $6b47: $28 $05
 
 	ld   a, $5c                                      ; $6b49: $3e $5c
-	call $1b64                                       ; $6b4b: $cd $64 $1b
+	call PlaySampledSound                                       ; $6b4b: $cd $64 $1b
 
 jr_020_6b4e:
 	ld   b, $2a                                      ; $6b4e: $06 $2a
@@ -9796,7 +9796,7 @@ jr_020_76d9:
 	ld   [wWramBank], a                                  ; $76df: $ea $93 $c2
 	ldh  [rSVBK], a                                  ; $76e2: $e0 $70
 	ld   a, [$cac7]                                  ; $76e4: $fa $c7 $ca
-	call $0d7d                                       ; $76e7: $cd $7d $0d
+	call ConvertAintoBCD                                       ; $76e7: $cd $7d $0d
 	ld   c, a                                        ; $76ea: $4f
 	ld   a, $40                                      ; $76eb: $3e $40
 	add  c                                           ; $76ed: $81
@@ -9838,7 +9838,7 @@ jr_020_7723:
 	ld   [wWramBank], a                                  ; $7729: $ea $93 $c2
 	ldh  [rSVBK], a                                  ; $772c: $e0 $70
 	ld   a, [$cac9]                                  ; $772e: $fa $c9 $ca
-	call $0d7d                                       ; $7731: $cd $7d $0d
+	call ConvertAintoBCD                                       ; $7731: $cd $7d $0d
 	ld   c, a                                        ; $7734: $4f
 	ld   a, $40                                      ; $7735: $3e $40
 	add  c                                           ; $7737: $81
@@ -10281,7 +10281,7 @@ jr_020_79a6:
 	ret                                              ; $79b8: $c9
 
 
-GameState24::
+GameState24_MiniGameDebugMenu::
 	ld   a, [wGameSubstate]                                  ; $79b9: $fa $a1 $c2
 	rst  JumpTable                                         ; $79bc: $df
 	call nc, $3879                                   ; $79bd: $d4 $79 $38
@@ -10289,13 +10289,13 @@ GameState24::
 	ld   l, a                                        ; $79c1: $6f
 	ld   a, e                                        ; $79c2: $7b
 	ld   a, h                                        ; $79c3: $7c
-	ld   [$ca4c], a                                  ; $79c4: $ea $4c $ca
+	ld   [wNapOrTrainReturnState], a                                  ; $79c4: $ea $4c $ca
 	ld   a, l                                        ; $79c7: $7d
-	ld   [$ca4d], a                                  ; $79c8: $ea $4d $ca
+	ld   [wNapOrTrainReturnSubstate], a                                  ; $79c8: $ea $4d $ca
 	ld   a, h                                        ; $79cb: $7c
-	ld   [$ca4c], a                                  ; $79cc: $ea $4c $ca
+	ld   [wNapOrTrainReturnState], a                                  ; $79cc: $ea $4c $ca
 	ld   a, l                                        ; $79cf: $7d
-	ld   [$ca4d], a                                  ; $79d0: $ea $4d $ca
+	ld   [wNapOrTrainReturnSubstate], a                                  ; $79d0: $ea $4d $ca
 	ret                                              ; $79d3: $c9
 
 
@@ -10457,7 +10457,7 @@ Jump_020_7b03:
 	call TurnOffLCD                                       ; $7b03: $cd $e3 $08
 	ld   a, $00                                      ; $7b06: $3e $00
 	call SafeSetAudVolForMultipleChannels                                       ; $7b08: $cd $e0 $1c
-	ld   a, $2e                                      ; $7b0b: $3e $2e
+	ld   a, GS_TRAINING_DEBUG_MENU                                      ; $7b0b: $3e $2e
 	ld   [wGameState], a                                  ; $7b0d: $ea $a0 $c2
 	xor  a                                           ; $7b10: $af
 	ld   [wGameSubstate], a                                  ; $7b11: $ea $a1 $c2
@@ -10507,7 +10507,7 @@ Jump_020_7b59:
 	call TurnOffLCD                                       ; $7b5c: $cd $e3 $08
 	ld   a, $00                                      ; $7b5f: $3e $00
 	call SafeSetAudVolForMultipleChannels                                       ; $7b61: $cd $e0 $1c
-	ld   a, $02                                      ; $7b64: $3e $02
+	ld   a, GS_INTRO                                      ; $7b64: $3e $02
 	ld   [wGameState], a                                  ; $7b66: $ea $a0 $c2
 	ld   a, $00                                      ; $7b69: $3e $00
 	ld   [wGameSubstate], a                                  ; $7b6b: $ea $a1 $c2

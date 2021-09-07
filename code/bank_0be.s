@@ -6258,7 +6258,7 @@ Jump_0be_5596:
 	ld   h, l                                        ; $5e0f: $65
 	ld   h, [hl]                                     ; $5e10: $66
 	ld   de, $2111                                   ; $5e11: $11 $11 $21
-	ld   de, $cb29                                   ; $5e14: $11 $29 $cb
+	ld   de, wMainConvoReturnState                                   ; $5e14: $11 $29 $cb
 	xor  b                                           ; $5e17: $a8
 	sbc  l                                           ; $5e18: $9d
 	cp   b                                           ; $5e19: $b8
@@ -6269,7 +6269,7 @@ Jump_0be_5596:
 	call c, $97a9                                    ; $5e1f: $dc $a9 $97
 	ld   d, e                                        ; $5e22: $53
 	ld   de, $1111                                   ; $5e23: $11 $11 $11
-	ld   de, $ca4c                                   ; $5e26: $11 $4c $ca
+	ld   de, wNapOrTrainReturnState                                   ; $5e26: $11 $4c $ca
 	add  a                                           ; $5e29: $87
 	xor  a                                           ; $5e2a: $af
 	jp   z, $9c77                                    ; $5e2b: $ca $77 $9c

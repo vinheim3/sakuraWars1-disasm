@@ -6450,7 +6450,7 @@ jr_015_5bbc:
 	add  b                                           ; $5bd7: $80
 	push bc                                          ; $5bd8: $c5
 	nop                                              ; $5bd9: $00
-	call nz, $cc83                                   ; $5bda: $c4 $83 $cc
+	call nz, wDormRoomButtonsDisplayed                                   ; $5bda: $c4 $83 $cc
 	ld   bc, $808c                                   ; $5bdd: $01 $8c $80
 	add  [hl]                                        ; $5be0: $86
 	rst  $38                                         ; $5be1: $ff

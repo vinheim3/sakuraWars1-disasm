@@ -8711,7 +8711,7 @@ jr_00b_6bd7:
 	bit  1, a                                        ; $6bda: $cb $4f
 	jr   z, jr_00b_6be8                              ; $6bdc: $28 $0a
 
-	ld   a, $36                                      ; $6bde: $3e $36
+	ld   a, GS_TITLE_SCREEN                                      ; $6bde: $3e $36
 	ld   [wGameState], a                                  ; $6be0: $ea $a0 $c2
 	xor  a                                           ; $6be3: $af
 	ld   [wGameSubstate], a                                  ; $6be4: $ea $a1 $c2
@@ -9024,7 +9024,7 @@ Jump_00b_6da8:
 	bit  1, a                                        ; $6e0a: $cb $4f
 	jr   z, jr_00b_6e18                              ; $6e0c: $28 $0a
 
-	ld   a, $36                                      ; $6e0e: $3e $36
+	ld   a, GS_TITLE_SCREEN                                      ; $6e0e: $3e $36
 	ld   [wGameState], a                                  ; $6e10: $ea $a0 $c2
 	xor  a                                           ; $6e13: $af
 	ld   [wGameSubstate], a                                  ; $6e14: $ea $a1 $c2
@@ -9402,7 +9402,7 @@ Jump_00b_7088:
 	bit  1, a                                        ; $70e5: $cb $4f
 	jr   z, jr_00b_70f3                              ; $70e7: $28 $0a
 
-	ld   a, $36                                      ; $70e9: $3e $36
+	ld   a, GS_TITLE_SCREEN                                      ; $70e9: $3e $36
 	ld   [wGameState], a                                  ; $70eb: $ea $a0 $c2
 	xor  a                                           ; $70ee: $af
 	ld   [wGameSubstate], a                                  ; $70ef: $ea $a1 $c2

@@ -4793,7 +4793,7 @@ jr_033_54ad:
 	ld   h, b                                        ; $54e1: $60
 	jr   nz, jr_033_5464                             ; $54e2: $20 $80
 
-	call nc, $a080                                   ; $54e4: $d4 $80 $a0
+	call nc, sGlobalFlags1                                   ; $54e4: $d4 $80 $a0
 	add  b                                           ; $54e7: $80
 	ret  nc                                          ; $54e8: $d0
 

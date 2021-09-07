@@ -193,7 +193,7 @@ jr_010_411f:
 	ld   [$c9fb], a                                  ; $416e: $ea $fb $c9
 	ld   a, l                                        ; $4171: $7d
 	ld   [$c9fc], a                                  ; $4172: $ea $fc $c9
-	ld   a, $21                                      ; $4175: $3e $21
+	ld   a, GS_KANNA_MINI_GAME_HELP_SCREEN                                      ; $4175: $3e $21
 	ld   [wGameState], a                                  ; $4177: $ea $a0 $c2
 	ld   a, $00                                      ; $417a: $3e $00
 	ld   [wGameSubstate], a                                  ; $417c: $ea $a1 $c2
@@ -2020,7 +2020,7 @@ Call_010_4d73:
 	ld   [$c8bf], a                                  ; $4d7c: $ea $bf $c8
 	ld   a, l                                        ; $4d7f: $7d
 	ld   [$c8c0], a                                  ; $4d80: $ea $c0 $c8
-	ld   a, $0e                                      ; $4d83: $3e $0e
+	ld   a, GS_SAVE_SCREEN                                      ; $4d83: $3e $0e
 	ld   [wGameState], a                                  ; $4d85: $ea $a0 $c2
 	ld   a, $00                                      ; $4d88: $3e $00
 	ld   [wGameSubstate], a                                  ; $4d8a: $ea $a1 $c2
@@ -2086,7 +2086,7 @@ jr_010_4df9:
 	ld   b, $00                                      ; $4df9: $06 $00
 	add  hl, bc                                      ; $4dfb: $09
 	ld   a, [hl]                                     ; $4dfc: $7e
-	call $1b64                                       ; $4dfd: $cd $64 $1b
+	call PlaySampledSound                                       ; $4dfd: $cd $64 $1b
 	ld   a, [wSaveScreenPopUpBottomRowSpriteSpecIdxUsed]                                  ; $4e00: $fa $af $c8
 	call HLequAddrOfAnimSpriteSpecDetails                                       ; $4e03: $cd $76 $30
 	ld   a, $0e                                      ; $4e06: $3e $0e
@@ -2169,7 +2169,7 @@ SetSaveScreenState::
 	ret                                              ; $4ea3: $c9
 
 
-GameState0f::
+GameState0f_GameBoyComms::
 	ld   a, [wGameSubstate]                                  ; $4ea4: $fa $a1 $c2
 	rst  JumpTable                                         ; $4ea7: $df
 	or   d                                           ; $4ea8: $b2
@@ -2316,7 +2316,7 @@ jr_010_4fd9:
 	or   a                                           ; $4fe1: $b7
 	jr   z, jr_010_4fe7                              ; $4fe2: $28 $03
 
-	call Call_010_517d                               ; $4fe4: $cd $7d $51
+	call PlayRandomConnSuccessfulSample                               ; $4fe4: $cd $7d $51
 
 jr_010_4fe7:
 	ld   hl, wGameSubstate                                   ; $4fe7: $21 $a1 $c2
@@ -2364,9 +2364,9 @@ jr_010_4ffc:
 	ld   bc, $003f                                   ; $5037: $01 $3f $00
 	call SetBGandOBJPaletteRangesToUpdate                                       ; $503a: $cd $aa $04
 	call TurnOffLCD                                       ; $503d: $cd $e3 $08
-	ld   a, [$c93f]                                  ; $5040: $fa $3f $c9
+	ld   a, [wGameBoyOrTVCommsReturnState]                                  ; $5040: $fa $3f $c9
 	ld   [wGameState], a                                  ; $5043: $ea $a0 $c2
-	ld   a, [$c940]                                  ; $5046: $fa $40 $c9
+	ld   a, [wGameBoyOrTVCommsReturnSubstate]                                  ; $5046: $fa $40 $c9
 	ld   [wGameSubstate], a                                  ; $5049: $ea $a1 $c2
 	ret                                              ; $504c: $c9
 
@@ -2529,55 +2529,66 @@ jr_010_5141:
 	jp   Jump_010_543a                               ; $517a: $c3 $3a $54
 
 
-Call_010_517d:
-	ldh  a, [rKEY1]                                  ; $517d: $f0 $4d
-	bit  7, a                                        ; $517f: $cb $7f
-	jr   nz, jr_010_5187                             ; $5181: $20 $04
+PlayRandomConnSuccessfulSample:
+; Clear ram state of double speed if unset (so sample nybbles sent once)
+	ldh  a, [rKEY1]                                                 ; $517d
+	bit  7, a                                                       ; $517f
+	jr   nz, :+                                                     ; $5181
 
-	xor  a                                           ; $5183: $af
-	ld   [wIsDoubleSpeed], a                                  ; $5184: $ea $02 $c2
+	xor  a                                                          ; $5183
+	ld   [wIsDoubleSpeed], a                                        ; $5184
 
-jr_010_5187:
-	ld   a, [wFrameCounter]                                  ; $5187: $fa $8f $c2
-	ld   h, a                                        ; $518a: $67
-	ld   l, $06                                      ; $518b: $2e $06
-	call HLequHdivModL                                       ; $518d: $cd $fb $0b
-	ld   h, $00                                      ; $5190: $26 $00
-	ld   bc, $51a6                                   ; $5192: $01 $a6 $51
-	add  hl, bc                                      ; $5195: $09
-	ld   a, [hl]                                     ; $5196: $7e
-	call $1b64                                       ; $5197: $cd $64 $1b
-	ldh  a, [rKEY1]                                  ; $519a: $f0 $4d
-	bit  7, a                                        ; $519c: $cb $7f
-	jr   nz, jr_010_51a5                             ; $519e: $20 $05
+; Frame counter mod 6 is idx into below table
+:	ld   a, [wFrameCounter]                                         ; $5187
+	ld   h, a                                                       ; $518a
+	ld   l, $06                                                     ; $518b
+	call HLequHdivModL                                              ; $518d
+	ld   h, $00                                                     ; $5190
+	ld   bc, .samples                                               ; $5192
+	add  hl, bc                                                     ; $5195
 
-	ld   a, $01                                      ; $51a0: $3e $01
-	ld   [wIsDoubleSpeed], a                                  ; $51a2: $ea $02 $c2
+; Play sample idxed in the table
+	ld   a, [hl]                                                    ; $5196
+	call PlaySampledSound                                           ; $5197
 
-jr_010_51a5:
-	ret                                              ; $51a5: $c9
+; If we weren't double speed, set it in ram anyway
+	ldh  a, [rKEY1]                                                 ; $519a
+	bit  7, a                                                       ; $519c
+	jr   nz, .done                                                  ; $519e
 
+	ld   a, $01                                                     ; $51a0
+	ld   [wIsDoubleSpeed], a                                        ; $51a2
 
-	dec  l                                           ; $51a6: $2d
-	add  hl, sp                                      ; $51a7: $39
-	ld   b, l                                        ; $51a8: $45
-	ld   d, c                                        ; $51a9: $51
-	ld   e, l                                        ; $51aa: $5d
-	ld   l, c                                        ; $51ab: $69
+.done:
+	ret                                                             ; $51a5
 
-Call_010_51ac:
-	ld   a, h                                        ; $51ac: $7c
-	ld   [$c93f], a                                  ; $51ad: $ea $3f $c9
-	ld   a, l                                        ; $51b0: $7d
-	ld   [$c940], a                                  ; $51b1: $ea $40 $c9
-	ld   a, $0f                                      ; $51b4: $3e $0f
-	ld   [wGameState], a                                  ; $51b6: $ea $a0 $c2
-	ld   a, $00                                      ; $51b9: $3e $00
-	ld   [wGameSubstate], a                                  ; $51bb: $ea $a1 $c2
-	ret                                              ; $51be: $c9
+.samples:
+	db SMPL_2d
+	db SMPL_39
+	db SMPL_45
+	db SMPL_51
+	db SMPL_5d
+	db SMPL_69
 
 
-GameState10::
+; H - return state
+; L - return substate
+SetGameboyCommsState:
+; Save return state/substate
+	ld   a, h                                                       ; $51ac
+	ld   [wGameBoyOrTVCommsReturnState], a                          ; $51ad
+	ld   a, l                                                       ; $51b0
+	ld   [wGameBoyOrTVCommsReturnSubstate], a                       ; $51b1
+
+; Set gameboy comms state
+	ld   a, GS_GAMEBOY_COMMS                                        ; $51b4
+	ld   [wGameState], a                                            ; $51b6
+	ld   a, $00                                                     ; $51b9
+	ld   [wGameSubstate], a                                         ; $51bb
+	ret                                                             ; $51be
+
+
+GameState10_PocketSakuraComms::
 	ld   a, [wGameSubstate]                                  ; $51bf: $fa $a1 $c2
 	rst  JumpTable                                         ; $51c2: $df
 	call wEnterNameNumCharsEntered                                       ; $51c3: $cd $51 $c9
@@ -2684,7 +2695,7 @@ GameState10::
 	inc  [hl]                                        ; $52c0: $34
 	ldh  a, [rKEY1]                                  ; $52c1: $f0 $4d
 	bit  7, a                                        ; $52c3: $cb $7f
-	call nz, UnsetDoubleSpeedMode                           ; $52c5: $c4 $f4 $53
+	call nz, ToggleDoubleSpeedMode                           ; $52c5: $c4 $f4 $53
 	ret                                              ; $52c8: $c9
 
 
@@ -2714,15 +2725,8 @@ jr_010_52f3:
 	jr   nz, jr_010_5319                             ; $52f6: $20 $21
 
 	ld   hl, $c8ca                                   ; $52f8: $21 $ca $c8
-	push af                                          ; $52fb: $f5
-	ld   a, $3a                                      ; $52fc: $3e $3a
-	ld   [wFarCallAddr], a                                  ; $52fe: $ea $98 $c2
-	ld   a, $6c                                      ; $5301: $3e $6c
-	ld   [wFarCallAddr+1], a                                  ; $5303: $ea $99 $c2
-	ld   a, $04                                      ; $5306: $3e $04
-	ld   [wFarCallBank], a                                  ; $5308: $ea $9a $c2
-	pop  af                                          ; $530b: $f1
-	call FarCall                                       ; $530c: $cd $62 $09
+
+	M_FarCall Func_04_6c3a
 
 jr_010_530f:
 	ld   a, $01                                      ; $530f: $3e $01
@@ -2743,7 +2747,7 @@ jr_010_531c:
 	or   a                                           ; $5324: $b7
 	jr   z, jr_010_532a                              ; $5325: $28 $03
 
-	call Call_010_517d                               ; $5327: $cd $7d $51
+	call PlayRandomConnSuccessfulSample                               ; $5327: $cd $7d $51
 
 jr_010_532a:
 	ld   hl, wGameSubstate                                   ; $532a: $21 $a1 $c2
@@ -2766,7 +2770,7 @@ jr_010_533f:
 
 	ldh  a, [rKEY1]                                  ; $5340: $f0 $4d
 	bit  7, a                                        ; $5342: $cb $7f
-	call z, UnsetDoubleSpeedMode                            ; $5344: $cc $f4 $53
+	call z, ToggleDoubleSpeedMode                            ; $5344: $cc $f4 $53
 	xor  a                                           ; $5347: $af
 	ld   [wStartingColorIdxToLoadCompDataFor], a                                  ; $5348: $ea $62 $c3
 	ld   a, $40                                      ; $534b: $3e $40
@@ -2848,7 +2852,7 @@ Call_010_53b6:
 	ret                                              ; $53f3: $c9
 
 
-UnsetDoubleSpeedMode::
+ToggleDoubleSpeedMode::
 ; Preserve IE, then unset double speed mode
 	ldh  a, [rIE]                                                   ; $53f4
 	push af                                                         ; $53f6
@@ -3087,488 +3091,541 @@ jr_010_5563:
 	ld   b, h                                        ; $5569: $44
 	ld   c, l                                        ; $556a: $4d
 
-Call_010_556b:
+SetPocketSakuraCommsState:
 	ld   a, h                                        ; $556b: $7c
 	ld   [$c942], a                                  ; $556c: $ea $42 $c9
 	ld   a, l                                        ; $556f: $7d
 	ld   [$c943], a                                  ; $5570: $ea $43 $c9
-	ld   a, $10                                      ; $5573: $3e $10
+	ld   a, GS_POCKET_SAKURA_COMMS                                      ; $5573: $3e $10
 	ld   [wGameState], a                                  ; $5575: $ea $a0 $c2
 	ld   a, $00                                      ; $5578: $3e $00
 	ld   [wGameSubstate], a                                  ; $557a: $ea $a1 $c2
 	ret                                              ; $557d: $c9
 
 
-GameState11::
-	ld   a, [wGameSubstate]                                  ; $557e: $fa $a1 $c2
-	rst  JumpTable                                         ; $5581: $df
-	sub  b                                           ; $5582: $90
-	ld   d, l                                        ; $5583: $55
-	ld   [hl], d                                     ; $5584: $72
-	ld   d, [hl]                                     ; $5585: $56
-	adc  h                                           ; $5586: $8c
-	ld   d, [hl]                                     ; $5587: $56
-	add  $56                                         ; $5588: $c6 $56
-	db   $d3                                         ; $558a: $d3
-	ld   d, [hl]                                     ; $558b: $56
-	db   $db                                         ; $558c: $db
-	ld   d, [hl]                                     ; $558d: $56
-	db   $ec                                         ; $558e: $ec
-	ld   d, [hl]                                     ; $558f: $56
+GameState11_TVComms::
+	ld   a, [wGameSubstate]                                         ; $557e
+	rst  JumpTable                                                  ; $5581
+	dw TVCommsSubstate0_Init
+	dw TVCommsSubstate1_CheckConnection
+	dw TVCommsSubstate2_Main
+	dw TVCommsSubstate3_DisplaySuccessfulBox
+	dw TVCommsSubstate4_PlaySuccessfulSample
+	dw TVCommsSubstate5_FadeOutWhenPrompted
+	dw TVCommsSubstate6_FadeOut
+
+
+TVCommsSubstate0_Init:
+;
 	ld   hl, $c8c2                                   ; $5590: $21 $c2 $c8
 	ld   c, $14                                      ; $5593: $0e $14
 	xor  a                                           ; $5595: $af
 
-jr_010_5596:
-	ld   [hl+], a                                    ; $5596: $22
+:	ld   [hl+], a                                    ; $5596: $22
 	dec  c                                           ; $5597: $0d
-	jr   nz, jr_010_5596                             ; $5598: $20 $fc
+	jr   nz, :-                             ; $5598: $20 $fc
 
-	call TurnOffLCD                                       ; $559a: $cd $e3 $08
-	ld   a, $00                                      ; $559d: $3e $00
-	call SafeSetAudVolForMultipleChannels                                       ; $559f: $cd $e0 $1c
-	ld   a, $ff                                      ; $55a2: $3e $ff
-	ld   [wInGameInputsEnabled], a                                  ; $55a4: $ea $0e $c2
-	ld   a, $0c                                      ; $55a7: $3e $0c
-	ld   [wBaseInitialStickyCounter], a                                  ; $55a9: $ea $13 $c2
-	ld   a, $04                                      ; $55ac: $3e $04
-	ld   [wBaseRepeatedStickyCounter], a                                  ; $55ae: $ea $14 $c2
-	call ClearOam                                       ; $55b1: $cd $d7 $0d
-	call ClearDisplayRegsAllowVBlankInt                                       ; $55b4: $cd $59 $0b
-	ld   a, LCDCF_OBJON|LCDCF_BGON                                      ; $55b7: $3e $03
-	ld   [wLCDC], a                                  ; $55b9: $ea $03 $c2
-	ld   a, $01                                      ; $55bc: $3e $01
-	ldh  [rVBK], a                                   ; $55be: $e0 $4f
-	ld   a, $1d                                      ; $55c0: $3e $1d
-	ld   hl, $9800                                   ; $55c2: $21 $00 $98
-	ld   de, $7160                                   ; $55c5: $11 $60 $71
-	call RLEXorCopy                                       ; $55c8: $cd $d2 $09
-	xor  a                                           ; $55cb: $af
-	ldh  [rVBK], a                                   ; $55cc: $e0 $4f
-	ld   a, $1d                                      ; $55ce: $3e $1d
-	ld   hl, $9800                                   ; $55d0: $21 $00 $98
-	ld   de, $5937                                   ; $55d3: $11 $37 $59
-	call RLEXorCopy                                       ; $55d6: $cd $d2 $09
-	ld   a, $16                                      ; $55d9: $3e $16
-	ld   hl, $8800                                   ; $55db: $21 $00 $88
-	ld   de, $628a                                   ; $55de: $11 $8a $62
-	call RLEXorCopy                                       ; $55e1: $cd $d2 $09
-	ld   a, [wWramBank]                                  ; $55e4: $fa $93 $c2
-	push af                                          ; $55e7: $f5
-	ld   a, $03                                      ; $55e8: $3e $03
-	ld   [wWramBank], a                                  ; $55ea: $ea $93 $c2
-	ldh  [rSVBK], a                                  ; $55ed: $e0 $70
-	ld   a, $1d                                      ; $55ef: $3e $1d
-	ld   hl, $d000                                   ; $55f1: $21 $00 $d0
-	ld   de, $5937                                   ; $55f4: $11 $37 $59
-	call RLEXorCopy                                       ; $55f7: $cd $d2 $09
-	ld   a, $1d                                      ; $55fa: $3e $1d
-	ld   hl, $d400                                   ; $55fc: $21 $00 $d4
-	ld   de, $7160                                   ; $55ff: $11 $60 $71
-	call RLEXorCopy                                       ; $5602: $cd $d2 $09
-	pop  af                                          ; $5605: $f1
-	ld   [wWramBank], a                                  ; $5606: $ea $93 $c2
-	ldh  [rSVBK], a                                  ; $5609: $e0 $70
+; Turn off LCD, and mute volume
+	call TurnOffLCD                                                 ; $559a
+	ld   a, $00                                                     ; $559d
+	call SafeSetAudVolForMultipleChannels                           ; $559f
+
+; Set sticky buttons parameters
+	ld   a, $ff                                                     ; $55a2
+	ld   [wInGameInputsEnabled], a                                  ; $55a4
+	ld   a, $0c                                                     ; $55a7
+	ld   [wBaseInitialStickyCounter], a                             ; $55a9
+	ld   a, $04                                                     ; $55ac
+	ld   [wBaseRepeatedStickyCounter], a                            ; $55ae
+
+; Clear oam, display regs, and turn off LCD
+	call ClearOam                                                   ; $55b1
+	call ClearDisplayRegsAllowVBlankInt                             ; $55b4
+
+	ld   a, LCDCF_OBJON|LCDCF_BGON                                  ; $55b7
+	ld   [wLCDC], a                                                 ; $55b9
+
+; Load tile attr, map, then tile data
+	ld   a, $01                                                     ; $55bc
+	ldh  [rVBK], a                                                  ; $55be
+	ld   a, BANK(RLEXorTileAttr_TVComms)                            ; $55c0
+	ld   hl, _SCRN0                                                 ; $55c2
+	ld   de, RLEXorTileAttr_TVComms                                 ; $55c5
+	call RLEXorCopy                                                 ; $55c8
+
+	xor  a                                                          ; $55cb
+	ldh  [rVBK], a                                                  ; $55cc
+	ld   a, BANK(RleXorTileMap_TVComms)                             ; $55ce
+	ld   hl, _SCRN0                                                 ; $55d0
+	ld   de, RleXorTileMap_TVComms                                  ; $55d3
+	call RLEXorCopy                                                 ; $55d6
+
+	ld   a, BANK(RLEXorTileData_TVComms)                            ; $55d9
+	ld   hl, _VRAM+$800                                             ; $55db
+	ld   de, RLEXorTileData_TVComms                                 ; $55de
+	call RLEXorCopy                                                 ; $55e1
+
+; Preserve ram bank, and set it to the bank of our buffer space
+	ld   a, [wWramBank]                                             ; $55e4
+	push af                                                         ; $55e7
+
+	ld   a, BANK(wTVCommsTileMapBuffer)                             ; $55e8
+	ld   [wWramBank], a                                             ; $55ea
+	ldh  [rSVBK], a                                                 ; $55ed
+
+; Decompress tile map and attr into ram as well
+	ld   a, BANK(RleXorTileMap_TVComms)                             ; $55ef
+	ld   hl, wTVCommsTileMapBuffer                                  ; $55f1
+	ld   de, RleXorTileMap_TVComms                                  ; $55f4
+	call RLEXorCopy                                                 ; $55f7
+
+	ld   a, BANK(RLEXorTileAttr_TVComms)                            ; $55fa
+	ld   hl, wTVCommsTileAttrBuffer                                 ; $55fc
+	ld   de, RLEXorTileAttr_TVComms                                 ; $55ff
+	call RLEXorCopy                                                 ; $5602
+
+; Restore ram bank
+	pop  af                                                         ; $5605
+	ld   [wWramBank], a                                             ; $5606
+	ldh  [rSVBK], a                                                 ; $5609
+
+;
 	xor  a                                           ; $560b: $af
 	ld   [wWY], a                                  ; $560c: $ea $0a $c2
 	ld   [wWX], a                                  ; $560f: $ea $09 $c2
 	ld   [wSCX], a                                  ; $5612: $ea $07 $c2
 	ld   [wSCY], a                                  ; $5615: $ea $08 $c2
 	ld   [$c941], a                                  ; $5618: $ea $41 $c9
+
 	call ClearBaseAnimSpriteSpecDetails                                       ; $561b: $cd $c9 $2e
-	xor  a                                           ; $561e: $af
-	ld   [wStartingColorIdxToLoadCompDataFor], a                                  ; $561f: $ea $62 $c3
-	ld   a, $20                                      ; $5622: $3e $20
-	ld   [wNumPaletteColorsToLoadCompDataFor], a                                  ; $5624: $ea $63 $c3
-	ld   a, $03                                      ; $5627: $3e $03
-	ld   b, $01                                      ; $5629: $06 $01
-	ld   hl, $7000                                   ; $562b: $21 $00 $70
-	ld   c, $1e                                      ; $562e: $0e $1e
-	ld   de, $7a0e                                   ; $5630: $11 $0e $7a
-	call FarLoadPaletteValsFadeToValsAndSetFadeSpeed                                       ; $5633: $cd $48 $07
-	call TurnOnLCD                                       ; $5636: $cd $09 $09
-	ld   a, $07                                      ; $5639: $3e $07
-	call SafeSetAudVolForMultipleChannels                                       ; $563b: $cd $e0 $1c
-	push af                                          ; $563e: $f5
-	ld   a, $54                                      ; $563f: $3e $54
-	ld   [wFarCallAddr], a                                  ; $5641: $ea $98 $c2
-	ld   a, $57                                      ; $5644: $3e $57
-	ld   [wFarCallAddr+1], a                                  ; $5646: $ea $99 $c2
-	ld   a, $11                                      ; $5649: $3e $11
-	ld   [wFarCallBank], a                                  ; $564b: $ea $9a $c2
-	pop  af                                          ; $564e: $f1
-	call FarCall                                       ; $564f: $cd $62 $09
-	ld   a, $1e                                      ; $5652: $3e $1e
-	ld   hl, $7a0e                                   ; $5654: $21 $0e $7a
-	ld   de, wBGPalettes                                   ; $5657: $11 $de $c2
-	ld   bc, $0080                                   ; $565a: $01 $80 $00
-	call FarMemCopy                                       ; $565d: $cd $b2 $09
-	ld   bc, $003f                                   ; $5660: $01 $3f $00
-	call SetBGandOBJPaletteRangesToUpdate                                       ; $5663: $cd $aa $04
-	ld   hl, wGameSubstate                                   ; $5666: $21 $a1 $c2
-	inc  [hl]                                        ; $5669: $34
-	ldh  a, [rKEY1]                                  ; $566a: $f0 $4d
-	bit  7, a                                        ; $566c: $cb $7f
-	call nz, UnsetDoubleSpeedMode                           ; $566e: $c4 $f4 $53
-	ret                                              ; $5671: $c9
+
+; Load color comps for all BG colors
+	xor  a                                                          ; $561e
+	ld   [wStartingColorIdxToLoadCompDataFor], a                    ; $561f
+	ld   a, NUM_COLORS                                              ; $5622
+	ld   [wNumPaletteColorsToLoadCompDataFor], a                    ; $5624
+
+; Fade from white palettes at 1/8th speed
+	ld   a, $03                                                     ; $5627
+	ld   b, BANK(Palettes_AllWhite)                                 ; $5629
+	ld   hl, Palettes_AllWhite                                      ; $562b
+	ld   c, BANK(BGPalettes_InfraComms)                             ; $562e
+	ld   de, BGPalettes_InfraComms                                  ; $5630
+	call FarLoadPaletteValsFadeToValsAndSetFadeSpeed                ; $5633
+
+; Turn on LCD, max out vol, then fade until done
+	call TurnOnLCD                                                  ; $5636
+	ld   a, $07                                                     ; $5639
+	call SafeSetAudVolForMultipleChannels                           ; $563b
+
+	M_FarCall FadeBGpals8timesHandlingAnimatedSpriteSpecs
+	
+; Set updated palettes
+	ld   a, BANK(BGPalettes_InfraComms)                             ; $5652
+	ld   hl, BGPalettes_InfraComms                                  ; $5654
+	ld   de, wBGPalettes                                            ; $5657
+	ld   bc, NUM_PALETTE_BYTES * 2                                  ; $565a
+	call FarMemCopy                                                 ; $565d
+
+	ldbc $00, $3f                                                   ; $5660
+	call SetBGandOBJPaletteRangesToUpdate                           ; $5663
+
+; To next substate
+	ld   hl, wGameSubstate                                          ; $5666
+	inc  [hl]                                                       ; $5669
+
+; Unset double speed mode
+	ldh  a, [rKEY1]                                                 ; $566a
+	bit  7, a                                                       ; $566c
+	call nz, ToggleDoubleSpeedMode                                  ; $566e
+	ret                                                             ; $5671
 
 
-	di                                               ; $5672: $f3
-	call Call_010_58f2                               ; $5673: $cd $f2 $58
-	ei                                               ; $5676: $fb
-	or   a                                           ; $5677: $b7
-	jr   z, jr_010_5684                              ; $5678: $28 $0a
+TVCommsSubstate1_CheckConnection:
+; Check if TV adapter is connected and branch based on success
+	di                                                              ; $5672
+	call CheckIfTVAdapterConnected                                  ; $5673
+	ei                                                              ; $5676
 
-	call Call_010_5781                               ; $567a: $cd $81 $57
-	ld   a, $05                                      ; $567d: $3e $05
-	ld   [wGameSubstate], a                                  ; $567f: $ea $a1 $c2
-	jr   jr_010_568b                                 ; $5682: $18 $07
+	or   a                                                          ; $5677
+	jr   z, .nextSubstate                                           ; $5678
 
-jr_010_5684:
-	call Call_010_5762                               ; $5684: $cd $62 $57
-	ld   hl, wGameSubstate                                   ; $5687: $21 $a1 $c2
-	inc  [hl]                                        ; $568a: $34
+; Display unsuccessful and go to "fade out when pressed" state
+	call DisplayTVCommsConnUnsuccessfulBox                          ; $567a
 
-jr_010_568b:
-	ret                                              ; $568b: $c9
+	ld   a, $05                                                     ; $567d
+	ld   [wGameSubstate], a                                         ; $567f
+	jr   .done                                                      ; $5682
+
+.nextSubstate:
+; Display that we're waiting for reception, then go to main substate
+	call DisplayTVCommsWaitingConnText                              ; $5684
+
+	ld   hl, wGameSubstate                                          ; $5687
+	inc  [hl]                                                       ; $568a
+
+.done:
+	ret                                                             ; $568b
 
 
+TVCommsSubstate2_Main:
 	di                                               ; $568c: $f3
 
-jr_010_568d:
+.loop:
 	call Func_10_5845                                       ; $568d: $cd $45 $58
 	or   a                                           ; $5690: $b7
-	jr   z, jr_010_56a9                              ; $5691: $28 $16
+	jr   z, .br_56a9                              ; $5691: $28 $16
 
-	call PollInput                                       ; $5693: $cd $a9 $03
-	ld   a, [wInGameButtonsPressed]                                  ; $5696: $fa $10 $c2
-	and  $02                                         ; $5699: $e6 $02
-	jr   z, jr_010_568d                              ; $569b: $28 $f0
+; Update input, breaking out of loop if B pressed
+	call PollInput                                                  ; $5693
+	ld   a, [wInGameButtonsPressed]                                 ; $5696
+	and  PADF_B                                                     ; $5699
+	jr   z, .loop                                                   ; $569b
 
-	ld   a, $06                                      ; $569d: $3e $06
-	ld   [wGameSubstate], a                                  ; $569f: $ea $a1 $c2
-	ld   a, $22                                      ; $56a2: $3e $22
-	call PlaySoundEffect                                       ; $56a4: $cd $df $1a
-	jr   jr_010_56c4                                 ; $56a7: $18 $1b
+; Go to fade out substate, and play sound
+	ld   a, $06                                                     ; $569d
+	ld   [wGameSubstate], a                                         ; $569f
 
-jr_010_56a9:
+	ld   a, SE_22                                                   ; $56a2
+	call PlaySoundEffect                                            ; $56a4
+	jr   .done                                                      ; $56a7
+
+.br_56a9:
 	ld   hl, $c6b6                                   ; $56a9: $21 $b6 $c6
-	push af                                          ; $56ac: $f5
-	ld   a, $3a                                      ; $56ad: $3e $3a
-	ld   [wFarCallAddr], a                                  ; $56af: $ea $98 $c2
-	ld   a, $6c                                      ; $56b2: $3e $6c
-	ld   [wFarCallAddr+1], a                                  ; $56b4: $ea $99 $c2
-	ld   a, $04                                      ; $56b7: $3e $04
-	ld   [wFarCallBank], a                                  ; $56b9: $ea $9a $c2
-	pop  af                                          ; $56bc: $f1
-	call FarCall                                       ; $56bd: $cd $62 $09
+
+	M_FarCall Func_04_6c3a
+
+; To next substate. going down success route, then end route
 	ld   hl, wGameSubstate                                   ; $56c0: $21 $a1 $c2
 	inc  [hl]                                        ; $56c3: $34
 
-jr_010_56c4:
+.done:
 	ei                                               ; $56c4: $fb
 	ret                                              ; $56c5: $c9
 
 
+TVCommsSubstate3_DisplaySuccessfulBox:
 	ld   a, $01                                      ; $56c6: $3e $01
 	ld   [$c941], a                                  ; $56c8: $ea $41 $c9
-	call Call_010_5743                               ; $56cb: $cd $43 $57
+	call DisplayTVCommsConnSuccessfulBox                               ; $56cb: $cd $43 $57
+
 	ld   hl, wGameSubstate                                   ; $56ce: $21 $a1 $c2
 	inc  [hl]                                        ; $56d1: $34
 	ret                                              ; $56d2: $c9
 
 
-	call Call_010_517d                               ; $56d3: $cd $7d $51
-	ld   hl, wGameSubstate                                   ; $56d6: $21 $a1 $c2
-	inc  [hl]                                        ; $56d9: $34
-	ret                                              ; $56da: $c9
+TVCommsSubstate4_PlaySuccessfulSample:
+; Play successful sound, then go to next substate (exit when prompted)
+	call PlayRandomConnSuccessfulSample                             ; $56d3
+
+	ld   hl, wGameSubstate                                          ; $56d6
+	inc  [hl]                                                       ; $56d9
+	ret                                                             ; $56da
 
 
-	ld   a, [wInGameButtonsPressed]                                  ; $56db: $fa $10 $c2
-	and  $03                                         ; $56de: $e6 $03
-	jr   z, jr_010_56eb                              ; $56e0: $28 $09
+TVCommsSubstate5_FadeOutWhenPrompted:
+; When B or A is pressed..
+	ld   a, [wInGameButtonsPressed]                                 ; $56db
+	and  PADF_B|PADF_A                                              ; $56de
+	jr   z, .done                                                   ; $56e0
 
-	ld   a, $21                                      ; $56e2: $3e $21
-	call PlaySoundEffect                                       ; $56e4: $cd $df $1a
-	ld   hl, wGameSubstate                                   ; $56e7: $21 $a1 $c2
-	inc  [hl]                                        ; $56ea: $34
+; Play sound, and go to the exit substate
+	ld   a, SE_21                                                   ; $56e2
+	call PlaySoundEffect                                            ; $56e4
 
-jr_010_56eb:
-	ret                                              ; $56eb: $c9
+	ld   hl, wGameSubstate                                          ; $56e7
+	inc  [hl]                                                       ; $56ea
 
-
-	ldh  a, [rKEY1]                                  ; $56ec: $f0 $4d
-	bit  7, a                                        ; $56ee: $cb $7f
-	call z, UnsetDoubleSpeedMode                            ; $56f0: $cc $f4 $53
-	xor  a                                           ; $56f3: $af
-	ld   [wStartingColorIdxToLoadCompDataFor], a                                  ; $56f4: $ea $62 $c3
-	ld   a, $20                                      ; $56f7: $3e $20
-	ld   [wNumPaletteColorsToLoadCompDataFor], a                                  ; $56f9: $ea $63 $c3
-	ld   a, $03                                      ; $56fc: $3e $03
-	ld   b, $1e                                      ; $56fe: $06 $1e
-	ld   hl, $7a0e                                   ; $5700: $21 $0e $7a
-	ld   c, $01                                      ; $5703: $0e $01
-	ld   de, $7000                                   ; $5705: $11 $00 $70
-	call FarLoadPaletteValsFadeToValsAndSetFadeSpeed                                       ; $5708: $cd $48 $07
-	push af                                          ; $570b: $f5
-	ld   a, $6f                                      ; $570c: $3e $6f
-	ld   [wFarCallAddr], a                                  ; $570e: $ea $98 $c2
-	ld   a, $57                                      ; $5711: $3e $57
-	ld   [wFarCallAddr+1], a                                  ; $5713: $ea $99 $c2
-	ld   a, $11                                      ; $5716: $3e $11
-	ld   [wFarCallBank], a                                  ; $5718: $ea $9a $c2
-	pop  af                                          ; $571b: $f1
-	call FarCall                                       ; $571c: $cd $62 $09
-	ld   a, $01                                      ; $571f: $3e $01
-	ld   hl, $7000                                   ; $5721: $21 $00 $70
-	ld   de, wBGPalettes                                   ; $5724: $11 $de $c2
-	ld   bc, $0080                                   ; $5727: $01 $80 $00
-	call FarMemCopy                                       ; $572a: $cd $b2 $09
-	ld   bc, $003f                                   ; $572d: $01 $3f $00
-	call SetBGandOBJPaletteRangesToUpdate                                       ; $5730: $cd $aa $04
-	call TurnOffLCD                                       ; $5733: $cd $e3 $08
-	ld   a, [$c93f]                                  ; $5736: $fa $3f $c9
-	ld   [wGameState], a                                  ; $5739: $ea $a0 $c2
-	ld   a, [$c940]                                  ; $573c: $fa $40 $c9
-	ld   [wGameSubstate], a                                  ; $573f: $ea $a1 $c2
-	ret                                              ; $5742: $c9
+.done:
+	ret                                                             ; $56eb
 
 
-Call_010_5743:
-	ld   c, $80                                      ; $5743: $0e $80
-	ld   de, $98e0                                   ; $5745: $11 $e0 $98
-	ld   a, $03                                      ; $5748: $3e $03
-	ld   hl, $d380                                   ; $574a: $21 $80 $d3
-	ld   b, $08                                      ; $574d: $06 $08
-	call EnqueueHDMATransfer                                       ; $574f: $cd $7c $02
-	ld   c, $81                                      ; $5752: $0e $81
-	ld   de, $98e0                                   ; $5754: $11 $e0 $98
-	ld   a, $03                                      ; $5757: $3e $03
-	ld   hl, $d780                                   ; $5759: $21 $80 $d7
-	ld   b, $08                                      ; $575c: $06 $08
-	call EnqueueHDMATransfer                                       ; $575e: $cd $7c $02
-	ret                                              ; $5761: $c9
+TVCommsSubstate6_FadeOut:
+; Set double speed mode again
+	ldh  a, [rKEY1]                                                 ; $56ec
+	bit  7, a                                                       ; $56ee
+	call z, ToggleDoubleSpeedMode                                   ; $56f0
+
+; Load color comp data for all BG palettes
+	xor  a                                                          ; $56f3
+	ld   [wStartingColorIdxToLoadCompDataFor], a                    ; $56f4
+	ld   a, NUM_COLORS                                              ; $56f7
+	ld   [wNumPaletteColorsToLoadCompDataFor], a                    ; $56f9
+
+; Load white palettes and fade to them
+	ld   a, $03                                                     ; $56fc
+	ld   b, BANK(BGPalettes_InfraComms)                             ; $56fe
+	ld   hl, BGPalettes_InfraComms                                  ; $5700
+	ld   c, BANK(Palettes_AllWhite)                                 ; $5703
+	ld   de, Palettes_AllWhite                                      ; $5705
+	call FarLoadPaletteValsFadeToValsAndSetFadeSpeed                ; $5708
+
+	M_FarCall FadeBGpalsToWhiteAndAudVol8timesHandlingAnimatedSpriteSpecs
+
+; Set white palettes and update hw pals
+	ld   a, BANK(Palettes_AllWhite)                                 ; $571f
+	ld   hl, Palettes_AllWhite                                      ; $5721
+	ld   de, wBGPalettes                                            ; $5724
+	ld   bc, NUM_PALETTE_BYTES * 2                                  ; $5727
+	call FarMemCopy                                                 ; $572a
+
+	ldbc $00, $3f                                                   ; $572d
+	call SetBGandOBJPaletteRangesToUpdate                           ; $5730
+
+; Turn off LCD and go back to previous state
+	call TurnOffLCD                                                 ; $5733
+
+	ld   a, [wGameBoyOrTVCommsReturnState]                          ; $5736
+	ld   [wGameState], a                                            ; $5739
+	ld   a, [wGameBoyOrTVCommsReturnSubstate]                       ; $573c
+	ld   [wGameSubstate], a                                         ; $573f
+	ret                                                             ; $5742
 
 
-Call_010_5762:
-	ld   c, $80                                      ; $5762: $0e $80
-	ld   de, $99c0                                   ; $5764: $11 $c0 $99
-	ld   a, $03                                      ; $5767: $3e $03
-	ld   hl, $d300                                   ; $5769: $21 $00 $d3
-	ld   b, $08                                      ; $576c: $06 $08
-	call EnqueueHDMATransfer                                       ; $576e: $cd $7c $02
-	ld   c, $81                                      ; $5771: $0e $81
-	ld   de, $99c0                                   ; $5773: $11 $c0 $99
-	ld   a, $03                                      ; $5776: $3e $03
-	ld   hl, $d700                                   ; $5778: $21 $00 $d7
-	ld   b, $08                                      ; $577b: $06 $08
-	call EnqueueHDMATransfer                                       ; $577d: $cd $7c $02
-	ret                                              ; $5780: $c9
+DisplayTVCommsConnSuccessfulBox:
+	ld   c, $80                                                     ; $5743
+	ld   de, _SCRN0+$e0                                             ; $5745
+	ld   a, BANK(wTVCommsTileMapBuffer)                             ; $5748
+	ld   hl, wTVCommsTileMapBuffer+$380                             ; $574a
+	ld   b, $80/$10                                                 ; $574d
+	call EnqueueHDMATransfer                                        ; $574f
+
+	ld   c, $81                                                     ; $5752
+	ld   de, _SCRN0+$e0                                             ; $5754
+	ld   a, BANK(wTVCommsTileAttrBuffer)                            ; $5757
+	ld   hl, wTVCommsTileAttrBuffer+$380                            ; $5759
+	ld   b, $80/$10                                                 ; $575c
+	call EnqueueHDMATransfer                                        ; $575e
+	ret                                                             ; $5761
 
 
-Call_010_5781:
-	ld   c, $80                                      ; $5781: $0e $80
-	ld   de, $98c0                                   ; $5783: $11 $c0 $98
-	ld   a, $03                                      ; $5786: $3e $03
-	ld   hl, $d240                                   ; $5788: $21 $40 $d2
-	ld   b, $0c                                      ; $578b: $06 $0c
-	call EnqueueHDMATransfer                                       ; $578d: $cd $7c $02
-	ld   c, $81                                      ; $5790: $0e $81
-	ld   de, $98c0                                   ; $5792: $11 $c0 $98
-	ld   a, $03                                      ; $5795: $3e $03
-	ld   hl, $d640                                   ; $5797: $21 $40 $d6
-	ld   b, $0c                                      ; $579a: $06 $0c
-	call EnqueueHDMATransfer                                       ; $579c: $cd $7c $02
-	ret                                              ; $579f: $c9
+DisplayTVCommsWaitingConnText:
+	ld   c, $80                                                     ; $5762
+	ld   de, _SCRN0+$1c0                                            ; $5764
+	ld   a, BANK(wTVCommsTileMapBuffer)                             ; $5767
+	ld   hl, wTVCommsTileMapBuffer+$300                             ; $5769
+	ld   b, $80/$10                                                 ; $576c
+	call EnqueueHDMATransfer                                        ; $576e
+
+	ld   c, $81                                                     ; $5771
+	ld   de, _SCRN0+$1c0                                            ; $5773
+	ld   a, BANK(wTVCommsTileAttrBuffer)                            ; $5776
+	ld   hl, wTVCommsTileAttrBuffer+$300                            ; $5778
+	ld   b, $80/$10                                                 ; $577b
+	call EnqueueHDMATransfer                                        ; $577d
+	ret                                                             ; $5780
 
 
-Call_010_57a0:
-	ld   a, h                                        ; $57a0: $7c
-	ld   [$c93f], a                                  ; $57a1: $ea $3f $c9
-	ld   a, l                                        ; $57a4: $7d
-	ld   [$c940], a                                  ; $57a5: $ea $40 $c9
-	ld   a, $11                                      ; $57a8: $3e $11
-	ld   [wGameState], a                                  ; $57aa: $ea $a0 $c2
-	ld   a, $00                                      ; $57ad: $3e $00
-	ld   [wGameSubstate], a                                  ; $57af: $ea $a1 $c2
-	ret                                              ; $57b2: $c9
+DisplayTVCommsConnUnsuccessfulBox:
+	ld   c, $80                                                     ; $5781
+	ld   de, _SCRN0+$c0                                             ; $5783
+	ld   a, BANK(wTVCommsTileMapBuffer)                             ; $5786
+	ld   hl, wTVCommsTileMapBuffer+$240                             ; $5788
+	ld   b, $c0/$10                                                 ; $578b
+	call EnqueueHDMATransfer                                        ; $578d
+
+	ld   c, $81                                                     ; $5790
+	ld   de, _SCRN0+$c0                                             ; $5792
+	ld   a, BANK(wTVCommsTileAttrBuffer)                            ; $5795
+	ld   hl, wTVCommsTileAttrBuffer+$240                            ; $5797
+	ld   b, $c0/$10                                                 ; $579a
+	call EnqueueHDMATransfer                                        ; $579c
+	ret                                                             ; $579f
+
+
+; H - return state
+; L - return substate
+SetTVCommsState:
+; Set return state/substate
+	ld   a, h                                                       ; $57a0
+	ld   [wGameBoyOrTVCommsReturnState], a                          ; $57a1
+	ld   a, l                                                       ; $57a4
+	ld   [wGameBoyOrTVCommsReturnSubstate], a                       ; $57a5
+
+; Then set tv comms state
+	ld   a, GS_TV_COMMS                                             ; $57a8
+	ld   [wGameState], a                                            ; $57aa
+	ld   a, $00                                                     ; $57ad
+	ld   [wGameSubstate], a                                         ; $57af
+	ret                                                             ; $57b2
 
 
 Call_010_57b3:
 	ld   hl, rRP                                   ; $57b3: $21 $56 $ff
 	ld   bc, $05b0                                   ; $57b6: $01 $b0 $05
 
-jr_010_57b9:
+.loop1:
 	dec  bc                                          ; $57b9: $0b
 	ld   a, b                                        ; $57ba: $78
 	or   c                                           ; $57bb: $b1
-	jr   z, jr_010_57e8                              ; $57bc: $28 $2a
+	jr   z, .returnFFh                              ; $57bc: $28 $2a
 
 	bit  4, [hl]                                     ; $57be: $cb $66
-	jr   z, jr_010_57b9                              ; $57c0: $28 $f7
+	jr   z, .loop1                              ; $57c0: $28 $f7
 
 	xor  a                                           ; $57c2: $af
 
-jr_010_57c3:
+.loop2:
 	inc  a                                           ; $57c3: $3c
 	cp   $11                                         ; $57c4: $fe $11
-	jr   z, jr_010_57e8                              ; $57c6: $28 $20
+	jr   z, .returnFFh                              ; $57c6: $28 $20
 
 	bit  4, [hl]                                     ; $57c8: $cb $66
-	jr   nz, jr_010_57c3                             ; $57ca: $20 $f7
+	jr   nz, .loop2                             ; $57ca: $20 $f7
 
 	ld   b, a                                        ; $57cc: $47
 	xor  a                                           ; $57cd: $af
 
-jr_010_57ce:
+.loop3:
 	inc  a                                           ; $57ce: $3c
 	cp   $28                                         ; $57cf: $fe $28
-	jr   z, jr_010_57e8                              ; $57d1: $28 $15
+	jr   z, .returnFFh                              ; $57d1: $28 $15
 
 	bit  4, [hl]                                     ; $57d3: $cb $66
-	jr   z, jr_010_57ce                              ; $57d5: $28 $f7
+	jr   z, .loop3                              ; $57d5: $28 $f7
 
 	add  b                                           ; $57d7: $80
 	ld   b, $00                                      ; $57d8: $06 $00
-	ld   hl, $57f6                                   ; $57da: $21 $f6 $57
+	ld   hl, .table                                   ; $57da: $21 $f6 $57
 
-jr_010_57dd:
+.loop4:
 	cp   [hl]                                        ; $57dd: $be
-	jr   c, jr_010_57e8                              ; $57de: $38 $08
+	jr   c, .returnFFh                              ; $57de: $38 $08
 
 	inc  hl                                          ; $57e0: $23
 	cp   [hl]                                        ; $57e1: $be
-	jr   c, jr_010_57ec                              ; $57e2: $38 $08
+	jr   c, .endLoop                              ; $57e2: $38 $08
 
 	inc  hl                                          ; $57e4: $23
 	inc  b                                           ; $57e5: $04
-	jr   jr_010_57dd                                 ; $57e6: $18 $f5
+	jr   .loop4                                 ; $57e6: $18 $f5
 
-jr_010_57e8:
+.returnFFh:
 	ld   b, $ff                                      ; $57e8: $06 $ff
-	jr   jr_010_57ec                                 ; $57ea: $18 $00
+	jr   .endLoop                                 ; $57ea: $18 $00
 
-jr_010_57ec:
+.endLoop:
 	ld   de, $00bf                                   ; $57ec: $11 $bf $00
 
-jr_010_57ef:
-	dec  de                                          ; $57ef: $1b
+:	dec  de                                          ; $57ef: $1b
 	ld   a, d                                        ; $57f0: $7a
 	or   e                                           ; $57f1: $b3
-	jr   nz, jr_010_57ef                             ; $57f2: $20 $fb
+	jr   nz, :-                             ; $57f2: $20 $fb
 
 	ld   a, b                                        ; $57f4: $78
 	ret                                              ; $57f5: $c9
 
-
-	inc  b                                           ; $57f6: $04
-	add  hl, bc                                      ; $57f7: $09
-	ld   a, [bc]                                     ; $57f8: $0a
-	rrca                                             ; $57f9: $0f
-	db   $10                                         ; $57fa: $10
-	dec  d                                           ; $57fb: $15
-	ld   d, $1b                                      ; $57fc: $16 $1b
-	rst  $38                                         ; $57fe: $ff
+.table:
+	db $04, $09, $0a, $0f, $10, $15, $16, $1b, $ff
 
 
-Func_10_57ff:
+; Returns A = 0 on success, else $ff
+CheckTVAdapterIRPulseTimings:
 	ld   hl, rRP                                   ; $57ff: $21 $56 $ff
+
+; Now wait for rRP to return bit 4 set (after checking it cleared before)
 	ld   bc, $05b0                                   ; $5802: $01 $b0 $05
 
-jr_010_5805:
+.loop1:
 	dec  bc                                          ; $5805: $0b
 	ld   a, b                                        ; $5806: $78
 	or   c                                           ; $5807: $b1
-	jr   z, jr_010_5834                              ; $5808: $28 $2a
+	jr   z, .returnFFh                              ; $5808: $28 $2a
 
 	bit  4, [hl]                                     ; $580a: $cb $66
-	jr   z, jr_010_5805                              ; $580c: $28 $f7
+	jr   z, .loop1                              ; $580c: $28 $f7
 
+; ; Loop $11 times waiting bit 4 to be cleared again
 	xor  a                                           ; $580e: $af
 
-jr_010_580f:
+.loop2:
 	inc  a                                           ; $580f: $3c
 	cp   $11                                         ; $5810: $fe $11
-	jr   z, jr_010_5834                              ; $5812: $28 $20
+	jr   z, .returnFFh                              ; $5812: $28 $20
 
 	bit  4, [hl]                                     ; $5814: $cb $66
-	jr   nz, jr_010_580f                             ; $5816: $20 $f7
+	jr   nz, .loop2                             ; $5816: $20 $f7
 
+; Store num loops in B, then wait $28 times for bit 4 to be set again
 	ld   b, a                                        ; $5818: $47
 	xor  a                                           ; $5819: $af
 
-jr_010_581a:
+.loop3:
 	inc  a                                           ; $581a: $3c
 	cp   $28                                         ; $581b: $fe $28
-	jr   z, jr_010_5834                              ; $581d: $28 $15
+	jr   z, .returnFFh                              ; $581d: $28 $15
 
 	bit  4, [hl]                                     ; $581f: $cb $66
-	jr   z, jr_010_581a                              ; $5821: $28 $f7
+	jr   z, .loop3                              ; $5821: $28 $f7
 
+; Add num loops onto prev num loops
 	add  b                                           ; $5823: $80
-	ld   b, $00                                      ; $5824: $06 $00
-	ld   hl, $5842                                   ; $5826: $21 $42 $58
 
-jr_010_5829:
+; The below simply checks that the total loops above is between $1c and $20 inclusive
+	ld   b, $00                                      ; $5824: $06 $00
+	ld   hl, .data                                   ; $5826: $21 $42 $58
+
+.loop4:
 	cp   [hl]                                        ; $5829: $be
-	jr   c, jr_010_5834                              ; $582a: $38 $08
+	jr   c, .returnFFh                              ; $582a: $38 $08
 
 	inc  hl                                          ; $582c: $23
 	cp   [hl]                                        ; $582d: $be
-	jr   c, jr_010_5838                              ; $582e: $38 $08
+	jr   c, .endLoop                              ; $582e: $38 $08
 
 	inc  hl                                          ; $5830: $23
 	inc  b                                           ; $5831: $04
-	jr   jr_010_5829                                 ; $5832: $18 $f5
+	jr   .loop4                                 ; $5832: $18 $f5
 
-jr_010_5834:
+.returnFFh:
+; If above loop done more than once, or any other failures in algo, returns $ff
 	ld   b, $ff                                      ; $5834: $06 $ff
-	jr   jr_010_5838                                 ; $5836: $18 $00
+	jr   .endLoop                                 ; $5836: $18 $00
 
-jr_010_5838:
+.endLoop:
+; Loop value used for rRP timing
 	ld   de, $00bf                                   ; $5838: $11 $bf $00
 
-jr_010_583b:
-	dec  de                                          ; $583b: $1b
+:	dec  de                                          ; $583b: $1b
 	ld   a, d                                        ; $583c: $7a
 	or   e                                           ; $583d: $b3
-	jr   nz, jr_010_583b                             ; $583e: $20 $fb
+	jr   nz, :-                             ; $583e: $20 $fb
 
 	ld   a, b                                        ; $5840: $78
 	ret                                              ; $5841: $c9
 
-
-	inc  e                                           ; $5842: $1c
-	db $21, $ff 
+.data:
+	db $1c, $21, $ff 
 	
 	
+; Returns A=0 when successful
 Func_10_5845:
-	call Func_10_57ff ; $5845: $cd $ff $57
+; todo: call func, returning 1 if 1/$ff, else jumping
+	call CheckTVAdapterIRPulseTimings ; $5845: $cd $ff $57
 	or   a                                           ; $5848: $b7
-	jr   z, jr_010_584e                              ; $5849: $28 $03
+	jr   z, .timingsGood                              ; $5849: $28 $03
 
 	ld   a, $01                                      ; $584b: $3e $01
 	ret                                              ; $584d: $c9
 
-
-jr_010_584e:
+.timingsGood:
 	ld   hl, $c6ae                                   ; $584e: $21 $ae $c6
 	ld   b, $20                                      ; $5851: $06 $20
 
-jr_010_5853:
+.loop_5853:
 	push bc                                          ; $5853: $c5
 	push hl                                          ; $5854: $e5
 	call Call_010_57b3                               ; $5855: $cd $b3 $57
 	pop  hl                                          ; $5858: $e1
 	pop  bc                                          ; $5859: $c1
+
 	cp   $ff                                         ; $585a: $fe $ff
-	jr   nz, jr_010_5861                             ; $585c: $20 $03
+	jr   nz, .br_5861                             ; $585c: $20 $03
 
 	ld   a, $02                                      ; $585e: $3e $02
 	ret                                              ; $5860: $c9
 
-
-jr_010_5861:
+.br_5861:
 	srl  a                                           ; $5861: $cb $3f
 	rr   [hl]                                        ; $5863: $cb $1e
 	srl  a                                           ; $5865: $cb $3f
@@ -3576,47 +3633,43 @@ jr_010_5861:
 	ld   a, b                                        ; $5869: $78
 	dec  a                                           ; $586a: $3d
 	and  $03                                         ; $586b: $e6 $03
-	jr   nz, jr_010_5870                             ; $586d: $20 $01
-
+	jr   nz, :+                             ; $586d: $20 $01
 	inc  hl                                          ; $586f: $23
-
-jr_010_5870:
-	dec  b                                           ; $5870: $05
-	jr   nz, jr_010_5853                             ; $5871: $20 $e0
+:	dec  b                                           ; $5870: $05
+	jr   nz, .loop_5853                             ; $5871: $20 $e0
 
 	ld   a, [$c6b4]                                  ; $5873: $fa $b4 $c6
 	or   a                                           ; $5876: $b7
-	jr   z, jr_010_587d                              ; $5877: $28 $04
+	jr   z, .return05h                              ; $5877: $28 $04
 
 	cp   $40                                         ; $5879: $fe $40
-	jr   c, jr_010_5880                              ; $587b: $38 $03
+	jr   c, .br_5880                              ; $587b: $38 $03
 
-jr_010_587d:
+.return05h:
 	ld   a, $05                                      ; $587d: $3e $05
 	ret                                              ; $587f: $c9
 
-
-jr_010_5880:
+.br_5880:
 	ld   a, [$c6b4]                                  ; $5880: $fa $b4 $c6
 	sla  a                                           ; $5883: $cb $27
 	sla  a                                           ; $5885: $cb $27
 	ld   b, a                                        ; $5887: $47
 	ld   hl, $c6b6                                   ; $5888: $21 $b6 $c6
 
-jr_010_588b:
+.loop_588b:
 	push bc                                          ; $588b: $c5
 	push hl                                          ; $588c: $e5
 	call Call_010_57b3                               ; $588d: $cd $b3 $57
 	pop  hl                                          ; $5890: $e1
 	pop  bc                                          ; $5891: $c1
+
 	cp   $ff                                         ; $5892: $fe $ff
-	jr   nz, jr_010_5899                             ; $5894: $20 $03
+	jr   nz, .br_5899                             ; $5894: $20 $03
 
 	ld   a, $06                                      ; $5896: $3e $06
 	ret                                              ; $5898: $c9
 
-
-jr_010_5899:
+.br_5899:
 	srl  a                                           ; $5899: $cb $3f
 	rr   [hl]                                        ; $589b: $cb $1e
 	srl  a                                           ; $589d: $cb $3f
@@ -3624,35 +3677,31 @@ jr_010_5899:
 	ld   a, b                                        ; $58a1: $78
 	dec  a                                           ; $58a2: $3d
 	and  $03                                         ; $58a3: $e6 $03
-	jr   nz, jr_010_58a8                             ; $58a5: $20 $01
-
+	jr   nz, :+                             ; $58a5: $20 $01
 	inc  hl                                          ; $58a7: $23
-
-jr_010_58a8:
-	dec  b                                           ; $58a8: $05
-	jr   nz, jr_010_588b                             ; $58a9: $20 $e0
+:	dec  b                                           ; $58a8: $05
+	jr   nz, .loop_588b                             ; $58a9: $20 $e0
 
 	ld   b, $04                                      ; $58ab: $06 $04
 
-jr_010_58ad:
+.loop_58ad:
 	push bc                                          ; $58ad: $c5
 	call Call_010_57b3                               ; $58ae: $cd $b3 $57
 	pop  bc                                          ; $58b1: $c1
 	cp   $ff                                         ; $58b2: $fe $ff
-	jr   nz, jr_010_58b9                             ; $58b4: $20 $03
+	jr   nz, .br_58b9                             ; $58b4: $20 $03
 
 	ld   a, $07                                      ; $58b6: $3e $07
 	ret                                              ; $58b8: $c9
 
-
-jr_010_58b9:
+.br_58b9:
 	ld   hl, $c6f5                                   ; $58b9: $21 $f5 $c6
 	srl  a                                           ; $58bc: $cb $3f
 	rr   [hl]                                        ; $58be: $cb $1e
 	srl  a                                           ; $58c0: $cb $3f
 	rr   [hl]                                        ; $58c2: $cb $1e
 	dec  b                                           ; $58c4: $05
-	jr   nz, jr_010_58ad                             ; $58c5: $20 $e6
+	jr   nz, .loop_58ad                             ; $58c5: $20 $e6
 
 	ld   hl, $c6ae                                   ; $58c7: $21 $ae $c6
 	ld   a, [$c6b4]                                  ; $58ca: $fa $b4 $c6
@@ -3660,58 +3709,58 @@ jr_010_58b9:
 	ld   b, a                                        ; $58cf: $47
 	ld   a, [hl+]                                    ; $58d0: $2a
 
-jr_010_58d1:
-	add  [hl]                                        ; $58d1: $86
+:	add  [hl]                                        ; $58d1: $86
 	inc  hl                                          ; $58d2: $23
 	dec  b                                           ; $58d3: $05
-	jr   nz, jr_010_58d1                             ; $58d4: $20 $fb
+	jr   nz, :-                             ; $58d4: $20 $fb
 
 	ld   hl, $c6f5                                   ; $58d6: $21 $f5 $c6
 	cp   [hl]                                        ; $58d9: $be
-	jr   z, jr_010_58df                              ; $58da: $28 $03
+	jr   z, .br_58df                              ; $58da: $28 $03
 
 	ld   a, $09                                      ; $58dc: $3e $09
 	ret                                              ; $58de: $c9
 
-
-jr_010_58df:
+.br_58df:
 	ld   a, [$c6b4]                                  ; $58df: $fa $b4 $c6
 	ld   b, a                                        ; $58e2: $47
 	ld   a, [$c6b3]                                  ; $58e3: $fa $b3 $c6
 	ld   c, a                                        ; $58e6: $4f
 	ld   hl, $c6b6                                   ; $58e7: $21 $b6 $c6
 
-jr_010_58ea:
-	ld   a, [hl]                                     ; $58ea: $7e
+:	ld   a, [hl]                                     ; $58ea: $7e
 	xor  c                                           ; $58eb: $a9
 	ld   [hl+], a                                    ; $58ec: $22
 	dec  b                                           ; $58ed: $05
-	jr   nz, jr_010_58ea                             ; $58ee: $20 $fa
+	jr   nz, :-                             ; $58ee: $20 $fa
 
 	xor  a                                           ; $58f0: $af
 	ret                                              ; $58f1: $c9
 
 
-Call_010_58f2:
-	ld   hl, rRP                                   ; $58f2: $21 $56 $ff
-	ld   bc, $05b0                                   ; $58f5: $01 $b0 $05
+; Returns A=0 if successful
+CheckIfTVAdapterConnected:
+	ld   hl, rRP                                                    ; $58f2
 
-jr_010_58f8:
-	dec  bc                                          ; $58f8: $0b
-	ld   a, b                                        ; $58f9: $78
-	or   c                                           ; $58fa: $b1
-	jr   z, jr_010_5903                              ; $58fb: $28 $06
+; Loop waiting a fixed amount of cycles
+	ld   bc, $05b0                                                  ; $58f5
 
-	bit  4, [hl]                                     ; $58fd: $cb $66
-	jr   nz, jr_010_58f8                             ; $58ff: $20 $f7
+.loop:
+	dec  bc                                                         ; $58f8
+	ld   a, b                                                       ; $58f9
+	or   c                                                          ; $58fa
+	jr   z, .noConn                                                 ; $58fb
 
-	xor  a                                           ; $5901: $af
-	ret                                              ; $5902: $c9
+; If at any point bit 4 is cleared on rRP, the TV adapter is connected
+	bit  4, [hl]                                                    ; $58fd
+	jr   nz, .loop                                                  ; $58ff
 
+	xor  a                                                          ; $5901
+	ret                                                             ; $5902
 
-jr_010_5903:
-	ld   a, $01                                      ; $5903: $3e $01
-	ret                                              ; $5905: $c9
+.noConn:
+	ld   a, $01                                                     ; $5903
+	ret                                                             ; $5905
 
 
 Call_010_5906:
@@ -4252,52 +4301,71 @@ Call_010_5c01:
 GameState14_Cinematron::
 	ld   a, [wGameSubstate]                                         ; $5c06
 	rst  JumpTable                                                  ; $5c09
-	dw CinematronSubstate0
-	dw CinematronSubstate1
+	dw CinematronSubstate0_DefaultInit
+	dw CinematronSubstate1_MainInit
 	dw CinematronSubstate2
-	dw CinematronSubstate3
+	dw CinematronSubstate3_SelectedOption
 	dw CinematronSubstate4
 	
 	
-CinematronSubstate0:
-	ld   a, $03; $5c14: $3e $03
-	ld   [$c91d], a                                  ; $5c16: $ea $1d $c9
+CinematronSubstate0_DefaultInit:
+; Start off on the 'return' option
+	ld   a, $03                                                     ; $5c14
+	ld   [wCinematronChosenOption], a                               ; $5c16
+
+;
 	xor  a                                           ; $5c19: $af
 	ld   [$c941], a                                  ; $5c1a: $ea $41 $c9
-	ld   hl, wGameSubstate                                   ; $5c1d: $21 $a1 $c2
-	inc  [hl]                                        ; $5c20: $34
 
-CinematronSubstate1:
-	di                                               ; $5c21: $f3
-	call Call_010_58f2                               ; $5c22: $cd $f2 $58
-	ei                                               ; $5c25: $fb
-	ld   [$c924], a                                  ; $5c26: $ea $24 $c9
-	or   a                                           ; $5c29: $b7
-	jr   z, jr_010_5c37                              ; $5c2a: $28 $0b
+; Inc to main substate
+	ld   hl, wGameSubstate                                          ; $5c1d
+	inc  [hl]                                                       ; $5c20
 
-	ld   hl, $c91d                                   ; $5c2c: $21 $1d $c9
-	ld   a, [hl]                                     ; $5c2f: $7e
-	cp   $02                                         ; $5c30: $fe $02
-	jr   nz, jr_010_5c37                             ; $5c32: $20 $03
+CinematronSubstate1_MainInit:
+; Check if TV adapter is connected, set flag, and jump if it is
+	di                                                              ; $5c21
+	call CheckIfTVAdapterConnected                                  ; $5c22
+	ei                                                              ; $5c25
 
-	ld   a, $03                                      ; $5c34: $3e $03
-	ld   [hl], a                                     ; $5c36: $77
+	ld   [wTVAdapterDisconnected], a                                ; $5c26
+	or   a                                                          ; $5c29
+	jr   z, .afterTVadapterCheck                                    ; $5c2a
 
-jr_010_5c37:
+; If no TV adapter, and chosen opt is sitting on TV adapter..
+	ld   hl, wCinematronChosenOption                                ; $5c2c
+	ld   a, [hl]                                                    ; $5c2f
+	cp   $02                                                        ; $5c30
+	jr   nz, .afterTVadapterCheck                                   ; $5c32
+
+; Set it to the 'return' button instead
+	ld   a, $03                                                     ; $5c34
+	ld   [hl], a                                                    ; $5c36
+
+.afterTVadapterCheck:
+;
 	call Call_010_65e0                               ; $5c37: $cd $e0 $65
-	call TurnOffLCD                                       ; $5c3a: $cd $e3 $08
-	ld   a, $00                                      ; $5c3d: $3e $00
-	call SafeSetAudVolForMultipleChannels                                       ; $5c3f: $cd $e0 $1c
-	ld   a, $ff                                      ; $5c42: $3e $ff
-	ld   [wInGameInputsEnabled], a                                  ; $5c44: $ea $0e $c2
-	ld   a, $0c                                      ; $5c47: $3e $0c
-	ld   [wBaseInitialStickyCounter], a                                  ; $5c49: $ea $13 $c2
-	ld   a, $04                                      ; $5c4c: $3e $04
-	ld   [wBaseRepeatedStickyCounter], a                                  ; $5c4e: $ea $14 $c2
-	call ClearOam                                       ; $5c51: $cd $d7 $0d
-	call ClearDisplayRegsAllowVBlankInt                                       ; $5c54: $cd $59 $0b
-	ld   a, LCDCF_OBJON|LCDCF_BGON                                      ; $5c57: $3e $03
-	ld   [wLCDC], a                                  ; $5c59: $ea $03 $c2
+
+; Turn off LCD and mute volume
+	call TurnOffLCD                                                 ; $5c3a
+	ld   a, $00                                                     ; $5c3d
+	call SafeSetAudVolForMultipleChannels                           ; $5c3f
+
+; Set sticky buttons params
+	ld   a, $ff                                                     ; $5c42
+	ld   [wInGameInputsEnabled], a                                  ; $5c44
+	ld   a, $0c                                                     ; $5c47
+	ld   [wBaseInitialStickyCounter], a                             ; $5c49
+	ld   a, $04                                                     ; $5c4c
+	ld   [wBaseRepeatedStickyCounter], a                            ; $5c4e
+
+; Clear oam and display regs, then turn off LCD
+	call ClearOam                                                   ; $5c51
+
+	call ClearDisplayRegsAllowVBlankInt                             ; $5c54
+	ld   a, LCDCF_OBJON|LCDCF_BGON                                  ; $5c57
+	ld   [wLCDC], a                                                 ; $5c59
+
+;
 	ld   a, [wWramBank]                                  ; $5c5c: $fa $93 $c2
 	push af                                          ; $5c5f: $f5
 	ld   a, $03                                      ; $5c60: $3e $03
@@ -4540,7 +4608,7 @@ jr_010_5e3a:
 	bit  0, a                                        ; $5e41: $cb $47
 	jr   z, jr_010_5e67                              ; $5e43: $28 $22
 
-	ld   a, [$c91d]                                  ; $5e45: $fa $1d $c9
+	ld   a, [wCinematronChosenOption]                                  ; $5e45: $fa $1d $c9
 	cp   $03                                         ; $5e48: $fe $03
 	jr   nz, jr_010_5e53                             ; $5e4a: $20 $07
 
@@ -4566,7 +4634,7 @@ jr_010_5e67:
 	call PlaySoundEffect                                       ; $5e6d: $cd $df $1a
 	call Call_010_62a6                               ; $5e70: $cd $a6 $62
 	ld   a, $03                                      ; $5e73: $3e $03
-	ld   [$c91d], a                                  ; $5e75: $ea $1d $c9
+	ld   [wCinematronChosenOption], a                                  ; $5e75: $ea $1d $c9
 	call Call_010_62b6                               ; $5e78: $cd $b6 $62
 	call Call_010_6240                               ; $5e7b: $cd $40 $62
 
@@ -4587,7 +4655,7 @@ jr_010_5ea2:
 
 
 Call_010_5ea3:
-	ld   a, [$c91d]                                  ; $5ea3: $fa $1d $c9
+	ld   a, [wCinematronChosenOption]                                  ; $5ea3: $fa $1d $c9
 	ld   c, a                                        ; $5ea6: $4f
 	ld   b, $00                                      ; $5ea7: $06 $00
 	ld   hl, $5eaf                                   ; $5ea9: $21 $af $5e
@@ -4911,29 +4979,37 @@ jr_010_60a8:
 	ret                                              ; $60a8: $c9
 
 
+; DE -
 Call_010_60a9:
 	push hl                                          ; $60a9: $e5
 	push de                                          ; $60aa: $d5
+
 	ld   a, [$cc95]                                  ; $60ab: $fa $95 $cc
-	call $0d7d                                       ; $60ae: $cd $7d $0d
+	call ConvertAintoBCD                                       ; $60ae: $cd $7d $0d
+
+; C = 1s, B = 10s, trash 100s
 	ld   c, a                                        ; $60b1: $4f
 	pop  af                                          ; $60b2: $f1
 	ld   b, a                                        ; $60b3: $47
 	pop  af                                          ; $60b4: $f1
+
 	pop  de                                          ; $60b5: $d1
 	pop  hl                                          ; $60b6: $e1
+
+; Jump if 10s == 0
 	ld   a, b                                        ; $60b7: $78
 	or   a                                           ; $60b8: $b7
-	jr   z, jr_010_60c3                              ; $60b9: $28 $08
+	jr   z, .store1s                              ; $60b9: $28 $08
 
-	cp   $0a                                         ; $60bb: $fe $0a
-	jr   z, jr_010_60c3                              ; $60bd: $28 $04
+	cp   10                                         ; $60bb: $fe $0a
+	jr   z, .store1s                              ; $60bd: $28 $04
 
+;
 	add  $11                                         ; $60bf: $c6 $11
 	ld   [de], a                                     ; $60c1: $12
 	inc  de                                          ; $60c2: $13
 
-jr_010_60c3:
+.store1s:
 	ld   a, c                                        ; $60c3: $79
 	add  $11                                         ; $60c4: $c6 $11
 	ld   [de], a                                     ; $60c6: $12
@@ -5073,46 +5149,50 @@ jr_010_617e:
 	ret                                              ; $617e: $c9
 
 
-CinematronSubstate3:
-	call TurnOffLCD                                       ; $617f: $cd $e3 $08
-	ld   a, $00                                      ; $6182: $3e $00
-	call PlaySong                                       ; $6184: $cd $92 $1a
-	ld   a, [$c91d]                                  ; $6187: $fa $1d $c9
-	rst  JumpTable                                         ; $618a: $df
-	dw $6193
-	dw $619b
-	dw $61a3
-	dw $61ab
+CinematronSubstate3_SelectedOption:
+; Turn off LCD and mute song
+	call TurnOffLCD                                                 ; $617f
 
+	ld   a, $00                                                     ; $6182
+	call PlaySong                                                   ; $6184
+	
+; Branch based on opt chosen, returning to the 'main init' state
+	ld   a, [wCinematronChosenOption]                               ; $6187
+	rst  JumpTable                                                  ; $618a
+	dw .pocketSakuraComms
+	dw .gameboyComms
+	dw .tvComms
+	dw .returnState
 
-	ld   h, $14                                      ; $6193: $26 $14
-	ld   l, $01                                      ; $6195: $2e $01
-	call Call_010_556b                               ; $6197: $cd $6b $55
-	ret                                              ; $619a: $c9
+.pocketSakuraComms:
+	ld   h, GS_CINEMATRON                                           ; $6193
+	ld   l, $01                                                     ; $6195
+	call SetPocketSakuraCommsState                                  ; $6197
+	ret                                                             ; $619a
 
+.gameboyComms:
+	ld   h, GS_CINEMATRON                                           ; $619b
+	ld   l, $01                                                     ; $619d
+	call SetGameboyCommsState                                       ; $619f
+	ret                                                             ; $61a2
 
-	ld   h, $14                                      ; $619b: $26 $14
-	ld   l, $01                                      ; $619d: $2e $01
-	call Call_010_51ac                               ; $619f: $cd $ac $51
-	ret                                              ; $61a2: $c9
+.tvComms:
+	ld   h, GS_CINEMATRON                                           ; $61a3
+	ld   l, $01                                                     ; $61a5
+	call SetTVCommsState                                            ; $61a7
+	ret                                                             ; $61aa
 
-
-	ld   h, $14                                      ; $61a3: $26 $14
-	ld   l, $01                                      ; $61a5: $2e $01
-	call Call_010_57a0                               ; $61a7: $cd $a0 $57
-	ret                                              ; $61aa: $c9
-
-
-	ld   a, [wCinematronReturnState]                                  ; $61ab: $fa $22 $c9
-	ld   [wGameState], a                                  ; $61ae: $ea $a0 $c2
-	ld   a, [wCinematronReturnSubstate]                                  ; $61b1: $fa $23 $c9
-	ld   [wGameSubstate], a                                  ; $61b4: $ea $a1 $c2
-	ret                                              ; $61b7: $c9
+.returnState:
+	ld   a, [wCinematronReturnState]                                ; $61ab
+	ld   [wGameState], a                                            ; $61ae
+	ld   a, [wCinematronReturnSubstate]                             ; $61b1
+	ld   [wGameSubstate], a                                         ; $61b4
+	ret                                                             ; $61b7
 
 
 Call_010_61b8:
 	call Call_010_62a6                               ; $61b8: $cd $a6 $62
-	ld   hl, $c91d                                   ; $61bb: $21 $1d $c9
+	ld   hl, wCinematronChosenOption                                   ; $61bb: $21 $1d $c9
 	ld   a, [wInGameButtonsPressed]                                  ; $61be: $fa $10 $c2
 	bit  6, a                                        ; $61c1: $cb $77
 	jr   z, jr_010_61d5                              ; $61c3: $28 $10
@@ -5215,7 +5295,7 @@ Call_010_6240:
 
 Call_010_625e:
 	push hl                                          ; $625e: $e5
-	ld   a, [$c91d]                                  ; $625f: $fa $1d $c9
+	ld   a, [wCinematronChosenOption]                                  ; $625f: $fa $1d $c9
 	ld   c, a                                        ; $6262: $4f
 	ld   b, $00                                      ; $6263: $06 $00
 	ld   hl, $626e                                   ; $6265: $21 $6e $62
@@ -5253,7 +5333,7 @@ jr_010_6291:
 
 Call_010_6292:
 	push hl                                          ; $6292: $e5
-	ld   a, [$c91d]                                  ; $6293: $fa $1d $c9
+	ld   a, [wCinematronChosenOption]                                  ; $6293: $fa $1d $c9
 	ld   c, a                                        ; $6296: $4f
 	ld   b, $00                                      ; $6297: $06 $00
 	ld   hl, $62a2                                   ; $6299: $21 $a2 $62
@@ -5292,7 +5372,7 @@ jr_010_62be:
 
 
 Call_010_62c6:
-	ld   a, [$c91d]                                  ; $62c6: $fa $1d $c9
+	ld   a, [wCinematronChosenOption]                                  ; $62c6: $fa $1d $c9
 	add  a                                           ; $62c9: $87
 	ld   c, a                                        ; $62ca: $4f
 	ld   b, $00                                      ; $62cb: $06 $00
@@ -5379,7 +5459,7 @@ Call_010_62fd:
 	ld   hl, $d074                                   ; $6330: $21 $74 $d0
 	ld   bc, $0006                                   ; $6333: $01 $06 $00
 	call MemCopy                                       ; $6336: $cd $a9 $09
-	ld   a, [$c924]                                  ; $6339: $fa $24 $c9
+	ld   a, [wTVAdapterDisconnected]                                  ; $6339: $fa $24 $c9
 	or   a                                           ; $633c: $b7
 	jr   z, jr_010_6357                              ; $633d: $28 $18
 
@@ -5498,7 +5578,7 @@ jr_010_642e:
 
 
 Call_010_6444:
-	ld   a, [$c91d]                                  ; $6444: $fa $1d $c9
+	ld   a, [wCinematronChosenOption]                                  ; $6444: $fa $1d $c9
 	ld   c, a                                        ; $6447: $4f
 	ld   b, $00                                      ; $6448: $06 $00
 	ld   hl, $646f                                   ; $644a: $21 $6f $64
@@ -5556,7 +5636,7 @@ Call_010_6493:
 	jr   z, jr_010_64f5                              ; $64bb: $28 $38
 
 	call Call_010_65fd                               ; $64bd: $cd $fd $65
-	ld   a, [$c91d]                                  ; $64c0: $fa $1d $c9
+	ld   a, [wCinematronChosenOption]                                  ; $64c0: $fa $1d $c9
 	add  a                                           ; $64c3: $87
 	ld   c, a                                        ; $64c4: $4f
 	ld   b, $00                                      ; $64c5: $06 $00
@@ -5886,7 +5966,7 @@ jr_010_6699:
 	
 	
 Func_10_66a8:
-	ld   a, [$c924] ; $66a8: $fa $24 $c9
+	ld   a, [wTVAdapterDisconnected] ; $66a8: $fa $24 $c9
 	or   a                                           ; $66ab: $b7
 	jr   z, jr_010_66d2                              ; $66ac: $28 $24
 
@@ -5908,7 +5988,7 @@ jr_010_66d2:
 
 
 Call_010_66d3:
-	ld   a, [$c924]                                  ; $66d3: $fa $24 $c9
+	ld   a, [wTVAdapterDisconnected]                                  ; $66d3: $fa $24 $c9
 	or   a                                           ; $66d6: $b7
 	jr   z, jr_010_66e2                              ; $66d7: $28 $09
 
@@ -7959,7 +8039,7 @@ jr_010_7303:
 
 	rst  WaitUntilVBlankIntHandledIfLCDOn                                         ; $7332: $cf
 	ld   a, $37                                      ; $7333: $3e $37
-	call $1b64                                       ; $7335: $cd $64 $1b
+	call PlaySampledSound                                       ; $7335: $cd $64 $1b
 
 jr_010_7338:
 	xor  a                                           ; $7338: $af
@@ -8263,7 +8343,7 @@ Func_10_7561::
 	ld   [$c9f9], a                                  ; $7562: $ea $f9 $c9
 	ld   a, l                                        ; $7565: $7d
 	ld   [$c9fa], a                                  ; $7566: $ea $fa $c9
-	ld   a, $1d                                      ; $7569: $3e $1d
+	ld   a, GS_SUMIRE_MINI_GAME_TITLE_SCREEN                                      ; $7569: $3e $1d
 	ld   [wGameState], a                                  ; $756b: $ea $a0 $c2
 	ld   a, $00                                      ; $756e: $3e $00
 	ld   [wGameSubstate], a                                  ; $7570: $ea $a1 $c2
@@ -8448,7 +8528,7 @@ jr_010_7692:
 	ld   [$c9fd], a                                  ; $76e1: $ea $fd $c9
 	ld   a, l                                        ; $76e4: $7d
 	ld   [$c9fe], a                                  ; $76e5: $ea $fe $c9
-	ld   a, $22                                      ; $76e8: $3e $22
+	ld   a, GS_IRIS_MINI_GAME_HELP_SCREEN                                      ; $76e8: $3e $22
 	ld   [wGameState], a                                  ; $76ea: $ea $a0 $c2
 	ld   a, $00                                      ; $76ed: $3e $00
 	ld   [wGameSubstate], a                                  ; $76ef: $ea $a1 $c2
@@ -8564,7 +8644,7 @@ GameState23::
 	inc  [hl]                                        ; $77f4: $34
 	ldh  a, [rKEY1]                                  ; $77f5: $f0 $4d
 	bit  7, a                                        ; $77f7: $cb $7f
-	call nz, UnsetDoubleSpeedMode                           ; $77f9: $c4 $f4 $53
+	call nz, ToggleDoubleSpeedMode                           ; $77f9: $c4 $f4 $53
 	ret                                              ; $77fc: $c9
 
 
@@ -8593,7 +8673,7 @@ jr_010_7816:
 	or   a                                           ; $781e: $b7
 	jr   z, jr_010_7824                              ; $781f: $28 $03
 
-	call Call_010_517d                               ; $7821: $cd $7d $51
+	call PlayRandomConnSuccessfulSample                               ; $7821: $cd $7d $51
 
 jr_010_7824:
 	ld   hl, wGameSubstate                                   ; $7824: $21 $a1 $c2
@@ -8616,7 +8696,7 @@ jr_010_7839:
 
 	ldh  a, [rKEY1]                                  ; $783a: $f0 $4d
 	bit  7, a                                        ; $783c: $cb $7f
-	call z, UnsetDoubleSpeedMode                            ; $783e: $cc $f4 $53
+	call z, ToggleDoubleSpeedMode                            ; $783e: $cc $f4 $53
 	xor  a                                           ; $7841: $af
 	ld   [wStartingColorIdxToLoadCompDataFor], a                                  ; $7842: $ea $62 $c3
 	ld   a, $40                                      ; $7845: $3e $40
@@ -8734,7 +8814,7 @@ jr_010_78f1:
 	ld   [$ca40], a                                  ; $7920: $ea $40 $ca
 	ld   a, l                                        ; $7923: $7d
 	ld   [$ca41], a                                  ; $7924: $ea $41 $ca
-	ld   a, $23                                      ; $7927: $3e $23
+	ld   a, GS_23                                      ; $7927: $3e $23
 	ld   [wGameState], a                                  ; $7929: $ea $a0 $c2
 	ld   a, $00                                      ; $792c: $3e $00
 	ld   [wGameSubstate], a                                  ; $792e: $ea $a1 $c2

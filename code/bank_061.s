@@ -9335,7 +9335,7 @@ jr_061_69e4:
 	ld   [hl], d                                     ; $6a28: $72
 	inc  b                                           ; $6a29: $04
 	call nc, $067c                                   ; $6a2a: $d4 $7c $06
-	ld   [$0d7d], sp                                 ; $6a2d: $08 $7d $0d
+	ld   [ConvertAintoBCD], sp                                 ; $6a2d: $08 $7d $0d
 	ld   bc, $7a07                                   ; $6a30: $01 $07 $7a
 	sbc  d                                           ; $6a33: $9a
 	sbc  c                                           ; $6a34: $99

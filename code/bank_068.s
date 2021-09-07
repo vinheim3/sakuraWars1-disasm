@@ -5617,7 +5617,7 @@ jr_068_596e:
 	and  c                                           ; $599c: $a1
 	ld   a, h                                        ; $599d: $7c
 	inc  b                                           ; $599e: $04
-	call nc, $0d7d                                   ; $599f: $d4 $7d $0d
+	call nc, ConvertAintoBCD                                   ; $599f: $d4 $7d $0d
 	ld   [hl], a                                     ; $59a2: $77
 	ld   [hl], c                                     ; $59a3: $71
 	ld   l, a                                        ; $59a4: $6f

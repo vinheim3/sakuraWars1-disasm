@@ -11577,7 +11577,7 @@ jr_01e_798e:
 	inc  d                                           ; $79f9: $14
 	nop                                              ; $79fa: $00
 	nop                                              ; $79fb: $00
-	jr   z, jr_01e_7a37                              ; $79fc: $28 $39
+	db $28, $39
 
 	and  $30                                         ; $79fe: $e6 $30
 	ld   h, e                                        ; $7a00: $63
@@ -11592,71 +11592,18 @@ jr_01e_798e:
 	inc  d                                           ; $7a09: $14
 	rst  $38                                         ; $7a0a: $ff
 	inc  bc                                          ; $7a0b: $03
-	ld   sp, $0046                                   ; $7a0c: $31 $46 $00
-	nop                                              ; $7a0f: $00
-	nop                                              ; $7a10: $00
-	nop                                              ; $7a11: $00
-	nop                                              ; $7a12: $00
-	nop                                              ; $7a13: $00
-	nop                                              ; $7a14: $00
-	nop                                              ; $7a15: $00
-	nop                                              ; $7a16: $00
-	nop                                              ; $7a17: $00
-
-jr_01e_7a18:
-	nop                                              ; $7a18: $00
-	nop                                              ; $7a19: $00
-	nop                                              ; $7a1a: $00
-	nop                                              ; $7a1b: $00
-	nop                                              ; $7a1c: $00
-	nop                                              ; $7a1d: $00
-	nop                                              ; $7a1e: $00
-	nop                                              ; $7a1f: $00
-	nop                                              ; $7a20: $00
-	nop                                              ; $7a21: $00
-	nop                                              ; $7a22: $00
-	nop                                              ; $7a23: $00
-	nop                                              ; $7a24: $00
-	nop                                              ; $7a25: $00
-	nop                                              ; $7a26: $00
-	nop                                              ; $7a27: $00
-	nop                                              ; $7a28: $00
-	nop                                              ; $7a29: $00
-	nop                                              ; $7a2a: $00
-	nop                                              ; $7a2b: $00
-	nop                                              ; $7a2c: $00
-	nop                                              ; $7a2d: $00
-	rst  $38                                         ; $7a2e: $ff
-	ld   a, a                                        ; $7a2f: $7f
-	cp   a                                           ; $7a30: $bf
-	ld   d, l                                        ; $7a31: $55
-	nop                                              ; $7a32: $00
-	nop                                              ; $7a33: $00
-	inc  e                                           ; $7a34: $1c
-	inc  d                                           ; $7a35: $14
-	rst  $38                                         ; $7a36: $ff
-
-jr_01e_7a37:
-	ld   a, a                                        ; $7a37: $7f
-	xor  $53                                         ; $7a38: $ee $53
-	nop                                              ; $7a3a: $00
-	nop                                              ; $7a3b: $00
-	ccf                                              ; $7a3c: $3f
-	ld   [bc], a                                     ; $7a3d: $02
-	rst  $38                                         ; $7a3e: $ff
-	ld   a, a                                        ; $7a3f: $7f
-	xor  $53                                         ; $7a40: $ee $53
-	nop                                              ; $7a42: $00
-	nop                                              ; $7a43: $00
-	inc  e                                           ; $7a44: $1c
-	inc  d                                           ; $7a45: $14
-	xor  $53                                         ; $7a46: $ee $53
-	cp   a                                           ; $7a48: $bf
-	ld   d, l                                        ; $7a49: $55
-	nop                                              ; $7a4a: $00
-	nop                                              ; $7a4b: $00
-	inc  e                                           ; $7a4c: $1c
-	inc  d                                           ; $7a4d: $14
+	db $31, $46 
+	
+	
+BGPalettes_InfraComms::
+	db $00, $00, $00, $00, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00
+	db $ff, $7f, $bf, $55, $00, $00, $1c, $14
+	db $ff, $7f, $ee, $53, $00, $00, $3f, $02
+	db $ff, $7f, $ee, $53, $00, $00, $1c, $14
+	db $ee, $53, $bf, $55, $00, $00, $1c, $14
 
 
 Palettes_ResetData::

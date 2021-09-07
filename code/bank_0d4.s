@@ -10797,7 +10797,7 @@ Call_0d4_74c9:
 	sbc  a                                           ; $75b5: $9f
 	rst  $38                                         ; $75b6: $ff
 	sub  $11                                         ; $75b7: $d6 $11
-	ld   de, $cb24                                   ; $75b9: $11 $24 $cb
+	ld   de, wMainConvoScriptIdx                                   ; $75b9: $11 $24 $cb
 	xor  d                                           ; $75bc: $aa
 	ld   d, l                                        ; $75bd: $55
 	ld   d, l                                        ; $75be: $55

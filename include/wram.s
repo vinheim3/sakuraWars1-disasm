@@ -306,7 +306,13 @@ wResetSaveDataReturnSubstate:: ; $c918
     db
 
 wc919:
-    ds $22-$19
+    ds $d-9
+
+wCinematronChosenOption:: ; $c91d
+    db
+
+wc91e:
+    ds $22-$1e
 
 wCinematronReturnState:: ; $c922
     db
@@ -314,8 +320,20 @@ wCinematronReturnState:: ; $c922
 wCinematronReturnSubstate:: ; $c923
     db
 
-wc924:
-    ds $46-$24
+wTVAdapterDisconnected:: ; $c924
+    db
+
+wc925:
+    ds $3f-$25
+
+wGameBoyOrTVCommsReturnState:: ; $c93f
+    db
+
+wGameBoyOrTVCommsReturnSubstate:: ; $c940
+    db
+
+wc941:
+    ds 6-1
 
 wEnterNameReturnState:: ; $c946
     db
@@ -379,7 +397,16 @@ wSettingsScreenFaceIconShown:: ; $c97b
     db
 
 wc97c:
-    ds $a50-$97c
+    ds $a4c-$97c
+
+wNapOrTrainReturnState:: ; $ca4c
+    db
+
+wNapOrTrainReturnSubstate:: ; $ca4d
+    db
+
+wca4e:
+    ds $50-$4e
 
 wBattleReturnState:: ; $ca50
     db
@@ -388,7 +415,13 @@ wBattleReturnSubstate:: ; $ca51
     db
 
 wca52:
-    ds $b0e-$a52
+    ds $6d-$52
+
+wNapOrTrainIdx:: ; $ca6d
+    db
+
+wca6e:
+    ds $b0e-$a6e
 
 wPlayerName:: ; $cb0e
     ds 6
@@ -416,7 +449,25 @@ wBattleWon:: ; $cb21
     db
 
 wcb22:
-    ds $51-$22
+    ds 4-2
+
+wMainConvoScriptIdx:: ; $cb24
+    dw
+
+wMainConvoScriptSong:: ; $cb26
+    db
+
+wcb27:
+    ds 9-7
+
+wMainConvoReturnState:: ; $cb29
+    db
+
+wMainConvoReturnSubstate:: ; $cb2a
+    db
+
+wcb2b:
+    ds $51-$2b
 
 wScriptEngineIsRunning:: ; $cb51
     db
@@ -483,7 +534,13 @@ wScriptCalcStack:: ; $cb96
     db ; unknown size
 
 wcb97:
-    ds $c02-$b97
+    ds $c8-$97
+
+wScriptSongToPlay:: ; $cbc8
+    db
+
+wcbc9:
+    ds $c02-$bc9
 
 wTitleScreenAnimationStep:: ; $cc02
     db
@@ -558,13 +615,28 @@ wDormRoomMiscCounterIdx:: ; $cc7a
     db
 
 wcc7b:
-    ds $f-$b
+    ds $c-$b
+
+wDormRoomReturnState:: ; $cc7c
+    db
+
+wDormRoomReturnSubstate:: ; $cc7d
+    db
+
+wDormRoomOptionsSetupIdx:: ; $cc7e
+    db
 
 wDormRoomDaySpritesX:: ; $cc7f
     db
 
 wcc80:
-    ds $98-$80
+    ds 3-0
+
+wDormRoomButtonsDisplayed:: ; $cc83
+    ds 5
+
+wcc88:
+    ds $98-$88
 
 wPrologueMainSubSubstate:: ; $cc98
     db
@@ -660,6 +732,14 @@ nextu
 
 wEnterNameSelectableCharsTileDataBuffer:: ; $d000
     ds $cc0
+
+nextu
+
+wTVCommsTileMapBuffer:: ; $d000
+    ds $400
+
+wTVCommsTileAttrBuffer:: ; $d400
+    ds $400
 
 endu
 

@@ -10120,7 +10120,7 @@ jr_04d_6d94:
 	inc  b                                           ; $6db1: $04
 	xor  b                                           ; $6db2: $a8
 	dec  b                                           ; $6db3: $05
-	ld   hl, $0d7d                                   ; $6db4: $21 $7d $0d
+	ld   hl, ConvertAintoBCD                                   ; $6db4: $21 $7d $0d
 	sbc  l                                           ; $6db7: $9d
 	ld   l, l                                        ; $6db8: $6d
 	ld   e, l                                        ; $6db9: $5d

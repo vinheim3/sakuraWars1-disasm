@@ -4380,7 +4380,7 @@ jr_09c_5366:
 	ld   [bc], a                                     ; $5367: $02
 	rst  $30                                         ; $5368: $f7
 	add  hl, hl                                      ; $5369: $29
-	ld   hl, $a080                                   ; $536a: $21 $80 $a0
+	ld   hl, sGlobalFlags1                                   ; $536a: $21 $80 $a0
 	rlca                                             ; $536d: $07
 	sub  l                                           ; $536e: $95
 	sbc  l                                           ; $536f: $9d
@@ -4495,7 +4495,7 @@ jr_09c_53bd:
 	ld   [bc], a                                     ; $53eb: $02
 	rst  $30                                         ; $53ec: $f7
 	add  hl, hl                                      ; $53ed: $29
-	ld   hl, $a080                                   ; $53ee: $21 $80 $a0
+	ld   hl, sGlobalFlags1                                   ; $53ee: $21 $80 $a0
 	ld   c, $95                                      ; $53f1: $0e $95
 	sbc  l                                           ; $53f3: $9d
 	cp   l                                           ; $53f4: $bd
@@ -4606,7 +4606,7 @@ jr_09c_545d:
 	ld   [bc], a                                     ; $546d: $02
 	rst  $30                                         ; $546e: $f7
 	add  hl, hl                                      ; $546f: $29
-	ld   hl, $a080                                   ; $5470: $21 $80 $a0
+	ld   hl, sGlobalFlags1                                   ; $5470: $21 $80 $a0
 	inc  b                                           ; $5473: $04
 	sub  l                                           ; $5474: $95
 	sbc  l                                           ; $5475: $9d

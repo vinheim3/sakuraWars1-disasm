@@ -5553,7 +5553,7 @@ Jump_0e6_57bb:
 	cp   h                                           ; $5813: $bc
 	add  a                                           ; $5814: $87
 	ld   [hl], h                                     ; $5815: $74
-	ld   de, $cb29                                   ; $5816: $11 $29 $cb
+	ld   de, wMainConvoReturnState                                   ; $5816: $11 $29 $cb
 	rst  WaitUntilVBlankIntHandledIfLCDOn                                         ; $5819: $cf
 	db   $fc                                         ; $581a: $fc
 	add  a                                           ; $581b: $87

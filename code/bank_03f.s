@@ -523,7 +523,7 @@ jr_03f_43b8:
 
 	rst  WaitUntilVBlankIntHandledIfLCDOn                                         ; $43f3: $cf
 	ld   a, $67                                      ; $43f4: $3e $67
-	call $1b64                                       ; $43f6: $cd $64 $1b
+	call PlaySampledSound                                       ; $43f6: $cd $64 $1b
 
 jr_03f_43f9:
 	xor  a                                           ; $43f9: $af
@@ -853,7 +853,7 @@ Func_3f_4634::
 	ld   [$c9f1], a                                  ; $4635: $ea $f1 $c9
 	ld   a, l                                        ; $4638: $7d
 	ld   [$c9f2], a                                  ; $4639: $ea $f2 $c9
-	ld   a, $1f                                      ; $463c: $3e $1f
+	ld   a, GS_KANNA_MINI_GAME_TITLE_SCREEN                                      ; $463c: $3e $1f
 	ld   [wGameState], a                                  ; $463e: $ea $a0 $c2
 	ld   a, $00                                      ; $4641: $3e $00
 	ld   [wGameSubstate], a                                  ; $4643: $ea $a1 $c2

@@ -1892,7 +1892,7 @@ Call_0b2_4611:
 	ld   d, h                                        ; $4869: $54
 	ld   b, h                                        ; $486a: $44
 	ld   d, l                                        ; $486b: $55
-	ld   hl, $cb26                                   ; $486c: $21 $26 $cb
+	ld   hl, wMainConvoScriptSong                                   ; $486c: $21 $26 $cb
 	ld   l, b                                        ; $486f: $68
 	cp   l                                           ; $4870: $bd
 	ret                                              ; $4871: $c9

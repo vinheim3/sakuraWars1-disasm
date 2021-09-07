@@ -4699,7 +4699,7 @@ jr_04a_539b:
 	inc  b                                           ; $5529: $04
 	sub  l                                           ; $552a: $95
 	ld   [bc], a                                     ; $552b: $02
-	ld   hl, $0d7d                                   ; $552c: $21 $7d $0d
+	ld   hl, ConvertAintoBCD                                   ; $552c: $21 $7d $0d
 	dec  b                                           ; $552f: $05
 	dec  h                                           ; $5530: $25
 	inc  bc                                          ; $5531: $03

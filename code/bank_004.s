@@ -7,7 +7,7 @@ INCLUDE "includes.s"
 
 SECTION "ROM Bank $004", ROMX[$4000], BANK[$4]
 
-GameState42::
+GameState42_RomandoShop::
 	ld   a, [wGameSubstate]                                  ; $4000: $fa $a1 $c2
 	dec  a                                           ; $4003: $3d
 	jp   z, Jump_004_44ae                            ; $4004: $ca $ae $44
@@ -3534,7 +3534,7 @@ Func_04_557d::
 	ld   [$cc52], a                                  ; $557e: $ea $52 $cc
 	ld   a, l                                        ; $5581: $7d
 	ld   [$cc53], a                                  ; $5582: $ea $53 $cc
-	ld   a, $42                                      ; $5585: $3e $42
+	ld   a, GS_ROMANDO_SHOP                                      ; $5585: $3e $42
 	ld   [wGameState], a                                  ; $5587: $ea $a0 $c2
 	xor  a                                           ; $558a: $af
 	ld   [wGameSubstate], a                                  ; $558b: $ea $a1 $c2
@@ -3599,9 +3599,9 @@ DormRoomSubstate0:
 	call ClearBaseAnimSpriteSpecDetails                             ; $55d3
 
 ;
-	call Func_04_5667                                       ; $55d6: $cd $67 $56
+	call PopulateDormRoomButtonsDisplayed                                       ; $55d6: $cd $67 $56
 	ld   hl, $c602                                   ; $55d9: $21 $02 $c6
-	ld   de, $cc83                                   ; $55dc: $11 $83 $cc
+	ld   de, wDormRoomButtonsDisplayed                                   ; $55dc: $11 $83 $cc
 	ld   b, $05                                      ; $55df: $06 $05
 
 .loop_55e1:
@@ -3678,56 +3678,64 @@ DormRoomSubstate0:
 	db $0e 
 	
 
-Func_04_5667:
-	ld   a, $ff ; $5667: $3e $ff
-	ld   hl, $cc83                                   ; $5669: $21 $83 $cc
-	ld   [hl+], a                                    ; $566c: $22
-	ld   [hl+], a                                    ; $566d: $22
-	ld   [hl+], a                                    ; $566e: $22
-	ld   [hl+], a                                    ; $566f: $22
-	ld   [hl+], a                                    ; $5670: $22
-	ld   [hl+], a                                    ; $5671: $22
-	ld   a, [$cc7e]                                  ; $5672: $fa $7e $cc
-	sla  a                                           ; $5675: $cb $27
-	ld   l, a                                        ; $5677: $6f
-	sla  a                                           ; $5678: $cb $27
-	add  l                                           ; $567a: $85
-	ld   l, a                                        ; $567b: $6f
-	ld   h, $00                                      ; $567c: $26 $00
-	ld   bc, $56e2                                   ; $567e: $01 $e2 $56
-	add  hl, bc                                      ; $5681: $09
-	ld   de, $cc83                                   ; $5682: $11 $83 $cc
-	ld   a, $05                                      ; $5685: $3e $05
+PopulateDormRoomButtonsDisplayed:
+; Fill all displayed buttons with the null terminator $ff
+	ld   a, $ff                                                     ; $5667
+	ld   hl, wDormRoomButtonsDisplayed                              ; $5669
+	ld   [hl+], a                                                   ; $566c
+	ld   [hl+], a                                                   ; $566d
+	ld   [hl+], a                                                   ; $566e
+	ld   [hl+], a                                                   ; $566f
+	ld   [hl+], a                                                   ; $5670
+	ld   [hl+], a                                                   ; $5671
 
-jr_004_5687:
-	push af                                          ; $5687: $f5
-	bit  7, [hl]                                     ; $5688: $cb $7e
-	jr   nz, jr_004_56dc                             ; $568a: $20 $50
+; HL = double opts setup idxed into table
+	ld   a, [wDormRoomOptionsSetupIdx]                              ; $5672
+	sla  a                                                          ; $5675
+	ld   l, a                                                       ; $5677
+	sla  a                                                          ; $5678
+	add  l                                                          ; $567a
+	ld   l, a                                                       ; $567b
+	ld   h, $00                                                     ; $567c
+	ld   bc, DormRoomOptionsSetup                                   ; $567e
+	add  hl, bc                                                     ; $5681
 
-	ld   a, [hl]                                     ; $568c: $7e
-	cp   $01                                         ; $568d: $fe $01
-	jr   z, jr_004_569b                              ; $568f: $28 $0a
+; Load up to 5 buttons
+	ld   de, wDormRoomButtonsDisplayed                              ; $5682
+	ld   a, $05                                                     ; $5685
 
-	cp   $03                                         ; $5691: $fe $03
-	jr   z, jr_004_56ab                              ; $5693: $28 $16
+.nextButton:
+	push af                                                         ; $5687
+	bit  7, [hl]                                                    ; $5688
+	jr   nz, .toNextButton                                          ; $568a
 
-	cp   $08                                         ; $5695: $fe $08
-	jr   z, jr_004_56c8                              ; $5697: $28 $2f
+; Branch if special case, else copy button to btns displayed
+	ld   a, [hl]                                                    ; $568c
+	cp   DRO_NAP                                                    ; $568d
+	jr   z, .napBtn                                                 ; $568f
 
-	jr   jr_004_56d9                                 ; $5699: $18 $3e
+	cp   DRO_ITEMS                                                  ; $5691
+	jr   z, .itemsBtn                                               ; $5693
 
-jr_004_569b:
-	ld   a, [sCurrDay]                                  ; $569b: $fa $b0 $af
-	cp   $02                                         ; $569e: $fe $02
-	jr   nz, jr_004_56d9                             ; $56a0: $20 $37
+	cp   DRO_FOCUS                                                  ; $5695
+	jr   z, .focusBtn                                               ; $5697
 
-	ld   a, [$cc7e]                                  ; $56a2: $fa $7e $cc
-	cp   $01                                         ; $56a5: $fe $01
-	jr   nz, jr_004_56d9                             ; $56a7: $20 $30
+	jr   .setDisplayed                                              ; $5699
 
-	jr   jr_004_56dc                                 ; $56a9: $18 $31
+.napBtn:
+; Don't display nap on Day 2
+	ld   a, [sCurrDay]                                              ; $569b
+	cp   $02                                                        ; $569e
+	jr   nz, .setDisplayed                                          ; $56a0
 
-jr_004_56ab:
+; Don't display nap if opts setup idx == 1
+	ld   a, [wDormRoomOptionsSetupIdx]                              ; $56a2
+	cp   DROS_TRAIN_NAP_1                                           ; $56a5
+	jr   nz, .setDisplayed                                          ; $56a7
+
+	jr   .toNextButton                                              ; $56a9
+
+.itemsBtn:
 	push de                                          ; $56ab: $d5
 	push hl                                          ; $56ac: $e5
 
@@ -3735,13 +3743,16 @@ jr_004_56ab:
 	
 	pop  hl                                          ; $56c1: $e1
 	pop  de                                          ; $56c2: $d1
+
 	or   a                                           ; $56c3: $b7
-	jr   z, jr_004_56d9                              ; $56c4: $28 $13
+	jr   z, .setDisplayed                              ; $56c4: $28 $13
 
-	jr   jr_004_56dc                                 ; $56c6: $18 $14
+	jr   .toNextButton                                 ; $56c6: $18 $14
 
-jr_004_56c8:
+.focusBtn:
 	push hl                                          ; $56c8: $e5
+
+; todo: display if $b090|$b091|$b092|$b093|$b094|$b095 != 0
 	ld   hl, $b090                                   ; $56c9: $21 $90 $b0
 	ld   a, [hl+]                                    ; $56cc: $2a
 	or   [hl]                                        ; $56cd: $b6
@@ -3754,55 +3765,31 @@ jr_004_56c8:
 	inc  hl                                          ; $56d4: $23
 	or   [hl]                                        ; $56d5: $b6
 	pop  hl                                          ; $56d6: $e1
-	jr   z, jr_004_56dc                              ; $56d7: $28 $03
+	jr   z, .toNextButton                              ; $56d7: $28 $03
 
-jr_004_56d9:
-	ld   a, [hl]                                     ; $56d9: $7e
-	ld   [de], a                                     ; $56da: $12
-	inc  de                                          ; $56db: $13
+.setDisplayed:
+	ld   a, [hl]                                                    ; $56d9
+	ld   [de], a                                                    ; $56da
+	inc  de                                                         ; $56db
 
-jr_004_56dc:
-	inc  hl                                          ; $56dc: $23
-	pop  af                                          ; $56dd: $f1
-	dec  a                                           ; $56de: $3d
-	jr   nz, jr_004_5687                             ; $56df: $20 $a6
+.toNextButton:
+	inc  hl                                                         ; $56dc
+	pop  af                                                         ; $56dd
+	dec  a                                                          ; $56de
+	jr   nz, .nextButton                                            ; $56df
 
-	ret                                              ; $56e1: $c9
+	ret                                                             ; $56e1
 
 
-	nop                                              ; $56e2: $00
-	ld   [$0403], sp                                 ; $56e3: $08 $03 $04
-	rst  $38                                         ; $56e6: $ff
-	rst  $38                                         ; $56e7: $ff
-	dec  b                                           ; $56e8: $05
-	ld   bc, $0403                                   ; $56e9: $01 $03 $04
-	rst  $38                                         ; $56ec: $ff
-	rst  $38                                         ; $56ed: $ff
-	nop                                              ; $56ee: $00
-	ld   [$0403], sp                                 ; $56ef: $08 $03 $04
-	rst  $38                                         ; $56f2: $ff
-	rst  $38                                         ; $56f3: $ff
-	dec  b                                           ; $56f4: $05
-	ld   bc, $0403                                   ; $56f5: $01 $03 $04
-	rst  $38                                         ; $56f8: $ff
-	rst  $38                                         ; $56f9: $ff
-	ld   b, $03                                      ; $56fa: $06 $03
-	inc  b                                           ; $56fc: $04
-	rst  $38                                         ; $56fd: $ff
-	rst  $38                                         ; $56fe: $ff
-	rst  $38                                         ; $56ff: $ff
-	rlca                                             ; $5700: $07
-	ld   a, [bc]                                     ; $5701: $0a
-	inc  bc                                          ; $5702: $03
-	inc  b                                           ; $5703: $04
-	rst  $38                                         ; $5704: $ff
-	rst  $38                                         ; $5705: $ff
-	add  hl, bc                                      ; $5706: $09
-	inc  bc                                          ; $5707: $03
-	inc  b                                           ; $5708: $04
-	rst  $38                                         ; $5709: $ff
-	rst  $38                                         ; $570a: $ff
-	rst  $38                                         ; $570b: $ff
+DormRoomOptionsSetup:
+	db DRO_EXPLORE_DAY,   DRO_FOCUS, DRO_ITEMS,   DRO_OPTIONS, $ff, $ff
+	db DRO_TRAIN,         DRO_NAP,   DRO_ITEMS,   DRO_OPTIONS, $ff, $ff
+	db DRO_EXPLORE_DAY,   DRO_FOCUS, DRO_ITEMS,   DRO_OPTIONS, $ff, $ff
+	db DRO_TRAIN,         DRO_NAP,   DRO_ITEMS,   DRO_OPTIONS, $ff, $ff
+	db DRO_EXPLORE_NIGHT, DRO_ITEMS, DRO_OPTIONS, $ff,         $ff, $ff
+	db DRO_SAVE,          DRO_SLEEP, DRO_ITEMS,   DRO_OPTIONS, $ff, $ff
+	db DRO_EXAM,          DRO_ITEMS, DRO_OPTIONS, $ff,         $ff, $ff
+
 
 Call_004_570c:
 	ld   a, [wWramBank]                                  ; $570c: $fa $93 $c2
@@ -4235,7 +4222,7 @@ endc
 if def(VWF)
 	call DormRoomLayoutHook
 else
-	call Call_004_5a7d                               ; $59f7: $cd $7d $5a
+	call DisplayDormRoomButtons                               ; $59f7: $cd $7d $5a
 endc
 	ld   c, $81                                      ; $59fa: $0e $81
 	ld   de, $9800                                   ; $59fc: $11 $00 $98
@@ -4298,10 +4285,11 @@ endc
 	jp   IncDormRoomAnimationStep                               ; $5a7a: $c3 $cc $58
 
 
-Call_004_5a7d:
+DisplayDormRoomButtons:
+; todo: dorm room relevant button tile attr here
 	ld   bc, $d9c2                                   ; $5a7d: $01 $c2 $d9
 	ld   de, $d9e2                                   ; $5a80: $11 $e2 $d9
-	ld   hl, $cc83                                   ; $5a83: $21 $83 $cc
+	ld   hl, wDormRoomButtonsDisplayed                                   ; $5a83: $21 $83 $cc
 
 jr_004_5a86:
 	ld   a, [hl+]                                    ; $5a86: $2a
@@ -4328,14 +4316,15 @@ jr_004_5a86:
 	jr   jr_004_5a86                                 ; $5a9d: $18 $e7
 
 jr_004_5a9f:
+; todo: dorm room relevant button tile maps here
 	ld   bc, $ddc2                                   ; $5a9f: $01 $c2 $dd
 	ld   de, $dde2                                   ; $5aa2: $11 $e2 $dd
-	ld   hl, $cc83                                   ; $5aa5: $21 $83 $cc
+	ld   hl, wDormRoomButtonsDisplayed                                   ; $5aa5: $21 $83 $cc
 
-jr_004_5aa8:
+.copyButton:
 	ld   a, [hl+]                                    ; $5aa8: $2a
 	bit  7, a                                        ; $5aa9: $cb $7f
-	jr   nz, jr_004_5ace                             ; $5aab: $20 $21
+	jr   nz, .breakBtnCopy                             ; $5aab: $20 $21
 
 	sla  a                                           ; $5aad: $cb $27
 	sla  a                                           ; $5aaf: $cb $27
@@ -4364,9 +4353,9 @@ jr_004_5aa8:
 	inc  a                                           ; $5ac9: $3c
 	ld   [de], a                                     ; $5aca: $12
 	inc  de                                          ; $5acb: $13
-	jr   jr_004_5aa8                                 ; $5acc: $18 $da
+	jr   .copyButton                                 ; $5acc: $18 $da
 
-jr_004_5ace:
+.breakBtnCopy:
 	ld   c, $81                                      ; $5ace: $0e $81
 	ld   de, $99c0                                   ; $5ad0: $11 $c0 $99
 	ld   a, $07                                      ; $5ad3: $3e $07
@@ -4387,7 +4376,7 @@ Call_004_5aed:
 	push hl                                          ; $5aee: $e5
 	ld   h, $00                                      ; $5aef: $26 $00
 	ld   l, a                                        ; $5af1: $6f
-	ld   bc, $cc83                                   ; $5af2: $01 $83 $cc
+	ld   bc, wDormRoomButtonsDisplayed                                   ; $5af2: $01 $83 $cc
 	add  hl, bc                                      ; $5af5: $09
 	ld   a, [hl]                                     ; $5af6: $7e
 	pop  hl                                          ; $5af7: $e1
@@ -4725,7 +4714,7 @@ DormRoomAnimationHandler06:
 	call HLequHdivModL                                       ; $5d3c: $cd $fb $0b
 	ld   a, l                                        ; $5d3f: $7d
 	ld   [$cc8b], a                                  ; $5d40: $ea $8b $cc
-	ld   a, [$cc7e]                                  ; $5d43: $fa $7e $cc
+	ld   a, [wDormRoomOptionsSetupIdx]                                  ; $5d43: $fa $7e $cc
 	cp   $03                                         ; $5d46: $fe $03
 	jp   c, Jump_004_5d60                            ; $5d48: $da $60 $5d
 
@@ -6052,9 +6041,9 @@ DormRoomAnimationHandler16:
 	xor  $65                                         ; $65ec: $ee $65
 
 jr_004_65ee:
-	ld   a, [$cc7c]                                  ; $65ee: $fa $7c $cc
+	ld   a, [wDormRoomReturnState]                                  ; $65ee: $fa $7c $cc
 	ld   [wGameState], a                                  ; $65f1: $ea $a0 $c2
-	ld   a, [$cc7d]                                  ; $65f4: $fa $7d $cc
+	ld   a, [wDormRoomReturnSubstate]                                  ; $65f4: $fa $7d $cc
 	ld   [wGameSubstate], a                                  ; $65f7: $ea $a1 $c2
 	ret                                              ; $65fa: $c9
 
@@ -6085,16 +6074,16 @@ jr_004_65ee:
 	call FarCall                                       ; $662b: $cd $62 $09
 	jr   jr_004_65ee                                 ; $662e: $18 $be
 
-	ld   hl, $afb1                                   ; $6630: $21 $b1 $af
+	ld   hl, sDayPeriodIdx                                   ; $6630: $21 $b1 $af
 	inc  [hl]                                        ; $6633: $34
 	ld   a, [$afe0]                                  ; $6634: $fa $e0 $af
 	add  $09                                         ; $6637: $c6 $09
 	ld   b, $00                                      ; $6639: $06 $00
 	ld   c, a                                        ; $663b: $4f
 	ld   d, $00                                      ; $663c: $16 $00
-	ld   a, [$cc7c]                                  ; $663e: $fa $7c $cc
+	ld   a, [wDormRoomReturnState]                                  ; $663e: $fa $7c $cc
 	ld   h, a                                        ; $6641: $67
-	ld   a, [$cc7d]                                  ; $6642: $fa $7d $cc
+	ld   a, [wDormRoomReturnSubstate]                                  ; $6642: $fa $7d $cc
 	ld   l, a                                        ; $6645: $6f
 	ld   a, [$c653]                                  ; $6646: $fa $53 $c6
 	push af                                          ; $6649: $f5
@@ -6192,37 +6181,48 @@ DormRoomAnimationHandler18:
 	ret                                              ; $66e2: $c9
 
 
-Func_04_66e3::
-	ld   [$cc7e], a                                  ; $66e3: $ea $7e $cc
-	ld   a, h                                        ; $66e6: $7c
-	ld   [$cc7c], a                                  ; $66e7: $ea $7c $cc
-	ld   a, l                                        ; $66ea: $7d
-	ld   [$cc7d], a                                  ; $66eb: $ea $7d $cc
-	ld   a, GS_DORM_ROOM                                      ; $66ee: $3e $45
-	ld   [wGameState], a                                  ; $66f0: $ea $a0 $c2
-	xor  a                                           ; $66f3: $af
-	ld   [wGameSubstate], a                                  ; $66f4: $ea $a1 $c2
-	ret                                              ; $66f7: $c9
+; A - dorm room options setup idx
+; H - return state
+; L - return substate
+SetDormRoomState::
+; Set dorm room opts setup idx, then save return state/substate
+	ld   [wDormRoomOptionsSetupIdx], a                              ; $66e3
+
+	ld   a, h                                                       ; $66e6
+	ld   [wDormRoomReturnState], a                                  ; $66e7
+	ld   a, l                                                       ; $66ea
+	ld   [wDormRoomReturnSubstate], a                               ; $66eb
+
+; Then set state
+	ld   a, GS_DORM_ROOM                                            ; $66ee
+	ld   [wGameState], a                                            ; $66f0
+	xor  a                                                          ; $66f3
+	ld   [wGameSubstate], a                                         ; $66f4
+	ret                                                             ; $66f7
 
 
 Jump_004_66f8:
+;
 	ld   a, [wWramBank]                                  ; $66f8: $fa $93 $c2
 	push af                                          ; $66fb: $f5
+
 	ld   a, $01                                      ; $66fc: $3e $01
 	ld   [wWramBank], a                                  ; $66fe: $ea $93 $c2
 	ldh  [rSVBK], a                                  ; $6701: $e0 $70
+
+;
 	ld   hl, $d101                                   ; $6703: $21 $01 $d1
 
-jr_004_6706:
+.loop:
 	ld   a, [hl+]                                    ; $6706: $2a
 	ld   c, a                                        ; $6707: $4f
 	cp   $36                                         ; $6708: $fe $36
-	jr   nc, jr_004_672f                             ; $670a: $30 $23
+	jr   nc, .done                             ; $670a: $30 $23
 
 	ld   a, [hl+]                                    ; $670c: $2a
 	ld   b, a                                        ; $670d: $47
 	or   a                                           ; $670e: $b7
-	jr   nz, jr_004_672f                             ; $670f: $20 $1e
+	jr   nz, .done                             ; $670f: $20 $1e
 
 	ld   a, [hl+]                                    ; $6711: $2a
 	push hl                                          ; $6712: $e5
@@ -6231,7 +6231,7 @@ jr_004_6706:
 	ld   l, c                                        ; $6715: $69
 	add  hl, hl                                      ; $6716: $29
 	add  hl, hl                                      ; $6717: $29
-	ld   bc, $673b                                   ; $6718: $01 $3b $67
+	ld   bc, .table                                   ; $6718: $01 $3b $67
 	add  hl, bc                                      ; $671b: $09
 	ld   a, [hl+]                                    ; $671c: $2a
 	ld   c, a                                        ; $671d: $4f
@@ -6241,470 +6241,295 @@ jr_004_6706:
 	ld   h, [hl]                                     ; $6721: $66
 	ld   l, a                                        ; $6722: $6f
 	pop  af                                          ; $6723: $f1
-	ld   de, $672c                                   ; $6724: $11 $2c $67
+
+; Push return address
+	ld   de, .return                                   ; $6724: $11 $2c $67
 	push de                                          ; $6727: $d5
+
+;
 	push hl                                          ; $6728: $e5
 	ld   h, b                                        ; $6729: $60
 	ld   l, c                                        ; $672a: $69
 	ret                                              ; $672b: $c9
 
-
+.return:
 	pop  hl                                          ; $672c: $e1
-	jr   jr_004_6706                                 ; $672d: $18 $d7
+	jr   .loop                                 ; $672d: $18 $d7
 
-jr_004_672f:
+.done:
 	ld   a, $0a                                      ; $672f: $3e $0a
 	ld   [rRAMG], a                                  ; $6731: $ea $00 $00
+	
 	pop  af                                          ; $6734: $f1
 	ld   [wWramBank], a                                  ; $6735: $ea $93 $c2
 	ldh  [rSVBK], a                                  ; $6738: $e0 $70
 	ret                                              ; $673a: $c9
 
+macro Unk_04_66f8
+	db \1, \2
+	dw \3
+endm
+.table:
+	Unk_04_66f8 $04, $02, Func_04_6813
+	db $88, $01, $13, $68
+	db $e8, $01, $13, $68
+	db $ec, $01, $13, $68
+	db $f0, $01, $13, $68
+	db $f4, $01, $13, $68
+	db $f8, $01, $13, $68
+	db $8c, $01, $13, $68
+	db $48, $01, $13, $68
+	db $4c, $01, $13, $68
+	db $50, $01, $13, $68
+	db $54, $01, $13, $68
+	db $58, $01, $13, $68
+	db $5c, $01, $13, $68
+	db $18, $01, $13, $68
+	db $1c, $01, $13, $68
+	db $20, $01, $13, $68
+	db $24, $01, $13, $68
+	db $28, $01, $13, $68
+	db $2c, $01, $13, $68
+	db $ac, $01, $13, $68
+	db $b0, $01, $13, $68
+	Unk_04_66f8 $60, $01, Func_04_684a
+	db $61, $01, $4a, $68
+	db $62, $01, $4a, $68
+	db $63, $01, $4a, $68
+	Unk_04_66f8 $64, $01, Func_04_6883
+	db $65, $01, $83, $68
+	db $66, $01, $83, $68
+	db $67, $01, $83, $68
+	Unk_04_66f8 $68, $01, Func_04_68bc
+	db $69, $01, $bc, $68
+	db $6a, $01, $bc, $68
+	db $6b, $01, $bc, $68
+	Unk_04_66f8 $6c, $01, Func_04_68f5
+	db $6d, $01, $f5, $68
+	db $6e, $01, $f5, $68
+	db $6f, $01, $f5, $68
+	Unk_04_66f8 $70, $01, Func_04_692e
+	db $71, $01, $2e, $69
+	db $72, $01, $2e, $69
+	db $73, $01, $2e, $69
+	Unk_04_66f8 $74, $01, Func_04_6967
+	db $75, $01, $67, $69
+	db $76, $01, $67, $69
+	db $77, $01, $67, $69
+	Unk_04_66f8 $78, $01, Func_04_69a0
+	db $79, $01, $a0, $69
+	db $7a, $01, $a0, $69
+	db $7b, $01, $a0, $69
+	Unk_04_66f8 $7c, $01, Func_04_69d9
+	db $7d, $01, $d9, $69
+	db $7e, $01, $d9, $69
+	db $7f, $01, $d9, $69
 
-	inc  b                                           ; $673b: $04
-	ld   [bc], a                                     ; $673c: $02
-	inc  de                                          ; $673d: $13
-	ld   l, b                                        ; $673e: $68
-	adc  b                                           ; $673f: $88
-	ld   bc, $6813                                   ; $6740: $01 $13 $68
-	add  sp, $01                                     ; $6743: $e8 $01
-	inc  de                                          ; $6745: $13
-	ld   l, b                                        ; $6746: $68
-	db   $ec                                         ; $6747: $ec
-	ld   bc, $6813                                   ; $6748: $01 $13 $68
-	ldh  a, [rSB]                                    ; $674b: $f0 $01
-	inc  de                                          ; $674d: $13
-	ld   l, b                                        ; $674e: $68
-	db   $f4                                         ; $674f: $f4
-	ld   bc, $6813                                   ; $6750: $01 $13 $68
-	ld   hl, sp+$01                                  ; $6753: $f8 $01
-	inc  de                                          ; $6755: $13
-	ld   l, b                                        ; $6756: $68
-	adc  h                                           ; $6757: $8c
-	ld   bc, $6813                                   ; $6758: $01 $13 $68
-	ld   c, b                                        ; $675b: $48
-	ld   bc, $6813                                   ; $675c: $01 $13 $68
-	ld   c, h                                        ; $675f: $4c
-	ld   bc, $6813                                   ; $6760: $01 $13 $68
-	ld   d, b                                        ; $6763: $50
-	ld   bc, $6813                                   ; $6764: $01 $13 $68
-	ld   d, h                                        ; $6767: $54
-	ld   bc, $6813                                   ; $6768: $01 $13 $68
-	ld   e, b                                        ; $676b: $58
-	ld   bc, $6813                                   ; $676c: $01 $13 $68
-	ld   e, h                                        ; $676f: $5c
-	ld   bc, $6813                                   ; $6770: $01 $13 $68
-	jr   jr_004_6776                                 ; $6773: $18 $01
 
-	inc  de                                          ; $6775: $13
-
-jr_004_6776:
-	ld   l, b                                        ; $6776: $68
-	inc  e                                           ; $6777: $1c
-	ld   bc, $6813                                   ; $6778: $01 $13 $68
-	jr   nz, jr_004_677e                             ; $677b: $20 $01
-
-	inc  de                                          ; $677d: $13
-
-jr_004_677e:
-	ld   l, b                                        ; $677e: $68
-	inc  h                                           ; $677f: $24
-	ld   bc, $6813                                   ; $6780: $01 $13 $68
-	jr   z, jr_004_6786                              ; $6783: $28 $01
-
-	inc  de                                          ; $6785: $13
-
-jr_004_6786:
-	ld   l, b                                        ; $6786: $68
-	inc  l                                           ; $6787: $2c
-	ld   bc, $6813                                   ; $6788: $01 $13 $68
-	xor  h                                           ; $678b: $ac
-	ld   bc, $6813                                   ; $678c: $01 $13 $68
-	or   b                                           ; $678f: $b0
-	ld   bc, $6813                                   ; $6790: $01 $13 $68
-	ld   h, b                                        ; $6793: $60
-	ld   bc, $684a                                   ; $6794: $01 $4a $68
-	ld   h, c                                        ; $6797: $61
-	ld   bc, $684a                                   ; $6798: $01 $4a $68
-	ld   h, d                                        ; $679b: $62
-	ld   bc, $684a                                   ; $679c: $01 $4a $68
-	ld   h, e                                        ; $679f: $63
-	ld   bc, $684a                                   ; $67a0: $01 $4a $68
-	ld   h, h                                        ; $67a3: $64
-	ld   bc, $6883                                   ; $67a4: $01 $83 $68
-	ld   h, l                                        ; $67a7: $65
-	ld   bc, $6883                                   ; $67a8: $01 $83 $68
-	ld   h, [hl]                                     ; $67ab: $66
-	ld   bc, $6883                                   ; $67ac: $01 $83 $68
-	ld   h, a                                        ; $67af: $67
-	ld   bc, $6883                                   ; $67b0: $01 $83 $68
-	ld   l, b                                        ; $67b3: $68
-	ld   bc, $68bc                                   ; $67b4: $01 $bc $68
-	ld   l, c                                        ; $67b7: $69
-	ld   bc, $68bc                                   ; $67b8: $01 $bc $68
-	ld   l, d                                        ; $67bb: $6a
-	ld   bc, $68bc                                   ; $67bc: $01 $bc $68
-	ld   l, e                                        ; $67bf: $6b
-	ld   bc, $68bc                                   ; $67c0: $01 $bc $68
-	ld   l, h                                        ; $67c3: $6c
-	ld   bc, $68f5                                   ; $67c4: $01 $f5 $68
-	ld   l, l                                        ; $67c7: $6d
-	ld   bc, $68f5                                   ; $67c8: $01 $f5 $68
-	ld   l, [hl]                                     ; $67cb: $6e
-	ld   bc, $68f5                                   ; $67cc: $01 $f5 $68
-	ld   l, a                                        ; $67cf: $6f
-	ld   bc, $68f5                                   ; $67d0: $01 $f5 $68
-	ld   [hl], b                                     ; $67d3: $70
-	ld   bc, $692e                                   ; $67d4: $01 $2e $69
-	ld   [hl], c                                     ; $67d7: $71
-	ld   bc, $692e                                   ; $67d8: $01 $2e $69
-	ld   [hl], d                                     ; $67db: $72
-	ld   bc, $692e                                   ; $67dc: $01 $2e $69
-	ld   [hl], e                                     ; $67df: $73
-	ld   bc, $692e                                   ; $67e0: $01 $2e $69
-	ld   [hl], h                                     ; $67e3: $74
-	ld   bc, $6967                                   ; $67e4: $01 $67 $69
-	ld   [hl], l                                     ; $67e7: $75
-	ld   bc, $6967                                   ; $67e8: $01 $67 $69
-	halt                                             ; $67eb: $76
-	ld   bc, $6967                                   ; $67ec: $01 $67 $69
-	ld   [hl], a                                     ; $67ef: $77
-	ld   bc, $6967                                   ; $67f0: $01 $67 $69
-	ld   a, b                                        ; $67f3: $78
-	ld   bc, $69a0                                   ; $67f4: $01 $a0 $69
-	ld   a, c                                        ; $67f7: $79
-	ld   bc, $69a0                                   ; $67f8: $01 $a0 $69
-	ld   a, d                                        ; $67fb: $7a
-	ld   bc, $69a0                                   ; $67fc: $01 $a0 $69
-	ld   a, e                                        ; $67ff: $7b
-	ld   bc, $69a0                                   ; $6800: $01 $a0 $69
-	ld   a, h                                        ; $6803: $7c
-	ld   bc, $69d9                                   ; $6804: $01 $d9 $69
-	ld   a, l                                        ; $6807: $7d
-	ld   bc, $69d9                                   ; $6808: $01 $d9 $69
-	ld   a, [hl]                                     ; $680b: $7e
-	ld   bc, $69d9                                   ; $680c: $01 $d9 $69
-	ld   a, a                                        ; $680f: $7f
-	ld   bc, $69d9                                   ; $6810: $01 $d9 $69
+Func_04_6813:
 	push af                                          ; $6813: $f5
 	push hl                                          ; $6814: $e5
-	push af                                          ; $6815: $f5
-	ld   a, $c2                                      ; $6816: $3e $c2
-	ld   [wFarCallAddr], a                                  ; $6818: $ea $98 $c2
-	ld   a, $71                                      ; $681b: $3e $71
-	ld   [wFarCallAddr+1], a                                  ; $681d: $ea $99 $c2
-	ld   a, $0c                                      ; $6820: $3e $0c
-	ld   [wFarCallBank], a                                  ; $6822: $ea $9a $c2
-	pop  af                                          ; $6825: $f1
-	call FarCall                                       ; $6826: $cd $62 $09
+
+	M_FarCall JpCheckIfFlagSet1
+
 	or   a                                           ; $6829: $b7
-	jr   nz, jr_004_6847                             ; $682a: $20 $1b
+	jr   nz, .done                             ; $682a: $20 $1b
 
 	pop  hl                                          ; $682c: $e1
 	pop  af                                          ; $682d: $f1
-	push af                                          ; $682e: $f5
-	ld   a, $ee                                      ; $682f: $3e $ee
-	ld   [wFarCallAddr], a                                  ; $6831: $ea $98 $c2
-	ld   a, $71                                      ; $6834: $3e $71
-	ld   [wFarCallAddr+1], a                                  ; $6836: $ea $99 $c2
-	ld   a, $0c                                      ; $6839: $3e $0c
-	ld   [wFarCallBank], a                                  ; $683b: $ea $9a $c2
-	pop  af                                          ; $683e: $f1
-	call FarCall                                       ; $683f: $cd $62 $09
+
+	M_FarCall JpSetOrUnsetFlag1
+
 	ld   hl, $cc95                                   ; $6842: $21 $95 $cc
 	inc  [hl]                                        ; $6845: $34
 	ret                                              ; $6846: $c9
 
-
-jr_004_6847:
+.done:
 	pop  hl                                          ; $6847: $e1
 	pop  af                                          ; $6848: $f1
 	ret                                              ; $6849: $c9
 
 
+Func_04_684a:
 	push af                                          ; $684a: $f5
 	push hl                                          ; $684b: $e5
-	push af                                          ; $684c: $f5
-	ld   a, $35                                      ; $684d: $3e $35
-	ld   [wFarCallAddr], a                                  ; $684f: $ea $98 $c2
-	ld   a, $42                                      ; $6852: $3e $42
-	ld   [wFarCallAddr+1], a                                  ; $6854: $ea $99 $c2
-	ld   a, $0a                                      ; $6857: $3e $0a
-	ld   [wFarCallBank], a                                  ; $6859: $ea $9a $c2
-	pop  af                                          ; $685c: $f1
-	call FarCall                                       ; $685d: $cd $62 $09
-	or   a                                           ; $6860: $b7
-	jr   nz, jr_004_6880                             ; $6861: $20 $1d
 
-	ld   hl, $03e8                                   ; $6863: $21 $e8 $03
+	M_FarCall CheckIfFlagSet1
+
+	or   a                                           ; $6860: $b7
+	jr   nz, .done                             ; $6861: $20 $1d
+
+	ld   hl, 1000                                   ; $6863: $21 $e8 $03
 	call Call_004_6a12                               ; $6866: $cd $12 $6a
 	pop  hl                                          ; $6869: $e1
 	pop  af                                          ; $686a: $f1
-	push af                                          ; $686b: $f5
-	ld   a, $de                                      ; $686c: $3e $de
-	ld   [wFarCallAddr], a                                  ; $686e: $ea $98 $c2
-	ld   a, $41                                      ; $6871: $3e $41
-	ld   [wFarCallAddr+1], a                                  ; $6873: $ea $99 $c2
-	ld   a, $0a                                      ; $6876: $3e $0a
-	ld   [wFarCallBank], a                                  ; $6878: $ea $9a $c2
-	pop  af                                          ; $687b: $f1
-	call FarCall                                       ; $687c: $cd $62 $09
+
+	M_FarCall SetOrUnsetFlag1
 	ret                                              ; $687f: $c9
 
-
-jr_004_6880:
+.done:
 	pop  hl                                          ; $6880: $e1
 	pop  af                                          ; $6881: $f1
 	ret                                              ; $6882: $c9
 
 
+Func_04_6883:
 	push af                                          ; $6883: $f5
 	push hl                                          ; $6884: $e5
-	push af                                          ; $6885: $f5
-	ld   a, $35                                      ; $6886: $3e $35
-	ld   [wFarCallAddr], a                                  ; $6888: $ea $98 $c2
-	ld   a, $42                                      ; $688b: $3e $42
-	ld   [wFarCallAddr+1], a                                  ; $688d: $ea $99 $c2
-	ld   a, $0a                                      ; $6890: $3e $0a
-	ld   [wFarCallBank], a                                  ; $6892: $ea $9a $c2
-	pop  af                                          ; $6895: $f1
-	call FarCall                                       ; $6896: $cd $62 $09
-	or   a                                           ; $6899: $b7
-	jr   nz, jr_004_68b9                             ; $689a: $20 $1d
 
-	ld   hl, $09c4                                   ; $689c: $21 $c4 $09
+	M_FarCall CheckIfFlagSet1
+
+	or   a                                           ; $6899: $b7
+	jr   nz, .done                             ; $689a: $20 $1d
+
+	ld   hl, 2500                                   ; $689c: $21 $c4 $09
 	call Call_004_6a12                               ; $689f: $cd $12 $6a
 	pop  hl                                          ; $68a2: $e1
 	pop  af                                          ; $68a3: $f1
-	push af                                          ; $68a4: $f5
-	ld   a, $de                                      ; $68a5: $3e $de
-	ld   [wFarCallAddr], a                                  ; $68a7: $ea $98 $c2
-	ld   a, $41                                      ; $68aa: $3e $41
-	ld   [wFarCallAddr+1], a                                  ; $68ac: $ea $99 $c2
-	ld   a, $0a                                      ; $68af: $3e $0a
-	ld   [wFarCallBank], a                                  ; $68b1: $ea $9a $c2
-	pop  af                                          ; $68b4: $f1
-	call FarCall                                       ; $68b5: $cd $62 $09
+
+	M_FarCall SetOrUnsetFlag1
 	ret                                              ; $68b8: $c9
 
-
-jr_004_68b9:
+.done:
 	pop  hl                                          ; $68b9: $e1
 	pop  af                                          ; $68ba: $f1
 	ret                                              ; $68bb: $c9
 
 
+Func_04_68bc:
 	push af                                          ; $68bc: $f5
 	push hl                                          ; $68bd: $e5
-	push af                                          ; $68be: $f5
-	ld   a, $35                                      ; $68bf: $3e $35
-	ld   [wFarCallAddr], a                                  ; $68c1: $ea $98 $c2
-	ld   a, $42                                      ; $68c4: $3e $42
-	ld   [wFarCallAddr+1], a                                  ; $68c6: $ea $99 $c2
-	ld   a, $0a                                      ; $68c9: $3e $0a
-	ld   [wFarCallBank], a                                  ; $68cb: $ea $9a $c2
-	pop  af                                          ; $68ce: $f1
-	call FarCall                                       ; $68cf: $cd $62 $09
-	or   a                                           ; $68d2: $b7
-	jr   nz, jr_004_68f2                             ; $68d3: $20 $1d
 
-	ld   hl, $1388                                   ; $68d5: $21 $88 $13
+	M_FarCall CheckIfFlagSet1
+
+	or   a                                           ; $68d2: $b7
+	jr   nz, .done                             ; $68d3: $20 $1d
+
+	ld   hl, 5000                                  ; $68d5: $21 $88 $13
 	call Call_004_6a12                               ; $68d8: $cd $12 $6a
 	pop  hl                                          ; $68db: $e1
 	pop  af                                          ; $68dc: $f1
-	push af                                          ; $68dd: $f5
-	ld   a, $de                                      ; $68de: $3e $de
-	ld   [wFarCallAddr], a                                  ; $68e0: $ea $98 $c2
-	ld   a, $41                                      ; $68e3: $3e $41
-	ld   [wFarCallAddr+1], a                                  ; $68e5: $ea $99 $c2
-	ld   a, $0a                                      ; $68e8: $3e $0a
-	ld   [wFarCallBank], a                                  ; $68ea: $ea $9a $c2
-	pop  af                                          ; $68ed: $f1
-	call FarCall                                       ; $68ee: $cd $62 $09
+
+	M_FarCall SetOrUnsetFlag1
 	ret                                              ; $68f1: $c9
 
-
-jr_004_68f2:
+.done:
 	pop  hl                                          ; $68f2: $e1
 	pop  af                                          ; $68f3: $f1
 	ret                                              ; $68f4: $c9
 
 
+Func_04_68f5:
 	push af                                          ; $68f5: $f5
 	push hl                                          ; $68f6: $e5
-	push af                                          ; $68f7: $f5
-	ld   a, $35                                      ; $68f8: $3e $35
-	ld   [wFarCallAddr], a                                  ; $68fa: $ea $98 $c2
-	ld   a, $42                                      ; $68fd: $3e $42
-	ld   [wFarCallAddr+1], a                                  ; $68ff: $ea $99 $c2
-	ld   a, $0a                                      ; $6902: $3e $0a
-	ld   [wFarCallBank], a                                  ; $6904: $ea $9a $c2
-	pop  af                                          ; $6907: $f1
-	call FarCall                                       ; $6908: $cd $62 $09
-	or   a                                           ; $690b: $b7
-	jr   nz, jr_004_692b                             ; $690c: $20 $1d
 
-	ld   hl, $1d4c                                   ; $690e: $21 $4c $1d
+	M_FarCall CheckIfFlagSet1
+
+	or   a                                           ; $690b: $b7
+	jr   nz, .done                             ; $690c: $20 $1d
+
+	ld   hl, 7500                                   ; $690e: $21 $4c $1d
 	call Call_004_6a12                               ; $6911: $cd $12 $6a
 	pop  hl                                          ; $6914: $e1
 	pop  af                                          ; $6915: $f1
-	push af                                          ; $6916: $f5
-	ld   a, $de                                      ; $6917: $3e $de
-	ld   [wFarCallAddr], a                                  ; $6919: $ea $98 $c2
-	ld   a, $41                                      ; $691c: $3e $41
-	ld   [wFarCallAddr+1], a                                  ; $691e: $ea $99 $c2
-	ld   a, $0a                                      ; $6921: $3e $0a
-	ld   [wFarCallBank], a                                  ; $6923: $ea $9a $c2
-	pop  af                                          ; $6926: $f1
-	call FarCall                                       ; $6927: $cd $62 $09
+
+	M_FarCall SetOrUnsetFlag1
 	ret                                              ; $692a: $c9
 
-
-jr_004_692b:
+.done:
 	pop  hl                                          ; $692b: $e1
 	pop  af                                          ; $692c: $f1
 	ret                                              ; $692d: $c9
 
 
+Func_04_692e:
 	push af                                          ; $692e: $f5
 	push hl                                          ; $692f: $e5
-	push af                                          ; $6930: $f5
-	ld   a, $35                                      ; $6931: $3e $35
-	ld   [wFarCallAddr], a                                  ; $6933: $ea $98 $c2
-	ld   a, $42                                      ; $6936: $3e $42
-	ld   [wFarCallAddr+1], a                                  ; $6938: $ea $99 $c2
-	ld   a, $0a                                      ; $693b: $3e $0a
-	ld   [wFarCallBank], a                                  ; $693d: $ea $9a $c2
-	pop  af                                          ; $6940: $f1
-	call FarCall                                       ; $6941: $cd $62 $09
-	or   a                                           ; $6944: $b7
-	jr   nz, jr_004_6964                             ; $6945: $20 $1d
 
-	ld   hl, $2710                                   ; $6947: $21 $10 $27
+	M_FarCall CheckIfFlagSet1
+
+	or   a                                           ; $6944: $b7
+	jr   nz, .done                             ; $6945: $20 $1d
+
+	ld   hl, 10000                                   ; $6947: $21 $10 $27
 	call Call_004_6a12                               ; $694a: $cd $12 $6a
 	pop  hl                                          ; $694d: $e1
 	pop  af                                          ; $694e: $f1
-	push af                                          ; $694f: $f5
-	ld   a, $de                                      ; $6950: $3e $de
-	ld   [wFarCallAddr], a                                  ; $6952: $ea $98 $c2
-	ld   a, $41                                      ; $6955: $3e $41
-	ld   [wFarCallAddr+1], a                                  ; $6957: $ea $99 $c2
-	ld   a, $0a                                      ; $695a: $3e $0a
-	ld   [wFarCallBank], a                                  ; $695c: $ea $9a $c2
-	pop  af                                          ; $695f: $f1
-	call FarCall                                       ; $6960: $cd $62 $09
+
+	M_FarCall SetOrUnsetFlag1
 	ret                                              ; $6963: $c9
 
-
-jr_004_6964:
+.done:
 	pop  hl                                          ; $6964: $e1
 	pop  af                                          ; $6965: $f1
 	ret                                              ; $6966: $c9
 
 
+Func_04_6967:
 	push af                                          ; $6967: $f5
 	push hl                                          ; $6968: $e5
-	push af                                          ; $6969: $f5
-	ld   a, $35                                      ; $696a: $3e $35
-	ld   [wFarCallAddr], a                                  ; $696c: $ea $98 $c2
-	ld   a, $42                                      ; $696f: $3e $42
-	ld   [wFarCallAddr+1], a                                  ; $6971: $ea $99 $c2
-	ld   a, $0a                                      ; $6974: $3e $0a
-	ld   [wFarCallBank], a                                  ; $6976: $ea $9a $c2
-	pop  af                                          ; $6979: $f1
-	call FarCall                                       ; $697a: $cd $62 $09
-	or   a                                           ; $697d: $b7
-	jr   nz, jr_004_699d                             ; $697e: $20 $1d
 
-	ld   hl, $61a8                                   ; $6980: $21 $a8 $61
+	M_FarCall CheckIfFlagSet1
+
+	or   a                                           ; $697d: $b7
+	jr   nz, .done                             ; $697e: $20 $1d
+
+	ld   hl, 25000                                   ; $6980: $21 $a8 $61
 	call Call_004_6a12                               ; $6983: $cd $12 $6a
 	pop  hl                                          ; $6986: $e1
 	pop  af                                          ; $6987: $f1
-	push af                                          ; $6988: $f5
-	ld   a, $de                                      ; $6989: $3e $de
-	ld   [wFarCallAddr], a                                  ; $698b: $ea $98 $c2
-	ld   a, $41                                      ; $698e: $3e $41
-	ld   [wFarCallAddr+1], a                                  ; $6990: $ea $99 $c2
-	ld   a, $0a                                      ; $6993: $3e $0a
-	ld   [wFarCallBank], a                                  ; $6995: $ea $9a $c2
-	pop  af                                          ; $6998: $f1
-	call FarCall                                       ; $6999: $cd $62 $09
+
+	M_FarCall SetOrUnsetFlag1
 	ret                                              ; $699c: $c9
 
-
-jr_004_699d:
+.done:
 	pop  hl                                          ; $699d: $e1
 	pop  af                                          ; $699e: $f1
 	ret                                              ; $699f: $c9
 
 
+Func_04_69a0:
 	push af                                          ; $69a0: $f5
 	push hl                                          ; $69a1: $e5
-	push af                                          ; $69a2: $f5
-	ld   a, $35                                      ; $69a3: $3e $35
-	ld   [wFarCallAddr], a                                  ; $69a5: $ea $98 $c2
-	ld   a, $42                                      ; $69a8: $3e $42
-	ld   [wFarCallAddr+1], a                                  ; $69aa: $ea $99 $c2
-	ld   a, $0a                                      ; $69ad: $3e $0a
-	ld   [wFarCallBank], a                                  ; $69af: $ea $9a $c2
-	pop  af                                          ; $69b2: $f1
-	call FarCall                                       ; $69b3: $cd $62 $09
-	or   a                                           ; $69b6: $b7
-	jr   nz, jr_004_69d6                             ; $69b7: $20 $1d
 
-	ld   hl, $c350                                   ; $69b9: $21 $50 $c3
+	M_FarCall CheckIfFlagSet1
+
+	or   a                                           ; $69b6: $b7
+	jr   nz, .done                             ; $69b7: $20 $1d
+
+	ld   hl, 50000                                   ; $69b9: $21 $50 $c3
 	call Call_004_6a12                               ; $69bc: $cd $12 $6a
 	pop  hl                                          ; $69bf: $e1
 	pop  af                                          ; $69c0: $f1
-	push af                                          ; $69c1: $f5
-	ld   a, $de                                      ; $69c2: $3e $de
-	ld   [wFarCallAddr], a                                  ; $69c4: $ea $98 $c2
-	ld   a, $41                                      ; $69c7: $3e $41
-	ld   [wFarCallAddr+1], a                                  ; $69c9: $ea $99 $c2
-	ld   a, $0a                                      ; $69cc: $3e $0a
-	ld   [wFarCallBank], a                                  ; $69ce: $ea $9a $c2
-	pop  af                                          ; $69d1: $f1
-	call FarCall                                       ; $69d2: $cd $62 $09
+
+	M_FarCall SetOrUnsetFlag1
 	ret                                              ; $69d5: $c9
 
-
-jr_004_69d6:
+.done:
 	pop  hl                                          ; $69d6: $e1
 	pop  af                                          ; $69d7: $f1
 	ret                                              ; $69d8: $c9
 
 
+; HL - flag to set
+Func_04_69d9:
 	push af                                          ; $69d9: $f5
 	push hl                                          ; $69da: $e5
-	push af                                          ; $69db: $f5
-	ld   a, $35                                      ; $69dc: $3e $35
-	ld   [wFarCallAddr], a                                  ; $69de: $ea $98 $c2
-	ld   a, $42                                      ; $69e1: $3e $42
-	ld   [wFarCallAddr+1], a                                  ; $69e3: $ea $99 $c2
-	ld   a, $0a                                      ; $69e6: $3e $0a
-	ld   [wFarCallBank], a                                  ; $69e8: $ea $9a $c2
-	pop  af                                          ; $69eb: $f1
-	call FarCall                                       ; $69ec: $cd $62 $09
+
+	M_FarCall CheckIfFlagSet1
+
 	or   a                                           ; $69ef: $b7
-	jr   nz, jr_004_6a0f                             ; $69f0: $20 $1d
+	jr   nz, .done                             ; $69f0: $20 $1d
 
 	ld   hl, $ffff                                   ; $69f2: $21 $ff $ff
 	call Call_004_6a12                               ; $69f5: $cd $12 $6a
 	pop  hl                                          ; $69f8: $e1
 	pop  af                                          ; $69f9: $f1
-	push af                                          ; $69fa: $f5
-	ld   a, $de                                      ; $69fb: $3e $de
-	ld   [wFarCallAddr], a                                  ; $69fd: $ea $98 $c2
-	ld   a, $41                                      ; $6a00: $3e $41
-	ld   [wFarCallAddr+1], a                                  ; $6a02: $ea $99 $c2
-	ld   a, $0a                                      ; $6a05: $3e $0a
-	ld   [wFarCallBank], a                                  ; $6a07: $ea $9a $c2
-	pop  af                                          ; $6a0a: $f1
-	call FarCall                                       ; $6a0b: $cd $62 $09
+
+	M_FarCall SetOrUnsetFlag1
 	ret                                              ; $6a0e: $c9
 
-
-jr_004_6a0f:
+.done:
 	pop  hl                                          ; $6a0f: $e1
 	pop  af                                          ; $6a10: $f1
 	ret                                              ; $6a11: $c9
@@ -6713,43 +6538,24 @@ jr_004_6a0f:
 Call_004_6a12:
 	push hl                                          ; $6a12: $e5
 	push hl                                          ; $6a13: $e5
-	push af                                          ; $6a14: $f5
-	ld   a, $4e                                      ; $6a15: $3e $4e
-	ld   [wFarCallAddr], a                                  ; $6a17: $ea $98 $c2
-	ld   a, $42                                      ; $6a1a: $3e $42
-	ld   [wFarCallAddr+1], a                                  ; $6a1c: $ea $99 $c2
-	ld   a, $0a                                      ; $6a1f: $3e $0a
-	ld   [wFarCallBank], a                                  ; $6a21: $ea $9a $c2
-	pop  af                                          ; $6a24: $f1
-	call FarCall                                       ; $6a25: $cd $62 $09
+
+	M_FarCall GetCurrPoints
+
 	pop  bc                                          ; $6a28: $c1
 	add  hl, bc                                      ; $6a29: $09
-	jr   nc, jr_004_6a2f                             ; $6a2a: $30 $03
-
+	jr   nc, :+                             ; $6a2a: $30 $03
 	ld   hl, $ffff                                   ; $6a2c: $21 $ff $ff
+:	M_FarCall Func_0a_423c
 
-jr_004_6a2f:
-	push af                                          ; $6a2f: $f5
-	ld   a, $3c                                      ; $6a30: $3e $3c
-	ld   [wFarCallAddr], a                                  ; $6a32: $ea $98 $c2
-	ld   a, $42                                      ; $6a35: $3e $42
-	ld   [wFarCallAddr+1], a                                  ; $6a37: $ea $99 $c2
-	ld   a, $0a                                      ; $6a3a: $3e $0a
-	ld   [wFarCallBank], a                                  ; $6a3c: $ea $9a $c2
-	pop  af                                          ; $6a3f: $f1
-	call FarCall                                       ; $6a40: $cd $62 $09
 	pop  hl                                          ; $6a43: $e1
 	ld   a, [$cc96]                                  ; $6a44: $fa $96 $cc
 	ld   c, a                                        ; $6a47: $4f
 	ld   a, [$cc97]                                  ; $6a48: $fa $97 $cc
 	ld   b, a                                        ; $6a4b: $47
 	add  hl, bc                                      ; $6a4c: $09
-	jr   nc, jr_004_6a52                             ; $6a4d: $30 $03
-
+	jr   nc, :+                             ; $6a4d: $30 $03
 	ld   hl, $ffff                                   ; $6a4f: $21 $ff $ff
-
-jr_004_6a52:
-	ld   a, l                                        ; $6a52: $7d
+:	ld   a, l                                        ; $6a52: $7d
 	ld   [$cc96], a                                  ; $6a53: $ea $96 $cc
 	ld   a, h                                        ; $6a56: $7c
 	ld   [$cc97], a                                  ; $6a57: $ea $97 $cc
@@ -6971,7 +6777,7 @@ jr_004_6b37:
 	push hl                                          ; $6b46: $e5
 	ld   a, b                                        ; $6b47: $78
 	call Call_004_6aeb                               ; $6b48: $cd $eb $6a
-	call Call_004_6b74                               ; $6b4b: $cd $74 $6b
+	call todo_CopyHLthenFFhIntoDE                               ; $6b4b: $cd $74 $6b
 	pop  hl                                          ; $6b4e: $e1
 
 jr_004_6b4f:
@@ -6995,18 +6801,24 @@ jr_004_6b5d:
 	call Call_004_6a12                               ; $6b61: $cd $12 $6a
 	pop  de                                          ; $6b64: $d1
 	ld   hl, $0000                                   ; $6b65: $21 $00 $00
-	call Call_004_6b74                               ; $6b68: $cd $74 $6b
+	call todo_CopyHLthenFFhIntoDE                               ; $6b68: $cd $74 $6b
 	ld   hl, $ffff                                   ; $6b6b: $21 $ff $ff
-	call Call_004_6b74                               ; $6b6e: $cd $74 $6b
+	call todo_CopyHLthenFFhIntoDE                               ; $6b6e: $cd $74 $6b
 	jp   Jump_004_66f8                               ; $6b71: $c3 $f8 $66
 
 
-Call_004_6b74:
+; DE -
+; HL -
+todo_CopyHLthenFFhIntoDE:
+;
 	ld   a, [wWramBank]                                  ; $6b74: $fa $93 $c2
 	push af                                          ; $6b77: $f5
+
 	ld   a, $01                                      ; $6b78: $3e $01
 	ld   [wWramBank], a                                  ; $6b7a: $ea $93 $c2
 	ldh  [rSVBK], a                                  ; $6b7d: $e0 $70
+
+;
 	ld   a, l                                        ; $6b7f: $7d
 	ld   [de], a                                     ; $6b80: $12
 	inc  de                                          ; $6b81: $13
@@ -7016,6 +6828,8 @@ Call_004_6b74:
 	ld   a, $ff                                      ; $6b85: $3e $ff
 	ld   [de], a                                     ; $6b87: $12
 	inc  de                                          ; $6b88: $13
+
+; Restore rom bank
 	pop  af                                          ; $6b89: $f1
 	ld   [wWramBank], a                                  ; $6b8a: $ea $93 $c2
 	ldh  [rSVBK], a                                  ; $6b8d: $e0 $70
@@ -7060,15 +6874,15 @@ Call_004_6b74:
 	jr   z, jr_004_6bec                              ; $6bca: $28 $20
 
 	ld   hl, $0002                                   ; $6bcc: $21 $02 $00
-	call Call_004_6b74                               ; $6bcf: $cd $74 $6b
+	call todo_CopyHLthenFFhIntoDE                               ; $6bcf: $cd $74 $6b
 	ld   hl, $0003                                   ; $6bd2: $21 $03 $00
-	call Call_004_6b74                               ; $6bd5: $cd $74 $6b
+	call todo_CopyHLthenFFhIntoDE                               ; $6bd5: $cd $74 $6b
 	ld   hl, $0004                                   ; $6bd8: $21 $04 $00
-	call Call_004_6b74                               ; $6bdb: $cd $74 $6b
+	call todo_CopyHLthenFFhIntoDE                               ; $6bdb: $cd $74 $6b
 	ld   hl, $0005                                   ; $6bde: $21 $05 $00
-	call Call_004_6b74                               ; $6be1: $cd $74 $6b
+	call todo_CopyHLthenFFhIntoDE                               ; $6be1: $cd $74 $6b
 	ld   hl, $0006                                   ; $6be4: $21 $06 $00
-	call Call_004_6b74                               ; $6be7: $cd $74 $6b
+	call todo_CopyHLthenFFhIntoDE                               ; $6be7: $cd $74 $6b
 	jr   jr_004_6c2b                                 ; $6bea: $18 $3f
 
 jr_004_6bec:
@@ -7081,566 +6895,454 @@ jr_004_6bec:
 	call $7206                                       ; $6bf6: $cd $06 $72
 	push hl                                          ; $6bf9: $e5
 	ld   hl, $0002                                   ; $6bfa: $21 $02 $00
-	call nc, Call_004_6b74                           ; $6bfd: $d4 $74 $6b
+	call nc, todo_CopyHLthenFFhIntoDE                           ; $6bfd: $d4 $74 $6b
 	pop  hl                                          ; $6c00: $e1
 	ld   bc, $4000                                   ; $6c01: $01 $00 $40
 	call $7206                                       ; $6c04: $cd $06 $72
 	push hl                                          ; $6c07: $e5
 	ld   hl, $0003                                   ; $6c08: $21 $03 $00
-	call nc, Call_004_6b74                           ; $6c0b: $d4 $74 $6b
+	call nc, todo_CopyHLthenFFhIntoDE                           ; $6c0b: $d4 $74 $6b
 	pop  hl                                          ; $6c0e: $e1
 	ld   bc, $6000                                   ; $6c0f: $01 $00 $60
 	call $7206                                       ; $6c12: $cd $06 $72
 	push hl                                          ; $6c15: $e5
 	ld   hl, $0004                                   ; $6c16: $21 $04 $00
-	call nc, Call_004_6b74                           ; $6c19: $d4 $74 $6b
+	call nc, todo_CopyHLthenFFhIntoDE                           ; $6c19: $d4 $74 $6b
 	pop  hl                                          ; $6c1c: $e1
 	ld   bc, $8000                                   ; $6c1d: $01 $00 $80
 	call $7206                                       ; $6c20: $cd $06 $72
 	push hl                                          ; $6c23: $e5
 	ld   hl, $0005                                   ; $6c24: $21 $05 $00
-	call nc, Call_004_6b74                           ; $6c27: $d4 $74 $6b
+	call nc, todo_CopyHLthenFFhIntoDE                           ; $6c27: $d4 $74 $6b
 	pop  hl                                          ; $6c2a: $e1
 
 jr_004_6c2b:
 	ld   hl, $0001                                   ; $6c2b: $21 $01 $00
-	call Call_004_6b74                               ; $6c2e: $cd $74 $6b
+	call todo_CopyHLthenFFhIntoDE                               ; $6c2e: $cd $74 $6b
 	ld   hl, $ffff                                   ; $6c31: $21 $ff $ff
-	call Call_004_6b74                               ; $6c34: $cd $74 $6b
+	call todo_CopyHLthenFFhIntoDE                               ; $6c34: $cd $74 $6b
 	jp   Jump_004_66f8                               ; $6c37: $c3 $f8 $66
 
 
+; todo: HL - start address of barcode lengths?
+Func_04_6c3a::
 	xor  a                                           ; $6c3a: $af
 	ld   [$cc95], a                                  ; $6c3b: $ea $95 $cc
 	ld   [$cc96], a                                  ; $6c3e: $ea $96 $cc
 	ld   [$cc97], a                                  ; $6c41: $ea $97 $cc
+
+; Return if idx is past number of table items
 	ld   a, [hl+]                                    ; $6c44: $2a
 	cp   $06                                         ; $6c45: $fe $06
 	ret  nc                                          ; $6c47: $d0
 
+; Save incremented HL using DE
 	ld   d, h                                        ; $6c48: $54
 	ld   e, l                                        ; $6c49: $5d
+
+; todo: hl = double ??? idxed into below table
 	sla  a                                           ; $6c4a: $cb $27
 	ld   h, $00                                      ; $6c4c: $26 $00
 	ld   l, a                                        ; $6c4e: $6f
-	ld   bc, $6c57                                   ; $6c4f: $01 $57 $6c
+	ld   bc, .table                                   ; $6c4f: $01 $57 $6c
 	add  hl, bc                                      ; $6c52: $09
+
+; Jump to handler
 	ld   a, [hl+]                                    ; $6c53: $2a
 	ld   h, [hl]                                     ; $6c54: $66
 	ld   l, a                                        ; $6c55: $6f
 	jp   hl                                          ; $6c56: $e9
 
+.table:
+	dw Data_04_6c63
+	dw Data_04_6c63
+	dw Data_04_6c77
+	dw Data_04_6db5
+	dw Data_04_6dc1
+	dw Data_04_6faf
 
-	ld   h, e                                        ; $6c57: $63
-	ld   l, h                                        ; $6c58: $6c
-	ld   h, e                                        ; $6c59: $63
-	ld   l, h                                        ; $6c5a: $6c
-	ld   [hl], a                                     ; $6c5b: $77
-	ld   l, h                                        ; $6c5c: $6c
-	or   l                                           ; $6c5d: $b5
-	ld   l, l                                        ; $6c5e: $6d
-	pop  bc                                          ; $6c5f: $c1
-	ld   l, l                                        ; $6c60: $6d
-	xor  a                                           ; $6c61: $af
-	ld   l, a                                        ; $6c62: $6f
+	
+; DE -
+Data_04_6c63:
+; HL = word in src
 	ld   a, [de]                                     ; $6c63: $1a
 	inc  de                                          ; $6c64: $13
 	ld   l, a                                        ; $6c65: $6f
 	ld   a, [de]                                     ; $6c66: $1a
 	ld   h, a                                        ; $6c67: $67
+
+;
 	ld   de, $d101                                   ; $6c68: $11 $01 $d1
-	call Call_004_6b74                               ; $6c6b: $cd $74 $6b
+	call todo_CopyHLthenFFhIntoDE                               ; $6c6b: $cd $74 $6b
 	ld   hl, $ffff                                   ; $6c6e: $21 $ff $ff
-	call Call_004_6b74                               ; $6c71: $cd $74 $6b
+	call todo_CopyHLthenFFhIntoDE                               ; $6c71: $cd $74 $6b
 	jp   Jump_004_66f8                               ; $6c74: $c3 $f8 $66
 
 
+Data_04_6c77:
 	ld   a, [de]                                     ; $6c77: $1a
 	cp   $10                                         ; $6c78: $fe $10
 	ret  nc                                          ; $6c7a: $d0
 
-	ld   bc, $6c8f                                   ; $6c7b: $01 $8f $6c
+; Push return address
+	ld   bc, .return                                   ; $6c7b: $01 $8f $6c
 	push bc                                          ; $6c7e: $c5
+
+;
 	ld   de, $d101                                   ; $6c7f: $11 $01 $d1
 	sla  a                                           ; $6c82: $cb $27
 	ld   h, $00                                      ; $6c84: $26 $00
 	ld   l, a                                        ; $6c86: $6f
-	ld   bc, $6c9e                                   ; $6c87: $01 $9e $6c
+	ld   bc, .table                                  ; $6c87: $01 $9e $6c
 	add  hl, bc                                      ; $6c8a: $09
 	ld   a, [hl+]                                    ; $6c8b: $2a
 	ld   h, [hl]                                     ; $6c8c: $66
 	ld   l, a                                        ; $6c8d: $6f
 	jp   hl                                          ; $6c8e: $e9
 
-
+.return:
 	ld   hl, $0007                                   ; $6c8f: $21 $07 $00
-	call Call_004_6b74                               ; $6c92: $cd $74 $6b
+	call todo_CopyHLthenFFhIntoDE                               ; $6c92: $cd $74 $6b
 	ld   hl, $ffff                                   ; $6c95: $21 $ff $ff
-	call Call_004_6b74                               ; $6c98: $cd $74 $6b
+	call todo_CopyHLthenFFhIntoDE                               ; $6c98: $cd $74 $6b
 	jp   Jump_004_66f8                               ; $6c9b: $c3 $f8 $66
 
+.table:
+	dw .entry0
+	dw .entry1
+	dw .entry2
+	dw .entry3
+	dw .entry4
+	dw .entry5
+	dw .entryStub
+	dw .entryStub
+	dw .entry8
+	dw .entry9
+	dw .entryA
+	dw .entryB
+	dw .entryC
+	dw .entryD
+	dw .entryStub
+	dw .entryStub
 
-	cp   a                                           ; $6c9e: $bf
-	ld   l, h                                        ; $6c9f: $6c
-	add  $6c                                         ; $6ca0: $c6 $6c
-	call nc, $e26c                                   ; $6ca2: $d4 $6c $e2
-	ld   l, h                                        ; $6ca5: $6c
-	db   $db                                         ; $6ca6: $db
-	ld   l, h                                        ; $6ca7: $6c
-	call $be6c                                       ; $6ca8: $cd $6c $be
-	ld   l, h                                        ; $6cab: $6c
-	cp   [hl]                                        ; $6cac: $be
-	ld   l, h                                        ; $6cad: $6c
-	jp   hl                                          ; $6cae: $e9
-
-
-	ld   l, h                                        ; $6caf: $6c
-	dec  bc                                          ; $6cb0: $0b
-	ld   l, l                                        ; $6cb1: $6d
-	ld   c, a                                        ; $6cb2: $4f
-	ld   l, l                                        ; $6cb3: $6d
-	sub  e                                           ; $6cb4: $93
-	ld   l, l                                        ; $6cb5: $6d
-	ld   [hl], c                                     ; $6cb6: $71
-	ld   l, l                                        ; $6cb7: $6d
-	dec  l                                           ; $6cb8: $2d
-	ld   l, l                                        ; $6cb9: $6d
-	cp   [hl]                                        ; $6cba: $be
-	ld   l, h                                        ; $6cbb: $6c
-	cp   [hl]                                        ; $6cbc: $be
-	ld   l, h                                        ; $6cbd: $6c
+.entryStub:
 	ret                                              ; $6cbe: $c9
 
-
+.entry0:
 	ld   hl, $0008                                   ; $6cbf: $21 $08 $00
-	call Call_004_6b74                               ; $6cc2: $cd $74 $6b
+	call todo_CopyHLthenFFhIntoDE                               ; $6cc2: $cd $74 $6b
 	ret                                              ; $6cc5: $c9
 
-
+.entry1:
 	ld   hl, $0009                                   ; $6cc6: $21 $09 $00
-	call Call_004_6b74                               ; $6cc9: $cd $74 $6b
+	call todo_CopyHLthenFFhIntoDE                               ; $6cc9: $cd $74 $6b
 	ret                                              ; $6ccc: $c9
 
-
+.entry5:
 	ld   hl, $000a                                   ; $6ccd: $21 $0a $00
-	call Call_004_6b74                               ; $6cd0: $cd $74 $6b
+	call todo_CopyHLthenFFhIntoDE                               ; $6cd0: $cd $74 $6b
 	ret                                              ; $6cd3: $c9
 
-
+.entry2:
 	ld   hl, $000b                                   ; $6cd4: $21 $0b $00
-	call Call_004_6b74                               ; $6cd7: $cd $74 $6b
+	call todo_CopyHLthenFFhIntoDE                               ; $6cd7: $cd $74 $6b
 	ret                                              ; $6cda: $c9
 
-
+.entry4:
 	ld   hl, $000c                                   ; $6cdb: $21 $0c $00
-	call Call_004_6b74                               ; $6cde: $cd $74 $6b
+	call todo_CopyHLthenFFhIntoDE                               ; $6cde: $cd $74 $6b
 	ret                                              ; $6ce1: $c9
 
-
+.entry3:
 	ld   hl, $000d                                   ; $6ce2: $21 $0d $00
-	call Call_004_6b74                               ; $6ce5: $cd $74 $6b
+	call todo_CopyHLthenFFhIntoDE                               ; $6ce5: $cd $74 $6b
 	ret                                              ; $6ce8: $c9
 
-
+.entry8:
 	push de                                          ; $6ce9: $d5
 	ld   hl, $0026                                   ; $6cea: $21 $26 $00
 	ld   a, $ff                                      ; $6ced: $3e $ff
-	push af                                          ; $6cef: $f5
-	ld   a, $de                                      ; $6cf0: $3e $de
-	ld   [wFarCallAddr], a                                  ; $6cf2: $ea $98 $c2
-	ld   a, $41                                      ; $6cf5: $3e $41
-	ld   [wFarCallAddr+1], a                                  ; $6cf7: $ea $99 $c2
-	ld   a, $0a                                      ; $6cfa: $3e $0a
-	ld   [wFarCallBank], a                                  ; $6cfc: $ea $9a $c2
-	pop  af                                          ; $6cff: $f1
-	call FarCall                                       ; $6d00: $cd $62 $09
+
+	M_FarCall SetOrUnsetFlag1
+
 	pop  de                                          ; $6d03: $d1
 	ld   hl, $000e                                   ; $6d04: $21 $0e $00
-	call Call_004_6b74                               ; $6d07: $cd $74 $6b
+	call todo_CopyHLthenFFhIntoDE                               ; $6d07: $cd $74 $6b
 	ret                                              ; $6d0a: $c9
 
-
+.entry9:
 	push de                                          ; $6d0b: $d5
 	ld   hl, $0027                                   ; $6d0c: $21 $27 $00
 	ld   a, $ff                                      ; $6d0f: $3e $ff
-	push af                                          ; $6d11: $f5
-	ld   a, $de                                      ; $6d12: $3e $de
-	ld   [wFarCallAddr], a                                  ; $6d14: $ea $98 $c2
-	ld   a, $41                                      ; $6d17: $3e $41
-	ld   [wFarCallAddr+1], a                                  ; $6d19: $ea $99 $c2
-	ld   a, $0a                                      ; $6d1c: $3e $0a
-	ld   [wFarCallBank], a                                  ; $6d1e: $ea $9a $c2
-	pop  af                                          ; $6d21: $f1
-	call FarCall                                       ; $6d22: $cd $62 $09
+
+	M_FarCall SetOrUnsetFlag1
+
 	pop  de                                          ; $6d25: $d1
 	ld   hl, $000f                                   ; $6d26: $21 $0f $00
-	call Call_004_6b74                               ; $6d29: $cd $74 $6b
+	call todo_CopyHLthenFFhIntoDE                               ; $6d29: $cd $74 $6b
 	ret                                              ; $6d2c: $c9
 
-
+.entryD:
 	push de                                          ; $6d2d: $d5
 	ld   hl, $0028                                   ; $6d2e: $21 $28 $00
 	ld   a, $ff                                      ; $6d31: $3e $ff
-	push af                                          ; $6d33: $f5
-	ld   a, $de                                      ; $6d34: $3e $de
-	ld   [wFarCallAddr], a                                  ; $6d36: $ea $98 $c2
-	ld   a, $41                                      ; $6d39: $3e $41
-	ld   [wFarCallAddr+1], a                                  ; $6d3b: $ea $99 $c2
-	ld   a, $0a                                      ; $6d3e: $3e $0a
-	ld   [wFarCallBank], a                                  ; $6d40: $ea $9a $c2
-	pop  af                                          ; $6d43: $f1
-	call FarCall                                       ; $6d44: $cd $62 $09
+
+	M_FarCall SetOrUnsetFlag1
+
 	pop  de                                          ; $6d47: $d1
 	ld   hl, $0010                                   ; $6d48: $21 $10 $00
-	call Call_004_6b74                               ; $6d4b: $cd $74 $6b
+	call todo_CopyHLthenFFhIntoDE                               ; $6d4b: $cd $74 $6b
 	ret                                              ; $6d4e: $c9
 
-
+.entryA:
 	push de                                          ; $6d4f: $d5
 	ld   hl, $0029                                   ; $6d50: $21 $29 $00
 	ld   a, $ff                                      ; $6d53: $3e $ff
-	push af                                          ; $6d55: $f5
-	ld   a, $de                                      ; $6d56: $3e $de
-	ld   [wFarCallAddr], a                                  ; $6d58: $ea $98 $c2
-	ld   a, $41                                      ; $6d5b: $3e $41
-	ld   [wFarCallAddr+1], a                                  ; $6d5d: $ea $99 $c2
-	ld   a, $0a                                      ; $6d60: $3e $0a
-	ld   [wFarCallBank], a                                  ; $6d62: $ea $9a $c2
-	pop  af                                          ; $6d65: $f1
-	call FarCall                                       ; $6d66: $cd $62 $09
+
+	M_FarCall SetOrUnsetFlag1
+
 	pop  de                                          ; $6d69: $d1
 	ld   hl, $0011                                   ; $6d6a: $21 $11 $00
-	call Call_004_6b74                               ; $6d6d: $cd $74 $6b
+	call todo_CopyHLthenFFhIntoDE                               ; $6d6d: $cd $74 $6b
 	ret                                              ; $6d70: $c9
 
-
+.entryC:
 	push de                                          ; $6d71: $d5
 	ld   hl, $002a                                   ; $6d72: $21 $2a $00
 	ld   a, $ff                                      ; $6d75: $3e $ff
-	push af                                          ; $6d77: $f5
-	ld   a, $de                                      ; $6d78: $3e $de
-	ld   [wFarCallAddr], a                                  ; $6d7a: $ea $98 $c2
-	ld   a, $41                                      ; $6d7d: $3e $41
-	ld   [wFarCallAddr+1], a                                  ; $6d7f: $ea $99 $c2
-	ld   a, $0a                                      ; $6d82: $3e $0a
-	ld   [wFarCallBank], a                                  ; $6d84: $ea $9a $c2
-	pop  af                                          ; $6d87: $f1
-	call FarCall                                       ; $6d88: $cd $62 $09
+
+	M_FarCall SetOrUnsetFlag1
+
 	pop  de                                          ; $6d8b: $d1
 	ld   hl, $0012                                   ; $6d8c: $21 $12 $00
-	call Call_004_6b74                               ; $6d8f: $cd $74 $6b
+	call todo_CopyHLthenFFhIntoDE                               ; $6d8f: $cd $74 $6b
 	ret                                              ; $6d92: $c9
 
-
+.entryB:
 	push de                                          ; $6d93: $d5
 	ld   hl, $002b                                   ; $6d94: $21 $2b $00
 	ld   a, $ff                                      ; $6d97: $3e $ff
-	push af                                          ; $6d99: $f5
-	ld   a, $de                                      ; $6d9a: $3e $de
-	ld   [wFarCallAddr], a                                  ; $6d9c: $ea $98 $c2
-	ld   a, $41                                      ; $6d9f: $3e $41
-	ld   [wFarCallAddr+1], a                                  ; $6da1: $ea $99 $c2
-	ld   a, $0a                                      ; $6da4: $3e $0a
-	ld   [wFarCallBank], a                                  ; $6da6: $ea $9a $c2
-	pop  af                                          ; $6da9: $f1
-	call FarCall                                       ; $6daa: $cd $62 $09
+
+	M_FarCall SetOrUnsetFlag1
+
 	pop  de                                          ; $6dad: $d1
 	ld   hl, $0013                                   ; $6dae: $21 $13 $00
-	call Call_004_6b74                               ; $6db1: $cd $74 $6b
+	call todo_CopyHLthenFFhIntoDE                               ; $6db1: $cd $74 $6b
 	ret                                              ; $6db4: $c9
 
 
+Data_04_6db5:
 	ld   de, $d101                                   ; $6db5: $11 $01 $d1
 	ld   hl, $ffff                                   ; $6db8: $21 $ff $ff
-	call Call_004_6b74                               ; $6dbb: $cd $74 $6b
+	call todo_CopyHLthenFFhIntoDE                               ; $6dbb: $cd $74 $6b
 	jp   Jump_004_66f8                               ; $6dbe: $c3 $f8 $66
 
 
+Data_04_6dc1:
 	ld   a, [de]                                     ; $6dc1: $1a
 	cp   $10                                         ; $6dc2: $fe $10
 	ret  nc                                          ; $6dc4: $d0
 
-	ld   bc, $6dd9                                   ; $6dc5: $01 $d9 $6d
+	ld   bc, .return                                   ; $6dc5: $01 $d9 $6d
 	push bc                                          ; $6dc8: $c5
 	ld   de, $d101                                   ; $6dc9: $11 $01 $d1
 	sla  a                                           ; $6dcc: $cb $27
 	ld   h, $00                                      ; $6dce: $26 $00
 	ld   l, a                                        ; $6dd0: $6f
-	ld   bc, $6de8                                   ; $6dd1: $01 $e8 $6d
+	ld   bc, .table                                   ; $6dd1: $01 $e8 $6d
 	add  hl, bc                                      ; $6dd4: $09
 	ld   a, [hl+]                                    ; $6dd5: $2a
 	ld   h, [hl]                                     ; $6dd6: $66
 	ld   l, a                                        ; $6dd7: $6f
 	jp   hl                                          ; $6dd8: $e9
 
-
+.return:
 	ld   hl, $0007                                   ; $6dd9: $21 $07 $00
-	call Call_004_6b74                               ; $6ddc: $cd $74 $6b
+	call todo_CopyHLthenFFhIntoDE                               ; $6ddc: $cd $74 $6b
 	ld   hl, $ffff                                   ; $6ddf: $21 $ff $ff
-	call Call_004_6b74                               ; $6de2: $cd $74 $6b
+	call todo_CopyHLthenFFhIntoDE                               ; $6de2: $cd $74 $6b
 	jp   Jump_004_66f8                               ; $6de5: $c3 $f8 $66
 
+.table:
+	dw .entry0
+	dw .entry1
+	dw .entry2
+	dw .entry3
+	dw .entry4
+	dw .entry5
+	dw .entry6
+	dw .entry7
+	dw .entry8
+	dw .entry9
+	dw .entryA
+	dw .entryB
+	dw .entryC
+	dw .entryD
+	dw .entryStub
+	dw .entryStub
 
-	add  hl, bc                                      ; $6de8: $09
-	ld   l, [hl]                                     ; $6de9: $6e
-	dec  hl                                          ; $6dea: $2b
-	ld   l, [hl]                                     ; $6deb: $6e
-	ld   c, l                                        ; $6dec: $4d
-	ld   l, [hl]                                     ; $6ded: $6e
-	ld   l, a                                        ; $6dee: $6f
-	ld   l, [hl]                                     ; $6def: $6e
-	sub  c                                           ; $6df0: $91
-	ld   l, [hl]                                     ; $6df1: $6e
-	or   e                                           ; $6df2: $b3
-	ld   l, [hl]                                     ; $6df3: $6e
-	push de                                          ; $6df4: $d5
-	ld   l, [hl]                                     ; $6df5: $6e
-	call c, $e36e                                    ; $6df6: $dc $6e $e3
-	ld   l, [hl]                                     ; $6df9: $6e
-	dec  b                                           ; $6dfa: $05
-	ld   l, a                                        ; $6dfb: $6f
-	daa                                              ; $6dfc: $27
-	ld   l, a                                        ; $6dfd: $6f
-	ld   c, c                                        ; $6dfe: $49
-	ld   l, a                                        ; $6dff: $6f
-	ld   l, e                                        ; $6e00: $6b
-	ld   l, a                                        ; $6e01: $6f
-	adc  l                                           ; $6e02: $8d
-	ld   l, a                                        ; $6e03: $6f
-	ld   [$086e], sp                                 ; $6e04: $08 $6e $08
-	ld   l, [hl]                                     ; $6e07: $6e
+.entryStub:
 	ret                                              ; $6e08: $c9
 
-
+.entry0:
 	push de                                          ; $6e09: $d5
 	ld   hl, $0020                                   ; $6e0a: $21 $20 $00
 	ld   a, $ff                                      ; $6e0d: $3e $ff
-	push af                                          ; $6e0f: $f5
-	ld   a, $de                                      ; $6e10: $3e $de
-	ld   [wFarCallAddr], a                                  ; $6e12: $ea $98 $c2
-	ld   a, $41                                      ; $6e15: $3e $41
-	ld   [wFarCallAddr+1], a                                  ; $6e17: $ea $99 $c2
-	ld   a, $0a                                      ; $6e1a: $3e $0a
-	ld   [wFarCallBank], a                                  ; $6e1c: $ea $9a $c2
-	pop  af                                          ; $6e1f: $f1
-	call FarCall                                       ; $6e20: $cd $62 $09
+
+	M_FarCall SetOrUnsetFlag1
+
 	pop  de                                          ; $6e23: $d1
 	ld   hl, $0008                                   ; $6e24: $21 $08 $00
-	call Call_004_6b74                               ; $6e27: $cd $74 $6b
+	call todo_CopyHLthenFFhIntoDE                               ; $6e27: $cd $74 $6b
 	ret                                              ; $6e2a: $c9
 
-
+.entry1:
 	push de                                          ; $6e2b: $d5
 	ld   hl, $0021                                   ; $6e2c: $21 $21 $00
 	ld   a, $ff                                      ; $6e2f: $3e $ff
-	push af                                          ; $6e31: $f5
-	ld   a, $de                                      ; $6e32: $3e $de
-	ld   [wFarCallAddr], a                                  ; $6e34: $ea $98 $c2
-	ld   a, $41                                      ; $6e37: $3e $41
-	ld   [wFarCallAddr+1], a                                  ; $6e39: $ea $99 $c2
-	ld   a, $0a                                      ; $6e3c: $3e $0a
-	ld   [wFarCallBank], a                                  ; $6e3e: $ea $9a $c2
-	pop  af                                          ; $6e41: $f1
-	call FarCall                                       ; $6e42: $cd $62 $09
+
+	M_FarCall SetOrUnsetFlag1
+
 	pop  de                                          ; $6e45: $d1
 	ld   hl, $0009                                   ; $6e46: $21 $09 $00
-	call Call_004_6b74                               ; $6e49: $cd $74 $6b
+	call todo_CopyHLthenFFhIntoDE                               ; $6e49: $cd $74 $6b
 	ret                                              ; $6e4c: $c9
 
-
+.entry2:
 	push de                                          ; $6e4d: $d5
 	ld   hl, $0022                                   ; $6e4e: $21 $22 $00
 	ld   a, $ff                                      ; $6e51: $3e $ff
-	push af                                          ; $6e53: $f5
-	ld   a, $de                                      ; $6e54: $3e $de
-	ld   [wFarCallAddr], a                                  ; $6e56: $ea $98 $c2
-	ld   a, $41                                      ; $6e59: $3e $41
-	ld   [wFarCallAddr+1], a                                  ; $6e5b: $ea $99 $c2
-	ld   a, $0a                                      ; $6e5e: $3e $0a
-	ld   [wFarCallBank], a                                  ; $6e60: $ea $9a $c2
-	pop  af                                          ; $6e63: $f1
-	call FarCall                                       ; $6e64: $cd $62 $09
+
+	M_FarCall SetOrUnsetFlag1
+
 	pop  de                                          ; $6e67: $d1
 	ld   hl, $000a                                   ; $6e68: $21 $0a $00
-	call Call_004_6b74                               ; $6e6b: $cd $74 $6b
+	call todo_CopyHLthenFFhIntoDE                               ; $6e6b: $cd $74 $6b
 	ret                                              ; $6e6e: $c9
 
-
+.entry3:
 	push de                                          ; $6e6f: $d5
 	ld   hl, $0023                                   ; $6e70: $21 $23 $00
 	ld   a, $ff                                      ; $6e73: $3e $ff
-	push af                                          ; $6e75: $f5
-	ld   a, $de                                      ; $6e76: $3e $de
-	ld   [wFarCallAddr], a                                  ; $6e78: $ea $98 $c2
-	ld   a, $41                                      ; $6e7b: $3e $41
-	ld   [wFarCallAddr+1], a                                  ; $6e7d: $ea $99 $c2
-	ld   a, $0a                                      ; $6e80: $3e $0a
-	ld   [wFarCallBank], a                                  ; $6e82: $ea $9a $c2
-	pop  af                                          ; $6e85: $f1
-	call FarCall                                       ; $6e86: $cd $62 $09
+
+	M_FarCall SetOrUnsetFlag1
+
 	pop  de                                          ; $6e89: $d1
 	ld   hl, $000b                                   ; $6e8a: $21 $0b $00
-	call Call_004_6b74                               ; $6e8d: $cd $74 $6b
+	call todo_CopyHLthenFFhIntoDE                               ; $6e8d: $cd $74 $6b
 	ret                                              ; $6e90: $c9
 
-
+.entry4:
 	push de                                          ; $6e91: $d5
 	ld   hl, $0024                                   ; $6e92: $21 $24 $00
 	ld   a, $ff                                      ; $6e95: $3e $ff
-	push af                                          ; $6e97: $f5
-	ld   a, $de                                      ; $6e98: $3e $de
-	ld   [wFarCallAddr], a                                  ; $6e9a: $ea $98 $c2
-	ld   a, $41                                      ; $6e9d: $3e $41
-	ld   [wFarCallAddr+1], a                                  ; $6e9f: $ea $99 $c2
-	ld   a, $0a                                      ; $6ea2: $3e $0a
-	ld   [wFarCallBank], a                                  ; $6ea4: $ea $9a $c2
-	pop  af                                          ; $6ea7: $f1
-	call FarCall                                       ; $6ea8: $cd $62 $09
+
+	M_FarCall SetOrUnsetFlag1
+
 	pop  de                                          ; $6eab: $d1
 	ld   hl, $000c                                   ; $6eac: $21 $0c $00
-	call Call_004_6b74                               ; $6eaf: $cd $74 $6b
+	call todo_CopyHLthenFFhIntoDE                               ; $6eaf: $cd $74 $6b
 	ret                                              ; $6eb2: $c9
 
-
+.entry5:
 	push de                                          ; $6eb3: $d5
 	ld   hl, $0025                                   ; $6eb4: $21 $25 $00
 	ld   a, $ff                                      ; $6eb7: $3e $ff
-	push af                                          ; $6eb9: $f5
-	ld   a, $de                                      ; $6eba: $3e $de
-	ld   [wFarCallAddr], a                                  ; $6ebc: $ea $98 $c2
-	ld   a, $41                                      ; $6ebf: $3e $41
-	ld   [wFarCallAddr+1], a                                  ; $6ec1: $ea $99 $c2
-	ld   a, $0a                                      ; $6ec4: $3e $0a
-	ld   [wFarCallBank], a                                  ; $6ec6: $ea $9a $c2
-	pop  af                                          ; $6ec9: $f1
-	call FarCall                                       ; $6eca: $cd $62 $09
+
+	M_FarCall SetOrUnsetFlag1
+
 	pop  de                                          ; $6ecd: $d1
 	ld   hl, $000d                                   ; $6ece: $21 $0d $00
-	call Call_004_6b74                               ; $6ed1: $cd $74 $6b
+	call todo_CopyHLthenFFhIntoDE                               ; $6ed1: $cd $74 $6b
 	ret                                              ; $6ed4: $c9
 
-
+.entry6:
 	ld   hl, $0014                                   ; $6ed5: $21 $14 $00
-	call Call_004_6b74                               ; $6ed8: $cd $74 $6b
+	call todo_CopyHLthenFFhIntoDE                               ; $6ed8: $cd $74 $6b
 	ret                                              ; $6edb: $c9
 
-
+.entry7:
 	ld   hl, $0015                                   ; $6edc: $21 $15 $00
-	call Call_004_6b74                               ; $6edf: $cd $74 $6b
+	call todo_CopyHLthenFFhIntoDE                               ; $6edf: $cd $74 $6b
 	ret                                              ; $6ee2: $c9
 
-
+.entry8:
 	push de                                          ; $6ee3: $d5
 	ld   hl, $0026                                   ; $6ee4: $21 $26 $00
 	ld   a, $ff                                      ; $6ee7: $3e $ff
-	push af                                          ; $6ee9: $f5
-	ld   a, $de                                      ; $6eea: $3e $de
-	ld   [wFarCallAddr], a                                  ; $6eec: $ea $98 $c2
-	ld   a, $41                                      ; $6eef: $3e $41
-	ld   [wFarCallAddr+1], a                                  ; $6ef1: $ea $99 $c2
-	ld   a, $0a                                      ; $6ef4: $3e $0a
-	ld   [wFarCallBank], a                                  ; $6ef6: $ea $9a $c2
-	pop  af                                          ; $6ef9: $f1
-	call FarCall                                       ; $6efa: $cd $62 $09
+
+	M_FarCall SetOrUnsetFlag1
+
 	pop  de                                          ; $6efd: $d1
 	ld   hl, $000e                                   ; $6efe: $21 $0e $00
-	call Call_004_6b74                               ; $6f01: $cd $74 $6b
+	call todo_CopyHLthenFFhIntoDE                               ; $6f01: $cd $74 $6b
 	ret                                              ; $6f04: $c9
 
-
+.entry9:
 	push de                                          ; $6f05: $d5
 	ld   hl, $0027                                   ; $6f06: $21 $27 $00
 	ld   a, $ff                                      ; $6f09: $3e $ff
-	push af                                          ; $6f0b: $f5
-	ld   a, $de                                      ; $6f0c: $3e $de
-	ld   [wFarCallAddr], a                                  ; $6f0e: $ea $98 $c2
-	ld   a, $41                                      ; $6f11: $3e $41
-	ld   [wFarCallAddr+1], a                                  ; $6f13: $ea $99 $c2
-	ld   a, $0a                                      ; $6f16: $3e $0a
-	ld   [wFarCallBank], a                                  ; $6f18: $ea $9a $c2
-	pop  af                                          ; $6f1b: $f1
-	call FarCall                                       ; $6f1c: $cd $62 $09
+
+	M_FarCall SetOrUnsetFlag1
+
 	pop  de                                          ; $6f1f: $d1
 	ld   hl, $000f                                   ; $6f20: $21 $0f $00
-	call Call_004_6b74                               ; $6f23: $cd $74 $6b
+	call todo_CopyHLthenFFhIntoDE                               ; $6f23: $cd $74 $6b
 	ret                                              ; $6f26: $c9
 
-
+.entryA:
 	push de                                          ; $6f27: $d5
 	ld   hl, $0028                                   ; $6f28: $21 $28 $00
 	ld   a, $ff                                      ; $6f2b: $3e $ff
-	push af                                          ; $6f2d: $f5
-	ld   a, $de                                      ; $6f2e: $3e $de
-	ld   [wFarCallAddr], a                                  ; $6f30: $ea $98 $c2
-	ld   a, $41                                      ; $6f33: $3e $41
-	ld   [wFarCallAddr+1], a                                  ; $6f35: $ea $99 $c2
-	ld   a, $0a                                      ; $6f38: $3e $0a
-	ld   [wFarCallBank], a                                  ; $6f3a: $ea $9a $c2
-	pop  af                                          ; $6f3d: $f1
-	call FarCall                                       ; $6f3e: $cd $62 $09
+
+	M_FarCall SetOrUnsetFlag1
+
 	pop  de                                          ; $6f41: $d1
 	ld   hl, $0010                                   ; $6f42: $21 $10 $00
-	call Call_004_6b74                               ; $6f45: $cd $74 $6b
+	call todo_CopyHLthenFFhIntoDE                               ; $6f45: $cd $74 $6b
 	ret                                              ; $6f48: $c9
 
-
+.entryB:
 	push de                                          ; $6f49: $d5
 	ld   hl, $0029                                   ; $6f4a: $21 $29 $00
 	ld   a, $ff                                      ; $6f4d: $3e $ff
-	push af                                          ; $6f4f: $f5
-	ld   a, $de                                      ; $6f50: $3e $de
-	ld   [wFarCallAddr], a                                  ; $6f52: $ea $98 $c2
-	ld   a, $41                                      ; $6f55: $3e $41
-	ld   [wFarCallAddr+1], a                                  ; $6f57: $ea $99 $c2
-	ld   a, $0a                                      ; $6f5a: $3e $0a
-	ld   [wFarCallBank], a                                  ; $6f5c: $ea $9a $c2
-	pop  af                                          ; $6f5f: $f1
-	call FarCall                                       ; $6f60: $cd $62 $09
+
+	M_FarCall SetOrUnsetFlag1
+
 	pop  de                                          ; $6f63: $d1
 	ld   hl, $0011                                   ; $6f64: $21 $11 $00
-	call Call_004_6b74                               ; $6f67: $cd $74 $6b
+	call todo_CopyHLthenFFhIntoDE                               ; $6f67: $cd $74 $6b
 	ret                                              ; $6f6a: $c9
 
-
+.entryC:
 	push de                                          ; $6f6b: $d5
 	ld   hl, $002a                                   ; $6f6c: $21 $2a $00
 	ld   a, $ff                                      ; $6f6f: $3e $ff
-	push af                                          ; $6f71: $f5
-	ld   a, $de                                      ; $6f72: $3e $de
-	ld   [wFarCallAddr], a                                  ; $6f74: $ea $98 $c2
-	ld   a, $41                                      ; $6f77: $3e $41
-	ld   [wFarCallAddr+1], a                                  ; $6f79: $ea $99 $c2
-	ld   a, $0a                                      ; $6f7c: $3e $0a
-	ld   [wFarCallBank], a                                  ; $6f7e: $ea $9a $c2
-	pop  af                                          ; $6f81: $f1
-	call FarCall                                       ; $6f82: $cd $62 $09
+
+	M_FarCall SetOrUnsetFlag1
+
 	pop  de                                          ; $6f85: $d1
 	ld   hl, $0012                                   ; $6f86: $21 $12 $00
-	call Call_004_6b74                               ; $6f89: $cd $74 $6b
+	call todo_CopyHLthenFFhIntoDE                               ; $6f89: $cd $74 $6b
 	ret                                              ; $6f8c: $c9
 
-
+.entryD:
 	push de                                          ; $6f8d: $d5
 	ld   hl, $002b                                   ; $6f8e: $21 $2b $00
 	ld   a, $ff                                      ; $6f91: $3e $ff
-	push af                                          ; $6f93: $f5
-	ld   a, $de                                      ; $6f94: $3e $de
-	ld   [wFarCallAddr], a                                  ; $6f96: $ea $98 $c2
-	ld   a, $41                                      ; $6f99: $3e $41
-	ld   [wFarCallAddr+1], a                                  ; $6f9b: $ea $99 $c2
-	ld   a, $0a                                      ; $6f9e: $3e $0a
-	ld   [wFarCallBank], a                                  ; $6fa0: $ea $9a $c2
-	pop  af                                          ; $6fa3: $f1
-	call FarCall                                       ; $6fa4: $cd $62 $09
+
+	M_FarCall SetOrUnsetFlag1
+
 	pop  de                                          ; $6fa7: $d1
 	ld   hl, $0013                                   ; $6fa8: $21 $13 $00
-	call Call_004_6b74                               ; $6fab: $cd $74 $6b
+	call todo_CopyHLthenFFhIntoDE                               ; $6fab: $cd $74 $6b
 	ret                                              ; $6fae: $c9
 
 
+Data_04_6faf:
 	ld   de, $d101                                   ; $6faf: $11 $01 $d1
 	ld   hl, $ffff                                   ; $6fb2: $21 $ff $ff
-	call Call_004_6b74                               ; $6fb5: $cd $74 $6b
+	call todo_CopyHLthenFFhIntoDE                               ; $6fb5: $cd $74 $6b
 	jp   Jump_004_66f8                               ; $6fb8: $c3 $f8 $66
 
 
@@ -8892,7 +8594,7 @@ jr_004_7766:
 	call SetBGandOBJPaletteRangesToUpdate                                       ; $7777: $cd $aa $04
 	xor  a                                           ; $777a: $af
 	call PlaySong                                       ; $777b: $cd $92 $1a
-	ld   a, $38                                      ; $777e: $3e $38
+	ld   a, GS_DAY_PERIOD_TRANSITION                                      ; $777e: $3e $38
 	ld   [wGameState], a                                  ; $7780: $ea $a0 $c2
 	xor  a                                           ; $7783: $af
 	ld   [wGameSubstate], a                                  ; $7784: $ea $a1 $c2
@@ -8941,7 +8643,7 @@ DormRoomTileDataBank1_8800h_hook:
 
 
 DormRoomLayoutHook:
-	call Call_004_5a7d
+	call DisplayDormRoomButtons
 
 	ld   a, BANK(TileMap_DormRoomStatsLabels)
 	ldbc 5, 6

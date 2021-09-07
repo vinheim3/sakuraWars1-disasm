@@ -3547,7 +3547,7 @@ jr_030_5391:
 	ld   hl, $53bb                                   ; $53ae: $21 $bb $53
 	add  hl, de                                      ; $53b1: $19
 	ld   a, [hl]                                     ; $53b2: $7e
-	call $1b64                                       ; $53b3: $cd $64 $1b
+	call PlaySampledSound                                       ; $53b3: $cd $64 $1b
 	ld   hl, wGameSubstate                                   ; $53b6: $21 $a1 $c2
 	inc  [hl]                                        ; $53b9: $34
 	ret                                              ; $53ba: $c9
@@ -4269,7 +4269,7 @@ jr_030_582f:
 	jr   c, jr_030_583a                              ; $5833: $38 $05
 
 	ld   a, $50                                      ; $5835: $3e $50
-	call $1b64                                       ; $5837: $cd $64 $1b
+	call PlaySampledSound                                       ; $5837: $cd $64 $1b
 
 jr_030_583a:
 	ld   hl, wGameSubstate                                   ; $583a: $21 $a1 $c2
@@ -6242,7 +6242,7 @@ Jump_030_626c:
 	ld   [$c71c], a                                  ; $6290: $ea $1c $c7
 	ld   a, l                                        ; $6293: $7d
 	ld   [$c71d], a                                  ; $6294: $ea $1d $c7
-	ld   a, $04                                      ; $6297: $3e $04
+	ld   a, GS_IRIS_MINI_GAME_MAIN                                      ; $6297: $3e $04
 	ld   [wGameState], a                                  ; $6299: $ea $a0 $c2
 	ld   a, $00                                      ; $629c: $3e $00
 	ld   [wGameSubstate], a                                  ; $629e: $ea $a1 $c2
@@ -6366,32 +6366,20 @@ jr_030_6327:
 	db $16 
 	
 	
-GameState05::
-	db $fa
-	and  c                                           ; $633f: $a1
-	jp   nz, $56df                                   ; $6340: $c2 $df $56
+GameState05_Credits::
+	ld   a, [wGameSubstate] ; $633e: $fa $a1 $c2
+	rst  JumpTable                                   ; $6341: $df
+	dw $6356
+	dw $6422
+	dw $64e9
+	dw $6636
+	dw $6b18
+	dw $6b34
+	dw $6b54
+	dw $6c5e
+	dw $71c1
+	dw $71d8
 
-	ld   h, e                                        ; $6343: $63
-	ld   [hl+], a                                    ; $6344: $22
-	ld   h, h                                        ; $6345: $64
-	jp   hl                                          ; $6346: $e9
-
-
-	ld   h, h                                        ; $6347: $64
-	ld   [hl], $66                                   ; $6348: $36 $66
-	jr   jr_030_63b7                                 ; $634a: $18 $6b
-
-	inc  [hl]                                        ; $634c: $34
-	ld   l, e                                        ; $634d: $6b
-	ld   d, h                                        ; $634e: $54
-	ld   l, e                                        ; $634f: $6b
-	ld   e, [hl]                                     ; $6350: $5e
-	ld   l, h                                        ; $6351: $6c
-	pop  bc                                          ; $6352: $c1
-	ld   [hl], c                                     ; $6353: $71
-	ret  c                                           ; $6354: $d8
-
-	ld   [hl], c                                     ; $6355: $71
 	ld   a, [wWramBank]                                  ; $6356: $fa $93 $c2
 	push af                                          ; $6359: $f5
 	ld   a, $05                                      ; $635a: $3e $05
@@ -9116,17 +9104,10 @@ jr_030_721d:
 	ld   bc, $003f                                   ; $722f: $01 $3f $00
 	call SetBGandOBJPaletteRangesToUpdate                                       ; $7232: $cd $aa $04
 	call TurnOffLCD                                       ; $7235: $cd $e3 $08
-	ld   h, $46                                      ; $7238: $26 $46
+	ld   h, GS_46                                      ; $7238: $26 $46
 	ld   l, $00                                      ; $723a: $2e $00
-	push af                                          ; $723c: $f5
-	ld   a, $57                                      ; $723d: $3e $57
-	ld   [wFarCallAddr], a                                  ; $723f: $ea $98 $c2
-	ld   a, $7e                                      ; $7242: $3e $7e
-	ld   [wFarCallAddr+1], a                                  ; $7244: $ea $99 $c2
-	ld   a, $11                                      ; $7247: $3e $11
-	ld   [wFarCallBank], a                                  ; $7249: $ea $9a $c2
-	pop  af                                          ; $724c: $f1
-	call FarCall                                       ; $724d: $cd $62 $09
+
+	M_FarCall Func_11_7e57
 	ret                                              ; $7250: $c9
 
 
@@ -9383,7 +9364,7 @@ jr_030_73a5:
 	jp   LCDCInterruptHandler.return                                       ; $73ae: $c3 $4a $04
 
 
-GameState06::
+GameState06_SoundMode::
 	ld   a, [wGameSubstate]                                  ; $73b1: $fa $a1 $c2
 	rst  JumpTable                                         ; $73b4: $df
 	cp   e                                           ; $73b5: $bb
@@ -10372,7 +10353,7 @@ Call_030_7785:
 	ld   [$c68c], a                                  ; $794a: $ea $8c $c6
 	ld   a, l                                        ; $794d: $7d
 	ld   [$c68d], a                                  ; $794e: $ea $8d $c6
-	ld   a, $06                                      ; $7951: $3e $06
+	ld   a, GS_SOUND_MODE                                      ; $7951: $3e $06
 	ld   [wGameState], a                                  ; $7953: $ea $a0 $c2
 	ld   a, $00                                      ; $7956: $3e $00
 	ld   [wGameSubstate], a                                  ; $7958: $ea $a1 $c2
@@ -10414,7 +10395,7 @@ jr_030_796f:
 	ret                                              ; $7990: $c9
 
 
-GameState09::
+GameState09_GirlVoiceSounds::
 	ld   a, [wGameSubstate]                                  ; $7991: $fa $a1 $c2
 	rst  JumpTable                                         ; $7994: $df
 	sbc  e                                           ; $7995: $9b
@@ -10668,8 +10649,8 @@ Call_030_7b4e:
 	bit  0, a                                        ; $7b6f: $cb $47
 	jr   z, jr_030_7b7c                              ; $7b71: $28 $09
 
-	call $7d7c                                       ; $7b73: $cd $7c $7d
-	call $1b64                                       ; $7b76: $cd $64 $1b
+	call Func_30_7d7c                                       ; $7b73: $cd $7c $7d
+	call PlaySampledSound                                       ; $7b76: $cd $64 $1b
 	jp   Jump_030_7c26                               ; $7b79: $c3 $26 $7c
 
 
@@ -10770,7 +10751,7 @@ jr_030_7bf8:
 	ld   [hl], a                                     ; $7bf8: $77
 	ld   a, $20                                      ; $7bf9: $3e $20
 	call PlaySoundEffect                                       ; $7bfb: $cd $df $1a
-	call $7df8                                       ; $7bfe: $cd $f8 $7d
+	call Func_30_7df8                                       ; $7bfe: $cd $f8 $7d
 	jr   jr_030_7c26                                 ; $7c01: $18 $23
 
 jr_030_7c03:
@@ -10795,7 +10776,7 @@ jr_030_7c1b:
 	ld   [hl], a                                     ; $7c1b: $77
 	ld   a, $20                                      ; $7c1c: $3e $20
 	call PlaySoundEffect                                       ; $7c1e: $cd $df $1a
-	call $7df8                                       ; $7c21: $cd $f8 $7d
+	call Func_30_7df8                                      ; $7c21: $cd $f8 $7d
 	jr   jr_030_7c26                                 ; $7c24: $18 $00
 
 Jump_030_7c26:
@@ -11028,7 +11009,7 @@ jr_030_7cec:
 	ld   [$c662], a                                  ; $7d3f: $ea $62 $c6
 	ld   a, l                                        ; $7d42: $7d
 	ld   [$c663], a                                  ; $7d43: $ea $63 $c6
-	ld   a, $09                                      ; $7d46: $3e $09
+	ld   a, GS_GIRL_VOICE_SOUNDS                                      ; $7d46: $3e $09
 	ld   [wGameState], a                                  ; $7d48: $ea $a0 $c2
 	xor  a                                           ; $7d4b: $af
 	ld   [wGameSubstate], a                                  ; $7d4c: $ea $a1 $c2
@@ -11063,8 +11044,12 @@ Call_030_7d50:
 	ld   bc, $01d4                                   ; $7d77: $01 $d4 $01
 	ret  c                                           ; $7d7a: $d8
 
-	ld   bc, $66fa                                   ; $7d7b: $01 $fa $66
-	add  $5f                                         ; $7d7e: $c6 $5f
+	db $01 
+	
+	
+Func_30_7d7c:
+	ld   a, [$c666] ; $7d7c: $fa $66 $c6
+	ld   e, a                                         ; $7d7f: $5f
 	ld   d, $00                                      ; $7d80: $16 $00
 	ld   hl, $c668                                   ; $7d82: $21 $68 $c6
 	add  hl, de                                      ; $7d85: $19
@@ -11072,7 +11057,7 @@ Call_030_7d50:
 	ld   b, $00                                      ; $7d87: $06 $00
 	sla  e                                           ; $7d89: $cb $23
 	rl   d                                           ; $7d8b: $cb $12
-	ld   hl, $7d97                                   ; $7d8d: $21 $97 $7d
+	ld   hl, .table                                   ; $7d8d: $21 $97 $7d
 	add  hl, de                                      ; $7d90: $19
 	ld   a, [hl+]                                    ; $7d91: $2a
 	ld   h, [hl]                                     ; $7d92: $66
@@ -11081,18 +11066,14 @@ Call_030_7d50:
 	ld   a, [hl]                                     ; $7d95: $7e
 	ret                                              ; $7d96: $c9
 
+.table:
+	dw Data_30_7db5
+	dw Data_30_7dc0
+	dw Data_30_7dcb
+	dw Data_30_7dd6
+	dw Data_30_7de2
+	dw Data_30_7ded
 
-	or   l                                           ; $7d97: $b5
-	ld   a, l                                        ; $7d98: $7d
-	ret  nz                                          ; $7d99: $c0
-
-	ld   a, l                                        ; $7d9a: $7d
-	bit  7, l                                        ; $7d9b: $cb $7d
-	sub  $7d                                         ; $7d9d: $d6 $7d
-	ldh  [c], a                                      ; $7d9f: $e2
-	ld   a, l                                        ; $7da0: $7d
-	db   $ed                                         ; $7da1: $ed
-	ld   a, l                                        ; $7da2: $7d
 
 Call_030_7da3:
 	ld   a, [$c666]                                  ; $7da3: $fa $66 $c6
@@ -11110,74 +11091,97 @@ Call_030_7da3:
 	inc  c                                           ; $7db2: $0c
 	dec  bc                                          ; $7db3: $0b
 	dec  bc                                          ; $7db4: $0b
-	dec  h                                           ; $7db5: $25
-	ld   h, $27                                      ; $7db6: $26 $27
-	jr   z, jr_030_7de3                              ; $7db8: $28 $29
 
-	ld   a, [hl+]                                    ; $7dba: $2a
-	dec  hl                                          ; $7dbb: $2b
-	inc  l                                           ; $7dbc: $2c
-	dec  l                                           ; $7dbd: $2d
-	jr   nc, jr_030_7dc0                             ; $7dbe: $30 $00
 
-jr_030_7dc0:
-	ld   sp, $3332                                   ; $7dc0: $31 $32 $33
-	inc  [hl]                                        ; $7dc3: $34
-	dec  [hl]                                        ; $7dc4: $35
-	ld   [hl], $37                                   ; $7dc5: $36 $37
-	jr   c, @+$3b                                    ; $7dc7: $38 $39
+Data_30_7db5:
+	db $25
+	db $26
+	db $27
+	db $28
+	db $29
+	db $2a
+	db $2b
+	db $2c
+	db $2d
+	db $30
+	db $00
 
-	inc  a                                           ; $7dc9: $3c
-	ld   bc, $3e3d                                   ; $7dca: $01 $3d $3e
-	ccf                                              ; $7dcd: $3f
-	ld   b, b                                        ; $7dce: $40
-	ld   b, c                                        ; $7dcf: $41
-	ld   b, d                                        ; $7dd0: $42
-	ld   b, e                                        ; $7dd1: $43
-	ld   b, h                                        ; $7dd2: $44
-	ld   b, l                                        ; $7dd3: $45
-	ld   c, b                                        ; $7dd4: $48
-	ld   [bc], a                                     ; $7dd5: $02
-	ld   c, c                                        ; $7dd6: $49
-	ld   c, d                                        ; $7dd7: $4a
-	ld   c, e                                        ; $7dd8: $4b
-	ld   c, h                                        ; $7dd9: $4c
-	ld   c, l                                        ; $7dda: $4d
-	ld   c, [hl]                                     ; $7ddb: $4e
-	ld   c, a                                        ; $7ddc: $4f
-	ld   d, b                                        ; $7ddd: $50
-	ld   d, c                                        ; $7dde: $51
-	ld   d, h                                        ; $7ddf: $54
-	inc  bc                                          ; $7de0: $03
-	inc  b                                           ; $7de1: $04
-	ld   d, l                                        ; $7de2: $55
 
-jr_030_7de3:
-	ld   d, [hl]                                     ; $7de3: $56
-	ld   d, a                                        ; $7de4: $57
-	ld   e, b                                        ; $7de5: $58
-	ld   e, c                                        ; $7de6: $59
-	ld   e, d                                        ; $7de7: $5a
-	ld   e, e                                        ; $7de8: $5b
-	ld   e, h                                        ; $7de9: $5c
-	ld   e, l                                        ; $7dea: $5d
-	ld   h, b                                        ; $7deb: $60
-	dec  b                                           ; $7dec: $05
-	ld   h, c                                        ; $7ded: $61
-	ld   h, d                                        ; $7dee: $62
-	ld   h, e                                        ; $7def: $63
-	ld   h, h                                        ; $7df0: $64
-	ld   h, l                                        ; $7df1: $65
-	ld   h, [hl]                                     ; $7df2: $66
-	ld   h, a                                        ; $7df3: $67
-	ld   l, b                                        ; $7df4: $68
-	ld   l, c                                        ; $7df5: $69
-	ld   l, h                                        ; $7df6: $6c
-	ld   b, $fa                                      ; $7df7: $06 $fa
-	sub  e                                           ; $7df9: $93
-	jp   nz, $3ef5                                   ; $7dfa: $c2 $f5 $3e
+Data_30_7dc0:
+	db $31
+	db $32
+	db $33
+	db $34
+	db $35
+	db $36
+	db $37
+	db $38
+	db $39
+	db $3c
+	db $01
+	
+	
+Data_30_7dcb:
+	db $3d
+	db $3e
+	db $3f
+	db $40
+	db $41
+	db $42
+	db $43
+	db $44
+	db $45
+	db $48
+	db $02
 
-	dec  b                                           ; $7dfd: $05
+
+Data_30_7dd6:
+	db $49
+	db $4a
+	db $4b
+	db $4c
+	db $4d
+	db $4e
+	db $4f
+	db $50
+	db $51
+	db $54
+	db $03
+	db $04
+
+
+Data_30_7de2:
+	db $55
+	db $56
+	db $57
+	db $58
+	db $59
+	db $5a
+	db $5b
+	db $5c
+	db $5d
+	db $60
+	db $05
+
+
+Data_30_7ded:
+	db $61
+	db $62
+	db $63
+	db $64
+	db $65
+	db $66
+	db $67
+	db $68
+	db $69
+	db $6c
+	db $06
+	
+	
+Func_30_7df8:
+	ld   a, [wWramBank] ; $7df8: $fa $93 $c2
+	push af                                   ; $7dfb: $f5
+	ld   a, $05                                   ; $7dfc: $3e $05
 	ld   [wWramBank], a                                  ; $7dfe: $ea $93 $c2
 	ldh  [rSVBK], a                                  ; $7e01: $e0 $70
 	ld   a, [$c666]                                  ; $7e03: $fa $66 $c6

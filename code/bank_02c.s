@@ -1257,7 +1257,7 @@ jr_02c_4571:
 	ld   [hl+], a                                    ; $459e: $22
 	ld   a, [hl+]                                    ; $459f: $2a
 	ldh  [c], a                                      ; $45a0: $e2
-	ld   [$a100], a                                  ; $45a1: $ea $00 $a1
+	ld   [sCurrPoints], a                                  ; $45a1: $ea $00 $a1
 	dec  l                                           ; $45a4: $2d
 	rst  $28                                         ; $45a5: $ef
 	ld   l, e                                        ; $45a6: $6b
@@ -11806,7 +11806,7 @@ jr_02c_72e9:
 	add  e                                           ; $73da: $83
 	db   $fc                                         ; $73db: $fc
 	nop                                              ; $73dc: $00
-	call c, $cc83                                    ; $73dd: $dc $83 $cc
+	call c, wDormRoomButtonsDisplayed                                    ; $73dd: $dc $83 $cc
 	ld   a, [bc]                                     ; $73e0: $0a
 	ret  z                                           ; $73e1: $c8
 
@@ -12433,7 +12433,7 @@ jr_02c_7604:
 	ret  nz                                          ; $7695: $c0
 
 	add  b                                           ; $7696: $80
-	jp   nc, $a080                                   ; $7697: $d2 $80 $a0
+	jp   nc, sGlobalFlags1                                   ; $7697: $d2 $80 $a0
 
 	add  b                                           ; $769a: $80
 	add  h                                           ; $769b: $84

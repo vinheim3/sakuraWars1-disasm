@@ -343,7 +343,7 @@ jr_00a_419c:
 	jr   z, jr_00a_41c9                              ; $41be: $28 $09
 
 	ld   a, [hl]                                     ; $41c0: $7e
-	ld   hl, $a080                                   ; $41c1: $21 $80 $a0
+	ld   hl, sGlobalFlags1                                   ; $41c1: $21 $80 $a0
 	add  hl, de                                      ; $41c4: $19
 	or   [hl]                                        ; $41c5: $b6
 	ld   [hl], a                                     ; $41c6: $77
@@ -352,7 +352,7 @@ jr_00a_419c:
 jr_00a_41c9:
 	ld   a, [hl]                                     ; $41c9: $7e
 	cpl                                              ; $41ca: $2f
-	ld   hl, $a080                                   ; $41cb: $21 $80 $a0
+	ld   hl, sGlobalFlags1                                   ; $41cb: $21 $80 $a0
 	add  hl, de                                      ; $41ce: $19
 	and  [hl]                                        ; $41cf: $a6
 	ld   [hl], a                                     ; $41d0: $77
@@ -371,6 +371,7 @@ SetSramByte1::
 
 
 ; A - if non-0, set, else unset
+; HL - flag to set/unset
 SetOrUnsetFlag1::
 	res  4, h                                        ; $41de: $cb $a4
 	set  5, h                                        ; $41e0: $cb $ec
@@ -384,7 +385,7 @@ GetSramValOrFlag1:
 
 ;
 	bit  5, h                                        ; $41e8: $cb $6c
-	jr   nz, .br_41f7                             ; $41ea: $20 $0b
+	jr   nz, .getFlag                             ; $41ea: $20 $0b
 
 	ld   a, h                                        ; $41ec: $7c
 	and  $03                                         ; $41ed: $e6 $03
@@ -394,7 +395,7 @@ GetSramValOrFlag1:
 	ld   a, [hl]                                     ; $41f4: $7e
 	jr   .done                                 ; $41f5: $18 $29
 
-.br_41f7:
+.getFlag:
 ; eg 0101, or 0189
 	ld   a, h                                        ; $41f7: $7c
 	and  $03                                         ; $41f8: $e6 $03
@@ -427,7 +428,7 @@ GetSramValOrFlag1:
 	ld   a, [hl]                                     ; $4216: $7e
 
 ;
-	ld   hl, $a080                                   ; $4217: $21 $80 $a0
+	ld   hl, sGlobalFlags1                                   ; $4217: $21 $80 $a0
 	add  hl, de                                      ; $421a: $19
 	and  [hl]                                        ; $421b: $a6
 	jr   z, .done                              ; $421c: $28 $02
@@ -459,24 +460,29 @@ CheckIfFlagSet1::
 	jp   GetSramValOrFlag1                               ; $4239: $c3 $e5 $41
 
 
-;
-	ld   de, $a100                                   ; $423c: $11 $00 $a1
+; HL - points to set
+Func_0a_423c::
+; Store HL in curr points
+	ld   de, sCurrPoints                                   ; $423c: $11 $00 $a1
 	ld   a, l                                        ; $423f: $7d
 	ld   [de], a                                     ; $4240: $12
 	inc  de                                          ; $4241: $13
 	ld   a, h                                        ; $4242: $7c
 	ld   [de], a                                     ; $4243: $12
+
+;
 	ld   hl, $a000                                   ; $4244: $21 $00 $a0
 	call Call_00a_431e                               ; $4247: $cd $1e $43
 	call Call_00a_40d3                               ; $424a: $cd $d3 $40
 	ret                                              ; $424d: $c9
 
 
-	ld   hl, $a100                                   ; $424e: $21 $00 $a1
-	ld   a, [hl+]                                    ; $4251: $2a
-	ld   h, [hl]                                     ; $4252: $66
-	ld   l, a                                        ; $4253: $6f
-	ret                                              ; $4254: $c9
+GetCurrPoints::
+	ld   hl, sCurrPoints                                            ; $424e
+	ld   a, [hl+]                                                   ; $4251
+	ld   h, [hl]                                                    ; $4252
+	ld   l, a                                                       ; $4253
+	ret                                                             ; $4254
 
 
 Func_0a_4255::
@@ -3400,7 +3406,7 @@ jr_00a_5bdd:
 	db $01 
 	
 	
-GameState35::
+GameState35_AltTitleScreen::
 	ld  a, [wGameSubstate] ; $5bec: $fa, $a1, $c2
 	dec  a                                   ; $5bef: $3d
 	jp   z, Jump_00a_5cfb                                   ; $5bf0: $ca $fb $5c
@@ -6228,7 +6234,7 @@ Jump_00a_6e81:
 
 TitleMenuScreenAnimationHandlerC:
 	ld   a, [$cc0f]                                  ; $6ebc: $fa $0f $cc
-	call $1b64                                       ; $6ebf: $cd $64 $1b
+	call PlaySampledSound                                       ; $6ebf: $cd $64 $1b
 	ld   a, $0d                                      ; $6ec2: $3e $0d
 	ld   [wTitleScreenAnimationStep], a                                  ; $6ec4: $ea $02 $cc
 	xor  a                                           ; $6ec7: $af
@@ -7079,7 +7085,7 @@ TitleMenuScreenAnimationHandlerD:
 
 	M_FarCall Call_00a_4428
 
-	ld   a, $38                                      ; $7436: $3e $38
+	ld   a, GS_DAY_PERIOD_TRANSITION                                      ; $7436: $3e $38
 	ld   [wGameState], a                                  ; $7438: $ea $a0 $c2
 	xor  a                                           ; $743b: $af
 	ld   [wGameSubstate], a                                  ; $743c: $ea $a1 $c2

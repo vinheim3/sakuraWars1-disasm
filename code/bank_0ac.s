@@ -9402,7 +9402,7 @@ jr_0ac_6923:
 
 	inc  hl                                          ; $6925: $23
 	rst  $38                                         ; $6926: $ff
-	ld   de, $afb1                                   ; $6927: $11 $b1 $af
+	ld   de, sDayPeriodIdx                                   ; $6927: $11 $b1 $af
 	db   $f4                                         ; $692a: $f4
 	dec  e                                           ; $692b: $1d
 	inc  sp                                          ; $692c: $33

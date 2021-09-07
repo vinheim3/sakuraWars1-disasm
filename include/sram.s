@@ -3,7 +3,16 @@ INCLUDE "includes.s"
 SECTION "SRAM", SRAM[$a000], BANK[$0]
 
 sa000:
-    ds $faa
+    ds $80
+
+sGlobalFlags1:: ; $a080
+    ds $80
+
+sCurrPoints:: ; $a100
+    dw
+
+sa102:
+    ds $faa-$102
 
 sPlayerName:: ; $afaa
     ds 6
@@ -12,8 +21,11 @@ sPlayerName:: ; $afaa
 sCurrDay:: ; $afb0
     db
 
-safb1:
-    ds $11b3-$fb1
+sDayPeriodIdx:: ; $afb1
+    db
+
+safb2:
+    ds $11b3-$fb2
 
 sTextSpeedBaseCounter:: ; $b1b3
     db

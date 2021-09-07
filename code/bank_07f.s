@@ -8190,7 +8190,7 @@ jr_07f_6386:
 	pop  hl                                          ; $638a: $e1
 	xor  e                                           ; $638b: $ab
 	add  b                                           ; $638c: $80
-	ld   bc, $a080                                   ; $638d: $01 $80 $a0
+	ld   bc, sGlobalFlags1                                   ; $638d: $01 $80 $a0
 	inc  bc                                          ; $6390: $03
 	rrca                                             ; $6391: $0f
 	nop                                              ; $6392: $00
