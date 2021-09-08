@@ -7380,7 +7380,7 @@ jr_011_6d30:
 	rst  $38                                         ; $6d9d: $ff
 
 
-Func_11_6d9e::
+SetMariaMiniGameTitleScreenState::
 	ld   a, h                                        ; $6d9e: $7c
 	ld   [$c8ad], a                                  ; $6d9f: $ea $ad $c8
 	ld   a, l                                        ; $6da2: $7d

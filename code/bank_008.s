@@ -632,7 +632,7 @@ ScriptEngineTable:
 	;
 	ScriptOpData ScriptOpcode03, $02
 	ScriptOpData ScriptOpcode04_Deque, $00
-	ScriptOpData ScriptOpcode05, $00
+	ScriptOpData ScriptOpcode05_SetFlagOrSramByte, $00
 	ScriptOpData ScriptOpcode06_Jump, $00
 	ScriptOpData ScriptOpcode07_JumpIfCalcValIsNon0, $00
 	ScriptOpData ScriptOpcode08_ClearTextBox, $00
@@ -666,7 +666,7 @@ ScriptEngineTable:
 	ScriptOpData ScriptOpcode18_UntimedQuestion, $03
 	ScriptOpData ScriptOpcode19_TimedQuestion, $00
 	;
-	ScriptOpData ScriptOpcode1a, $01
+	ScriptOpData ScriptOpcode1a_MiniGame, $01
 	;
 	ScriptOpData ScriptOpcode1b, $03
 	ScriptOpData ScriptOpcode1c_SetPortraitAndCharacter, $00
@@ -1679,8 +1679,8 @@ ScriptOpcode04_Deque_Main:
 	jp   DequeueAScriptOpcode                               ; $4a3c: $c3 $bc $40
 
 
-ScriptOpcode05_Init:
-ScriptOpcode05_Main:
+ScriptOpcode05_SetFlagOrSramByte_Init:
+ScriptOpcode05_SetFlagOrSramByte_Main:
 ;
 	call GetNextScriptOpcodeToProcess                               ; $4a3f: $cd $70 $42
 	ld   h, a                                        ; $4a42: $67
@@ -5596,7 +5596,7 @@ jr_008_6534:
 	ret                                              ; $6559: $c9
 
 
-ScriptOpcode1a_Init:
+ScriptOpcode1a_MiniGame_Init:
 	ld   a, $1a                                      ; $655a: $3e $1a
 	call EnqueueAScriptOpcode                               ; $655c: $cd $97 $40
 	call GetNextScriptOpcodeToProcess                               ; $655f: $cd $70 $42
@@ -5609,7 +5609,7 @@ ScriptOpcode1a_Init:
 	jp   AddInterruptScriptOpcode                               ; $656c: $c3 $ba $42
 
 
-ScriptOpcode1a_Main:
+ScriptOpcode1a_MiniGame_Main:
 	xor  a                                           ; $656f: $af
 	ld   [wScriptEngineContsRunningThisMainLoop], a                                  ; $6570: $ea $52 $cb
 	ld   a, [hl]                                     ; $6573: $7e
@@ -5620,30 +5620,24 @@ ScriptOpcode1a_Main:
 	sla  a                                           ; $657a: $cb $27
 	ld   b, $00                                      ; $657c: $06 $00
 	ld   c, a                                        ; $657e: $4f
-	ld   hl, $6587                                   ; $657f: $21 $87 $65
+	ld   hl, .table                                   ; $657f: $21 $87 $65
 	add  hl, bc                                      ; $6582: $09
 	ld   a, [hl+]                                    ; $6583: $2a
 	ld   h, [hl]                                     ; $6584: $66
 	ld   l, a                                        ; $6585: $6f
 	jp   hl                                          ; $6586: $e9
 
+.table:
+	dw .entry0
+	dw .entry1
+	dw .entry2
+	dw .entry3
+	dw .entry4
+	dw .entry5
+	dw .entry6
+	dw .entry7
 
-	sub  a                                           ; $6587: $97
-	ld   h, l                                        ; $6588: $65
-	bit  4, l                                        ; $6589: $cb $65
-	nop                                              ; $658b: $00
-	ld   h, [hl]                                     ; $658c: $66
-	inc  [hl]                                        ; $658d: $34
-	ld   h, [hl]                                     ; $658e: $66
-	ld   l, b                                        ; $658f: $68
-	ld   h, [hl]                                     ; $6590: $66
-	sbc  h                                           ; $6591: $9c
-	ld   h, [hl]                                     ; $6592: $66
-	ret  nc                                          ; $6593: $d0
-
-	ld   h, [hl]                                     ; $6594: $66
-	inc  b                                           ; $6595: $04
-	ld   h, a                                        ; $6596: $67
+.entry0:
 	ld   hl, $0014                                   ; $6597: $21 $14 $00
 	ld   a, $ff                                      ; $659a: $3e $ff
 
@@ -5653,10 +5647,10 @@ ScriptOpcode1a_Main:
 	ld   h, a                                        ; $65b3: $67
 	ld   l, $01                                      ; $65b4: $2e $01
 
-	M_FarCall Func_3e_7f51
+	M_FarCall SetSakuraMiniGameTitleScreenState
 	ret                                              ; $65ca: $c9
 
-
+.entry1:
 	ld   hl, $0015                                   ; $65cb: $21 $15 $00
 	ld   a, $ff                                      ; $65ce: $3e $ff
 
@@ -5667,10 +5661,10 @@ ScriptOpcode1a_Main:
 	ld   l, $01                                      ; $65e8: $2e $01
 	xor  a                                           ; $65ea: $af
 
-	M_FarCall Func_10_7561
+	M_FarCall SetSumireMiniGameTitleScreenState
 	ret                                              ; $65ff: $c9
 
-
+.entry2:
 	ld   hl, $0016                                   ; $6600: $21 $16 $00
 	ld   a, $ff                                      ; $6603: $3e $ff
 
@@ -5680,10 +5674,10 @@ ScriptOpcode1a_Main:
 	ld   h, a                                        ; $661c: $67
 	ld   l, $01                                      ; $661d: $2e $01
 
-	M_FarCall Func_11_6d9e
+	M_FarCall SetMariaMiniGameTitleScreenState
 	ret                                              ; $6633: $c9
 
-
+.entry3:
 	ld   hl, $0017                                   ; $6634: $21 $17 $00
 	ld   a, $ff                                      ; $6637: $3e $ff
 
@@ -5693,10 +5687,10 @@ ScriptOpcode1a_Main:
 	ld   h, a                                        ; $6650: $67
 	ld   l, $01                                      ; $6651: $2e $01
 
-	M_FarCall Func_3e_794b
+	M_FarCall SetIrisMiniGameTitleScreenState
 	ret                                              ; $6667: $c9
 
-
+.entry4:
 	ld   hl, $0018                                   ; $6668: $21 $18 $00
 	ld   a, $ff                                      ; $666b: $3e $ff
 
@@ -5706,10 +5700,10 @@ ScriptOpcode1a_Main:
 	ld   h, a                                        ; $6684: $67
 	ld   l, $01                                      ; $6685: $2e $01
 
-	M_FarCall Func_3e_7301
+	M_FarCall SetKohranMiniGameTitleScreenState
 	ret                                              ; $669b: $c9
 
-
+.entry5:
 	ld   hl, $0019                                   ; $669c: $21 $19 $00
 	ld   a, $ff                                      ; $669f: $3e $ff
 
@@ -5719,10 +5713,10 @@ ScriptOpcode1a_Main:
 	ld   h, a                                        ; $66b8: $67
 	ld   l, $01                                      ; $66b9: $2e $01
 
-	M_FarCall Func_3f_4634
+	M_FarCall SetKannaMiniGameTitleScreenState
 	ret                                              ; $66cf: $c9
 
-
+.entry6:
 	ld   hl, $00d8                                   ; $66d0: $21 $d8 $00
 	ld   a, $ff                                      ; $66d3: $3e $ff
 
@@ -5732,10 +5726,10 @@ ScriptOpcode1a_Main:
 	ld   h, a                                        ; $66ec: $67
 	ld   l, $01                                      ; $66ed: $2e $01
 
-	M_FarCall Func_3e_4863
+	M_FarCall SetRedLightGreenLightState
 	ret                                              ; $6703: $c9
 
-
+.entry7:
 	ld   hl, $00d7                                   ; $6704: $21 $d7 $00
 	ld   a, $ff                                      ; $6707: $3e $ff
 
@@ -5745,7 +5739,7 @@ ScriptOpcode1a_Main:
 	ld   h, a                                        ; $6720: $67
 	ld   l, $01                                      ; $6721: $2e $01
 
-	M_FarCall Func_3e_5a6d
+	M_FarCall SetPushUpsState
 	ret                                              ; $6737: $c9
 
 

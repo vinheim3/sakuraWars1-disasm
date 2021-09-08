@@ -264,7 +264,13 @@ wType0AnimSpriteYPosRelativeTo:: ; $c601
     db
 
 wc602:
-    ds $99-2
+    ds $66-2
+
+wSoundModeGirlSelected:: ; $c666
+    db
+
+wc667:
+    ds $99-$67
 
 wMiniGamesReturnState:: ; $c699
     db

@@ -1257,7 +1257,7 @@ Call_03e_4858:
 	ret                                              ; $4862: $c9
 
 
-Func_3e_4863::
+SetRedLightGreenLightState::
 	ld   a, h                                        ; $4863: $7c
 	ld   [$c93b], a                                  ; $4864: $ea $3b $c9
 	ld   a, l                                        ; $4867: $7d
@@ -4052,7 +4052,7 @@ Call_03e_5a4d:
 	ret                                              ; $5a6c: $c9
 
 
-Func_3e_5a6d::
+SetPushUpsState::
 	ld   a, h                                        ; $5a6d: $7c
 	ld   [$c9a5], a                                  ; $5a6e: $ea $a5 $c9
 	ld   a, l                                        ; $5a71: $7d
@@ -7815,7 +7815,7 @@ Call_03e_72df:
 	ret                                              ; $7300: $c9
 
 
-Func_3e_7301::
+SetKohranMiniGameTitleScreenState::
 	ld   a, h                                        ; $7301: $7c
 	ld   [$c9d7], a                                  ; $7302: $ea $d7 $c9
 	ld   a, l                                        ; $7305: $7d
@@ -8691,7 +8691,7 @@ jr_03e_7934:
 	ret                                              ; $794a: $c9
 
 
-Func_3e_794b::
+SetIrisMiniGameTitleScreenState::
 	ld   a, h                                        ; $794b: $7c
 	ld   [$c9e1], a                                  ; $794c: $ea $e1 $c9
 	ld   a, l                                        ; $794f: $7d
@@ -9501,7 +9501,7 @@ Call_03e_7f2f:
 	ret                                              ; $7f50: $c9
 
 
-Func_3e_7f51::
+SetSakuraMiniGameTitleScreenState::
 	ld   a, h                                        ; $7f51: $7c
 	ld   [$c9e9], a                                  ; $7f52: $ea $e9 $c9
 	ld   a, l                                        ; $7f55: $7d

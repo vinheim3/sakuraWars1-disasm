@@ -7962,20 +7962,16 @@ JpSetOrUnsetFlag1::
 	ret                                              ; $7202: $c9
 
 
+SetOrUnsetNextFlag1::
 	inc  hl                                          ; $7203: $23
-	push af                                          ; $7204: $f5
-	ld   a, $de                                      ; $7205: $3e $de
-	ld   [wFarCallAddr], a                                  ; $7207: $ea $98 $c2
-	ld   a, $41                                      ; $720a: $3e $41
-	ld   [wFarCallAddr+1], a                                  ; $720c: $ea $99 $c2
-	ld   a, $0a                                      ; $720f: $3e $0a
-	ld   [wFarCallBank], a                                  ; $7211: $ea $9a $c2
-	pop  af                                          ; $7214: $f1
-	call FarCall                                       ; $7215: $cd $62 $09
+
+	M_FarCall SetOrUnsetFlag1
+
 	dec  hl                                          ; $7218: $2b
 	ret                                              ; $7219: $c9
 
 
+;
 	ld   hl, Data_0c_721f                                   ; $721a: $21 $1f $72
 	jr   jr_00c_722d                                 ; $721d: $18 $0e
 

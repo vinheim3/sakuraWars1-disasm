@@ -8338,7 +8338,7 @@ Call_010_753f:
 	ret                                              ; $7560: $c9
 
 
-Func_10_7561::
+SetSumireMiniGameTitleScreenState::
 	ld   a, h                                        ; $7561: $7c
 	ld   [$c9f9], a                                  ; $7562: $ea $f9 $c9
 	ld   a, l                                        ; $7565: $7d

@@ -10478,7 +10478,7 @@ jr_030_7a37:
 	jr   z, jr_030_7a37                              ; $7a3f: $28 $f6
 
 	ld   a, b                                        ; $7a41: $78
-	ld   [$c666], a                                  ; $7a42: $ea $66 $c6
+	ld   [wSoundModeGirlSelected], a                                  ; $7a42: $ea $66 $c6
 	ld   a, $ff                                      ; $7a45: $3e $ff
 	ld   [$c667], a                                  ; $7a47: $ea $67 $c6
 	ld   hl, $c668                                   ; $7a4a: $21 $68 $c6
@@ -10573,14 +10573,14 @@ Call_030_7ad6:
 Call_030_7ae5:
 	ld   a, $0b                                      ; $7ae5: $3e $0b
 	ld   [wSpriteGroup], a                                  ; $7ae7: $ea $1a $c2
-	ld   a, [$c666]                                  ; $7aea: $fa $66 $c6
+	ld   a, [wSoundModeGirlSelected]                                  ; $7aea: $fa $66 $c6
 	swap a                                           ; $7aed: $cb $37
 	ld   bc, $7028                                   ; $7aef: $01 $28 $70
 	add  c                                           ; $7af2: $81
 	ld   c, a                                        ; $7af3: $4f
 	ld   a, [$c671]                                  ; $7af4: $fa $71 $c6
 	call LoadSpriteFromMainTable                                       ; $7af7: $cd $16 $0e
-	ld   a, [$c666]                                  ; $7afa: $fa $66 $c6
+	ld   a, [wSoundModeGirlSelected]                                  ; $7afa: $fa $66 $c6
 	ld   b, a                                        ; $7afd: $47
 	ld   a, [$c667]                                  ; $7afe: $fa $67 $c6
 	cp   b                                           ; $7b01: $b8
@@ -10607,7 +10607,7 @@ Call_030_7ae5:
 	call EnqueueHDMATransfer                                       ; $7b24: $cd $7c $02
 
 jr_030_7b27:
-	ld   a, [$c666]                                  ; $7b27: $fa $66 $c6
+	ld   a, [wSoundModeGirlSelected]                                  ; $7b27: $fa $66 $c6
 	ld   h, a                                        ; $7b2a: $67
 	ld   l, $00                                      ; $7b2b: $2e $00
 	srl  h                                           ; $7b2d: $cb $3c
@@ -10623,7 +10623,7 @@ jr_030_7b27:
 	ld   c, $81                                      ; $7b40: $0e $81
 	ld   b, $04                                      ; $7b42: $06 $04
 	call EnqueueHDMATransfer                                       ; $7b44: $cd $7c $02
-	ld   a, [$c666]                                  ; $7b47: $fa $66 $c6
+	ld   a, [wSoundModeGirlSelected]                                  ; $7b47: $fa $66 $c6
 	ld   [$c667], a                                  ; $7b4a: $ea $67 $c6
 	ret                                              ; $7b4d: $c9
 
@@ -10649,7 +10649,7 @@ Call_030_7b4e:
 	bit  0, a                                        ; $7b6f: $cb $47
 	jr   z, jr_030_7b7c                              ; $7b71: $28 $09
 
-	call Func_30_7d7c                                       ; $7b73: $cd $7c $7d
+	call GetSelectedSampledSoundIdx                                       ; $7b73: $cd $7c $7d
 	call PlaySampledSound                                       ; $7b76: $cd $64 $1b
 	jp   Jump_030_7c26                               ; $7b79: $c3 $26 $7c
 
@@ -10670,7 +10670,7 @@ jr_030_7b8c:
 	bit  6, a                                        ; $7b8f: $cb $77
 	jr   z, jr_030_7bb7                              ; $7b91: $28 $24
 
-	ld   a, [$c666]                                  ; $7b93: $fa $66 $c6
+	ld   a, [wSoundModeGirlSelected]                                  ; $7b93: $fa $66 $c6
 
 jr_030_7b96:
 	sub  $01                                         ; $7b96: $d6 $01
@@ -10687,7 +10687,7 @@ jr_030_7b9c:
 	ld   a, b                                        ; $7ba3: $78
 	jr   z, jr_030_7b96                              ; $7ba4: $28 $f0
 
-	ld   hl, $c666                                   ; $7ba6: $21 $66 $c6
+	ld   hl, wSoundModeGirlSelected                                   ; $7ba6: $21 $66 $c6
 	cp   [hl]                                        ; $7ba9: $be
 	jr   z, jr_030_7c26                              ; $7baa: $28 $7a
 
@@ -10701,7 +10701,7 @@ jr_030_7bb7:
 	bit  7, a                                        ; $7bb7: $cb $7f
 	jr   z, jr_030_7bdf                              ; $7bb9: $28 $24
 
-	ld   a, [$c666]                                  ; $7bbb: $fa $66 $c6
+	ld   a, [wSoundModeGirlSelected]                                  ; $7bbb: $fa $66 $c6
 
 jr_030_7bbe:
 	inc  a                                           ; $7bbe: $3c
@@ -10719,7 +10719,7 @@ jr_030_7bc4:
 	ld   a, b                                        ; $7bcb: $78
 	jr   z, jr_030_7bbe                              ; $7bcc: $28 $f0
 
-	ld   hl, $c666                                   ; $7bce: $21 $66 $c6
+	ld   hl, wSoundModeGirlSelected                                   ; $7bce: $21 $66 $c6
 	cp   [hl]                                        ; $7bd1: $be
 	jr   z, jr_030_7c26                              ; $7bd2: $28 $52
 
@@ -10733,7 +10733,7 @@ jr_030_7bdf:
 	bit  5, a                                        ; $7bdf: $cb $6f
 	jr   z, jr_030_7c03                              ; $7be1: $28 $20
 
-	ld   a, [$c666]                                  ; $7be3: $fa $66 $c6
+	ld   a, [wSoundModeGirlSelected]                                  ; $7be3: $fa $66 $c6
 	ld   e, a                                        ; $7be6: $5f
 	ld   d, $00                                      ; $7be7: $16 $00
 	ld   hl, $c668                                   ; $7be9: $21 $68 $c6
@@ -10743,7 +10743,7 @@ jr_030_7bdf:
 	jr   nc, jr_030_7bf8                             ; $7bf0: $30 $06
 
 	push hl                                          ; $7bf2: $e5
-	call Call_030_7da3                               ; $7bf3: $cd $a3 $7d
+	call GetNumSampledSoundsForGirl                               ; $7bf3: $cd $a3 $7d
 	pop  hl                                          ; $7bf6: $e1
 	dec  a                                           ; $7bf7: $3d
 
@@ -10758,9 +10758,9 @@ jr_030_7c03:
 	bit  4, a                                        ; $7c03: $cb $67
 	jr   z, jr_030_7c26                              ; $7c05: $28 $1f
 
-	call Call_030_7da3                               ; $7c07: $cd $a3 $7d
+	call GetNumSampledSoundsForGirl                               ; $7c07: $cd $a3 $7d
 	ld   b, a                                        ; $7c0a: $47
-	ld   a, [$c666]                                  ; $7c0b: $fa $66 $c6
+	ld   a, [wSoundModeGirlSelected]                                  ; $7c0b: $fa $66 $c6
 	ld   e, a                                        ; $7c0e: $5f
 	ld   d, $00                                      ; $7c0f: $16 $00
 	ld   hl, $c668                                   ; $7c11: $21 $68 $c6
@@ -10830,7 +10830,7 @@ Call_030_7c53:
 
 
 Call_030_7c62:
-	ld   a, [$c666]                                  ; $7c62: $fa $66 $c6
+	ld   a, [wSoundModeGirlSelected]                                  ; $7c62: $fa $66 $c6
 	swap a                                           ; $7c65: $cb $37
 	ld   bc, $2020                                   ; $7c67: $01 $20 $20
 	add  c                                           ; $7c6a: $81
@@ -10842,7 +10842,7 @@ Call_030_7c62:
 jr_030_7c73:
 	push af                                          ; $7c73: $f5
 	ld   b, a                                        ; $7c74: $47
-	ld   a, [$c666]                                  ; $7c75: $fa $66 $c6
+	ld   a, [wSoundModeGirlSelected]                                  ; $7c75: $fa $66 $c6
 	cp   b                                           ; $7c78: $b8
 	jr   z, jr_030_7c97                              ; $7c79: $28 $1c
 
@@ -10885,7 +10885,7 @@ Call_030_7ca4:
 	ld   [$c672], a                                  ; $7ca6: $ea $72 $c6
 	ld   a, $7c                                      ; $7ca9: $3e $7c
 	ld   [$c673], a                                  ; $7cab: $ea $73 $c6
-	ld   a, [$c666]                                  ; $7cae: $fa $66 $c6
+	ld   a, [wSoundModeGirlSelected]                                  ; $7cae: $fa $66 $c6
 	ld   l, a                                        ; $7cb1: $6f
 	ld   h, $00                                      ; $7cb2: $26 $00
 	add  hl, hl                                      ; $7cb4: $29
@@ -10919,7 +10919,7 @@ jr_030_7cd8:
 	or   a                                           ; $7cd9: $b7
 	jr   nz, jr_030_7cec                             ; $7cda: $20 $10
 
-	ld   a, [$c666]                                  ; $7cdc: $fa $66 $c6
+	ld   a, [wSoundModeGirlSelected]                                  ; $7cdc: $fa $66 $c6
 	ld   l, a                                        ; $7cdf: $6f
 	ld   h, $00                                      ; $7ce0: $26 $00
 	add  hl, hl                                      ; $7ce2: $29
@@ -11047,26 +11047,32 @@ Call_030_7d50:
 	db $01 
 	
 	
-Func_30_7d7c:
-	ld   a, [$c666] ; $7d7c: $fa $66 $c6
+GetSelectedSampledSoundIdx:
+;
+	ld   a, [wSoundModeGirlSelected] ; $7d7c: $fa $66 $c6
 	ld   e, a                                         ; $7d7f: $5f
 	ld   d, $00                                      ; $7d80: $16 $00
 	ld   hl, $c668                                   ; $7d82: $21 $68 $c6
 	add  hl, de                                      ; $7d85: $19
+
+;
 	ld   c, [hl]                                     ; $7d86: $4e
 	ld   b, $00                                      ; $7d87: $06 $00
 	sla  e                                           ; $7d89: $cb $23
 	rl   d                                           ; $7d8b: $cb $12
-	ld   hl, .table                                   ; $7d8d: $21 $97 $7d
+	ld   hl, .girlsSampledSounds                                   ; $7d8d: $21 $97 $7d
 	add  hl, de                                      ; $7d90: $19
+
+;
 	ld   a, [hl+]                                    ; $7d91: $2a
 	ld   h, [hl]                                     ; $7d92: $66
 	ld   l, a                                        ; $7d93: $6f
 	add  hl, bc                                      ; $7d94: $09
+
 	ld   a, [hl]                                     ; $7d95: $7e
 	ret                                              ; $7d96: $c9
 
-.table:
+.girlsSampledSounds:
 	dw Data_30_7db5
 	dw Data_30_7dc0
 	dw Data_30_7dcb
@@ -11075,16 +11081,17 @@ Func_30_7d7c:
 	dw Data_30_7ded
 
 
-Call_030_7da3:
-	ld   a, [$c666]                                  ; $7da3: $fa $66 $c6
+GetNumSampledSoundsForGirl:
+; Get value from table in A, idxed by girl selected
+	ld   a, [wSoundModeGirlSelected]                                  ; $7da3: $fa $66 $c6
 	ld   e, a                                        ; $7da6: $5f
 	ld   d, $00                                      ; $7da7: $16 $00
-	ld   hl, $7daf                                   ; $7da9: $21 $af $7d
+	ld   hl, .counts                                   ; $7da9: $21 $af $7d
 	add  hl, de                                      ; $7dac: $19
 	ld   a, [hl]                                     ; $7dad: $7e
 	ret                                              ; $7dae: $c9
 
-
+.counts:
 	dec  bc                                          ; $7daf: $0b
 	dec  bc                                          ; $7db0: $0b
 	dec  bc                                          ; $7db1: $0b
@@ -11184,7 +11191,7 @@ Func_30_7df8:
 	ld   a, $05                                   ; $7dfc: $3e $05
 	ld   [wWramBank], a                                  ; $7dfe: $ea $93 $c2
 	ldh  [rSVBK], a                                  ; $7e01: $e0 $70
-	ld   a, [$c666]                                  ; $7e03: $fa $66 $c6
+	ld   a, [wSoundModeGirlSelected]                                  ; $7e03: $fa $66 $c6
 	ld   d, a                                        ; $7e06: $57
 	ld   e, $00                                      ; $7e07: $1e $00
 	srl  d                                           ; $7e09: $cb $3a
@@ -11194,7 +11201,7 @@ Func_30_7df8:
 	ld   hl, $d08d                                   ; $7e11: $21 $8d $d0
 	add  hl, de                                      ; $7e14: $19
 	push hl                                          ; $7e15: $e5
-	ld   a, [$c666]                                  ; $7e16: $fa $66 $c6
+	ld   a, [wSoundModeGirlSelected]                                  ; $7e16: $fa $66 $c6
 	ld   e, a                                        ; $7e19: $5f
 	ld   d, $00                                      ; $7e1a: $16 $00
 	ld   hl, $c668                                   ; $7e1c: $21 $68 $c6

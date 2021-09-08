@@ -848,7 +848,7 @@ Call_03f_4615:
 	ret                                              ; $4633: $c9
 
 
-Func_3f_4634::
+SetKannaMiniGameTitleScreenState::
 	ld   a, h                                        ; $4634: $7c
 	ld   [$c9f1], a                                  ; $4635: $ea $f1 $c9
 	ld   a, l                                        ; $4638: $7d
