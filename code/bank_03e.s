@@ -8764,7 +8764,11 @@ jr_03e_79a7:
 	ld   a, $19                                      ; $79cc: $3e $19
 	ld   hl, $d000                                   ; $79ce: $21 $00 $d0
 	ld   de, $71e2                                   ; $79d1: $11 $e2 $71
+if def(VWF)
+	call SakuraMiniGameTitleScreenBank1_8800hHook
+else
 	call RLEXorCopy                                       ; $79d4: $cd $d2 $09
+endc
 
 ;
 	ld   c, $81                                      ; $79d7: $0e $81
@@ -8784,7 +8788,11 @@ jr_03e_79a7:
 	call EnqueueHDMATransfer                                       ; $79f3: $cd $7c $02
 	rst  WaitUntilVBlankIntHandledIfLCDOn                                         ; $79f6: $cf
 
-;
+if def(VWF)
+	M_FarCall LoadSakuraMiniGameTitleScreenGfxSpr
+	nop
+else
+
 	ld   a, $1c                                      ; $79f7: $3e $1c
 	ld   hl, $d000                                   ; $79f9: $21 $00 $d0
 	ld   de, $5600                                   ; $79fc: $11 $00 $56
@@ -8795,6 +8803,7 @@ jr_03e_79a7:
 	ld   de, $8000                                   ; $7a04: $11 $00 $80
 	ld   a, $03                                      ; $7a07: $3e $03
 	ld   hl, $d000                                   ; $7a09: $21 $00 $d0
+endc
 	ld   b, $40                                      ; $7a0c: $06 $40
 	call EnqueueHDMATransfer                                       ; $7a0e: $cd $7c $02
 	rst  WaitUntilVBlankIntHandledIfLCDOn                                         ; $7a11: $cf
@@ -8812,7 +8821,11 @@ jr_03e_79a7:
 	ld   a, $15                                      ; $7a22: $3e $15
 	ld   hl, $d000                                   ; $7a24: $21 $00 $d0
 	ld   de, $6759                                   ; $7a27: $11 $59 $67
+if def(VWF)
+	call SakuraMiniGameTitleScreenBank0_8800hHook
+else
 	call RLEXorCopy                                       ; $7a2a: $cd $d2 $09
+endc
 
 ;
 	ld   c, $80                                      ; $7a2d: $0e $80
@@ -8842,13 +8855,13 @@ jr_03e_79a7:
 	rst  WaitUntilVBlankIntHandledIfLCDOn                                         ; $7a5c: $cf
 
 ; Main layout
-	ld   a, $1d                                      ; $7a5d: $3e $1d
-	ld   de, $4878                                   ; $7a5f: $11 $78 $48
+	ld   a, BANK(TileAttr_SakuraMiniGameTitleScreen)                                      ; $7a5d: $3e $1d
+	ld   de, TileAttr_SakuraMiniGameTitleScreen                                   ; $7a5f: $11 $78 $48
 	ld   hl, $dc40                                   ; $7a62: $21 $40 $dc
 	ld   bc, $1412                                   ; $7a65: $01 $12 $14
 	call FarCopyLayout                                       ; $7a68: $cd $2c $0b
 
-	ld   a, $1d                                      ; $7a6b: $3e $1d
+	ld   a, BANK(TileMap_SakuraMiniGameTitleScreen)                                      ; $7a6b: $3e $1d
 	ld   hl, $da00                                   ; $7a6d: $21 $00 $da
 	call FarCopyLayout                                       ; $7a70: $cd $2c $0b
 
@@ -9540,6 +9553,20 @@ BattleTileDataHook:
 	call RLEXorCopy
 
 	M_FarCall LoadEnBattleTileData
+	ret
+
+
+SakuraMiniGameTitleScreenBank0_8800hHook:
+	call RLEXorCopy
+
+	M_FarCall LoadSakuraMiniGameTitleScreenGfx0
+	ret
+
+
+SakuraMiniGameTitleScreenBank1_8800hHook:
+	call RLEXorCopy
+
+	M_FarCall LoadSakuraMiniGameTitleScreenGfx1
 	ret
 
 endc

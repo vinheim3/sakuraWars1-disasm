@@ -48,22 +48,22 @@ macro AddrBank
     db BANK(\1)
 endm
 
-macro M_FarCall
+macro M_FarCall ; 20
     DEF MARK = 0
 if _NARG != 1
     DEF MARK = \1
     shift
 endc
-    push af
-    ld   a, LOW(\1)
-    ld   [wFarCallAddr], a
-    ld   a, HIGH(\1)
-    ld   [wFarCallAddr+1], a
-    ld   a, BANK(\1)
-    ld   [wFarCallBank], a
-    pop  af
+    push af ; 1
+    ld   a, LOW(\1) ; 2
+    ld   [wFarCallAddr], a ; 3
+    ld   a, HIGH(\1) ; 2
+    ld   [wFarCallAddr+1], a ; 3
+    ld   a, BANK(\1) ; 2
+    ld   [wFarCallBank], a ; 3
+    pop  af ; 1
 if MARK == 0
-    call FarCall
+    call FarCall ; 3
 endc
 if MARK == "z"
     call z, FarCall

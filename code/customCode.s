@@ -14,6 +14,173 @@ Gfx_EnCinematron::
 .end::
 
 
+LoadSakuraMiniGameTitleScreenGfx0::
+	ld   bc, 38*$10
+	ld   de, $d000+$570
+	ld   hl, .data1
+	call MemCopy
+
+	ld   bc, $10
+	ld   de, $d000+$a50
+	ld   hl, .data2
+	call MemCopy
+
+	ret
+
+.data1:
+	INCBIN "en_sakuraMiniGameTitleScreen.2bpp", 2*$10, 38*$10
+.data2:
+	INCBIN "en_sakuraMiniGameTitleScreen.2bpp", 89*$10, $10
+
+
+LoadSakuraMiniGameTitleScreenGfx1::
+	ld   bc, 39*$10
+	ld   de, $d000
+	ld   hl, .data1
+	call MemCopy
+
+	ld   bc, 9*$10
+	ld   de, $d000+$270
+	ld   hl, .data2
+	call MemCopy
+
+	ld   bc, 9*$10
+	ld   de, $d000+$300
+	ld   hl, .data3
+	call MemCopy
+
+	ld   bc, 9*$10
+	ld   de, $d000+$3a0
+	ld   hl, .data4
+	call MemCopy
+
+	ld   bc, 3*$10
+	ld   de, $d000+$360
+	ld   hl, .data5
+	call MemCopy
+
+	ret
+
+.data1:
+	INCBIN "en_sakuraMiniGameTitleScreen.2bpp", 40*$10, 39*$10
+.data2:
+	INCBIN "en_sakuraMiniGameTitleScreen.2bpp", 80*$10, 9*$10
+.data3:
+	INCBIN "en_sakuraMiniGameTitleScreen.2bpp", 90*$10, 9*$10
+.data4:
+	INCBIN "en_sakuraMiniGameTitleScreen.2bpp", 107*$10, 9*$10
+.data5:
+	INCBIN "en_sakuraMiniGameTitleScreen.2bpp", 103*$10, 3*$10
+
+
+LoadSakuraMiniGameTitleScreenGfxSpr::
+	ld   a, $1c                                      ; $79f7: $3e $1c
+	ld   hl, $d000                                   ; $79f9: $21 $00 $d0
+	ld   de, $5600                                   ; $79fc: $11 $00 $56
+	call RLEXorCopy                                       ; $79ff: $cd $d2 $09
+
+; Cutting some sprite lines
+	ld   bc, 8
+	ld   hl, $d000+$470+4
+	call MemClear
+
+	ld   bc, 12
+	ld   hl, $d000+$490+4
+	call MemClear
+
+	ld   bc, 8
+	ld   hl, $d000+$4b0+6
+	call MemClear
+
+	ld   bc, 12
+	ld   hl, $d000+$d0+4
+	call MemClear
+
+	ld   bc, 16
+	ld   hl, $d000+$100
+	call MemClear
+
+	ld   bc, 2
+	ld   hl, $d000+$410+14
+	call MemClear
+
+; Clearing/setting parts of sprite lines
+	ld   a, $08
+	ld   [$d000+$380+12], a
+	ld   a, $f8
+	ld   [$d000+$380+13], a
+	ld   a, $08
+	ld   [$d000+$380+14], a
+	ld   a, $f8
+	ld   [$d000+$380+15], a
+	ld   a, $08
+	ld   [$d000+$390], a
+	ld   a, $f8
+	ld   [$d000+$390+1], a
+	ld   a, $18
+	ld   [$d000+$390+2], a
+	ld   a, $f8
+	ld   [$d000+$390+3], a
+
+	ld   a, $3e
+	ld   [$d000+$110+1], a
+	ld   a, $19
+	ld   [$d000+$110+3], a
+
+	ld   bc, 7*2
+	ld   de, $d000+$c0+6
+	ld   hl, .hairSheen
+	call MemCopy
+
+; New sprites
+; - on top of the left R
+	ld   a, $80
+	ld   [$d000+$520], a
+; - below the L
+	ld   a, $f8
+	ld   [$d000+$540], a
+	ld   a, $f0
+	ld   [$d000+$540+2], a
+; - below the right R
+	ld   a, $40
+	ld   [$d000+$560+8], a
+	ld   [$d000+$560+10], a
+	ld   a, $03
+	ld   [$d000+$570], a
+	ld   a, $01
+	ld   [$d000+$570+2], a
+; - middle of world series
+	ld   bc, 4*2
+	ld   de, $d000+$580+8
+	ld   hl, .middleOfWorldSeries
+	call MemCopy
+; - middle of L & D
+	ld   bc, 4*2
+	ld   de, $d000+$5a0
+	ld   hl, .middleOfLandD1
+	call MemCopy
+	ld   bc, 3*2
+	ld   de, $d000+$5c0
+	ld   hl, .middleOfLandD2
+	call MemCopy
+
+	ld   c, $80                                      ; $7a02: $0e $80
+	ld   de, $8000                                   ; $7a04: $11 $00 $80
+	ld   a, $03                                      ; $7a07: $3e $03
+	ld   hl, $d000                                   ; $7a09: $21 $00 $d0
+	ret
+
+.hairSheen:
+	db $3f,$20, $7f,$40, $ff,$80, $ff,$80, $ff,$80
+	db $ff,$01, $ff,$01
+.middleOfWorldSeries:
+	db $02,$00, $02,$00, $06,$00, $0e,$00
+.middleOfLandD1:
+	db $07,$00, $1f,$00, $07,$00, $06,$00
+.middleOfLandD2:
+	db $ff,$00, $e0,$00, $80,$00
+
+
 LoadSettingsEnTileData::
 	ld   bc, $c0
 	ld   de, $d1a0

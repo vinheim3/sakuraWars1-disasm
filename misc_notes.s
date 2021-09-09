@@ -16,6 +16,7 @@
 ; rgbgfx -o en_enterName.2bpp en_enterName.png
 ; rgbgfx -o en_battleKanjis.2bpp en_battleKanjis.png
 ; rgbgfx -o en_cinematron.2bpp en_cinematron.png
+; rgbgfx -o en_sakuraMiniGameTitleScreen.2bpp en_sakuraMiniGameTitleScreen.png
 ; tools/gfx.py 1bpp newLetters.png --from=png --interleave
 
 ; empty banks
