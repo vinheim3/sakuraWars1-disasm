@@ -425,6 +425,46 @@ LoadSumireMiniGameTitleScreenGfxSpr::
 .end:
 
 
+LoadMariaMiniGameTitleScreenGfx1::
+	ld   bc, 11*$10
+	ld   de, $d000
+	ld   hl, .row1
+	call MemCopy
+
+	ld   bc, 11*$10
+	ld   de, $d000+(11*$10)
+	ld   hl, .row2
+	call MemCopy
+
+	ld   bc, 13*$10
+	ld   de, $d000+(22*$10)
+	ld   hl, .row3
+	call MemCopy
+
+	ld   bc, 13*$10
+	ld   de, $d000+(35*$10)
+	ld   hl, .row4
+	call MemCopy
+
+	ld   bc, $10
+	ld   de, $d000+$7f0
+	ld   hl, .row5
+	call MemCopy
+
+	ret
+
+.row1:
+	INCBIN "en_mariaMiniGameTitleScreen.2bpp", 0, 11*$10
+.row2:
+	INCBIN "en_mariaMiniGameTitleScreen.2bpp", 13*$10, 11*$10
+.row3:
+	INCBIN "en_mariaMiniGameTitleScreen.2bpp", 26*$10, 13*$10
+.row4:
+	INCBIN "en_mariaMiniGameTitleScreen.2bpp", 39*$10, 13*$10
+.row5:
+	INCBIN "en_mariaMiniGameTitleScreen.2bpp", (52+11)*$10, $10
+
+
 LoadSettingsEnTileData::
 	ld   bc, $c0
 	ld   de, $d1a0

@@ -20,6 +20,7 @@
 ; rgbgfx -o en_sumireMiniGameTitleScreen.2bpp en_sumireMiniGameTitleScreen.png
 ; rgbgfx -o en_sumireMGTitleScreenPressA.2bpp en_sumireMGTitleScreenPressA.png
 ; rgbgfx -o en_sumireMGTitleScreenSpr.2bpp -h en_sumireMGTitleScreenSpr.png
+; rgbgfx -o en_mariaMiniGameTitleScreen.2bpp en_mariaMiniGameTitleScreen.png
 ; tools/gfx.py 1bpp newLetters.png --from=png --interleave
 
 ; empty banks

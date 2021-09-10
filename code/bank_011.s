@@ -4155,7 +4155,11 @@ jr_011_5920:
 	ld   a, $1a                                      ; $5945: $3e $1a
 	ld   hl, $d000                                   ; $5947: $21 $00 $d0
 	ld   de, $4bbe                                   ; $594a: $11 $be $4b
+if def(VWF)
+	call EnMariaMiniGameTitleScreenBank1_8800hHook                                       ; $594d: $cd $d2 $09
+else
 	call RLEXorCopy                                       ; $594d: $cd $d2 $09
+endc
 
 ;
 	ld   c, $81                                      ; $5950: $0e $81
@@ -4209,13 +4213,13 @@ jr_011_5920:
 	rst  WaitUntilVBlankIntHandledIfLCDOn                                         ; $59aa: $cf
 
 ;
-	ld   a, $1a                                      ; $59ab: $3e $1a
-	ld   de, $7d30                                   ; $59ad: $11 $30 $7d
+	ld   a, BANK(TileAttr_MariaMiniGameTitleScreen)                                      ; $59ab: $3e $1a
+	ld   de, TileAttr_MariaMiniGameTitleScreen                                   ; $59ad: $11 $30 $7d
 	ld   hl, $dc40                                   ; $59b0: $21 $40 $dc
 	ld   bc, $1412                                   ; $59b3: $01 $12 $14
 	call FarCopyLayout                                       ; $59b6: $cd $2c $0b
 
-	ld   a, $1a                                      ; $59b9: $3e $1a
+	ld   a, BANK(TileMap_MariaMiniGameTitleScreen)                                      ; $59b9: $3e $1a
 	ld   hl, $da00                                   ; $59bb: $21 $00 $da
 	call FarCopyLayout                                       ; $59be: $cd $2c $0b
 
@@ -10450,3 +10454,13 @@ Func_11_7e57::
 	ld   a, $00                                      ; $7e64: $3e $00
 	ld   [wGameSubstate], a                                  ; $7e66: $ea $a1 $c2
 	ret                                              ; $7e69: $c9
+
+if def(VWF)
+
+EnMariaMiniGameTitleScreenBank1_8800hHook:
+	call RLEXorCopy
+
+	M_FarCall LoadMariaMiniGameTitleScreenGfx1
+	ret
+
+endc
