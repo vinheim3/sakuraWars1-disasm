@@ -672,7 +672,7 @@ if __name__ == "__main__":
 
     # flags
     translate = True
-    compileBs = False
+    compileBs = True
 
     """Individual"""
     # scriptNum = conv(sys.argv[1])
@@ -695,12 +695,16 @@ if __name__ == "__main__":
     doneEnglish = {}
 
     if translate:
-        with open('sakura wars GB - 04:09:21.csv') as f:
+        with open('sakura wars GB - 10:09:21.csv') as f:
             reader = csv.reader(f)
             for scriptNum, offset, orig, blank, english, char, dupe1, dupe2 in reader:
+                # todo: temp - remove
+                if english:
+                    english = english.replace('&', '')
                 if not scriptNum:
                     continue
 
+                # Special cases starting with a space/s
                 if (int(scriptNum), int(offset)) in (
                     (368, 864),
                     (457, 242),
@@ -735,7 +739,7 @@ if __name__ == "__main__":
                     continue
 
     availableBanks = [
-        0x02, 0x03,       0x2b, 0x36, 0x37, 0x38, 0x39, 
+        0x02, 0x03,             0x36, 0x37, 0x38, 0x39, # using $1f, $2b
         0x3a, 0x3b, 0x3c, 0x3d, 0x6c, 0x6d, 0x6e, 0x6f,
         0x86, 0x87,
     ]
@@ -759,7 +763,9 @@ if __name__ == "__main__":
         startAddr = wordIn(data, baseTable+scriptNum*3)+0x4000
 
         se = ScriptExtractor(data, bankAddr(startBank, startAddr), scriptNum)
-        se.englishMap = fullEnglishMap[scriptNum]
+        # todo: temp - remove
+        if scriptNum not in (0x2d6,):
+            se.englishMap = fullEnglishMap[scriptNum]
         comps, totalBytes = se.run()
 
         if compileBs:
@@ -776,7 +782,9 @@ SECTION "Bank $00", ROM0[$200]
                 f.write(final_str)
 
             os.chdir('scriptBuild')
-            os.system('make -B')
+            ret = os.system('make -B')
+            if ret != 0:
+                break
             os.chdir('..')
 
             with open('scriptBuild/sakuraWars1.gbc', 'rb') as f:

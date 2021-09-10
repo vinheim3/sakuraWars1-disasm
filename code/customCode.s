@@ -1,7 +1,7 @@
 include "includes.s"
 
 
-SECTION "Custom misc", ROMX[$4000], BANK[$1f]
+SECTION "Custom misc $1f", ROMX[$4000], BANK[$1f]
 
 if def(VWF)
 
@@ -1269,5 +1269,161 @@ RpnData_5a_5691::
 RpnData_5a_668c::
 	db $04, $80, $c1, $01, $00, $20, $00
 
+
+endc
+
+
+SECTION "Custom misc $2b", ROMX[$4000], BANK[$2b]
+
+if def(VWF)
+
+LoadIrisMiniGameTitleScreenGfxSpr::
+; Original code pt. 1
+	ld   a, $1c                                      ; $73ad: $3e $1c
+	ld   hl, $d000                                   ; $73af: $21 $00 $d0
+	ld   de, $5276                                   ; $73b2: $11 $76 $52
+	call RLEXorCopy                                       ; $73b5: $cd $d2 $09
+
+; Hook
+	ld   bc, .end-.gfx
+	ld   de, $d000+$360
+	ld   hl, .gfx
+	call MemCopy
+
+; Original code pt. 2
+	ld   c, $80                                      ; $73b8: $0e $80
+	ld   de, $8000                                   ; $73ba: $11 $00 $80
+	ld   a, $03                                      ; $73bd: $3e $03
+	ld   hl, $d000                                   ; $73bf: $21 $00 $d0
+	ret
+
+.gfx:
+	INCBIN "en_irisMGTitleScreenSpr.2bpp"
+.end:
+
+
+LoadIrisMiniGameTitleScreenGfx1::
+	ld   bc, 11*$10
+	ld   de, $d000
+	ld   hl, .row1
+	call MemCopy
+
+	ld   bc, 11*$10
+	ld   de, $d000+11*$10
+	ld   hl, .row2
+	call MemCopy
+
+	ld   bc, 11*$10
+	ld   de, $d000+22*$10
+	ld   hl, .row3
+	call MemCopy
+
+	ld   bc, 6*$10
+	ld   de, $d000+33*$10
+	ld   hl, .row4
+	call MemCopy
+
+	ld   bc, 9*$10
+	ld   de, $d000+39*$10
+	ld   hl, .row5
+	call MemCopy
+
+	ld   bc, 9*$10
+	ld   de, $d000+48*$10
+	ld   hl, .row6
+	call MemCopy
+
+	ld   bc, 12*$10
+	ld   de, $d000+57*$10
+	ld   hl, .row7
+	call MemCopy
+
+	ld   bc, 13*$10
+	ld   de, $d000+69*$10
+	ld   hl, .row8
+	call MemCopy
+
+	ld   bc, 13*$10
+	ld   de, $d000+82*$10
+	ld   hl, .row9
+	call MemCopy
+
+	ld   bc, $10
+	ld   de, $d000+95*$10
+	ld   hl, .dress
+	call MemCopy
+
+; Transfer new tiles
+	ld   c, $81
+	ld   de, $8800
+	ld   a, $03
+	ld   hl, $d000
+	ld   b, $80
+	call EnqueueHDMATransfer
+	rst  WaitUntilVBlankIntHandledIfLCDOn
+
+; Original code
+	ld   a, $18                                      ; $7382: $3e $18
+	ld   hl, $d000                                   ; $7384: $21 $00 $d0
+	ld   de, $4000                                   ; $7387: $11 $00 $40
+	call RLEXorCopy                                       ; $738a: $cd $d2 $09
+
+	ld   a, $ff
+	ld   [$d000+$670], a
+	ld   [$d000+$670+2], a
+	ld   [$d000+$670+4], a
+
+	ld   [$d000+$b0], a
+	ld   [$d000+$b0+2], a
+	ld   [$d000+$b0+4], a
+	ld   [$d000+$b0+6], a
+	ld   [$d000+$b0+8], a
+
+	ld   a, $bf
+	ld   [$d000+$7d0], a
+	ld   [$d000+$7d0+2], a
+	ld   [$d000+$7d0+4], a
+	ld   [$d000+$7d0+6], a
+	ld   [$d000+$7d0+8], a
+	ld   [$d000+$7d0+10], a
+	ld   [$d000+$7d0+12], a
+	ld   [$d000+$7d0+14], a
+
+	ld   a, $fd
+	ld   [$d000+$240], a
+	ld   [$d000+$240+2], a
+	ld   [$d000+$240+4], a
+	ld   [$d000+$240+6], a
+	ld   [$d000+$240+8], a
+	ld   [$d000+$240+10], a
+	ld   [$d000+$240+12], a
+	ld   [$d000+$240+14], a
+
+	ld   c, $81                                      ; $738d: $0e $81
+	ld   de, $9000                                   ; $738f: $11 $00 $90
+	ld   a, $03                                      ; $7392: $3e $03
+	ld   hl, $d000                                   ; $7394: $21 $00 $d0
+
+	ret
+.row1:
+	INCBIN "en_irisMiniGameTitleScreen.2bpp", 0, 11*$10
+.row2:
+	INCBIN "en_irisMiniGameTitleScreen.2bpp", 20*$10, 11*$10
+.row3:
+	INCBIN "en_irisMiniGameTitleScreen.2bpp", 40*$10, 11*$10
+.row4:
+	INCBIN "en_irisMiniGameTitleScreen.2bpp", 65*$10, 6*$10
+.row5:
+	INCBIN "en_irisMiniGameTitleScreen.2bpp", 82*$10, 9*$10
+.row6:
+	INCBIN "en_irisMiniGameTitleScreen.2bpp", 102*$10, 9*$10
+.row7:
+	INCBIN "en_irisMiniGameTitleScreen.2bpp", 128*$10, 12*$10
+.row8:
+	INCBIN "en_irisMiniGameTitleScreen.2bpp", 147*$10, 13*$10
+.row9:
+	INCBIN "en_irisMiniGameTitleScreen.2bpp", 167*$10, 13*$10
+.dress:
+	INCBIN "en_irisMiniGameTitleScreen.2bpp", 51*$10, $10
 
 endc

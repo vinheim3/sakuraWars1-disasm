@@ -7886,7 +7886,10 @@ jr_03e_735d:
 	ld   [wWramBank], a                                  ; $737d: $ea $93 $c2
 	ldh  [rSVBK], a                                  ; $7380: $e0 $70
 
-;
+if def(VWF)
+	M_FarCall LoadIrisMiniGameTitleScreenGfx1
+	nop
+else
 	ld   a, $18                                      ; $7382: $3e $18
 	ld   hl, $d000                                   ; $7384: $21 $00 $d0
 	ld   de, $4000                                   ; $7387: $11 $00 $40
@@ -7897,6 +7900,7 @@ jr_03e_735d:
 	ld   de, $9000                                   ; $738f: $11 $00 $90
 	ld   a, $03                                      ; $7392: $3e $03
 	ld   hl, $d000                                   ; $7394: $21 $00 $d0
+endc
 	ld   b, $40                                      ; $7397: $06 $40
 	call EnqueueHDMATransfer                                       ; $7399: $cd $7c $02
 	rst  WaitUntilVBlankIntHandledIfLCDOn                                         ; $739c: $cf
@@ -7910,6 +7914,10 @@ jr_03e_735d:
 	call EnqueueHDMATransfer                                       ; $73a9: $cd $7c $02
 	rst  WaitUntilVBlankIntHandledIfLCDOn                                         ; $73ac: $cf
 
+if def(VWF)
+	M_FarCall LoadIrisMiniGameTitleScreenGfxSpr
+	nop
+else
 ;
 	ld   a, $1c                                      ; $73ad: $3e $1c
 	ld   hl, $d000                                   ; $73af: $21 $00 $d0
@@ -7921,6 +7929,7 @@ jr_03e_735d:
 	ld   de, $8000                                   ; $73ba: $11 $00 $80
 	ld   a, $03                                      ; $73bd: $3e $03
 	ld   hl, $d000                                   ; $73bf: $21 $00 $d0
+endc
 	ld   b, $40                                      ; $73c2: $06 $40
 	call EnqueueHDMATransfer                                       ; $73c4: $cd $7c $02
 	rst  WaitUntilVBlankIntHandledIfLCDOn                                         ; $73c7: $cf
@@ -7968,14 +7977,14 @@ jr_03e_735d:
 	rst  WaitUntilVBlankIntHandledIfLCDOn                                         ; $7412: $cf
 
 ;
-	ld   a, $1d                                      ; $7413: $3e $1d
-	ld   de, $45a8                                   ; $7415: $11 $a8 $45
+	ld   a, BANK(TileAttr_IrisMiniGameTitleScreen)                                      ; $7413: $3e $1d
+	ld   de, TileAttr_IrisMiniGameTitleScreen                                   ; $7415: $11 $a8 $45
 	ld   hl, $dc40                                   ; $7418: $21 $40 $dc
 	ld   bc, $1412                                   ; $741b: $01 $12 $14
 	call FarCopyLayout                                       ; $741e: $cd $2c $0b
 
 ;
-	ld   a, $1d                                      ; $7421: $3e $1d
+	ld   a, BANK(TileMap_IrisMiniGameTitleScreen)                                      ; $7421: $3e $1d
 	ld   hl, $da00                                   ; $7423: $21 $00 $da
 	call FarCopyLayout                                       ; $7426: $cd $2c $0b
 
@@ -8033,43 +8042,60 @@ jr_03e_735d:
 	ld   hl, $db60                                   ; $74b7: $21 $60 $db
 	ld   bc, $00c0                                   ; $74ba: $01 $c0 $00
 	call MemCopy                                       ; $74bd: $cd $a9 $09
-	ld   a, $1e                                      ; $74c0: $3e $1e
-	ld   de, $74c0                                   ; $74c2: $11 $c0 $74
+
+; Explanation/training/start prompt
+	ld   a, BANK(TileAttr_IrisMiniGameTSPracticeBox)                                      ; $74c0: $3e $1e
+	ld   de, TileAttr_IrisMiniGameTSPracticeBox                                   ; $74c2: $11 $c0 $74
 	ld   hl, $d402                                   ; $74c5: $21 $02 $d4
 	ld   bc, $0806                                   ; $74c8: $01 $06 $08
 	call FarCopyLayout                                       ; $74cb: $cd $2c $0b
-	ld   a, $1e                                      ; $74ce: $3e $1e
+
+	ld   a, BANK(TileMap_IrisMiniGameTSPracticeBox)                                      ; $74ce: $3e $1e
 	ld   hl, $d102                                   ; $74d0: $21 $02 $d1
 	call FarCopyLayout                                       ; $74d3: $cd $2c $0b
 
 ; Popup box
-	ld   a, $1e                                      ; $74d6: $3e $1e
-	ld   de, $7b4e                                   ; $74d8: $11 $4e $7b
+	ld   a, BANK(TileAttr_IrisMiniGameTSPopupBox)                                      ; $74d6: $3e $1e
+	ld   de, TileAttr_IrisMiniGameTSPopupBox                                   ; $74d8: $11 $4e $7b
 	ld   hl, $d322                                   ; $74db: $21 $22 $d3
 	ld   bc, $0804                                   ; $74de: $01 $04 $08
 	call FarCopyLayout                                       ; $74e1: $cd $2c $0b
 
-	ld   a, $1e                                      ; $74e4: $3e $1e
+	ld   a, BANK(TileMap_IrisMiniGameTSPopupBox)                                      ; $74e4: $3e $1e
 	ld   hl, $d022                                   ; $74e6: $21 $22 $d0
 	call FarCopyLayout                                       ; $74e9: $cd $2c $0b
 
-;
-	ld   a, $1e                                      ; $74ec: $3e $1e
-	ld   de, $7e69                                   ; $74ee: $11 $69 $7e
+; Hide press A btn
+	ld   a, BANK(TileAttr_IrisMiniGameTSHidingAText)                                      ; $74ec: $3e $1e
+	ld   de, TileAttr_IrisMiniGameTSHidingAText                                   ; $74ee: $11 $69 $7e
+if def(VWF)
+	ld   hl, $d722
+else
 	ld   hl, $d702                                   ; $74f1: $21 $02 $d7
+endc
 	ld   bc, $0603                                   ; $74f4: $01 $03 $06
 	call FarCopyLayout                                       ; $74f7: $cd $2c $0b
-	ld   a, $1e                                      ; $74fa: $3e $1e
+
+	ld   a, BANK(TileMap_IrisMiniGameTSHidingAText)                                      ; $74fa: $3e $1e
+if def(VWF)
+	ld   hl, $d622
+else
 	ld   hl, $d602                                   ; $74fc: $21 $02 $d6
+endc
 	call FarCopyLayout                                       ; $74ff: $cd $2c $0b
-	ld   a, $1e                                      ; $7502: $3e $1e
-	ld   de, $7520                                   ; $7504: $11 $20 $75
+
+; Difficulty box
+	ld   a, BANK(TileAttr_IrisMiniGameTSDifficultyBox)                                      ; $7502: $3e $1e
+	ld   de, TileAttr_IrisMiniGameTSDifficultyBox                                   ; $7504: $11 $20 $75
 	ld   hl, $d902                                   ; $7507: $21 $02 $d9
 	ld   bc, $0806                                   ; $750a: $01 $06 $08
 	call FarCopyLayout                                       ; $750d: $cd $2c $0b
-	ld   a, $1e                                      ; $7510: $3e $1e
+
+	ld   a, BANK(TileMap_IrisMiniGameTSDifficultyBox)                                      ; $7510: $3e $1e
 	ld   hl, $d802                                   ; $7512: $21 $02 $d8
 	call FarCopyLayout                                       ; $7515: $cd $2c $0b
+
+;
 	pop  af                                          ; $7518: $f1
 	ld   [wWramBank], a                                  ; $7519: $ea $93 $c2
 	ldh  [rSVBK], a                                  ; $751c: $e0 $70
@@ -8111,8 +8137,8 @@ jr_03e_735d:
 	ld   a, $03                                      ; $7578: $3e $03
 	ld   b, $01                                      ; $757a: $06 $01
 	ld   hl, $7000                                   ; $757c: $21 $00 $70
-	ld   c, $1e                                      ; $757f: $0e $1e
-	ld   de, $6b7c                                   ; $7581: $11 $7c $6b
+	ld   c, BANK(Palettes_IrisMiniGameTitleScreen)                                      ; $757f: $0e $1e
+	ld   de, Palettes_IrisMiniGameTitleScreen                                   ; $7581: $11 $7c $6b
 	call FarLoadPaletteValsFadeToValsAndSetFadeSpeed                                       ; $7584: $cd $48 $07
 	ld   a, $0a                                      ; $7587: $3e $0a
 	call PlaySong                                       ; $7589: $cd $92 $1a
@@ -8126,7 +8152,7 @@ jr_03e_735d:
 	jr   jr_03e_75a5                                 ; $759b: $18 $08
 
 jr_03e_759d:
-	call Call_03e_78a6                               ; $759d: $cd $a6 $78
+	call ShowIrisMiniGameTitleScreen1stPopup                               ; $759d: $cd $a6 $78
 	ld   a, $03                                      ; $75a0: $3e $03
 	ld   [wGameSubstate], a                                  ; $75a2: $ea $a1 $c2
 
@@ -8141,8 +8167,8 @@ jr_03e_75a5:
 	ld   [wFarCallBank], a                                  ; $75b5: $ea $9a $c2
 	pop  af                                          ; $75b8: $f1
 	call FarCall                                       ; $75b9: $cd $62 $09
-	ld   a, $1e                                      ; $75bc: $3e $1e
-	ld   hl, $6b7c                                   ; $75be: $21 $7c $6b
+	ld   a, BANK(Palettes_IrisMiniGameTitleScreen)                                      ; $75bc: $3e $1e
+	ld   hl, Palettes_IrisMiniGameTitleScreen                                   ; $75be: $21 $7c $6b
 	ld   de, wBGPalettes                                   ; $75c1: $11 $de $c2
 	ld   bc, $0080                                   ; $75c4: $01 $80 $00
 	call FarMemCopy                                       ; $75c7: $cd $b2 $09
@@ -8152,7 +8178,7 @@ jr_03e_75a5:
 
 
 	call Call_03e_77cc                               ; $75d1: $cd $cc $77
-	call Call_03e_784b                               ; $75d4: $cd $4b $78
+	call FlashIrisMiniGameTitleScreenPressABtn                               ; $75d4: $cd $4b $78
 	push af                                          ; $75d7: $f5
 	ld   a, $47                                      ; $75d8: $3e $47
 	ld   [wFarCallAddr], a                                  ; $75da: $ea $98 $c2
@@ -8166,7 +8192,7 @@ jr_03e_75a5:
 	bit  0, a                                        ; $75ee: $cb $47
 	jr   z, jr_03e_7600                              ; $75f0: $28 $0e
 
-	call Call_03e_78a6                               ; $75f2: $cd $a6 $78
+	call ShowIrisMiniGameTitleScreen1stPopup                               ; $75f2: $cd $a6 $78
 	ld   hl, wGameSubstate                                   ; $75f5: $21 $a1 $c2
 	inc  [hl]                                        ; $75f8: $34
 	ld   a, $21                                      ; $75f9: $3e $21
@@ -8256,7 +8282,7 @@ jr_03e_765d:
 	cp   $00                                         ; $7674: $fe $00
 	jr   z, jr_03e_7680                              ; $7676: $28 $08
 
-	call Call_03e_78ee                               ; $7678: $cd $ee $78
+	call ShowIrisMiniGameTitleScreenDifficultyPopup                               ; $7678: $cd $ee $78
 	ld   a, $04                                      ; $767b: $3e $04
 	ld   [wGameSubstate], a                                  ; $767d: $ea $a1 $c2
 
@@ -8297,7 +8323,7 @@ jr_03e_76a9:
 	bit  1, a                                        ; $76a9: $cb $4f
 	jr   z, jr_03e_76bb                              ; $76ab: $28 $0e
 
-	call Call_03e_78a6                               ; $76ad: $cd $a6 $78
+	call ShowIrisMiniGameTitleScreen1stPopup                               ; $76ad: $cd $a6 $78
 	ld   hl, wGameSubstate                                   ; $76b0: $21 $a1 $c2
 	dec  [hl]                                        ; $76b3: $35
 	ld   a, $22                                      ; $76b4: $3e $22
@@ -8351,8 +8377,8 @@ jr_03e_76fd:
 	ld   a, $40                                      ; $7701: $3e $40
 	ld   [wNumPaletteColorsToLoadCompDataFor], a                                  ; $7703: $ea $63 $c3
 	ld   a, $03                                      ; $7706: $3e $03
-	ld   b, $1e                                      ; $7708: $06 $1e
-	ld   hl, $6b7c                                   ; $770a: $21 $7c $6b
+	ld   b, BANK(Palettes_IrisMiniGameTitleScreen)                                      ; $7708: $06 $1e
+	ld   hl, Palettes_IrisMiniGameTitleScreen                                   ; $770a: $21 $7c $6b
 	ld   c, $01                                      ; $770d: $0e $01
 	ld   de, $7000                                   ; $770f: $11 $00 $70
 	call FarLoadPaletteValsFadeToValsAndSetFadeSpeed                                       ; $7712: $cd $48 $07
@@ -8539,7 +8565,7 @@ jr_03e_7824:
 	ret                                              ; $784a: $c9
 
 
-Call_03e_784b:
+FlashIrisMiniGameTitleScreenPressABtn:
 	ld   hl, $c9dc                                   ; $784b: $21 $dc $c9
 	dec  [hl]                                        ; $784e: $35
 	jr   nz, jr_03e_789b                             ; $784f: $20 $4a
@@ -8556,13 +8582,21 @@ Call_03e_784b:
 	ld   de, $9980                                   ; $785f: $11 $80 $99
 	ld   a, $03                                      ; $7862: $3e $03
 	ld   hl, $d220                                   ; $7864: $21 $20 $d2
+if def(VWF)
+	ld   b, $08
+else
 	ld   b, $06                                      ; $7867: $06 $06
+endc
 	call EnqueueHDMATransfer                                       ; $7869: $cd $7c $02
 	ld   c, $81                                      ; $786c: $0e $81
 	ld   de, $9980                                   ; $786e: $11 $80 $99
 	ld   a, $03                                      ; $7871: $3e $03
 	ld   hl, $d520                                   ; $7873: $21 $20 $d5
+if def(VWF)
+	ld   b, $08
+else
 	ld   b, $06                                      ; $7876: $06 $06
+endc
 	call EnqueueHDMATransfer                                       ; $7878: $cd $7c $02
 	jr   jr_03e_789b                                 ; $787b: $18 $1e
 
@@ -8571,13 +8605,21 @@ jr_03e_787d:
 	ld   de, $9980                                   ; $787f: $11 $80 $99
 	ld   a, $03                                      ; $7882: $3e $03
 	ld   hl, $d600                                   ; $7884: $21 $00 $d6
+if def(VWF)
+	ld   b, $08
+else
 	ld   b, $06                                      ; $7887: $06 $06
+endc
 	call EnqueueHDMATransfer                                       ; $7889: $cd $7c $02
 	ld   c, $81                                      ; $788c: $0e $81
 	ld   de, $9980                                   ; $788e: $11 $80 $99
 	ld   a, $03                                      ; $7891: $3e $03
 	ld   hl, $d700                                   ; $7893: $21 $00 $d7
+if def(VWF)
+	ld   b, $08
+else
 	ld   b, $06                                      ; $7896: $06 $06
+endc
 	call EnqueueHDMATransfer                                       ; $7898: $cd $7c $02
 
 jr_03e_789b:
@@ -8592,7 +8634,7 @@ Call_03e_789c:
 	ret                                              ; $78a5: $c9
 
 
-Call_03e_78a6:
+ShowIrisMiniGameTitleScreen1stPopup:
 	call Call_03e_780e                               ; $78a6: $cd $0e $78
 	ld   a, [$cb1d]                                  ; $78a9: $fa $1d $cb
 	or   a                                           ; $78ac: $b7
@@ -8630,7 +8672,7 @@ jr_03e_78ed:
 	ret                                              ; $78ed: $c9
 
 
-Call_03e_78ee:
+ShowIrisMiniGameTitleScreenDifficultyPopup:
 	call Call_03e_7804                               ; $78ee: $cd $04 $78
 	ld   c, $80                                      ; $78f1: $0e $80
 	ld   de, $9960                                   ; $78f3: $11 $60 $99

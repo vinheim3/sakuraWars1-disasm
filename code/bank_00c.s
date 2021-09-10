@@ -2559,7 +2559,7 @@ GameState3c_FileLoadDisplay::
 	M_FarCall LoadType0NewAnimatedSpriteSpecDetails
 
 .afterDayBranch:
-; todo: sprite for curr day 10's digit
+; sprite for curr day 10's digit
 	ld   a, [sCurrDay]                                  ; $4eae: $fa $b0 $af
 	cp   $0a                                         ; $4eb1: $fe $0a
 	ld   a, $00                                      ; $4eb3: $3e $00
@@ -2583,7 +2583,7 @@ GameState3c_FileLoadDisplay::
 
 	M_FarCall LoadType0NewAnimatedSpriteSpecDetails
 	
-; todo: sprite for curr day 1's digit
+; sprite for curr day 1's digit
 	ld   a, $00                                      ; $4eeb: $3e $00
 	ld   hl, $0000                                   ; $4eed: $21 $00 $00
 	ld   d, h                                        ; $4ef0: $54
@@ -2605,7 +2605,7 @@ GameState3c_FileLoadDisplay::
 
 	M_FarCall LoadType0NewAnimatedSpriteSpecDetails
 
-; todo: title logo misc sprites for filling in color clashes
+; title logo misc sprites for filling in color clashes
 	ld   a, $00                                      ; $4f23: $3e $00
 	ld   hl, $0000                                   ; $4f25: $21 $00 $00
 	ld   d, h                                        ; $4f28: $54

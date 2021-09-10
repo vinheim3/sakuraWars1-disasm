@@ -8218,128 +8218,33 @@ jr_01e_6ac9:
 	nop                                              ; $6b79: $00
 	nop                                              ; $6b7a: $00
 	nop                                              ; $6b7b: $00
-	pop  af                                          ; $6b7c: $f1
-	rrca                                             ; $6b7d: $0f
-	rst  $38                                         ; $6b7e: $ff
-	ld   a, a                                        ; $6b7f: $7f
-	ld   l, [hl]                                     ; $6b80: $6e
-	ld   a, l                                        ; $6b81: $7d
-	ld   b, d                                        ; $6b82: $42
-	db   $10                                         ; $6b83: $10
-	rst  $20                                         ; $6b84: $e7
-	ld   d, e                                        ; $6b85: $53
-	rst  $38                                         ; $6b86: $ff
-	ld   a, a                                        ; $6b87: $7f
-	ld   l, [hl]                                     ; $6b88: $6e
-	ld   a, l                                        ; $6b89: $7d
-	ld   b, d                                        ; $6b8a: $42
-	db   $10                                         ; $6b8b: $10
-	rst  $20                                         ; $6b8c: $e7
-	ld   d, e                                        ; $6b8d: $53
-	rst  $38                                         ; $6b8e: $ff
-	ld   a, a                                        ; $6b8f: $7f
-	nop                                              ; $6b90: $00
-	ld   l, $42                                      ; $6b91: $2e $42
-	db   $10                                         ; $6b93: $10
-	rst  $20                                         ; $6b94: $e7
-	ld   d, e                                        ; $6b95: $53
-	pop  af                                          ; $6b96: $f1
-	rrca                                             ; $6b97: $0f
-	nop                                              ; $6b98: $00
-	ld   l, $42                                      ; $6b99: $2e $42
-	db   $10                                         ; $6b9b: $10
-	pop  af                                          ; $6b9c: $f1
-	rrca                                             ; $6b9d: $0f
-	rst  JumpTable                                         ; $6b9e: $df
-	inc  bc                                          ; $6b9f: $03
-	inc  a                                           ; $6ba0: $3c
-	dec  c                                           ; $6ba1: $0d
-	ld   b, d                                        ; $6ba2: $42
-	db   $10                                         ; $6ba3: $10
-	pop  af                                          ; $6ba4: $f1
-	rrca                                             ; $6ba5: $0f
-	rra                                              ; $6ba6: $1f
-	nop                                              ; $6ba7: $00
-	rst  $38                                         ; $6ba8: $ff
-	ld   [bc], a                                     ; $6ba9: $02
-	ld   h, e                                        ; $6baa: $63
-	ld   a, h                                        ; $6bab: $7c
-	rst  $38                                         ; $6bac: $ff
-	ld   a, a                                        ; $6bad: $7f
-	pop  af                                          ; $6bae: $f1
-	rrca                                             ; $6baf: $0f
-	rra                                              ; $6bb0: $1f
-	rla                                              ; $6bb1: $17
-	ld   b, d                                        ; $6bb2: $42
-	db   $10                                         ; $6bb3: $10
-	pop  af                                          ; $6bb4: $f1
-	rrca                                             ; $6bb5: $0f
-	ld   e, a                                        ; $6bb6: $5f
-	ld   b, e                                        ; $6bb7: $43
-	sub  a                                           ; $6bb8: $97
-	nop                                              ; $6bb9: $00
-	ld   b, d                                        ; $6bba: $42
-	stop                                             ; $6bbb: $10 $00
-	nop                                              ; $6bbd: $00
-	rst  $38                                         ; $6bbe: $ff
-	ld   h, h                                        ; $6bbf: $64
-	ld   d, e                                        ; $6bc0: $53
-	inc  l                                           ; $6bc1: $2c
-	ld   b, h                                        ; $6bc2: $44
-	ld   [hl-], a                                    ; $6bc3: $32
-	nop                                              ; $6bc4: $00
-	nop                                              ; $6bc5: $00
-	rst  $38                                         ; $6bc6: $ff
-	ld   a, a                                        ; $6bc7: $7f
-	ldh  [$7d], a                                    ; $6bc8: $e0 $7d
-	db   $fd                                         ; $6bca: $fd
-	dec  e                                           ; $6bcb: $1d
-	nop                                              ; $6bcc: $00
-	nop                                              ; $6bcd: $00
-	rst  JumpTable                                         ; $6bce: $df
-	inc  bc                                          ; $6bcf: $03
-	rra                                              ; $6bd0: $1f
-	ccf                                              ; $6bd1: $3f
-	db   $fd                                         ; $6bd2: $fd
-	dec  e                                           ; $6bd3: $1d
-	nop                                              ; $6bd4: $00
-	nop                                              ; $6bd5: $00
-	rra                                              ; $6bd6: $1f
-	ld   [$02ff], sp                                 ; $6bd7: $08 $ff $02
-	nop                                              ; $6bda: $00
-	nop                                              ; $6bdb: $00
-	nop                                              ; $6bdc: $00
-	nop                                              ; $6bdd: $00
-	nop                                              ; $6bde: $00
-	nop                                              ; $6bdf: $00
-	nop                                              ; $6be0: $00
-	nop                                              ; $6be1: $00
-	nop                                              ; $6be2: $00
-	nop                                              ; $6be3: $00
-	nop                                              ; $6be4: $00
-	nop                                              ; $6be5: $00
-	nop                                              ; $6be6: $00
-	nop                                              ; $6be7: $00
-	nop                                              ; $6be8: $00
-	nop                                              ; $6be9: $00
-	nop                                              ; $6bea: $00
-	nop                                              ; $6beb: $00
-	nop                                              ; $6bec: $00
-	nop                                              ; $6bed: $00
-	nop                                              ; $6bee: $00
-	nop                                              ; $6bef: $00
-	nop                                              ; $6bf0: $00
-	nop                                              ; $6bf1: $00
-	nop                                              ; $6bf2: $00
-	nop                                              ; $6bf3: $00
-	nop                                              ; $6bf4: $00
-	nop                                              ; $6bf5: $00
-	nop                                              ; $6bf6: $00
-	nop                                              ; $6bf7: $00
-	nop                                              ; $6bf8: $00
-	nop                                              ; $6bf9: $00
-	nop                                              ; $6bfa: $00
-	nop                                              ; $6bfb: $00
+
+
+Palettes_IrisMiniGameTitleScreen::
+	db $f1, $0f, $ff, $7f, $6e, $7d, $42, $10
+	db $e7, $53, $ff, $7f, $6e, $7d, $42, $10
+	db $e7, $53, $ff, $7f, $00, $2e, $42, $10
+	db $e7, $53, $f1, $0f, $00, $2e, $42, $10
+	db $f1, $0f, $df, $03, $3c, $0d, $42, $10
+	db $f1, $0f, $1f, $00, $ff, $02, $63, $7c
+if def(VWF)
+	db $ff, $7f, $ff, $7f, $1f, $17, $42, $10
+else
+	db $ff, $7f, $f1, $0f, $1f, $17, $42, $10
+endc
+	db $f1, $0f, $5f, $43, $97, $00, $42, $10
+
+	db $00, $00, $ff, $64, $53, $2c, $44, $32
+	db $00, $00, $ff, $7f, $e0, $7d, $fd, $1d
+	db $00, $00, $df, $03, $1f, $3f, $fd, $1d
+	db $00, $00, $1f, $08, $ff, $02, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00
+
+
+
 	rst  $38                                         ; $6bfc: $ff
 	ld   a, a                                        ; $6bfd: $7f
 	ld   a, a                                        ; $6bfe: $7f
@@ -10325,140 +10230,57 @@ jr_01e_74ab:
 	ld   l, l                                        ; $74bd: $6d
 	ld   l, [hl]                                     ; $74be: $6e
 	ld   l, a                                        ; $74bf: $6f
-	ld   c, $0e                                      ; $74c0: $0e $0e
-	ld   c, $0e                                      ; $74c2: $0e $0e
-	ld   c, $0e                                      ; $74c4: $0e $0e
-	ld   c, $2e                                      ; $74c6: $0e $2e
-	ld   c, $0e                                      ; $74c8: $0e $0e
-	ld   c, $0e                                      ; $74ca: $0e $0e
-	ld   c, $0e                                      ; $74cc: $0e $0e
-	ld   c, $2e                                      ; $74ce: $0e $2e
-	ld   c, $0e                                      ; $74d0: $0e $0e
-	ld   c, $0e                                      ; $74d2: $0e $0e
-	ld   c, $0e                                      ; $74d4: $0e $0e
-	ld   c, $2e                                      ; $74d6: $0e $2e
-	ld   c, $0e                                      ; $74d8: $0e $0e
-	ld   c, $0e                                      ; $74da: $0e $0e
-	ld   c, $0e                                      ; $74dc: $0e $0e
-	ld   c, $2e                                      ; $74de: $0e $2e
-	ld   c, $0e                                      ; $74e0: $0e $0e
-	ld   c, $0e                                      ; $74e2: $0e $0e
-	ld   c, $0e                                      ; $74e4: $0e $0e
-	ld   c, $2e                                      ; $74e6: $0e $2e
-	ld   c, [hl]                                     ; $74e8: $4e
-	ld   c, [hl]                                     ; $74e9: $4e
-	ld   c, $0e                                      ; $74ea: $0e $0e
-	ld   c, $0e                                      ; $74ec: $0e $0e
-	ld   c, $6e                                      ; $74ee: $0e $6e
-	ld   l, l                                        ; $74f0: $6d
-	ld   l, [hl]                                     ; $74f1: $6e
-	ld   h, b                                        ; $74f2: $60
-	ld   h, c                                        ; $74f3: $61
-	ld   l, [hl]                                     ; $74f4: $6e
-	ld   h, d                                        ; $74f5: $62
-	ld   h, e                                        ; $74f6: $63
-	ld   l, l                                        ; $74f7: $6d
-	ld   a, l                                        ; $74f8: $7d
-	ld   a, [hl]                                     ; $74f9: $7e
-	ld   [hl], b                                     ; $74fa: $70
-	ld   [hl], c                                     ; $74fb: $71
-	ld   a, [hl]                                     ; $74fc: $7e
-	ld   [hl], d                                     ; $74fd: $72
-	ld   [hl], e                                     ; $74fe: $73
-	ld   a, l                                        ; $74ff: $7d
-	ld   a, l                                        ; $7500: $7d
-	ld   a, [hl]                                     ; $7501: $7e
-	ld   h, h                                        ; $7502: $64
-	ld   h, l                                        ; $7503: $65
-	ld   a, [hl]                                     ; $7504: $7e
-	ld   h, [hl]                                     ; $7505: $66
-	ld   h, a                                        ; $7506: $67
-	ld   a, l                                        ; $7507: $7d
-	ld   a, l                                        ; $7508: $7d
-	ld   a, [hl]                                     ; $7509: $7e
-	ld   [hl], h                                     ; $750a: $74
-	ld   [hl], l                                     ; $750b: $75
-	ld   a, [hl]                                     ; $750c: $7e
-	halt                                             ; $750d: $76
-	ld   [hl], a                                     ; $750e: $77
-	ld   a, l                                        ; $750f: $7d
-	ld   a, l                                        ; $7510: $7d
-	ld   a, [hl]                                     ; $7511: $7e
-	ld   l, b                                        ; $7512: $68
-	ld   l, c                                        ; $7513: $69
-	ld   l, d                                        ; $7514: $6a
-	ld   l, e                                        ; $7515: $6b
-	ld   l, h                                        ; $7516: $6c
-	ld   a, l                                        ; $7517: $7d
-	ld   l, l                                        ; $7518: $6d
-	ld   l, [hl]                                     ; $7519: $6e
-	ld   a, b                                        ; $751a: $78
-	ld   a, c                                        ; $751b: $79
-	ld   a, d                                        ; $751c: $7a
-	ld   a, e                                        ; $751d: $7b
-	ld   a, h                                        ; $751e: $7c
-	ld   l, l                                        ; $751f: $6d
-	ld   c, $0e                                      ; $7520: $0e $0e
-	ld   c, $0e                                      ; $7522: $0e $0e
-	ld   c, $0e                                      ; $7524: $0e $0e
-	ld   c, $0e                                      ; $7526: $0e $0e
-	ld   c, $0e                                      ; $7528: $0e $0e
-	ld   c, $0e                                      ; $752a: $0e $0e
-	ld   c, $0e                                      ; $752c: $0e $0e
-	ld   c, $0e                                      ; $752e: $0e $0e
-	ld   c, $0e                                      ; $7530: $0e $0e
-	ld   c, $0e                                      ; $7532: $0e $0e
-	ld   c, $0e                                      ; $7534: $0e $0e
-	ld   c, $0e                                      ; $7536: $0e $0e
-	ld   c, $0e                                      ; $7538: $0e $0e
-	ld   c, $0e                                      ; $753a: $0e $0e
-	ld   c, $0e                                      ; $753c: $0e $0e
-	ld   c, $0e                                      ; $753e: $0e $0e
-	ld   c, $0e                                      ; $7540: $0e $0e
-	ld   c, $0e                                      ; $7542: $0e $0e
-	ld   c, $0e                                      ; $7544: $0e $0e
-	ld   c, $0e                                      ; $7546: $0e $0e
-	ld   c, $0e                                      ; $7548: $0e $0e
-	ld   c, $0e                                      ; $754a: $0e $0e
-	ld   c, $0e                                      ; $754c: $0e $0e
-	ld   c, $0e                                      ; $754e: $0e $0e
-	nop                                              ; $7550: $00
-	ld   bc, $0302                                   ; $7551: $01 $02 $03
-	inc  b                                           ; $7554: $04
-	dec  b                                           ; $7555: $05
-	ld   b, $07                                      ; $7556: $06 $07
-	db   $10                                         ; $7558: $10
-	ld   de, $1312                                   ; $7559: $11 $12 $13
-	inc  d                                           ; $755c: $14
-	dec  d                                           ; $755d: $15
-	ld   d, $17                                      ; $755e: $16 $17
-	inc  hl                                          ; $7560: $23
-	ld   [hl+], a                                    ; $7561: $22
-	ld   [$2209], sp                                 ; $7562: $08 $09 $22
-	ld   a, [bc]                                     ; $7565: $0a
-	dec  bc                                          ; $7566: $0b
-	inc  h                                           ; $7567: $24
-	inc  hl                                          ; $7568: $23
-	ld   [hl+], a                                    ; $7569: $22
-	jr   jr_01e_7585                                 ; $756a: $18 $19
 
-	ld   [hl+], a                                    ; $756c: $22
-	ld   a, [de]                                     ; $756d: $1a
-	dec  de                                          ; $756e: $1b
-	inc  h                                           ; $756f: $24
-	inc  hl                                          ; $7570: $23
-	ld   [hl+], a                                    ; $7571: $22
-	inc  c                                           ; $7572: $0c
-	dec  c                                           ; $7573: $0d
-	ld   c, $0f                                      ; $7574: $0e $0f
-	jr   nz, jr_01e_759c                             ; $7576: $20 $24
 
-	dec  h                                           ; $7578: $25
-	daa                                              ; $7579: $27
-	inc  e                                           ; $757a: $1c
-	dec  e                                           ; $757b: $1d
-	ld   e, $1f                                      ; $757c: $1e $1f
-	ld   hl, $0726                                   ; $757e: $21 $26 $07
+TileAttr_IrisMiniGameTSPracticeBox::
+if def(VWF)
+	db $0e, $0e, $0e, $0e, $0e, $0e, $8e, $ae
+	db $0e, $0e, $0e, $0e, $0e, $0e, $8e, $ae
+	db $0e, $0e, $0e, $0e, $0e, $0e, $8e, $ae
+else
+	db $0e, $0e, $0e, $0e, $0e, $0e, $0e, $2e
+	db $0e, $0e, $0e, $0e, $0e, $0e, $0e, $2e
+	db $0e, $0e, $0e, $0e, $0e, $0e, $0e, $2e
+endc
+	db $0e, $0e, $0e, $0e, $0e, $0e, $0e, $2e
+	db $0e, $0e, $0e, $0e, $0e, $0e, $0e, $2e
+	db $4e, $4e, $0e, $0e, $0e, $0e, $0e, $6e
+
+
+TileMap_IrisMiniGameTSPracticeBox::
+	db $6d, $6e, $60, $61, $6e, $62, $63, $6d
+	db $7d, $7e, $70, $71, $7e, $72, $73, $7d
+	db $7d, $7e, $64, $65, $7e, $66, $67, $7d
+	db $7d, $7e, $74, $75, $7e, $76, $77, $7d
+	db $7d, $7e, $68, $69, $6a, $6b, $6c, $7d
+	db $6d, $6e, $78, $79, $7a, $7b, $7c, $6d
+
+
+TileAttr_IrisMiniGameTSDifficultyBox::
+if def(VWF)
+	db $0e, $0e, $0e, $0e, $0e, $0e, $8e, $8e
+	db $0e, $0e, $0e, $0e, $0e, $0e, $8e, $8e
+	db $0e, $0e, $0e, $0e, $0e, $0e, $8e, $8e
+else
+	db $0e, $0e, $0e, $0e, $0e, $0e, $0e, $0e
+	db $0e, $0e, $0e, $0e, $0e, $0e, $0e, $0e
+	db $0e, $0e, $0e, $0e, $0e, $0e, $0e, $0e
+endc
+	db $0e, $0e, $0e, $0e, $0e, $0e, $0e, $0e
+	db $0e, $0e, $0e, $0e, $0e, $0e, $0e, $0e
+	db $0e, $0e, $0e, $0e, $0e, $0e, $0e, $0e
+
+
+TileMap_IrisMiniGameTSDifficultyBox::
+	db $00, $01, $02, $03, $04, $05, $06, $07
+	db $10, $11, $12, $13, $14, $15, $16, $17
+	db $23, $22, $08, $09, $22, $0a, $0b, $24
+	db $23, $22, $18, $19, $22, $1a, $1b, $24
+	db $23, $22, $0c, $0d, $0e, $0f, $20, $24
+	db $25, $27, $1c, $1d, $1e, $1f, $21, $26
+
+
+	rlca                                   ; $7580: $07
 	rlca                                             ; $7581: $07
 	rlca                                             ; $7582: $07
 	rlca                                             ; $7583: $07
@@ -11534,55 +11356,27 @@ Palettes_ResetData::
 	ld   d, d                                        ; $7b4b: $52
 	ld   d, e                                        ; $7b4c: $53
 	ld   d, l                                        ; $7b4d: $55
-	ld   c, $0e                                      ; $7b4e: $0e $0e
-	ld   c, $0e                                      ; $7b50: $0e $0e
-	ld   c, $0e                                      ; $7b52: $0e $0e
-	ld   c, $2e                                      ; $7b54: $0e $2e
-	ld   c, $0e                                      ; $7b56: $0e $0e
-	ld   c, $0e                                      ; $7b58: $0e $0e
-	ld   c, $0e                                      ; $7b5a: $0e $0e
-	ld   c, $2e                                      ; $7b5c: $0e $2e
-	ld   c, $0e                                      ; $7b5e: $0e $0e
-	ld   c, $0e                                      ; $7b60: $0e $0e
-	ld   c, $0e                                      ; $7b62: $0e $0e
-	ld   c, $2e                                      ; $7b64: $0e $2e
-	ld   c, [hl]                                     ; $7b66: $4e
-	ld   c, [hl]                                     ; $7b67: $4e
-	ld   c, $0e                                      ; $7b68: $0e $0e
-	ld   c, $0e                                      ; $7b6a: $0e $0e
-	ld   c, $6e                                      ; $7b6c: $0e $6e
-	ld   l, l                                        ; $7b6e: $6d
-	ld   l, [hl]                                     ; $7b6f: $6e
-	ld   h, b                                        ; $7b70: $60
-	ld   h, c                                        ; $7b71: $61
-	ld   l, [hl]                                     ; $7b72: $6e
-	ld   h, d                                        ; $7b73: $62
-	ld   h, e                                        ; $7b74: $63
-	ld   l, l                                        ; $7b75: $6d
-	ld   a, l                                        ; $7b76: $7d
-	ld   a, [hl]                                     ; $7b77: $7e
-	ld   [hl], b                                     ; $7b78: $70
-	ld   [hl], c                                     ; $7b79: $71
-	ld   a, [hl]                                     ; $7b7a: $7e
-	ld   [hl], d                                     ; $7b7b: $72
-	ld   [hl], e                                     ; $7b7c: $73
-	ld   a, l                                        ; $7b7d: $7d
-	ld   a, l                                        ; $7b7e: $7d
-	ld   a, [hl]                                     ; $7b7f: $7e
-	ld   l, b                                        ; $7b80: $68
-	ld   l, c                                        ; $7b81: $69
-	ld   l, d                                        ; $7b82: $6a
-	ld   l, e                                        ; $7b83: $6b
-	ld   l, h                                        ; $7b84: $6c
-	ld   a, l                                        ; $7b85: $7d
-	ld   l, l                                        ; $7b86: $6d
-	ld   l, [hl]                                     ; $7b87: $6e
-	ld   a, b                                        ; $7b88: $78
-	ld   a, c                                        ; $7b89: $79
-	ld   a, d                                        ; $7b8a: $7a
-	ld   a, e                                        ; $7b8b: $7b
-	ld   a, h                                        ; $7b8c: $7c
-	ld   l, l                                        ; $7b8d: $6d
+
+
+TileAttr_IrisMiniGameTSPopupBox::
+if def(VWF)
+	db $0e, $0e, $0e, $0e, $0e, $0e, $8e, $ae
+	db $0e, $0e, $0e, $0e, $0e, $0e, $8e, $ae
+else
+	db $0e, $0e, $0e, $0e, $0e, $0e, $0e, $2e
+	db $0e, $0e, $0e, $0e, $0e, $0e, $0e, $2e
+endc
+	db $0e, $0e, $0e, $0e, $0e, $0e, $0e, $2e
+	db $4e, $4e, $0e, $0e, $0e, $0e, $0e, $6e
+
+
+TileMap_IrisMiniGameTSPopupBox::
+	db $6d, $6e, $60, $61, $6e, $62, $63, $6d
+	db $7d, $7e, $70, $71, $7e, $72, $73, $7d
+	db $7d, $7e, $68, $69, $6a, $6b, $6c, $7d
+	db $6d, $6e, $78, $79, $7a, $7b, $7c, $6d
+
+
 	rlca                                             ; $7b8e: $07
 	rlca                                             ; $7b8f: $07
 	rlca                                             ; $7b90: $07
@@ -12252,44 +12046,30 @@ endc
 	sbc  a                                           ; $7e65: $9f
 	ld   [hl], $83                                   ; $7e66: $36 $83
 	inc  d                                           ; $7e68: $14
-	nop                                              ; $7e69: $00
-	nop                                              ; $7e6a: $00
 
-jr_01e_7e6b:
-	nop                                              ; $7e6b: $00
-	nop                                              ; $7e6c: $00
-	nop                                              ; $7e6d: $00
-	nop                                              ; $7e6e: $00
-	nop                                              ; $7e6f: $00
-	nop                                              ; $7e70: $00
-	nop                                              ; $7e71: $00
-	nop                                              ; $7e72: $00
-	nop                                              ; $7e73: $00
-	nop                                              ; $7e74: $00
-	nop                                              ; $7e75: $00
-	nop                                              ; $7e76: $00
-	nop                                              ; $7e77: $00
-	nop                                              ; $7e78: $00
-	nop                                              ; $7e79: $00
-	nop                                              ; $7e7a: $00
-	nop                                              ; $7e7b: $00
-	nop                                              ; $7e7c: $00
-	nop                                              ; $7e7d: $00
-	nop                                              ; $7e7e: $00
-	nop                                              ; $7e7f: $00
-	nop                                              ; $7e80: $00
-	nop                                              ; $7e81: $00
-	nop                                              ; $7e82: $00
-	nop                                              ; $7e83: $00
-	nop                                              ; $7e84: $00
-	nop                                              ; $7e85: $00
-	nop                                              ; $7e86: $00
-	nop                                              ; $7e87: $00
-	nop                                              ; $7e88: $00
-	nop                                              ; $7e89: $00
-	nop                                              ; $7e8a: $00
-	nop                                              ; $7e8b: $00
-	nop                                              ; $7e8c: $00
+
+TileAttr_IrisMiniGameTSHidingAText::
+	db $00, $00, $00, $00, $00, $00
+if def(VWF)
+	db $00, $00, $00, $00, $00, $0d
+	db $00, $00, $00, $00, $00, $08
+else
+	db $00, $00, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00
+endc
+
+
+TileMap_IrisMiniGameTSHidingAText::
+	db $00, $00, $00, $00, $00, $00
+if def(VWF)
+	db $00, $00, $00, $00, $00, $c5
+	db $00, $00, $00, $00, $00, $d2
+else
+	db $00, $00, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00
+endc
+
+
 	inc  bc                                          ; $7e8d: $03
 	inc  b                                           ; $7e8e: $04
 	inc  b                                           ; $7e8f: $04
