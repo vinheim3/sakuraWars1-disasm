@@ -7585,7 +7585,11 @@ jr_010_6f98:
 	ld   a, $17                                      ; $6fbd: $3e $17
 	ld   hl, $d000                                   ; $6fbf: $21 $00 $d0
 	ld   de, $5763                                   ; $6fc2: $11 $63 $57
+if def(VWF)
+	call SumireMiniGameTitleScreenBank1_9000hHook
+else
 	call RLEXorCopy                                       ; $6fc5: $cd $d2 $09
+endc
 
 ;
 	ld   c, $81                                      ; $6fc8: $0e $81
@@ -7609,7 +7613,11 @@ jr_010_6f98:
 	ld   a, $1c                                      ; $6fe8: $3e $1c
 	ld   hl, $d000                                   ; $6fea: $21 $00 $d0
 	ld   de, $70a5                                   ; $6fed: $11 $a5 $70
+if def(VWF)
+	call SumireMiniGameTitleScreenBank0_8000hHook
+else
 	call RLEXorCopy                                       ; $6ff0: $cd $d2 $09
+endc
 
 ;
 	ld   c, $80                                      ; $6ff3: $0e $80
@@ -7633,7 +7641,11 @@ jr_010_6f98:
 	ld   a, $14                                      ; $7013: $3e $14
 	ld   hl, $d000                                   ; $7015: $21 $00 $d0
 	ld   de, $5298                                   ; $7018: $11 $98 $52
+if def(VWF)
+	call SumireMiniGameTitleScreenBank0_8800hHook
+else
 	call RLEXorCopy                                       ; $701b: $cd $d2 $09
+endc
 
 ;
 	ld   c, $80                                      ; $701e: $0e $80
@@ -7663,14 +7675,14 @@ jr_010_6f98:
 	rst  WaitUntilVBlankIntHandledIfLCDOn                                         ; $704d: $cf
 
 ;
-	ld   a, $1d                                      ; $704e: $3e $1d
-	ld   de, $4e18                                   ; $7050: $11 $18 $4e
+	ld   a, BANK(TileAttr_SumireMiniGameTitleScreen)                                      ; $704e: $3e $1d
+	ld   de, TileAttr_SumireMiniGameTitleScreen                                   ; $7050: $11 $18 $4e
 	ld   hl, $dc40                                   ; $7053: $21 $40 $dc
 	ld   bc, $1412                                   ; $7056: $01 $12 $14
 	call FarCopyLayout                                       ; $7059: $cd $2c $0b
 
 ;
-	ld   a, $1d                                      ; $705c: $3e $1d
+	ld   a, BANK(TileMap_SumireMiniGameTitleScreen)                                      ; $705c: $3e $1d
 	ld   hl, $da00                                   ; $705e: $21 $00 $da
 	call FarCopyLayout                                       ; $7061: $cd $2c $0b
 
@@ -7691,15 +7703,18 @@ jr_010_6f98:
 	call EnqueueHDMATransfer                                       ; $707f: $cd $7c $02
 	rst  WaitUntilVBlankIntHandledIfLCDOn                                         ; $7082: $cf
 
-;
 	ld   de, $d600                                   ; $7083: $11 $00 $d6
 	ld   hl, $dae0                                   ; $7086: $21 $e0 $da
 	ld   bc, $00c0                                   ; $7089: $01 $c0 $00
 	call MemCopy                                       ; $708c: $cd $a9 $09
+
+; Show flashing text tilemap
 	ld   de, $d200                                   ; $708f: $11 $00 $d2
 	ld   hl, $dae0                                   ; $7092: $21 $e0 $da
 	ld   bc, $00c0                                   ; $7095: $01 $c0 $00
 	call MemCopy                                       ; $7098: $cd $a9 $09
+
+;
 	ld   de, $d700                                   ; $709b: $11 $00 $d7
 	ld   hl, $dd20                                   ; $709e: $21 $20 $dd
 	ld   bc, $00c0                                   ; $70a1: $01 $c0 $00
@@ -7708,14 +7723,27 @@ jr_010_6f98:
 	ld   hl, $dd20                                   ; $70aa: $21 $20 $dd
 	ld   bc, $00c0                                   ; $70ad: $01 $c0 $00
 	call MemCopy                                       ; $70b0: $cd $a9 $09
-	ld   a, $1e                                      ; $70b3: $3e $1e
-	ld   de, $7e11                                   ; $70b5: $11 $11 $7e
+
+; Hide flashing text tile attr, then tile map
+	ld   a, BANK(TileAttr_SumireMiniGameTSHidingAText)                                      ; $70b3: $3e $1e
+	ld   de, TileAttr_SumireMiniGameTSHidingAText                                   ; $70b5: $11 $11 $7e
+if def(VWF)
+	ld   hl, $d765
+else
 	ld   hl, $d784                                   ; $70b8: $21 $84 $d7
+endc
 	ld   bc, $0c02                                   ; $70bb: $01 $02 $0c
 	call FarCopyLayout                                       ; $70be: $cd $2c $0b
-	ld   a, $1e                                      ; $70c1: $3e $1e
+
+	ld   a, BANK(TileMap_SumireMiniGameTSHidingAText)                                      ; $70c1: $3e $1e
+if def(VWF)
+	ld   hl, $d665
+else
 	ld   hl, $d684                                   ; $70c3: $21 $84 $d6
+endc
 	call FarCopyLayout                                       ; $70c6: $cd $2c $0b
+
+;
 	ld   de, $d400                                   ; $70c9: $11 $00 $d4
 	ld   hl, $d700                                   ; $70cc: $21 $00 $d7
 	ld   bc, $00c0                                   ; $70cf: $01 $c0 $00
@@ -7742,13 +7770,13 @@ jr_010_6f98:
 	call MemCopy                                       ; $710e: $cd $a9 $09
 
 ; 2nd popup box
-	ld   a, $1e                                      ; $7111: $3e $1e
-	ld   de, $7700                                   ; $7113: $11 $00 $77
+	ld   a, BANK(TileAttr_SumireMiniGameTSExplanationBox)                                      ; $7111: $3e $1e
+	ld   de, TileAttr_SumireMiniGameTSExplanationBox                                   ; $7113: $11 $00 $77
 	ld   hl, $d406                                   ; $7116: $21 $06 $d4
 	ld   bc, $0806                                   ; $7119: $01 $06 $08
 	call FarCopyLayout                                       ; $711c: $cd $2c $0b
 	
-	ld   a, $1e                                      ; $711f: $3e $1e
+	ld   a, BANK(TileMap_SumireMiniGameTSExplanationBox)                                      ; $711f: $3e $1e
 	ld   hl, $d106                                   ; $7121: $21 $06 $d1
 	call FarCopyLayout                                       ; $7124: $cd $2c $0b
 
@@ -7764,14 +7792,17 @@ jr_010_6f98:
 	call FarCopyLayout                                       ; $713a: $cd $2c $0b
 
 ;
-	ld   a, $1e                                      ; $713d: $3e $1e
-	ld   de, $7760                                   ; $713f: $11 $60 $77
+	ld   a, BANK(TileAttr_SumireMiniGameTSDifficultyBox)                                      ; $713d: $3e $1e
+	ld   de, TileAttr_SumireMiniGameTSDifficultyBox                                   ; $713f: $11 $60 $77
 	ld   hl, $d906                                   ; $7142: $21 $06 $d9
 	ld   bc, $0806                                   ; $7145: $01 $06 $08
 	call FarCopyLayout                                       ; $7148: $cd $2c $0b
-	ld   a, $1e                                      ; $714b: $3e $1e
+
+	ld   a, BANK(TileMap_SumireMiniGameTSDifficultyBox)                                      ; $714b: $3e $1e
 	ld   hl, $d806                                   ; $714d: $21 $06 $d8
 	call FarCopyLayout                                       ; $7150: $cd $2c $0b
+
+;
 	pop  af                                          ; $7153: $f1
 	ld   [wWramBank], a                                  ; $7154: $ea $93 $c2
 	ldh  [rSVBK], a                                  ; $7157: $e0 $70
@@ -7813,8 +7844,8 @@ jr_010_6f98:
 	ld   a, $03                                      ; $71b3: $3e $03
 	ld   b, $01                                      ; $71b5: $06 $01
 	ld   hl, $7000                                   ; $71b7: $21 $00 $70
-	ld   c, $1e                                      ; $71ba: $0e $1e
-	ld   de, $6cfc                                   ; $71bc: $11 $fc $6c
+	ld   c, BANK(Palettes_SumireMiniGameTitleScreen)                                      ; $71ba: $0e $1e
+	ld   de, Palettes_SumireMiniGameTitleScreen                                   ; $71bc: $11 $fc $6c
 	call FarLoadPaletteValsFadeToValsAndSetFadeSpeed                                       ; $71bf: $cd $48 $07
 	ld   a, $07                                      ; $71c2: $3e $07
 	call PlaySong                                       ; $71c4: $cd $92 $1a
@@ -7843,8 +7874,8 @@ jr_010_71e0:
 	ld   [wFarCallBank], a                                  ; $71f0: $ea $9a $c2
 	pop  af                                          ; $71f3: $f1
 	call FarCall                                       ; $71f4: $cd $62 $09
-	ld   a, $1e                                      ; $71f7: $3e $1e
-	ld   hl, $6cfc                                   ; $71f9: $21 $fc $6c
+	ld   a, BANK(Palettes_SumireMiniGameTitleScreen)                                     ; $71f7: $3e $1e
+	ld   hl, Palettes_SumireMiniGameTitleScreen                                   ; $71f9: $21 $fc $6c
 	ld   de, wBGPalettes                                   ; $71fc: $11 $de $c2
 	ld   bc, $0080                                   ; $71ff: $01 $80 $00
 	call FarMemCopy                                       ; $7202: $cd $b2 $09
@@ -7854,7 +7885,7 @@ jr_010_71e0:
 
 
 	call Call_010_73cf                               ; $720c: $cd $cf $73
-	call Call_010_747a                               ; $720f: $cd $7a $74
+	call FlashABtnTextOnSumireMiniGameTitleScreen                               ; $720f: $cd $7a $74
 	push af                                          ; $7212: $f5
 	ld   a, $47                                      ; $7213: $3e $47
 	ld   [wFarCallAddr], a                                  ; $7215: $ea $98 $c2
@@ -8047,8 +8078,8 @@ jr_010_7338:
 	ld   a, $40                                      ; $733c: $3e $40
 	ld   [wNumPaletteColorsToLoadCompDataFor], a                                  ; $733e: $ea $63 $c3
 	ld   a, $03                                      ; $7341: $3e $03
-	ld   b, $1e                                      ; $7343: $06 $1e
-	ld   hl, $6cfc                                   ; $7345: $21 $fc $6c
+	ld   b, BANK(Palettes_SumireMiniGameTitleScreen)                                      ; $7343: $06 $1e
+	ld   hl, Palettes_SumireMiniGameTitleScreen                                   ; $7345: $21 $fc $6c
 	ld   c, $01                                      ; $7348: $0e $01
 	ld   de, $7000                                   ; $734a: $11 $00 $70
 	call FarLoadPaletteValsFadeToValsAndSetFadeSpeed                                       ; $734d: $cd $48 $07
@@ -8213,10 +8244,10 @@ jr_010_7453:
 	ret                                              ; $7479: $c9
 
 
-Call_010_747a:
+FlashABtnTextOnSumireMiniGameTitleScreen:
 	ld   hl, $c9f4                                   ; $747a: $21 $f4 $c9
 	dec  [hl]                                        ; $747d: $35
-	jr   nz, jr_010_74ca                             ; $747e: $20 $4a
+	jr   nz, .done                             ; $747e: $20 $4a
 
 	ld   [hl], $21                                   ; $7480: $36 $21
 	ld   hl, $c9f5                                   ; $7482: $21 $f5 $c9
@@ -8224,37 +8255,61 @@ Call_010_747a:
 	xor  $01                                         ; $7486: $ee $01
 	ld   [hl], a                                     ; $7488: $77
 	or   a                                           ; $7489: $b7
-	jr   nz, jr_010_74ac                             ; $748a: $20 $20
+	jr   nz, .hideText                             ; $748a: $20 $20
 
 	ld   c, $80                                      ; $748c: $0e $80
+if def(VWF)
+	ld   de, $9940
+	ld   a, $03
+	ld   hl, $d260
+else
 	ld   de, $9960                                   ; $748e: $11 $60 $99
 	ld   a, $03                                      ; $7491: $3e $03
 	ld   hl, $d280                                   ; $7493: $21 $80 $d2
+endc
 	ld   b, $04                                      ; $7496: $06 $04
 	call EnqueueHDMATransfer                                       ; $7498: $cd $7c $02
 	ld   c, $81                                      ; $749b: $0e $81
+if def(VWF)
+	ld   de, $9940
+	ld   a, $03
+	ld   hl, $d560
+else
 	ld   de, $9960                                   ; $749d: $11 $60 $99
 	ld   a, $03                                      ; $74a0: $3e $03
 	ld   hl, $d580                                   ; $74a2: $21 $80 $d5
+endc
 	ld   b, $04                                      ; $74a5: $06 $04
 	call EnqueueHDMATransfer                                       ; $74a7: $cd $7c $02
-	jr   jr_010_74ca                                 ; $74aa: $18 $1e
+	jr   .done                                 ; $74aa: $18 $1e
 
-jr_010_74ac:
+.hideText:
 	ld   c, $80                                      ; $74ac: $0e $80
+if def(VWF)
+	ld   de, $9940
+	ld   a, $03
+	ld   hl, $d660
+else
 	ld   de, $9960                                   ; $74ae: $11 $60 $99
 	ld   a, $03                                      ; $74b1: $3e $03
 	ld   hl, $d680                                   ; $74b3: $21 $80 $d6
+endc
 	ld   b, $04                                      ; $74b6: $06 $04
 	call EnqueueHDMATransfer                                       ; $74b8: $cd $7c $02
 	ld   c, $81                                      ; $74bb: $0e $81
+if def(VWF)
+	ld   de, $9940
+	ld   a, $03
+	ld   hl, $d760
+else
 	ld   de, $9960                                   ; $74bd: $11 $60 $99
 	ld   a, $03                                      ; $74c0: $3e $03
 	ld   hl, $d780                                   ; $74c2: $21 $80 $d7
+endc
 	ld   b, $04                                      ; $74c5: $06 $04
 	call EnqueueHDMATransfer                                       ; $74c7: $cd $7c $02
 
-jr_010_74ca:
+.done:
 	ret                                              ; $74ca: $c9
 
 
@@ -9379,6 +9434,27 @@ CinematronTileAttrHook:
 	res  3, a
 	ld   [$d000+$14f], a
 
+	ret
+
+
+SumireMiniGameTitleScreenBank0_8000hHook:
+	call RLEXorCopy
+
+	M_FarCall LoadSumireMiniGameTitleScreenGfxSpr
+	ret
+
+
+SumireMiniGameTitleScreenBank0_8800hHook:
+	call RLEXorCopy
+
+	M_FarCall LoadSumireMiniGameTitleScreenGfx0
+	ret
+
+
+SumireMiniGameTitleScreenBank1_9000hHook:
+	call RLEXorCopy
+
+	M_FarCall LoadSumireMiniGameTitleScreenGfx1
 	ret
 
 endc

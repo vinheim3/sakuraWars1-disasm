@@ -17,6 +17,9 @@
 ; rgbgfx -o en_battleKanjis.2bpp en_battleKanjis.png
 ; rgbgfx -o en_cinematron.2bpp en_cinematron.png
 ; rgbgfx -o en_sakuraMiniGameTitleScreen.2bpp en_sakuraMiniGameTitleScreen.png
+; rgbgfx -o en_sumireMiniGameTitleScreen.2bpp en_sumireMiniGameTitleScreen.png
+; rgbgfx -o en_sumireMGTitleScreenPressA.2bpp en_sumireMGTitleScreenPressA.png
+; rgbgfx -o en_sumireMGTitleScreenSpr.2bpp -h en_sumireMGTitleScreenSpr.png
 ; tools/gfx.py 1bpp newLetters.png --from=png --interleave
 
 ; empty banks

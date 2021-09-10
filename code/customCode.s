@@ -181,6 +181,250 @@ LoadSakuraMiniGameTitleScreenGfxSpr::
 	db $ff,$00, $e0,$00, $80,$00
 
 
+LoadSumireMiniGameTitleScreenGfx0::
+; What already exists
+	ld   bc, 6*$10
+	ld   de, $d000+$a00
+	ld   hl, .row1left
+	call MemCopy
+
+	ld   bc, 9*$10
+	ld   de, $d000+$a60
+	ld   hl, .row1right
+	call MemCopy
+
+	ld   bc, 6*$10
+	ld   de, $d000+$b00
+	ld   hl, .row2left
+	call MemCopy
+
+	ld   bc, 9*$10
+	ld   de, $d000+$b60
+	ld   hl, .row2right
+	call MemCopy
+
+	ld   bc, 6*$10
+	ld   de, $d000+$c00
+	ld   hl, .row3left
+	call MemCopy
+
+	ld   bc, 9*$10
+	ld   de, $d000+$c60
+	ld   hl, .row3right
+	call MemCopy
+
+	ld   bc, 6*$10
+	ld   de, $d000+$d00
+	ld   hl, .row4left
+	call MemCopy
+
+	ld   bc, 4*$10
+	ld   de, $d000+$d60
+	ld   hl, .row4right
+	call MemCopy
+
+	ld   bc, 7*$10
+	ld   de, $d000+$e00
+	ld   hl, .row5left
+	call MemCopy
+
+	ld   bc, 3*$10
+	ld   de, $d000+$e70
+	ld   hl, .row5right
+	call MemCopy
+
+	ld   bc, 7*$10
+	ld   de, $d000+$f00
+	ld   hl, .row6left
+	call MemCopy
+
+; New tiles
+	ld   bc, 2*$10
+	ld   de, $d000+$db0
+	ld   hl, .newLeft1
+	call MemCopy
+
+	ld   bc, 2*$10
+	ld   de, $d000+$dd0
+	ld   hl, .newLeft2
+	call MemCopy
+
+	ld   bc, 2*$10
+	ld   de, $d000+$ea0
+	ld   hl, .newLeft3
+	call MemCopy
+
+	ld   bc, 4*$10
+	ld   de, $d000+$ec0
+	ld   hl, .newLeft4
+	call MemCopy
+
+	ld   bc, 4*$10
+	ld   de, $d000+$f70
+	ld   hl, .newLeft5
+	call MemCopy
+
+	ld   bc, $10
+	ld   de, $d000+$df0
+	ld   hl, .newLeft6_1
+	call MemCopy
+
+	ld   bc, $10
+	ld   de, $d000+$af0
+	ld   hl, .newLeft6_2
+	call MemCopy
+
+	ld   bc, 2*$10
+	ld   de, $d000+$fb0
+	ld   hl, .newRight4
+	call MemCopy
+
+	ld   bc, 2*$10
+	ld   de, $d000+$fd0
+	ld   hl, .newRight5
+	call MemCopy
+
+	ld   bc, $10
+	ld   de, $d000+$ff0
+	ld   hl, .newRight6
+	call MemCopy
+
+	ret
+	
+.row1left:
+	INCBIN "en_sumireMiniGameTitleScreen.2bpp", 1*$10, 6*$10
+.row1right:
+	INCBIN "en_sumireMiniGameTitleScreen.2bpp", 9*$10, 9*$10
+.row2left:
+	INCBIN "en_sumireMiniGameTitleScreen.2bpp", 21*$10, 6*$10
+.row2right:
+	INCBIN "en_sumireMiniGameTitleScreen.2bpp", 29*$10, 9*$10
+.row3left:
+	INCBIN "en_sumireMiniGameTitleScreen.2bpp", 41*$10, 6*$10
+.row3right:
+	INCBIN "en_sumireMiniGameTitleScreen.2bpp", 49*$10, 9*$10
+.row4left:
+	INCBIN "en_sumireMiniGameTitleScreen.2bpp", 61*$10, 6*$10
+.row4right:
+	INCBIN "en_sumireMiniGameTitleScreen.2bpp", 69*$10, 4*$10
+.row5left:
+	INCBIN "en_sumireMiniGameTitleScreen.2bpp", 81*$10, 7*$10
+.row5right:
+	INCBIN "en_sumireMiniGameTitleScreen.2bpp", 90*$10, 3*$10
+.row6left:
+	INCBIN "en_sumireMiniGameTitleScreen.2bpp", 101*$10, 7*$10
+
+.newLeft1:
+	INCBIN "en_sumireMiniGameTitleScreen.2bpp", 47*$10, 2*$10
+.newLeft2:
+	INCBIN "en_sumireMiniGameTitleScreen.2bpp", 67*$10, 2*$10
+.newLeft3:
+	INCBIN "en_sumireMiniGameTitleScreen.2bpp", 88*$10, 2*$10
+.newLeft4:
+	INCBIN "en_sumireMiniGameTitleScreen.2bpp", 108*$10, 4*$10
+.newLeft5:
+	INCBIN "en_sumireMiniGameTitleScreen.2bpp", 128*$10, 4*$10
+.newLeft6_1:
+	INCBIN "en_sumireMiniGameTitleScreen.2bpp", 148*$10, $10
+.newLeft6_2:
+	INCBIN "en_sumireMiniGameTitleScreen.2bpp", 149*$10, $10
+.newRight4:
+	INCBIN "en_sumireMiniGameTitleScreen.2bpp", 117*$10, 2*$10
+.newRight5:
+	INCBIN "en_sumireMiniGameTitleScreen.2bpp", 137*$10, 2*$10
+.newRight6:
+	INCBIN "en_sumireMiniGameTitleScreen.2bpp", 157*$10, $10
+
+
+LoadSumireMiniGameTitleScreenGfx1::
+; $9000 - new tiles
+	ld   bc, 5*$10
+	ld   de, $d000+$a0
+	ld   hl, .row4right
+	call MemCopy
+
+	ld   bc, 4*$10
+	ld   de, $d000+$1a0
+	ld   hl, .row5right
+	call MemCopy
+
+	ld   bc, 5*$10
+	ld   de, $d000+$290
+	ld   hl, .row6right
+	call MemCopy
+
+	ld   bc, 7*$10
+	ld   de, $d000+$200
+	ld   hl, .row7left
+	call MemCopy
+
+	ld   bc, 5*$10
+	ld   de, $d000+$390
+	ld   hl, .row7right
+	call MemCopy
+
+	ld   bc, 7*$10
+	ld   de, $d000+$300
+	ld   hl, .row8left
+	call MemCopy
+
+; Press A btn
+	ld   bc, 10*$10
+	ld   de, $d000
+	ld   hl, .pressAleftTop
+	call MemCopy
+
+	ld   bc, 2*$10
+	ld   de, $d000+$1e0
+	ld   hl, .pressArightTop
+	call MemCopy
+
+	ld   bc, 10*$10
+	ld   de, $d000+$100
+	ld   hl, .pressAleftBottom
+	call MemCopy
+
+	ld   bc, 2*$10
+	ld   de, $d000+$2e0
+	ld   hl, .pressArightBottom
+	call MemCopy
+
+	ret
+
+.row4right:
+	INCBIN "en_sumireMiniGameTitleScreen.2bpp", 73*$10, 5*$10
+.row5right:
+	INCBIN "en_sumireMiniGameTitleScreen.2bpp", 93*$10, 4*$10
+.row6right:
+	INCBIN "en_sumireMiniGameTitleScreen.2bpp", 112*$10, 5*$10
+.row7left:
+	INCBIN "en_sumireMiniGameTitleScreen.2bpp", 121*$10, 7*$10
+.row7right:
+	INCBIN "en_sumireMiniGameTitleScreen.2bpp", 132*$10, 5*$10
+.row8left:
+	INCBIN "en_sumireMiniGameTitleScreen.2bpp", 141*$10, 7*$10
+
+.pressAleftTop:
+	INCBIN "en_sumireMGTitleScreenPressA.2bpp", 0, 10*$10
+.pressArightTop:
+	INCBIN "en_sumireMGTitleScreenPressA.2bpp", 10*$10, 2*$10
+.pressAleftBottom:
+	INCBIN "en_sumireMGTitleScreenPressA.2bpp", 12*$10, 10*$10
+.pressArightBottom:
+	INCBIN "en_sumireMGTitleScreenPressA.2bpp", 22*$10, 2*$10
+
+
+LoadSumireMiniGameTitleScreenGfxSpr::
+	ld   bc, .end-.gfx
+	ld   de, $d000+$1e0
+	ld   hl, .gfx
+	jp   MemCopy
+
+.gfx:
+	INCBIN "en_sumireMGTitleScreenSpr.2bpp"
+.end:
+
+
 LoadSettingsEnTileData::
 	ld   bc, $c0
 	ld   de, $d1a0
