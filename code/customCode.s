@@ -389,6 +389,14 @@ LoadSumireMiniGameTitleScreenGfx1::
 	ld   hl, .pressArightBottom
 	call MemCopy
 
+; Priority tiles
+	ld   a, $bf
+	ld   [$d000+$400+6], a
+	ld   [$d000+$400+8], a
+	ld   [$d000+$400+10], a
+	ld   [$d000+$400+12], a
+	ld   [$d000+$400+14], a
+
 	ret
 
 .row4right:
@@ -1367,37 +1375,6 @@ LoadIrisMiniGameTitleScreenGfx1::
 	ld   hl, $d000                                   ; $7384: $21 $00 $d0
 	ld   de, $4000                                   ; $7387: $11 $00 $40
 	call RLEXorCopy                                       ; $738a: $cd $d2 $09
-
-	ld   a, $ff
-	ld   [$d000+$670], a
-	ld   [$d000+$670+2], a
-	ld   [$d000+$670+4], a
-
-	ld   [$d000+$b0], a
-	ld   [$d000+$b0+2], a
-	ld   [$d000+$b0+4], a
-	ld   [$d000+$b0+6], a
-	ld   [$d000+$b0+8], a
-
-	ld   a, $bf
-	ld   [$d000+$7d0], a
-	ld   [$d000+$7d0+2], a
-	ld   [$d000+$7d0+4], a
-	ld   [$d000+$7d0+6], a
-	ld   [$d000+$7d0+8], a
-	ld   [$d000+$7d0+10], a
-	ld   [$d000+$7d0+12], a
-	ld   [$d000+$7d0+14], a
-
-	ld   a, $fd
-	ld   [$d000+$240], a
-	ld   [$d000+$240+2], a
-	ld   [$d000+$240+4], a
-	ld   [$d000+$240+6], a
-	ld   [$d000+$240+8], a
-	ld   [$d000+$240+10], a
-	ld   [$d000+$240+12], a
-	ld   [$d000+$240+14], a
 
 	ld   c, $81                                      ; $738d: $0e $81
 	ld   de, $9000                                   ; $738f: $11 $00 $90

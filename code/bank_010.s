@@ -7703,12 +7703,12 @@ endc
 	call EnqueueHDMATransfer                                       ; $707f: $cd $7c $02
 	rst  WaitUntilVBlankIntHandledIfLCDOn                                         ; $7082: $cf
 
+; Show flashing text tile attr, then map
 	ld   de, $d600                                   ; $7083: $11 $00 $d6
 	ld   hl, $dae0                                   ; $7086: $21 $e0 $da
 	ld   bc, $00c0                                   ; $7089: $01 $c0 $00
 	call MemCopy                                       ; $708c: $cd $a9 $09
 
-; Show flashing text tilemap
 	ld   de, $d200                                   ; $708f: $11 $00 $d2
 	ld   hl, $dae0                                   ; $7092: $21 $e0 $da
 	ld   bc, $00c0                                   ; $7095: $01 $c0 $00
@@ -7724,7 +7724,7 @@ endc
 	ld   bc, $00c0                                   ; $70ad: $01 $c0 $00
 	call MemCopy                                       ; $70b0: $cd $a9 $09
 
-; Hide flashing text tile attr, then tile map
+; Hide flashing text tile attr, then map
 	ld   a, BANK(TileAttr_SumireMiniGameTSHidingAText)                                      ; $70b3: $3e $1e
 	ld   de, TileAttr_SumireMiniGameTSHidingAText                                   ; $70b5: $11 $11 $7e
 if def(VWF)
@@ -7769,7 +7769,7 @@ endc
 	ld   bc, $00c0                                   ; $710b: $01 $c0 $00
 	call MemCopy                                       ; $710e: $cd $a9 $09
 
-; 2nd popup box
+; Popup box with Practice
 	ld   a, BANK(TileAttr_SumireMiniGameTSExplanationBox)                                      ; $7111: $3e $1e
 	ld   de, TileAttr_SumireMiniGameTSExplanationBox                                   ; $7113: $11 $00 $77
 	ld   hl, $d406                                   ; $7116: $21 $06 $d4
