@@ -85,14 +85,22 @@ jr_03f_4049:
 	ld   a, $03                                      ; $408e: $3e $03
 	ld   hl, $d400                                   ; $4090: $21 $00 $d4
 	ld   b, $40                                      ; $4093: $06 $40
+if def(VWF)
+	call KannaMiniGameTitleScreenBank1_8800hHook
+else
 	call EnqueueHDMATransfer                                       ; $4095: $cd $7c $02
+endc
 	rst  WaitUntilVBlankIntHandledIfLCDOn                                         ; $4098: $cf
 
 ;
 	ld   a, $1c                                      ; $4099: $3e $1c
 	ld   hl, $d000                                   ; $409b: $21 $00 $d0
 	ld   de, $7c89                                   ; $409e: $11 $89 $7c
+if def(VWF)
+	call KannaMiniGameTitleScreenBank0_8000hHook
+else
 	call RLEXorCopy                                       ; $40a1: $cd $d2 $09
+endc
 
 ;
 	ld   c, $80                                      ; $40a4: $0e $80
@@ -146,13 +154,13 @@ jr_03f_4049:
 	rst  WaitUntilVBlankIntHandledIfLCDOn                                         ; $40fe: $cf
 
 ;
-	ld   a, $1d                                      ; $40ff: $3e $1d
-	ld   de, $4b48                                   ; $4101: $11 $48 $4b
+	ld   a, BANK(TileAttr_KannaMiniGameTitleScreen)                                      ; $40ff: $3e $1d
+	ld   de, TileAttr_KannaMiniGameTitleScreen                                   ; $4101: $11 $48 $4b
 	ld   hl, $dc40                                   ; $4104: $21 $40 $dc
 	ld   bc, $1412                                   ; $4107: $01 $12 $14
 	call FarCopyLayout                                       ; $410a: $cd $2c $0b
 
-	ld   a, $1d                                      ; $410d: $3e $1d
+	ld   a, BANK(TileMap_KannaMiniGameTitleScreen)                                      ; $410d: $3e $1d
 	ld   hl, $da00                                   ; $410f: $21 $00 $da
 	call FarCopyLayout                                       ; $4112: $cd $2c $0b
 
@@ -288,8 +296,8 @@ jr_03f_4049:
 	ld   a, $03                                      ; $4264: $3e $03
 	ld   b, $01                                      ; $4266: $06 $01
 	ld   hl, $7000                                   ; $4268: $21 $00 $70
-	ld   c, $1e                                      ; $426b: $0e $1e
-	ld   de, $6c7c                                   ; $426d: $11 $7c $6c
+	ld   c, BANK(Palettes_KannaMiniGameTitleScreen)                                      ; $426b: $0e $1e
+	ld   de, Palettes_KannaMiniGameTitleScreen                                   ; $426d: $11 $7c $6c
 	call FarLoadPaletteValsFadeToValsAndSetFadeSpeed                                       ; $4270: $cd $48 $07
 	ld   a, $09                                      ; $4273: $3e $09
 	call PlaySong                                       ; $4275: $cd $92 $1a
@@ -299,14 +307,14 @@ jr_03f_4049:
 	jr   z, jr_03f_428f                              ; $4280: $28 $0d
 
 	call Call_03f_4582                               ; $4282: $cd $82 $45
-	call Call_03f_4490                               ; $4285: $cd $90 $44
+	call DisplayKannaMiniGameTitleScreenSpritesWithPressA                               ; $4285: $cd $90 $44
 	ld   a, $02                                      ; $4288: $3e $02
 	ld   [wGameSubstate], a                                  ; $428a: $ea $a1 $c2
 	jr   jr_03f_429a                                 ; $428d: $18 $0b
 
 jr_03f_428f:
 	call Call_03f_45ab                               ; $428f: $cd $ab $45
-	call Call_03f_44ab                               ; $4292: $cd $ab $44
+	call DisplayKannaMiniGameTitleScreenSpritesWithoutPressA                               ; $4292: $cd $ab $44
 	ld   a, $03                                      ; $4295: $3e $03
 	ld   [wGameSubstate], a                                  ; $4297: $ea $a1 $c2
 
@@ -321,8 +329,8 @@ jr_03f_429a:
 	ld   [wFarCallBank], a                                  ; $42aa: $ea $9a $c2
 	pop  af                                          ; $42ad: $f1
 	call FarCall                                       ; $42ae: $cd $62 $09
-	ld   a, $1e                                      ; $42b1: $3e $1e
-	ld   hl, $6c7c                                   ; $42b3: $21 $7c $6c
+	ld   a, BANK(Palettes_KannaMiniGameTitleScreen)                                     ; $42b1: $3e $1e
+	ld   hl, Palettes_KannaMiniGameTitleScreen                                   ; $42b3: $21 $7c $6c
 	ld   de, wBGPalettes                                   ; $42b6: $11 $de $c2
 	ld   bc, $0080                                   ; $42b9: $01 $80 $00
 	call FarMemCopy                                       ; $42bc: $cd $b2 $09
@@ -437,7 +445,7 @@ jr_03f_4347:
 jr_03f_436a:
 	call ClearOam                                       ; $436a: $cd $d7 $0d
 	call AnimateAllAnimatedSpriteSpecs                                       ; $436d: $cd $d3 $2e
-	call Call_03f_44ab                               ; $4370: $cd $ab $44
+	call DisplayKannaMiniGameTitleScreenSpritesWithoutPressA                               ; $4370: $cd $ab $44
 	ret                                              ; $4373: $c9
 
 
@@ -492,7 +500,7 @@ jr_03f_43ab:
 jr_03f_43b8:
 	call ClearOam                                       ; $43b8: $cd $d7 $0d
 	call AnimateAllAnimatedSpriteSpecs                                       ; $43bb: $cd $d3 $2e
-	call Call_03f_44ab                               ; $43be: $cd $ab $44
+	call DisplayKannaMiniGameTitleScreenSpritesWithoutPressA                               ; $43be: $cd $ab $44
 	ret                                              ; $43c1: $c9
 
 
@@ -505,7 +513,7 @@ jr_03f_43b8:
 
 	call ClearOam                                       ; $43cc: $cd $d7 $0d
 	call AnimateAllAnimatedSpriteSpecs                                       ; $43cf: $cd $d3 $2e
-	call Call_03f_44ab                               ; $43d2: $cd $ab $44
+	call DisplayKannaMiniGameTitleScreenSpritesWithoutPressA                               ; $43d2: $cd $ab $44
 	ld   a, [$c9ee]                                  ; $43d5: $fa $ee $c9
 	call HLequAddrOfAnimSpriteSpecDetails                                       ; $43d8: $cd $76 $30
 	push af                                          ; $43db: $f5
@@ -531,8 +539,8 @@ jr_03f_43f9:
 	ld   a, $40                                      ; $43fd: $3e $40
 	ld   [wNumPaletteColorsToLoadCompDataFor], a                                  ; $43ff: $ea $63 $c3
 	ld   a, $03                                      ; $4402: $3e $03
-	ld   b, $1e                                      ; $4404: $06 $1e
-	ld   hl, $6c7c                                   ; $4406: $21 $7c $6c
+	ld   b, BANK(Palettes_KannaMiniGameTitleScreen)                                     ; $4404: $06 $1e
+	ld   hl, Palettes_KannaMiniGameTitleScreen                                   ; $4406: $21 $7c $6c
 	ld   c, $01                                      ; $4409: $0e $01
 	ld   de, $7000                                   ; $440b: $11 $00 $70
 	call FarLoadPaletteValsFadeToValsAndSetFadeSpeed                                       ; $440e: $cd $48 $07
@@ -604,7 +612,7 @@ jr_03f_448f:
 	ret                                              ; $448f: $c9
 
 
-Call_03f_4490:
+DisplayKannaMiniGameTitleScreenSpritesWithPressA:
 	ld   bc, $4040                                   ; $4490: $01 $40 $40
 	ld   a, $0a                                      ; $4493: $3e $0a
 	ld   [wSpriteGroup], a                                  ; $4495: $ea $1a $c2
@@ -618,7 +626,7 @@ Call_03f_4490:
 	ret                                              ; $44aa: $c9
 
 
-Call_03f_44ab:
+DisplayKannaMiniGameTitleScreenSpritesWithoutPressA:
 	ld   bc, $4040                                   ; $44ab: $01 $40 $40
 	ld   a, $0a                                      ; $44ae: $3e $0a
 	ld   [wSpriteGroup], a                                  ; $44b0: $ea $1a $c2
@@ -644,6 +652,7 @@ Call_03f_44ab:
 	cp   $80                                         ; $44e0: $fe $80
 	jr   c, jr_03f_44f1                              ; $44e2: $38 $0d
 
+; todo: when press A disappears, not when popup box appears
 	ld   bc, $4040                                   ; $44e4: $01 $40 $40
 	ld   a, $0a                                      ; $44e7: $3e $0a
 	ld   [wSpriteGroup], a                                  ; $44e9: $ea $1a $c2
@@ -743,11 +752,11 @@ jr_03f_4573:
 	or   a                                           ; $4576: $b7
 	jr   z, jr_03f_457e                              ; $4577: $28 $05
 
-	call Call_03f_44ab                               ; $4579: $cd $ab $44
+	call DisplayKannaMiniGameTitleScreenSpritesWithoutPressA                               ; $4579: $cd $ab $44
 	jr   jr_03f_4581                                 ; $457c: $18 $03
 
 jr_03f_457e:
-	call Call_03f_4490                               ; $457e: $cd $90 $44
+	call DisplayKannaMiniGameTitleScreenSpritesWithPressA                               ; $457e: $cd $90 $44
 
 jr_03f_4581:
 	ret                                              ; $4581: $c9
@@ -7436,14 +7445,14 @@ SpriteGroupAPointers::
 	dw SpriteGroupA_Idx49h
 	dw $727c
 	dw $7280
-	dw $7284
+	dw SpriteGroupA_Idx4ch
 	dw $72d0
 	dw $72d4
 	dw $72d8
-	dw $72dc
-	dw $72e8
-	dw $7334
-	dw $7368
+	dw SpriteGroupA_Idx50h
+	dw SpriteGroupA_Idx51h
+	dw SpriteGroupA_Idx52h
+	dw SpriteGroupA_Idx53h
 	dw SpriteGroupA_Idx54h
 	dw SpriteGroupA_Idx55h
 	dw SpriteGroupA_Idx56h
@@ -10495,242 +10504,111 @@ SpriteGroupA_Idx49h:
 	ld   [$164e], sp                                 ; $727d: $08 $4e $16
 	db   $10                                         ; $7280: $10
 	ld   [$1650], sp                                 ; $7281: $08 $50 $16
-	ld   [$4408], sp                                 ; $7284: $08 $08 $44
-	inc  b                                           ; $7287: $04
-	db   $fd                                         ; $7288: $fd
-	db   $10                                         ; $7289: $10
-	ld   b, b                                        ; $728a: $40
-	inc  b                                           ; $728b: $04
-	ld   h, $60                                      ; $728c: $26 $60
-	jr   nz, @+$03                                   ; $728e: $20 $01
 
-	jr   @+$40                                       ; $7290: $18 $3e
 
-	ld   e, $02                                      ; $7292: $1e $02
-	jr   @+$38                                       ; $7294: $18 $36
-
-	inc  e                                           ; $7296: $1c
-	ld   [bc], a                                     ; $7297: $02
-	jr   nz, jr_03f_72ab                             ; $7298: $20 $11
-
-jr_03f_729a:
-	ld   a, [de]                                     ; $729a: $1a
-	ld   [bc], a                                     ; $729b: $02
-	jr   @+$0d                                       ; $729c: $18 $0b
-
-	jr   @+$05                                       ; $729e: $18 $03
-
-jr_03f_72a0:
-	ld   e, $03                                      ; $72a0: $1e $03
-	ld   d, $03                                      ; $72a2: $16 $03
-	jr   nz, @-$03                                   ; $72a4: $20 $fb
-
-	inc  d                                           ; $72a6: $14
-	ld   bc, $f320                                   ; $72a7: $01 $20 $f3
-	ld   [de], a                                     ; $72aa: $12
-
-jr_03f_72ab:
-	ld   bc, $4608                                   ; $72ab: $01 $08 $46
-	db   $10                                         ; $72ae: $10
-	ld   bc, $3e08                                   ; $72af: $01 $08 $3e
-	ld   c, $01                                      ; $72b2: $0e $01
-	ld   [$0c36], sp                                 ; $72b4: $08 $36 $0c
-	ld   bc, $2301                                   ; $72b7: $01 $01 $23
-	ld   a, [bc]                                     ; $72ba: $0a
-	nop                                              ; $72bb: $00
-	inc  b                                           ; $72bc: $04
-	inc  c                                           ; $72bd: $0c
-
-jr_03f_72be:
-	ld   [$ea00], sp                                 ; $72be: $08 $00 $ea
-	jr   nz, @+$08                                   ; $72c1: $20 $06
-
-	ld   bc, $18ea                                   ; $72c3: $01 $ea $18
-	inc  b                                           ; $72c6: $04
-	ld   bc, $10ed                                   ; $72c7: $01 $ed $10
-	ld   [bc], a                                     ; $72ca: $02
-	ld   bc, $08f0                                   ; $72cb: $01 $f0 $08
-	nop                                              ; $72ce: $00
-	ld   de, $0810                                   ; $72cf: $11 $10 $08
+; Kanna - always appears
+if def(VWF)
+else
+SpriteGroupA_Idx4ch:
+endc
+	db $08, $08, $44, $04
+	db $fd, $10, $40, $04
+	db $26, $60, $20, $01
+	db $18, $3e, $1e, $02
+	db $18, $36, $1c, $02
+	db $20, $11, $1a, $02
+	db $18, $0b, $18, $03
+	db $1e, $03, $16, $03
+	db $20, $fb, $14, $01
+	db $20, $f3, $12, $01
+	db $08, $46, $10, $01
+	db $08, $3e, $0e, $01
+	db $08, $36, $0c, $01
+	db $01, $23, $0a, $00
+	db $04, $0c, $08, $00
+	db $ea, $20, $06, $01
+	db $ea, $18, $04, $01
+	db $ed, $10, $02, $01
+	db $f0, $08, $00, $11
+	
+	
+	db $10, $08 ; $72d0
 	ld   b, [hl]                                     ; $72d2: $46
 	ld   d, $10                                      ; $72d3: $16 $10
 	ld   [$1648], sp                                 ; $72d5: $08 $48 $16
 	db   $10                                         ; $72d8: $10
 	ld   [$164a], sp                                 ; $72d9: $08 $4a $16
-	ld   b, h                                        ; $72dc: $44
-	ret  nc                                          ; $72dd: $d0
 
-	ld   [hl+], a                                    ; $72de: $22
-	ld   bc, $d840                                   ; $72df: $01 $40 $d8
-	ld   h, $01                                      ; $72e2: $26 $01
-	jr   nc, jr_03f_72be                             ; $72e4: $30 $d8
 
-	inc  h                                           ; $72e6: $24
-	ld   de, $0808                                   ; $72e7: $11 $08 $08
-	ld   b, h                                        ; $72ea: $44
-	inc  b                                           ; $72eb: $04
-	db   $fd                                         ; $72ec: $fd
-	db   $10                                         ; $72ed: $10
-	ld   b, b                                        ; $72ee: $40
-	inc  b                                           ; $72ef: $04
-	ld   h, $60                                      ; $72f0: $26 $60
-	jr   nz, @+$03                                   ; $72f2: $20 $01
+; Kanna MG - when press A disappears
+SpriteGroupA_Idx50h:
+	db $44, $d0, $22, $01
+	db $40, $d8, $26, $01
+	db $30, $d8, $24, $11
+	
+	
+; Kanna MG - always appears
+if def(VWF)
+else
+SpriteGroupA_Idx51h:
+endc
+	db $08, $08, $44, $04
+	db $fd, $10, $40, $04
+	db $26, $60, $20, $01
+	db $18, $3e, $1e, $02
+	db $18, $36, $1c, $02
+	db $20, $11, $1a, $02
+	db $18, $0b, $18, $03
+	db $1e, $03, $16, $03
+	db $20, $fb, $14, $01
+	db $20, $f3, $12, $01
+	db $08, $46, $10, $01
+	db $08, $3e, $0e, $01
+	db $08, $36, $0c, $01
+	db $01, $23, $0a, $00
+	db $04, $0c, $08, $00
+	db $ea, $20, $06, $01
+	db $ea, $18, $04, $01
+	db $ed, $10, $02, $01
+	db $f0, $08, $00, $11
+	
+	
+; Kanna MG - when popup box appears
+; Kanna MG - when press A disappears
+SpriteGroupA_Idx52h:
+	db $48, $00, $42, $04
+	db $48, $60, $3e, $02
+	db $38, $60, $3c, $02
+	db $48, $58, $3a, $02
+	db $38, $58, $38, $02
+	db $48, $50, $36, $02
+	db $38, $50, $34, $02
+	db $40, $48, $32, $02
+	db $50, $37, $30, $05
+	db $48, $2d, $2e, $02
+	db $50, $e0, $2c, $02
+	db $40, $e8, $2a, $02
+	db $40, $e0, $28, $12
 
-	jr   @+$40                                       ; $72f4: $18 $3e
 
-	ld   e, $02                                      ; $72f6: $1e $02
-	jr   @+$38                                       ; $72f8: $18 $36
-
-	inc  e                                           ; $72fa: $1c
-	ld   [bc], a                                     ; $72fb: $02
-	jr   nz, jr_03f_730f                             ; $72fc: $20 $11
-
-	ld   a, [de]                                     ; $72fe: $1a
-	ld   [bc], a                                     ; $72ff: $02
-	jr   @+$0d                                       ; $7300: $18 $0b
-
-	jr   @+$05                                       ; $7302: $18 $03
-
-	ld   e, $03                                      ; $7304: $1e $03
-	ld   d, $03                                      ; $7306: $16 $03
-	jr   nz, @-$03                                   ; $7308: $20 $fb
-
-	inc  d                                           ; $730a: $14
-	ld   bc, $f320                                   ; $730b: $01 $20 $f3
-	ld   [de], a                                     ; $730e: $12
-
-jr_03f_730f:
-	ld   bc, $4608                                   ; $730f: $01 $08 $46
-	db   $10                                         ; $7312: $10
-	ld   bc, $3e08                                   ; $7313: $01 $08 $3e
-	ld   c, $01                                      ; $7316: $0e $01
-	ld   [$0c36], sp                                 ; $7318: $08 $36 $0c
-	ld   bc, $2301                                   ; $731b: $01 $01 $23
-	ld   a, [bc]                                     ; $731e: $0a
-	nop                                              ; $731f: $00
-	inc  b                                           ; $7320: $04
-	inc  c                                           ; $7321: $0c
-	ld   [$ea00], sp                                 ; $7322: $08 $00 $ea
-	jr   nz, @+$08                                   ; $7325: $20 $06
-
-	ld   bc, $18ea                                   ; $7327: $01 $ea $18
-	inc  b                                           ; $732a: $04
-	ld   bc, $10ed                                   ; $732b: $01 $ed $10
-	ld   [bc], a                                     ; $732e: $02
-	ld   bc, $08f0                                   ; $732f: $01 $f0 $08
-	nop                                              ; $7332: $00
-	ld   de, $0048                                   ; $7333: $11 $48 $00
-	ld   b, d                                        ; $7336: $42
-	inc  b                                           ; $7337: $04
-	ld   c, b                                        ; $7338: $48
-	ld   h, b                                        ; $7339: $60
-	ld   a, $02                                      ; $733a: $3e $02
-	jr   c, jr_03f_739e                              ; $733c: $38 $60
-
-	inc  a                                           ; $733e: $3c
-	ld   [bc], a                                     ; $733f: $02
-	ld   c, b                                        ; $7340: $48
-	ld   e, b                                        ; $7341: $58
-	ld   a, [hl-]                                    ; $7342: $3a
-	ld   [bc], a                                     ; $7343: $02
-	jr   c, jr_03f_739e                              ; $7344: $38 $58
-
-	jr   c, jr_03f_734a                              ; $7346: $38 $02
-
-	ld   c, b                                        ; $7348: $48
-	ld   d, b                                        ; $7349: $50
-
-jr_03f_734a:
-	ld   [hl], $02                                   ; $734a: $36 $02
-	jr   c, jr_03f_739e                              ; $734c: $38 $50
-
-	inc  [hl]                                        ; $734e: $34
-	ld   [bc], a                                     ; $734f: $02
-	ld   b, b                                        ; $7350: $40
-	ld   c, b                                        ; $7351: $48
-	ld   [hl-], a                                    ; $7352: $32
-	ld   [bc], a                                     ; $7353: $02
-	ld   d, b                                        ; $7354: $50
-	scf                                              ; $7355: $37
-	jr   nc, jr_03f_735d                             ; $7356: $30 $05
-
-	ld   c, b                                        ; $7358: $48
-	dec  l                                           ; $7359: $2d
-	ld   l, $02                                      ; $735a: $2e $02
-	ld   d, b                                        ; $735c: $50
-
-jr_03f_735d:
-	ldh  [$2c], a                                    ; $735d: $e0 $2c
-	ld   [bc], a                                     ; $735f: $02
-	ld   b, b                                        ; $7360: $40
-	add  sp, $2a                                     ; $7361: $e8 $2a
-	ld   [bc], a                                     ; $7363: $02
-	ld   b, b                                        ; $7364: $40
-	ldh  [$28], a                                    ; $7365: $e0 $28
-	ld   [de], a                                     ; $7367: $12
-	ld   b, b                                        ; $7368: $40
-	ldh  [rHDMA2], a                                 ; $7369: $e0 $52
-	ld   [bc], a                                     ; $736b: $02
-	ld   b, b                                        ; $736c: $40
-	add  sp, $4c                                     ; $736d: $e8 $4c
-	ld   [bc], a                                     ; $736f: $02
-	jr   nc, jr_03f_734a                             ; $7370: $30 $d8
-
-	ld   d, b                                        ; $7372: $50
-	ld   bc, $0048                                   ; $7373: $01 $48 $00
-	ld   c, [hl]                                     ; $7376: $4e
-	inc  b                                           ; $7377: $04
-	ld   b, b                                        ; $7378: $40
-	ret  c                                           ; $7379: $d8
-
-	ld   h, $01                                      ; $737a: $26 $01
-	ld   c, b                                        ; $737c: $48
-	ld   h, b                                        ; $737d: $60
-	ld   a, $02                                      ; $737e: $3e $02
-	jr   c, @+$62                                    ; $7380: $38 $60
-
-	inc  a                                           ; $7382: $3c
-	ld   [bc], a                                     ; $7383: $02
-	ld   c, b                                        ; $7384: $48
-	ld   e, b                                        ; $7385: $58
-	ld   a, [hl-]                                    ; $7386: $3a
-	ld   [bc], a                                     ; $7387: $02
-	jr   c, @+$5a                                    ; $7388: $38 $58
-
-	jr   c, jr_03f_738e                              ; $738a: $38 $02
-
-	ld   c, b                                        ; $738c: $48
-	ld   d, b                                        ; $738d: $50
-
-jr_03f_738e:
-	ld   [hl], $02                                   ; $738e: $36 $02
-	jr   c, @+$52                                    ; $7390: $38 $50
-
-	inc  [hl]                                        ; $7392: $34
-	ld   [bc], a                                     ; $7393: $02
-	ld   b, b                                        ; $7394: $40
-	ld   c, b                                        ; $7395: $48
-	ld   [hl-], a                                    ; $7396: $32
-	ld   [bc], a                                     ; $7397: $02
-	ld   d, b                                        ; $7398: $50
-	scf                                              ; $7399: $37
-	jr   nc, jr_03f_73a1                             ; $739a: $30 $05
-
-	ld   c, b                                        ; $739c: $48
-	dec  l                                           ; $739d: $2d
-
-jr_03f_739e:
-	ld   l, $02                                      ; $739e: $2e $02
-	ld   d, b                                        ; $73a0: $50
-
-jr_03f_73a1:
-	ldh  [$2c], a                                    ; $73a1: $e0 $2c
-	ld   [bc], a                                     ; $73a3: $02
-	ld   b, h                                        ; $73a4: $44
-	ret  nc                                          ; $73a5: $d0
-
-	ld   [hl+], a                                    ; $73a6: $22
-	db $11 
+; Kanna - when press A appears
+SpriteGroupA_Idx53h:
+	db $40, $e0, $52, $02
+	db $40, $e8, $4c, $02
+	db $30, $d8, $50, $01
+	db $48, $00, $4e, $04
+	db $40, $d8, $26, $01
+	db $48, $60, $3e, $02
+	db $38, $60, $3c, $02
+	db $48, $58, $3a, $02
+	db $38, $58, $38, $02
+	db $48, $50, $36, $02
+	db $38, $50, $34, $02
+	db $40, $48, $32, $02
+	db $50, $37, $30, $05
+	db $48, $2d, $2e, $02
+	db $50, $e0, $2c, $02
+	db $44, $d0, $22, $11
 	
 	
 if def(VWF)
@@ -12172,9 +12050,54 @@ SpriteGroupA_Idx43h:
 	db 13*8+7 +$10-$20, 18*8+1 +8-$50, $48, $03 ; 8-wide
 	db 15*8+7 +$10-$20, 12*8+5 +8-$50, $48, $03 ; 8-wide
 	db 15*8+7 +$10-$20, 14*8+4 +8-$50, $4a, $03 ; 5-wide
-	db 15*8+7 +$10-$20, 16*8+2 +8-$50, $48, $03 ; 8-wide
+	;db 15*8+7 +$10-$20, 16*8+2 +8-$50, $48, $03 ; 8-wide
 	db 15*8+7 +$10-$20, 17*8+7 +8-$50, $4a, $03 ; 5-wide
 
 	db $08, $08, $18, $12
+
+
+SpriteGroupA_Idx4ch:
+SpriteGroupA_Idx51h:
+	db $08, $08, $44, $04
+	db $fd, $10, $40, $04
+	db $26, $60, $20, $01
+	db $18, $3e, $1e, $02
+	db $18, $36, $1c, $02
+	db $20, $11, $1a, $02
+	db $18, $0b, $18, $03
+	db $1e, $03, $16, $03
+	db $20, $fb, $14, $01
+	db $20, $f3, $12, $01
+	db $08, $46, $10, $01
+	db $08, $3e, $0e, $01
+	db $08, $36, $0c, $01
+	db $01, $23, $0a, $00
+	db $04, $0c, $08, $00
+	db $ea, $20, $06, $01
+	db $ea, $18, $04, $01
+	db $ed, $10, $02, $01
+
+	db 1*8+1 +$10-$40, 6*8+0 +8-$40, $54, $07
+	db 1*8+1 +$10-$40, 7*8+0 +8-$40, $56, $07
+	db 1*8+1 +$10-$40, 8*8+3 +8-$40, $58, $07
+	db 1*8+1 +$10-$40, 9*8+3 +8-$40, $5a, $07
+	db 1*8+1 +$10-$40, 10*8+3 +8-$40, $5c, $07
+
+	db $f0, $08, $00, $11
+
+
+KannaMiniGameTitleScreenBank1_8800hHook:
+	call EnqueueHDMATransfer
+	rst  WaitUntilVBlankIntHandledIfLCDOn
+
+	M_FarCall LoadKannaMiniGameTitleScreenGfx1
+
+	ret
+
+KannaMiniGameTitleScreenBank0_8000hHook:
+	call RLEXorCopy
+
+	M_FarCall LoadKannaMiniGameTitleScreenGfxSpr
+	ret
 
 endc

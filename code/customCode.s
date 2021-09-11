@@ -1426,4 +1426,35 @@ LoadIrisMiniGameTitleScreenGfx1::
 .dress:
 	INCBIN "en_irisMiniGameTitleScreen.2bpp", 51*$10, $10
 
+
+LoadKannaMiniGameTitleScreenGfx1::
+	ld   bc, .end-.gfx
+	ld   de, $d000
+	ld   hl, .gfx
+	call MemCopy
+
+	ld   c, $81
+	ld   de, $9000
+	ld   a, $03
+	ld   hl, $d000
+	ld   b, 5*20
+	call EnqueueHDMATransfer
+
+	ret
+.gfx:
+	INCBIN "en_kannaMiniGameTitleScreen.2bpp"
+.end:
+
+
+LoadKannaMiniGameTitleScreenGfxSpr::
+	ld   bc, .end-.gfx
+	ld   de, $d000+$540
+	ld   hl, .gfx
+	call MemCopy
+	ret
+
+.gfx:
+	INCBIN "en_kannaMGTitleScreenSpr.2bpp"
+.end:
+
 endc

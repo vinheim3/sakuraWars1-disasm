@@ -8343,7 +8343,7 @@ jr_01e_6c26:
 	ld   e, l                                        ; $6c59: $5d
 	ld   b, e                                        ; $6c5a: $43
 	db   $10                                         ; $6c5b: $10
-	jr   jr_01e_6cc1                                 ; $6c5c: $18 $63
+	db $18, $63
 
 	sub  c                                           ; $6c5e: $91
 	ld   d, h                                        ; $6c5f: $54
@@ -8364,7 +8364,7 @@ jr_01e_6c26:
 jr_01e_6c6e:
 	inc  e                                           ; $6c6e: $1c
 	inc  bc                                          ; $6c6f: $03
-	jr   nz, jr_01e_6c80                             ; $6c70: $20 $0e
+	db $20, $0e
 
 	ld   c, e                                        ; $6c72: $4b
 	stop                                             ; $6c73: $10 $00
@@ -8375,135 +8375,30 @@ jr_01e_6c6e:
 	nop                                              ; $6c79: $00
 	nop                                              ; $6c7a: $00
 	nop                                              ; $6c7b: $00
-	rst  $38                                         ; $6c7c: $ff
-	ld   a, a                                        ; $6c7d: $7f
-	ld   e, a                                        ; $6c7e: $5f
-	ld   [de], a                                     ; $6c7f: $12
 
-jr_01e_6c80:
-	ld   [de], a                                     ; $6c80: $12
-	nop                                              ; $6c81: $00
-	ld   [bc], a                                     ; $6c82: $02
-	nop                                              ; $6c83: $00
-	rst  $38                                         ; $6c84: $ff
-	ld   a, a                                        ; $6c85: $7f
-	sbc  a                                           ; $6c86: $9f
-	daa                                              ; $6c87: $27
-	ret  z                                           ; $6c88: $c8
 
-	nop                                              ; $6c89: $00
-	inc  bc                                          ; $6c8a: $03
-	nop                                              ; $6c8b: $00
-	sbc  a                                           ; $6c8c: $9f
-	daa                                              ; $6c8d: $27
-	ld   e, a                                        ; $6c8e: $5f
-	ld   [de], a                                     ; $6c8f: $12
-	ret  z                                           ; $6c90: $c8
+Palettes_KannaMiniGameTitleScreen::
+	db $ff, $7f, $5f, $12, $12, $00, $02, $00
+	db $ff, $7f, $9f, $27, $c8, $00, $03, $00
+	db $9f, $27, $5f, $12, $c8, $00, $03, $00
+	db $ff, $7f, $5f, $12, $f3, $00, $03, $00
+	db $ff, $7f, $f3, $00, $12, $00, $03, $00
+	db $ff, $7f, $43, $2e, $7f, $38, $03, $00
+	db $9f, $27, $5f, $12, $1f, $00, $03, $00
+	db $ff, $7f, $43, $2e, $12, $00, $03, $00
 
-	nop                                              ; $6c91: $00
-	inc  bc                                          ; $6c92: $03
-	nop                                              ; $6c93: $00
-	rst  $38                                         ; $6c94: $ff
-	ld   a, a                                        ; $6c95: $7f
-	ld   e, a                                        ; $6c96: $5f
-	ld   [de], a                                     ; $6c97: $12
-	di                                               ; $6c98: $f3
-	nop                                              ; $6c99: $00
-	inc  bc                                          ; $6c9a: $03
-	nop                                              ; $6c9b: $00
-	rst  $38                                         ; $6c9c: $ff
-	ld   a, a                                        ; $6c9d: $7f
-	di                                               ; $6c9e: $f3
-	nop                                              ; $6c9f: $00
-	ld   [de], a                                     ; $6ca0: $12
-	nop                                              ; $6ca1: $00
-	inc  bc                                          ; $6ca2: $03
-	nop                                              ; $6ca3: $00
-	rst  $38                                         ; $6ca4: $ff
-	ld   a, a                                        ; $6ca5: $7f
-	ld   b, e                                        ; $6ca6: $43
-	ld   l, $7f                                      ; $6ca7: $2e $7f
-	jr   c, jr_01e_6cae                              ; $6ca9: $38 $03
-
-	nop                                              ; $6cab: $00
-	sbc  a                                           ; $6cac: $9f
-	daa                                              ; $6cad: $27
-
-jr_01e_6cae:
-	ld   e, a                                        ; $6cae: $5f
-	ld   [de], a                                     ; $6caf: $12
-	rra                                              ; $6cb0: $1f
-	nop                                              ; $6cb1: $00
-	inc  bc                                          ; $6cb2: $03
-	nop                                              ; $6cb3: $00
-	rst  $38                                         ; $6cb4: $ff
-	ld   a, a                                        ; $6cb5: $7f
-	ld   b, e                                        ; $6cb6: $43
-	ld   l, $12                                      ; $6cb7: $2e $12
-	nop                                              ; $6cb9: $00
-	inc  bc                                          ; $6cba: $03
-	nop                                              ; $6cbb: $00
-	rst  $38                                         ; $6cbc: $ff
-	ld   a, a                                        ; $6cbd: $7f
-	ld   d, a                                        ; $6cbe: $57
-	ld   a, l                                        ; $6cbf: $7d
-	ld   c, a                                        ; $6cc0: $4f
-
-jr_01e_6cc1:
-	ld   e, h                                        ; $6cc1: $5c
-	nop                                              ; $6cc2: $00
-	nop                                              ; $6cc3: $00
-	rst  $38                                         ; $6cc4: $ff
-	ld   a, a                                        ; $6cc5: $7f
-	inc  d                                           ; $6cc6: $14
-	ld   a, a                                        ; $6cc7: $7f
-	dec  l                                           ; $6cc8: $2d
-	halt                                             ; $6cc9: $76
-	nop                                              ; $6cca: $00
-	nop                                              ; $6ccb: $00
-	rst  $38                                         ; $6ccc: $ff
-	ld   a, a                                        ; $6ccd: $7f
-	rst  $38                                         ; $6cce: $ff
-	ld   a, a                                        ; $6ccf: $7f
-	jp   c, $7016                                    ; $6cd0: $da $16 $70
-
-	ld   bc, $7fff                                   ; $6cd3: $01 $ff $7f
-	rst  $38                                         ; $6cd6: $ff
-	ld   a, a                                        ; $6cd7: $7f
-	dec  l                                           ; $6cd8: $2d
-	halt                                             ; $6cd9: $76
-	nop                                              ; $6cda: $00
-	nop                                              ; $6cdb: $00
-	rst  $38                                         ; $6cdc: $ff
-	ld   a, a                                        ; $6cdd: $7f
-	rst  $38                                         ; $6cde: $ff
-	ld   a, a                                        ; $6cdf: $7f
-	ld   e, a                                        ; $6ce0: $5f
-	ld   [de], a                                     ; $6ce1: $12
-	di                                               ; $6ce2: $f3
-	nop                                              ; $6ce3: $00
-	rst  $38                                         ; $6ce4: $ff
-	ld   a, a                                        ; $6ce5: $7f
-	sbc  a                                           ; $6ce6: $9f
-	daa                                              ; $6ce7: $27
-	ld   [hl], b                                     ; $6ce8: $70
-	ld   bc, $0000                                   ; $6ce9: $01 $00 $00
-	rst  $38                                         ; $6cec: $ff
-	ld   a, a                                        ; $6ced: $7f
-	cp   a                                           ; $6cee: $bf
-	inc  bc                                          ; $6cef: $03
-	rra                                              ; $6cf0: $1f
-	nop                                              ; $6cf1: $00
-	inc  bc                                          ; $6cf2: $03
-	nop                                              ; $6cf3: $00
-	rst  $38                                         ; $6cf4: $ff
-	ld   a, a                                        ; $6cf5: $7f
-	rst  $38                                         ; $6cf6: $ff
-	ld   a, a                                        ; $6cf7: $7f
-	rst  $38                                         ; $6cf8: $ff
-	ld   a, a                                        ; $6cf9: $7f
-	nop                                              ; $6cfa: $00
-	nop                                              ; $6cfb: $00
+	db $ff, $7f, $57, $7d, $4f, $5c, $00, $00
+	db $ff, $7f, $14, $7f, $2d, $76, $00, $00
+	db $ff, $7f, $ff, $7f, $da, $16, $70, $01
+	db $ff, $7f, $ff, $7f, $2d, $76, $00, $00
+	db $ff, $7f, $ff, $7f, $5f, $12, $f3, $00
+	db $ff, $7f, $9f, $27, $70, $01, $00, $00
+	db $ff, $7f, $bf, $03, $1f, $00, $03, $00
+if def(VWF)
+	db $ff, $7f, $7f, $38, $ff, $7f, $00, $00
+else
+	db $ff, $7f, $ff, $7f, $ff, $7f, $00, $00
+endc
 
 
 Palettes_SumireMiniGameTitleScreen::

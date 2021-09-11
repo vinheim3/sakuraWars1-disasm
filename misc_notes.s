@@ -23,6 +23,8 @@
 ; rgbgfx -o en_mariaMiniGameTitleScreen.2bpp en_mariaMiniGameTitleScreen.png
 ; rgbgfx -o en_irisMiniGameTitleScreen.2bpp en_irisMiniGameTitleScreen.png
 ; rgbgfx -o en_irisMGTitleScreenSpr.2bpp -h en_irisMGTitleScreenSpr.png
+; rgbgfx -o en_kannaMiniGameTitleScreen.2bpp en_kannaMiniGameTitleScreen.png
+; rgbgfx -o en_kannaMGTitleScreenSpr.2bpp -h en_kannaMGTitleScreenSpr.png
 ; tools/gfx.py 1bpp newLetters.png --from=png --interleave
 
 ; empty banks
@@ -35,6 +37,7 @@
 
 ; IMPORTANT
 ; When adding new characters, add map+width in scriptExtract, and width in getCharWidth
+; TODO: optimize kanna's title screen tile usage
 
 
 ; tools/instantText.py battle Table_24_71b0
