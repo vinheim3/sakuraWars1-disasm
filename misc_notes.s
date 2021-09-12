@@ -27,6 +27,12 @@
 ; rgbgfx -o en_kannaMGTitleScreenSpr.2bpp -h en_kannaMGTitleScreenSpr.png
 ; rgbgfx -o en_kohranMiniGameTitleScreen.2bpp en_kohranMiniGameTitleScreen.png
 ; rgbgfx -o en_kohranMGTitleScreenSpr.2bpp -h en_kohranMGTitleScreenSpr.png
+; rgbgfx -o en_sakuraMGHelpScreen.2bpp -u -T en_sakuraMGHelpScreen.png
+; rgbgfx -o en_sumireMGHelpScreen.2bpp -u -T en_sumireMGHelpScreen.png
+; rgbgfx -o en_mariaMGHelpScreen.2bpp -u -T en_mariaMGHelpScreen.png
+; rgbgfx -o en_irisMGHelpScreen.2bpp -u -T en_irisMGHelpScreen.png
+; rgbgfx -o en_kohranMGHelpScreen.2bpp -u -T en_kohranMGHelpScreen.png
+; rgbgfx -o en_kannaMGHelpScreen.2bpp -u -T en_kannaMGHelpScreen.png
 ; tools/gfx.py 1bpp newLetters.png --from=png --interleave
 
 ; empty banks

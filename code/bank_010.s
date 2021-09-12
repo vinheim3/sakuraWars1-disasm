@@ -36,7 +36,11 @@ KannaMiniGameHelpScreenSubstate0:
 	ld   a, $1e                                      ; $402f: $3e $1e
 	ld   hl, $d000                                   ; $4031: $21 $00 $d0
 	ld   de, $4c0c                                   ; $4034: $11 $0c $4c
+if def(VWF)
+	call KannaMiniGameHelpScreenTileAttrHook
+else
 	call RLEXorCopy                                       ; $4037: $cd $d2 $09
+endc
 
 ;
 	ld   c, $81                                      ; $403a: $0e $81
@@ -51,7 +55,11 @@ KannaMiniGameHelpScreenSubstate0:
 	ld   a, $1e                                      ; $404a: $3e $1e
 	ld   hl, $d000                                   ; $404c: $21 $00 $d0
 	ld   de, $449c                                   ; $404f: $11 $9c $44
+if def(VWF)
+	call KannaMiniGameHelpScreenTileMapHook
+else
 	call RLEXorCopy                                       ; $4052: $cd $d2 $09
+endc
 
 ;
 	ld   c, $80                                      ; $4055: $0e $80
@@ -66,7 +74,11 @@ KannaMiniGameHelpScreenSubstate0:
 	ld   a, $1a                                      ; $4065: $3e $1a
 	ld   hl, $d000                                   ; $4067: $21 $00 $d0
 	ld   de, $5728                                   ; $406a: $11 $28 $57
+if def(VWF)
+	call KannaMiniGameHelpScreenTileDataHook
+else
 	call RLEXorCopy                                       ; $406d: $cd $d2 $09
+endc
 
 ;
 	ld   c, $80                                      ; $4070: $0e $80
@@ -8408,10 +8420,12 @@ SetSumireMiniGameTitleScreenState::
 GameState22_IrisMiniGameHelpScreen::
 	ld   a, [wGameSubstate]                                  ; $7574: $fa $a1 $c2
 	rst  JumpTable                                         ; $7577: $df
-	dw $757e
+	dw IrisMiniGameHelpScreenSubstate0
 	dw $7682
 	dw $7693
 
+
+IrisMiniGameHelpScreenSubstate0:
 	ld   a, $ff                                      ; $757e: $3e $ff
 	ld   [wInGameInputsEnabled], a                                  ; $7580: $ea $0e $c2
 	ld   a, $0c                                      ; $7583: $3e $0c
@@ -8432,7 +8446,11 @@ GameState22_IrisMiniGameHelpScreen::
 	ld   a, $19                                      ; $75a3: $3e $19
 	ld   hl, $d000                                   ; $75a5: $21 $00 $d0
 	ld   de, $6bd7                                   ; $75a8: $11 $d7 $6b
+if def(VWF)
+	call IrisMiniGameHelpScreenTileDataHook
+else
 	call RLEXorCopy                                       ; $75ab: $cd $d2 $09
+endc
 
 ;
 	ld   c, $80                                      ; $75ae: $0e $80
@@ -8461,16 +8479,24 @@ GameState22_IrisMiniGameHelpScreen::
 	call EnqueueHDMATransfer                                       ; $75da: $cd $7c $02
 	rst  WaitUntilVBlankIntHandledIfLCDOn                                         ; $75dd: $cf
 
-;
+; Tile attr, then map
 	ld   a, $1d                                      ; $75de: $3e $1d
 	ld   de, $50e8                                   ; $75e0: $11 $e8 $50
 	ld   hl, $d000                                   ; $75e3: $21 $00 $d0
 	ld   bc, $1412                                   ; $75e6: $01 $12 $14
+if def(VWF)
+	call IrisMiniGameHelpScreenTileAttrHook
+else
 	call FarCopyLayout                                       ; $75e9: $cd $2c $0b
+endc
 
 	ld   a, $1d                                      ; $75ec: $3e $1d
 	ld   hl, $d400                                   ; $75ee: $21 $00 $d4
+if def(VWF)
+	call IrisMiniGameHelpScreenTileMapHook
+else
 	call FarCopyLayout                                       ; $75f1: $cd $2c $0b
+endc
 
 ;
 	ld   c, $81                                      ; $75f4: $0e $81
@@ -9456,5 +9482,71 @@ SumireMiniGameTitleScreenBank1_9000hHook:
 
 	M_FarCall LoadSumireMiniGameTitleScreenGfx1
 	ret
+
+
+IrisMiniGameHelpScreenTileAttrHook:
+	call FarCopyLayout
+
+	M_FarCall AlterMiniGameHelpScreenAttrs
+	ret
+
+
+IrisMiniGameHelpScreenTileMapHook:
+	;call RLEXorCopy
+
+	ld   a, BANK(TileMap_IrisMiniGameHelpScreen)
+	ldbc $14, $12
+	ld   de, TileMap_IrisMiniGameHelpScreen
+	ld   hl, $d400
+	call FarCopyLayout
+	ret
+
+
+IrisMiniGameHelpScreenTileDataHook:
+	;call RLEXorCopy
+
+	ld   a, BANK(Gfx_IrisMiniGameHelpScreen)
+	ld   bc, Gfx_IrisMiniGameHelpScreen.end-Gfx_IrisMiniGameHelpScreen
+	ld   de, $d000
+	ld   hl, Gfx_IrisMiniGameHelpScreen
+	call FarMemCopy
+	ret
+
+
+KannaMiniGameHelpScreenTileAttrHook:
+	call RLEXorCopy
+
+	ld   a, $07
+	ld   [$d000+$e6], a
+	ld   [$d000+$ed], a
+	ld   [$d000+$14a], a
+	ld   [$d000+$14b], a
+	ld   [$d000+$14c], a
+
+	M_FarCall AlterMiniGameHelpScreenAttrs
+	ret
+
+
+KannaMiniGameHelpScreenTileMapHook:
+	;call RLEXorCopy
+
+	ld   a, BANK(TileMap_KannaMiniGameHelpScreen)
+	ldbc $14, $12
+	ld   de, TileMap_KannaMiniGameHelpScreen
+	ld   hl, $d000
+	call FarCopyLayout
+	ret
+
+
+KannaMiniGameHelpScreenTileDataHook:
+	;call RLEXorCopy
+
+	ld   a, BANK(Gfx_KannaMiniGameHelpScreen)
+	ld   bc, Gfx_KannaMiniGameHelpScreen.end-Gfx_KannaMiniGameHelpScreen
+	ld   de, $d000
+	ld   hl, Gfx_KannaMiniGameHelpScreen
+	call FarMemCopy
+	ret
+
 
 endc

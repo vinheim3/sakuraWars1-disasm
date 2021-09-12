@@ -2434,7 +2434,11 @@ SakuraMiniGameMainSubstate0:
 	ld   a, $15                                      ; $4e0a: $3e $15
 	ld   hl, $d000                                   ; $4e0c: $21 $00 $d0
 	ld   de, $7f25                                   ; $4e0f: $11 $25 $7f
+if def(VWF)
+	call SakuraMiniGameHelpScreenTileAttrHook
+else
 	call RLEXorCopy                                       ; $4e12: $cd $d2 $09
+endc
 
 ;
 	ld   c, $81                                      ; $4e15: $0e $81
@@ -2449,7 +2453,11 @@ SakuraMiniGameMainSubstate0:
 	ld   a, $1e                                      ; $4e25: $3e $1e
 	ld   hl, $d000                                   ; $4e27: $21 $00 $d0
 	ld   de, $4604                                   ; $4e2a: $11 $04 $46
+if def(VWF)
+	call SakuraMiniGameHelpScreenTileMapHook
+else
 	call RLEXorCopy                                       ; $4e2d: $cd $d2 $09
+endc
 
 ;
 	ld   c, $80                                      ; $4e30: $0e $80
@@ -2464,7 +2472,11 @@ SakuraMiniGameMainSubstate0:
 	ld   a, $1a                                      ; $4e40: $3e $1a
 	ld   hl, $d000                                   ; $4e42: $21 $00 $d0
 	ld   de, $6257                                   ; $4e45: $11 $57 $62
+if def(VWF)
+	call SakuraMiniGameHelpScreenTileDataHook
+else
 	call RLEXorCopy                                       ; $4e48: $cd $d2 $09
+endc
 
 ;
 	ld   c, $80                                      ; $4e4b: $0e $80
@@ -2480,7 +2492,11 @@ SakuraMiniGameMainSubstate0:
 	ld   de, $8c00                                   ; $4e5d: $11 $00 $8c
 	ld   a, $03                                      ; $4e60: $3e $03
 	ld   hl, $d400                                   ; $4e62: $21 $00 $d4
+if def(VWF)
+	ld   b, $70
+else
 	ld   b, $40                                      ; $4e65: $06 $40
+endc
 	call EnqueueHDMATransfer                                       ; $4e67: $cd $7c $02
 	rst  WaitUntilVBlankIntHandledIfLCDOn                                         ; $4e6a: $cf
 
@@ -4646,7 +4662,11 @@ MariaMiniGameSubstate06:
 	ld   a, $1e                                      ; $5d02: $3e $1e
 	ld   hl, $d000                                   ; $5d04: $21 $00 $d0
 	ld   de, $4d0f                                   ; $5d07: $11 $0f $4d
+if def(VWF)
+	call MariaMiniGameHelpScreenTileAttrHook
+else
 	call RLEXorCopy                                       ; $5d0a: $cd $d2 $09
+endc
 
 ;
 	ld   c, $81                                      ; $5d0d: $0e $81
@@ -4661,7 +4681,11 @@ MariaMiniGameSubstate06:
 	ld   a, $1e                                      ; $5d1d: $3e $1e
 	ld   hl, $d000                                   ; $5d1f: $21 $00 $d0
 	ld   de, $4769                                   ; $5d22: $11 $69 $47
+if def(VWF)
+	call MariaMiniGameHelpScreenTileMapHook
+else
 	call RLEXorCopy                                       ; $5d25: $cd $d2 $09
+endc
 
 ;
 	ld   c, $80                                      ; $5d28: $0e $80
@@ -4676,7 +4700,11 @@ MariaMiniGameSubstate06:
 	ld   a, $19                                      ; $5d38: $3e $19
 	ld   hl, $d000                                   ; $5d3a: $21 $00 $d0
 	ld   de, $5972                                   ; $5d3d: $11 $72 $59
+if def(VWF)
+	call MariaMiniGameHelpScreenTileDataHook
+else
 	call RLEXorCopy                                       ; $5d40: $cd $d2 $09
+endc
 
 ;
 	ld   c, $80                                      ; $5d43: $0e $80
@@ -10461,6 +10489,58 @@ EnMariaMiniGameTitleScreenBank1_8800hHook:
 	call RLEXorCopy
 
 	M_FarCall LoadMariaMiniGameTitleScreenGfx1
+	ret
+
+
+SakuraMiniGameHelpScreenTileAttrHook:
+MariaMiniGameHelpScreenTileAttrHook:
+	call RLEXorCopy
+
+	M_FarCall AlterMiniGameHelpScreenAttrs
+	ret
+
+
+SakuraMiniGameHelpScreenTileMapHook:
+	;call RLEXorCopy
+
+	ld   a, BANK(TileMap_SakuraMiniGameHelpScreen)
+	ldbc $14, $12
+	ld   de, TileMap_SakuraMiniGameHelpScreen
+	ld   hl, $d000
+	call FarCopyLayout
+	ret
+
+
+SakuraMiniGameHelpScreenTileDataHook:
+	;call RLEXorCopy
+
+	ld   a, BANK(Gfx_SakuraMiniGameHelpScreen)
+	ld   bc, Gfx_SakuraMiniGameHelpScreen.end-Gfx_SakuraMiniGameHelpScreen
+	ld   de, $d000
+	ld   hl, Gfx_SakuraMiniGameHelpScreen
+	call FarMemCopy
+	ret
+
+
+MariaMiniGameHelpScreenTileMapHook:
+	;call RLEXorCopy
+
+	ld   a, BANK(TileMap_MariaMiniGameHelpScreen)
+	ldbc $14, $12
+	ld   de, TileMap_MariaMiniGameHelpScreen
+	ld   hl, $d000
+	call FarCopyLayout
+	ret
+
+
+MariaMiniGameHelpScreenTileDataHook:
+	;call RLEXorCopy
+
+	ld   a, BANK(Gfx_MariaMiniGameHelpScreen)
+	ld   bc, Gfx_MariaMiniGameHelpScreen.end-Gfx_MariaMiniGameHelpScreen
+	ld   de, $d000
+	ld   hl, Gfx_MariaMiniGameHelpScreen
+	call FarMemCopy
 	ret
 
 endc
