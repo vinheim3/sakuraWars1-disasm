@@ -1039,4 +1039,121 @@ Gfx_SumireMiniGameMainSpr::
 	INCBIN "en_sumireMiniGameMainSpr.2bpp"
 .end::
 
+
+Gfx_MariaMiniGameMain::
+	INCBIN "en_mariaMiniGameMain.2bpp"
+.end::
+
+
+TileMap_EnMariaMiniGameMain::
+	db $80, $81, $82, $83
+	db $84, $85, $86, $87
+	db $88, $89, $8a, $8b
+
+
+LoadIrisMiniGameMainGfx1::
+	ld   bc, $80
+	ld   de, $8a60
+	ld   hl, .row1
+	call MemCopy
+
+	ld   bc, $80
+	ld   de, $8ae0
+	ld   hl, .row2
+	call MemCopy
+
+	ld   bc, $80
+	ld   de, $8b60
+	ld   hl, .row3
+	call MemCopy
+
+	ld   bc, $80
+	ld   de, $8be0
+	ld   hl, .row4
+	call MemCopy
+
+	ld   bc, $80
+	ld   de, $8c60
+	ld   hl, .row5
+	call MemCopy
+
+	ld   bc, $80
+	ld   de, $8ce0
+	ld   hl, .row6
+	call MemCopy
+
+	ld   bc, $b0
+	ld   de, $8d60
+	ld   hl, .row7
+	call MemCopy
+
+	ld   bc, $b0
+	ld   de, $8e10
+	ld   hl, .row8
+	call MemCopy
+
+	ld   bc, $b0
+	ld   de, $8ec0
+	ld   hl, .row9
+	call MemCopy
+
+	ld   bc, $30
+	ld   de, $88a0
+	ld   hl, .score
+	call MemCopy
+
+	ld   bc, $30
+	ld   de, $8830
+	ld   hl, .timer
+	call MemCopy
+
+	ret
+
+.row1:
+	INCBIN "en_irisMiniGameMain.2bpp", 0, $80
+.row2:
+	INCBIN "en_irisMiniGameMain.2bpp", 11*$10, $80
+.row3:
+	INCBIN "en_irisMiniGameMain.2bpp", 22*$10, $80
+.row4:
+	INCBIN "en_irisMiniGameMain.2bpp", 33*$10, $80
+.row5:
+	INCBIN "en_irisMiniGameMain.2bpp", 44*$10, $80
+.row6:
+	INCBIN "en_irisMiniGameMain.2bpp", 55*$10, $80
+.row7:
+	INCBIN "en_irisMiniGameMain.2bpp", 66*$10, $b0
+.row8:
+	INCBIN "en_irisMiniGameMain.2bpp", 77*$10, $b0
+.row9:
+	INCBIN "en_irisMiniGameMain.2bpp", 88*$10, $b0
+
+.score:
+	INCBIN "en_irisMiniGameMain.2bpp", 8*$10, $30
+.timer:
+	INCBIN "en_irisMiniGameMain.2bpp", (11+8)*$10, $30
+
+
+IrisMiniGameMainLayout1::
+	db $a6, $a7, $a8, $a9, $aa, $ab, $ac, $ad
+	db $ae, $af, $b0, $b1, $b2, $b3, $b4, $b5
+	db $b6, $b7, $b8, $b9, $ba, $bb, $bc, $bd
+
+
+IrisMiniGameMainLayout2::
+	db $be, $bf, $c0, $c1, $c2, $c3, $c4, $c5
+	db $c6, $c7, $c8, $c9, $ca, $cb, $cc, $cd
+	db $ce, $cf, $d0, $d1, $d2, $d3, $d4, $d5
+
+
+IrisMiniGameMainLayout3::
+	db $d6, $d7, $d8, $d9, $da, $db, $dc, $dd, $de, $df, $e0
+	db $e1, $e2, $e3, $e4, $e5, $e6, $e7, $e8, $e9, $ea, $eb
+	db $ec, $ed, $ee, $ef, $f0, $f1, $f2, $f3, $f4, $f5, $f6
+
+
+IrisMiniGameMainLayout4::
+	db $4c, $e0, $e0, $4c, $4c
+	db $4c, $f0, $f0, $4f, $4c
+
 endc

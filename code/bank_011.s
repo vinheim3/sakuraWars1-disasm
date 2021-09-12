@@ -4814,25 +4814,34 @@ MariaMiniGameSubstate09:
 	ld   a, $43                                      ; $5e18: $3e $43
 	ld   [wLCDC], a                                  ; $5e1a: $ea $03 $c2
 
-;
 	ld   a, $01                                      ; $5e1d: $3e $01
 	ldh  [rVBK], a                                   ; $5e1f: $e0 $4f
+
+; Load tile attr
 	ld   a, $1d                                      ; $5e21: $3e $1d
 	ld   hl, $9800                                   ; $5e23: $21 $00 $98
 	ld   de, $6f7d                                   ; $5e26: $11 $7d $6f
+if def(VWF)
+	call MariaMiniGameMainTileAttrHook
+else
 	call RLEXorCopy                                       ; $5e29: $cd $d2 $09
+endc
 
-;
+; Load bank 1 OBJ tile data
 	ld   a, $17                                      ; $5e2c: $3e $17
 	ld   hl, $8000                                   ; $5e2e: $21 $00 $80
 	ld   de, $7b8e                                   ; $5e31: $11 $8e $7b
 	call RLEXorCopy                                       ; $5e34: $cd $d2 $09
 
-;
+; Load bank 1 BG tile data
 	ld   a, $18                                      ; $5e37: $3e $18
 	ld   hl, $8800                                   ; $5e39: $21 $00 $88
 	ld   de, $5b56                                   ; $5e3c: $11 $56 $5b
+if def(VWF)
+	call MariaMiniGameMainBank0_8800hHook
+else
 	call RLEXorCopy                                       ; $5e3f: $cd $d2 $09
+endc
 
 ;
 	ld   hl, $9c00                                   ; $5e42: $21 $00 $9c
@@ -4841,11 +4850,15 @@ MariaMiniGameSubstate09:
 	xor  a                                           ; $5e4b: $af
 	ldh  [rVBK], a                                   ; $5e4c: $e0 $4f
 
-;
+; Load tile map
 	ld   a, $1d                                      ; $5e4e: $3e $1d
 	ld   hl, $9800                                   ; $5e50: $21 $00 $98
 	ld   de, $4000                                   ; $5e53: $11 $00 $40
+if def(VWF)
+	call MariaMiniGameMainTileMapHook
+else
 	call RLEXorCopy                                       ; $5e56: $cd $d2 $09
+endc
 
 ;
 	ld   a, $14                                      ; $5e59: $3e $14
@@ -10541,6 +10554,44 @@ MariaMiniGameHelpScreenTileDataHook:
 	ld   de, $d000
 	ld   hl, Gfx_MariaMiniGameHelpScreen
 	call FarMemCopy
+	ret
+	
+MariaMiniGameMainBank0_8800hHook:
+	call RLEXorCopy
+
+	ld   a, BANK(Gfx_MariaMiniGameMain)
+	ld   bc, Gfx_MariaMiniGameMain.end-Gfx_MariaMiniGameMain
+	ld   de, $8800
+	ld   hl, Gfx_MariaMiniGameMain
+	call FarMemCopy
+	ret
+
+
+MariaMiniGameMainTileMapHook:
+	call RLEXorCopy
+	
+	ld   a, BANK(TileMap_EnMariaMiniGameMain)
+	ldbc $04, $03
+	ld   de, TileMap_EnMariaMiniGameMain
+	ld   hl, $99ec
+	call FarCopyLayout
+
+	ld   a, BANK(TileMap_EnMariaMiniGameMain)
+	ldbc $04, $03
+	ld   de, TileMap_EnMariaMiniGameMain
+	ld   hl, $9a46
+	call FarCopyLayout
+	ret
+
+
+MariaMiniGameMainTileAttrHook:
+	call RLEXorCopy
+
+	ld   a, $0d
+	ld   [$99ed], a
+	ld   [$99ee], a
+	ld   [$9a47], a
+	ld   [$9a48], a
 	ret
 
 endc

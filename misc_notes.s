@@ -34,6 +34,8 @@
 ; rgbgfx -o en_kohranMGHelpScreen.2bpp -u -T en_kohranMGHelpScreen.png
 ; rgbgfx -o en_kannaMGHelpScreen.2bpp -u -T en_kannaMGHelpScreen.png
 ; rgbgfx -o en_sumireMiniGameMainSpr.2bpp -h en_sumireMiniGameMainSpr.png
+; rgbgfx -o en_mariaMiniGameMain.2bpp en_mariaMiniGameMain.png
+; rgbgfx -o en_irisMiniGameMain.2bpp en_irisMiniGameMain.png
 ; tools/gfx.py 1bpp newLetters.png --from=png --interleave
 
 ; empty banks

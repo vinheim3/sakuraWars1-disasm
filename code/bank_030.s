@@ -4101,23 +4101,36 @@ IrisMiniGameMainSubstate0:
 	ld   a, $33                                      ; $56d1: $3e $33
 	ld   hl, $8000                                   ; $56d3: $21 $00 $80
 	ld   de, $6948                                   ; $56d6: $11 $48 $69
+if def(VWF)
+	call IrisMiniGameMainBank1_8000hHook
+else
 	call RLEXorCopy                                       ; $56d9: $cd $d2 $09
+endc
 
 ;
 	ld   a, $01                                      ; $56dc: $3e $01
 	ldh  [rVBK], a                                   ; $56de: $e0 $4f
+
 	ld   hl, $9800                                   ; $56e0: $21 $00 $98
 	ld   a, $34                                      ; $56e3: $3e $34
 	ld   de, $5982                                   ; $56e5: $11 $82 $59
 	ld   bc, $141b                                   ; $56e8: $01 $1b $14
+if def(VWF)
+	call IrisMiniGameMainTileAttrHook
+else
 	call FarCopyLayout                                       ; $56eb: $cd $2c $0b
+endc
 
 ;
 	xor  a                                           ; $56ee: $af
 	ldh  [rVBK], a                                   ; $56ef: $e0 $4f
 	ld   hl, $9800                                   ; $56f1: $21 $00 $98
 	ld   a, $34                                      ; $56f4: $3e $34
+if def(VWF)
+	call IrisMiniGameMainTileMapHook
+else
 	call FarCopyLayout                                       ; $56f6: $cd $2c $0b
+endc
 
 ;
 	ld   a, [wWramBank]                                  ; $56f9: $fa $93 $c2
@@ -5953,7 +5966,11 @@ Call_030_60c1:
 	ld   hl, $d003                                   ; $60d8: $21 $03 $d0
 	call Call_030_60fd                               ; $60db: $cd $fd $60
 	ld   a, [$c722]                                  ; $60de: $fa $22 $c7
+if def(VWF)
+	ld   hl, $d00e
+else
 	ld   hl, $d00f                                   ; $60e1: $21 $0f $d0
+endc
 	call Call_030_6111                               ; $60e4: $cd $11 $61
 	pop  af                                          ; $60e7: $f1
 	ld   [wWramBank], a                                  ; $60e8: $ea $93 $c2
@@ -11257,3 +11274,74 @@ jr_030_7e62:
 	sub  b                                           ; $7e64: $90
 	inc  c                                           ; $7e65: $0c
 	jr   jr_030_7e62                                 ; $7e66: $18 $fa
+
+
+if def(VWF)
+
+IrisMiniGameMainBank1_8000hHook:
+	call RLEXorCopy
+
+	M_FarCall LoadIrisMiniGameMainGfx1
+	ret
+
+
+IrisMiniGameMainTileMapHook:
+	call FarCopyLayout
+
+	ld   a, BANK(IrisMiniGameMainLayout1)
+	ldbc $08, $03
+	ld   de, IrisMiniGameMainLayout1
+	ld   hl, $9a46
+	call FarCopyLayout
+
+	ld   a, BANK(IrisMiniGameMainLayout2)
+	ldbc $08, $03
+	ld   de, IrisMiniGameMainLayout2
+	ld   hl, $9aa6
+	call FarCopyLayout
+
+	ld   a, BANK(IrisMiniGameMainLayout3)
+	ldbc $0b, $03
+	ld   de, IrisMiniGameMainLayout3
+	ld   hl, $9b06
+	call FarCopyLayout
+
+	ld   a, BANK(IrisMiniGameMainLayout4)
+	ldbc $05, $02
+	ld   de, IrisMiniGameMainLayout4
+	ld   hl, $99ed
+	call FarCopyLayout
+	ret
+
+
+IrisMiniGameMainTileAttrHook:
+	call FarCopyLayout
+
+	ld   a, $88
+	ld   [$9a46], a
+	ld   [$9a66], a
+	ld   [$9a86], a
+	ld   [$9a4d], a
+	ld   [$9a6d], a
+	ld   [$9a8d], a
+	ld   [$9b10], a
+	ld   [$9b30], a
+	ld   [$9b50], a
+	ld   [$9b0e], a
+	ld   [$9b0f], a
+	ld   [$9b2e], a
+	ld   [$9b2f], a
+	ld   [$9b4e], a
+	ld   [$9b4f], a
+
+	ld   a, $03
+	ld   [$99ee], a
+	ld   [$9a0e], a
+
+	ld   a, $0b
+	ld   [$99f0], a
+	ld   [$9a10], a
+
+	ret
+
+endc
