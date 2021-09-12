@@ -554,26 +554,6 @@ class ScriptExtractor:
                 elif param == 'r':
                     offset += 2
                     totalBytes += 2
-
-                    if self.scriptNum == 0x2e0:
-                        if details['ref'] == 0x7e4:
-                            param_comps.append(".ref_7ec-8")
-                            continue
-                        if details['ref'] == 0x938:
-                            param_comps.append(".ref_93c-4")
-                            continue
-                        if details['ref'] == 0xa75:
-                            param_comps.append(".ref_a79-4")
-                            continue
-                        if details['ref'] == 0xba4:
-                            param_comps.append(".ref_ba8-4")
-                            continue
-                        if details['ref'] == 0xce3:
-                            param_comps.append(".ref_ce7-4")
-                            continue
-                        if details['ref'] == 0xe2b:
-                            param_comps.append(".ref_e2f-4")
-                            continue
                     param_comps.append(f".ref_{details['ref']:x}")
                 elif param == 'R':
                     # exit early
@@ -660,8 +640,14 @@ class ScriptExtractor:
 
     def run(self):
         self.genRefs(getRefs=True)
-        self.instructions = {}
         self.offset = 0
+        self.instructions = {}
+        
+        if self.scriptNum == 0x2e0:
+            self.genRefs(getRefs=True)
+            self.offset = 0
+            self.instructions = {}
+
         self.genRefs(getRefs=False)
         return self.genComps()
 

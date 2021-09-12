@@ -328,12 +328,18 @@ SumireMiniGameMainSubstate3:
 	ld   bc, $0400                                   ; $41ff: $01 $00 $04
 	call FarMemCopy                                       ; $4202: $cd $b2 $09
 
-;
+; Load bank 1 tile data
 	ld   a, $25                                      ; $4205: $3e $25
 	ld   de, $8000                                   ; $4207: $11 $00 $80
 	ld   hl, $5800                                   ; $420a: $21 $00 $58
 	ld   bc, $1800                                   ; $420d: $01 $00 $18
+if def(VWF)
+	call SumireMiniGameMainBank1_8000hHook
+else
 	call FarMemCopy                                       ; $4210: $cd $b2 $09
+endc
+
+;
 	xor  a                                           ; $4213: $af
 	ldh  [rVBK], a                                   ; $4214: $e0 $4f
 	ld   a, [$ca71]                                  ; $4216: $fa $71 $ca
@@ -361,12 +367,18 @@ SumireMiniGameMainSubstate3:
 	ld   bc, $0400                                   ; $4243: $01 $00 $04
 	call FarMemCopy                                       ; $4246: $cd $b2 $09
 
-;
+; Load bank 0 tile data
 	ld   a, $25                                      ; $4249: $3e $25
 	ld   de, $8000                                   ; $424b: $11 $00 $80
 	ld   hl, $4000                                   ; $424e: $21 $00 $40
 	ld   bc, $1800                                   ; $4251: $01 $00 $18
+if def(VWF)
+	call SumireMiniGameMainBank0_8000hHook
+else
 	call FarMemCopy                                       ; $4254: $cd $b2 $09
+endc
+
+;
 	call Call_020_433c                               ; $4257: $cd $3c $43
 	call Call_020_57b9                               ; $425a: $cd $b9 $57
 	ld   a, $f4                                      ; $425d: $3e $f4
@@ -10625,6 +10637,28 @@ KohranMiniGameHelpScreenTileDataHook:
 	ld   bc, Gfx_KohranMiniGameHelpScreen.end-Gfx_KohranMiniGameHelpScreen
 	ld   de, $d000
 	ld   hl, Gfx_KohranMiniGameHelpScreen
+	call FarMemCopy
+	ret
+
+
+SumireMiniGameMainBank0_8000hHook:
+	call FarMemCopy
+
+	ld   a, BANK(Gfx_SumireMiniGameMainSpr)
+	ld   bc, $80
+	ld   de, $8d40
+	ld   hl, Gfx_SumireMiniGameMainSpr
+	call FarMemCopy
+	ret
+
+
+SumireMiniGameMainBank1_8000hHook:
+	call FarMemCopy
+
+	ld   a, BANK(Gfx_SumireMiniGameMainSpr)
+	ld   bc, Gfx_SumireMiniGameMainSpr.end-Gfx_SumireMiniGameMainSpr-$80
+	ld   de, $8000
+	ld   hl, Gfx_SumireMiniGameMainSpr+$80
 	call FarMemCopy
 	ret
 

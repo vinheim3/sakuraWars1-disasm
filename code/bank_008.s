@@ -683,7 +683,7 @@ ScriptEngineTable:
 	;
 	ScriptOpData ScriptOpcode23, $03
 	;
-	ScriptOpData ScriptOpcode24, $03
+	ScriptOpData ScriptOpcode24_Credits, $03
 	ScriptOpData ScriptOpcode25_NapOrTrain, $00
 	ScriptOpData ScriptOpcode26, $00
 	;
@@ -6389,7 +6389,7 @@ ScriptOpcode22_Stub_Main:
 	ret                                              ; $6ba2: $c9
 
 
-ScriptOpcode24_Init:
+ScriptOpcode24_Credits_Init:
 	ld   a, $04                                      ; $6ba3: $3e $04
 	call PlaySong                                       ; $6ba5: $cd $92 $1a
 	ld   a, $24                                      ; $6ba8: $3e $24
@@ -6405,7 +6405,7 @@ ScriptOpcode24_Init:
 	
 	pop  hl                                          ; $6bc9: $e1
 
-ScriptOpcode24_Main:
+ScriptOpcode24_Credits_Main:
 	xor  a                                           ; $6bca: $af
 	ld   [wScriptEngineContsRunningThisMainLoop], a                                  ; $6bcb: $ea $52 $cb
 	ld   a, l                                        ; $6bce: $7d
@@ -6422,20 +6422,20 @@ ScriptOpcode24_Main:
 	sla  a                                           ; $6be1: $cb $27
 	ld   h, $00                                      ; $6be3: $26 $00
 	ld   l, a                                        ; $6be5: $6f
-	ld   bc, $6bee                                   ; $6be6: $01 $ee $6b
+	ld   bc, .table                                   ; $6be6: $01 $ee $6b
 	add  hl, bc                                      ; $6be9: $09
 	ld   a, [hl+]                                    ; $6bea: $2a
 	ld   h, [hl]                                     ; $6beb: $66
 	ld   l, a                                        ; $6bec: $6f
 	jp   hl                                          ; $6bed: $e9
 
+.table:
+	dw todo_Opcode24Entry0
+	dw todo_Opcode24Entry1
+	dw todo_Opcode24Entry2
 
-	db   $f4                                         ; $6bee: $f4
-	ld   l, e                                        ; $6bef: $6b
-	rra                                              ; $6bf0: $1f
-	ld   l, h                                        ; $6bf1: $6c
-	sbc  e                                           ; $6bf2: $9b
-	ld   l, h                                        ; $6bf3: $6c
+
+todo_Opcode24Entry0:
 	ld   hl, hScriptOpcodeParams+1                                   ; $6bf4: $21 $a1 $ff
 	ld   a, [hl]                                     ; $6bf7: $7e
 	inc  [hl]                                        ; $6bf8: $34
@@ -6465,6 +6465,7 @@ jr_008_6c1c:
 	jp   Jump_008_6d40                               ; $6c1c: $c3 $40 $6d
 
 
+todo_Opcode24Entry1:
 	ldh  a, [hScriptOpcodeParams+1]                                    ; $6c1f: $f0 $a1
 	or   a                                           ; $6c21: $b7
 	jr   nz, jr_008_6c56                             ; $6c22: $20 $32
@@ -6539,6 +6540,7 @@ jr_008_6c6a:
 	jp   Jump_008_6d40                               ; $6c98: $c3 $40 $6d
 
 
+todo_Opcode24Entry2:
 	ld   hl, hScriptOpcodeParams+1                                   ; $6c9b: $21 $a1 $ff
 	ld   a, [hl]                                     ; $6c9e: $7e
 	inc  [hl]                                        ; $6c9f: $34

@@ -1034,4 +1034,9 @@ Gfx_KannaMiniGameHelpScreen::
 	INCBIN "en_kannaMGHelpScreen.2bpp"
 .end::
 
+
+Gfx_SumireMiniGameMainSpr::
+	INCBIN "en_sumireMiniGameMainSpr.2bpp"
+.end::
+
 endc
