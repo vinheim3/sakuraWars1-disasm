@@ -7101,6 +7101,10 @@ jr_03e_6d54:
 	call EnqueueHDMATransfer                                       ; $6db0: $cd $7c $02
 	rst  WaitUntilVBlankIntHandledIfLCDOn                                         ; $6db3: $cf
 
+if def(VWF)
+	M_FarCall LoadKohranMiniGameTitleScreenGfxSpr
+	nop
+else
 ;
 	ld   a, $13                                      ; $6db4: $3e $13
 	ld   hl, $d000                                   ; $6db6: $21 $00 $d0
@@ -7112,6 +7116,7 @@ jr_03e_6d54:
 	ld   de, $8000                                   ; $6dc1: $11 $00 $80
 	ld   a, $03                                      ; $6dc4: $3e $03
 	ld   hl, $d000                                   ; $6dc6: $21 $00 $d0
+endc
 	ld   b, $40                                      ; $6dc9: $06 $40
 	call EnqueueHDMATransfer                                       ; $6dcb: $cd $7c $02
 	rst  WaitUntilVBlankIntHandledIfLCDOn                                         ; $6dce: $cf
@@ -7125,6 +7130,10 @@ jr_03e_6d54:
 	call EnqueueHDMATransfer                                       ; $6ddb: $cd $7c $02
 	rst  WaitUntilVBlankIntHandledIfLCDOn                                         ; $6dde: $cf
 
+if def(VWF)
+	M_FarCall LoadKohranMiniGameTitleScreenGfx0
+	nop
+else
 ;
 	ld   a, $16                                      ; $6ddf: $3e $16
 	ld   hl, $d000                                   ; $6de1: $21 $00 $d0
@@ -7136,6 +7145,7 @@ jr_03e_6d54:
 	ld   de, $8800                                   ; $6dec: $11 $00 $88
 	ld   a, $03                                      ; $6def: $3e $03
 	ld   hl, $d000                                   ; $6df1: $21 $00 $d0
+endc
 	ld   b, $40                                      ; $6df4: $06 $40
 	call EnqueueHDMATransfer                                       ; $6df6: $cd $7c $02
 	rst  WaitUntilVBlankIntHandledIfLCDOn                                         ; $6df9: $cf
@@ -7159,13 +7169,13 @@ jr_03e_6d54:
 	rst  WaitUntilVBlankIntHandledIfLCDOn                                         ; $6e19: $cf
 
 ;
-	ld   a, $1d                                      ; $6e1a: $3e $1d
-	ld   de, $42d8                                   ; $6e1c: $11 $d8 $42
+	ld   a, BANK(TileAttr_KohranMiniGameTitleScreen)                                      ; $6e1a: $3e $1d
+	ld   de, TileAttr_KohranMiniGameTitleScreen                                   ; $6e1c: $11 $d8 $42
 	ld   hl, $dc40                                   ; $6e1f: $21 $40 $dc
 	ld   bc, $1412                                   ; $6e22: $01 $12 $14
 	call FarCopyLayout                                       ; $6e25: $cd $2c $0b
 
-	ld   a, $1d                                      ; $6e28: $3e $1d
+	ld   a, BANK(TileMap_KohranMiniGameTitleScreen)                                      ; $6e28: $3e $1d
 	ld   hl, $da00                                   ; $6e2a: $21 $00 $da
 	call FarCopyLayout                                       ; $6e2d: $cd $2c $0b
 
@@ -7301,8 +7311,8 @@ jr_03e_6d54:
 	ld   a, $03                                      ; $6f7f: $3e $03
 	ld   b, $01                                      ; $6f81: $06 $01
 	ld   hl, $7000                                   ; $6f83: $21 $00 $70
-	ld   c, $1e                                      ; $6f86: $0e $1e
-	ld   de, $6afc                                   ; $6f88: $11 $fc $6a
+	ld   c, BANK(Palettes_KohranMiniGameTitleScreen)                                      ; $6f86: $0e $1e
+	ld   de, Palettes_KohranMiniGameTitleScreen                                   ; $6f88: $11 $fc $6a
 	call FarLoadPaletteValsFadeToValsAndSetFadeSpeed                                       ; $6f8b: $cd $48 $07
 	ld   a, $0b                                      ; $6f8e: $3e $0b
 	call PlaySong                                       ; $6f90: $cd $92 $1a
@@ -7331,8 +7341,8 @@ jr_03e_6fac:
 	ld   [wFarCallBank], a                                  ; $6fbc: $ea $9a $c2
 	pop  af                                          ; $6fbf: $f1
 	call FarCall                                       ; $6fc0: $cd $62 $09
-	ld   a, $1e                                      ; $6fc3: $3e $1e
-	ld   hl, $6afc                                   ; $6fc5: $21 $fc $6a
+	ld   a, BANK(Palettes_KohranMiniGameTitleScreen)                                      ; $6fc3: $3e $1e
+	ld   hl, Palettes_KohranMiniGameTitleScreen                                   ; $6fc5: $21 $fc $6a
 	ld   de, wBGPalettes                                   ; $6fc8: $11 $de $c2
 	ld   bc, $0080                                   ; $6fcb: $01 $80 $00
 	call FarMemCopy                                       ; $6fce: $cd $b2 $09
@@ -7541,8 +7551,8 @@ jr_03e_7104:
 	ld   a, $40                                      ; $7108: $3e $40
 	ld   [wNumPaletteColorsToLoadCompDataFor], a                                  ; $710a: $ea $63 $c3
 	ld   a, $03                                      ; $710d: $3e $03
-	ld   b, $1e                                      ; $710f: $06 $1e
-	ld   hl, $6afc                                   ; $7111: $21 $fc $6a
+	ld   b, BANK(Palettes_KohranMiniGameTitleScreen)                                      ; $710f: $06 $1e
+	ld   hl, Palettes_KohranMiniGameTitleScreen                                   ; $7111: $21 $fc $6a
 	ld   c, $01                                      ; $7114: $0e $01
 	ld   de, $7000                                   ; $7116: $11 $00 $70
 	call FarLoadPaletteValsFadeToValsAndSetFadeSpeed                                       ; $7119: $cd $48 $07

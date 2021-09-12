@@ -1434,4 +1434,73 @@ LoadKannaMiniGameTitleScreenGfxSpr::
 	INCBIN "en_kannaMGTitleScreenSpr.2bpp"
 .end:
 
+
+LoadKohranMiniGameTitleScreenGfx0::
+; Original code pt. 1
+	ld   a, $16                                      ; $6ddf: $3e $16
+	ld   hl, $d000                                   ; $6de1: $21 $00 $d0
+	ld   de, $4c65                                   ; $6de4: $11 $65 $4c
+	call RLEXorCopy                                       ; $6de7: $cd $d2 $09
+
+; New tiles
+	ld   bc, .end-.gfx
+	ld   de, $d000+$900
+	ld   hl, .gfx
+	call MemCopy
+
+; Original code pt. 2
+	ld   c, $80                                      ; $6dea: $0e $80
+	ld   de, $8800                                   ; $6dec: $11 $00 $88
+	ld   a, $03                                      ; $6def: $3e $03
+	ld   hl, $d000                                   ; $6df1: $21 $00 $d0
+
+	ret
+.gfx:
+	INCBIN "en_kohranMiniGameTitleScreen.2bpp"
+.end:
+
+
+LoadKohranMiniGameTitleScreenGfxSpr::
+; Original code pt. 1
+	ld   a, $13                                      ; $6db4: $3e $13
+	ld   hl, $d000                                   ; $6db6: $21 $00 $d0
+	ld   de, $7d86                                   ; $6db9: $11 $86 $7d
+	call RLEXorCopy                                       ; $6dbc: $cd $d2 $09
+
+; Edits
+	ld   b, $10
+	ld   hl, $d000+$2e0
+:	ld   a, [hl]
+	and  $fc
+	or   $01
+	ld   [hl+], a
+	ld   a, [hl]
+	or   $03
+	ld   [hl+], a
+	dec  b
+	jr   nz, :-
+
+	ld   bc, .end-.gfx
+	ld   de, $d000+$3e0
+	ld   hl, .gfx
+	call MemCopy
+
+	ld   a, [$d000+$1f0+2]
+	and  $fc
+	ld   [$d000+$1f0+2], a
+	ld   a, [$d000+$1f0+3]
+	and  $fc
+	ld   [$d000+$1f0+3], a
+
+; Original code pt. 2
+	ld   c, $80                                      ; $6dbf: $0e $80
+	ld   de, $8000                                   ; $6dc1: $11 $00 $80
+	ld   a, $03                                      ; $6dc4: $3e $03
+	ld   hl, $d000                                   ; $6dc6: $21 $00 $d0
+
+	ret
+.gfx:
+	INCBIN "en_kohranMGTitleScreenSpr.2bpp"
+.end:
+
 endc

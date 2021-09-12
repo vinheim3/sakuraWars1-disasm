@@ -25,6 +25,8 @@
 ; rgbgfx -o en_irisMGTitleScreenSpr.2bpp -h en_irisMGTitleScreenSpr.png
 ; rgbgfx -o en_kannaMiniGameTitleScreen.2bpp en_kannaMiniGameTitleScreen.png
 ; rgbgfx -o en_kannaMGTitleScreenSpr.2bpp -h en_kannaMGTitleScreenSpr.png
+; rgbgfx -o en_kohranMiniGameTitleScreen.2bpp en_kohranMiniGameTitleScreen.png
+; rgbgfx -o en_kohranMGTitleScreenSpr.2bpp -h en_kohranMGTitleScreenSpr.png
 ; tools/gfx.py 1bpp newLetters.png --from=png --interleave
 
 ; empty banks
