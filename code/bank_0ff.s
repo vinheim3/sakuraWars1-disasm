@@ -954,6 +954,8 @@ jr_0ff_4482:
 	ld   b, $ff                                      ; $44b9: $06 $ff
 	rst  $38                                         ; $44bb: $ff
 
+; in case of null terminators
+	db $00, $00, $00
 
 if def(VWF)
 
@@ -1155,5 +1157,98 @@ IrisMiniGameMainLayout3::
 IrisMiniGameMainLayout4::
 	db $4c, $e0, $e0, $4c, $4c
 	db $4c, $f0, $f0, $4f, $4c
+
+
+EnLoadIrisMiniGameTileAttrs::
+	ld   a, $88
+	ld   [$9a46], a
+	ld   [$9a66], a
+	ld   [$9a86], a
+	ld   [$9a4d], a
+	ld   [$9a6d], a
+	ld   [$9a8d], a
+	ld   [$9b10], a
+	ld   [$9b30], a
+	ld   [$9b50], a
+	ld   [$9b0e], a
+	ld   [$9b0f], a
+	ld   [$9b2e], a
+	ld   [$9b2f], a
+	ld   [$9b4e], a
+	ld   [$9b4f], a
+
+	ld   a, $03
+	ld   [$99ee], a
+	ld   [$9a0e], a
+
+	ld   a, $0b
+	ld   [$99f0], a
+	ld   [$9a10], a
+	ret
+
+
+Gfx_IrisMiniGameMain::
+	INCBIN "en_kohranMiniGameMain.2bpp"
+.end::
+
+
+EnLoadKannaMiniGameGfx0::
+	ld   bc, 10*$10
+	ld   de, $8c10
+	ld   hl, .row1
+	call MemCopy
+
+	ld   bc, 10*$10
+	ld   de, $8d10
+	ld   hl, .row2
+	call MemCopy
+
+	ld   bc, 10*$10
+	ld   de, $8e10
+	ld   hl, .row3
+	call MemCopy
+
+	ld   bc, 10*$10
+	ld   de, $8f10
+	ld   hl, .row4
+	call MemCopy
+
+	ld   bc, 6*$10
+	ld   de, $8cb0
+	ld   hl, .row6_1
+	call MemCopy
+
+	ld   bc, 6*$10
+	ld   de, $8db0
+	ld   hl, .row7_1
+	call MemCopy
+
+	ld   bc, 6*$10
+	ld   de, $8eb0
+	ld   hl, .row8_1
+	call MemCopy
+
+	ld   bc, 5*$10
+	ld   de, $8fb0
+	ld   hl, .row9_1
+	call MemCopy
+
+	ret
+.row1:
+	INCBIN "en_kannaMiniGameMain.2bpp", 0, 10*$10
+.row2:
+	INCBIN "en_kannaMiniGameMain.2bpp", 10*$10, 10*$10
+.row3:
+	INCBIN "en_kannaMiniGameMain.2bpp", 20*$10, 10*$10
+.row4:
+	INCBIN "en_kannaMiniGameMain.2bpp", 30*$10, 10*$10
+.row6_1:
+	INCBIN "en_kannaMiniGameMain.2bpp", 50*$10, 6*$10
+.row7_1:
+	INCBIN "en_kannaMiniGameMain.2bpp", 60*$10, 6*$10
+.row8_1:
+	INCBIN "en_kannaMiniGameMain.2bpp", 70*$10, 6*$10
+.row9_1:
+	INCBIN "en_kannaMiniGameMain.2bpp", 80*$10, 5*$10
 
 endc

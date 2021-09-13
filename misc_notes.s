@@ -36,6 +36,8 @@
 ; rgbgfx -o en_sumireMiniGameMainSpr.2bpp -h en_sumireMiniGameMainSpr.png
 ; rgbgfx -o en_mariaMiniGameMain.2bpp en_mariaMiniGameMain.png
 ; rgbgfx -o en_irisMiniGameMain.2bpp en_irisMiniGameMain.png
+; rgbgfx -o en_kohranMiniGameMain.2bpp en_kohranMiniGameMain.png
+; rgbgfx -o en_kannaMiniGameMain.2bpp en_kannaMiniGameMain.png
 ; tools/gfx.py 1bpp newLetters.png --from=png --interleave
 
 ; empty banks

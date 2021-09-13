@@ -6673,7 +6673,11 @@ KohranMiniGameMainSubstate3:
 	ld   de, $8000                                   ; $646b: $11 $00 $80
 	ld   hl, $4000                                   ; $646e: $21 $00 $40
 	ld   bc, $1800                                   ; $6471: $01 $00 $18
+if def(VWF)
+	call KohranMiniGameMainBank0_8000hHook
+else
 	call FarMemCopy                                       ; $6474: $cd $b2 $09
+endc
 
 ;
 	ld   a, $07                                      ; $6477: $3e $07
@@ -8394,7 +8398,7 @@ jr_020_6f23:
 	ld   a, [$ca6e]                                  ; $6f29: $fa $6e $ca
 	call Call_020_71a9                               ; $6f2c: $cd $a9 $71
 	call Call_020_7143                               ; $6f2f: $cd $43 $71
-	call $70de                                       ; $6f32: $cd $de $70
+	call Func_20_70de                                       ; $6f32: $cd $de $70
 	call Call_020_6fcd                               ; $6f35: $cd $cd $6f
 	call $7083                                       ; $6f38: $cd $83 $70
 	call Call_020_6f72                               ; $6f3b: $cd $72 $6f
@@ -8426,7 +8430,7 @@ Call_020_6f72:
 	ld   a, $07                                      ; $6f76: $3e $07
 	ld   [wWramBank], a                                  ; $6f78: $ea $93 $c2
 	ldh  [rSVBK], a                                  ; $6f7b: $e0 $70
-	ld   hl, $4800                                   ; $6f7d: $21 $00 $48
+	ld   hl, Data_2a_4800                                   ; $6f7d: $21 $00 $48
 	ld   d, h                                        ; $6f80: $54
 	ld   e, l                                        ; $6f81: $5d
 	ld   hl, $6fbf                                   ; $6f82: $21 $bf $6f
@@ -8491,7 +8495,7 @@ Call_020_6fcd:
 	ld   a, $07                                      ; $6fd1: $3e $07
 	ld   [wWramBank], a                                  ; $6fd3: $ea $93 $c2
 	ldh  [rSVBK], a                                  ; $6fd6: $e0 $70
-	ld   hl, $4c00                                   ; $6fd8: $21 $00 $4c
+	ld   hl, Data_2a_4c00                                   ; $6fd8: $21 $00 $4c
 	ld   d, h                                        ; $6fdb: $54
 	ld   e, l                                        ; $6fdc: $5d
 	ld   hl, $701a                                   ; $6fdd: $21 $1a $70
@@ -8556,7 +8560,7 @@ Call_020_7028:
 	ld   a, $07                                      ; $702c: $3e $07
 	ld   [wWramBank], a                                  ; $702e: $ea $93 $c2
 	ldh  [rSVBK], a                                  ; $7031: $e0 $70
-	ld   hl, $4800                                   ; $7033: $21 $00 $48
+	ld   hl, Data_2a_4800                                   ; $7033: $21 $00 $48
 	ld   d, h                                        ; $7036: $54
 	ld   e, l                                        ; $7037: $5d
 	ld   hl, $7075                                   ; $7038: $21 $75 $70
@@ -8616,7 +8620,7 @@ jr_020_704f:
 	rlca                                             ; $7088: $07
 	ld   [wWramBank], a                                  ; $7089: $ea $93 $c2
 	ldh  [rSVBK], a                                  ; $708c: $e0 $70
-	ld   hl, $4c00                                   ; $708e: $21 $00 $4c
+	ld   hl, Data_2a_4c00                                   ; $708e: $21 $00 $4c
 	ld   d, h                                        ; $7091: $54
 	ld   e, l                                        ; $7092: $5d
 	ld   hl, $70d0                                   ; $7093: $21 $d0 $70
@@ -8670,13 +8674,16 @@ jr_020_70aa:
 	adc  h                                           ; $70d8: $8c
 	ld   bc, $0190                                   ; $70d9: $01 $90 $01
 	sub  h                                           ; $70dc: $94
-	ld   bc, $93fa                                   ; $70dd: $01 $fa $93
-	jp   nz, $3ef5                                   ; $70e0: $c2 $f5 $3e
-
-	rlca                                             ; $70e3: $07
+	db $01 
+	
+	
+Func_20_70de:
+	ld   a, [wWramBank] ; $70de: $fa $93 $c2
+	push af                                   ; $70e1: $f5
+	ld   a, $07                                   ; $70e2: $3e $07
 	ld   [wWramBank], a                                  ; $70e4: $ea $93 $c2
 	ldh  [rSVBK], a                                  ; $70e7: $e0 $70
-	ld   hl, $4800                                   ; $70e9: $21 $00 $48
+	ld   hl, Data_2a_4800                                   ; $70e9: $21 $00 $48
 	ld   d, h                                        ; $70ec: $54
 	ld   e, l                                        ; $70ed: $5d
 	ld   hl, $7137                                   ; $70ee: $21 $37 $71
@@ -8756,7 +8763,7 @@ Call_020_7143:
 	ld   a, $07                                      ; $7147: $3e $07
 	ld   [wWramBank], a                                  ; $7149: $ea $93 $c2
 	ldh  [rSVBK], a                                  ; $714c: $e0 $70
-	ld   hl, $4c00                                   ; $714e: $21 $00 $4c
+	ld   hl, Data_2a_4c00                                   ; $714e: $21 $00 $4c
 	ld   d, h                                        ; $7151: $54
 	ld   e, l                                        ; $7152: $5d
 	ld   hl, $719d                                   ; $7153: $21 $9d $71
@@ -10659,6 +10666,23 @@ SumireMiniGameMainBank1_8000hHook:
 	ld   bc, Gfx_SumireMiniGameMainSpr.end-Gfx_SumireMiniGameMainSpr-$80
 	ld   de, $8000
 	ld   hl, Gfx_SumireMiniGameMainSpr+$80
+	call FarMemCopy
+	ret
+
+
+KohranMiniGameMainBank0_8000hHook:
+	call FarMemCopy
+
+	ld   a, BANK(Gfx_IrisMiniGameMain)
+	ld   bc, $40
+	ld   de, $9600
+	ld   hl, Gfx_IrisMiniGameMain
+	call FarMemCopy
+
+	ld   a, BANK(Gfx_IrisMiniGameMain)
+	ld   bc, Gfx_IrisMiniGameMain.end-Gfx_IrisMiniGameMain-$40
+	ld   de, $9700
+	ld   hl, Gfx_IrisMiniGameMain+$40
 	call FarMemCopy
 	ret
 

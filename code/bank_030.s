@@ -11317,31 +11317,7 @@ IrisMiniGameMainTileMapHook:
 IrisMiniGameMainTileAttrHook:
 	call FarCopyLayout
 
-	ld   a, $88
-	ld   [$9a46], a
-	ld   [$9a66], a
-	ld   [$9a86], a
-	ld   [$9a4d], a
-	ld   [$9a6d], a
-	ld   [$9a8d], a
-	ld   [$9b10], a
-	ld   [$9b30], a
-	ld   [$9b50], a
-	ld   [$9b0e], a
-	ld   [$9b0f], a
-	ld   [$9b2e], a
-	ld   [$9b2f], a
-	ld   [$9b4e], a
-	ld   [$9b4f], a
-
-	ld   a, $03
-	ld   [$99ee], a
-	ld   [$9a0e], a
-
-	ld   a, $0b
-	ld   [$99f0], a
-	ld   [$9a10], a
-
+	M_FarCall EnLoadIrisMiniGameTileAttrs
 	ret
 
 endc

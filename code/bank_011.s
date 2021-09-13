@@ -128,7 +128,11 @@ KannaMiniGameMainSubstate1:
 	ld   a, $1b                                      ; $40c4: $3e $1b
 	ld   hl, $9000                                   ; $40c6: $21 $00 $90
 	ld   de, $6ed5                                   ; $40c9: $11 $d5 $6e
+if def(VWF)
+	call KannaMiniGameBank1_9000hHook
+else
 	call RLEXorCopy                                       ; $40cc: $cd $d2 $09
+endc
 
 ;
 	call Call_011_4a41                               ; $40cf: $cd $41 $4a
@@ -151,7 +155,11 @@ KannaMiniGameMainSubstate1:
 	ld   a, $15                                      ; $40eb: $3e $15
 	ld   hl, $8800                                   ; $40ed: $21 $00 $88
 	ld   de, $4d2b                                   ; $40f0: $11 $2b $4d
+if def(VWF)
+	call KannaMiniGameBank0_8800hHook
+else
 	call RLEXorCopy                                       ; $40f3: $cd $d2 $09
+endc
 
 ;
 	call Call_011_4ad4                               ; $40f6: $cd $d4 $4a
@@ -10592,6 +10600,20 @@ MariaMiniGameMainTileAttrHook:
 	ld   [$99ee], a
 	ld   [$9a47], a
 	ld   [$9a48], a
+	ret
+
+
+KannaMiniGameBank0_8800hHook:
+	call RLEXorCopy
+
+	M_FarCall EnLoadKannaMiniGameGfx0
+	ret
+
+
+KannaMiniGameBank1_9000hHook:
+	call RLEXorCopy
+
+	M_FarCall EnLoadKannaMiniGameGfx1
 	ret
 
 endc

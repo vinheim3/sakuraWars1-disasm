@@ -12379,3 +12379,83 @@ jr_0fd_785a:
 	nop                                              ; $7944: $00
 	rlca                                             ; $7945: $07
 	xor  l                                           ; $7946: $ad
+
+; in case of null terminators
+db $00, $00, $00
+
+if def(VWF)
+
+EnLoadKannaMiniGameGfx1::
+	ld   bc, $10
+	ld   de, $9000
+	ld   hl, .row5_1
+	call MemCopy
+
+	ld   bc, $10
+	ld   de, $9100
+	ld   hl, .row5_2
+	call MemCopy
+
+	ld   bc, $10
+	ld   de, $9200
+	ld   hl, .row5_3
+	call MemCopy
+
+	ld   bc, 7*$10
+	ld   de, $9050
+	ld   hl, .row5_4
+	call MemCopy
+
+	ld   bc, 4*$10
+	ld   de, $9010
+	ld   hl, .row6_2
+	call MemCopy
+
+	ld   bc, 4*$10
+	ld   de, $9110
+	ld   hl, .row7_2
+	call MemCopy
+
+	ld   bc, 4*$10
+	ld   de, $9210
+	ld   hl, .row8_2
+	call MemCopy
+
+	ld   bc, 5*$10
+	ld   de, $9300
+	ld   hl, .row9_2
+	call MemCopy
+
+	ld   bc, 4*$10
+	ld   de, $90c0
+	ld   hl, .row10_1
+	call MemCopy
+
+	ld   bc, 6*$10
+	ld   de, $9150
+	ld   hl, .row10_2
+	call MemCopy
+
+	ret
+.row5_1:
+	INCBIN "en_kannaMiniGameMain.2bpp", 40*$10, $10
+.row5_2:
+	INCBIN "en_kannaMiniGameMain.2bpp", 41*$10, $10
+.row5_3:
+	INCBIN "en_kannaMiniGameMain.2bpp", 42*$10, $10
+.row5_4:
+	INCBIN "en_kannaMiniGameMain.2bpp", 43*$10, 7*$10
+.row6_2:
+	INCBIN "en_kannaMiniGameMain.2bpp", 56*$10, 4*$10
+.row7_2:
+	INCBIN "en_kannaMiniGameMain.2bpp", 66*$10, 4*$10
+.row8_2:
+	INCBIN "en_kannaMiniGameMain.2bpp", 76*$10, 4*$10
+.row9_2:
+	INCBIN "en_kannaMiniGameMain.2bpp", 85*$10, 5*$10
+.row10_1:
+	INCBIN "en_kannaMiniGameMain.2bpp", 90*$10, 4*$10
+.row10_2:
+	INCBIN "en_kannaMiniGameMain.2bpp", 94*$10, 6*$10
+
+endc
