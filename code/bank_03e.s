@@ -2428,6 +2428,9 @@ MiniGameResultsSubstate0:
 	xor  a                                           ; $4fc5: $af
 	ldh  [rVBK], a                                   ; $4fc6: $e0 $4f
 	ld   a, $19                                      ; $4fc8: $3e $19
+if def(VWF)
+	M_FarCall MiniGameResultsHook
+else
 	ld   hl, $9800                                   ; $4fca: $21 $00 $98
 	ld   de, $7dc5                                   ; $4fcd: $11 $c5 $7d
 	call RLEXorCopy                                       ; $4fd0: $cd $d2 $09
@@ -2437,6 +2440,7 @@ MiniGameResultsSubstate0:
 	ld   hl, $8000                                   ; $4fd5: $21 $00 $80
 	ld   de, $46f7                                   ; $4fd8: $11 $f7 $46
 	call RLEXorCopy                                       ; $4fdb: $cd $d2 $09
+endc
 
 ;
 	call Func_3e_530f                                       ; $4fde: $cd $0f $53
@@ -2916,14 +2920,17 @@ Func_3e_530f:
 	add  hl, bc                                      ; $5318: $09
 	ld   a, [hl]                                     ; $5319: $7e
 	cp   $01                                         ; $531a: $fe $01
-	jr   nz, jr_03e_5322                             ; $531c: $20 $04
+	jr   nz, :+                             ; $531c: $20 $04
 
 	xor  a                                           ; $531e: $af
 	ld   [$c987], a                                  ; $531f: $ea $87 $c9
 
-jr_03e_5322:
-	ld   hl, $c986                                   ; $5322: $21 $86 $c9
+:	ld   hl, $c986                                   ; $5322: $21 $86 $c9
+if def(VWF)
+	ld   de, $9851
+else
 	ld   de, $9852                                   ; $5325: $11 $52 $98
+endc
 	call Call_03e_533c                               ; $5328: $cd $3c $53
 	ret                                              ; $532b: $c9
 
@@ -2935,7 +2942,11 @@ jr_03e_5322:
 
 Call_03e_5332:
 	ld   hl, $c98a                                   ; $5332: $21 $8a $c9
+if def(VWF)
+	ld   de, $98b1
+else
 	ld   de, $98b2                                   ; $5335: $11 $b2 $98
+endc
 	call Call_03e_533c                               ; $5338: $cd $3c $53
 	ret                                              ; $533b: $c9
 
@@ -2953,15 +2964,14 @@ Call_03e_533c:
 	ld   a, l                                        ; $5348: $7d
 	call Call_03e_5375                               ; $5349: $cd $75 $53
 	ld   a, $0a                                      ; $534c: $3e $0a
-	call Call_03e_53a2                               ; $534e: $cd $a2 $53
+	call DrawMinigameResultsDigit                               ; $534e: $cd $a2 $53
 	ld   a, b                                        ; $5351: $78
 	call Call_03e_5375                               ; $5352: $cd $75 $53
 	ld   a, $0a                                      ; $5355: $3e $0a
-	call Call_03e_53a2                               ; $5357: $cd $a2 $53
+	call DrawMinigameResultsDigit                               ; $5357: $cd $a2 $53
 	ld   a, c                                        ; $535a: $79
 	call Call_03e_5375                               ; $535b: $cd $75 $53
 	ret                                              ; $535e: $c9
-
 
 jr_03e_535f:
 	push hl                                          ; $535f: $e5
@@ -2969,10 +2979,14 @@ jr_03e_535f:
 	ld   hl, $0020                                   ; $5361: $21 $20 $00
 	add  hl, de                                      ; $5364: $19
 	pop  de                                          ; $5365: $d1
+if def(VWF)
+	ds $5370-@, 0
+else
 	ld   a, $0d                                      ; $5366: $3e $0d
-	call Call_03e_53a2                               ; $5368: $cd $a2 $53
+	call DrawMinigameResultsDigit                               ; $5368: $cd $a2 $53
 	ld   a, $0c                                      ; $536b: $3e $0c
-	call Call_03e_53a2                               ; $536d: $cd $a2 $53
+	call DrawMinigameResultsDigit                               ; $536d: $cd $a2 $53
+endc
 	pop  hl                                          ; $5370: $e1
 	call Call_03e_53e5                               ; $5371: $cd $e5 $53
 	ret                                              ; $5374: $c9
@@ -3007,18 +3021,20 @@ Call_03e_5375:
 
 Call_03e_539d:
 	cp   $0a                                         ; $539d: $fe $0a
-	jr   nz, jr_03e_53a2                             ; $539f: $20 $01
+	jr   nz, DrawMinigameResultsDigit                             ; $539f: $20 $01
 
 	xor  a                                           ; $53a1: $af
 
-Call_03e_53a2:
-jr_03e_53a2:
-	add  $c0                                         ; $53a2: $c6 $c0
-	ld   [de], a                                     ; $53a4: $12
-	dec  de                                          ; $53a5: $1b
-	add  $10                                         ; $53a6: $c6 $10
-	ld   [hl-], a                                    ; $53a8: $32
-	ret                                              ; $53a9: $c9
+; A - digit value
+; DE - address of digit's top half
+; HL - address of digit's bottom half
+DrawMinigameResultsDigit:
+	add  $c0                                                        ; $53a2
+	ld   [de], a                                                    ; $53a4
+	dec  de                                                         ; $53a5
+	add  $10                                                        ; $53a6
+	ld   [hl-], a                                                   ; $53a8
+	ret                                                             ; $53a9
 
 
 Call_03e_53aa:
@@ -3074,15 +3090,15 @@ Call_03e_53e5:
 	ld   de, $0020                                   ; $53fe: $11 $20 $00
 	add  hl, de                                      ; $5401: $19
 	pop  de                                          ; $5402: $d1
-	call Call_03e_53a2                               ; $5403: $cd $a2 $53
+	call DrawMinigameResultsDigit                               ; $5403: $cd $a2 $53
 	pop  af                                          ; $5406: $f1
-	call Call_03e_53a2                               ; $5407: $cd $a2 $53
+	call DrawMinigameResultsDigit                               ; $5407: $cd $a2 $53
 	pop  af                                          ; $540a: $f1
-	call Call_03e_53a2                               ; $540b: $cd $a2 $53
+	call DrawMinigameResultsDigit                               ; $540b: $cd $a2 $53
 	pop  af                                          ; $540e: $f1
-	call Call_03e_53a2                               ; $540f: $cd $a2 $53
+	call DrawMinigameResultsDigit                               ; $540f: $cd $a2 $53
 	pop  af                                          ; $5412: $f1
-	call Call_03e_53a2                               ; $5413: $cd $a2 $53
+	call DrawMinigameResultsDigit                               ; $5413: $cd $a2 $53
 	ret                                              ; $5416: $c9
 
 
