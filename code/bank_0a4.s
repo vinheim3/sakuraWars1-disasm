@@ -7754,4 +7754,185 @@ EnLoadSakuraMiniGameTileAttr::
 	db $03, $03, $03, $03, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0c, $04, $04, $04, $04
 	db $03, $03, $03, $03, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $03, $03, $03, $03
 
+
+EnLoadMiniGameSelectionGfx0::
+	ld   bc, $e0
+	ld   de, $96a0
+	ld   hl, .row1
+	call MemCopy
+
+	ld   bc, $80
+	ld   de, $9780
+	ld   hl, .row2_1
+	call MemCopy
+	ret
+.row1:
+	INCBIN "en_minigameSelection.2bpp", 0, $e0
+.row2_1:
+	INCBIN "en_minigameSelection.2bpp", (1*14)*$10, $80
+
+
+EnLoadMiniGameSelectionGfx1::
+	ld   bc, $60
+	ld   de, $8800
+	ld   hl, .row2_2
+	call MemCopy
+
+	ld   bc, $90
+	ld   de, $8860
+	ld   hl, .row3
+	call MemCopy
+	
+	ld   bc, $90
+	ld   de, $88f0
+	ld   hl, .row4
+	call MemCopy
+
+	ld   bc, $b0
+	ld   de, $8980
+	ld   hl, .row5
+	call MemCopy
+
+	ld   bc, $b0
+	ld   de, $8a30
+	ld   hl, .row6
+	call MemCopy
+
+	ld   bc, $c0
+	ld   de, $8ae0
+	ld   hl, .row7
+	call MemCopy
+
+	ld   bc, $c0
+	ld   de, $8ba0
+	ld   hl, .row8
+	call MemCopy
+
+	ld   bc, $b0
+	ld   de, $8c60
+	ld   hl, .row9
+	call MemCopy
+
+	ld   bc, $e0
+	ld   de, $8d10
+	ld   hl, .row10
+	call MemCopy
+
+	ld   bc, $e0
+	ld   de, $8df0
+	ld   hl, .row11
+	call MemCopy
+
+	ld   bc, $e0
+	ld   de, $8ed0
+	ld   hl, .row12
+	call MemCopy
+
+	ld   bc, $c0
+	ld   de, $8fb0
+	ld   hl, .row13
+	call MemCopy
+
+	ld   bc, $c0
+	ld   de, $9070
+	ld   hl, .row14
+	call MemCopy
+
+	ld   bc, $90
+	ld   de, $9130
+	ld   hl, .row15
+	call MemCopy
+
+	ld   bc, $70
+	ld   de, $91c0
+	ld   hl, .row16
+	call MemCopy
+
+	ld   bc, $c0
+	ld   de, $9230
+	ld   hl, .row17
+	call MemCopy
+
+	ld   bc, $c0
+	ld   de, $92f0
+	ld   hl, .row18
+	call MemCopy
+
+	ld   bc, $70
+	ld   de, $93b0
+	ld   hl, .row19
+	call MemCopy
+
+	ld   bc, $70
+	ld   de, $9420
+	ld   hl, .row20
+	call MemCopy
+
+	ld   bc, $a0
+	ld   de, $9490
+	ld   hl, .row21
+	call MemCopy
+
+	ld   bc, $a0
+	ld   de, $9530
+	ld   hl, .row22
+	call MemCopy
+
+	ld   bc, $60
+	ld   de, $95d0
+	ld   hl, .row23
+	call MemCopy
+
+	ld   bc, $60
+	ld   de, $9630
+	ld   hl, .row24
+	call MemCopy
+	ret
+.row2_2:
+	INCBIN "en_minigameSelection.2bpp", (1*14+8)*$10, $60
+.row3:
+	INCBIN "en_minigameSelection.2bpp", (2*14+3)*$10, $90
+.row4:
+	INCBIN "en_minigameSelection.2bpp", (3*14+3)*$10, $90
+.row5:
+	INCBIN "en_minigameSelection.2bpp", (4*14+1)*$10, $b0
+.row6:
+	INCBIN "en_minigameSelection.2bpp", (5*14+1)*$10, $b0
+.row7:
+	INCBIN "en_minigameSelection.2bpp", (6*14+1)*$10, $c0
+.row8:
+	INCBIN "en_minigameSelection.2bpp", (7*14+1)*$10, $c0
+.row9:
+	INCBIN "en_minigameSelection.2bpp", (8*14+0)*$10, $b0
+.row10:
+	INCBIN "en_minigameSelection.2bpp", (9*14+0)*$10, $e0
+.row11:
+	INCBIN "en_minigameSelection.2bpp", (10*14+0)*$10, $e0
+.row12:
+	INCBIN "en_minigameSelection.2bpp", (11*14+0)*$10, $e0
+.row13:
+	INCBIN "en_minigameSelection.2bpp", (12*14+1)*$10, $c0
+.row14:
+	INCBIN "en_minigameSelection.2bpp", (13*14+1)*$10, $c0
+.row15:
+	INCBIN "en_minigameSelection.2bpp", (14*14+4)*$10, $90
+.row16:
+	INCBIN "en_minigameSelection.2bpp", (15*14+4)*$10, $70
+.row17:
+	INCBIN "en_minigameSelection.2bpp", (16*14+1)*$10, $c0
+.row18:
+	INCBIN "en_minigameSelection.2bpp", (17*14+1)*$10, $c0
+.row19:
+	INCBIN "en_minigameSelection.2bpp", (18*14+3)*$10, $70
+.row20:
+	INCBIN "en_minigameSelection.2bpp", (19*14+3)*$10, $70
+.row21:
+	INCBIN "en_minigameSelection.2bpp", (20*14+2)*$10, $a0
+.row22:
+	INCBIN "en_minigameSelection.2bpp", (21*14+2)*$10, $a0
+.row23:
+	INCBIN "en_minigameSelection.2bpp", (22*14+4)*$10, $60
+.row24:
+	INCBIN "en_minigameSelection.2bpp", (23*14+4)*$10, $60
+
 endc

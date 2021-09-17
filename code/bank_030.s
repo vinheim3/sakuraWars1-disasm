@@ -3156,7 +3156,11 @@ MiniGamesSubstate1:
 	ld   a, $33                                      ; $50ec: $3e $33
 	ld   hl, $8000                                   ; $50ee: $21 $00 $80
 	ld   de, $552d                                   ; $50f1: $11 $2d $55
+if def(VWF)
+	call MiniGameSelectionBank0_8000hHook
+else
 	call RLEXorCopy                                       ; $50f4: $cd $d2 $09
+endc
 
 ;
 	ld   a, $01                                      ; $50f7: $3e $01
@@ -3164,14 +3168,18 @@ MiniGamesSubstate1:
 	ld   a, $33                                      ; $50fb: $3e $33
 	ld   hl, $9000                                   ; $50fd: $21 $00 $90
 	ld   de, $7577                                   ; $5100: $11 $77 $75
+if def(VWF)
+	call MiniGameSelectionBank1_9000hHook
+else
 	call RLEXorCopy                                       ; $5103: $cd $d2 $09
+endc
 
 ;
 	ld   a, $01                                      ; $5106: $3e $01
 	ldh  [rVBK], a                                   ; $5108: $e0 $4f
 	ld   hl, _SCRN0                                   ; $510a: $21 $00 $98
-	ld   a, $34                                      ; $510d: $3e $34
-	ld   de, $5522                                   ; $510f: $11 $22 $55
+	ld   a, BANK(TileAttr_MiniGameSelection)                                      ; $510d: $3e $34
+	ld   de, TileAttr_MiniGameSelection                                   ; $510f: $11 $22 $55
 	ldbc $14, $1c                                   ; $5112: $01 $1c $14
 	call FarCopyLayout                                       ; $5115: $cd $2c $0b
 
@@ -3179,7 +3187,7 @@ MiniGamesSubstate1:
 	xor  a                                           ; $5118: $af
 	ldh  [rVBK], a                                   ; $5119: $e0 $4f
 	ld   hl, _SCRN0                                   ; $511b: $21 $00 $98
-	ld   a, $34                                      ; $511e: $3e $34
+	ld   a, BANK(TileMap_MiniGameSelection)                                      ; $511e: $3e $34
 	call FarCopyLayout                                       ; $5120: $cd $2c $0b
 
 ;
@@ -11318,6 +11326,20 @@ IrisMiniGameMainTileAttrHook:
 	call FarCopyLayout
 
 	M_FarCall EnLoadIrisMiniGameTileAttrs
+	ret
+
+
+MiniGameSelectionBank0_8000hHook:
+	call RLEXorCopy
+
+	M_FarCall EnLoadMiniGameSelectionGfx0
+	ret
+
+
+MiniGameSelectionBank1_9000hHook:
+	call RLEXorCopy
+
+	M_FarCall EnLoadMiniGameSelectionGfx1
 	ret
 
 endc

@@ -40,6 +40,8 @@
 ; rgbgfx -o en_kannaMiniGameMain.2bpp en_kannaMiniGameMain.png
 ; rgbgfx -o en_minigameResults.2bpp en_minigameResults.png
 ; rgbgfx -o en_sakuraMiniGameMain.2bpp en_sakuraMiniGameMain.png
+; rgbgfx -o en_minigamePopup.2bpp -u -T en_minigamePopup.png
+; rgbgfx -o en_minigameSelection.2bpp en_minigameSelection.png
 ; tools/gfx.py 1bpp newLetters.png --from=png --interleave
 
 ; empty banks
