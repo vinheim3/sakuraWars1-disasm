@@ -9156,4 +9156,174 @@ MiniGameResultsHook::
 	db $01, $01, $01, $01, $01, $01, $01, $01, $01, $01
 	db $01, $01, $01, $01, $01, $01, $01, $01, $01, $01
 	db $01, $01, $01, $01, $01, $01, $01, $01, $01, $01
+
+
+EnLoadSakuraMiniGameGfx0::
+	ld   bc, $f0
+	ld   de, $9620
+	ld   hl, .row1
+	call MemCopy
+
+	ld   bc, $f0
+	ld   de, $9710
+	ld   hl, .row2_1
+	call MemCopy
+
+	ld   bc, $30
+	ld   de, $9270
+	ld   hl, .pts1
+	call MemCopy
+
+	ld   bc, $30
+	ld   de, $93a0
+	ld   hl, .pts2
+	call MemCopy
+
+	ld   bc, $30
+	ld   de, $9470
+	ld   hl, .pts3
+	call MemCopy
+
+	ld   bc, $30
+	ld   de, $9530
+	ld   hl, .pts4
+	call MemCopy
+
+	ld   bc, $20
+	ld   de, $9370
+	ld   hl, .logs1
+	call MemCopy
+
+	ld   bc, $20
+	ld   de, $9440
+	ld   hl, .logs2
+	call MemCopy
+
+	ld   bc, $20
+	ld   de, $9500
+	ld   hl, .logs3
+	call MemCopy
+
+	ret
+.row1:
+	INCBIN "en_sakuraMiniGameMain.2bpp", 3*$10, $f0
+.row2_1:
+	INCBIN "en_sakuraMiniGameMain.2bpp", 22*$10, $f0
+.pts1:
+	INCBIN "en_sakuraMiniGameMain.2bpp", 240*$10, $30
+.pts2:
+	INCBIN "en_sakuraMiniGameMain.2bpp", 260*$10, $30
+.pts3:
+	INCBIN "en_sakuraMiniGameMain.2bpp", 280*$10, $30
+.pts4:
+	INCBIN "en_sakuraMiniGameMain.2bpp", 300*$10, $30
+.logs1:
+	INCBIN "en_sakuraMiniGameMain.2bpp", 243*$10, $20
+.logs2:
+	INCBIN "en_sakuraMiniGameMain.2bpp", 263*$10, $20
+.logs3:
+	INCBIN "en_sakuraMiniGameMain.2bpp", 283*$10, $20
+
+
+EnLoadSakuraMiniGameGfx1::
+	ld   bc, $10
+	ld   de, $8800
+	ld   hl, .row2_2
+	call MemCopy
+
+	ld   bc, $100
+	ld   de, $8810
+	ld   hl, .row3
+	call MemCopy
+
+	ld   bc, $100
+	ld   de, $8910
+	ld   hl, .row4
+	call MemCopy
+
+	ld   bc, $e0
+	ld   de, $8a10
+	ld   hl, .row5
+	call MemCopy
+
+	ld   bc, $e0
+	ld   de, $8af0
+	ld   hl, .row6
+	call MemCopy
+
+	ld   bc, $e0
+	ld   de, $8bd0
+	ld   hl, .row7
+	call MemCopy
+
+	ld   bc, $20
+	ld   de, $8cb0
+	ld   hl, .row8
+	call MemCopy
+
+	ld   bc, $30
+	ld   de, $8cd0
+	ld   hl, .row9_1
+	call MemCopy
+
+	ld   bc, $60
+	ld   de, $8da0
+	ld   hl, .row9_2
+	call MemCopy
+
+	ld   bc, $10
+	ld   de, $8ea0
+	ld   hl, .row9_3
+	call MemCopy
+
+	ld   bc, $50
+	ld   de, $8eb0
+	ld   hl, .row10_1
+	call MemCopy
+
+	ld   bc, $50
+	ld   de, $8fa0
+	ld   hl, .row10_2
+	call MemCopy
+
+	ld   bc, $a0
+	ld   de, $8ff0
+	ld   hl, .row11
+	call MemCopy
+
+	ld   bc, $a0
+	ld   de, $9090
+	ld   hl, .row12
+	call MemCopy
+
+	ret
+.row2_2:
+	INCBIN "en_sakuraMiniGameMain.2bpp", 37*$10, $10
+.row3:
+	INCBIN "en_sakuraMiniGameMain.2bpp", 42*$10, $100
+.row4:
+	INCBIN "en_sakuraMiniGameMain.2bpp", 62*$10, $100
+.row5:
+	INCBIN "en_sakuraMiniGameMain.2bpp", 83*$10, $e0
+.row6:
+	INCBIN "en_sakuraMiniGameMain.2bpp", 103*$10, $e0
+.row7:
+	INCBIN "en_sakuraMiniGameMain.2bpp", 123*$10, $e0
+.row8:
+	INCBIN "en_sakuraMiniGameMain.2bpp", 153*$10, $20
+.row9_1:
+	INCBIN "en_sakuraMiniGameMain.2bpp", 165*$10, $30
+.row9_2:
+	INCBIN "en_sakuraMiniGameMain.2bpp", 168*$10, $60
+.row9_3:
+	INCBIN "en_sakuraMiniGameMain.2bpp", 174*$10, $10
+.row10_1:
+	INCBIN "en_sakuraMiniGameMain.2bpp", 185*$10, $50
+.row10_2:
+	INCBIN "en_sakuraMiniGameMain.2bpp", 190*$10, $50
+.row11:
+	INCBIN "en_sakuraMiniGameMain.2bpp", 205*$10, $a0
+.row12:
+	INCBIN "en_sakuraMiniGameMain.2bpp", 225*$10, $a0
+
 endc

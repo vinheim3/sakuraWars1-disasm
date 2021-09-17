@@ -2636,7 +2636,11 @@ SakuraMiniGameMainSubstate3:
 	ld   a, $17                                      ; $4f53: $3e $17
 	ld   hl, $8800                                   ; $4f55: $21 $00 $88
 	ld   de, $4000                                   ; $4f58: $11 $00 $40
+if def(VWF)
+	call SakuraMiniGameBank1_8800hHook
+else
 	call RLEXorCopy                                       ; $4f5b: $cd $d2 $09
+endc
 
 ;
 	xor  a                                           ; $4f5e: $af
@@ -2650,7 +2654,11 @@ SakuraMiniGameMainSubstate3:
 	ld   a, $12                                      ; $4f6c: $3e $12
 	ld   hl, $8000                                   ; $4f6e: $21 $00 $80
 	ld   de, $6a00                                   ; $4f71: $11 $00 $6a
+if def(VWF)
+	call SakuraMiniGameBank0_8000hHook
+else
 	call RLEXorCopy                                       ; $4f74: $cd $d2 $09
+endc
 
 ;
 	ld   a, [wWramBank]                                  ; $4f77: $fa $93 $c2
@@ -2658,14 +2666,28 @@ SakuraMiniGameMainSubstate3:
 	ld   a, $03                                      ; $4f7b: $3e $03
 	ld   [wWramBank], a                                  ; $4f7d: $ea $93 $c2
 	ldh  [rSVBK], a                                  ; $4f80: $e0 $70
+
+; Copy tile map into ram
 	ld   a, $1d                                      ; $4f82: $3e $1d
 	ld   hl, $d000                                   ; $4f84: $21 $00 $d0
 	ld   de, $53b8                                   ; $4f87: $11 $b8 $53
+if def(VWF)
+	call SakuraMiniGameTileMapHook
+else
 	call RLEXorCopy                                       ; $4f8a: $cd $d2 $09
+endc
+
+; Copy tile attr into ram
 	ld   a, $1d                                      ; $4f8d: $3e $1d
 	ld   hl, $d400                                   ; $4f8f: $21 $00 $d4
 	ld   de, $6d99                                   ; $4f92: $11 $99 $6d
+if def(VWF)
+	call SakuraMiniGameTileAttrHook
+else
 	call RLEXorCopy                                       ; $4f95: $cd $d2 $09
+endc
+
+;
 	ld   de, $d800                                   ; $4f98: $11 $00 $d8
 	ld   hl, $d040                                   ; $4f9b: $21 $40 $d0
 	ld   bc, $0080                                   ; $4f9e: $01 $80 $00
@@ -10614,6 +10636,34 @@ KannaMiniGameBank1_9000hHook:
 	call RLEXorCopy
 
 	M_FarCall EnLoadKannaMiniGameGfx1
+	ret
+
+
+SakuraMiniGameBank0_8000hHook:
+	call RLEXorCopy
+
+	M_FarCall EnLoadSakuraMiniGameGfx0
+	ret
+
+
+SakuraMiniGameBank1_8800hHook:
+	call RLEXorCopy
+
+	M_FarCall EnLoadSakuraMiniGameGfx1
+	ret
+
+
+SakuraMiniGameTileMapHook:
+	call RLEXorCopy
+
+	M_FarCall EnLoadSakuraMiniGameTileMap
+	ret
+
+
+SakuraMiniGameTileAttrHook:
+	call RLEXorCopy
+
+	M_FarCall EnLoadSakuraMiniGameTileAttr
 	ret
 
 endc

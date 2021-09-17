@@ -39,6 +39,7 @@
 ; rgbgfx -o en_kohranMiniGameMain.2bpp en_kohranMiniGameMain.png
 ; rgbgfx -o en_kannaMiniGameMain.2bpp en_kannaMiniGameMain.png
 ; rgbgfx -o en_minigameResults.2bpp en_minigameResults.png
+; rgbgfx -o en_sakuraMiniGameMain.2bpp en_sakuraMiniGameMain.png
 ; tools/gfx.py 1bpp newLetters.png --from=png --interleave
 
 ; empty banks
@@ -48,6 +49,9 @@
 
 ; script banks
 ; 0x41 - 0x6a
+
+; hook banks
+; 0xff, 0xfd, 0xfb, 0xa4
 
 ; IMPORTANT
 ; When adding new characters, add map+width in scriptExtract, and width in getCharWidth
