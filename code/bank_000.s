@@ -4533,9 +4533,9 @@ CheckIfNextTextCharIsPunctuation::
 ; H - next kanji's quarter bank offset
 ; L - kanji's idx
 ; Returns additional counter in A
-; Smallest addition for hoving periods $09 and $ff
+; Smallest addition for sequential periods $09 and $ff
 ; Small addition for inverted comma, ? and !
-; Medium addition for hovering period $f3
+; Medium addition for full stop-period $f3
 ; Big addition for comma and period
 ; Biggest addition for inverted comma
 GetCharAdditionalSpeedCounter::
@@ -9774,6 +9774,9 @@ GetCharWidth1:
 ; The following takes up 2 pixels + 1 space
 	ld   b, $03
 	cp   $01 ; '
+	ret  z
+
+	cp   $15 ; :
 	ret  z
 
 	cp   $18 ; ;

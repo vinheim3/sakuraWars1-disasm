@@ -476,7 +476,7 @@ class ScriptExtractor:
             elif op == 0x2e:
                 self.instructions[currOpAddress] = {
                     "name": "ScriptOpt_2e",
-                    "params": "b",
+                    "params": "bb",
                 }
                 jumps = list(filter(lambda item: item >= self.offset, self.jumpAddresses))
                 if not list(jumps):

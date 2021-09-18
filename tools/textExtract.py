@@ -10,7 +10,7 @@ from util import getRom, conv, bankAddr, wordIn, getKanjiMap
 kanji_map = getKanjiMap()
 
 existingTranslations = {}
-with open('sakura wars GB - 30:08:21.csv') as f:
+with open('sakura wars GB - 10:09:21.csv') as f:
     reader = csv.reader(f)
     for row in reader:
         if row[0]:
@@ -217,7 +217,7 @@ def get_script_screens(bank, addr, scriptNum, providedJumps=None):
 
         if opcode in (0, 6, 0x2e):
             if opcode == 0x2e:
-                offset += 1
+                offset += 2
             if opcode == 0x06:
                 word = wordIn(data, start+offset)
                 jumpAddresses.append(word)

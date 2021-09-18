@@ -8003,7 +8003,7 @@ ScriptOpcode2e_StartScript_Main:
 	add  hl, bc                                      ; $7694: $09
 
 ;
-	ld   a, $40                                      ; $7695: $3e $40
+	ld   a, BANK(ScriptSources)                                      ; $7695: $3e $40
 	ld   de, wBaseScriptAddr                                   ; $7697: $11 $8a $cb
 	ld   bc, $0003                                   ; $769a: $01 $03 $00
 	call FarMemCopy                                       ; $769d: $cd $b2 $09
