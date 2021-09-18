@@ -1182,11 +1182,9 @@ ScriptOpcode01_DisplayText_Init:
 	ld   bc, $0006                                                  ; $474b
 	call MemCopy                                                    ; $474e
 
-;
-	call GetNextScriptOpcodeToProcess                               ; $4751: $cd $70 $42
-	or   a                                           ; $4754: $b7
-
-;
+; If next byte is non-0, it's Sumire misnaming the player
+	call GetNextScriptOpcodeToProcess                               ; $4751
+	or   a                                                          ; $4754
 	M_FarCall "nz", AlterPlayerNameIntoWram
 
 ; Until the null terminator is found, add a kanji to display
@@ -1229,7 +1227,11 @@ ScriptOpcode01_DisplayText_Init:
 	dw .scriptByte8
 	dw .scriptByteFFh
 	dw .scriptByteLt8
+if def(VWF)
+	dw TextScriptByteBh
+else
 	dw .scriptByteBtoF
+endc
 	dw .scriptByteBtoF
 	dw .scriptByteBtoF
 	dw .scriptByteBtoF
@@ -8133,3 +8135,13 @@ ScriptOpcode31_Main:
 jr_008_7777:
 	M_FarCall SetSramByte2
 	ret                                              ; $778b: $c9
+
+if def(VWF)
+
+TextScriptByteBh:
+	call GetNextScriptOpcodeToProcess
+	call AddDictWordToConvoStructForCurrTextBox
+
+	jp ScriptOpcode01_DisplayText_Init.toNextDataByte
+
+endc

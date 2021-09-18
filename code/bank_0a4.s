@@ -7683,23 +7683,31 @@ jr_0a4_62ca:
 
 if def(VWF)
 
+; HL - base screen addr (vram or wram buffer)
 EnLoadSakuraMiniGameTileMap::
+	push hl
+	ld   bc, $240
+	add  hl, bc
 	ld   a, BANK(.base1)
 	ldbc 16, 4
 	ld   de, .base1
-	ld   hl, $d000+$240
 	call FarCopyLayout
 
+	pop  hl
+	push hl
+	ld   bc, $2c1
+	add  hl, bc
 	ld   a, BANK(.base2)
 	ldbc 18, 4
 	ld   de, .base2
-	ld   hl, $d000+$2c1
 	call FarCopyLayout
 
+	pop  hl
+	ld   bc, $341
+	add  hl, bc
 	ld   a, BANK(.base3)
 	ldbc 18, 4
 	ld   de, .base3
-	ld   hl, $d000+$341
 	call FarCopyLayout
 	ret
 .base1:
@@ -7719,23 +7727,31 @@ EnLoadSakuraMiniGameTileMap::
 	db $c0, $c1, $c2, $c3, $09, $0a, $0b, $0c, $0d, $0e, $0f, $10, $11, $12, $ce, $cf, $08, $09
 
 
+; HL - base screen addr (vram or wram buffer)
 EnLoadSakuraMiniGameTileAttr::
+	push hl
+	ld   bc, $240
+	add  hl, bc
 	ld   a, BANK(.base1)
 	ldbc 16, 4
 	ld   de, .base1
-	ld   hl, $d400+$240
 	call FarCopyLayout
 
+	pop  hl
+	push hl
+	ld   bc, $2c1
+	add  hl, bc
 	ld   a, BANK(.base2)
 	ldbc 18, 4
 	ld   de, .base2
-	ld   hl, $d400+$2c1
 	call FarCopyLayout
 
+	pop  hl
+	ld   bc, $341
+	add  hl, bc
 	ld   a, BANK(.base3)
 	ldbc 18, 4
 	ld   de, .base3
-	ld   hl, $d400+$341
 	call FarCopyLayout
 	ret
 .base1:

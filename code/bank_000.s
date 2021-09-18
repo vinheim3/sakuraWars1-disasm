@@ -10170,6 +10170,802 @@ ClearVwfTileBuffers:
 	pop  hl
 	pop  af
 	ret
+
+
+; A - dict idx
+AddDictWordToConvoStructForCurrTextBox::
+; HL = pointer to entry
+	ld   hl, .table
+	ld   b, 0
+	ld   c, a
+	add  hl, bc
+	add  hl, bc
+
+; HL = pointer to text
+	ld   a, [hl+]
+	ld   h, [hl]
+	ld   l, a
+
+; Add letters to convo struct
+:	ld   a, [hl+]
+	and  a
+	ret  z
+
+	push hl
+	call AddKanjiToConvoStructForCurrTextBox
+	pop  hl
+	jr   :-
+
+.table:
+	dw .item00
+	dw .item01
+	dw .item02
+	dw .item03
+	dw .item04
+	dw .item05
+	dw .item06
+	dw .item07
+	dw .item08
+	dw .item09
+	dw .item0a
+	dw .item0b
+	dw .item0c
+	dw .item0d
+	dw .item0e
+	dw .item0f
+	dw .item10
+	dw .item11
+	dw .item12
+	dw .item13
+	dw .item14
+	dw .item15
+	dw .item16
+	dw .item17
+	dw .item18
+	dw .item19
+	dw .item1a
+	dw .item1b
+	dw .item1c
+	dw .item1d
+	dw .item1e
+	dw .item1f
+	dw .item20
+	dw .item21
+	dw .item22
+	dw .item23
+	dw .item24
+	dw .item25
+	dw .item26
+	dw .item27
+	dw .item28
+	dw .item29
+	dw .item2a
+	dw .item2b
+	dw .item2c
+	dw .item2d
+	dw .item2e
+	dw .item2f
+	dw .item30
+	dw .item31
+	dw .item32
+	dw .item33
+	dw .item34
+	dw .item35
+	dw .item36
+	dw .item37
+	dw .item38
+	dw .item39
+	dw .item3a
+	dw .item3b
+	dw .item3c
+	dw .item3d
+	dw .item3e
+	dw .item3f
+	dw .item40
+	dw .item41
+	dw .item42
+	dw .item43
+	dw .item44
+	dw .item45
+	dw .item46
+	dw .item47
+	dw .item48
+	dw .item49
+	dw .item4a
+	dw .item4b
+	dw .item4c
+	dw .item4d
+	dw .item4e
+	dw .item4f
+	dw .item50
+	dw .item51
+	dw .item52
+	dw .item53
+	dw .item54
+	dw .item55
+	dw .item56
+	dw .item57
+	dw .item58
+	dw .item59
+	dw .item5a
+	dw .item5b
+	dw .item5c
+	dw .item5d
+	dw .item5e
+	dw .item5f
+	dw .item60
+	dw .item61
+	dw .item62
+	dw .item63
+	dw .item64
+	dw .item65
+	dw .item66
+	dw .item67
+	dw .item68
+	dw .item69
+	dw .item6a
+	dw .item6b
+	dw .item6c
+	dw .item6d
+	dw .item6e
+	dw .item6f
+	dw .item70
+	dw .item71
+	dw .item72
+	dw .item73
+	dw .item74
+	dw .item75
+	dw .item76
+	dw .item77
+	dw .item78
+	dw .item79
+	dw .item7a
+	dw .item7b
+	dw .item7c
+	dw .item7d
+	dw .item7e
+	dw .item7f
+	dw .item80
+	dw .item81
+	dw .item82
+	dw .item83
+	dw .item84
+	dw .item85
+	dw .item86
+	dw .item87
+	dw .item88
+	dw .item89
+	dw .item8a
+	dw .item8b
+	dw .item8c
+	dw .item8d
+	dw .item8e
+	dw .item8f
+	dw .item90
+	dw .item91
+	dw .item92
+	dw .item93
+	dw .item94
+	dw .item95
+	dw .item96
+	dw .item97
+	dw .item98
+	dw .item99
+	dw .item9a
+	dw .item9b
+	dw .item9c
+	dw .item9d
+	dw .item9e
+	dw .item9f
+	dw .itema0
+	dw .itema1
+	dw .itema2
+	dw .itema3
+	dw .itema4
+	dw .itema5
+	dw .itema6
+	dw .itema7
+	dw .itema8
+	dw .itema9
+	dw .itemaa
+	dw .itemab
+	dw .itemac
+	dw .itemad
+	dw .itemae
+	dw .itemaf
+	dw .itemb0
+	dw .itemb1
+	dw .itemb2
+	dw .itemb3
+	dw .itemb4
+	dw .itemb5
+	dw .itemb6
+	dw .itemb7
+	dw .itemb8
+	dw .itemb9
+	dw .itemba
+	dw .itembb
+	dw .itembc
+	dw .itembd
+	dw .itembe
+	dw .itembf
+	dw .itemc0
+	dw .itemc1
+	dw .itemc2
+	dw .itemc3
+	dw .itemc4
+	dw .itemc5
+	dw .itemc6
+	dw .itemc7
+	dw .itemc8
+	dw .itemc9
+	dw .itemca
+	dw .itemcb
+	dw .itemcc
+	dw .itemcd
+	dw .itemce
+	dw .itemcf
+	dw .itemd0
+	dw .itemd1
+	dw .itemd2
+	dw .itemd3
+	dw .itemd4
+	dw .itemd5
+	dw .itemd6
+	dw .itemd7
+	dw .itemd8
+	dw .itemd9
+	dw .itemda
+	dw .itemdb
+	dw .itemdc
+	dw .itemdd
+	dw .itemde
+	dw .itemdf
+	dw .iteme0
+	dw .iteme1
+	dw .iteme2
+	dw .iteme3
+	dw .iteme4
+	dw .iteme5
+	dw .iteme6
+	dw .iteme7
+	dw .iteme8
+	dw .iteme9
+	dw .itemea
+	dw .itemeb
+	dw .itemec
+	dw .itemed
+	dw .itemee
+	dw .itemef
+	dw .itemf0
+	dw .itemf1
+	dw .itemf2
+	dw .itemf3
+	dw .itemf4
+	dw .itemf5
+	dw .itemf6
+	dw .itemf7
+	dw .itemf8
+	dw .itemf9
+	dw .itemfa
+	dw .itemfb
+	dw .itemfc
+	dw .itemfd
+	dw .itemfe
+	dw .itemff
+.item00:
+	db "the", 0
+.item01:
+	db "Could", 0
+.item02:
+	db "Alright,", 0
+.item03:
+	db "Maybe", 0
+.item04:
+	db "blah...", 0
+.item05:
+	db "question", 0
+.item06:
+	db "hallway...", 0
+.item07:
+	db "mystery.", 0
+.item08:
+	db "see...", 0
+.item09:
+	db "Nails...", 0
+.item0a:
+	db "middle", 0
+.item0b:
+	db "probably", 0
+.item0c:
+	db "hammering", 0
+.item0d:
+	db "someone", 0
+.item0e:
+	db "impressed,", 0
+.item0f:
+	db "think", 0
+.item10:
+	db "and", 0
+.item11:
+	db "you", 0
+.item12:
+	db "that", 0
+.item13:
+	db "night.", 0
+.item14:
+	db "Hmm...", 0
+.item15:
+	db "training", 0
+.item16:
+	db "You", 0
+.item17:
+	db "next", 0
+.item18:
+	db "about", 0
+.item19:
+	db "could", 0
+.item1a:
+	db "might", 0
+.item1b:
+	db "been", 0
+.item1c:
+	db "here", 0
+.item1d:
+	db "find", 0
+.item1e:
+	db "Props?", 0
+.item1f:
+	db "answer", 0
+.item20:
+	db "something", 0
+.item21:
+	db "Okay,", 0
+.item22:
+	db "explosions.", 0
+.item23:
+	db "Blah", 0
+.item24:
+	db "blah", 0
+.item25:
+	db "are.", 0
+.item26:
+	db "Someone", 0
+.item27:
+	db "Captain", 0
+.item28:
+	db "Yoneda?", 0
+.item29:
+	db "Kohran?", 0
+.item2a:
+	db "Kohran.", 0
+.item2b:
+	db "singing", 0
+.item2c:
+	db "Maria", 0
+.item2d:
+	db "would", 0
+.item2e:
+	db "likely", 0
+.item2f:
+	db "thinking", 0
+.item30:
+	db "Water...", 0
+.item31:
+	db "water...", 0
+.item32:
+	db "manager,", 0
+.item33:
+	db "something.", 0
+.item34:
+	db "experiment", 0
+.item35:
+	db "her", 0
+.item36:
+	db "like", 0
+.item37:
+	db "doing", 0
+.item38:
+	db "time,", 0
+.item39:
+	db "everyone,", 0
+.item3a:
+	db "What", 0
+.item3b:
+	db "who?", 0
+.item3c:
+	db "trying", 0
+.item3d:
+	db "wrong?", 0
+.item3e:
+	db "brings", 0
+.item3f:
+	db "Kanna.", 0
+.item40:
+	db "right.", 0
+.item41:
+	db "through", 0
+.item42:
+	db "exactly", 0
+.item43:
+	db "getting", 0
+.item44:
+	db "Ohhhohohoho!", 0
+.item45:
+	db "it!", 0
+.item46:
+	db "this", 0
+.item47:
+	db "just", 0
+.item48:
+	db "nails", 0
+.item49:
+	db "drunk", 0
+.item4a:
+	db "night...", 0
+.item4b:
+	db "manager.", 0
+.item4c:
+	db "performance", 0
+.item4d:
+	db "ridiculous!", 0
+.item4e:
+	db "Understood?", 0
+.item4f:
+	db "Understood.", 0
+.item50:
+	db "overloading", 0
+.item51:
+	db "have", 0
+.item52:
+	db "Maria.", 0
+.item53:
+	db "Sakura", 0
+.item54:
+	db "Kanna?", 0
+.item55:
+	db "forgetting", 0
+.item56:
+	db "seriously.", 0
+.item57:
+	db "conducting", 0
+.item58:
+	db "Singing...", 0
+.item59:
+	db "something?", 0
+.item5a:
+	db "Apologies,", 0
+.item5b:
+	db "Wailing...", 0
+.item5c:
+	db "But", 0
+.item5d:
+	db "night", 0
+.item5e:
+	db "Iris?", 0
+.item5f:
+	db "Iris.", 0
+.item60:
+	db "here?", 0
+.item61:
+	db "bring", 0
+.item62:
+	db "suppose", 0
+.item63:
+	db "Sakura?", 0
+.item64:
+	db "Sakura,", 0
+.item65:
+	db "disturb", 0
+.item66:
+	db "mystery", 0
+.item67:
+	db "because", 0
+.item68:
+	db "Sumire.", 0
+.item69:
+	db "lately,", 0
+.item6a:
+	db "lately.", 0
+.item6b:
+	db "room", 0
+.item6c:
+	db "were", 0
+.item6d:
+	db "training.", 0
+.item6e:
+	db "occasion,", 0
+.item6f:
+	db "thinking.", 0
+.item70:
+	db "Sometimes", 0
+.item71:
+	db "screaming", 0
+.item72:
+	db "The", 0
+.item73:
+	db "one", 0
+.item74:
+	db "not", 0
+.item75:
+	db "she", 0
+.item76:
+	db "it.", 0
+.item77:
+	db "your", 0
+.item78:
+	db "all.", 0
+.item79:
+	db "with", 0
+.item7a:
+	db "why?", 0
+.item7b:
+	db "some", 0
+.item7c:
+	db "onto", 0
+.item7d:
+	db "these", 0
+.item7e:
+	db "start", 0
+.item7f:
+	db "sound", 0
+.item80:
+	db "being", 0
+.item81:
+	db "towel", 0
+.item82:
+	db "room.", 0
+.item83:
+	db "case,", 0
+.item84:
+	db "Think", 0
+.item85:
+	db "Haha,", 0
+.item86:
+	db "later.", 0
+.item87:
+	db "others", 0
+.item88:
+	db "before", 0
+.item89:
+	db "repair", 0
+.item8a:
+	db "during", 0
+.item8b:
+	db "Ogami?", 0
+.item8c:
+	db "Maria,", 0
+.item8d:
+	db "towel.", 0
+.item8e:
+	db "figure", 0
+.item8f:
+	db "sheets", 0
+.item90:
+	db "theater.", 0
+.item91:
+	db "daytime.", 0
+.item92:
+	db "minutes?", 0
+.item93:
+	db "swimming", 0
+.item94:
+	db "midnight", 0
+.item95:
+	db "bringing", 0
+.item96:
+	db "Swimming", 0
+.item97:
+	db "already.", 0
+.item98:
+	db "markings", 0
+.item99:
+	db "Probably", 0
+.item9a:
+	db "floating", 0
+.item9b:
+	db "ballads!", 0
+.item9c:
+	db "eerie...", 0
+.item9d:
+	db "singing.", 0
+.item9e:
+	db "concentration,", 0
+.item9f:
+	db "get", 0
+.itema0:
+	db "but", 0
+.itema1:
+	db "...", 0
+.itema2:
+	db "for", 0
+.itema3:
+	db "is,", 0
+.itema4:
+	db "take", 0
+.itema5:
+	db "help", 0
+.itema6:
+	db "you.", 0
+.itema7:
+	db "must", 0
+.itema8:
+	db "from", 0
+.itema9:
+	db "know", 0
+.itemaa:
+	db "manager", 0
+.itemab:
+	db "repairs", 0
+.itemac:
+	db "Sakura.", 0
+.itemad:
+	db "realize", 0
+.itemae:
+	db "bothers", 0
+.itemaf:
+	db "revenge", 0
+.itemb0:
+	db "serious", 0
+.itemb1:
+	db "Please?", 0
+.itemb2:
+	db "without", 0
+.itemb3:
+	db "ghosts.", 0
+.itemb4:
+	db "theory.", 0
+.itemb5:
+	db "Sumire,", 0
+.itemb6:
+	db "Sumire?", 0
+.itemb7:
+	db "pardon.", 0
+.itemb8:
+	db "much...", 0
+.itemb9:
+	db "pool...", 0
+.itemba:
+	db "around.", 0
+.itembb:
+	db "smashed", 0
+.itembc:
+	db "believe", 0
+.itembd:
+	db "correct", 0
+.itembe:
+	db "Singing", 0
+.itembf:
+	db "buzzed,", 0
+.itemc0:
+	db "though,", 0
+.itemc1:
+	db "Phew...", 0
+.itemc2:
+	db "frustrations", 0
+.itemc3:
+	db "unthinkable,", 0
+.itemc4:
+	db "responsible?", 0
+.itemc5:
+	db "electricity.", 0
+.itemc6:
+	db "experiments.", 0
+.itemc7:
+	db "was", 0
+.itemc8:
+	db "worry", 0
+.itemc9:
+	db "right", 0
+.itemca:
+	db "week.", 0
+.itemcb:
+	db "know!", 0
+.itemcc:
+	db "water", 0
+.itemcd:
+	db "their", 0
+.itemce:
+	db "after", 0
+.itemcf:
+	db "sweat", 0
+.itemd0:
+	db "that,", 0
+.itemd1:
+	db "Yeah,", 0
+.itemd2:
+	db "which", 0
+.itemd3:
+	db "Wait,", 0
+.itemd4:
+	db "Water", 0
+.itemd5:
+	db "fine.", 0
+.itemd6:
+	db "explanation", 0
+.itemd7:
+	db "infidelity.", 0
+.itemd8:
+	db "ridiculous.", 0
+.itemd9:
+	db "foolishness", 0
+.itemda:
+	db "Enthusiast!", 0
+.itemdb:
+	db "daydreaming", 0
+.itemdc:
+	db "explosions,", 0
+.itemdd:
+	db "ridiculous,", 0
+.itemde:
+	db "nightmares.", 0
+.itemdf:
+	db "me.", 0
+.iteme0:
+	db "Good", 0
+.iteme1:
+	db "That", 0
+.iteme2:
+	db "Hey,", 0
+.iteme3:
+	db "pool", 0
+.iteme4:
+	db "then", 0
+.iteme5:
+	db "swim", 0
+.iteme6:
+	db "when", 0
+.iteme7:
+	db "much", 0
+.iteme8:
+	db "only", 0
+.iteme9:
+	db "usual.", 0
+.itemea:
+	db "today.", 0
+.itemeb:
+	db "Right,", 0
+.itemec:
+	db "sorry,", 0
+.itemed:
+	db "voodoo", 0
+.itemee:
+	db "sorry.", 0
+.itemef:
+	db "coming", 0
+.itemf0:
+	db "little", 0
+.itemf1:
+	db "right,", 0
+.itemf2:
+	db "What?!", 0
+.itemf3:
+	db "people", 0
+.itemf4:
+	db "hobby.", 0
+.itemf5:
+	db "water,", 0
+.itemf6:
+	db "nobody", 0
+.itemf7:
+	db "Cadet.", 0
+.itemf8:
+	db "forgot", 0
+.itemf9:
+	db "forget", 0
+.itemfa:
+	db "Nobody", 0
+.itemfb:
+	db "water.", 0
+.itemfc:
+	db "appear", 0
+.itemfd:
+	db "caused", 0
+.itemfe:
+	db "Kohran", 0
+.itemff:
+	db "Sorry.", 0
+
 endc
 
 if def(TV_HACK)

@@ -250,7 +250,7 @@ macro ScriptOpt_2c
 endm
 
 macro ScriptOpt_2e
-    db $2e, \1
+    db $2e, \1, \2
 endm
 
 macro ScriptOpt_2f

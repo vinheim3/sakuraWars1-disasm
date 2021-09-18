@@ -1100,12 +1100,12 @@ LoadIrisMiniGameMainGfx1::
 	call MemCopy
 
 	ld   bc, $30
-	ld   de, $88a0
+	ld   de, $8830
 	ld   hl, .score
 	call MemCopy
 
 	ld   bc, $30
-	ld   de, $8830
+	ld   de, $88a0
 	ld   hl, .timer
 	call MemCopy
 

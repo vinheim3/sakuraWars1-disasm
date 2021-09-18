@@ -6,6 +6,7 @@ import os
 import clipboard
 import time
 from util import bankConv, getRom, conv, bankAddr, wordIn, stringB, groupBytes
+from common_words import get_chosen
 
 
 class ScriptExtractor:
@@ -162,6 +163,11 @@ class ScriptExtractor:
             "params": "",
         },
     }
+
+    chosen_words = {
+        word: i
+        for i, (word, _) in enumerate(get_chosen())
+    }
     
     def __init__(self, rom, start, scriptNum):
         self.rom = rom
@@ -174,7 +180,7 @@ class ScriptExtractor:
         self.englishMap = {}
 
     @staticmethod
-    def convertEnglish(english, limit=112):
+    def convertEnglish(english, limit=112, dictionary=False):
         words = english.split()
         textboxes = []
         lineCounter = 0
@@ -204,6 +210,17 @@ class ScriptExtractor:
                     boxBytes.extend([0x08, 0x00])
                     wordIdx += 6
                     continue
+
+                if dictionary:
+                    seekIdx = wordIdx+1
+                    while seekIdx < len(word) and word[seekIdx] != 0:
+                        seekIdx += 1
+
+                    curr_word = word[wordIdx:seekIdx]
+                    if curr_word in ScriptExtractor.chosen_words:
+                        boxBytes.extend([0x0b, ScriptExtractor.chosen_words[curr_word]])
+                        wordIdx = seekIdx
+                        continue
 
                 if word[wordIdx] == "'":
                     if wordIdx != len(word)-1 and word[wordIdx+1] in "0123456789":
@@ -519,7 +536,7 @@ class ScriptExtractor:
 
             if params == 't' and address+1 in self.englishMap:
                 english = self.englishMap[address+1]
-                textboxes = self.convertEnglish(english)
+                textboxes = self.convertEnglish(english, dictionary=True)
                 for line in self.englishMap[address+1].split('\n'):
                     comps.append(f"; {line}")
                 if prompted is False:
@@ -573,7 +590,7 @@ class ScriptExtractor:
                         limit = 112
                         if name == 'ScriptOpt_TimedQuestion':
                             limit = 128
-                        textboxes = self.convertEnglish(english, limit)
+                        textboxes = self.convertEnglish(english, limit=limit)
                         assert len(textboxes) == 1
                         if 0x0d in textboxes[0]:
                             print(self.scriptNum, address+offset)
@@ -681,7 +698,7 @@ if __name__ == "__main__":
     doneEnglish = {}
 
     if translate:
-        with open('sakura wars GB - 10:09:21.csv') as f:
+        with open('sakura wars GB - 18:09:21.csv') as f:
             reader = csv.reader(f)
             for scriptNum, offset, orig, blank, english, char, dupe1, dupe2 in reader:
                 # todo: temp - remove
@@ -749,9 +766,7 @@ if __name__ == "__main__":
         startAddr = wordIn(data, baseTable+scriptNum*3)+0x4000
 
         se = ScriptExtractor(data, bankAddr(startBank, startAddr), scriptNum)
-        # todo: temp - remove
-        if scriptNum not in (0x2d6,):
-            se.englishMap = fullEnglishMap[scriptNum]
+        se.englishMap = fullEnglishMap[scriptNum]
         comps, totalBytes = se.run()
 
         if compileBs:
@@ -759,6 +774,7 @@ if __name__ == "__main__":
             final_comps = '\n'.join(comps)
             final_str = f"""
 include "macros.s"
+include "charmap.s"
 
 SECTION "Bank $00", ROM0[$200]
 

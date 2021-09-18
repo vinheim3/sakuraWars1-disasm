@@ -2630,7 +2630,11 @@ SakuraMiniGameMainSubstate3:
 	ld   a, $1d                                      ; $4f48: $3e $1d
 	ld   hl, $9800                                   ; $4f4a: $21 $00 $98
 	ld   de, $6d99                                   ; $4f4d: $11 $99 $6d
+if def(VWF)
+	call SakuraMiniGameTileAttrHook1
+else
 	call RLEXorCopy                                       ; $4f50: $cd $d2 $09
+endc
 
 ;
 	ld   a, $17                                      ; $4f53: $3e $17
@@ -2648,7 +2652,11 @@ endc
 	ld   a, $1d                                      ; $4f61: $3e $1d
 	ld   hl, $9800                                   ; $4f63: $21 $00 $98
 	ld   de, $53b8                                   ; $4f66: $11 $b8 $53
+if def(VWF)
+	call SakuraMiniGameTileMap1Hook
+else
 	call RLEXorCopy                                       ; $4f69: $cd $d2 $09
+endc
 
 ;
 	ld   a, $12                                      ; $4f6c: $3e $12
@@ -2672,25 +2680,25 @@ endc
 	ld   hl, $d000                                   ; $4f84: $21 $00 $d0
 	ld   de, $53b8                                   ; $4f87: $11 $b8 $53
 if def(VWF)
-	call SakuraMiniGameTileMapHook
+	call SakuraMiniGameTileMap2Hook
 else
 	call RLEXorCopy                                       ; $4f8a: $cd $d2 $09
 endc
 
 ; Copy tile attr into ram
+if def(VWF)
+	M_FarCall SakuraMiniGameTileAttrHook2
+else
 	ld   a, $1d                                      ; $4f8d: $3e $1d
 	ld   hl, $d400                                   ; $4f8f: $21 $00 $d4
 	ld   de, $6d99                                   ; $4f92: $11 $99 $6d
-if def(VWF)
-	call SakuraMiniGameTileAttrHook
-else
 	call RLEXorCopy                                       ; $4f95: $cd $d2 $09
-endc
 
 ;
 	ld   de, $d800                                   ; $4f98: $11 $00 $d8
 	ld   hl, $d040                                   ; $4f9b: $21 $40 $d0
 	ld   bc, $0080                                   ; $4f9e: $01 $80 $00
+endc
 	call MemCopy                                       ; $4fa1: $cd $a9 $09
 	ld   de, $d880                                   ; $4fa4: $11 $80 $d8
 	ld   hl, $d440                                   ; $4fa7: $21 $40 $d4
@@ -2952,15 +2960,18 @@ Call_011_5159:
 	ld   [wWramBank], a                                  ; $515f: $ea $93 $c2
 	ldh  [rSVBK], a                                  ; $5162: $e0 $70
 	ld   bc, $0000                                   ; $5164: $01 $00 $00
-	ld   hl, $51be                                   ; $5167: $21 $be $51
+	ld   hl, .table                                   ; $5167: $21 $be $51
 
-jr_011_516a:
+.loop:
+; Get src addr, then bank, then preserve pointer in table
 	ld   a, [hl+]                                    ; $516a: $2a
 	ld   e, a                                        ; $516b: $5f
 	ld   a, [hl+]                                    ; $516c: $2a
 	ld   d, a                                        ; $516d: $57
 	ld   a, [hl+]                                    ; $516e: $2a
 	push hl                                          ; $516f: $e5
+
+;
 	ld   hl, $d882                                   ; $5170: $21 $82 $d8
 	add  hl, bc                                      ; $5173: $09
 	push bc                                          ; $5174: $c5
@@ -2974,6 +2985,8 @@ jr_011_516a:
 	push bc                                          ; $5182: $c5
 	ld   bc, $0404                                   ; $5183: $01 $04 $04
 	call FarCopyLayout                                       ; $5186: $cd $2c $0b
+
+;
 	ld   c, $80                                      ; $5189: $0e $80
 	ld   de, $9840                                   ; $518b: $11 $40 $98
 	ld   a, $03                                      ; $518e: $3e $03
@@ -2994,23 +3007,18 @@ jr_011_516a:
 	add  c                                           ; $51b1: $81
 	ld   c, a                                        ; $51b2: $4f
 	cp   $10                                         ; $51b3: $fe $10
-	jr   c, jr_011_516a                              ; $51b5: $38 $b3
+	jr   c, .loop                              ; $51b5: $38 $b3
 
 	pop  af                                          ; $51b7: $f1
 	ld   [wWramBank], a                                  ; $51b8: $ea $93 $c2
 	ldh  [rSVBK], a                                  ; $51bb: $e0 $70
 	ret                                              ; $51bd: $c9
 
-
-	adc  l                                           ; $51be: $8d
-	ld   a, [hl]                                     ; $51bf: $7e
-	ld   e, $ad                                      ; $51c0: $1e $ad
-	ld   a, [hl]                                     ; $51c2: $7e
-	ld   e, $cd                                      ; $51c3: $1e $cd
-	ld   a, [hl]                                     ; $51c5: $7e
-	ld   e, $ed                                      ; $51c6: $1e $ed
-	ld   a, [hl]                                     ; $51c8: $7e
-	db $1e 
+.table:
+	AddrBank Layout_SakuraYoureAPro1
+	AddrBank Layout_SakuraYoureAPro2
+	AddrBank Layout_SakuraYoureAPro3
+	AddrBank Layout_SakuraYoureAPro4
 	
 	
 SakuraMiniGameMainSubstate9:
@@ -10680,16 +10688,26 @@ SakuraMiniGameBank1_8800hHook:
 	ret
 
 
-SakuraMiniGameTileMapHook:
+SakuraMiniGameTileMap1Hook:
 	call RLEXorCopy
 
+	ld   hl, $9800
 	M_FarCall EnLoadSakuraMiniGameTileMap
 	ret
 
 
-SakuraMiniGameTileAttrHook:
+SakuraMiniGameTileMap2Hook:
 	call RLEXorCopy
 
+	ld   hl, $d000
+	M_FarCall EnLoadSakuraMiniGameTileMap
+	ret
+
+
+SakuraMiniGameTileAttrHook1:
+	call RLEXorCopy
+
+	ld   hl, $9800
 	M_FarCall EnLoadSakuraMiniGameTileAttr
 	ret
 

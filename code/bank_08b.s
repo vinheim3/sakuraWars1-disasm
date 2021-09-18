@@ -1433,4 +1433,21 @@ ReplaceKannaMiniGameTSPopup::
 .gfx:
 	INCBIN "en_kannaMGPopup.2bpp" ; $04c0
 
+
+SakuraMiniGameTileAttrHook2::
+; Original code pt.1
+	ld   a, $1d
+	ld   hl, $d400
+	ld   de, $6d99
+	call RLEXorCopy
+
+	ld   hl, $d400
+	M_FarCall EnLoadSakuraMiniGameTileAttr
+
+; Original code pt.2
+	ld   de, $d800
+	ld   hl, $d040
+	ld   bc, $0080 
+	ret
+
 endc
