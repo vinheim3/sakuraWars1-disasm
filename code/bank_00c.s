@@ -7948,7 +7948,7 @@ JpCheckIfFlagSet1::
 	ret                                                             ; $71d6
 
 
-Call_00c_71d7:
+CheckIfNextFlagSet1::
 	inc  hl                                          ; $71d7: $23
 
 	M_FarCall CheckIfFlagSet1
@@ -8004,7 +8004,7 @@ jr_00c_722f:
 	or   a                                           ; $723a: $b7
 	jr   z, jr_00c_722f                              ; $723b: $28 $f2
 
-	call Call_00c_71d7                               ; $723d: $cd $d7 $71
+	call CheckIfNextFlagSet1                               ; $723d: $cd $d7 $71
 	or   a                                           ; $7240: $b7
 	jr   nz, jr_00c_722f                             ; $7241: $20 $ec
 
@@ -8034,7 +8034,7 @@ jr_00c_7250:
 	or   l                                           ; $7258: $b5
 	ret  z                                           ; $7259: $c8
 
-	call Call_00c_71d7                               ; $725a: $cd $d7 $71
+	call CheckIfNextFlagSet1                               ; $725a: $cd $d7 $71
 	or   a                                           ; $725d: $b7
 	jr   z, .loop                              ; $725e: $28 $f2
 

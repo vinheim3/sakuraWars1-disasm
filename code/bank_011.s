@@ -4222,7 +4222,11 @@ endc
 	ld   a, $03                                      ; $5965: $3e $03
 	ld   hl, $d400                                   ; $5967: $21 $00 $d4
 	ld   b, $40                                      ; $596a: $06 $40
+if def(VWF)
+	call EnMariaTSHDMATransferHook
+else
 	call EnqueueHDMATransfer                                       ; $596c: $cd $7c $02
+endc
 	rst  WaitUntilVBlankIntHandledIfLCDOn                                         ; $596f: $cf
 
 ;
@@ -4323,23 +4327,26 @@ endc
 	ld   hl, $db60                                   ; $5a4f: $21 $60 $db
 	ld   bc, $00c0                                   ; $5a52: $01 $c0 $00
 	call MemCopy                                       ; $5a55: $cd $a9 $09
-	ld   a, $1e                                      ; $5a58: $3e $1e
-	ld   de, $7340                                   ; $5a5a: $11 $40 $73
+
+; Practice popup box
+	ld   a, BANK(TileAttr_MariaMiniGameTSPracticeBox)                                      ; $5a58: $3e $1e
+	ld   de, TileAttr_MariaMiniGameTSPracticeBox                                  ; $5a5a: $11 $40 $73
 	ld   hl, $d409                                   ; $5a5d: $21 $09 $d4
 	ld   bc, $0806                                   ; $5a60: $01 $06 $08
 	call FarCopyLayout                                       ; $5a63: $cd $2c $0b
-	ld   a, $1e                                      ; $5a66: $3e $1e
+
+	ld   a, BANK(TileMap_MariaMiniGameTSPracticeBox)                                      ; $5a66: $3e $1e
 	ld   hl, $d109                                   ; $5a68: $21 $09 $d1
 	call FarCopyLayout                                       ; $5a6b: $cd $2c $0b
 
-; Popup box
-	ld   a, $1e                                      ; $5a6e: $3e $1e
-	ld   de, $7ace                                   ; $5a70: $11 $ce $7a
+; 1st popup box
+	ld   a, BANK(TileAttr_MariaMiniGameTSPopupBox)                                      ; $5a6e: $3e $1e
+	ld   de, TileAttr_MariaMiniGameTSPopupBox                                   ; $5a70: $11 $ce $7a
 	ld   hl, $d329                                   ; $5a73: $21 $29 $d3
 	ld   bc, $0804                                   ; $5a76: $01 $04 $08
 	call FarCopyLayout                                       ; $5a79: $cd $2c $0b
 
-	ld   a, $1e                                      ; $5a7c: $3e $1e
+	ld   a, BANK(TileMap_MariaMiniGameTSPopupBox)                                      ; $5a7c: $3e $1e
 	ld   hl, $d029                                   ; $5a7e: $21 $29 $d0
 	call FarCopyLayout                                       ; $5a81: $cd $2c $0b
 
@@ -4352,14 +4359,19 @@ endc
 	ld   a, $1e                                      ; $5a92: $3e $1e
 	ld   hl, $d609                                   ; $5a94: $21 $09 $d6
 	call FarCopyLayout                                       ; $5a97: $cd $2c $0b
-	ld   a, $1e                                      ; $5a9a: $3e $1e
-	ld   de, $73a0                                   ; $5a9c: $11 $a0 $73
+
+; Difficulty popup box
+	ld   a, BANK(TileAttr_MariaMiniGameTSDifficultyBox)                                      ; $5a9a: $3e $1e
+	ld   de, TileAttr_MariaMiniGameTSDifficultyBox                                   ; $5a9c: $11 $a0 $73
 	ld   hl, $d909                                   ; $5a9f: $21 $09 $d9
 	ld   bc, $0806                                   ; $5aa2: $01 $06 $08
 	call FarCopyLayout                                       ; $5aa5: $cd $2c $0b
-	ld   a, $1e                                      ; $5aa8: $3e $1e
+
+	ld   a, BANK(TileMap_MariaMiniGameTSDifficultyBox)                                      ; $5aa8: $3e $1e
 	ld   hl, $d809                                   ; $5aaa: $21 $09 $d8
 	call FarCopyLayout                                       ; $5aad: $cd $2c $0b
+
+;
 	pop  af                                          ; $5ab0: $f1
 	ld   [wWramBank], a                                  ; $5ab1: $ea $93 $c2
 	ldh  [rSVBK], a                                  ; $5ab4: $e0 $70
@@ -4416,7 +4428,7 @@ endc
 	jr   jr_011_5b3d                                 ; $5b33: $18 $08
 
 jr_011_5b35:
-	call Call_011_6bb1                               ; $5b35: $cd $b1 $6b
+	call DisplayMaria1stPopupBox                               ; $5b35: $cd $b1 $6b
 	ld   a, $03                                      ; $5b38: $3e $03
 	ld   [wGameSubstate], a                                  ; $5b3a: $ea $a1 $c2
 
@@ -4448,7 +4460,7 @@ jr_011_5b3d:
 	bit  0, a                                        ; $5b75: $cb $47
 	jr   z, jr_011_5b87                              ; $5b77: $28 $0e
 
-	call Call_011_6bb1                               ; $5b79: $cd $b1 $6b
+	call DisplayMaria1stPopupBox                               ; $5b79: $cd $b1 $6b
 	ld   hl, wGameSubstate                                   ; $5b7c: $21 $a1 $c2
 	inc  [hl]                                        ; $5b7f: $34
 	ld   a, $21                                      ; $5b80: $3e $21
@@ -4538,7 +4550,7 @@ jr_011_5be4:
 	cp   $00                                         ; $5bfb: $fe $00
 	jr   z, jr_011_5c07                              ; $5bfd: $28 $08
 
-	call Call_011_6bf9                               ; $5bff: $cd $f9 $6b
+	call DisplayMariaDifficultyPopupBox                               ; $5bff: $cd $f9 $6b
 	ld   a, $04                                      ; $5c02: $3e $04
 	ld   [wGameSubstate], a                                  ; $5c04: $ea $a1 $c2
 
@@ -4579,7 +4591,7 @@ jr_011_5c30:
 	bit  1, a                                        ; $5c30: $cb $4f
 	jr   z, jr_011_5c42                              ; $5c32: $28 $0e
 
-	call Call_011_6bb1                               ; $5c34: $cd $b1 $6b
+	call DisplayMaria1stPopupBox                               ; $5c34: $cd $b1 $6b
 	ld   hl, wGameSubstate                                   ; $5c37: $21 $a1 $c2
 	dec  [hl]                                        ; $5c3a: $35
 	ld   a, $22                                      ; $5c3b: $3e $22
@@ -7122,7 +7134,7 @@ Call_011_6ba7:
 	ret                                              ; $6bb0: $c9
 
 
-Call_011_6bb1:
+DisplayMaria1stPopupBox:
 	call Call_011_6b19                               ; $6bb1: $cd $19 $6b
 	ld   a, [$cb1d]                                  ; $6bb4: $fa $1d $cb
 	or   a                                           ; $6bb7: $b7
@@ -7160,7 +7172,7 @@ jr_011_6bf8:
 	ret                                              ; $6bf8: $c9
 
 
-Call_011_6bf9:
+DisplayMariaDifficultyPopupBox:
 	call Call_011_6b0f                               ; $6bf9: $cd $0f $6b
 	ld   c, $80                                      ; $6bfc: $0e $80
 	ld   de, $9960                                   ; $6bfe: $11 $60 $99
@@ -10532,6 +10544,21 @@ EnMariaMiniGameTitleScreenBank1_8800hHook:
 	call RLEXorCopy
 
 	M_FarCall LoadMariaMiniGameTitleScreenGfx1
+	M_FarCall ReplaceMariaMiniGameTSPopup
+	ret
+
+
+EnMariaTSHDMATransferHook:
+	call EnqueueHDMATransfer
+	rst  WaitUntilVBlankIntHandledIfLCDOn
+
+	ld   c, $81
+	ld   de, $9000
+	ld   a, $03
+	ld   hl, $d800
+	ld   b, $4c
+	call EnqueueHDMATransfer
+
 	ret
 
 

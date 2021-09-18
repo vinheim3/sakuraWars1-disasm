@@ -7084,6 +7084,10 @@ jr_03e_6d54:
 	ld   [wWramBank], a                                  ; $6d74: $ea $93 $c2
 	ldh  [rSVBK], a                                  ; $6d77: $e0 $70
 
+if def(VWF)
+	M_FarCall LoadKohranMiniGameTitleScreenGfx1
+	nop
+else
 ;
 	ld   a, $15                                      ; $6d79: $3e $15
 	ld   hl, $d000                                   ; $6d7b: $21 $00 $d0
@@ -7095,6 +7099,7 @@ jr_03e_6d54:
 	ld   de, $8800                                   ; $6d86: $11 $00 $88
 	ld   a, $03                                      ; $6d89: $3e $03
 	ld   hl, $d000                                   ; $6d8b: $21 $00 $d0
+endc
 	ld   b, $40                                      ; $6d8e: $06 $40
 	call EnqueueHDMATransfer                                       ; $6d90: $cd $7c $02
 	rst  WaitUntilVBlankIntHandledIfLCDOn                                         ; $6d93: $cf
@@ -7249,43 +7254,52 @@ endc
 	ld   hl, $da00                                   ; $6ebe: $21 $00 $da
 	ld   bc, $00c0                                   ; $6ec1: $01 $c0 $00
 	call MemCopy                                       ; $6ec4: $cd $a9 $09
-	ld   a, $1e                                      ; $6ec7: $3e $1e
-	ld   de, $7400                                   ; $6ec9: $11 $00 $74
+
+; Practice popup box
+	ld   a, BANK(TileAttr_KohranMiniGameTSPracticeBox)                                     ; $6ec7: $3e $1e
+	ld   de, TileAttr_KohranMiniGameTSPracticeBox                                   ; $6ec9: $11 $00 $74
 	ld   hl, $d40c                                   ; $6ecc: $21 $0c $d4
 	ld   bc, $0806                                   ; $6ecf: $01 $06 $08
 	call FarCopyLayout                                       ; $6ed2: $cd $2c $0b
-	ld   a, $1e                                      ; $6ed5: $3e $1e
+
+	ld   a, BANK(TileMap_KohranMiniGameTSPracticeBox)                                      ; $6ed5: $3e $1e
 	ld   hl, $d10c                                   ; $6ed7: $21 $0c $d1
 	call FarCopyLayout                                       ; $6eda: $cd $2c $0b
 
-; Popup box
-	ld   a, $1e                                      ; $6edd: $3e $1e
-	ld   de, $7b0e                                   ; $6edf: $11 $0e $7b
+; 1st popup box
+	ld   a, BANK(TileAttr_KohranMiniGameTSPopupBox)                                      ; $6edd: $3e $1e
+	ld   de, TileAttr_KohranMiniGameTSPopupBox                                   ; $6edf: $11 $0e $7b
 	ld   hl, $d32c                                   ; $6ee2: $21 $2c $d3
 	ld   bc, $0804                                   ; $6ee5: $01 $04 $08
 	call FarCopyLayout                                       ; $6ee8: $cd $2c $0b
 
-	ld   a, $1e                                      ; $6eeb: $3e $1e
+	ld   a, BANK(TileMap_KohranMiniGameTSPopupBox)                                      ; $6eeb: $3e $1e
 	ld   hl, $d02c                                   ; $6eed: $21 $2c $d0
 	call FarCopyLayout                                       ; $6ef0: $cd $2c $0b
 
-;
+; Hide Press A btn layout
 	ld   a, $1e                                      ; $6ef3: $3e $1e
 	ld   de, $7db1                                   ; $6ef5: $11 $b1 $7d
 	ld   hl, $d70e                                   ; $6ef8: $21 $0e $d7
 	ld   bc, $0604                                   ; $6efb: $01 $04 $06
 	call FarCopyLayout                                       ; $6efe: $cd $2c $0b
+
 	ld   a, $1e                                      ; $6f01: $3e $1e
 	ld   hl, $d60e                                   ; $6f03: $21 $0e $d6
 	call FarCopyLayout                                       ; $6f06: $cd $2c $0b
-	ld   a, $1e                                      ; $6f09: $3e $1e
-	ld   de, $7460                                   ; $6f0b: $11 $60 $74
+
+; Difficulty popup box
+	ld   a, BANK(TileAttr_KohranMiniGameTSDifficultyBox)                                      ; $6f09: $3e $1e
+	ld   de, TileAttr_KohranMiniGameTSDifficultyBox                                   ; $6f0b: $11 $60 $74
 	ld   hl, $d90c                                   ; $6f0e: $21 $0c $d9
 	ld   bc, $0806                                   ; $6f11: $01 $06 $08
 	call FarCopyLayout                                       ; $6f14: $cd $2c $0b
-	ld   a, $1e                                      ; $6f17: $3e $1e
+
+	ld   a, BANK(TileMap_KohranMiniGameTSDifficultyBox)                                      ; $6f17: $3e $1e
 	ld   hl, $d80c                                   ; $6f19: $21 $0c $d8
 	call FarCopyLayout                                       ; $6f1c: $cd $2c $0b
+
+;
 	pop  af                                          ; $6f1f: $f1
 	ld   [wWramBank], a                                  ; $6f20: $ea $93 $c2
 	ldh  [rSVBK], a                                  ; $6f23: $e0 $70
@@ -7342,7 +7356,7 @@ endc
 	jr   jr_03e_6fac                                 ; $6fa2: $18 $08
 
 jr_03e_6fa4:
-	call Call_03e_7275                               ; $6fa4: $cd $75 $72
+	call DisplayKohran1stPopupBox                               ; $6fa4: $cd $75 $72
 	ld   a, $03                                      ; $6fa7: $3e $03
 	ld   [wGameSubstate], a                                  ; $6fa9: $ea $a1 $c2
 
@@ -7382,7 +7396,7 @@ jr_03e_6fac:
 	bit  0, a                                        ; $6ff5: $cb $47
 	jr   z, jr_03e_7007                              ; $6ff7: $28 $0e
 
-	call Call_03e_7275                               ; $6ff9: $cd $75 $72
+	call DisplayKohran1stPopupBox                               ; $6ff9: $cd $75 $72
 	ld   hl, wGameSubstate                                   ; $6ffc: $21 $a1 $c2
 	inc  [hl]                                        ; $6fff: $34
 	ld   a, $21                                      ; $7000: $3e $21
@@ -7472,7 +7486,7 @@ jr_03e_7064:
 	cp   $00                                         ; $707b: $fe $00
 	jr   z, jr_03e_7087                              ; $707d: $28 $08
 
-	call Call_03e_72bd                               ; $707f: $cd $bd $72
+	call DisplayKohranDifficultyPopupBox                               ; $707f: $cd $bd $72
 	ld   a, $04                                      ; $7082: $3e $04
 	ld   [wGameSubstate], a                                  ; $7084: $ea $a1 $c2
 
@@ -7513,7 +7527,7 @@ jr_03e_70b0:
 	bit  1, a                                        ; $70b0: $cb $4f
 	jr   z, jr_03e_70c2                              ; $70b2: $28 $0e
 
-	call Call_03e_7275                               ; $70b4: $cd $75 $72
+	call DisplayKohran1stPopupBox                               ; $70b4: $cd $75 $72
 	ld   hl, wGameSubstate                                   ; $70b7: $21 $a1 $c2
 	dec  [hl]                                        ; $70ba: $35
 	ld   a, $22                                      ; $70bb: $3e $22
@@ -7769,7 +7783,7 @@ Call_03e_726b:
 	ret                                              ; $7274: $c9
 
 
-Call_03e_7275:
+DisplayKohran1stPopupBox:
 	call $71dd                                       ; $7275: $cd $dd $71
 	ld   a, [$cb1d]                                  ; $7278: $fa $1d $cb
 	or   a                                           ; $727b: $b7
@@ -7807,7 +7821,7 @@ jr_03e_72bc:
 	ret                                              ; $72bc: $c9
 
 
-Call_03e_72bd:
+DisplayKohranDifficultyPopupBox:
 	call Call_03e_71d3                               ; $72bd: $cd $d3 $71
 	ld   c, $80                                      ; $72c0: $0e $80
 	ld   de, $9800                                   ; $72c2: $11 $00 $98
@@ -8069,7 +8083,7 @@ endc
 	ld   bc, $00c0                                   ; $74ba: $01 $c0 $00
 	call MemCopy                                       ; $74bd: $cd $a9 $09
 
-; Explanation/training/start prompt
+; Practice popup box
 	ld   a, BANK(TileAttr_IrisMiniGameTSPracticeBox)                                      ; $74c0: $3e $1e
 	ld   de, TileAttr_IrisMiniGameTSPracticeBox                                   ; $74c2: $11 $c0 $74
 	ld   hl, $d402                                   ; $74c5: $21 $02 $d4
@@ -8080,7 +8094,7 @@ endc
 	ld   hl, $d102                                   ; $74d0: $21 $02 $d1
 	call FarCopyLayout                                       ; $74d3: $cd $2c $0b
 
-; Popup box
+; 1st popup box
 	ld   a, BANK(TileAttr_IrisMiniGameTSPopupBox)                                      ; $74d6: $3e $1e
 	ld   de, TileAttr_IrisMiniGameTSPopupBox                                   ; $74d8: $11 $4e $7b
 	ld   hl, $d322                                   ; $74db: $21 $22 $d3
@@ -8110,7 +8124,7 @@ else
 endc
 	call FarCopyLayout                                       ; $74ff: $cd $2c $0b
 
-; Difficulty box
+; Difficulty popup box
 	ld   a, BANK(TileAttr_IrisMiniGameTSDifficultyBox)                                      ; $7502: $3e $1e
 	ld   de, TileAttr_IrisMiniGameTSDifficultyBox                                   ; $7504: $11 $20 $75
 	ld   hl, $d902                                   ; $7507: $21 $02 $d9
@@ -8178,7 +8192,7 @@ endc
 	jr   jr_03e_75a5                                 ; $759b: $18 $08
 
 jr_03e_759d:
-	call ShowIrisMiniGameTitleScreen1stPopup                               ; $759d: $cd $a6 $78
+	call DisplayIris1stPopupBox                               ; $759d: $cd $a6 $78
 	ld   a, $03                                      ; $75a0: $3e $03
 	ld   [wGameSubstate], a                                  ; $75a2: $ea $a1 $c2
 
@@ -8218,7 +8232,7 @@ jr_03e_75a5:
 	bit  0, a                                        ; $75ee: $cb $47
 	jr   z, jr_03e_7600                              ; $75f0: $28 $0e
 
-	call ShowIrisMiniGameTitleScreen1stPopup                               ; $75f2: $cd $a6 $78
+	call DisplayIris1stPopupBox                               ; $75f2: $cd $a6 $78
 	ld   hl, wGameSubstate                                   ; $75f5: $21 $a1 $c2
 	inc  [hl]                                        ; $75f8: $34
 	ld   a, $21                                      ; $75f9: $3e $21
@@ -8308,7 +8322,7 @@ jr_03e_765d:
 	cp   $00                                         ; $7674: $fe $00
 	jr   z, jr_03e_7680                              ; $7676: $28 $08
 
-	call ShowIrisMiniGameTitleScreenDifficultyPopup                               ; $7678: $cd $ee $78
+	call DisplayIrisDifficultyPopupBox                               ; $7678: $cd $ee $78
 	ld   a, $04                                      ; $767b: $3e $04
 	ld   [wGameSubstate], a                                  ; $767d: $ea $a1 $c2
 
@@ -8349,7 +8363,7 @@ jr_03e_76a9:
 	bit  1, a                                        ; $76a9: $cb $4f
 	jr   z, jr_03e_76bb                              ; $76ab: $28 $0e
 
-	call ShowIrisMiniGameTitleScreen1stPopup                               ; $76ad: $cd $a6 $78
+	call DisplayIris1stPopupBox                               ; $76ad: $cd $a6 $78
 	ld   hl, wGameSubstate                                   ; $76b0: $21 $a1 $c2
 	dec  [hl]                                        ; $76b3: $35
 	ld   a, $22                                      ; $76b4: $3e $22
@@ -8660,7 +8674,7 @@ Call_03e_789c:
 	ret                                              ; $78a5: $c9
 
 
-ShowIrisMiniGameTitleScreen1stPopup:
+DisplayIris1stPopupBox:
 	call Call_03e_780e                               ; $78a6: $cd $0e $78
 	ld   a, [$cb1d]                                  ; $78a9: $fa $1d $cb
 	or   a                                           ; $78ac: $b7
@@ -8698,7 +8712,7 @@ jr_03e_78ed:
 	ret                                              ; $78ed: $c9
 
 
-ShowIrisMiniGameTitleScreenDifficultyPopup:
+DisplayIrisDifficultyPopupBox:
 	call Call_03e_7804                               ; $78ee: $cd $04 $78
 	ld   c, $80                                      ; $78f1: $0e $80
 	ld   de, $9960                                   ; $78f3: $11 $60 $99
@@ -8796,15 +8810,7 @@ SakuraMiniGameTitleScreenSubstate0:
 	jr   z, jr_03e_79a7                              ; $7986: $28 $1f
 
 	ld   hl, $0118                                   ; $7988: $21 $18 $01
-	push af                                          ; $798b: $f5
-	ld   a, $d7                                      ; $798c: $3e $d7
-	ld   [wFarCallAddr], a                                  ; $798e: $ea $98 $c2
-	ld   a, $71                                      ; $7991: $3e $71
-	ld   [wFarCallAddr+1], a                                  ; $7993: $ea $99 $c2
-	ld   a, $0c                                      ; $7996: $3e $0c
-	ld   [wFarCallBank], a                                  ; $7998: $ea $9a $c2
-	pop  af                                          ; $799b: $f1
-	call FarCall                                       ; $799c: $cd $62 $09
+	M_FarCall CheckIfNextFlagSet1
 	or   a                                           ; $799f: $b7
 	jr   z, jr_03e_79a7                              ; $79a0: $28 $05
 
@@ -8843,16 +8849,27 @@ endc
 	ld   de, $8800                                   ; $79d9: $11 $00 $88
 	ld   a, $03                                      ; $79dc: $3e $03
 	ld   hl, $d000                                   ; $79de: $21 $00 $d0
+if def(VWF)
+	ld   b, $66
+else
 	ld   b, $40                                      ; $79e1: $06 $40
+endc
 	call EnqueueHDMATransfer                                       ; $79e3: $cd $7c $02
 	rst  WaitUntilVBlankIntHandledIfLCDOn                                         ; $79e6: $cf
 
 ;
 	ld   c, $81                                      ; $79e7: $0e $81
+if def(VWF)
+	ld   de, $8e60
+	ld   a, $03
+	ld   hl, $d660
+	ld   b, $66
+else
 	ld   de, $8c00                                   ; $79e9: $11 $00 $8c
 	ld   a, $03                                      ; $79ec: $3e $03
 	ld   hl, $d400                                   ; $79ee: $21 $00 $d4
 	ld   b, $40                                      ; $79f1: $06 $40
+endc
 	call EnqueueHDMATransfer                                       ; $79f3: $cd $7c $02
 	rst  WaitUntilVBlankIntHandledIfLCDOn                                         ; $79f6: $cf
 
@@ -8995,35 +9012,41 @@ endc
 	ld   hl, $d600                                   ; $7b17: $21 $00 $d6
 	ld   bc, $00c0                                   ; $7b1a: $01 $c0 $00
 	call MemCopy                                       ; $7b1d: $cd $a9 $09
-	ld   a, $1e                                      ; $7b20: $3e $1e
-	ld   de, $7580                                   ; $7b22: $11 $80 $75
+
+; Practice popup box
+	ld   a, BANK(TileAttr_SakuraMiniGameTSPracticeBox)                                      ; $7b20: $3e $1e
+	ld   de, TileAttr_SakuraMiniGameTSPracticeBox                                   ; $7b22: $11 $80 $75
 	ld   hl, $d406                                   ; $7b25: $21 $06 $d4
 	ld   bc, $0806                                   ; $7b28: $01 $06 $08
 	call FarCopyLayout                                       ; $7b2b: $cd $2c $0b
-	ld   a, $1e                                      ; $7b2e: $3e $1e
+
+	ld   a, BANK(TileMap_SakuraMiniGameTSPracticeBox)                                      ; $7b2e: $3e $1e
 	ld   hl, $d106                                   ; $7b30: $21 $06 $d1
 	call FarCopyLayout                                       ; $7b33: $cd $2c $0b
 
-; Popup menu
-	ld   a, $1e                                      ; $7b36: $3e $1e
-	ld   de, $7b8e                                   ; $7b38: $11 $8e $7b
+; 1st popup menu
+	ld   a, BANK(TileAttr_SakuraMiniGameTSPopupBox)                                      ; $7b36: $3e $1e
+	ld   de, TileAttr_SakuraMiniGameTSPopupBox                                   ; $7b38: $11 $8e $7b
 	ld   hl, $d326                                   ; $7b3b: $21 $26 $d3
 	ldbc $08, $04                                   ; $7b3e: $01 $04 $08
 	call FarCopyLayout                                       ; $7b41: $cd $2c $0b
 
-	ld   a, $1e                                      ; $7b44: $3e $1e
+	ld   a, BANK(TileMap_SakuraMiniGameTSPopupBox)                                      ; $7b44: $3e $1e
 	ld   hl, $d026                                   ; $7b46: $21 $26 $d0
 	call FarCopyLayout                                       ; $7b49: $cd $2c $0b
 
-;
-	ld   a, $1e                                      ; $7b4c: $3e $1e
-	ld   de, $75e0                                   ; $7b4e: $11 $e0 $75
+; Difficulty popup box
+	ld   a, BANK(TileAttr_SakuraMiniGameTSDifficultyBox)                                      ; $7b4c: $3e $1e
+	ld   de, TileAttr_SakuraMiniGameTSDifficultyBox                                   ; $7b4e: $11 $e0 $75
 	ld   hl, $d906                                   ; $7b51: $21 $06 $d9
 	ld   bc, $0806                                   ; $7b54: $01 $06 $08
 	call FarCopyLayout                                       ; $7b57: $cd $2c $0b
-	ld   a, $1e                                      ; $7b5a: $3e $1e
+
+	ld   a, BANK(TileMap_SakuraMiniGameTSDifficultyBox)                                      ; $7b5a: $3e $1e
 	ld   hl, $d806                                   ; $7b5c: $21 $06 $d8
 	call FarCopyLayout                                       ; $7b5f: $cd $2c $0b
+
+;
 	pop  af                                          ; $7b62: $f1
 	ld   [wWramBank], a                                  ; $7b63: $ea $93 $c2
 	ldh  [rSVBK], a                                  ; $7b66: $e0 $70
@@ -9076,7 +9099,7 @@ endc
 	jr   jr_03e_7bef                                 ; $7be5: $18 $08
 
 jr_03e_7be7:
-	call Call_03e_7ec5                               ; $7be7: $cd $c5 $7e
+	call DisplaySakura1stPopupBox                               ; $7be7: $cd $c5 $7e
 	ld   a, $03                                      ; $7bea: $3e $03
 	ld   [wGameSubstate], a                                  ; $7bec: $ea $a1 $c2
 
@@ -9109,7 +9132,7 @@ jr_03e_7bef:
 	bit  0, a                                        ; $7c35: $cb $47
 	jr   z, jr_03e_7c47                              ; $7c37: $28 $0e
 
-	call Call_03e_7ec5                               ; $7c39: $cd $c5 $7e
+	call DisplaySakura1stPopupBox                               ; $7c39: $cd $c5 $7e
 	ld   hl, wGameSubstate                                   ; $7c3c: $21 $a1 $c2
 	inc  [hl]                                        ; $7c3f: $34
 	ld   a, $21                                      ; $7c40: $3e $21
@@ -9200,7 +9223,7 @@ jr_03e_7ca7:
 	cp   $00                                         ; $7cbe: $fe $00
 	jr   z, jr_03e_7cca                              ; $7cc0: $28 $08
 
-	call Call_03e_7f0d                               ; $7cc2: $cd $0d $7f
+	call DisplaySakuraDifficultyPopupBox                               ; $7cc2: $cd $0d $7f
 	ld   a, $04                                      ; $7cc5: $3e $04
 	ld   [wGameSubstate], a                                  ; $7cc7: $ea $a1 $c2
 
@@ -9241,7 +9264,7 @@ jr_03e_7cf3:
 	bit  1, a                                        ; $7cf3: $cb $4f
 	jr   z, jr_03e_7d05                              ; $7cf5: $28 $0e
 
-	call Call_03e_7ec5                               ; $7cf7: $cd $c5 $7e
+	call DisplaySakura1stPopupBox                               ; $7cf7: $cd $c5 $7e
 	ld   hl, wGameSubstate                                   ; $7cfa: $21 $a1 $c2
 	dec  [hl]                                        ; $7cfd: $35
 	ld   a, $22                                      ; $7cfe: $3e $22
@@ -9510,7 +9533,7 @@ Call_03e_7ebb:
 	ret                                              ; $7ec4: $c9
 
 
-Call_03e_7ec5:
+DisplaySakura1stPopupBox:
 	call Call_03e_7e2d                               ; $7ec5: $cd $2d $7e
 	ld   a, [$cb1d]                                  ; $7ec8: $fa $1d $cb
 	or   a                                           ; $7ecb: $b7
@@ -9548,7 +9571,7 @@ Call_03e_7ec5:
 	ret                                              ; $7f0c: $c9
 
 
-Call_03e_7f0d:
+DisplaySakuraDifficultyPopupBox:
 	call Call_03e_7e23                               ; $7f0d: $cd $23 $7e
 	ld   c, $80                                      ; $7f10: $0e $80
 	ld   de, $9980                                   ; $7f12: $11 $80 $99

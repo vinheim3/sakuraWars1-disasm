@@ -68,7 +68,11 @@ jr_03f_4049:
 	ld   a, $1a                                      ; $406e: $3e $1a
 	ld   hl, $d000                                   ; $4070: $21 $00 $d0
 	ld   de, $518b                                   ; $4073: $11 $8b $51
+if def(VWF)
+	call KannaMiniGameTitleScreenBank1_8800hHook
+else
 	call RLEXorCopy                                       ; $4076: $cd $d2 $09
+endc
 
 ;
 	ld   c, $81                                      ; $4079: $0e $81
@@ -86,7 +90,7 @@ jr_03f_4049:
 	ld   hl, $d400                                   ; $4090: $21 $00 $d4
 	ld   b, $40                                      ; $4093: $06 $40
 if def(VWF)
-	call KannaMiniGameTitleScreenBank1_8800hHook
+	call KannaMiniGameTitleScreenBank1_8c00hHook
 else
 	call EnqueueHDMATransfer                                       ; $4095: $cd $7c $02
 endc
@@ -218,23 +222,26 @@ endc
 	ld   hl, $db60                                   ; $41a3: $21 $60 $db
 	ld   bc, $00c0                                   ; $41a6: $01 $c0 $00
 	call MemCopy                                       ; $41a9: $cd $a9 $09
-	ld   a, $1e                                      ; $41ac: $3e $1e
-	ld   de, $7640                                   ; $41ae: $11 $40 $76
+
+; Practice popup box
+	ld   a, BANK(TileAttr_KannaMiniGameTSPracticeBox)                                      ; $41ac: $3e $1e
+	ld   de, TileAttr_KannaMiniGameTSPracticeBox                                   ; $41ae: $11 $40 $76
 	ld   hl, $d401                                   ; $41b1: $21 $01 $d4
 	ld   bc, $0806                                   ; $41b4: $01 $06 $08
 	call FarCopyLayout                                       ; $41b7: $cd $2c $0b
-	ld   a, $1e                                      ; $41ba: $3e $1e
+
+	ld   a, BANK(TileMap_KannaMiniGameTSPracticeBox)                                      ; $41ba: $3e $1e
 	ld   hl, $d101                                   ; $41bc: $21 $01 $d1
 	call FarCopyLayout                                       ; $41bf: $cd $2c $0b
 
-; Popup box
-	ld   a, $1e                                      ; $41c2: $3e $1e
-	ld   de, $7bce                                   ; $41c4: $11 $ce $7b
+; 1st popup box
+	ld   a, BANK(TileAttr_KannaMiniGameTSPopupBox)                                      ; $41c2: $3e $1e
+	ld   de, TileAttr_KannaMiniGameTSPopupBox                                   ; $41c4: $11 $ce $7b
 	ld   hl, $d341                                   ; $41c7: $21 $41 $d3
 	ld   bc, $0804                                   ; $41ca: $01 $04 $08
 	call FarCopyLayout                                       ; $41cd: $cd $2c $0b
 	
-	ld   a, $1e                                      ; $41d0: $3e $1e
+	ld   a, BANK(TileMap_KannaMiniGameTSPopupBox)                                      ; $41d0: $3e $1e
 	ld   hl, $d041                                   ; $41d2: $21 $41 $d0
 	call FarCopyLayout                                       ; $41d5: $cd $2c $0b
 
@@ -247,14 +254,19 @@ endc
 	ld   a, $1e                                      ; $41e6: $3e $1e
 	ld   hl, $d601                                   ; $41e8: $21 $01 $d6
 	call FarCopyLayout                                       ; $41eb: $cd $2c $0b
-	ld   a, $1e                                      ; $41ee: $3e $1e
-	ld   de, $76a0                                   ; $41f0: $11 $a0 $76
+
+; Difficulty popup box
+	ld   a, BANK(TileAttr_KannaMiniGameTSDifficultyBox)                                     ; $41ee: $3e $1e
+	ld   de, TileAttr_KannaMiniGameTSDifficultyBox                                   ; $41f0: $11 $a0 $76
 	ld   hl, $d901                                   ; $41f3: $21 $01 $d9
 	ld   bc, $0806                                   ; $41f6: $01 $06 $08
 	call FarCopyLayout                                       ; $41f9: $cd $2c $0b
-	ld   a, $1e                                      ; $41fc: $3e $1e
+
+	ld   a, BANK(TileMap_KannaMiniGameTSDifficultyBox)                                      ; $41fc: $3e $1e
 	ld   hl, $d801                                   ; $41fe: $21 $01 $d8
 	call FarCopyLayout                                       ; $4201: $cd $2c $0b
+
+;
 	pop  af                                          ; $4204: $f1
 	ld   [wWramBank], a                                  ; $4205: $ea $93 $c2
 	ldh  [rSVBK], a                                  ; $4208: $e0 $70
@@ -313,7 +325,7 @@ endc
 	jr   jr_03f_429a                                 ; $428d: $18 $0b
 
 jr_03f_428f:
-	call Call_03f_45ab                               ; $428f: $cd $ab $45
+	call DisplayKanna1stPopupBox                               ; $428f: $cd $ab $45
 	call DisplayKannaMiniGameTitleScreenSpritesWithoutPressA                               ; $4292: $cd $ab $44
 	ld   a, $03                                      ; $4295: $3e $03
 	ld   [wGameSubstate], a                                  ; $4297: $ea $a1 $c2
@@ -347,7 +359,7 @@ jr_03f_429a:
 	bit  0, a                                        ; $42d5: $cb $47
 	jr   z, jr_03f_42e7                              ; $42d7: $28 $0e
 
-	call Call_03f_45ab                               ; $42d9: $cd $ab $45
+	call DisplayKanna1stPopupBox                               ; $42d9: $cd $ab $45
 	ld   hl, wGameSubstate                                   ; $42dc: $21 $a1 $c2
 	inc  [hl]                                        ; $42df: $34
 	ld   a, $21                                      ; $42e0: $3e $21
@@ -438,7 +450,7 @@ jr_03f_4347:
 	cp   $00                                         ; $435e: $fe $00
 	jr   z, jr_03f_436a                              ; $4360: $28 $08
 
-	call Call_03f_45f3                               ; $4362: $cd $f3 $45
+	call DisplayKannaDifficultyPopupBox                               ; $4362: $cd $f3 $45
 	ld   a, $04                                      ; $4365: $3e $04
 	ld   [wGameSubstate], a                                  ; $4367: $ea $a1 $c2
 
@@ -481,7 +493,7 @@ jr_03f_4399:
 	bit  1, a                                        ; $4399: $cb $4f
 	jr   z, jr_03f_43ab                              ; $439b: $28 $0e
 
-	call Call_03f_45ab                               ; $439d: $cd $ab $45
+	call DisplayKanna1stPopupBox                               ; $439d: $cd $ab $45
 	ld   hl, wGameSubstate                                   ; $43a0: $21 $a1 $c2
 	dec  [hl]                                        ; $43a3: $35
 	ld   a, $22                                      ; $43a4: $3e $22
@@ -786,7 +798,7 @@ Call_03f_458c:
 	ret                                              ; $45aa: $c9
 
 
-Call_03f_45ab:
+DisplayKanna1stPopupBox:
 	call Call_03f_451c                               ; $45ab: $cd $1c $45
 	ld   a, [$cb1d]                                  ; $45ae: $fa $1d $cb
 	or   a                                           ; $45b1: $b7
@@ -824,7 +836,7 @@ jr_03f_45f2:
 	ret                                              ; $45f2: $c9
 
 
-Call_03f_45f3:
+DisplayKannaDifficultyPopupBox:
 	call Call_03f_4512                               ; $45f3: $cd $12 $45
 	ld   c, $80                                      ; $45f6: $0e $80
 	ld   de, $9960                                   ; $45f8: $11 $60 $99
@@ -12071,10 +12083,16 @@ SpriteGroupA_Idx3fh:
 
 
 KannaMiniGameTitleScreenBank1_8800hHook:
+	call RLEXorCopy
+
+	M_FarCall ReplaceKannaMiniGameTSPopup
+	ret
+
+KannaMiniGameTitleScreenBank1_8c00hHook:
 	call EnqueueHDMATransfer
 	rst  WaitUntilVBlankIntHandledIfLCDOn
 
-	M_FarCall LoadKannaMiniGameTitleScreenGfx1
+	M_FarCall LoadKannaMiniGameTitleScreenGfx1_2
 
 	ret
 

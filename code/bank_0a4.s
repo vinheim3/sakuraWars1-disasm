@@ -7935,4 +7935,54 @@ EnLoadMiniGameSelectionGfx1::
 .row24:
 	INCBIN "en_minigameSelection.2bpp", (23*14+4)*$10, $60
 
+
+ReplaceSakuraMiniGameTSPopup::
+	ld   bc, Gfx_MiniGamePopup.end-Gfx_MiniGamePopup
+	ld   de, $d000+$800
+	ld   hl, Gfx_MiniGamePopup
+	call MemCopy
+	ret
+
+
+ReplaceSumireMiniGameTSPopup::
+	ld   bc, Gfx_MiniGamePopup.end-Gfx_MiniGamePopup
+	ld   de, $d000
+	ld   hl, Gfx_MiniGamePopup
+	call MemCopy
+
+	ld   c, $81
+	ld   de, $8800
+	ld   a, $03
+	ld   hl, $d000
+	ld   b, $4c
+	call EnqueueHDMATransfer
+	rst  WaitUntilVBlankIntHandledIfLCDOn
+	ret
+
+
+ReplaceMariaMiniGameTSPopup::
+	ld   bc, Gfx_MariaMGPopup.end-Gfx_MariaMGPopup
+	ld   de, $d000+$800
+	ld   hl, Gfx_MariaMGPopup
+	call MemCopy
+	ret
+
+
+ReplaceIrisMiniGameTSPopup::
+	ld   bc, Gfx_MiniGamePopup.end-Gfx_MiniGamePopup
+	ld   de, $d000
+	ld   hl, Gfx_MiniGamePopup
+	call MemCopy
+	ret
+
+
+Gfx_MiniGamePopup::
+	INCBIN "en_minigamePopup.2bpp" ; $04c0
+.end::
+
+
+Gfx_MariaMGPopup::
+	INCBIN "en_mariaMGPopup.2bpp" ; $04c0
+.end::
+
 endc

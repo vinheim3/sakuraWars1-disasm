@@ -59,6 +59,8 @@ LoadSakuraMiniGameTitleScreenGfx1::
 	ld   hl, .data5
 	call MemCopy
 
+	M_FarCall ReplaceSakuraMiniGameTSPopup
+
 	ret
 
 .data1:
@@ -1376,6 +1378,8 @@ LoadIrisMiniGameTitleScreenGfx1::
 	ld   de, $4000                                   ; $7387: $11 $00 $40
 	call RLEXorCopy                                       ; $738a: $cd $d2 $09
 
+	M_FarCall ReplaceIrisMiniGameTSPopup
+
 	ld   c, $81                                      ; $738d: $0e $81
 	ld   de, $9000                                   ; $738f: $11 $00 $90
 	ld   a, $03                                      ; $7392: $3e $03
@@ -1404,7 +1408,7 @@ LoadIrisMiniGameTitleScreenGfx1::
 	INCBIN "en_irisMiniGameTitleScreen.2bpp", 51*$10, $10
 
 
-LoadKannaMiniGameTitleScreenGfx1::
+LoadKannaMiniGameTitleScreenGfx1_2::
 	ld   bc, .end-.gfx
 	ld   de, $d000
 	ld   hl, .gfx

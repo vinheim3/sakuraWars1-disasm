@@ -41,6 +41,9 @@
 ; rgbgfx -o en_minigameResults.2bpp en_minigameResults.png
 ; rgbgfx -o en_sakuraMiniGameMain.2bpp en_sakuraMiniGameMain.png
 ; rgbgfx -o en_minigamePopup.2bpp -u -T en_minigamePopup.png
+; rgbgfx -o en_mariaMGPopup.2bpp -u -T en_mariaMGPopup.png
+; rgbgfx -o en_kohranMGPopup.2bpp -u -T en_kohranMGPopup.png
+; rgbgfx -o en_kannaMGPopup.2bpp -u -T en_kannaMGPopup.png
 ; rgbgfx -o en_minigameSelection.2bpp en_minigameSelection.png
 ; tools/gfx.py 1bpp newLetters.png --from=png --interleave
 
@@ -53,7 +56,15 @@
 ; 0x41 - 0x6a
 
 ; hook banks
-; 0xff, 0xfd, 0xfb, 0xa4
+; 0xff, 0xfd, 0xfb, 0xa4, 0x8b
+
+; cb1d=0 for practice
+; sakura - 0x3e (c9e3/c9e7 !=0 for difficulty)
+; sumire - 0x10 (c9f3/c9f7 !=0 for difficulty)
+; maria - 0x11 (c89c/c89f !=0 for difficulty)
+; iris - 0x3e (c9db/c9df !=0 for difficulty)
+; kohran - 0x3e (c9d3/c9d9 !=0 for difficulty)
+; kanna - 0x3f (c9eb/c9ef !=0 for difficulty)
 
 ; IMPORTANT
 ; When adding new characters, add map+width in scriptExtract, and width in getCharWidth

@@ -7781,29 +7781,29 @@ endc
 	ld   bc, $00c0                                   ; $710b: $01 $c0 $00
 	call MemCopy                                       ; $710e: $cd $a9 $09
 
-; Popup box with Practice
-	ld   a, BANK(TileAttr_SumireMiniGameTSExplanationBox)                                      ; $7111: $3e $1e
-	ld   de, TileAttr_SumireMiniGameTSExplanationBox                                   ; $7113: $11 $00 $77
+; Practice popup box
+	ld   a, BANK(TileAttr_SumireMiniGameTSPracticeBox)                                      ; $7111: $3e $1e
+	ld   de, TileAttr_SumireMiniGameTSPracticeBox                                   ; $7113: $11 $00 $77
 	ld   hl, $d406                                   ; $7116: $21 $06 $d4
 	ld   bc, $0806                                   ; $7119: $01 $06 $08
 	call FarCopyLayout                                       ; $711c: $cd $2c $0b
 	
-	ld   a, BANK(TileMap_SumireMiniGameTSExplanationBox)                                      ; $711f: $3e $1e
+	ld   a, BANK(TileMap_SumireMiniGameTSPracticeBox)                                      ; $711f: $3e $1e
 	ld   hl, $d106                                   ; $7121: $21 $06 $d1
 	call FarCopyLayout                                       ; $7124: $cd $2c $0b
 
 ; 1st popup box
-	ld   a, $1e                                      ; $7127: $3e $1e
-	ld   de, $7c0e                                   ; $7129: $11 $0e $7c
+	ld   a, BANK(TileAttr_SumireMiniGameTSPopupBox)                                      ; $7127: $3e $1e
+	ld   de, TileAttr_SumireMiniGameTSPopupBox                                   ; $7129: $11 $0e $7c
 	ld   hl, $d326                                   ; $712c: $21 $26 $d3
 	ld   bc, $0804                                   ; $712f: $01 $04 $08
 	call FarCopyLayout                                       ; $7132: $cd $2c $0b
 
-	ld   a, $1e                                      ; $7135: $3e $1e
+	ld   a, BANK(TileMap_SumireMiniGameTSPopupBox)                                      ; $7135: $3e $1e
 	ld   hl, $d026                                   ; $7137: $21 $26 $d0
 	call FarCopyLayout                                       ; $713a: $cd $2c $0b
 
-;
+; Difficulty popup box
 	ld   a, BANK(TileAttr_SumireMiniGameTSDifficultyBox)                                      ; $713d: $3e $1e
 	ld   de, TileAttr_SumireMiniGameTSDifficultyBox                                   ; $713f: $11 $60 $77
 	ld   hl, $d906                                   ; $7142: $21 $06 $d9
@@ -7871,7 +7871,7 @@ endc
 	jr   jr_010_71e0                                 ; $71d6: $18 $08
 
 jr_010_71d8:
-	call Call_010_74d5                               ; $71d8: $cd $d5 $74
+	call DisplaySumire1stPopupBox                               ; $71d8: $cd $d5 $74
 	ld   a, $03                                      ; $71db: $3e $03
 	ld   [wGameSubstate], a                                  ; $71dd: $ea $a1 $c2
 
@@ -7911,7 +7911,7 @@ jr_010_71e0:
 	bit  0, a                                        ; $7229: $cb $47
 	jr   z, jr_010_723b                              ; $722b: $28 $0e
 
-	call Call_010_74d5                               ; $722d: $cd $d5 $74
+	call DisplaySumire1stPopupBox                               ; $722d: $cd $d5 $74
 	ld   hl, wGameSubstate                                   ; $7230: $21 $a1 $c2
 	inc  [hl]                                        ; $7233: $34
 	ld   a, $21                                      ; $7234: $3e $21
@@ -8001,7 +8001,7 @@ jr_010_7298:
 	cp   $00                                         ; $72af: $fe $00
 	jr   z, jr_010_72bb                              ; $72b1: $28 $08
 
-	call Call_010_751d                               ; $72b3: $cd $1d $75
+	call DisplaySumireDifficultyPopupBox                               ; $72b3: $cd $1d $75
 	ld   a, $04                                      ; $72b6: $3e $04
 	ld   [wGameSubstate], a                                  ; $72b8: $ea $a1 $c2
 
@@ -8042,7 +8042,7 @@ jr_010_72e4:
 	bit  1, a                                        ; $72e4: $cb $4f
 	jr   z, jr_010_72f6                              ; $72e6: $28 $0e
 
-	call Call_010_74d5                               ; $72e8: $cd $d5 $74
+	call DisplaySumire1stPopupBox                               ; $72e8: $cd $d5 $74
 	ld   hl, wGameSubstate                                   ; $72eb: $21 $a1 $c2
 	dec  [hl]                                        ; $72ee: $35
 	ld   a, $22                                      ; $72ef: $3e $22
@@ -8333,11 +8333,11 @@ Call_010_74cb:
 	ret                                              ; $74d4: $c9
 
 
-Call_010_74d5:
+DisplaySumire1stPopupBox:
 	call Call_010_743d                               ; $74d5: $cd $3d $74
 	ld   a, [$cb1d]                                  ; $74d8: $fa $1d $cb
 	or   a                                           ; $74db: $b7
-	jr   nz, jr_010_74fe                             ; $74dc: $20 $20
+	jr   nz, .noPractice                             ; $74dc: $20 $20
 
 	ld   c, $80                                      ; $74de: $0e $80
 	ld   de, $98e0                                   ; $74e0: $11 $e0 $98
@@ -8353,7 +8353,7 @@ Call_010_74d5:
 	call EnqueueHDMATransfer                                       ; $74f9: $cd $7c $02
 	jr   jr_010_751c                                 ; $74fc: $18 $1e
 
-jr_010_74fe:
+.noPractice:
 	ld   c, $80                                      ; $74fe: $0e $80
 	ld   de, $98e0                                   ; $7500: $11 $e0 $98
 	ld   a, $03                                      ; $7503: $3e $03
@@ -8371,7 +8371,7 @@ jr_010_751c:
 	ret                                              ; $751c: $c9
 
 
-Call_010_751d:
+DisplaySumireDifficultyPopupBox:
 	call Call_010_7433                               ; $751d: $cd $33 $74
 	ld   c, $80                                      ; $7520: $0e $80
 	ld   de, $98e0                                   ; $7522: $11 $e0 $98
@@ -9478,9 +9478,14 @@ SumireMiniGameTitleScreenBank0_8800hHook:
 
 
 SumireMiniGameTitleScreenBank1_9000hHook:
+	M_FarCall ReplaceSumireMiniGameTSPopup
+
+	ld   a, $17                                      ; $6fbd: $3e $17
+	ld   hl, $d000                                   ; $6fbf: $21 $00 $d0
+	ld   de, $5763                                   ; $6fc2: $11 $63 $57
 	call RLEXorCopy
 
-	M_FarCall LoadSumireMiniGameTitleScreenGfx1
+	M_FarCall LoadSumireMiniGameTitleScreenGfx1	
 	ret
 
 
