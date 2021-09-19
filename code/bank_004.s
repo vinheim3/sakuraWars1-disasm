@@ -8565,8 +8565,9 @@ DormRoomLayoutHook:
 	ret
 
 
-Gfx_EnDormRoomStatsLabels:
+Gfx_EnDormRoomStatsLabels::
 	INCBIN "en_statsLabels.2bpp"
+.end::
 
 
 Gfx_EnDormRoomOpts:

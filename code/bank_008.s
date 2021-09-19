@@ -5630,16 +5630,16 @@ ScriptOpcode1a_MiniGame_Main:
 	jp   hl                                          ; $6586: $e9
 
 .table:
-	dw .entry0
-	dw .entry1
-	dw .entry2
-	dw .entry3
-	dw .entry4
-	dw .entry5
-	dw .entry6
-	dw .entry7
+	dw .sakura
+	dw .sumire
+	dw .maria
+	dw .iris
+	dw .kohran
+	dw .kanna
+	dw .redLightGreenLight
+	dw .pushUps
 
-.entry0:
+.sakura:
 	ld   hl, $0014                                   ; $6597: $21 $14 $00
 	ld   a, $ff                                      ; $659a: $3e $ff
 
@@ -5652,7 +5652,7 @@ ScriptOpcode1a_MiniGame_Main:
 	M_FarCall SetSakuraMiniGameTitleScreenState
 	ret                                              ; $65ca: $c9
 
-.entry1:
+.sumire:
 	ld   hl, $0015                                   ; $65cb: $21 $15 $00
 	ld   a, $ff                                      ; $65ce: $3e $ff
 
@@ -5666,7 +5666,7 @@ ScriptOpcode1a_MiniGame_Main:
 	M_FarCall SetSumireMiniGameTitleScreenState
 	ret                                              ; $65ff: $c9
 
-.entry2:
+.maria:
 	ld   hl, $0016                                   ; $6600: $21 $16 $00
 	ld   a, $ff                                      ; $6603: $3e $ff
 
@@ -5679,7 +5679,7 @@ ScriptOpcode1a_MiniGame_Main:
 	M_FarCall SetMariaMiniGameTitleScreenState
 	ret                                              ; $6633: $c9
 
-.entry3:
+.iris:
 	ld   hl, $0017                                   ; $6634: $21 $17 $00
 	ld   a, $ff                                      ; $6637: $3e $ff
 
@@ -5692,7 +5692,7 @@ ScriptOpcode1a_MiniGame_Main:
 	M_FarCall SetIrisMiniGameTitleScreenState
 	ret                                              ; $6667: $c9
 
-.entry4:
+.kohran:
 	ld   hl, $0018                                   ; $6668: $21 $18 $00
 	ld   a, $ff                                      ; $666b: $3e $ff
 
@@ -5705,7 +5705,7 @@ ScriptOpcode1a_MiniGame_Main:
 	M_FarCall SetKohranMiniGameTitleScreenState
 	ret                                              ; $669b: $c9
 
-.entry5:
+.kanna:
 	ld   hl, $0019                                   ; $669c: $21 $19 $00
 	ld   a, $ff                                      ; $669f: $3e $ff
 
@@ -5718,7 +5718,7 @@ ScriptOpcode1a_MiniGame_Main:
 	M_FarCall SetKannaMiniGameTitleScreenState
 	ret                                              ; $66cf: $c9
 
-.entry6:
+.redLightGreenLight:
 	ld   hl, $00d8                                   ; $66d0: $21 $d8 $00
 	ld   a, $ff                                      ; $66d3: $3e $ff
 
@@ -5731,7 +5731,7 @@ ScriptOpcode1a_MiniGame_Main:
 	M_FarCall SetRedLightGreenLightState
 	ret                                              ; $6703: $c9
 
-.entry7:
+.pushUps:
 	ld   hl, $00d7                                   ; $6704: $21 $d7 $00
 	ld   a, $ff                                      ; $6707: $3e $ff
 

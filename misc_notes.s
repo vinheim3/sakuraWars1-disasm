@@ -59,6 +59,7 @@
 ; hook banks
 ; 0xff, 0xfd, 0xfb, 0xa4, 0x8b
 
+; Minigames
 ; cb1d=0 for practice
 ; sakura - 0x3e (c9e3/c9e7 !=0 for difficulty)
 ; sumire - 0x10 (c9f3/c9f7 !=0 for difficulty)

@@ -1133,7 +1133,11 @@ GameState29_KohranTraining::
 	ld   a, $2e                                      ; $4663: $3e $2e
 	ld   hl, $d000                                   ; $4665: $21 $00 $d0
 	ld   de, $71d8                                   ; $4668: $11 $d8 $71
+if def(VWF)
+	call NapOrTrainBank1_8800hHook
+else
 	call RLEXorCopy                                       ; $466b: $cd $d2 $09
+endc
 	ld   c, $81                                      ; $466e: $0e $81
 	ld   de, $8800                                   ; $4670: $11 $00 $88
 	ld   a, $07                                      ; $4673: $3e $07
@@ -1165,7 +1169,11 @@ GameState29_KohranTraining::
 	ld   a, $2f                                      ; $46ae: $3e $2f
 	ld   hl, $d000                                   ; $46b0: $21 $00 $d0
 	ld   de, $4f51                                   ; $46b3: $11 $51 $4f
+if def(VWF)
+	call NapOrTrainTileMapHook
+else
 	call RLEXorCopy                                       ; $46b6: $cd $d2 $09
+endc
 	ld   c, $80                                      ; $46b9: $0e $80
 	ld   de, $9800                                   ; $46bb: $11 $00 $98
 	ld   a, $07                                      ; $46be: $3e $07
@@ -1742,7 +1750,11 @@ GameState28_SumireTraining::
 	ld   a, $2f                                      ; $4ab5: $3e $2f
 	ld   hl, $d000                                   ; $4ab7: $21 $00 $d0
 	ld   de, $4000                                   ; $4aba: $11 $00 $40
+if def(VWF)
+	call NapOrTrainBank1_8800hHook
+else
 	call RLEXorCopy                                       ; $4abd: $cd $d2 $09
+endc
 	ld   c, $81                                      ; $4ac0: $0e $81
 	ld   de, $8800                                   ; $4ac2: $11 $00 $88
 	ld   a, $07                                      ; $4ac5: $3e $07
@@ -1774,7 +1786,11 @@ GameState28_SumireTraining::
 	ld   a, $2f                                      ; $4b00: $3e $2f
 	ld   hl, $d000                                   ; $4b02: $21 $00 $d0
 	ld   de, $50ea                                   ; $4b05: $11 $ea $50
+if def(VWF)
+	call NapOrTrainTileMapHook
+else
 	call RLEXorCopy                                       ; $4b08: $cd $d2 $09
+endc
 	ld   c, $80                                      ; $4b0b: $0e $80
 	ld   de, $9800                                   ; $4b0d: $11 $00 $98
 	ld   a, $07                                      ; $4b10: $3e $07
@@ -2370,7 +2386,11 @@ GameState27_SakuraTraining::
 	ld   a, $2e                                      ; $4f3f: $3e $2e
 	ld   hl, $d000                                   ; $4f41: $21 $00 $d0
 	ld   de, $5d69                                   ; $4f44: $11 $69 $5d
+if def(VWF)
+	call NapOrTrainBank1_8800hHook
+else
 	call RLEXorCopy                                       ; $4f47: $cd $d2 $09
+endc
 	ld   c, $81                                      ; $4f4a: $0e $81
 	ld   de, $8800                                   ; $4f4c: $11 $00 $88
 	ld   a, $07                                      ; $4f4f: $3e $07
@@ -2402,7 +2422,11 @@ GameState27_SakuraTraining::
 	ld   a, $2f                                      ; $4f8a: $3e $2f
 	ld   hl, $d000                                   ; $4f8c: $21 $00 $d0
 	ld   de, $541c                                   ; $4f8f: $11 $1c $54
+if def(VWF)
+	call NapOrTrainTileMapHook
+else
 	call RLEXorCopy                                       ; $4f92: $cd $d2 $09
+endc
 	ld   c, $80                                      ; $4f95: $0e $80
 	ld   de, $9800                                   ; $4f97: $11 $00 $98
 	ld   a, $07                                      ; $4f9a: $3e $07
@@ -3191,7 +3215,11 @@ GameState2a_IrisTraining::
 	ld   a, $2e                                      ; $54e1: $3e $2e
 	ld   hl, $d000                                   ; $54e3: $21 $00 $d0
 	ld   de, $462f                                   ; $54e6: $11 $2f $46
+if def(VWF)
+	call NapOrTrainBank1_8800hHook
+else
 	call RLEXorCopy                                       ; $54e9: $cd $d2 $09
+endc
 	ld   c, $81                                      ; $54ec: $0e $81
 	ld   de, $8800                                   ; $54ee: $11 $00 $88
 	ld   a, $07                                      ; $54f1: $3e $07
@@ -3223,7 +3251,11 @@ GameState2a_IrisTraining::
 	ld   a, $2f                                      ; $552c: $3e $2f
 	ld   hl, $d000                                   ; $552e: $21 $00 $d0
 	ld   de, $5283                                   ; $5531: $11 $83 $52
+if def(VWF)
+	call NapOrTrainTileMapHook
+else
 	call RLEXorCopy                                       ; $5534: $cd $d2 $09
+endc
 	ld   c, $80                                      ; $5537: $0e $80
 	ld   de, $9800                                   ; $5539: $11 $00 $98
 	ld   a, $07                                      ; $553c: $3e $07
@@ -4004,7 +4036,11 @@ GameState2c_MariaTraining::
 	ld   a, $2d                                      ; $5a81: $3e $2d
 	ld   hl, $d000                                   ; $5a83: $21 $00 $d0
 	ld   de, $7236                                   ; $5a86: $11 $36 $72
+if def(VWF)
+	call NapOrTrainBank1_8800hHook
+else
 	call RLEXorCopy                                       ; $5a89: $cd $d2 $09
+endc
 	ld   c, $81                                      ; $5a8c: $0e $81
 	ld   de, $8800                                   ; $5a8e: $11 $00 $88
 	ld   a, $07                                      ; $5a91: $3e $07
@@ -4036,7 +4072,11 @@ GameState2c_MariaTraining::
 	ld   a, $2f                                      ; $5acc: $3e $2f
 	ld   hl, $d000                                   ; $5ace: $21 $00 $d0
 	ld   de, $55b5                                   ; $5ad1: $11 $b5 $55
+if def(VWF)
+	call NapOrTrainTileMapHook
+else
 	call RLEXorCopy                                       ; $5ad4: $cd $d2 $09
+endc
 	ld   c, $80                                      ; $5ad7: $0e $80
 	ld   de, $9800                                   ; $5ad9: $11 $00 $98
 	ld   a, $07                                      ; $5adc: $3e $07
@@ -4718,7 +4758,11 @@ Jump_021_5f67:
 	ld   a, $2d                                      ; $5f90: $3e $2d
 	ld   hl, $d000                                   ; $5f92: $21 $00 $d0
 	ld   de, $4b68                                   ; $5f95: $11 $68 $4b
+if def(VWF)
+	call NapOrTrainBank1_8800hHook
+else
 	call RLEXorCopy                                       ; $5f98: $cd $d2 $09
+endc
 	ld   c, $81                                      ; $5f9b: $0e $81
 	ld   de, $8800                                   ; $5f9d: $11 $00 $88
 	ld   a, $07                                      ; $5fa0: $3e $07
@@ -4750,7 +4794,11 @@ Jump_021_5f67:
 	ld   a, $2f                                      ; $5fdb: $3e $2f
 	ld   hl, $d000                                   ; $5fdd: $21 $00 $d0
 	ld   de, $574e                                   ; $5fe0: $11 $4e $57
+if def(VWF)
+	call NapOrTrainTileMapHook
+else
 	call RLEXorCopy                                       ; $5fe3: $cd $d2 $09
+endc
 	ld   c, $80                                      ; $5fe6: $0e $80
 	ld   de, $9800                                   ; $5fe8: $11 $00 $98
 	ld   a, $07                                      ; $5feb: $3e $07
@@ -5466,7 +5514,11 @@ NapSubstate0:
 	ld   a, $2e                                      ; $64d3: $3e $2e
 	ld   hl, $d000                                   ; $64d5: $21 $00 $d0
 	ld   de, $767c                                   ; $64d8: $11 $7c $76
+if def(VWF)
+	call NapOrTrainBank1_8800hHook
+else
 	call RLEXorCopy                                       ; $64db: $cd $d2 $09
+endc
 	ld   c, $81                                      ; $64de: $0e $81
 	ld   de, $8800                                   ; $64e0: $11 $00 $88
 	ld   a, $07                                      ; $64e3: $3e $07
@@ -5498,7 +5550,11 @@ NapSubstate0:
 	ld   a, $2f                                      ; $651e: $3e $2f
 	ld   hl, $d000                                   ; $6520: $21 $00 $d0
 	ld   de, $4db7                                   ; $6523: $11 $b7 $4d
+if def(VWF)
+	call NapOrTrainTileMapHook
+else
 	call RLEXorCopy                                       ; $6526: $cd $d2 $09
+endc
 	ld   c, $80                                      ; $6529: $0e $80
 	ld   de, $9800                                   ; $652b: $11 $00 $98
 	ld   a, $07                                      ; $652e: $3e $07
@@ -9302,3 +9358,38 @@ Call_021_7c39:
 	ld   [de], a                                     ; $7c5c: $12
 	pop  de                                          ; $7c5d: $d1
 	ret                                              ; $7c5e: $c9
+
+
+if def(VWF)
+
+NapOrTrainBank1_8800hHook:
+	call RLEXorCopy
+
+	ld   a, BANK(Gfx_EnDormRoomStatsLabels)
+	ld   bc, Gfx_EnDormRoomStatsLabels.end-Gfx_EnDormRoomStatsLabels
+	ld   de, $d000+$b00
+	ld   hl, Gfx_EnDormRoomStatsLabels
+	call FarMemCopy
+	ret
+
+
+NapOrTrainTileMapHook:
+	call RLEXorCopy
+
+	ld   a, BANK(TileMap_TrainingStatsLabels)
+	ldbc 5, 6
+	ld   de, TileMap_TrainingStatsLabels
+	ld   hl, $d021
+	call FarCopyLayout
+	ret
+
+
+TileMap_TrainingStatsLabels:
+	db $30, $31, $32, $33, $24
+	db $34, $35, $36, $37, $24
+	db $38, $39, $3a, $3b, $3c
+	db $3d, $3e, $46, $46, $24
+	db $3f, $40, $41, $46, $24
+	db $42, $43, $44, $45, $24
+
+endc
