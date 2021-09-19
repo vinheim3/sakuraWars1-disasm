@@ -45,6 +45,7 @@
 ; rgbgfx -o en_kohranMGPopup.2bpp -u -T en_kohranMGPopup.png
 ; rgbgfx -o en_kannaMGPopup.2bpp -u -T en_kannaMGPopup.png
 ; rgbgfx -o en_minigameSelection.2bpp en_minigameSelection.png
+; rgbgfx -o en_saveScreenPopups.2bpp -u -T en_saveScreenPopups.png
 ; tools/gfx.py 1bpp newLetters.png --from=png --interleave
 
 ; empty banks

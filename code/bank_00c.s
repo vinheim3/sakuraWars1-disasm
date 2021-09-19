@@ -2928,7 +2928,7 @@ FileLoadDisplayAnimationHandler4_ToNextState:
 
 
 
-GameState3d::
+GameState3d_GirlImage::
 	ld   a, [wGameSubstate]                                  ; $50d6: $fa $a1 $c2
 	or   a                                           ; $50d9: $b7
 	jp   nz, Jump_00c_5185                           ; $50da: $c2 $85 $51
@@ -3288,13 +3288,13 @@ jr_00c_532d:
 	ret                                              ; $534d: $c9
 
 
-Func_0c_534e::
+SetGirlImageState::
 	ld   [$cc23], a                                  ; $534e: $ea $23 $cc
 	ld   a, h                                        ; $5351: $7c
 	ld   [$cc21], a                                  ; $5352: $ea $21 $cc
 	ld   a, l                                        ; $5355: $7d
 	ld   [$cc22], a                                  ; $5356: $ea $22 $cc
-	ld   a, GS_3d                                      ; $5359: $3e $3d
+	ld   a, GS_GIRL_IMAGE                                      ; $5359: $3e $3d
 	ld   [wGameState], a                                  ; $535b: $ea $a0 $c2
 	xor  a                                           ; $535e: $af
 	ld   [wGameSubstate], a                                  ; $535f: $ea $a1 $c2

@@ -920,17 +920,17 @@ SpriteGroup5Pointers::
 	dw $4bfc
 	dw $4c0c
 	dw $4c1c
-	dw SpriteGroup2_Idx21h
-	dw SpriteGroup2_Idx22h
-	dw $4c7c
-	dw $4cbc
-	dw $4cfc
-	dw $4d3c
-	dw SpriteGroup2_Idx27h
-	dw SpriteGroup2_Idx28h
-	dw SpriteGroup2_Idx29h
-	dw SpriteGroup2_Idx2ah
-	dw $4e7c
+	dw SpriteGroup2_Idx21h_SaveScreenPopupSmall
+	dw SpriteGroup2_Idx22h_SaveScreenPopupMedium
+	dw SpriteGroup2_Idx23h_SaveScreenSavePopup
+	dw SpriteGroup2_Idx24h_SaveScreenLoadPopup
+	dw SpriteGroup2_Idx25h_SaveScreenDeletePopup
+	dw SpriteGroup2_Idx26h_SaveScreenCopyPopup
+	dw SpriteGroup2_Idx27h_SaveScreenPopupYesSelected
+	dw SpriteGroup2_Idx28h_SaveScreenPopupNoSelected
+	dw SpriteGroup2_Idx29h_SaveScreenPopupUnselected
+	dw SpriteGroup2_Idx2ah_SaveScreenSaveComplete
+	dw SpriteGroup2_Idx2bh
 	dw $4efc
 	dw $4f04
 	dw $4f0c
@@ -2132,16 +2132,39 @@ jr_03f_4c0e:
 	db $11 
 	
 	
-SpriteGroup2_Idx21h:
+SpriteGroup2_Idx21h_SaveScreenPopupSmall:
+if def(VWF)
+	db $18, $08, $59, $63
+	db $20, $08, $28, $63
+	db $20, $00, $59, $03
+	db $18, $00, $28, $13
+else
 	db $18, $08, $11, $63
 	db $20, $08, $10, $63
 	db $20, $00, $11, $03
 	db $18, $00, $10, $13
+endc
 
 
-SpriteGroup2_Idx22h:
+SpriteGroup2_Idx22h_SaveScreenPopupMedium:
 	db $1c, $10, $6d, $63
 	db $24, $10, $6c, $63
+if def(VWF)
+	db $1c, $f8, $2d, $43
+	db $24, $f8, $5a, $43
+	db $1c, $00, $3e, $63
+	db $1c, $08, $3e, $63
+	db $24, $00, $11, $63
+	db $24, $08, $11, $63
+	db $1c, $f8, $6d, $03
+	db $14, $f8, $6c, $03
+	db $1c, $10, $2d, $23
+	db $14, $10, $5a, $23
+	db $1c, $08, $3e, $03
+	db $1c, $00, $3e, $03
+	db $14, $08, $11, $03
+	db $14, $00, $11, $13
+else
 	db $1c, $f8, $35, $43
 	db $24, $f8, $34, $43
 	db $1c, $00, $13, $63
@@ -2156,70 +2179,66 @@ SpriteGroup2_Idx22h:
 	db $1c, $00, $13, $03
 	db $14, $08, $12, $03
 	db $14, $00, $12, $13
+endc
 
 
-	jr   jr_03f_4c9e                                 ; $4c7c: $18 $20
-
-	inc  hl                                          ; $4c7e: $23
-	inc  bc                                          ; $4c7f: $03
-	db   $10                                         ; $4c80: $10
-	jr   nz, @+$24                                   ; $4c81: $20 $22
-
-	inc  bc                                          ; $4c83: $03
-	jr   jr_03f_4c9e                                 ; $4c84: $18 $18
-
-	ld   hl, $1003                                   ; $4c86: $21 $03 $10
-	jr   jr_03f_4cab                                 ; $4c89: $18 $20
-
-	inc  bc                                          ; $4c8b: $03
-	jr   jr_03f_4c9e                                 ; $4c8c: $18 $10
-
-	rra                                              ; $4c8e: $1f
-	inc  bc                                          ; $4c8f: $03
-	db   $10                                         ; $4c90: $10
-	db   $10                                         ; $4c91: $10
-	ld   e, $03                                      ; $4c92: $1e $03
-	jr   jr_03f_4c9e                                 ; $4c94: $18 $08
-
-	dec  e                                           ; $4c96: $1d
-	inc  bc                                          ; $4c97: $03
-	db   $10                                         ; $4c98: $10
-	ld   [$031c], sp                                 ; $4c99: $08 $1c $03
-	jr   jr_03f_4c9e                                 ; $4c9c: $18 $00
-
-jr_03f_4c9e:
-	dec  de                                          ; $4c9e: $1b
-	inc  bc                                          ; $4c9f: $03
-	stop                                             ; $4ca0: $10 $00
-	ld   a, [de]                                     ; $4ca2: $1a
-	inc  bc                                          ; $4ca3: $03
-	jr   jr_03f_4c9e                                 ; $4ca4: $18 $f8
-
-	add  hl, de                                      ; $4ca6: $19
-	inc  bc                                          ; $4ca7: $03
-	db   $10                                         ; $4ca8: $10
-	ld   hl, sp+$18                                  ; $4ca9: $f8 $18
-
-jr_03f_4cab:
-	inc  bc                                          ; $4cab: $03
-	jr   jr_03f_4c9e                                 ; $4cac: $18 $f0
-
-	rla                                              ; $4cae: $17
-	inc  bc                                          ; $4caf: $03
-	db   $10                                         ; $4cb0: $10
-	ldh  a, [rAUD2LEN]                               ; $4cb1: $f0 $16
-	inc  bc                                          ; $4cb3: $03
-	jr   jr_03f_4c9e                                 ; $4cb4: $18 $e8
-
-jr_03f_4cb6:
-	dec  d                                           ; $4cb6: $15
-	inc  bc                                          ; $4cb7: $03
-	db   $10                                         ; $4cb8: $10
-	add  sp, $14                                     ; $4cb9: $e8 $14
-	inc  de                                          ; $4cbb: $13
+SpriteGroup2_Idx23h_SaveScreenSavePopup:
+if def(VWF)
+	db $18, $20, $1f, $03
+	db $10, $20, $17, $03
+	db $18, $18, $33, $03
+	db $10, $18, $16, $03
+	db $18, $10, $32, $03
+	db $10, $10, $11, $03
+	db $18, $08, $31, $03
+	db $10, $08, $2c, $03
+	db $18, $00, $30, $03
+	db $10, $00, $2b, $03
+	db $18, $f8, $2f, $03
+	db $10, $f8, $2a, $03
+	db $18, $f0, $2e, $03
+	db $10, $f0, $29, $03
+	db $18, $e8, $2d, $03
+	db $10, $e8, $28, $13
+else
+	db $18, $20, $23, $03
+	db $10, $20, $22, $03
+	db $18, $18, $21, $03
+	db $10, $18, $20, $03
+	db $18, $10, $1f, $03
+	db $10, $10, $1e, $03
+	db $18, $08, $1d, $03
+	db $10, $08, $1c, $03
+	db $18, $00, $1b, $03
+	db $10, $00, $1a, $03
+	db $18, $f8, $19, $03
+	db $10, $f8, $18, $03
+	db $18, $f0, $17, $03
+	db $10, $f0, $16, $03
+	db $18, $e8, $15, $03
+	db $10, $e8, $14, $13
+endc
 
 
-SpriteGroup2_Idx24h:
+SpriteGroup2_Idx24h_SaveScreenLoadPopup:
+if def(VWF)
+	db $18, $20, $1f, $03
+	db $10, $20, $17, $03
+	db $18, $18, $1e, $03
+	db $10, $18, $16, $03
+	db $18, $10, $1d, $03
+	db $10, $10, $15, $03
+	db $18, $08, $1c, $03
+	db $10, $08, $14, $03
+	db $18, $00, $1b, $03
+	db $10, $00, $13, $03
+	db $18, $f8, $1a, $03
+	db $10, $f8, $12, $03
+	db $18, $f0, $19, $03
+	db $10, $f0, $11, $03
+	db $18, $e8, $18, $03
+	db $10, $e8, $10, $13
+else
 	db $18, $f8, $33, $03
 	db $10, $f8, $32, $03
 	db $18, $f0, $31, $03
@@ -2236,128 +2255,105 @@ SpriteGroup2_Idx24h:
 	db $10, $08, $1c, $03
 	db $18, $00, $1b, $03
 	db $10, $00, $1a, $13
+endc
 
 
-	jr   jr_03f_4cfe                                 ; $4cfc: $18 $00
-
-jr_03f_4cfe:
-	ld   b, c                                        ; $4cfe: $41
-	inc  bc                                          ; $4cff: $03
-	stop                                             ; $4d00: $10 $00
-	ld   b, b                                        ; $4d02: $40
-
-jr_03f_4d03:
-	inc  bc                                          ; $4d03: $03
-	jr   jr_03f_4cfe                                 ; $4d04: $18 $f8
-
-	ccf                                              ; $4d06: $3f
-	inc  bc                                          ; $4d07: $03
-	db   $10                                         ; $4d08: $10
-	ld   hl, sp+$3e                                  ; $4d09: $f8 $3e
-	inc  bc                                          ; $4d0b: $03
-	jr   jr_03f_4cfe                                 ; $4d0c: $18 $f0
-
-	dec  a                                           ; $4d0e: $3d
-	inc  bc                                          ; $4d0f: $03
-	db   $10                                         ; $4d10: $10
-	ldh  a, [$3c]                                    ; $4d11: $f0 $3c
-	inc  bc                                          ; $4d13: $03
-	jr   jr_03f_4cfe                                 ; $4d14: $18 $e8
-
-	dec  sp                                          ; $4d16: $3b
-	inc  bc                                          ; $4d17: $03
-	db   $10                                         ; $4d18: $10
-	add  sp, $3a                                     ; $4d19: $e8 $3a
-	inc  bc                                          ; $4d1b: $03
-	jr   jr_03f_4d3e                                 ; $4d1c: $18 $20
-
-	inc  hl                                          ; $4d1e: $23
-	inc  bc                                          ; $4d1f: $03
-	db   $10                                         ; $4d20: $10
-	jr   nz, @+$24                                   ; $4d21: $20 $22
-
-	inc  bc                                          ; $4d23: $03
-	jr   jr_03f_4d3e                                 ; $4d24: $18 $18
-
-	ld   hl, $1003                                   ; $4d26: $21 $03 $10
-	jr   jr_03f_4d4b                                 ; $4d29: $18 $20
-
-	inc  bc                                          ; $4d2b: $03
-	jr   jr_03f_4d3e                                 ; $4d2c: $18 $10
-
-	rra                                              ; $4d2e: $1f
-	inc  bc                                          ; $4d2f: $03
-	db   $10                                         ; $4d30: $10
-	db   $10                                         ; $4d31: $10
-	ld   e, $03                                      ; $4d32: $1e $03
-	jr   jr_03f_4d3e                                 ; $4d34: $18 $08
-
-	dec  e                                           ; $4d36: $1d
-	inc  bc                                          ; $4d37: $03
-	db   $10                                         ; $4d38: $10
-	ld   [$131c], sp                                 ; $4d39: $08 $1c $13
-	jr   jr_03f_4d3e                                 ; $4d3c: $18 $00
-
-jr_03f_4d3e:
-	ld   b, c                                        ; $4d3e: $41
-	inc  bc                                          ; $4d3f: $03
-	stop                                             ; $4d40: $10 $00
-	ld   b, b                                        ; $4d42: $40
-	inc  bc                                          ; $4d43: $03
-	jr   jr_03f_4d3e                                 ; $4d44: $18 $f8
-
-	ld   b, a                                        ; $4d46: $47
-	inc  bc                                          ; $4d47: $03
-	db   $10                                         ; $4d48: $10
-	ld   hl, sp+$46                                  ; $4d49: $f8 $46
-
-jr_03f_4d4b:
-	inc  bc                                          ; $4d4b: $03
-	jr   jr_03f_4d3e                                 ; $4d4c: $18 $f0
-
-	ld   b, l                                        ; $4d4e: $45
-	inc  bc                                          ; $4d4f: $03
-	db   $10                                         ; $4d50: $10
-	ldh  a, [rLY]                                    ; $4d51: $f0 $44
-	inc  bc                                          ; $4d53: $03
-	jr   jr_03f_4d3e                                 ; $4d54: $18 $e8
-
-	ld   b, e                                        ; $4d56: $43
-	inc  bc                                          ; $4d57: $03
-	db   $10                                         ; $4d58: $10
-	add  sp, $42                                     ; $4d59: $e8 $42
-	inc  bc                                          ; $4d5b: $03
-	db $18, $20
-
-	inc  hl                                          ; $4d5e: $23
-	inc  bc                                          ; $4d5f: $03
-	db   $10                                         ; $4d60: $10
-	jr   nz, @+$24                                   ; $4d61: $20 $22
-
-	inc  bc                                          ; $4d63: $03
-	db $18, $18
-
-jr_03f_4d66:
-	ld   hl, $1003                                   ; $4d66: $21 $03 $10
-	db $18, $20
-
-	inc  bc                                          ; $4d6b: $03
-	db $18, $10
-
-	rra                                              ; $4d6e: $1f
-	inc  bc                                          ; $4d6f: $03
-	db   $10                                         ; $4d70: $10
-	db   $10                                         ; $4d71: $10
-	ld   e, $03                                      ; $4d72: $1e $03
-	db $18, $08
-
-	dec  e                                           ; $4d76: $1d
-	inc  bc                                          ; $4d77: $03
-	db   $10                                         ; $4d78: $10
-	ld   [$131c], sp                                 ; $4d79: $08 $1c $13
+SpriteGroup2_Idx25h_SaveScreenDeletePopup:
+if def(VWF)
+	db $18, $20, $1f, $03
+	db $10, $20, $17, $03
+	db $18, $18, $1e, $03
+	db $10, $18, $16, $03
+	db $18, $10, $1d, $03
+	db $10, $10, $15, $03
+	db $18, $08, $27, $03
+	db $10, $08, $14, $03
+	db $18, $00, $26, $03
+	db $10, $00, $22, $03
+	db $18, $f8, $25, $03
+	db $10, $f8, $21, $03
+	db $18, $f0, $24, $03
+	db $10, $f0, $11, $03
+	db $18, $e8, $23, $03
+	db $10, $e8, $20, $13
+else
+	db $18, $00, $41, $03
+	db $10, $00, $40, $03
+	db $18, $f8, $3f, $03
+	db $10, $f8, $3e, $03
+	db $18, $f0, $3d, $03
+	db $10, $f0, $3c, $03
+	db $18, $e8, $3b, $03
+	db $10, $e8, $3a, $03
+	db $18, $20, $23, $03
+	db $10, $20, $22, $03
+	db $18, $18, $21, $03
+	db $10, $18, $20, $03
+	db $18, $10, $1f, $03
+	db $10, $10, $1e, $03
+	db $18, $08, $1d, $03
+	db $10, $08, $1c, $13
+endc
 
 
-SpriteGroup2_Idx27h:
+SpriteGroup2_Idx26h_SaveScreenCopyPopup:
+if def(VWF)
+	db $18, $20, $1f, $03
+	db $10, $20, $17, $03
+	db $18, $18, $1e, $03
+	db $10, $18, $16, $03
+	db $18, $10, $1d, $03
+	db $10, $10, $15, $03
+	db $18, $08, $1c, $03
+	db $10, $08, $14, $03
+	db $18, $00, $1b, $03
+	db $10, $00, $13, $03
+	db $18, $f8, $37, $03
+	db $10, $f8, $21, $03
+	db $18, $f0, $36, $03
+	db $10, $f0, $15, $03
+	db $18, $e8, $35, $03
+	db $10, $e8, $34, $13
+else
+	db $18, $00, $41, $03
+	db $10, $00, $40, $03
+	db $18, $f8, $47, $03
+	db $10, $f8, $46, $03
+	db $18, $f0, $45, $03
+	db $10, $f0, $44, $03
+	db $18, $e8, $43, $03
+	db $10, $e8, $42, $03
+	db $18, $20, $23, $03
+	db $10, $20, $22, $03
+	db $18, $18, $21, $03
+	db $10, $18, $20, $03
+	db $18, $10, $1f, $03
+	db $10, $10, $1e, $03
+	db $18, $08, $1d, $03
+	db $10, $08, $1c, $13
+endc
+
+
+SpriteGroup2_Idx27h_SaveScreenPopupYesSelected:
+if def(VWF)
+	db $28, $20, $47, $03
+	db $20, $20, $3f, $03
+	db $28, $18, $46, $03
+	db $20, $18, $3e, $03
+	db $28, $10, $45, $03
+	db $20, $10, $3d, $03
+	db $28, $08, $44, $03
+	db $20, $08, $3c, $03
+	db $28, $00, $46, $03
+	db $20, $00, $3e, $03
+
+	db $28, $f8, $42, $03
+	db $20, $f8, $3a, $03
+	db $28, $f0, $41, $03
+	db $20, $f0, $39, $03
+	db $28, $e8, $40, $03
+	db $20, $e8, $38, $13
+else
 	db $28, $e8, $37, $03
 	db $20, $e8, $36, $03
 	db $28, $20, $2d, $03
@@ -2374,9 +2370,29 @@ SpriteGroup2_Idx27h:
 	db $20, $f8, $26, $03
 	db $28, $f0, $25, $03
 	db $20, $f0, $24, $13
+endc
 
 
-SpriteGroup2_Idx28h:
+SpriteGroup2_Idx28h_SaveScreenPopupNoSelected:
+if def(VWF)
+	db $28, $20, $47, $03
+	db $20, $20, $3f, $03
+	db $28, $18, $46, $03
+	db $20, $18, $3e, $03
+	db $28, $10, $45, $03
+	db $20, $10, $3d, $03
+	db $28, $08, $44, $03
+	db $20, $08, $3c, $03
+	db $28, $00, $43, $03
+	db $20, $00, $3b, $03
+
+	db $28, $f8, $42, $03
+	db $20, $f8, $3a, $03
+	db $28, $f0, $41, $03
+	db $20, $f0, $39, $03
+	db $28, $e8, $48, $03
+	db $20, $e8, $2d, $13
+else
 	db $28, $00, $39, $03
 	db $20, $00, $38, $03
 	db $20, $e8, $35, $43
@@ -2393,9 +2409,29 @@ SpriteGroup2_Idx28h:
 	db $20, $f8, $26, $03
 	db $28, $f0, $25, $03
 	db $20, $f0, $24, $13
+endc
 
 
-SpriteGroup2_Idx29h:
+SpriteGroup2_Idx29h_SaveScreenPopupUnselected:
+if def(VWF)
+	db $28, $20, $47, $03
+	db $20, $20, $3f, $03
+	db $28, $18, $46, $03
+	db $20, $18, $3e, $03
+	db $28, $10, $45, $03
+	db $20, $10, $3d, $03
+	db $28, $08, $44, $03
+	db $20, $08, $3c, $03
+	db $28, $00, $46, $03
+	db $20, $00, $3e, $03
+
+	db $28, $f8, $42, $03
+	db $20, $f8, $3a, $03
+	db $28, $f0, $41, $03
+	db $20, $f0, $39, $03
+	db $28, $e8, $48, $03
+	db $20, $e8, $2d, $13
+else
 	db $20, $e8, $35, $43
 	db $28, $e8, $34, $43
 	db $28, $20, $2d, $03
@@ -2412,72 +2448,48 @@ SpriteGroup2_Idx29h:
 	db $20, $f8, $26, $03
 	db $28, $f0, $25, $03
 	db $20, $f0, $24, $13
+endc
 
 
-SpriteGroup2_Idx2ah:
-	jr   jr_03f_4e5e                                 ; $4e3c: $18 $20
+SpriteGroup2_Idx2ah_SaveScreenSaveComplete:
+if def(VWF)
+	db $20, $20, $58, $03
+	db $18, $20, $50, $03
+	db $20, $18, $57, $03
+	db $18, $18, $4f, $03
+	db $20, $10, $56, $03
+	db $18, $10, $4e, $03
+	db $20, $08, $55, $03
+	db $18, $08, $4d, $03
+	db $20, $00, $54, $03
+	db $18, $00, $4c, $03
+	db $20, $f8, $53, $03
+	db $18, $f8, $4b, $03
+	db $20, $f0, $52, $03
+	db $18, $f0, $4a, $03
+	db $20, $e8, $51, $03
+	db $18, $e8, $49, $13
+else
+	db $18, $20, $11, $63
+	db $20, $20, $10, $63
+	db $20, $18, $53, $03
+	db $18, $18, $52, $03
+	db $20, $10, $51, $03
+	db $18, $10, $50, $03
+	db $20, $08, $4f, $03
+	db $18, $08, $4e, $03
+	db $20, $00, $4d, $03
+	db $18, $00, $4c, $03
+	db $20, $f8, $4b, $03
+	db $18, $f8, $4a, $03
+	db $20, $f0, $49, $03
+	db $18, $f0, $48, $03
+	db $20, $e8, $11, $03
+	db $18, $e8, $10, $13
+endc
 
-	ld   de, $2063                                   ; $4e3e: $11 $63 $20
-	jr   nz, jr_03f_4e53                             ; $4e41: $20 $10
 
-	ld   h, e                                        ; $4e43: $63
-	jr   nz, jr_03f_4e5e                             ; $4e44: $20 $18
-
-	ld   d, e                                        ; $4e46: $53
-	inc  bc                                          ; $4e47: $03
-	jr   jr_03f_4e62                                 ; $4e48: $18 $18
-
-	ld   d, d                                        ; $4e4a: $52
-	inc  bc                                          ; $4e4b: $03
-	jr   nz, jr_03f_4e5e                             ; $4e4c: $20 $10
-
-	ld   d, c                                        ; $4e4e: $51
-	inc  bc                                          ; $4e4f: $03
-	jr   jr_03f_4e62                                 ; $4e50: $18 $10
-
-	ld   d, b                                        ; $4e52: $50
-
-jr_03f_4e53:
-	inc  bc                                          ; $4e53: $03
-	jr   nz, jr_03f_4e5e                             ; $4e54: $20 $08
-
-	ld   c, a                                        ; $4e56: $4f
-	inc  bc                                          ; $4e57: $03
-	jr   jr_03f_4e62                                 ; $4e58: $18 $08
-
-	ld   c, [hl]                                     ; $4e5a: $4e
-	inc  bc                                          ; $4e5b: $03
-	jr   nz, jr_03f_4e5e                             ; $4e5c: $20 $00
-
-jr_03f_4e5e:
-	ld   c, l                                        ; $4e5e: $4d
-	inc  bc                                          ; $4e5f: $03
-	jr   jr_03f_4e62                                 ; $4e60: $18 $00
-
-jr_03f_4e62:
-	ld   c, h                                        ; $4e62: $4c
-	inc  bc                                          ; $4e63: $03
-	jr   nz, jr_03f_4e5e                             ; $4e64: $20 $f8
-
-	ld   c, e                                        ; $4e66: $4b
-	inc  bc                                          ; $4e67: $03
-	jr   jr_03f_4e62                                 ; $4e68: $18 $f8
-
-	ld   c, d                                        ; $4e6a: $4a
-	inc  bc                                          ; $4e6b: $03
-	jr   nz, jr_03f_4e5e                             ; $4e6c: $20 $f0
-
-	ld   c, c                                        ; $4e6e: $49
-	inc  bc                                          ; $4e6f: $03
-	jr   jr_03f_4e62                                 ; $4e70: $18 $f0
-
-	ld   c, b                                        ; $4e72: $48
-	inc  bc                                          ; $4e73: $03
-	jr   nz, jr_03f_4e5e                             ; $4e74: $20 $e8
-
-	ld   de, $1803                                   ; $4e76: $11 $03 $18
-	add  sp, $10                                     ; $4e79: $e8 $10
-	inc  de                                          ; $4e7b: $13
+SpriteGroup2_Idx2bh:
 	jr   z, jr_03f_4e96                              ; $4e7c: $28 $18
 
 	ld   l, e                                        ; $4e7e: $6b

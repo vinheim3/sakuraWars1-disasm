@@ -6006,13 +6006,14 @@ Jump_021_68ea:
 	ret                                              ; $68eb: $c9
 
 
-GameState30::
+GameState30_SoundTest::
 	ld   a, [wGameSubstate]                                  ; $68ec: $fa $a1 $c2
 	rst  JumpTable                                         ; $68ef: $df
-	db   $f4                                         ; $68f0: $f4
-	ld   l, b                                        ; $68f1: $68
-	rla                                              ; $68f2: $17
-	ld   l, d                                        ; $68f3: $6a
+	dw SoundTest_Substate0
+	dw SoundTest_Substate1
+
+
+SoundTest_Substate0:
 	ld   a, $ff                                      ; $68f4: $3e $ff
 	ld   [wInGameInputsEnabled], a                                  ; $68f6: $ea $0e $c2
 	ld   a, $00                                      ; $68f9: $3e $00
@@ -6186,6 +6187,7 @@ jr_021_6a0b:
 	ret                                              ; $6a16: $c9
 
 
+SoundTest_Substate1:
 	call ClearOam                                       ; $6a17: $cd $d7 $0d
 	call Call_021_6972                               ; $6a1a: $cd $72 $69
 	ld   a, [wInGameButtonsPressed]                                  ; $6a1d: $fa $10 $c2
@@ -6857,15 +6859,8 @@ Jump_021_6e1b:
 	ld   h, a                                        ; $6e26: $67
 	ld   a, [wGameSubstate]                                  ; $6e27: $fa $a1 $c2
 	ld   l, $00                                      ; $6e2a: $2e $00
-	push af                                          ; $6e2c: $f5
-	ld   a, $5b                                      ; $6e2d: $3e $5b
-	ld   [wFarCallAddr], a                                  ; $6e2f: $ea $98 $c2
-	ld   a, $78                                      ; $6e32: $3e $78
-	ld   [wFarCallAddr+1], a                                  ; $6e34: $ea $99 $c2
-	ld   a, $05                                      ; $6e37: $3e $05
-	ld   [wFarCallBank], a                                  ; $6e39: $ea $9a $c2
-	pop  af                                          ; $6e3c: $f1
-	call FarCall                                       ; $6e3d: $cd $62 $09
+
+	M_FarCall Func_05_785b
 	ret                                              ; $6e40: $c9
 
 

@@ -2478,7 +2478,7 @@ jr_031_4f51:
 	rst  $10                                         ; $4f89: $d7
 
 
-GameState08_GirlImages::
+GameState08_GirlEventImages::
 	ld   a, [wGameSubstate]                                  ; $4f8a: $fa $a1 $c2
 	rst  JumpTable                                         ; $4f8d: $df
 	sub  h                                           ; $4f8e: $94
@@ -3585,11 +3585,12 @@ Jump_031_5798:
 	ret                                              ; $57cf: $c9
 
 
+SetGirlEventImagesState::
 	ld   a, h                                        ; $57d0: $7c
 	ld   [$c678], a                                  ; $57d1: $ea $78 $c6
 	ld   a, l                                        ; $57d4: $7d
 	ld   [$c679], a                                  ; $57d5: $ea $79 $c6
-	ld   a, GS_GIRL_IMAGES                                      ; $57d8: $3e $08
+	ld   a, GS_GIRL_EVENT_IMAGES                                      ; $57d8: $3e $08
 	ld   [wGameState], a                                  ; $57da: $ea $a0 $c2
 	xor  a                                           ; $57dd: $af
 	ld   [wGameSubstate], a                                  ; $57de: $ea $a1 $c2

@@ -1238,14 +1238,14 @@ AnimatedSpriteSpecs::
 	dw AnimatedSpriteSpec_11-3
 	dw AnimatedSpriteSpec_12-3
 	dw AnimatedSpriteSpec_13-3
-	dw $72f7
-	dw $72fd
-	dw AnimatedSpriteSpec_16-3
+	dw AnimatedSpriteSpec_14_SaveScreenShowSavePopup-3
+	dw AnimatedSpriteSpec_15-3
+	dw AnimatedSpriteSpec_16_SaveScreenShowLoadPopup-3
 	dw AnimatedSpriteSpec_17-3
-	dw AnimatedSpriteSpec_18-3
-	dw $7315
-	dw $731b
-	dw $7321
+	dw AnimatedSpriteSpec_18_SaveScreenShowDeletePopup-3
+	dw AnimatedSpriteSpec_19-3
+	dw AnimatedSpriteSpec_1a_SaveScreenCopyDeletePopup-3
+	dw AnimatedSpriteSpec_1b-3
 	dw $7327
 	dw $7342
 	dw $7348
@@ -1467,6 +1467,7 @@ AnimatedSpriteSpec_11:
 AnimatedSpriteSpec_12:
 	db $02, $27, $00
 
+
 AnimatedSpriteSpec_10:
 	db $02, $21, $02
 	db $02, $22, $02
@@ -1477,50 +1478,46 @@ AnimatedSpriteSpec_13:
 	AnimJump :-
 
 
-	add  b                                           ; $72fa: $80
-	inc  b                                           ; $72fb: $04
-	nop                                              ; $72fc: $00
-	ld   [bc], a                                     ; $72fd: $02
-	inc  hl                                          ; $72fe: $23
-	nop                                              ; $72ff: $00
-	ld   [bc], a                                     ; $7300: $02
-	inc  hl                                          ; $7301: $23
-	jr   z, jr_001_7284                              ; $7302: $28 $80
-
-jr_001_7304:
-	nop                                              ; $7304: $00
-	nop                                              ; $7305: $00
+AnimatedSpriteSpec_14_SaveScreenShowSavePopup:
+	AnimHide $04
+	db SG_2, SG2_SAVE_SCREEN_SAVE_POPUP, $00
 
 
-AnimatedSpriteSpec_16:
-	db $80, $04, $00
-	db $02, $24, $00
+AnimatedSpriteSpec_15:
+	db SG_2, SG2_SAVE_SCREEN_SAVE_POPUP, $28
+	AnimHide $00
+
+
+AnimatedSpriteSpec_16_SaveScreenShowLoadPopup:
+	AnimHide $04
+	db SG_2, SG2_SAVE_SCREEN_LOAD_POPUP, $00
+
 
 AnimatedSpriteSpec_17:
-	db $02, $24, $28
-	db $80, $00, $00
-
-AnimatedSpriteSpec_18:
-	db $80, $04, $00
-	db $02, $25, $00
+	db SG_2, SG2_SAVE_SCREEN_LOAD_POPUP, $28
+	AnimHide $00
 
 
-	ld   [bc], a                                     ; $7318: $02
-	dec  h                                           ; $7319: $25
-	jr   z, jr_001_729c                              ; $731a: $28 $80
+AnimatedSpriteSpec_18_SaveScreenShowDeletePopup:
+	AnimHide $04
+	db SG_2, SG2_SAVE_SCREEN_DELETE_POPUP, $00
 
-	nop                                              ; $731c: $00
-	nop                                              ; $731d: $00
-	add  b                                           ; $731e: $80
-	inc  b                                           ; $731f: $04
-	nop                                              ; $7320: $00
-	ld   [bc], a                                     ; $7321: $02
-	ld   h, $00                                      ; $7322: $26 $00
-	ld   [bc], a                                     ; $7324: $02
-	ld   h, $28                                      ; $7325: $26 $28
-	add  b                                           ; $7327: $80
-	nop                                              ; $7328: $00
-	nop                                              ; $7329: $00
+
+AnimatedSpriteSpec_19:
+	db SG_2, SG2_SAVE_SCREEN_DELETE_POPUP, $28
+	AnimHide $00
+
+
+AnimatedSpriteSpec_1a_SaveScreenCopyDeletePopup:
+	AnimHide $04
+	db SG_2, SG2_SAVE_SCREEN_COPY_POPUP, $00
+
+
+AnimatedSpriteSpec_1b:
+	db SG_2, SG2_SAVE_SCREEN_COPY_POPUP, $28
+	AnimHide $00
+
+
 	ld   [bc], a                                     ; $732a: $02
 	add  hl, hl                                      ; $732b: $29
 	inc  b                                           ; $732c: $04

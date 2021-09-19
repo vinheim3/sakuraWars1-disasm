@@ -592,7 +592,7 @@
                             canvasWidth: 32 * 8,
                         },
                         {
-                            name: "Save screen (gs $0e)",
+                            name: "Save screen BG (gs $0e)",
                             sources: [
                                 ['rleXorCopy', 0x1b, 0x450c, 0xd000],
                                 ['simpleCopy', 0x00, 0xd000, 0x8000, 0x800, 'memory', 'memory'],
@@ -614,6 +614,39 @@
                             isGBC: true,
                             rowsShown: 32,
                             canvasHeight: 32 * 8,
+                        },
+                        {
+                            name: "Save screen OBJ (gs $0e)",
+                            sources: [
+                                ['rleXorCopy', 0x1b, 0x450c, 0xd000],
+                                ['simpleCopy', 0x00, 0xd000, 0x8000, 0x800, 'memory', 'memory'],
+
+                                ['rleXorCopy', 0x14, 0x6e31, 0xd000],
+                                ['simpleCopy', 0x00, 0xd000, 0x8800, 0x1000, 'memory', 'memory'],
+
+                                ['rleXorCopy', 0x19, 0x5fb2, 0xd000],
+                                ['simpleCopy', 0x00, 0xd000, 0x0800, 0x800, 'memory', 'vram1'],
+
+                                ['fillScreen', 0, 0x7f, 0],
+                                ['spriteCopy', 0x3f, 0x4c7c, 0x9800, false, 0x20, 0x00],
+                                ['spriteCopy', 0x3f, 0x4cbc, 0x9800, false, 0x20, 0x10],
+                                ['spriteCopy', 0x3f, 0x4cfc, 0x9800, false, 0x20, 0x20],
+                                ['spriteCopy', 0x3f, 0x4d3c, 0x9800, false, 0x20, 0x30],
+
+                                ['spriteCopy', 0x3f, 0x4c3c, 0x9800, false, 0x20, 0x40],
+                                ['spriteCopy', 0x3f, 0x4c2c, 0x9800, false, 0x20, 0x50],
+
+                                ['spriteCopy', 0x3f, 0x4d7c, 0x9800, false, 0x20, 0x60],
+                                ['spriteCopy', 0x3f, 0x4dbc, 0x9800, false, 0x20, 0x70],
+                                ['spriteCopy', 0x3f, 0x4dfc, 0x9800, false, 0x20, 0x80],
+                                ['spriteCopy', 0x3f, 0x4e3c, 0x9800, false, 0x20, 0x98],
+                                
+                                ['simpleCopy', 0x1e, 0x663c, 0x0000, 0x40, 'rom', 'bgPalettes'],
+                            ],
+                            isGBC: true,
+                            is8000: true,
+                            rowsShown: 32,
+                            canvasHeight: 32*8,
                         },
                         {
                             name: "Dorm Room (gs $45)",
@@ -1030,6 +1063,16 @@
                             isGBC: true,
                             rowsShown: 32,
                             canvasHeight: 32*8,
+                        },
+                        {
+                            name: "Sound Test (gs $30)",
+                            sources: [
+                                ['rleXorCopy', 0x2d, 0x7feb, 0x1800, 'vram1'],
+                                ['rleXorCopy', 0x2f, 0x45d0, 0x9800],
+                                ['rleXorCopy', 0x2f, 0x480e, 0x8800],
+                                ['simpleCopy', 0x2f, 0x69e3, 0x0000, 0x40, 'rom', 'bgPalettes'],
+                            ],
+                            isGBC: true,
                         },
                     ],
                 },

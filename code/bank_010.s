@@ -264,7 +264,11 @@ GameState0e_SaveScreen::
 	ld   a, BANK(RleXorTileData_SaveScreenBank0_8000)                                      ; $41c9: $3e $1b
 	ld   hl, $d000                                   ; $41cb: $21 $00 $d0
 	ld   de, RleXorTileData_SaveScreenBank0_8000                                   ; $41ce: $11 $0c $45
+if def(VWF)
+	call SaveScreenTileDataBank0_8000h_hook
+else
 	call RLEXorCopy                                       ; $41d1: $cd $d2 $09
+endc
 
 ; VBlank enqueue that tile data
 	ld   c, $80                                      ; $41d4: $0e $80
@@ -1247,7 +1251,7 @@ Call_010_4810:
 	set  6, [hl]                                     ; $4813: $cb $f6
 	ld   a, [wSaveScreenPopUpBottomRowSpriteSpecIdxUsed]                                  ; $4815: $fa $af $c8
 	call HLequAddrOfAnimSpriteSpecDetails                                       ; $4818: $cd $76 $30
-	ld   a, $1c                                      ; $481b: $3e $1c
+	ld   a, ASS_SAVE_SCREEN_SHOW_SAVE_COMPLETE                                      ; $481b: $3e $1c
 	ld   [$c8b0], a                                  ; $481d: $ea $b0 $c8
 	ld   de, AnimatedSpriteSpecs                                   ; $4820: $11 $80 $71
 
@@ -1370,15 +1374,15 @@ HandleSaveScreenAPressed:
 	jp   .done                               ; $48fa: $c3 $8b $49
 
 .br_48fd:
-	ld   b, $18                                      ; $48fd: $06 $18
+	ld   b, ASS_SAVE_SCREEN_SHOW_DELETE_POPUP                                      ; $48fd: $06 $18
 	bit  3, a                                        ; $48ff: $cb $5f
 	jr   nz, .br_493d                             ; $4901: $20 $3a
 
-	ld   b, $1a                                      ; $4903: $06 $1a
+	ld   b, ASS_SAVE_SCREEN_SHOW_COPY_POPUP                                      ; $4903: $06 $1a
 	bit  2, a                                        ; $4905: $cb $57
 	jr   nz, .br_493d                             ; $4907: $20 $34
 
-	ld   b, $14                                      ; $4909: $06 $14
+	ld   b, ASS_SAVE_SCREEN_SHOW_SAVE_POPUP                                      ; $4909: $06 $14
 	bit  0, a                                        ; $490b: $cb $47
 	jr   z, .br_493d                              ; $490d: $28 $2e
 
@@ -1386,7 +1390,7 @@ HandleSaveScreenAPressed:
 	set  4, [hl]                                     ; $4912: $cb $e6
 	ld   a, [wSaveScreenPopUpTopRowSpriteSpecIdxUsed]                                  ; $4914: $fa $b1 $c8
 	call HLequAddrOfAnimSpriteSpecDetails                                       ; $4917: $cd $76 $30
-	ld   a, ASS_SAVE_SCREEN_POPUP_LOAD                                      ; $491a: $3e $16
+	ld   a, ASS_SAVE_SCREEN_SHOW_LOAD_POPUP                                      ; $491a: $3e $16
 	ld   de, AnimatedSpriteSpecs                                   ; $491c: $11 $80 $71
 
 	M_FarCall LoadType1NewAnimatedSpriteSpecAddress
@@ -9051,6 +9055,13 @@ jr_010_79ca:
 	ret                                              ; $7a35: $c9
 
 if def(VWF)
+
+SaveScreenTileDataBank0_8000h_hook:
+	call RLEXorCopy
+
+	M_FarCall EnLoadSaveScreenPopupGfx
+	ret
+
 SaveScreenTileDataBank0_8800h_hook:
 	call RLEXorCopy
 

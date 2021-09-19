@@ -1675,4 +1675,15 @@ Data_30_77d4entry13::
 Data_30_77d4entry14::
 	db $1e, $35, $4d, $10, $2e, $46, $3d, $44, $10, $48, $43, $10, $48, $3c, $39, $10, $1d, $3d, $48, $4d, $00
 
+
+EnLoadSaveScreenPopupGfx::
+	ld   bc, .end-.gfx
+	ld   de, $d000+$100
+	ld   hl, .gfx
+	call MemCopy
+	ret
+.gfx:
+	INCBIN "en_saveScreenPopups.2bpp"
+.end:
+
 endc

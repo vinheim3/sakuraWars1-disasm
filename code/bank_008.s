@@ -6323,7 +6323,7 @@ ScriptOpcode1f_Main:
 	ld   h, GS_MAIN_CONVO                                      ; $6b21: $26 $3b
 	ld   l, $01                                      ; $6b23: $2e $01
 
-	M_FarCall Func_0c_534e
+	M_FarCall SetGirlImageState
 	
 	ld   a, SO_02                                      ; $6b39: $3e $02
 	call AddInterruptScriptOpcode                               ; $6b3b: $cd $ba $42

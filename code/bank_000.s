@@ -3254,7 +3254,7 @@ HandleGameState:
 	AddrBank GameState05_Credits
 	AddrBank GameState06_SoundMode
 	AddrBank GameState07_SceneryImages
-	AddrBank GameState08_GirlImages
+	AddrBank GameState08_GirlEventImages
 	AddrBank GameState09_GirlVoiceSounds
 	AddrBank GameState0a ; like sound mode but bugged
 	AddrBank GameState0b_KannaMiniGameMain
@@ -3294,7 +3294,7 @@ HandleGameState:
 	AddrBank GameState2d_Nap
 	AddrBank GameState2e_TrainingDebugMenu
 	AddrBank GameState2f_Battle
-	AddrBank GameState30 ; bugged
+	AddrBank GameState30_SoundTest
 	AddrBank GameState31_SpecialAnimsDebugMenu
 	AddrBank GameState32_BattleDebugMenu
 	AddrBank GameState33_PlayerSpecialAnims
@@ -3307,7 +3307,7 @@ HandleGameState:
 	AddrBank GameState3a_Items
 	AddrBank GameState3b_MainConvo
 	AddrBank GameState3c_FileLoadDisplay
-	AddrBank GameState3d ; bugged
+	AddrBank GameState3d_GirlImage
 	AddrBank GameState3e_Schedule
 	AddrBank GameState3f_GameOver
 	AddrBank GameState40_Inventory

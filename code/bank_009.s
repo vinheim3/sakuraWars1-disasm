@@ -6046,17 +6046,10 @@ jr_009_64bb:
 
 
 jr_009_64d7:
-	ld   h, $41                                      ; $64d7: $26 $41
+	ld   h, GS_TREASURE_CHEST                                      ; $64d7: $26 $41
 	ld   l, $01                                      ; $64d9: $2e $01
-	push af                                          ; $64db: $f5
-	ld   a, $d0                                      ; $64dc: $3e $d0
-	ld   [wFarCallAddr], a                                  ; $64de: $ea $98 $c2
-	ld   a, $57                                      ; $64e1: $3e $57
-	ld   [wFarCallAddr+1], a                                  ; $64e3: $ea $99 $c2
-	ld   a, $31                                      ; $64e6: $3e $31
-	ld   [wFarCallBank], a                                  ; $64e8: $ea $9a $c2
-	pop  af                                          ; $64eb: $f1
-	call FarCall                                       ; $64ec: $cd $62 $09
+
+	M_FarCall SetGirlEventImagesState
 	ret                                              ; $64ef: $c9
 
 
