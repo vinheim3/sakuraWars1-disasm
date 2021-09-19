@@ -73,19 +73,19 @@
 
 ; tools/instantText.py battle Table_24_71b0
 ;   battle text in bank $24 (DONE + text fits)
-;   _90_5087 (DONE)
+;   _90_5087 (DONE + text fits)
 ;   _90_4e80 (DONE)
-;   _90_5118 (DONE)
+;   _90_5118 (DONE + text fits)
 ;   _90_5234 (DONE)
 ;   _90_5ac9 (DONE)
 ;   _05_579f (not translated)
 ;   _0c_5ad5 (DONE)
-;   _30_683a
-;   _30_6e56
-;   _30_77d4
+;   _30_683a (DONE)
+;   _30_6e56 (DONE)
+;   _30_77d4 (DONE)
 ;   _31_441e (DONE)
-;   _31_595e (DONE)
-;   _0d_618f
+;   _31_595e (DONE + text fits)
+;   _0d_618f (DONE + text fits)
 ; tools/scriptExtract.py
 
 

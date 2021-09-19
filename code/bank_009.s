@@ -6006,17 +6006,10 @@ jr_009_643b:
 	jr   z, jr_009_6489                              ; $6487: $28 $00
 
 jr_009_6489:
-	ld   h, $41                                      ; $6489: $26 $41
+	ld   h, GS_TREASURE_CHEST                                      ; $6489: $26 $41
 	ld   l, $01                                      ; $648b: $2e $01
-	push af                                          ; $648d: $f5
-	ld   a, $87                                      ; $648e: $3e $87
-	ld   [wFarCallAddr], a                                  ; $6490: $ea $98 $c2
-	ld   a, $67                                      ; $6493: $3e $67
-	ld   [wFarCallAddr+1], a                                  ; $6495: $ea $99 $c2
-	ld   a, $0d                                      ; $6498: $3e $0d
-	ld   [wFarCallBank], a                                  ; $649a: $ea $9a $c2
-	pop  af                                          ; $649d: $f1
-	call FarCall                                       ; $649e: $cd $62 $09
+
+	M_FarCall SetItemsState
 	ret                                              ; $64a1: $c9
 
 

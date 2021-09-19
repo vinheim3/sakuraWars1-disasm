@@ -4,31 +4,54 @@ import csv
 import sys
 import clipboard
 from scriptExtract import ScriptExtractor
-from util import getKanjiMap, stringB
+from util import getKanjiMap, stringB, getRom, bankAddr, groupBytes
 
 """
 scriptName - eg battle (1st column of spreadsheet to check against)
 tableName - table prefix to use in asm
 """
 
+data = getRom()
+
 scriptName = sys.argv[1]
 tableName = sys.argv[2]
 kanji_map = getKanjiMap()
 prefix = f"{tableName}entry"
 
-def is_timed(_scriptName, idx):
+
+def get_limit(_scriptName, idx):
+    limit = None
+
+    if _scriptName == '_0d_618f':
+        return 96
+
+    if _scriptName == '_30_683a':
+        return 72
+
+    if _scriptName == 'battle':
+        if 53-2 <= idx <= 63-2:
+            return 128
+        return 112
+
+    return limit
+
+
+def is_oneline(_scriptName, idx):
     if _scriptName == 'battle':
         if 53-2 <= idx <= 63-2:
             return True
+
+    if _scriptName == '_30_683a':
+        return True
 
     return False
 
 tableItems = []
 existing_map = {}
-with open('sakura wars GB - misc 05:09:21.csv') as f:
+with open('sakura wars GB - misc 19:09:21.csv') as f:
     reader = csv.reader(f)
     for row in reader:
-        if row[2] not in existing_map:
+        if row[2] not in existing_map and row[4]:
             existing_map[row[2]] = row[4]
 
         if row[0] != scriptName:
@@ -36,35 +59,66 @@ with open('sakura wars GB - misc 05:09:21.csv') as f:
 
         tableItems.append(row[2])
 
-comps = [f"{tableName}::"]
-for i in range(len(tableItems)):
-    comps.append(f"\tdw {prefix}{i:02x}-{tableName}")
+if scriptName == '_0d_618f':
+    comps = ["Data_0d_5c1f::"]
+    existingEntries = data[bankAddr(0xd, 0x5c1f):bankAddr(0xd, 0x618f)]
+    existingGroups = groupBytes(existingEntries, 16)
+
+    for i in range(87):
+        w1 = f"{prefix}{i*2:02x}-{tableName}"
+        w2 = f"{prefix}{i*2+1:02x}-{tableName}"
+        rest = ", ".join(f"${b:02x}" for b in existingGroups[i][4:])
+        comps.append(f"\tItemIndexEntry {w1}, {w2}, {rest}")
+
+else:
+    comps = [f"{tableName}::"]
+    for i in range(len(tableItems)):
+        comps.append(f"\tdw {prefix}{i:02x}-{tableName}")
+
 comps.append("")
 
 for i, jp in enumerate(tableItems):
+    if jp == "":
+        comps.append(f"{prefix}{i:02x}:")
+        tableItem = [0x10]*24
+        tableItem.append(0)
+        comps.append(stringB(tableItem))
+        continue
+
     tableItem = existing_map[jp]
 
-    # Calculate if any lines breached limit (doesn't actually use conversion)
-    limit = 112
-    if is_timed(scriptName, i):
-        limit = 128
-    lines = tableItem.split('\n')
-    for line in lines:
-        textboxes = ScriptExtractor.convertEnglish(line, limit)
-        if textboxes and 0x0d in textboxes[0]:
-            print(i, line, 'breached')
+    comps.append(f"{prefix}{i:02x}::")
 
-    comps.append(f"{prefix}{i:02x}:")
-    bs = []
-    for char in tableItem:
-        if char == " ":
-            bs.append(0x10)
-        elif char == "\n":
-            bs.append(0x0d)
-        else:
-            bs.extend(ScriptExtractor.getCharVal(char))
-    bs.append(0)
-    comps.append(stringB(bs))
+    # Calculate if any lines breached limit (doesn't actually use conversion)
+    limit = get_limit(scriptName, i)
+    lines = tableItem.split('\n')
+    if limit:
+        for line in lines:
+            textboxes = ScriptExtractor.convertEnglish(line, limit)
+            try:
+                assert len(textboxes) == 1
+            except AssertionError:
+                print(lines, i, jp)
+                raise
+
+            textbox = textboxes[0]
+            if is_oneline(scriptName, i) and textboxes and 0x0d in textbox:
+                print(i, line, 'breached')
+
+            textbox.append(0)
+            comps.append(stringB(textbox))
+
+    else:
+        bs = []
+        for char in tableItem:
+            if char == " ":
+                bs.append(0x10)
+            elif char == "\n":
+                bs.append(0x0d)
+            else:
+                bs.extend(ScriptExtractor.getCharVal(char))
+        bs.append(0)
+        comps.append(stringB(bs))
 
 final_str = "\n".join(comps)
 print(final_str)

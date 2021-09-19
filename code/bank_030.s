@@ -7035,17 +7035,21 @@ jr_030_678b:
 	add  a                                           ; $67a1: $87
 	ld   c, a                                        ; $67a2: $4f
 	ld   b, $00                                      ; $67a3: $06 $00
-	ld   hl, $683a                                   ; $67a5: $21 $3a $68
+	ld   hl, Data_30_683a                                   ; $67a5: $21 $3a $68
 	add  hl, bc                                      ; $67a8: $09
 	ld   a, [hl+]                                    ; $67a9: $2a
 	ld   c, a                                        ; $67aa: $4f
 	ld   b, [hl]                                     ; $67ab: $46
-	ld   hl, $683a                                   ; $67ac: $21 $3a $68
+	ld   hl, Data_30_683a                                   ; $67ac: $21 $3a $68
 	add  hl, bc                                      ; $67af: $09
 	ld   e, l                                        ; $67b0: $5d
 	ld   d, h                                        ; $67b1: $54
 	ld   hl, $d000                                   ; $67b2: $21 $00 $d0
+if def(VWF)
+	ld   a, BANK(Data_30_683aentry00)
+else
 	ld   a, $30                                      ; $67b5: $3e $30
+endc
 	call LoadInstantText                                       ; $67b7: $cd $06 $13
 	pop  hl                                          ; $67ba: $e1
 	pop  af                                          ; $67bb: $f1
@@ -7120,6 +7124,54 @@ jr_030_678b:
 	ret                                              ; $6839: $c9
 
 
+Data_30_683a:
+if def(VWF)
+	dw Data_30_683aentry00-Data_30_683a
+	dw Data_30_683aentry01-Data_30_683a
+	dw Data_30_683aentry02-Data_30_683a
+	dw Data_30_683aentry03-Data_30_683a
+	dw Data_30_683aentry04-Data_30_683a
+	dw Data_30_683aentry05-Data_30_683a
+	dw Data_30_683aentry06-Data_30_683a
+	dw Data_30_683aentry07-Data_30_683a
+	dw Data_30_683aentry08-Data_30_683a
+	dw Data_30_683aentry09-Data_30_683a
+	dw Data_30_683aentry0a-Data_30_683a
+	dw Data_30_683aentry0b-Data_30_683a
+	dw Data_30_683aentry0c-Data_30_683a
+	dw Data_30_683aentry0d-Data_30_683a
+	dw Data_30_683aentry0e-Data_30_683a
+	dw Data_30_683aentry0f-Data_30_683a
+	dw Data_30_683aentry10-Data_30_683a
+	dw Data_30_683aentry11-Data_30_683a
+	dw Data_30_683aentry12-Data_30_683a
+	dw Data_30_683aentry13-Data_30_683a
+	dw Data_30_683aentry14-Data_30_683a
+	dw Data_30_683aentry15-Data_30_683a
+	dw Data_30_683aentry16-Data_30_683a
+	dw Data_30_683aentry17-Data_30_683a
+	dw Data_30_683aentry18-Data_30_683a
+	dw Data_30_683aentry19-Data_30_683a
+	dw Data_30_683aentry1a-Data_30_683a
+	dw Data_30_683aentry1b-Data_30_683a
+	dw Data_30_683aentry1c-Data_30_683a
+	dw Data_30_683aentry1d-Data_30_683a
+	dw Data_30_683aentry1e-Data_30_683a
+	dw Data_30_683aentry1f-Data_30_683a
+	dw Data_30_683aentry20-Data_30_683a
+	dw Data_30_683aentry21-Data_30_683a
+	dw Data_30_683aentry22-Data_30_683a
+	dw Data_30_683aentry23-Data_30_683a
+	dw Data_30_683aentry24-Data_30_683a
+	dw Data_30_683aentry25-Data_30_683a
+	dw Data_30_683aentry26-Data_30_683a
+	dw Data_30_683aentry27-Data_30_683a
+	dw Data_30_683aentry28-Data_30_683a
+	dw Data_30_683aentry29-Data_30_683a
+	dw Data_30_683aentry2a-Data_30_683a
+	dw Data_30_683aentry2b-Data_30_683a
+	dw Data_30_683aentry2c-Data_30_683a
+else
 	ld   e, d                                        ; $683a: $5a
 	nop                                              ; $683b: $00
 	ld   h, h                                        ; $683c: $64
@@ -7189,6 +7241,7 @@ jr_030_678b:
 	ld   [bc], a                                     ; $6891: $02
 	or   a                                           ; $6892: $b7
 	ld   [bc], a                                     ; $6893: $02
+endc
 	db   $10                                         ; $6894: $10
 	db   $10                                         ; $6895: $10
 	db   $10                                         ; $6896: $10
@@ -8188,17 +8241,21 @@ jr_030_6d28:
 	add  a                                           ; $6da1: $87
 	ld   c, a                                        ; $6da2: $4f
 	ld   b, $00                                      ; $6da3: $06 $00
-	ld   hl, $6e56                                   ; $6da5: $21 $56 $6e
+	ld   hl, Data_30_6e56                                  ; $6da5: $21 $56 $6e
 	add  hl, bc                                      ; $6da8: $09
 	ld   a, [hl+]                                    ; $6da9: $2a
 	ld   c, a                                        ; $6daa: $4f
 	ld   b, [hl]                                     ; $6dab: $46
-	ld   hl, $6e56                                   ; $6dac: $21 $56 $6e
+	ld   hl, Data_30_6e56                                   ; $6dac: $21 $56 $6e
 	add  hl, bc                                      ; $6daf: $09
 	ld   e, l                                        ; $6db0: $5d
 	ld   d, h                                        ; $6db1: $54
 	ld   hl, $d000                                   ; $6db2: $21 $00 $d0
+if def(VWF)
+	ld   a, BANK(Data_30_6e56entry00)
+else
 	ld   a, $30                                      ; $6db5: $3e $30
+endc
 	call LoadInstantText                                       ; $6db7: $cd $06 $13
 	ld   a, [$c71b]                                  ; $6dba: $fa $1b $c7
 	and  $07                                         ; $6dbd: $e6 $07
@@ -8291,6 +8348,53 @@ jr_030_6e12:
 	ret                                              ; $6e55: $c9
 
 
+Data_30_6e56:
+if def(VWF)
+	dw Data_30_6e56entry00-Data_30_6e56
+	dw Data_30_6e56entry01-Data_30_6e56
+	dw Data_30_6e56entry02-Data_30_6e56
+	dw Data_30_6e56entry03-Data_30_6e56
+	dw Data_30_6e56entry04-Data_30_6e56
+	dw Data_30_6e56entry05-Data_30_6e56
+	dw Data_30_6e56entry06-Data_30_6e56
+	dw Data_30_6e56entry07-Data_30_6e56
+	dw Data_30_6e56entry08-Data_30_6e56
+	dw Data_30_6e56entry09-Data_30_6e56
+	dw Data_30_6e56entry0a-Data_30_6e56
+	dw Data_30_6e56entry0b-Data_30_6e56
+	dw Data_30_6e56entry0c-Data_30_6e56
+	dw Data_30_6e56entry0d-Data_30_6e56
+	dw Data_30_6e56entry0e-Data_30_6e56
+	dw Data_30_6e56entry0f-Data_30_6e56
+	dw Data_30_6e56entry10-Data_30_6e56
+	dw Data_30_6e56entry11-Data_30_6e56
+	dw Data_30_6e56entry12-Data_30_6e56
+	dw Data_30_6e56entry13-Data_30_6e56
+	dw Data_30_6e56entry14-Data_30_6e56
+	dw Data_30_6e56entry15-Data_30_6e56
+	dw Data_30_6e56entry16-Data_30_6e56
+	dw Data_30_6e56entry17-Data_30_6e56
+	dw Data_30_6e56entry18-Data_30_6e56
+	dw Data_30_6e56entry19-Data_30_6e56
+	dw Data_30_6e56entry1a-Data_30_6e56
+	dw Data_30_6e56entry1b-Data_30_6e56
+	dw Data_30_6e56entry1c-Data_30_6e56
+	dw Data_30_6e56entry1d-Data_30_6e56
+	dw Data_30_6e56entry1e-Data_30_6e56
+	dw Data_30_6e56entry1f-Data_30_6e56
+	dw Data_30_6e56entry20-Data_30_6e56
+	dw Data_30_6e56entry21-Data_30_6e56
+	dw Data_30_6e56entry22-Data_30_6e56
+	dw Data_30_6e56entry23-Data_30_6e56
+	dw Data_30_6e56entry24-Data_30_6e56
+	dw Data_30_6e56entry25-Data_30_6e56
+	dw Data_30_6e56entry26-Data_30_6e56
+	dw Data_30_6e56entry27-Data_30_6e56
+	dw Data_30_6e56entry28-Data_30_6e56
+	dw Data_30_6e56entry29-Data_30_6e56
+	dw Data_30_6e56entry2a-Data_30_6e56
+	dw Data_30_6e56entry2b-Data_30_6e56
+else
 	ld   e, b                                        ; $6e56: $58
 	nop                                              ; $6e57: $00
 	ld   l, l                                        ; $6e58: $6d
@@ -8355,6 +8459,7 @@ jr_030_6e12:
 	ld   [bc], a                                     ; $6eab: $02
 	inc  d                                           ; $6eac: $14
 	inc  bc                                          ; $6ead: $03
+endc
 	db   $10                                         ; $6eae: $10
 	db   $10                                         ; $6eaf: $10
 	db   $10                                         ; $6eb0: $10
@@ -10009,17 +10114,21 @@ Call_030_7785:
 	add  a                                           ; $77a5: $87
 	ld   c, a                                        ; $77a6: $4f
 	ld   b, $00                                      ; $77a7: $06 $00
-	ld   hl, $77d4                                   ; $77a9: $21 $d4 $77
+	ld   hl, Data_30_77d4                                   ; $77a9: $21 $d4 $77
 	add  hl, bc                                      ; $77ac: $09
 	ld   a, [hl+]                                    ; $77ad: $2a
 	ld   c, a                                        ; $77ae: $4f
 	ld   b, [hl]                                     ; $77af: $46
-	ld   hl, $77d4                                   ; $77b0: $21 $d4 $77
+	ld   hl, Data_30_77d4                                   ; $77b0: $21 $d4 $77
 	add  hl, bc                                      ; $77b3: $09
 	ld   e, l                                        ; $77b4: $5d
 	ld   d, h                                        ; $77b5: $54
 	ld   hl, $d0a0                                   ; $77b6: $21 $a0 $d0
+if def(VWF)
+	ld   a, BANK(Data_30_77d4entry00)
+else
 	ld   a, $30                                      ; $77b9: $3e $30
+endc
 	call LoadInstantText                                       ; $77bb: $cd $06 $13
 	pop  af                                          ; $77be: $f1
 	ld   [wWramBank], a                                  ; $77bf: $ea $93 $c2
@@ -10033,6 +10142,30 @@ Call_030_7785:
 	ret                                              ; $77d3: $c9
 
 
+Data_30_77d4:
+if def(VWF)
+	dw Data_30_77d4entry00-Data_30_77d4
+	dw Data_30_77d4entry01-Data_30_77d4
+	dw Data_30_77d4entry02-Data_30_77d4
+	dw Data_30_77d4entry03-Data_30_77d4
+	dw Data_30_77d4entry04-Data_30_77d4
+	dw Data_30_77d4entry05-Data_30_77d4
+	dw Data_30_77d4entry06-Data_30_77d4
+	dw Data_30_77d4entry07-Data_30_77d4
+	dw Data_30_77d4entry08-Data_30_77d4
+	dw Data_30_77d4entry09-Data_30_77d4
+	dw Data_30_77d4entry0a-Data_30_77d4
+	dw Data_30_77d4entry0b-Data_30_77d4
+	dw Data_30_77d4entry0c-Data_30_77d4
+	dw Data_30_77d4entry0d-Data_30_77d4
+	dw Data_30_77d4entry0e-Data_30_77d4
+	dw Data_30_77d4entry0f-Data_30_77d4
+	dw Data_30_77d4entry10-Data_30_77d4
+	dw Data_30_77d4entry11-Data_30_77d4
+	dw Data_30_77d4entry12-Data_30_77d4
+	dw Data_30_77d4entry13-Data_30_77d4
+	dw Data_30_77d4entry14-Data_30_77d4
+else
 	ld   a, [hl+]                                    ; $77d4: $2a
 	nop                                              ; $77d5: $00
 	add  hl, sp                                      ; $77d6: $39
@@ -10069,7 +10202,10 @@ Call_030_7785:
 	ld   b, a                                        ; $77f8: $47
 	ld   bc, $0156                                   ; $77f9: $01 $56 $01
 	ld   h, e                                        ; $77fc: $63
-	ld   bc, $1010                                   ; $77fd: $01 $10 $10
+	db $01 
+endc
+	
+	db $10, $10
 	db   $10                                         ; $7800: $10
 	db   $10                                         ; $7801: $10
 	db   $10                                         ; $7802: $10
