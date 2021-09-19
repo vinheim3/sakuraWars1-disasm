@@ -248,7 +248,7 @@ jr_024_41d5:
 	ld   b, $00                                      ; $41f0: $06 $00
 	ld   c, $01                                      ; $41f2: $0e $01
 
-	M_FarCall Func_0a_54ba
+	M_FarCall todo_DisplayCharacterPortrait
 
 	ld   a, $0c                                      ; $4208: $3e $0c
 	call PlaySong                                       ; $420a: $cd $92 $1a

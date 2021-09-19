@@ -4032,7 +4032,7 @@ jr_076_51ae:
 	inc  sp                                          ; $51b4: $33
 	add  b                                           ; $51b5: $80
 	ld   [hl], h                                     ; $51b6: $74
-	ld   bc, $cbd5                                   ; $51b7: $01 $d5 $cb
+	ld   bc, wCharacterPortraitBaseAddr+1                                   ; $51b7: $01 $d5 $cb
 	add  d                                           ; $51ba: $82
 	ld   [$1c82], sp                                 ; $51bb: $08 $82 $1c
 	add  b                                           ; $51be: $80

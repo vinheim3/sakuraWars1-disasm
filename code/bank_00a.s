@@ -2228,58 +2228,75 @@ jr_00a_549e:
 	ret                                              ; $54b9: $c9
 
 
-; b - idx into table
-Func_0a_54ba::
-	ld   a, [wWramBank]                                  ; $54ba: $fa $93 $c2
-	push af                                          ; $54bd: $f5
-	ld   a, $07                                      ; $54be: $3e $07
-	ld   [wWramBank], a                                  ; $54c0: $ea $93 $c2
-	ldh  [rSVBK], a                                  ; $54c3: $e0 $70
-	push bc                                          ; $54c5: $c5
-	ld   d, $00                                      ; $54c6: $16 $00
-	ld   e, b                                        ; $54c8: $58
-	ld   hl, Table_00a_564c                                   ; $54c9: $21 $4c $56
-	add  hl, de                                      ; $54cc: $19
-	add  hl, de                                      ; $54cd: $19
-	add  hl, de                                      ; $54ce: $19
-	ld   a, [hl+]                                    ; $54cf: $2a
-	ld   [$cbd4], a                                  ; $54d0: $ea $d4 $cb
-	ld   a, [hl+]                                    ; $54d3: $2a
-	ld   [$cbd5], a                                  ; $54d4: $ea $d5 $cb
-	ld   a, [hl]                                     ; $54d7: $7e
-	ld   [$cbd6], a                                  ; $54d8: $ea $d6 $cb
+; B - character idx
+; C - face idx
+todo_DisplayCharacterPortrait::
+; Preserve ram bank, and set it to where tile data and map buffer is
+	ld   a, [wWramBank]                                             ; $54ba
+	push af                                                         ; $54bd
 
-;
-	pop  bc                                          ; $54db: $c1
-	ld   d, $00                                      ; $54dc: $16 $00
-	ld   e, b                                        ; $54de: $58
-	ld   hl, $4000                                   ; $54df: $21 $00 $40
-	add  hl, de                                      ; $54e2: $19
-	add  hl, de                                      ; $54e3: $19
-	ld   a, $91                                      ; $54e4: $3e $91
-	call FarGetHLinHL                                       ; $54e6: $cd $ee $0a
-	ld   de, $4000                                   ; $54e9: $11 $00 $40
-	add  hl, de                                      ; $54ec: $19
-	ld   d, h                                        ; $54ed: $54
-	ld   e, l                                        ; $54ee: $5d
-	ld   h, $00                                      ; $54ef: $26 $00
-	ld   l, c                                        ; $54f1: $69
-	add  hl, hl                                      ; $54f2: $29
-	add  hl, hl                                      ; $54f3: $29
-	ld   b, h                                        ; $54f4: $44
-	ld   c, l                                        ; $54f5: $4d
-	add  hl, hl                                      ; $54f6: $29
-	add  hl, hl                                      ; $54f7: $29
-	add  hl, bc                                      ; $54f8: $09
-	add  hl, bc                                      ; $54f9: $09
-	add  hl, bc                                      ; $54fa: $09
-	add  hl, de                                      ; $54fb: $19
-	ld   b, h                                        ; $54fc: $44
-	ld   c, l                                        ; $54fd: $4d
-	ld   a, $91                                      ; $54fe: $3e $91
-	ld   de, $d200                                   ; $5500: $11 $00 $d2
-	ld   bc, $001c                                   ; $5503: $01 $1c $00
-	call FarMemCopy                                       ; $5506: $cd $b2 $09
+	ld   a, BANK(wCharacterPortraitTileDataBuffer)                  ; $54be
+	ld   [wWramBank], a                                             ; $54c0
+	ldh  [rSVBK], a                                                 ; $54c3
+
+; DE points to 3-byte entry for character's portrait tile data
+	push bc                                                         ; $54c5
+	ld   d, $00                                                     ; $54c6
+	ld   e, b                                                       ; $54c8
+	ld   hl, CharacterPortraitTileDatas                             ; $54c9
+	add  hl, de                                                     ; $54cc
+	add  hl, de                                                     ; $54cd
+	add  hl, de                                                     ; $54ce
+
+; 1st word is addr, then bank is a byte after
+	ld   a, [hl+]                                                   ; $54cf
+	ld   [wCharacterPortraitBaseAddr], a                            ; $54d0
+	ld   a, [hl+]                                                   ; $54d3
+	ld   [wCharacterPortraitBaseAddr+1], a                          ; $54d4
+	ld   a, [hl]                                                    ; $54d7
+	ld   [wCharacterPortraitBaseBank], a                            ; $54d8
+
+; HL points to table entry for character
+	pop  bc                                                         ; $54db
+	ld   d, $00                                                     ; $54dc
+	ld   e, b                                                       ; $54de
+	ld   hl, CharacterPortraitTileMaps                              ; $54df
+	add  hl, de                                                     ; $54e2
+	add  hl, de                                                     ; $54e3
+
+; DE points to character's many tile maps
+	ld   a, BANK(CharacterPortraitTileMaps)                         ; $54e4
+	call FarGetHLinHL                                               ; $54e6
+	ld   de, CharacterPortraitTileMaps                              ; $54e9
+	add  hl, de                                                     ; $54ec
+	ld   d, h                                                       ; $54ed
+	ld   e, l                                                       ; $54ee
+
+; HL and BC = 4 * face idx
+	ld   h, $00                                                     ; $54ef
+	ld   l, c                                                       ; $54f1
+	add  hl, hl                                                     ; $54f2
+	add  hl, hl                                                     ; $54f3
+	ld   b, h                                                       ; $54f4
+	ld   c, l                                                       ; $54f5
+
+; HL = 7HL (28 * face idx) + offset for character's tile maps
+	add  hl, hl                                                     ; $54f6
+	add  hl, hl                                                     ; $54f7
+	add  hl, bc                                                     ; $54f8
+	add  hl, bc                                                     ; $54f9
+	add  hl, bc                                                     ; $54fa
+	add  hl, de                                                     ; $54fb
+	ld   b, h                                                       ; $54fc
+	ld   c, l                                                       ; $54fd
+
+; Copy 28 bytes, 24 portrait bytes + ???
+	ld   a, BANK(CharacterPortraitTileMaps)                         ; $54fe
+	ld   de, wCharacterPortraitTileMap                              ; $5500
+	ld   bc, 28                                                     ; $5503
+	call FarMemCopy                                                 ; $5506
+
+; copy last 4 bytes
 	ld   hl, $d218                                   ; $5509: $21 $18 $d2
 	ld   de, $cb0d                                   ; $550c: $11 $0d $cb
 	ld   a, [hl+]                                    ; $550f: $2a
@@ -2295,56 +2312,65 @@ Func_0a_54ba::
 	ld   [de], a                                     ; $5519: $12
 	inc  de                                          ; $551a: $13
 
-; loop $18 times (24 portrait bytes)
-	ld   de, $d000                                   ; $551b: $11 $00 $d0
-	ld   bc, $d200                                   ; $551e: $01 $00 $d2
-	ld   a, $18                                      ; $5521: $3e $18
+; Loop $18 times (4*6 portrait tiles)
+	ld   de, wCharacterPortraitTileDataBuffer                       ; $551b
+	ld   bc, wCharacterPortraitTileMap                              ; $551e
+	ld   a, wCharacterPortraitTileMap.end-wCharacterPortraitTileMap ; $5521
 
-jr_00a_5523:
-	push af                                          ; $5523: $f5
-	push bc                                          ; $5524: $c5
+.nextTile:
+	push af                                                         ; $5523
+	push bc                                                         ; $5524
 
-; h = high nybb, l = low nybble * $10
-	ld   a, [bc]                                     ; $5525: $0a
-	and  $f0                                         ; $5526: $e6 $f0
-	swap a                                           ; $5528: $cb $37
-	ld   h, a                                        ; $552a: $67
-	ld   a, [bc]                                     ; $552b: $0a
-	and  $0f                                         ; $552c: $e6 $0f
-	swap a                                           ; $552e: $cb $37
-	ld   l, a                                        ; $5530: $6f
+; H = high nybb, L = low nybble * $10, ie HL = val in [bc]*$10
+	ld   a, [bc]                                                    ; $5525
+	and  $f0                                                        ; $5526
+	swap a                                                          ; $5528
+	ld   h, a                                                       ; $552a
+	ld   a, [bc]                                                    ; $552b
+	and  $0f                                                        ; $552c
+	swap a                                                          ; $552e
+	ld   l, a                                                       ; $5530
 
-; hl += cbd5/4 (offset in data), cbd6 = bank
-	ld   a, [$cbd4]                                  ; $5531: $fa $d4 $cb
-	ld   c, a                                        ; $5534: $4f
-	ld   a, [$cbd5]                                  ; $5535: $fa $d5 $cb
-	ld   b, a                                        ; $5538: $47
-	ld   a, [$cbd6]                                  ; $5539: $fa $d6 $cb
-	add  hl, bc                                      ; $553c: $09
-	ld   c, $01                                      ; $553d: $0e $01
-	call FarMemCopy16C                                       ; $553f: $cd $82 $0a
+; Offset HL into character's set of tile data
+	ld   a, [wCharacterPortraitBaseAddr]                            ; $5531
+	ld   c, a                                                       ; $5534
+	ld   a, [wCharacterPortraitBaseAddr+1]                          ; $5535
+	ld   b, a                                                       ; $5538
+	ld   a, [wCharacterPortraitBaseBank]                            ; $5539
+	add  hl, bc                                                     ; $553c
+	ld   c, $01                                                     ; $553d
+	call FarMemCopy16C                                              ; $553f
 
-	pop  bc                                          ; $5542: $c1
-	pop  af                                          ; $5543: $f1
-	inc  bc                                          ; $5544: $03
-	dec  a                                           ; $5545: $3d
-	jr   nz, jr_00a_5523                             ; $5546: $20 $db
+	pop  bc                                                         ; $5542
+	pop  af                                                         ; $5543
 
-	ld   c, $81                                      ; $5548: $0e $81
-	ld   de, $8d40                                   ; $554a: $11 $40 $8d
-	ld   a, $07                                      ; $554d: $3e $07
-	ld   hl, $d000                                   ; $554f: $21 $00 $d0
-	ld   b, $18                                      ; $5552: $06 $18
-	call EnqueueHDMATransfer                                       ; $5554: $cd $7c $02
+; To next tile
+	inc  bc                                                         ; $5544
+	dec  a                                                          ; $5545
+	jr   nz, .nextTile                                              ; $5546
+
+; Enqueue portrait tile data transfer
+	ld   c, $81                                                     ; $5548
+	ld   de, _VRAM+$d40                                             ; $554a
+	ld   a, BANK(wCharacterPortraitTileDataBuffer)                  ; $554d
+	ld   hl, wCharacterPortraitTileDataBuffer                       ; $554f
+	ld   b, (wCharacterPortraitTileDataBuffer.end-wCharacterPortraitTileDataBuffer)/$10 ; $5552
+	call EnqueueHDMATransfer                                        ; $5554
 	
-	pop  af                                          ; $5557: $f1
-	ld   [wWramBank], a                                  ; $5558: $ea $93 $c2
-	ldh  [rSVBK], a                                  ; $555b: $e0 $70
+; Restore ram bank
+	pop  af                                                         ; $5557
+	ld   [wWramBank], a                                             ; $5558
+	ldh  [rSVBK], a                                                 ; $555b
+
+;
 	ld   a, [wWramBank]                                  ; $555d: $fa $93 $c2
 	push af                                          ; $5560: $f5
+
 	ld   a, $02                                      ; $5561: $3e $02
 	ld   [wWramBank], a                                  ; $5563: $ea $93 $c2
 	ldh  [rSVBK], a                                  ; $5566: $e0 $70
+
+;
 	ld   hl, $d281                                   ; $5568: $21 $81 $d2
 	ld   e, $09                                      ; $556b: $1e $09
 	ld   a, [$cb0d]                                  ; $556d: $fa $0d $cb
@@ -2382,8 +2408,10 @@ jr_00a_5523:
 	sla  d                                           ; $5598: $cb $22
 	adc  e                                           ; $559a: $8b
 	ld   [hl+], a                                    ; $559b: $22
+
+;
 	ld   hl, $d2c1                                   ; $559c: $21 $c1 $d2
-	ld   a, [wPlayerName]                                  ; $559f: $fa $0e $cb
+	ld   a, [$cb0e]                                  ; $559f: $fa $0e $cb
 	ld   d, a                                        ; $55a2: $57
 	xor  a                                           ; $55a3: $af
 	sla  d                                           ; $55a4: $cb $22
@@ -2418,8 +2446,10 @@ jr_00a_5523:
 	sla  d                                           ; $55ca: $cb $22
 	adc  e                                           ; $55cc: $8b
 	ld   [hl+], a                                    ; $55cd: $22
+
+;
 	ld   hl, $d301                                   ; $55ce: $21 $01 $d3
-	ld   a, [wPlayerName+1]                                  ; $55d1: $fa $0f $cb
+	ld   a, [$cb0f]                                  ; $55d1: $fa $0f $cb
 	ld   d, a                                        ; $55d4: $57
 	xor  a                                           ; $55d5: $af
 	sla  d                                           ; $55d6: $cb $22
@@ -2454,9 +2484,13 @@ jr_00a_5523:
 	sla  d                                           ; $55fc: $cb $22
 	adc  e                                           ; $55fe: $8b
 	ld   [hl+], a                                    ; $55ff: $22
+
+; Restore ram bank
 	pop  af                                          ; $5600: $f1
 	ld   [wWramBank], a                                  ; $5601: $ea $93 $c2
 	ldh  [rSVBK], a                                  ; $5604: $e0 $70
+
+;
 	ld   a, [$cbd7]                                  ; $5606: $fa $d7 $cb
 	or   a                                           ; $5609: $b7
 	jr   z, jr_00a_561d                              ; $560a: $28 $11
@@ -2478,26 +2512,26 @@ jr_00a_561d:
 	call EnqueueHDMATransfer                                       ; $5629: $cd $7c $02
 
 jr_00a_562c:
-	ld   a, [wPlayerName+2]                                  ; $562c: $fa $10 $cb
+	ld   a, [$cb10]                                  ; $562c: $fa $10 $cb
 	ld   h, $00                                      ; $562f: $26 $00
 	ld   l, a                                        ; $5631: $6f
 	add  hl, hl                                      ; $5632: $29
 	add  hl, hl                                      ; $5633: $29
 	add  hl, hl                                      ; $5634: $29
 	add  hl, hl                                      ; $5635: $29
-	ld   bc, $4613                                   ; $5636: $01 $13 $46
+	ld   bc, Data_a2_4613                                   ; $5636: $01 $13 $46
 	add  hl, bc                                      ; $5639: $09
-	ld   a, $a2                                      ; $563a: $3e $a2
+	ld   a, BANK(Data_a2_4613)                                      ; $563a: $3e $a2
 	ld   de, wBGPalettes+1*8                                   ; $563c: $11 $e6 $c2
 	ld   bc, $0010                                   ; $563f: $01 $10 $00
 	call FarMemCopy                                       ; $5642: $cd $b2 $09
-	ld   bc, $040b                                   ; $5645: $01 $0b $04
+	ldbc $04, $0b                                   ; $5645: $01 $0b $04
 	call SetBGandOBJPaletteRangesToUpdate                                       ; $5648: $cd $aa $04
 	ret                                              ; $564b: $c9
 
 
-Table_00a_564c:
-	db $13, $48, $a2
+CharacterPortraitTileDatas:
+	AddrBank Data_a2_4813
 	db $28, $55, $95
 	db $30, $63, $93
 	db $35, $67, $98
@@ -2528,62 +2562,60 @@ Func_0a_5682::
 	ld   a, c                                        ; $5691: $79
 	ld   [$cbe0], a                                  ; $5692: $ea $e0 $cb
 	xor  a                                           ; $5695: $af
-	ld   [$cbd8], a                                  ; $5696: $ea $d8 $cb
-	ld   [$cbd9], a                                  ; $5699: $ea $d9 $cb
+	ld   [wUntimedQuestionProcessStep], a                                  ; $5696: $ea $d8 $cb
+	ld   [wUntimedQuestionProcessMiscCounter], a                                  ; $5699: $ea $d9 $cb
 	ld   [$cbda], a                                  ; $569c: $ea $da $cb
 	ld   [$cbde], a                                  ; $569f: $ea $de $cb
 	ret                                              ; $56a2: $c9
 
 
-Func_0a_56a3::
+HandleUntimedQuestionProcess::
+;
 	ld   a, [wWramBank]                                  ; $56a3: $fa $93 $c2
-
-jr_00a_56a6:
 	push af                                          ; $56a6: $f5
+
 	ld   a, $02                                      ; $56a7: $3e $02
 	ld   [wWramBank], a                                  ; $56a9: $ea $93 $c2
 	ldh  [rSVBK], a                                  ; $56ac: $e0 $70
-	ld   bc, $56c2                                   ; $56ae: $01 $c2 $56
-	push bc                                          ; $56b1: $c5
-	ld   a, [$cbd8]                                  ; $56b2: $fa $d8 $cb
-	sla  a                                           ; $56b5: $cb $27
 
-jr_00a_56b7:
+;
+	ld   bc, .return                                   ; $56ae: $01 $c2 $56
+	push bc                                          ; $56b1: $c5
+
+;
+	ld   a, [wUntimedQuestionProcessStep]                                  ; $56b2: $fa $d8 $cb
+	sla  a                                           ; $56b5: $cb $27
 	ld   b, $00                                      ; $56b7: $06 $00
 	ld   c, a                                        ; $56b9: $4f
-	ld   hl, $56c9                                   ; $56ba: $21 $c9 $56
+	ld   hl, .table                                   ; $56ba: $21 $c9 $56
 	add  hl, bc                                      ; $56bd: $09
+
+;
 	ld   a, [hl+]                                    ; $56be: $2a
 	ld   h, [hl]                                     ; $56bf: $66
 	ld   l, a                                        ; $56c0: $6f
 	jp   hl                                          ; $56c1: $e9
 
-
+.return:
 	pop  af                                          ; $56c2: $f1
 	ld   [wWramBank], a                                  ; $56c3: $ea $93 $c2
 	ldh  [rSVBK], a                                  ; $56c6: $e0 $70
 	ret                                              ; $56c8: $c9
 
+.table:
+	dw UntimedQuestionProcessStep1
+	dw $57b5
+	dw $5816
+	dw UntimedQuestionProcessStep4
+	dw $5893
+	dw $58ba
+	dw $5893
+	dw $5906
 
-	reti                                             ; $56c9: $d9
 
-
-	ld   d, [hl]                                     ; $56ca: $56
-	or   l                                           ; $56cb: $b5
-	ld   d, a                                        ; $56cc: $57
-	ld   d, $58                                      ; $56cd: $16 $58
-	reti                                             ; $56cf: $d9
-
-
-	ld   d, [hl]                                     ; $56d0: $56
-	sub  e                                           ; $56d1: $93
-	ld   e, b                                        ; $56d2: $58
-	cp   d                                           ; $56d3: $ba
-	ld   e, b                                        ; $56d4: $58
-	sub  e                                           ; $56d5: $93
-	ld   e, b                                        ; $56d6: $58
-	ld   b, $59                                      ; $56d7: $06 $59
-	ld   hl, $cbd9                                   ; $56d9: $21 $d9 $cb
+UntimedQuestionProcessStep1:
+UntimedQuestionProcessStep4:
+	ld   hl, wUntimedQuestionProcessMiscCounter                                   ; $56d9: $21 $d9 $cb
 	ld   a, [hl]                                     ; $56dc: $7e
 	inc  [hl]                                        ; $56dd: $34
 	or   a                                           ; $56de: $b7
@@ -2610,7 +2642,7 @@ jr_00a_56b7:
 	call FarLoadPaletteValsFadeToValsAndSetFadeSpeed                                       ; $570e: $cd $48 $07
 
 jr_00a_5711:
-	ld   a, [$cbd9]                                  ; $5711: $fa $d9 $cb
+	ld   a, [wUntimedQuestionProcessMiscCounter]                                  ; $5711: $fa $d9 $cb
 	cp   $10                                         ; $5714: $fe $10
 	jr   nc, jr_00a_571f                             ; $5716: $30 $07
 
@@ -2618,22 +2650,14 @@ jr_00a_5711:
 	call FadePalettesAndSetRangeToUpdate                                       ; $571b: $cd $32 $08
 	ret                                              ; $571e: $c9
 
-
 jr_00a_571f:
-	ld   a, [$cbd8]                                  ; $571f: $fa $d8 $cb
+	ld   a, [wUntimedQuestionProcessStep]                                  ; $571f: $fa $d8 $cb
 	cp   $03                                         ; $5722: $fe $03
 	jr   z, jr_00a_575e                              ; $5724: $28 $38
 
 	ld   bc, $0001                                   ; $5726: $01 $01 $00
-	push af                                          ; $5729: $f5
-	ld   a, $ba                                      ; $572a: $3e $ba
-	ld   [wFarCallAddr], a                                  ; $572c: $ea $98 $c2
-	ld   a, $54                                      ; $572f: $3e $54
-	ld   [wFarCallAddr+1], a                                  ; $5731: $ea $99 $c2
-	ld   a, $0a                                      ; $5734: $3e $0a
-	ld   [wFarCallBank], a                                  ; $5736: $ea $9a $c2
-	pop  af                                          ; $5739: $f1
-	call FarCall                                       ; $573a: $cd $62 $09
+	M_FarCall todo_DisplayCharacterPortrait
+
 	ld   de, $da08                                   ; $573d: $11 $08 $da
 	ld   hl, wBGPalettes+1*8                                   ; $5740: $21 $e6 $c2
 	ld   bc, $0010                                   ; $5743: $01 $10 $00
@@ -2644,10 +2668,10 @@ jr_00a_571f:
 	call CopyEthenDintoHL_BCtimes                                       ; $5752: $cd $9f $09
 
 jr_00a_5755:
-	ld   hl, $cbd8                                   ; $5755: $21 $d8 $cb
+	ld   hl, wUntimedQuestionProcessStep                                   ; $5755: $21 $d8 $cb
 	inc  [hl]                                        ; $5758: $34
 	xor  a                                           ; $5759: $af
-	ld   [$cbd9], a                                  ; $575a: $ea $d9 $cb
+	ld   [wUntimedQuestionProcessMiscCounter], a                                  ; $575a: $ea $d9 $cb
 	ret                                              ; $575d: $c9
 
 
@@ -2691,7 +2715,7 @@ jr_00a_5798:
 	call EnqueueHDMATransfer                                       ; $57b0: $cd $7c $02
 	jr   jr_00a_5755                                 ; $57b3: $18 $a0
 
-	ld   hl, $cbd9                                   ; $57b5: $21 $d9 $cb
+	ld   hl, wUntimedQuestionProcessMiscCounter                                   ; $57b5: $21 $d9 $cb
 	ld   a, [hl]                                     ; $57b8: $7e
 	inc  [hl]                                        ; $57b9: $34
 	or   a                                           ; $57ba: $b7
@@ -2700,6 +2724,8 @@ jr_00a_5798:
 	xor  a                                           ; $57bd: $af
 	ld   [$cbdb], a                                  ; $57be: $ea $db $cb
 	call Call_00a_594d                               ; $57c1: $cd $4d $59
+
+;
 	ld   c, $81                                      ; $57c4: $0e $81
 	ld   de, $8800                                   ; $57c6: $11 $00 $88
 	ld   a, $02                                      ; $57c9: $3e $02
@@ -2718,7 +2744,7 @@ jr_00a_5798:
 	call FarLoadPaletteValsFadeToValsAndSetFadeSpeed                                       ; $57e8: $cd $48 $07
 
 jr_00a_57eb:
-	ld   a, [$cbd9]                                  ; $57eb: $fa $d9 $cb
+	ld   a, [wUntimedQuestionProcessMiscCounter]                                  ; $57eb: $fa $d9 $cb
 	cp   $10                                         ; $57ee: $fe $10
 	jr   nc, jr_00a_57f9                             ; $57f0: $30 $07
 
@@ -2735,10 +2761,10 @@ jr_00a_57f9:
 	call FarMemCopy                                       ; $5804: $cd $b2 $09
 	ld   bc, $000b                                   ; $5807: $01 $0b $00
 	call SetBGandOBJPaletteRangesToUpdate                                       ; $580a: $cd $aa $04
-	ld   hl, $cbd8                                   ; $580d: $21 $d8 $cb
+	ld   hl, wUntimedQuestionProcessStep                                   ; $580d: $21 $d8 $cb
 	inc  [hl]                                        ; $5810: $34
 	xor  a                                           ; $5811: $af
-	ld   [$cbd9], a                                  ; $5812: $ea $d9 $cb
+	ld   [wUntimedQuestionProcessMiscCounter], a                                  ; $5812: $ea $d9 $cb
 	ret                                              ; $5815: $c9
 
 
@@ -2762,17 +2788,17 @@ jr_00a_57f9:
 	jr   nz, jr_00a_5844                             ; $5838: $20 $0a
 
 	ld   a, $06                                      ; $583a: $3e $06
-	ld   [$cbd8], a                                  ; $583c: $ea $d8 $cb
+	ld   [wUntimedQuestionProcessStep], a                                  ; $583c: $ea $d8 $cb
 	xor  a                                           ; $583f: $af
-	ld   [$cbd9], a                                  ; $5840: $ea $d9 $cb
+	ld   [wUntimedQuestionProcessMiscCounter], a                                  ; $5840: $ea $d9 $cb
 	ret                                              ; $5843: $c9
 
 
 jr_00a_5844:
-	ld   hl, $cbd8                                   ; $5844: $21 $d8 $cb
+	ld   hl, wUntimedQuestionProcessStep                                   ; $5844: $21 $d8 $cb
 	inc  [hl]                                        ; $5847: $34
 	xor  a                                           ; $5848: $af
-	ld   [$cbd9], a                                  ; $5849: $ea $d9 $cb
+	ld   [wUntimedQuestionProcessMiscCounter], a                                  ; $5849: $ea $d9 $cb
 	ret                                              ; $584c: $c9
 
 
@@ -2829,14 +2855,14 @@ jr_00a_5872:
 	ld   hl, $d340                                   ; $58a9: $21 $40 $d3
 	ld   b, $54                                      ; $58ac: $06 $54
 	call EnqueueHDMATransfer                                       ; $58ae: $cd $7c $02
-	ld   hl, $cbd8                                   ; $58b1: $21 $d8 $cb
+	ld   hl, wUntimedQuestionProcessStep                                   ; $58b1: $21 $d8 $cb
 	inc  [hl]                                        ; $58b4: $34
 	xor  a                                           ; $58b5: $af
-	ld   [$cbd9], a                                  ; $58b6: $ea $d9 $cb
+	ld   [wUntimedQuestionProcessMiscCounter], a                                  ; $58b6: $ea $d9 $cb
 	ret                                              ; $58b9: $c9
 
 
-	ld   hl, $cbd9                                   ; $58ba: $21 $d9 $cb
+	ld   hl, wUntimedQuestionProcessMiscCounter                                   ; $58ba: $21 $d9 $cb
 	ld   a, [hl]                                     ; $58bd: $7e
 	inc  [hl]                                        ; $58be: $34
 	or   a                                           ; $58bf: $b7
@@ -2854,7 +2880,7 @@ jr_00a_5872:
 	call FarLoadPaletteValsFadeToValsAndSetFadeSpeed                                       ; $58d7: $cd $48 $07
 
 jr_00a_58da:
-	ld   a, [$cbd9]                                  ; $58da: $fa $d9 $cb
+	ld   a, [wUntimedQuestionProcessMiscCounter]                                  ; $58da: $fa $d9 $cb
 	cp   $10                                         ; $58dd: $fe $10
 	jr   nc, jr_00a_58e8                             ; $58df: $30 $07
 

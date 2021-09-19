@@ -546,7 +546,25 @@ wScriptSongToPlay:: ; $cbc8
     db
 
 wcbc9:
-    ds $c02-$bc9
+    ds $d4-$c9
+
+wCharacterPortraitBaseAddr:: ; $cbd4
+    dw
+
+wCharacterPortraitBaseBank:: ; $cbd6
+    db
+
+wcbd7:
+    ds 8-7
+
+wUntimedQuestionProcessStep:: ; $cbd8
+    db
+
+wUntimedQuestionProcessMiscCounter:: ; $cbd9
+    db
+
+wcbda:
+    ds $c02-$bda
 
 wTitleScreenAnimationStep:: ; $cc02
     db
@@ -776,5 +794,18 @@ wFileLoadDisplayTileAttrBuffer:: ; $d000
 
 wFileLoadDisplayTileMapBuffer:: ; $d400
     ds $400
+
+nextu
+
+wCharacterPortraitTileDataBuffer:: ; $d000
+    ds $180
+.end::
+
+w7_d180:
+    ds $200-$180
+
+wCharacterPortraitTileMap:: ; $d200
+    ds $18
+.end::
 
 endu

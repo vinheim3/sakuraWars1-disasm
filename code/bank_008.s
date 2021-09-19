@@ -3369,7 +3369,7 @@ ScriptOpcode0f_SetPortrait_Main:
 	ld   c, a                                        ; $55f9: $4f
 
 ;
-	M_FarCall Func_0a_54ba
+	M_FarCall todo_DisplayCharacterPortrait
 
 	ld   de, $da08                                   ; $560e: $11 $08 $da
 	ld   hl, wBGPalettes+1*8                                   ; $5611: $21 $e6 $c2
@@ -5136,7 +5136,7 @@ ScriptOpcode18_UntimedQuestion_Main:
 	ld   a, [hl-]                                    ; $61f5: $3a
 	ldh  [hScriptOpcodeParams+2], a                                    ; $61f6: $e0 $a2
 
-	M_FarCall Func_0a_56a3
+	M_FarCall HandleUntimedQuestionProcess
 	
 	ld   a, [$cbda]                                  ; $620c: $fa $da $cb
 	or   a                                           ; $620f: $b7

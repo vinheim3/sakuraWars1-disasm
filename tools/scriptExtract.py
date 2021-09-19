@@ -188,15 +188,23 @@ class ScriptExtractor:
         boxBytes = []
         spaceLen = 3
 
-        for word in words:
+        currTextStyle = 3
+
+        for i, word in enumerate(words):
             wordLen = ScriptExtractor.getWordLength(word)
-            if colCounter + wordLen + spaceLen >= limit:
+            calc = colCounter + wordLen
+            if i != 0:
+                calc += spaceLen
+            if calc >= limit:
                 lineCounter += 1
                 colCounter = 0
                 if lineCounter >= 3:
                     textboxes.append(boxBytes)
                     boxBytes = []
                     lineCounter = 0
+                    
+                    if currTextStyle != 3:
+                        boxBytes.extend([0x0a, currTextStyle])
                 else:
                     boxBytes.append(0x0d)
             else:
@@ -224,7 +232,8 @@ class ScriptExtractor:
 
                 if word[wordIdx] == "'":
                     if wordIdx != len(word)-1 and word[wordIdx+1] in "0123456789":
-                        boxBytes.extend([0x0a, int(word[wordIdx+1])])
+                        currTextStyle = int(word[wordIdx+1])
+                        boxBytes.extend([0x0a, currTextStyle])
                         wordIdx += 2
                         continue
 
@@ -698,7 +707,7 @@ if __name__ == "__main__":
     doneEnglish = {}
 
     if translate:
-        with open('sakura wars GB - 18:09:21.csv') as f:
+        with open('sakura wars GB - 19:09:21.csv') as f:
             reader = csv.reader(f)
             for scriptNum, offset, orig, blank, english, char, dupe1, dupe2 in reader:
                 # todo: temp - remove

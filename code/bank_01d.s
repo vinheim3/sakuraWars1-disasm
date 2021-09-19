@@ -1704,7 +1704,7 @@ jr_01d_53ad:
 	inc  bc                                          ; $5578: $03
 	ld   bc, $0107                                   ; $5579: $01 $07 $01
 	inc  bc                                          ; $557c: $03
-	ld   bc, $cbd5                                   ; $557d: $01 $d5 $cb
+	ld   bc, wCharacterPortraitBaseAddr+1                                   ; $557d: $01 $d5 $cb
 	jp   z, $0107                                    ; $5580: $ca $07 $01
 
 	inc  bc                                          ; $5583: $03

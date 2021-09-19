@@ -23,15 +23,21 @@ def get_limit(_scriptName, idx):
     limit = None
 
     if _scriptName == '_0d_618f':
-        return 96
+        if idx % 2 == 0:
+            return 8 * 8 + 2
+        else:
+            return 12 * 8
 
     if _scriptName == '_30_683a':
-        return 72
+        return 9 * 8
+
+    if _scriptName == '_90_5ac9':
+        return 18 * 8
 
     if _scriptName == 'battle':
         if 53-2 <= idx <= 63-2:
-            return 128
-        return 112
+            return 16 * 8
+        return 14 * 8
 
     return limit
 
@@ -43,6 +49,12 @@ def is_oneline(_scriptName, idx):
 
     if _scriptName == '_30_683a':
         return True
+
+    if _scriptName == '_90_5ac9':
+        return True
+
+    if _scriptName == '_0d_618f':
+        return idx % 2 == 0
 
     return False
 
@@ -103,7 +115,8 @@ for i, jp in enumerate(tableItems):
 
             textbox = textboxes[0]
             if is_oneline(scriptName, i) and textboxes and 0x0d in textbox:
-                print(i, line, 'breached')
+                # print(i, line, 'breached')
+                print(line, limit)
 
             textbox.append(0)
             comps.append(stringB(textbox))
@@ -121,5 +134,5 @@ for i, jp in enumerate(tableItems):
         comps.append(stringB(bs))
 
 final_str = "\n".join(comps)
-print(final_str)
+# print(final_str)
 clipboard.copy(final_str)
