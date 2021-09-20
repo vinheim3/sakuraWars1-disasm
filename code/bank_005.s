@@ -2975,7 +2975,7 @@ Jump_005_539c:
 	ret                                              ; $53a4: $c9
 
 
-GameState43::
+GameState43_FlagSettings::
 	ld   a, [wGameSubstate]                                  ; $53a5: $fa $a1 $c2
 	or   a                                           ; $53a8: $b7
 	jp   nz, Jump_005_72e6                           ; $53a9: $c2 $e6 $72
@@ -3499,12 +3499,12 @@ Call_005_572e:
 	jr   nc, jr_005_574d                             ; $5738: $30 $13
 
 	add  hl, hl                                      ; $573a: $29
-	ld   de, $579f                                   ; $573b: $11 $9f $57
+	ld   de, Data_05_579f                                   ; $573b: $11 $9f $57
 	add  hl, de                                      ; $573e: $19
 	ld   a, [hl+]                                    ; $573f: $2a
 	ld   h, [hl]                                     ; $5740: $66
 	ld   l, a                                        ; $5741: $6f
-	ld   de, $579f                                   ; $5742: $11 $9f $57
+	ld   de, Data_05_579f                                   ; $5742: $11 $9f $57
 	add  hl, de                                      ; $5745: $19
 	ld   a, $05                                      ; $5746: $3e $05
 	call FarGetByte                                       ; $5748: $cd $cf $0a
@@ -3538,12 +3538,12 @@ Call_005_5752:
 	jr   nc, jr_005_578f                             ; $5777: $30 $16
 
 	add  hl, hl                                      ; $5779: $29
-	ld   de, $579f                                   ; $577a: $11 $9f $57
+	ld   de, Data_05_579f                                   ; $577a: $11 $9f $57
 	add  hl, de                                      ; $577d: $19
 	ld   a, [hl+]                                    ; $577e: $2a
 	ld   h, [hl]                                     ; $577f: $66
 	ld   l, a                                        ; $5780: $6f
-	ld   de, $579f                                   ; $5781: $11 $9f $57
+	ld   de, Data_05_579f                                  ; $5781: $11 $9f $57
 	add  hl, de                                      ; $5784: $19
 	ld   d, h                                        ; $5785: $54
 	ld   e, l                                        ; $5786: $5d
@@ -3561,6 +3561,1289 @@ jr_005_578f:
 	ret                                              ; $579e: $c9
 
 
+Data_05_579f:
+if def(VWF)
+	dw Data_05_579fentry00-Data_05_579f
+	dw Data_05_579fentry01-Data_05_579f
+	dw Data_05_579fentry02-Data_05_579f
+	dw Data_05_579fentry03-Data_05_579f
+	dw Data_05_579fentry04-Data_05_579f
+	dw Data_05_579fentry05-Data_05_579f
+	dw Data_05_579fentry06-Data_05_579f
+	dw Data_05_579fentry07-Data_05_579f
+	dw Data_05_579fentry08-Data_05_579f
+	dw Data_05_579fentry09-Data_05_579f
+	dw Data_05_579fentry0a-Data_05_579f
+	dw Data_05_579fentry0b-Data_05_579f
+	dw Data_05_579fentry0c-Data_05_579f
+	dw Data_05_579fentry0d-Data_05_579f
+	dw Data_05_579fentry0e-Data_05_579f
+	dw Data_05_579fentry0f-Data_05_579f
+	dw Data_05_579fentry10-Data_05_579f
+	dw Data_05_579fentry11-Data_05_579f
+	dw Data_05_579fentry12-Data_05_579f
+	dw Data_05_579fentry13-Data_05_579f
+	dw Data_05_579fentry14-Data_05_579f
+	dw Data_05_579fentry15-Data_05_579f
+	dw Data_05_579fentry16-Data_05_579f
+	dw Data_05_579fentry17-Data_05_579f
+	dw Data_05_579fentry18-Data_05_579f
+	dw Data_05_579fentry19-Data_05_579f
+	dw Data_05_579fentry1a-Data_05_579f
+	dw Data_05_579fentry1b-Data_05_579f
+	dw Data_05_579fentry1c-Data_05_579f
+	dw Data_05_579fentry1d-Data_05_579f
+	dw Data_05_579fentry1e-Data_05_579f
+	dw Data_05_579fentry1f-Data_05_579f
+	dw Data_05_579fentry20-Data_05_579f
+	dw Data_05_579fentry21-Data_05_579f
+	dw Data_05_579fentry22-Data_05_579f
+	dw Data_05_579fentry23-Data_05_579f
+	dw Data_05_579fentry24-Data_05_579f
+	dw Data_05_579fentry25-Data_05_579f
+	dw Data_05_579fentry26-Data_05_579f
+	dw Data_05_579fentry27-Data_05_579f
+	dw Data_05_579fentry28-Data_05_579f
+	dw Data_05_579fentry29-Data_05_579f
+	dw Data_05_579fentry2a-Data_05_579f
+	dw Data_05_579fentry2b-Data_05_579f
+	dw Data_05_579fentry2c-Data_05_579f
+	dw Data_05_579fentry2d-Data_05_579f
+	dw Data_05_579fentry2e-Data_05_579f
+	dw Data_05_579fentry2f-Data_05_579f
+	dw Data_05_579fentry30-Data_05_579f
+	dw Data_05_579fentry31-Data_05_579f
+	dw Data_05_579fentry32-Data_05_579f
+	dw Data_05_579fentry33-Data_05_579f
+	dw Data_05_579fentry34-Data_05_579f
+	dw Data_05_579fentry35-Data_05_579f
+	dw Data_05_579fentry36-Data_05_579f
+	dw Data_05_579fentry37-Data_05_579f
+	dw Data_05_579fentry38-Data_05_579f
+	dw Data_05_579fentry39-Data_05_579f
+	dw Data_05_579fentry3a-Data_05_579f
+	dw Data_05_579fentry3b-Data_05_579f
+	dw Data_05_579fentry3c-Data_05_579f
+	dw Data_05_579fentry3d-Data_05_579f
+	dw Data_05_579fentry3e-Data_05_579f
+	dw Data_05_579fentry3f-Data_05_579f
+	dw Data_05_579fentry40-Data_05_579f
+	dw Data_05_579fentry41-Data_05_579f
+	dw Data_05_579fentry42-Data_05_579f
+	dw Data_05_579fentry43-Data_05_579f
+	dw Data_05_579fentry44-Data_05_579f
+	dw Data_05_579fentry45-Data_05_579f
+	dw Data_05_579fentry46-Data_05_579f
+	dw Data_05_579fentry47-Data_05_579f
+	dw Data_05_579fentry48-Data_05_579f
+	dw Data_05_579fentry49-Data_05_579f
+	dw Data_05_579fentry4a-Data_05_579f
+	dw Data_05_579fentry4b-Data_05_579f
+	dw Data_05_579fentry4c-Data_05_579f
+	dw Data_05_579fentry4d-Data_05_579f
+	dw Data_05_579fentry4e-Data_05_579f
+	dw Data_05_579fentry4f-Data_05_579f
+	dw Data_05_579fentry50-Data_05_579f
+	dw Data_05_579fentry51-Data_05_579f
+	dw Data_05_579fentry52-Data_05_579f
+	dw Data_05_579fentry53-Data_05_579f
+	dw Data_05_579fentry54-Data_05_579f
+	dw Data_05_579fentry55-Data_05_579f
+	dw Data_05_579fentry56-Data_05_579f
+	dw Data_05_579fentry57-Data_05_579f
+	dw Data_05_579fentry58-Data_05_579f
+	dw Data_05_579fentry59-Data_05_579f
+	dw Data_05_579fentry5a-Data_05_579f
+	dw Data_05_579fentry5b-Data_05_579f
+	dw Data_05_579fentry5c-Data_05_579f
+	dw Data_05_579fentry5d-Data_05_579f
+	dw Data_05_579fentry5e-Data_05_579f
+	dw Data_05_579fentry5f-Data_05_579f
+	dw Data_05_579fentry60-Data_05_579f
+	dw Data_05_579fentry61-Data_05_579f
+	dw Data_05_579fentry62-Data_05_579f
+	dw Data_05_579fentry63-Data_05_579f
+	dw Data_05_579fentry64-Data_05_579f
+	dw Data_05_579fentry65-Data_05_579f
+	dw Data_05_579fentry66-Data_05_579f
+	dw Data_05_579fentry67-Data_05_579f
+	dw Data_05_579fentry68-Data_05_579f
+	dw Data_05_579fentry69-Data_05_579f
+	dw Data_05_579fentry6a-Data_05_579f
+	dw Data_05_579fentry6b-Data_05_579f
+	dw Data_05_579fentry6c-Data_05_579f
+	dw Data_05_579fentry6d-Data_05_579f
+	dw Data_05_579fentry6e-Data_05_579f
+	dw Data_05_579fentry6f-Data_05_579f
+	dw Data_05_579fentry70-Data_05_579f
+	dw Data_05_579fentry71-Data_05_579f
+	dw Data_05_579fentry72-Data_05_579f
+	dw Data_05_579fentry73-Data_05_579f
+	dw Data_05_579fentry74-Data_05_579f
+	dw Data_05_579fentry75-Data_05_579f
+	dw Data_05_579fentry76-Data_05_579f
+	dw Data_05_579fentry77-Data_05_579f
+	dw Data_05_579fentry78-Data_05_579f
+	dw Data_05_579fentry79-Data_05_579f
+	dw Data_05_579fentry7a-Data_05_579f
+	dw Data_05_579fentry7b-Data_05_579f
+	dw Data_05_579fentry7c-Data_05_579f
+	dw Data_05_579fentry7d-Data_05_579f
+	dw Data_05_579fentry7e-Data_05_579f
+	dw Data_05_579fentry7f-Data_05_579f
+	dw Data_05_579fentry80-Data_05_579f
+	dw Data_05_579fentry81-Data_05_579f
+	dw Data_05_579fentry82-Data_05_579f
+	dw Data_05_579fentry83-Data_05_579f
+	dw Data_05_579fentry84-Data_05_579f
+	dw Data_05_579fentry85-Data_05_579f
+	dw Data_05_579fentry86-Data_05_579f
+	dw Data_05_579fentry87-Data_05_579f
+	dw Data_05_579fentry88-Data_05_579f
+	dw Data_05_579fentry89-Data_05_579f
+	dw Data_05_579fentry8a-Data_05_579f
+	dw Data_05_579fentry8b-Data_05_579f
+	dw Data_05_579fentry8c-Data_05_579f
+	dw Data_05_579fentry8d-Data_05_579f
+	dw Data_05_579fentry8e-Data_05_579f
+	dw Data_05_579fentry8f-Data_05_579f
+	dw Data_05_579fentry90-Data_05_579f
+	dw Data_05_579fentry91-Data_05_579f
+	dw Data_05_579fentry92-Data_05_579f
+	dw Data_05_579fentry93-Data_05_579f
+	dw Data_05_579fentry94-Data_05_579f
+	dw Data_05_579fentry95-Data_05_579f
+	dw Data_05_579fentry96-Data_05_579f
+	dw Data_05_579fentry97-Data_05_579f
+	dw Data_05_579fentry98-Data_05_579f
+	dw Data_05_579fentry99-Data_05_579f
+	dw Data_05_579fentry9a-Data_05_579f
+	dw Data_05_579fentry9b-Data_05_579f
+	dw Data_05_579fentry9c-Data_05_579f
+	dw Data_05_579fentry9d-Data_05_579f
+	dw Data_05_579fentry9e-Data_05_579f
+	dw Data_05_579fentry9f-Data_05_579f
+	dw Data_05_579fentrya0-Data_05_579f
+	dw Data_05_579fentrya1-Data_05_579f
+	dw Data_05_579fentrya2-Data_05_579f
+	dw Data_05_579fentrya3-Data_05_579f
+	dw Data_05_579fentrya4-Data_05_579f
+	dw Data_05_579fentrya5-Data_05_579f
+	dw Data_05_579fentrya6-Data_05_579f
+	dw Data_05_579fentrya7-Data_05_579f
+	dw Data_05_579fentrya8-Data_05_579f
+	dw Data_05_579fentrya9-Data_05_579f
+	dw Data_05_579fentryaa-Data_05_579f
+	dw Data_05_579fentryab-Data_05_579f
+	dw Data_05_579fentryac-Data_05_579f
+	dw Data_05_579fentryad-Data_05_579f
+	dw Data_05_579fentryae-Data_05_579f
+	dw Data_05_579fentryaf-Data_05_579f
+	dw Data_05_579fentryb0-Data_05_579f
+	dw Data_05_579fentryb1-Data_05_579f
+	dw Data_05_579fentryb2-Data_05_579f
+	dw Data_05_579fentryb3-Data_05_579f
+	dw Data_05_579fentryb4-Data_05_579f
+	dw Data_05_579fentryb5-Data_05_579f
+	dw Data_05_579fentryb6-Data_05_579f
+	dw Data_05_579fentryb7-Data_05_579f
+	dw Data_05_579fentryb8-Data_05_579f
+	dw Data_05_579fentryb9-Data_05_579f
+	dw Data_05_579fentryba-Data_05_579f
+	dw Data_05_579fentrybb-Data_05_579f
+	dw Data_05_579fentrybc-Data_05_579f
+	dw Data_05_579fentrybd-Data_05_579f
+	dw Data_05_579fentrybe-Data_05_579f
+	dw Data_05_579fentrybf-Data_05_579f
+	dw Data_05_579fentryc0-Data_05_579f
+	dw Data_05_579fentryc1-Data_05_579f
+	dw Data_05_579fentryc2-Data_05_579f
+	dw Data_05_579fentryc3-Data_05_579f
+	dw Data_05_579fentryc4-Data_05_579f
+	dw Data_05_579fentryc5-Data_05_579f
+	dw Data_05_579fentryc6-Data_05_579f
+	dw Data_05_579fentryc7-Data_05_579f
+	dw Data_05_579fentryc8-Data_05_579f
+	dw Data_05_579fentryc9-Data_05_579f
+	dw Data_05_579fentryca-Data_05_579f
+	dw Data_05_579fentrycb-Data_05_579f
+	dw Data_05_579fentrycc-Data_05_579f
+	dw Data_05_579fentrycd-Data_05_579f
+	dw Data_05_579fentryce-Data_05_579f
+	dw Data_05_579fentrycf-Data_05_579f
+	dw Data_05_579fentryd0-Data_05_579f
+	dw Data_05_579fentryd1-Data_05_579f
+	dw Data_05_579fentryd2-Data_05_579f
+	dw Data_05_579fentryd3-Data_05_579f
+	dw Data_05_579fentryd4-Data_05_579f
+	dw Data_05_579fentryd5-Data_05_579f
+	dw Data_05_579fentryd6-Data_05_579f
+	dw Data_05_579fentryd7-Data_05_579f
+	dw Data_05_579fentryd8-Data_05_579f
+	dw Data_05_579fentryd9-Data_05_579f
+	dw Data_05_579fentryda-Data_05_579f
+	dw Data_05_579fentrydb-Data_05_579f
+	dw Data_05_579fentrydc-Data_05_579f
+	dw Data_05_579fentrydd-Data_05_579f
+	dw Data_05_579fentryde-Data_05_579f
+	dw Data_05_579fentrydf-Data_05_579f
+	dw Data_05_579fentrye0-Data_05_579f
+	dw Data_05_579fentrye1-Data_05_579f
+	dw Data_05_579fentrye2-Data_05_579f
+	dw Data_05_579fentrye3-Data_05_579f
+	dw Data_05_579fentrye4-Data_05_579f
+	dw Data_05_579fentrye5-Data_05_579f
+	dw Data_05_579fentrye6-Data_05_579f
+	dw Data_05_579fentrye7-Data_05_579f
+	dw Data_05_579fentrye8-Data_05_579f
+	dw Data_05_579fentrye9-Data_05_579f
+	dw Data_05_579fentryea-Data_05_579f
+	dw Data_05_579fentryeb-Data_05_579f
+	dw Data_05_579fentryec-Data_05_579f
+	dw Data_05_579fentryed-Data_05_579f
+	dw Data_05_579fentryee-Data_05_579f
+	dw Data_05_579fentryef-Data_05_579f
+	dw Data_05_579fentryf0-Data_05_579f
+	dw Data_05_579fentryf1-Data_05_579f
+	dw Data_05_579fentryf2-Data_05_579f
+	dw Data_05_579fentryf3-Data_05_579f
+	dw Data_05_579fentryf4-Data_05_579f
+	dw Data_05_579fentryf5-Data_05_579f
+	dw Data_05_579fentryf6-Data_05_579f
+	dw Data_05_579fentryf7-Data_05_579f
+	dw Data_05_579fentryf8-Data_05_579f
+	dw Data_05_579fentryf9-Data_05_579f
+	dw Data_05_579fentryfa-Data_05_579f
+	dw Data_05_579fentryfb-Data_05_579f
+	dw Data_05_579fentryfc-Data_05_579f
+	dw Data_05_579fentryfd-Data_05_579f
+	dw Data_05_579fentryfe-Data_05_579f
+	dw Data_05_579fentryff-Data_05_579f
+	dw Data_05_579fentry100-Data_05_579f
+	dw Data_05_579fentry101-Data_05_579f
+	dw Data_05_579fentry102-Data_05_579f
+	dw Data_05_579fentry103-Data_05_579f
+	dw Data_05_579fentry104-Data_05_579f
+	dw Data_05_579fentry105-Data_05_579f
+	dw Data_05_579fentry106-Data_05_579f
+	dw Data_05_579fentry107-Data_05_579f
+	dw Data_05_579fentry108-Data_05_579f
+	dw Data_05_579fentry109-Data_05_579f
+	dw Data_05_579fentry10a-Data_05_579f
+	dw Data_05_579fentry10b-Data_05_579f
+	dw Data_05_579fentry10c-Data_05_579f
+	dw Data_05_579fentry10d-Data_05_579f
+	dw Data_05_579fentry10e-Data_05_579f
+	dw Data_05_579fentry10f-Data_05_579f
+	dw Data_05_579fentry110-Data_05_579f
+	dw Data_05_579fentry111-Data_05_579f
+	dw Data_05_579fentry112-Data_05_579f
+	dw Data_05_579fentry113-Data_05_579f
+	dw Data_05_579fentry114-Data_05_579f
+	dw Data_05_579fentry115-Data_05_579f
+	dw Data_05_579fentry116-Data_05_579f
+	dw Data_05_579fentry117-Data_05_579f
+	dw Data_05_579fentry118-Data_05_579f
+	dw Data_05_579fentry119-Data_05_579f
+	dw Data_05_579fentry11a-Data_05_579f
+	dw Data_05_579fentry11b-Data_05_579f
+	dw Data_05_579fentry11c-Data_05_579f
+	dw Data_05_579fentry11d-Data_05_579f
+	dw Data_05_579fentry11e-Data_05_579f
+	dw Data_05_579fentry11f-Data_05_579f
+	dw Data_05_579fentry120-Data_05_579f
+	dw Data_05_579fentry121-Data_05_579f
+	dw Data_05_579fentry122-Data_05_579f
+	dw Data_05_579fentry123-Data_05_579f
+	dw Data_05_579fentry124-Data_05_579f
+	dw Data_05_579fentry125-Data_05_579f
+	dw Data_05_579fentry126-Data_05_579f
+	dw Data_05_579fentry127-Data_05_579f
+	dw Data_05_579fentry128-Data_05_579f
+	dw Data_05_579fentry129-Data_05_579f
+	dw Data_05_579fentry12a-Data_05_579f
+	dw Data_05_579fentry12b-Data_05_579f
+	dw Data_05_579fentry12c-Data_05_579f
+	dw Data_05_579fentry12d-Data_05_579f
+	dw Data_05_579fentry12e-Data_05_579f
+	dw Data_05_579fentry12f-Data_05_579f
+	dw Data_05_579fentry130-Data_05_579f
+	dw Data_05_579fentry131-Data_05_579f
+	dw Data_05_579fentry132-Data_05_579f
+	dw Data_05_579fentry133-Data_05_579f
+	dw Data_05_579fentry134-Data_05_579f
+	dw Data_05_579fentry135-Data_05_579f
+	dw Data_05_579fentry136-Data_05_579f
+	dw Data_05_579fentry137-Data_05_579f
+	dw Data_05_579fentry138-Data_05_579f
+	dw Data_05_579fentry139-Data_05_579f
+	dw Data_05_579fentry13a-Data_05_579f
+	dw Data_05_579fentry13b-Data_05_579f
+	dw Data_05_579fentry13c-Data_05_579f
+	dw Data_05_579fentry13d-Data_05_579f
+	dw Data_05_579fentry13e-Data_05_579f
+	dw Data_05_579fentry13f-Data_05_579f
+	dw Data_05_579fentry140-Data_05_579f
+	dw Data_05_579fentry141-Data_05_579f
+	dw Data_05_579fentry142-Data_05_579f
+	dw Data_05_579fentry143-Data_05_579f
+	dw Data_05_579fentry144-Data_05_579f
+	dw Data_05_579fentry145-Data_05_579f
+	dw Data_05_579fentry146-Data_05_579f
+	dw Data_05_579fentry147-Data_05_579f
+	dw Data_05_579fentry148-Data_05_579f
+	dw Data_05_579fentry149-Data_05_579f
+	dw Data_05_579fentry14a-Data_05_579f
+	dw Data_05_579fentry14b-Data_05_579f
+	dw Data_05_579fentry14c-Data_05_579f
+	dw Data_05_579fentry14d-Data_05_579f
+	dw Data_05_579fentry14e-Data_05_579f
+	dw Data_05_579fentry14f-Data_05_579f
+	dw Data_05_579fentry150-Data_05_579f
+	dw Data_05_579fentry151-Data_05_579f
+	dw Data_05_579fentry152-Data_05_579f
+	dw Data_05_579fentry153-Data_05_579f
+	dw Data_05_579fentry154-Data_05_579f
+	dw Data_05_579fentry155-Data_05_579f
+	dw Data_05_579fentry156-Data_05_579f
+	dw Data_05_579fentry157-Data_05_579f
+	dw Data_05_579fentry158-Data_05_579f
+	dw Data_05_579fentry159-Data_05_579f
+	dw Data_05_579fentry15a-Data_05_579f
+	dw Data_05_579fentry15b-Data_05_579f
+	dw Data_05_579fentry15c-Data_05_579f
+	dw Data_05_579fentry15d-Data_05_579f
+	dw Data_05_579fentry15e-Data_05_579f
+	dw Data_05_579fentry15f-Data_05_579f
+	dw Data_05_579fentry160-Data_05_579f
+	dw Data_05_579fentry161-Data_05_579f
+	dw Data_05_579fentry162-Data_05_579f
+	dw Data_05_579fentry163-Data_05_579f
+	dw Data_05_579fentry164-Data_05_579f
+	dw Data_05_579fentry165-Data_05_579f
+	dw Data_05_579fentry166-Data_05_579f
+	dw Data_05_579fentry167-Data_05_579f
+	dw Data_05_579fentry168-Data_05_579f
+	dw Data_05_579fentry169-Data_05_579f
+	dw Data_05_579fentry16a-Data_05_579f
+	dw Data_05_579fentry16b-Data_05_579f
+	dw Data_05_579fentry16c-Data_05_579f
+	dw Data_05_579fentry16d-Data_05_579f
+	dw Data_05_579fentry16e-Data_05_579f
+	dw Data_05_579fentry16f-Data_05_579f
+	dw Data_05_579fentry170-Data_05_579f
+	dw Data_05_579fentry171-Data_05_579f
+	dw Data_05_579fentry172-Data_05_579f
+	dw Data_05_579fentry173-Data_05_579f
+	dw Data_05_579fentry174-Data_05_579f
+	dw Data_05_579fentry175-Data_05_579f
+	dw Data_05_579fentry176-Data_05_579f
+	dw Data_05_579fentry177-Data_05_579f
+	dw Data_05_579fentry178-Data_05_579f
+	dw Data_05_579fentry179-Data_05_579f
+	dw Data_05_579fentry17a-Data_05_579f
+	dw Data_05_579fentry17b-Data_05_579f
+	dw Data_05_579fentry17c-Data_05_579f
+	dw Data_05_579fentry17d-Data_05_579f
+	dw Data_05_579fentry17e-Data_05_579f
+	dw Data_05_579fentry17f-Data_05_579f
+	dw Data_05_579fentry180-Data_05_579f
+	dw Data_05_579fentry181-Data_05_579f
+	dw Data_05_579fentry182-Data_05_579f
+	dw Data_05_579fentry183-Data_05_579f
+	dw Data_05_579fentry184-Data_05_579f
+	dw Data_05_579fentry185-Data_05_579f
+	dw Data_05_579fentry186-Data_05_579f
+	dw Data_05_579fentry187-Data_05_579f
+	dw Data_05_579fentry188-Data_05_579f
+	dw Data_05_579fentry189-Data_05_579f
+	dw Data_05_579fentry18a-Data_05_579f
+	dw Data_05_579fentry18b-Data_05_579f
+	dw Data_05_579fentry18c-Data_05_579f
+	dw Data_05_579fentry18d-Data_05_579f
+	dw Data_05_579fentry18e-Data_05_579f
+	dw Data_05_579fentry18f-Data_05_579f
+	dw Data_05_579fentry190-Data_05_579f
+	dw Data_05_579fentry191-Data_05_579f
+	dw Data_05_579fentry192-Data_05_579f
+	dw Data_05_579fentry193-Data_05_579f
+	dw Data_05_579fentry194-Data_05_579f
+	dw Data_05_579fentry195-Data_05_579f
+	dw Data_05_579fentry196-Data_05_579f
+	dw Data_05_579fentry197-Data_05_579f
+	dw Data_05_579fentry198-Data_05_579f
+	dw Data_05_579fentry199-Data_05_579f
+	dw Data_05_579fentry19a-Data_05_579f
+	dw Data_05_579fentry19b-Data_05_579f
+	dw Data_05_579fentry19c-Data_05_579f
+	dw Data_05_579fentry19d-Data_05_579f
+	dw Data_05_579fentry19e-Data_05_579f
+	dw Data_05_579fentry19f-Data_05_579f
+	dw Data_05_579fentry1a0-Data_05_579f
+	dw Data_05_579fentry1a1-Data_05_579f
+	dw Data_05_579fentry1a2-Data_05_579f
+	dw Data_05_579fentry1a3-Data_05_579f
+	dw Data_05_579fentry1a4-Data_05_579f
+	dw Data_05_579fentry1a5-Data_05_579f
+	dw Data_05_579fentry1a6-Data_05_579f
+	dw Data_05_579fentry1a7-Data_05_579f
+	dw Data_05_579fentry1a8-Data_05_579f
+	dw Data_05_579fentry1a9-Data_05_579f
+	dw Data_05_579fentry1aa-Data_05_579f
+	dw Data_05_579fentry1ab-Data_05_579f
+	dw Data_05_579fentry1ac-Data_05_579f
+	dw Data_05_579fentry1ad-Data_05_579f
+	dw Data_05_579fentry1ae-Data_05_579f
+	dw Data_05_579fentry1af-Data_05_579f
+	dw Data_05_579fentry1b0-Data_05_579f
+	dw Data_05_579fentry1b1-Data_05_579f
+	dw Data_05_579fentry1b2-Data_05_579f
+	dw Data_05_579fentry1b3-Data_05_579f
+	dw Data_05_579fentry1b4-Data_05_579f
+	dw Data_05_579fentry1b5-Data_05_579f
+	dw Data_05_579fentry1b6-Data_05_579f
+	dw Data_05_579fentry1b7-Data_05_579f
+	dw Data_05_579fentry1b8-Data_05_579f
+	dw Data_05_579fentry1b9-Data_05_579f
+	dw Data_05_579fentry1ba-Data_05_579f
+	dw Data_05_579fentry1bb-Data_05_579f
+	dw Data_05_579fentry1bc-Data_05_579f
+	dw Data_05_579fentry1bd-Data_05_579f
+	dw Data_05_579fentry1be-Data_05_579f
+	dw Data_05_579fentry1bf-Data_05_579f
+	dw Data_05_579fentry1c0-Data_05_579f
+	dw Data_05_579fentry1c1-Data_05_579f
+	dw Data_05_579fentry1c2-Data_05_579f
+	dw Data_05_579fentry1c3-Data_05_579f
+	dw Data_05_579fentry1c4-Data_05_579f
+	dw Data_05_579fentry1c5-Data_05_579f
+	dw Data_05_579fentry1c6-Data_05_579f
+	dw Data_05_579fentry1c7-Data_05_579f
+	dw Data_05_579fentry1c8-Data_05_579f
+	dw Data_05_579fentry1c9-Data_05_579f
+	dw Data_05_579fentry1ca-Data_05_579f
+	dw Data_05_579fentry1cb-Data_05_579f
+	dw Data_05_579fentry1cc-Data_05_579f
+	dw Data_05_579fentry1cd-Data_05_579f
+	dw Data_05_579fentry1ce-Data_05_579f
+	dw Data_05_579fentry1cf-Data_05_579f
+	dw Data_05_579fentry1d0-Data_05_579f
+	dw Data_05_579fentry1d1-Data_05_579f
+	dw Data_05_579fentry1d2-Data_05_579f
+	dw Data_05_579fentry1d3-Data_05_579f
+	dw Data_05_579fentry1d4-Data_05_579f
+	dw Data_05_579fentry1d5-Data_05_579f
+	dw Data_05_579fentry1d6-Data_05_579f
+	dw Data_05_579fentry1d7-Data_05_579f
+	dw Data_05_579fentry1d8-Data_05_579f
+	dw Data_05_579fentry1d9-Data_05_579f
+	dw Data_05_579fentry1da-Data_05_579f
+	dw Data_05_579fentry1db-Data_05_579f
+	dw Data_05_579fentry1dc-Data_05_579f
+	dw Data_05_579fentry1dd-Data_05_579f
+	dw Data_05_579fentry1de-Data_05_579f
+	dw Data_05_579fentry1df-Data_05_579f
+	dw Data_05_579fentry1e0-Data_05_579f
+	dw Data_05_579fentry1e1-Data_05_579f
+	dw Data_05_579fentry1e2-Data_05_579f
+	dw Data_05_579fentry1e3-Data_05_579f
+	dw Data_05_579fentry1e4-Data_05_579f
+	dw Data_05_579fentry1e5-Data_05_579f
+	dw Data_05_579fentry1e6-Data_05_579f
+	dw Data_05_579fentry1e7-Data_05_579f
+	dw Data_05_579fentry1e8-Data_05_579f
+	dw Data_05_579fentry1e9-Data_05_579f
+	dw Data_05_579fentry1ea-Data_05_579f
+	dw Data_05_579fentry1eb-Data_05_579f
+	dw Data_05_579fentry1ec-Data_05_579f
+	dw Data_05_579fentry1ed-Data_05_579f
+	dw Data_05_579fentry1ee-Data_05_579f
+	dw Data_05_579fentry1ef-Data_05_579f
+	dw Data_05_579fentry1f0-Data_05_579f
+	dw Data_05_579fentry1f1-Data_05_579f
+	dw Data_05_579fentry1f2-Data_05_579f
+	dw Data_05_579fentry1f3-Data_05_579f
+	dw Data_05_579fentry1f4-Data_05_579f
+	dw Data_05_579fentry1f5-Data_05_579f
+	dw Data_05_579fentry1f6-Data_05_579f
+	dw Data_05_579fentry1f7-Data_05_579f
+	dw Data_05_579fentry1f8-Data_05_579f
+	dw Data_05_579fentry1f9-Data_05_579f
+	dw Data_05_579fentry1fa-Data_05_579f
+	dw Data_05_579fentry1fb-Data_05_579f
+	dw Data_05_579fentry1fc-Data_05_579f
+	dw Data_05_579fentry1fd-Data_05_579f
+	dw Data_05_579fentry1fe-Data_05_579f
+	dw Data_05_579fentry1ff-Data_05_579f
+	dw Data_05_579fentry200-Data_05_579f
+	dw Data_05_579fentry201-Data_05_579f
+	dw Data_05_579fentry202-Data_05_579f
+	dw Data_05_579fentry203-Data_05_579f
+	dw Data_05_579fentry204-Data_05_579f
+	dw Data_05_579fentry205-Data_05_579f
+	dw Data_05_579fentry206-Data_05_579f
+	dw Data_05_579fentry207-Data_05_579f
+	dw Data_05_579fentry208-Data_05_579f
+	dw Data_05_579fentry209-Data_05_579f
+	dw Data_05_579fentry20a-Data_05_579f
+	dw Data_05_579fentry20b-Data_05_579f
+	dw Data_05_579fentry20c-Data_05_579f
+	dw Data_05_579fentry20d-Data_05_579f
+	dw Data_05_579fentry20e-Data_05_579f
+	dw Data_05_579fentry20f-Data_05_579f
+	dw Data_05_579fentry210-Data_05_579f
+	dw Data_05_579fentry211-Data_05_579f
+	dw Data_05_579fentry212-Data_05_579f
+	dw Data_05_579fentry213-Data_05_579f
+	dw Data_05_579fentry214-Data_05_579f
+	dw Data_05_579fentry215-Data_05_579f
+	dw Data_05_579fentry216-Data_05_579f
+	dw Data_05_579fentry217-Data_05_579f
+	dw Data_05_579fentry218-Data_05_579f
+	dw Data_05_579fentry219-Data_05_579f
+	dw Data_05_579fentry21a-Data_05_579f
+	dw Data_05_579fentry21b-Data_05_579f
+	dw Data_05_579fentry21c-Data_05_579f
+	dw Data_05_579fentry21d-Data_05_579f
+	dw Data_05_579fentry21e-Data_05_579f
+	dw Data_05_579fentry21f-Data_05_579f
+	dw Data_05_579fentry220-Data_05_579f
+	dw Data_05_579fentry221-Data_05_579f
+	dw Data_05_579fentry222-Data_05_579f
+	dw Data_05_579fentry223-Data_05_579f
+	dw Data_05_579fentry224-Data_05_579f
+	dw Data_05_579fentry225-Data_05_579f
+	dw Data_05_579fentry226-Data_05_579f
+	dw Data_05_579fentry227-Data_05_579f
+	dw Data_05_579fentry228-Data_05_579f
+	dw Data_05_579fentry229-Data_05_579f
+	dw Data_05_579fentry22a-Data_05_579f
+	dw Data_05_579fentry22b-Data_05_579f
+	dw Data_05_579fentry22c-Data_05_579f
+	dw Data_05_579fentry22d-Data_05_579f
+	dw Data_05_579fentry22e-Data_05_579f
+	dw Data_05_579fentry22f-Data_05_579f
+	dw Data_05_579fentry230-Data_05_579f
+	dw Data_05_579fentry231-Data_05_579f
+	dw Data_05_579fentry232-Data_05_579f
+	dw Data_05_579fentry233-Data_05_579f
+	dw Data_05_579fentry234-Data_05_579f
+	dw Data_05_579fentry235-Data_05_579f
+	dw Data_05_579fentry236-Data_05_579f
+	dw Data_05_579fentry237-Data_05_579f
+	dw Data_05_579fentry238-Data_05_579f
+	dw Data_05_579fentry239-Data_05_579f
+	dw Data_05_579fentry23a-Data_05_579f
+	dw Data_05_579fentry23b-Data_05_579f
+	dw Data_05_579fentry23c-Data_05_579f
+	dw Data_05_579fentry23d-Data_05_579f
+	dw Data_05_579fentry23e-Data_05_579f
+	dw Data_05_579fentry23f-Data_05_579f
+	dw Data_05_579fentry240-Data_05_579f
+	dw Data_05_579fentry241-Data_05_579f
+	dw Data_05_579fentry242-Data_05_579f
+	dw Data_05_579fentry243-Data_05_579f
+	dw Data_05_579fentry244-Data_05_579f
+	dw Data_05_579fentry245-Data_05_579f
+	dw Data_05_579fentry246-Data_05_579f
+	dw Data_05_579fentry247-Data_05_579f
+	dw Data_05_579fentry248-Data_05_579f
+	dw Data_05_579fentry249-Data_05_579f
+	dw Data_05_579fentry24a-Data_05_579f
+	dw Data_05_579fentry24b-Data_05_579f
+	dw Data_05_579fentry24c-Data_05_579f
+	dw Data_05_579fentry24d-Data_05_579f
+	dw Data_05_579fentry24e-Data_05_579f
+	dw Data_05_579fentry24f-Data_05_579f
+	dw Data_05_579fentry250-Data_05_579f
+	dw Data_05_579fentry251-Data_05_579f
+	dw Data_05_579fentry252-Data_05_579f
+	dw Data_05_579fentry253-Data_05_579f
+	dw Data_05_579fentry254-Data_05_579f
+	dw Data_05_579fentry255-Data_05_579f
+	dw Data_05_579fentry256-Data_05_579f
+	dw Data_05_579fentry257-Data_05_579f
+	dw Data_05_579fentry258-Data_05_579f
+	dw Data_05_579fentry259-Data_05_579f
+	dw Data_05_579fentry25a-Data_05_579f
+	dw Data_05_579fentry25b-Data_05_579f
+	dw Data_05_579fentry25c-Data_05_579f
+	dw Data_05_579fentry25d-Data_05_579f
+	dw Data_05_579fentry25e-Data_05_579f
+	dw Data_05_579fentry25f-Data_05_579f
+	dw Data_05_579fentry260-Data_05_579f
+	dw Data_05_579fentry261-Data_05_579f
+	dw Data_05_579fentry262-Data_05_579f
+	dw Data_05_579fentry263-Data_05_579f
+	dw Data_05_579fentry264-Data_05_579f
+	dw Data_05_579fentry265-Data_05_579f
+	dw Data_05_579fentry266-Data_05_579f
+	dw Data_05_579fentry267-Data_05_579f
+	dw Data_05_579fentry268-Data_05_579f
+	dw Data_05_579fentry269-Data_05_579f
+	dw Data_05_579fentry26a-Data_05_579f
+	dw Data_05_579fentry26b-Data_05_579f
+	dw Data_05_579fentry26c-Data_05_579f
+	dw Data_05_579fentry26d-Data_05_579f
+	dw Data_05_579fentry26e-Data_05_579f
+	dw Data_05_579fentry26f-Data_05_579f
+	dw Data_05_579fentry270-Data_05_579f
+	dw Data_05_579fentry271-Data_05_579f
+	dw Data_05_579fentry272-Data_05_579f
+	dw Data_05_579fentry273-Data_05_579f
+	dw Data_05_579fentry274-Data_05_579f
+	dw Data_05_579fentry275-Data_05_579f
+	dw Data_05_579fentry276-Data_05_579f
+	dw Data_05_579fentry277-Data_05_579f
+	dw Data_05_579fentry278-Data_05_579f
+	dw Data_05_579fentry279-Data_05_579f
+	dw Data_05_579fentry27a-Data_05_579f
+	dw Data_05_579fentry27b-Data_05_579f
+	dw Data_05_579fentry27c-Data_05_579f
+	dw Data_05_579fentry27d-Data_05_579f
+	dw Data_05_579fentry27e-Data_05_579f
+	dw Data_05_579fentry27f-Data_05_579f
+	dw Data_05_579fentry280-Data_05_579f
+	dw Data_05_579fentry281-Data_05_579f
+	dw Data_05_579fentry282-Data_05_579f
+	dw Data_05_579fentry283-Data_05_579f
+	dw Data_05_579fentry284-Data_05_579f
+	dw Data_05_579fentry285-Data_05_579f
+	dw Data_05_579fentry286-Data_05_579f
+	dw Data_05_579fentry287-Data_05_579f
+	dw Data_05_579fentry288-Data_05_579f
+	dw Data_05_579fentry289-Data_05_579f
+	dw Data_05_579fentry28a-Data_05_579f
+	dw Data_05_579fentry28b-Data_05_579f
+	dw Data_05_579fentry28c-Data_05_579f
+	dw Data_05_579fentry28d-Data_05_579f
+	dw Data_05_579fentry28e-Data_05_579f
+	dw Data_05_579fentry28f-Data_05_579f
+	dw Data_05_579fentry290-Data_05_579f
+	dw Data_05_579fentry291-Data_05_579f
+	dw Data_05_579fentry292-Data_05_579f
+	dw Data_05_579fentry293-Data_05_579f
+	dw Data_05_579fentry294-Data_05_579f
+	dw Data_05_579fentry295-Data_05_579f
+	dw Data_05_579fentry296-Data_05_579f
+	dw Data_05_579fentry297-Data_05_579f
+	dw Data_05_579fentry298-Data_05_579f
+	dw Data_05_579fentry299-Data_05_579f
+	dw Data_05_579fentry29a-Data_05_579f
+	dw Data_05_579fentry29b-Data_05_579f
+	dw Data_05_579fentry29c-Data_05_579f
+	dw Data_05_579fentry29d-Data_05_579f
+	dw Data_05_579fentry29e-Data_05_579f
+	dw Data_05_579fentry29f-Data_05_579f
+	dw Data_05_579fentry2a0-Data_05_579f
+	dw Data_05_579fentry2a1-Data_05_579f
+	dw Data_05_579fentry2a2-Data_05_579f
+	dw Data_05_579fentry2a3-Data_05_579f
+	dw Data_05_579fentry2a4-Data_05_579f
+	dw Data_05_579fentry2a5-Data_05_579f
+	dw Data_05_579fentry2a6-Data_05_579f
+	dw Data_05_579fentry2a7-Data_05_579f
+	dw Data_05_579fentry2a8-Data_05_579f
+	dw Data_05_579fentry2a9-Data_05_579f
+	dw Data_05_579fentry2aa-Data_05_579f
+	dw Data_05_579fentry2ab-Data_05_579f
+	dw Data_05_579fentry2ac-Data_05_579f
+	dw Data_05_579fentry2ad-Data_05_579f
+	dw Data_05_579fentry2ae-Data_05_579f
+	dw Data_05_579fentry2af-Data_05_579f
+	dw Data_05_579fentry2b0-Data_05_579f
+	dw Data_05_579fentry2b1-Data_05_579f
+	dw Data_05_579fentry2b2-Data_05_579f
+	dw Data_05_579fentry2b3-Data_05_579f
+	dw Data_05_579fentry2b4-Data_05_579f
+	dw Data_05_579fentry2b5-Data_05_579f
+	dw Data_05_579fentry2b6-Data_05_579f
+	dw Data_05_579fentry2b7-Data_05_579f
+	dw Data_05_579fentry2b8-Data_05_579f
+	dw Data_05_579fentry2b9-Data_05_579f
+	dw Data_05_579fentry2ba-Data_05_579f
+	dw Data_05_579fentry2bb-Data_05_579f
+	dw Data_05_579fentry2bc-Data_05_579f
+	dw Data_05_579fentry2bd-Data_05_579f
+	dw Data_05_579fentry2be-Data_05_579f
+	dw Data_05_579fentry2bf-Data_05_579f
+	dw Data_05_579fentry2c0-Data_05_579f
+	dw Data_05_579fentry2c1-Data_05_579f
+	dw Data_05_579fentry2c2-Data_05_579f
+	dw Data_05_579fentry2c3-Data_05_579f
+	dw Data_05_579fentry2c4-Data_05_579f
+	dw Data_05_579fentry2c5-Data_05_579f
+	dw Data_05_579fentry2c6-Data_05_579f
+	dw Data_05_579fentry2c7-Data_05_579f
+	dw Data_05_579fentry2c8-Data_05_579f
+	dw Data_05_579fentry2c9-Data_05_579f
+	dw Data_05_579fentry2ca-Data_05_579f
+	dw Data_05_579fentry2cb-Data_05_579f
+	dw Data_05_579fentry2cc-Data_05_579f
+	dw Data_05_579fentry2cd-Data_05_579f
+	dw Data_05_579fentry2ce-Data_05_579f
+	dw Data_05_579fentry2cf-Data_05_579f
+	dw Data_05_579fentry2d0-Data_05_579f
+	dw Data_05_579fentry2d1-Data_05_579f
+	dw Data_05_579fentry2d2-Data_05_579f
+	dw Data_05_579fentry2d3-Data_05_579f
+	dw Data_05_579fentry2d4-Data_05_579f
+	dw Data_05_579fentry2d5-Data_05_579f
+	dw Data_05_579fentry2d6-Data_05_579f
+	dw Data_05_579fentry2d7-Data_05_579f
+	dw Data_05_579fentry2d8-Data_05_579f
+	dw Data_05_579fentry2d9-Data_05_579f
+	dw Data_05_579fentry2da-Data_05_579f
+	dw Data_05_579fentry2db-Data_05_579f
+	dw Data_05_579fentry2dc-Data_05_579f
+	dw Data_05_579fentry2dd-Data_05_579f
+	dw Data_05_579fentry2de-Data_05_579f
+	dw Data_05_579fentry2df-Data_05_579f
+	dw Data_05_579fentry2e0-Data_05_579f
+	dw Data_05_579fentry2e1-Data_05_579f
+	dw Data_05_579fentry2e2-Data_05_579f
+	dw Data_05_579fentry2e3-Data_05_579f
+	dw Data_05_579fentry2e4-Data_05_579f
+	dw Data_05_579fentry2e5-Data_05_579f
+	dw Data_05_579fentry2e6-Data_05_579f
+	dw Data_05_579fentry2e7-Data_05_579f
+	dw Data_05_579fentry2e8-Data_05_579f
+	dw Data_05_579fentry2e9-Data_05_579f
+	dw Data_05_579fentry2ea-Data_05_579f
+	dw Data_05_579fentry2eb-Data_05_579f
+	dw Data_05_579fentry2ec-Data_05_579f
+	dw Data_05_579fentry2ed-Data_05_579f
+	dw Data_05_579fentry2ee-Data_05_579f
+	dw Data_05_579fentry2ef-Data_05_579f
+	dw Data_05_579fentry2f0-Data_05_579f
+	dw Data_05_579fentry2f1-Data_05_579f
+	dw Data_05_579fentry2f2-Data_05_579f
+	dw Data_05_579fentry2f3-Data_05_579f
+	dw Data_05_579fentry2f4-Data_05_579f
+	dw Data_05_579fentry2f5-Data_05_579f
+	dw Data_05_579fentry2f6-Data_05_579f
+	dw Data_05_579fentry2f7-Data_05_579f
+	dw Data_05_579fentry2f8-Data_05_579f
+	dw Data_05_579fentry2f9-Data_05_579f
+	dw Data_05_579fentry2fa-Data_05_579f
+	dw Data_05_579fentry2fb-Data_05_579f
+	dw Data_05_579fentry2fc-Data_05_579f
+	dw Data_05_579fentry2fd-Data_05_579f
+	dw Data_05_579fentry2fe-Data_05_579f
+	dw Data_05_579fentry2ff-Data_05_579f
+	dw Data_05_579fentry300-Data_05_579f
+	dw Data_05_579fentry301-Data_05_579f
+	dw Data_05_579fentry302-Data_05_579f
+	dw Data_05_579fentry303-Data_05_579f
+	dw Data_05_579fentry304-Data_05_579f
+	dw Data_05_579fentry305-Data_05_579f
+	dw Data_05_579fentry306-Data_05_579f
+	dw Data_05_579fentry307-Data_05_579f
+	dw Data_05_579fentry308-Data_05_579f
+	dw Data_05_579fentry309-Data_05_579f
+	dw Data_05_579fentry30a-Data_05_579f
+	dw Data_05_579fentry30b-Data_05_579f
+	dw Data_05_579fentry30c-Data_05_579f
+	dw Data_05_579fentry30d-Data_05_579f
+	dw Data_05_579fentry30e-Data_05_579f
+	dw Data_05_579fentry30f-Data_05_579f
+	dw Data_05_579fentry310-Data_05_579f
+	dw Data_05_579fentry311-Data_05_579f
+	dw Data_05_579fentry312-Data_05_579f
+	dw Data_05_579fentry313-Data_05_579f
+	dw Data_05_579fentry314-Data_05_579f
+	dw Data_05_579fentry315-Data_05_579f
+	dw Data_05_579fentry316-Data_05_579f
+	dw Data_05_579fentry317-Data_05_579f
+	dw Data_05_579fentry318-Data_05_579f
+	dw Data_05_579fentry319-Data_05_579f
+	dw Data_05_579fentry31a-Data_05_579f
+	dw Data_05_579fentry31b-Data_05_579f
+	dw Data_05_579fentry31c-Data_05_579f
+	dw Data_05_579fentry31d-Data_05_579f
+	dw Data_05_579fentry31e-Data_05_579f
+	dw Data_05_579fentry31f-Data_05_579f
+	dw Data_05_579fentry320-Data_05_579f
+	dw Data_05_579fentry321-Data_05_579f
+	dw Data_05_579fentry322-Data_05_579f
+	dw Data_05_579fentry323-Data_05_579f
+	dw Data_05_579fentry324-Data_05_579f
+	dw Data_05_579fentry325-Data_05_579f
+	dw Data_05_579fentry326-Data_05_579f
+	dw Data_05_579fentry327-Data_05_579f
+	dw Data_05_579fentry328-Data_05_579f
+	dw Data_05_579fentry329-Data_05_579f
+	dw Data_05_579fentry32a-Data_05_579f
+	dw Data_05_579fentry32b-Data_05_579f
+	dw Data_05_579fentry32c-Data_05_579f
+	dw Data_05_579fentry32d-Data_05_579f
+	dw Data_05_579fentry32e-Data_05_579f
+	dw Data_05_579fentry32f-Data_05_579f
+	dw Data_05_579fentry330-Data_05_579f
+	dw Data_05_579fentry331-Data_05_579f
+	dw Data_05_579fentry332-Data_05_579f
+	dw Data_05_579fentry333-Data_05_579f
+	dw Data_05_579fentry334-Data_05_579f
+	dw Data_05_579fentry335-Data_05_579f
+	dw Data_05_579fentry336-Data_05_579f
+	dw Data_05_579fentry337-Data_05_579f
+	dw Data_05_579fentry338-Data_05_579f
+	dw Data_05_579fentry339-Data_05_579f
+	dw Data_05_579fentry33a-Data_05_579f
+	dw Data_05_579fentry33b-Data_05_579f
+	dw Data_05_579fentry33c-Data_05_579f
+	dw Data_05_579fentry33d-Data_05_579f
+	dw Data_05_579fentry33e-Data_05_579f
+	dw Data_05_579fentry33f-Data_05_579f
+	dw Data_05_579fentry340-Data_05_579f
+	dw Data_05_579fentry341-Data_05_579f
+	dw Data_05_579fentry342-Data_05_579f
+	dw Data_05_579fentry343-Data_05_579f
+	dw Data_05_579fentry344-Data_05_579f
+	dw Data_05_579fentry345-Data_05_579f
+	dw Data_05_579fentry346-Data_05_579f
+	dw Data_05_579fentry347-Data_05_579f
+	dw Data_05_579fentry348-Data_05_579f
+	dw Data_05_579fentry349-Data_05_579f
+	dw Data_05_579fentry34a-Data_05_579f
+	dw Data_05_579fentry34b-Data_05_579f
+	dw Data_05_579fentry34c-Data_05_579f
+	dw Data_05_579fentry34d-Data_05_579f
+	dw Data_05_579fentry34e-Data_05_579f
+	dw Data_05_579fentry34f-Data_05_579f
+	dw Data_05_579fentry350-Data_05_579f
+	dw Data_05_579fentry351-Data_05_579f
+	dw Data_05_579fentry352-Data_05_579f
+	dw Data_05_579fentry353-Data_05_579f
+	dw Data_05_579fentry354-Data_05_579f
+	dw Data_05_579fentry355-Data_05_579f
+	dw Data_05_579fentry356-Data_05_579f
+	dw Data_05_579fentry357-Data_05_579f
+	dw Data_05_579fentry358-Data_05_579f
+	dw Data_05_579fentry359-Data_05_579f
+	dw Data_05_579fentry35a-Data_05_579f
+	dw Data_05_579fentry35b-Data_05_579f
+	dw Data_05_579fentry35c-Data_05_579f
+	dw Data_05_579fentry35d-Data_05_579f
+	dw Data_05_579fentry35e-Data_05_579f
+	dw Data_05_579fentry35f-Data_05_579f
+	dw Data_05_579fentry360-Data_05_579f
+	dw Data_05_579fentry361-Data_05_579f
+	dw Data_05_579fentry362-Data_05_579f
+	dw Data_05_579fentry363-Data_05_579f
+	dw Data_05_579fentry364-Data_05_579f
+	dw Data_05_579fentry365-Data_05_579f
+	dw Data_05_579fentry366-Data_05_579f
+	dw Data_05_579fentry367-Data_05_579f
+	dw Data_05_579fentry368-Data_05_579f
+	dw Data_05_579fentry369-Data_05_579f
+	dw Data_05_579fentry36a-Data_05_579f
+	dw Data_05_579fentry36b-Data_05_579f
+	dw Data_05_579fentry36c-Data_05_579f
+	dw Data_05_579fentry36d-Data_05_579f
+	dw Data_05_579fentry36e-Data_05_579f
+	dw Data_05_579fentry36f-Data_05_579f
+	dw Data_05_579fentry370-Data_05_579f
+	dw Data_05_579fentry371-Data_05_579f
+	dw Data_05_579fentry372-Data_05_579f
+	dw Data_05_579fentry373-Data_05_579f
+	dw Data_05_579fentry374-Data_05_579f
+	dw Data_05_579fentry375-Data_05_579f
+	dw Data_05_579fentry376-Data_05_579f
+	dw Data_05_579fentry377-Data_05_579f
+	dw Data_05_579fentry378-Data_05_579f
+	dw Data_05_579fentry379-Data_05_579f
+	dw Data_05_579fentry37a-Data_05_579f
+	dw Data_05_579fentry37b-Data_05_579f
+	dw Data_05_579fentry37c-Data_05_579f
+	dw Data_05_579fentry37d-Data_05_579f
+	dw Data_05_579fentry37e-Data_05_579f
+	dw Data_05_579fentry37f-Data_05_579f
+	dw Data_05_579fentry380-Data_05_579f
+	dw Data_05_579fentry381-Data_05_579f
+	dw Data_05_579fentry382-Data_05_579f
+	dw Data_05_579fentry383-Data_05_579f
+	dw Data_05_579fentry384-Data_05_579f
+	dw Data_05_579fentry385-Data_05_579f
+	dw Data_05_579fentry386-Data_05_579f
+	dw Data_05_579fentry387-Data_05_579f
+	dw Data_05_579fentry388-Data_05_579f
+	dw Data_05_579fentry389-Data_05_579f
+	dw Data_05_579fentry38a-Data_05_579f
+	dw Data_05_579fentry38b-Data_05_579f
+	dw Data_05_579fentry38c-Data_05_579f
+	dw Data_05_579fentry38d-Data_05_579f
+	dw Data_05_579fentry38e-Data_05_579f
+	dw Data_05_579fentry38f-Data_05_579f
+	dw Data_05_579fentry390-Data_05_579f
+	dw Data_05_579fentry391-Data_05_579f
+	dw Data_05_579fentry392-Data_05_579f
+	dw Data_05_579fentry393-Data_05_579f
+	dw Data_05_579fentry394-Data_05_579f
+	dw Data_05_579fentry395-Data_05_579f
+	dw Data_05_579fentry396-Data_05_579f
+	dw Data_05_579fentry397-Data_05_579f
+	dw Data_05_579fentry398-Data_05_579f
+	dw Data_05_579fentry399-Data_05_579f
+	dw Data_05_579fentry39a-Data_05_579f
+	dw Data_05_579fentry39b-Data_05_579f
+	dw Data_05_579fentry39c-Data_05_579f
+	dw Data_05_579fentry39d-Data_05_579f
+	dw Data_05_579fentry39e-Data_05_579f
+	dw Data_05_579fentry39f-Data_05_579f
+	dw Data_05_579fentry3a0-Data_05_579f
+	dw Data_05_579fentry3a1-Data_05_579f
+	dw Data_05_579fentry3a2-Data_05_579f
+	dw Data_05_579fentry3a3-Data_05_579f
+	dw Data_05_579fentry3a4-Data_05_579f
+	dw Data_05_579fentry3a5-Data_05_579f
+	dw Data_05_579fentry3a6-Data_05_579f
+	dw Data_05_579fentry3a7-Data_05_579f
+	dw Data_05_579fentry3a8-Data_05_579f
+	dw Data_05_579fentry3a9-Data_05_579f
+	dw Data_05_579fentry3aa-Data_05_579f
+	dw Data_05_579fentry3ab-Data_05_579f
+	dw Data_05_579fentry3ac-Data_05_579f
+	dw Data_05_579fentry3ad-Data_05_579f
+	dw Data_05_579fentry3ae-Data_05_579f
+	dw Data_05_579fentry3af-Data_05_579f
+	dw Data_05_579fentry3b0-Data_05_579f
+	dw Data_05_579fentry3b1-Data_05_579f
+	dw Data_05_579fentry3b2-Data_05_579f
+	dw Data_05_579fentry3b3-Data_05_579f
+	dw Data_05_579fentry3b4-Data_05_579f
+	dw Data_05_579fentry3b5-Data_05_579f
+	dw Data_05_579fentry3b6-Data_05_579f
+	dw Data_05_579fentry3b7-Data_05_579f
+	dw Data_05_579fentry3b8-Data_05_579f
+	dw Data_05_579fentry3b9-Data_05_579f
+	dw Data_05_579fentry3ba-Data_05_579f
+	dw Data_05_579fentry3bb-Data_05_579f
+	dw Data_05_579fentry3bc-Data_05_579f
+	dw Data_05_579fentry3bd-Data_05_579f
+	dw Data_05_579fentry3be-Data_05_579f
+	dw Data_05_579fentry3bf-Data_05_579f
+	dw Data_05_579fentry3c0-Data_05_579f
+	dw Data_05_579fentry3c1-Data_05_579f
+	dw Data_05_579fentry3c2-Data_05_579f
+	dw Data_05_579fentry3c3-Data_05_579f
+	dw Data_05_579fentry3c4-Data_05_579f
+	dw Data_05_579fentry3c5-Data_05_579f
+	dw Data_05_579fentry3c6-Data_05_579f
+	dw Data_05_579fentry3c7-Data_05_579f
+	dw Data_05_579fentry3c8-Data_05_579f
+	dw Data_05_579fentry3c9-Data_05_579f
+	dw Data_05_579fentry3ca-Data_05_579f
+	dw Data_05_579fentry3cb-Data_05_579f
+	dw Data_05_579fentry3cc-Data_05_579f
+	dw Data_05_579fentry3cd-Data_05_579f
+	dw Data_05_579fentry3ce-Data_05_579f
+	dw Data_05_579fentry3cf-Data_05_579f
+	dw Data_05_579fentry3d0-Data_05_579f
+	dw Data_05_579fentry3d1-Data_05_579f
+	dw Data_05_579fentry3d2-Data_05_579f
+	dw Data_05_579fentry3d3-Data_05_579f
+	dw Data_05_579fentry3d4-Data_05_579f
+	dw Data_05_579fentry3d5-Data_05_579f
+	dw Data_05_579fentry3d6-Data_05_579f
+	dw Data_05_579fentry3d7-Data_05_579f
+	dw Data_05_579fentry3d8-Data_05_579f
+	dw Data_05_579fentry3d9-Data_05_579f
+	dw Data_05_579fentry3da-Data_05_579f
+	dw Data_05_579fentry3db-Data_05_579f
+	dw Data_05_579fentry3dc-Data_05_579f
+	dw Data_05_579fentry3dd-Data_05_579f
+	dw Data_05_579fentry3de-Data_05_579f
+	dw Data_05_579fentry3df-Data_05_579f
+	dw Data_05_579fentry3e0-Data_05_579f
+	dw Data_05_579fentry3e1-Data_05_579f
+	dw Data_05_579fentry3e2-Data_05_579f
+	dw Data_05_579fentry3e3-Data_05_579f
+	dw Data_05_579fentry3e4-Data_05_579f
+	dw Data_05_579fentry3e5-Data_05_579f
+	dw Data_05_579fentry3e6-Data_05_579f
+	dw Data_05_579fentry3e7-Data_05_579f
+	dw Data_05_579fentry3e8-Data_05_579f
+	dw Data_05_579fentry3e9-Data_05_579f
+	dw Data_05_579fentry3ea-Data_05_579f
+	dw Data_05_579fentry3eb-Data_05_579f
+	dw Data_05_579fentry3ec-Data_05_579f
+	dw Data_05_579fentry3ed-Data_05_579f
+	dw Data_05_579fentry3ee-Data_05_579f
+	dw Data_05_579fentry3ef-Data_05_579f
+	dw Data_05_579fentry3f0-Data_05_579f
+	dw Data_05_579fentry3f1-Data_05_579f
+	dw Data_05_579fentry3f2-Data_05_579f
+	dw Data_05_579fentry3f3-Data_05_579f
+	dw Data_05_579fentry3f4-Data_05_579f
+	dw Data_05_579fentry3f5-Data_05_579f
+	dw Data_05_579fentry3f6-Data_05_579f
+	dw Data_05_579fentry3f7-Data_05_579f
+	dw Data_05_579fentry3f8-Data_05_579f
+	dw Data_05_579fentry3f9-Data_05_579f
+	dw Data_05_579fentry3fa-Data_05_579f
+	dw Data_05_579fentry3fb-Data_05_579f
+	dw Data_05_579fentry3fc-Data_05_579f
+	dw Data_05_579fentry3fd-Data_05_579f
+	dw Data_05_579fentry3fe-Data_05_579f
+	dw Data_05_579fentry3ff-Data_05_579f
+	dw Data_05_579fentry400-Data_05_579f
+	dw Data_05_579fentry401-Data_05_579f
+	dw Data_05_579fentry402-Data_05_579f
+	dw Data_05_579fentry403-Data_05_579f
+	dw Data_05_579fentry404-Data_05_579f
+	dw Data_05_579fentry405-Data_05_579f
+	dw Data_05_579fentry406-Data_05_579f
+	dw Data_05_579fentry407-Data_05_579f
+	dw Data_05_579fentry408-Data_05_579f
+	dw Data_05_579fentry409-Data_05_579f
+	dw Data_05_579fentry40a-Data_05_579f
+	dw Data_05_579fentry40b-Data_05_579f
+	dw Data_05_579fentry40c-Data_05_579f
+	dw Data_05_579fentry40d-Data_05_579f
+	dw Data_05_579fentry40e-Data_05_579f
+	dw Data_05_579fentry40f-Data_05_579f
+	dw Data_05_579fentry410-Data_05_579f
+	dw Data_05_579fentry411-Data_05_579f
+	dw Data_05_579fentry412-Data_05_579f
+	dw Data_05_579fentry413-Data_05_579f
+	dw Data_05_579fentry414-Data_05_579f
+	dw Data_05_579fentry415-Data_05_579f
+	dw Data_05_579fentry416-Data_05_579f
+	dw Data_05_579fentry417-Data_05_579f
+	dw Data_05_579fentry418-Data_05_579f
+	dw Data_05_579fentry419-Data_05_579f
+	dw Data_05_579fentry41a-Data_05_579f
+	dw Data_05_579fentry41b-Data_05_579f
+	dw Data_05_579fentry41c-Data_05_579f
+	dw Data_05_579fentry41d-Data_05_579f
+	dw Data_05_579fentry41e-Data_05_579f
+	dw Data_05_579fentry41f-Data_05_579f
+	dw Data_05_579fentry420-Data_05_579f
+	dw Data_05_579fentry421-Data_05_579f
+	dw Data_05_579fentry422-Data_05_579f
+	dw Data_05_579fentry423-Data_05_579f
+	dw Data_05_579fentry424-Data_05_579f
+	dw Data_05_579fentry425-Data_05_579f
+	dw Data_05_579fentry426-Data_05_579f
+	dw Data_05_579fentry427-Data_05_579f
+	dw Data_05_579fentry428-Data_05_579f
+	dw Data_05_579fentry429-Data_05_579f
+	dw Data_05_579fentry42a-Data_05_579f
+	dw Data_05_579fentry42b-Data_05_579f
+	dw Data_05_579fentry42c-Data_05_579f
+	dw Data_05_579fentry42d-Data_05_579f
+	dw Data_05_579fentry42e-Data_05_579f
+	dw Data_05_579fentry42f-Data_05_579f
+	dw Data_05_579fentry430-Data_05_579f
+	dw Data_05_579fentry431-Data_05_579f
+	dw Data_05_579fentry432-Data_05_579f
+	dw Data_05_579fentry433-Data_05_579f
+	dw Data_05_579fentry434-Data_05_579f
+	dw Data_05_579fentry435-Data_05_579f
+	dw Data_05_579fentry436-Data_05_579f
+	dw Data_05_579fentry437-Data_05_579f
+	dw Data_05_579fentry438-Data_05_579f
+	dw Data_05_579fentry439-Data_05_579f
+	dw Data_05_579fentry43a-Data_05_579f
+	dw Data_05_579fentry43b-Data_05_579f
+	dw Data_05_579fentry43c-Data_05_579f
+	dw Data_05_579fentry43d-Data_05_579f
+	dw Data_05_579fentry43e-Data_05_579f
+	dw Data_05_579fentry43f-Data_05_579f
+	dw Data_05_579fentry440-Data_05_579f
+	dw Data_05_579fentry441-Data_05_579f
+	dw Data_05_579fentry442-Data_05_579f
+	dw Data_05_579fentry443-Data_05_579f
+	dw Data_05_579fentry444-Data_05_579f
+	dw Data_05_579fentry445-Data_05_579f
+	dw Data_05_579fentry446-Data_05_579f
+	dw Data_05_579fentry447-Data_05_579f
+	dw Data_05_579fentry448-Data_05_579f
+	dw Data_05_579fentry449-Data_05_579f
+	dw Data_05_579fentry44a-Data_05_579f
+	dw Data_05_579fentry44b-Data_05_579f
+	dw Data_05_579fentry44c-Data_05_579f
+	dw Data_05_579fentry44d-Data_05_579f
+	dw Data_05_579fentry44e-Data_05_579f
+	dw Data_05_579fentry44f-Data_05_579f
+	dw Data_05_579fentry450-Data_05_579f
+	dw Data_05_579fentry451-Data_05_579f
+	dw Data_05_579fentry452-Data_05_579f
+	dw Data_05_579fentry453-Data_05_579f
+	dw Data_05_579fentry454-Data_05_579f
+	dw Data_05_579fentry455-Data_05_579f
+	dw Data_05_579fentry456-Data_05_579f
+	dw Data_05_579fentry457-Data_05_579f
+	dw Data_05_579fentry458-Data_05_579f
+	dw Data_05_579fentry459-Data_05_579f
+	dw Data_05_579fentry45a-Data_05_579f
+	dw Data_05_579fentry45b-Data_05_579f
+	dw Data_05_579fentry45c-Data_05_579f
+	dw Data_05_579fentry45d-Data_05_579f
+	dw Data_05_579fentry45e-Data_05_579f
+	dw Data_05_579fentry45f-Data_05_579f
+	dw Data_05_579fentry460-Data_05_579f
+	dw Data_05_579fentry461-Data_05_579f
+	dw Data_05_579fentry462-Data_05_579f
+	dw Data_05_579fentry463-Data_05_579f
+	dw Data_05_579fentry464-Data_05_579f
+	dw Data_05_579fentry465-Data_05_579f
+	dw Data_05_579fentry466-Data_05_579f
+	dw Data_05_579fentry467-Data_05_579f
+	dw Data_05_579fentry468-Data_05_579f
+	dw Data_05_579fentry469-Data_05_579f
+	dw Data_05_579fentry46a-Data_05_579f
+	dw Data_05_579fentry46b-Data_05_579f
+	dw Data_05_579fentry46c-Data_05_579f
+	dw Data_05_579fentry46d-Data_05_579f
+	dw Data_05_579fentry46e-Data_05_579f
+	dw Data_05_579fentry46f-Data_05_579f
+	dw Data_05_579fentry470-Data_05_579f
+	dw Data_05_579fentry471-Data_05_579f
+	dw Data_05_579fentry472-Data_05_579f
+	dw Data_05_579fentry473-Data_05_579f
+	dw Data_05_579fentry474-Data_05_579f
+	dw Data_05_579fentry475-Data_05_579f
+	dw Data_05_579fentry476-Data_05_579f
+	dw Data_05_579fentry477-Data_05_579f
+	dw Data_05_579fentry478-Data_05_579f
+	dw Data_05_579fentry479-Data_05_579f
+	dw Data_05_579fentry47a-Data_05_579f
+	dw Data_05_579fentry47b-Data_05_579f
+	dw Data_05_579fentry47c-Data_05_579f
+	dw Data_05_579fentry47d-Data_05_579f
+	dw Data_05_579fentry47e-Data_05_579f
+	dw Data_05_579fentry47f-Data_05_579f
+	dw Data_05_579fentry480-Data_05_579f
+	dw Data_05_579fentry481-Data_05_579f
+	dw Data_05_579fentry482-Data_05_579f
+	dw Data_05_579fentry483-Data_05_579f
+	dw Data_05_579fentry484-Data_05_579f
+	dw Data_05_579fentry485-Data_05_579f
+	dw Data_05_579fentry486-Data_05_579f
+	dw Data_05_579fentry487-Data_05_579f
+	dw Data_05_579fentry488-Data_05_579f
+	dw Data_05_579fentry489-Data_05_579f
+	dw Data_05_579fentry48a-Data_05_579f
+	dw Data_05_579fentry48b-Data_05_579f
+	dw Data_05_579fentry48c-Data_05_579f
+	dw Data_05_579fentry48d-Data_05_579f
+	dw Data_05_579fentry48e-Data_05_579f
+	dw Data_05_579fentry48f-Data_05_579f
+	dw Data_05_579fentry490-Data_05_579f
+	dw Data_05_579fentry491-Data_05_579f
+	dw Data_05_579fentry492-Data_05_579f
+	dw Data_05_579fentry493-Data_05_579f
+	dw Data_05_579fentry494-Data_05_579f
+	dw Data_05_579fentry495-Data_05_579f
+	dw Data_05_579fentry496-Data_05_579f
+	dw Data_05_579fentry497-Data_05_579f
+	dw Data_05_579fentry498-Data_05_579f
+	dw Data_05_579fentry499-Data_05_579f
+	dw Data_05_579fentry49a-Data_05_579f
+	dw Data_05_579fentry49b-Data_05_579f
+	dw Data_05_579fentry49c-Data_05_579f
+	dw Data_05_579fentry49d-Data_05_579f
+	dw Data_05_579fentry49e-Data_05_579f
+	dw Data_05_579fentry49f-Data_05_579f
+	dw Data_05_579fentry4a0-Data_05_579f
+	dw Data_05_579fentry4a1-Data_05_579f
+	dw Data_05_579fentry4a2-Data_05_579f
+	dw Data_05_579fentry4a3-Data_05_579f
+	dw Data_05_579fentry4a4-Data_05_579f
+	dw Data_05_579fentry4a5-Data_05_579f
+	dw Data_05_579fentry4a6-Data_05_579f
+	dw Data_05_579fentry4a7-Data_05_579f
+	dw Data_05_579fentry4a8-Data_05_579f
+	dw Data_05_579fentry4a9-Data_05_579f
+	dw Data_05_579fentry4aa-Data_05_579f
+	dw Data_05_579fentry4ab-Data_05_579f
+	dw Data_05_579fentry4ac-Data_05_579f
+	dw Data_05_579fentry4ad-Data_05_579f
+	dw Data_05_579fentry4ae-Data_05_579f
+	dw Data_05_579fentry4af-Data_05_579f
+	dw Data_05_579fentry4b0-Data_05_579f
+	dw Data_05_579fentry4b1-Data_05_579f
+	dw Data_05_579fentry4b2-Data_05_579f
+	dw Data_05_579fentry4b3-Data_05_579f
+	dw Data_05_579fentry4b4-Data_05_579f
+	dw Data_05_579fentry4b5-Data_05_579f
+	dw Data_05_579fentry4b6-Data_05_579f
+	dw Data_05_579fentry4b7-Data_05_579f
+	dw Data_05_579fentry4b8-Data_05_579f
+	dw Data_05_579fentry4b9-Data_05_579f
+	dw Data_05_579fentry4ba-Data_05_579f
+	dw Data_05_579fentry4bb-Data_05_579f
+	dw Data_05_579fentry4bc-Data_05_579f
+	dw Data_05_579fentry4bd-Data_05_579f
+	dw Data_05_579fentry4be-Data_05_579f
+	dw Data_05_579fentry4bf-Data_05_579f
+	dw Data_05_579fentry4c0-Data_05_579f
+	dw Data_05_579fentry4c1-Data_05_579f
+	dw Data_05_579fentry4c2-Data_05_579f
+	dw Data_05_579fentry4c3-Data_05_579f
+	dw Data_05_579fentry4c4-Data_05_579f
+	dw Data_05_579fentry4c5-Data_05_579f
+	dw Data_05_579fentry4c6-Data_05_579f
+	dw Data_05_579fentry4c7-Data_05_579f
+	dw Data_05_579fentry4c8-Data_05_579f
+	dw Data_05_579fentry4c9-Data_05_579f
+	dw Data_05_579fentry4ca-Data_05_579f
+	dw Data_05_579fentry4cb-Data_05_579f
+	dw Data_05_579fentry4cc-Data_05_579f
+	dw Data_05_579fentry4cd-Data_05_579f
+	dw Data_05_579fentry4ce-Data_05_579f
+	dw Data_05_579fentry4cf-Data_05_579f
+	dw Data_05_579fentry4d0-Data_05_579f
+	dw Data_05_579fentry4d1-Data_05_579f
+	dw Data_05_579fentry4d2-Data_05_579f
+	dw Data_05_579fentry4d3-Data_05_579f
+	dw Data_05_579fentry4d4-Data_05_579f
+	dw Data_05_579fentry4d5-Data_05_579f
+	dw Data_05_579fentry4d6-Data_05_579f
+	dw Data_05_579fentry4d7-Data_05_579f
+	dw Data_05_579fentry4d8-Data_05_579f
+	dw Data_05_579fentry4d9-Data_05_579f
+	dw Data_05_579fentry4da-Data_05_579f
+	dw Data_05_579fentry4db-Data_05_579f
+	dw Data_05_579fentry4dc-Data_05_579f
+	dw Data_05_579fentry4dd-Data_05_579f
+	dw Data_05_579fentry4de-Data_05_579f
+	dw Data_05_579fentry4df-Data_05_579f
+	dw Data_05_579fentry4e0-Data_05_579f
+	dw Data_05_579fentry4e1-Data_05_579f
+	dw Data_05_579fentry4e2-Data_05_579f
+	dw Data_05_579fentry4e3-Data_05_579f
+	dw Data_05_579fentry4e4-Data_05_579f
+	dw Data_05_579fentry4e5-Data_05_579f
+	dw Data_05_579fentry4e6-Data_05_579f
+	dw Data_05_579fentry4e7-Data_05_579f
+	dw Data_05_579fentry4e8-Data_05_579f
+	dw Data_05_579fentry4e9-Data_05_579f
+	dw Data_05_579fentry4ea-Data_05_579f
+	dw Data_05_579fentry4eb-Data_05_579f
+	dw Data_05_579fentry4ec-Data_05_579f
+	dw Data_05_579fentry4ed-Data_05_579f
+	dw Data_05_579fentry4ee-Data_05_579f
+	dw Data_05_579fentry4ef-Data_05_579f
+	dw Data_05_579fentry4f0-Data_05_579f
+	dw Data_05_579fentry4f1-Data_05_579f
+	dw Data_05_579fentry4f2-Data_05_579f
+	dw Data_05_579fentry4f3-Data_05_579f
+	dw Data_05_579fentry4f4-Data_05_579f
+	dw Data_05_579fentry4f5-Data_05_579f
+	dw Data_05_579fentry4f6-Data_05_579f
+	dw Data_05_579fentry4f7-Data_05_579f
+	dw Data_05_579fentry4f8-Data_05_579f
+	dw Data_05_579fentry4f9-Data_05_579f
+	dw Data_05_579fentry4fa-Data_05_579f
+	dw Data_05_579fentry4fb-Data_05_579f
+	dw Data_05_579fentry4fc-Data_05_579f
+	dw Data_05_579fentry4fd-Data_05_579f
+	dw Data_05_579fentry4fe-Data_05_579f
+	dw Data_05_579fentry4ff-Data_05_579f
+else
 	nop                                              ; $579f: $00
 	ld   a, [bc]                                     ; $57a0: $0a
 	dec  b                                           ; $57a1: $05
@@ -6002,6 +7285,816 @@ jr_005_5f9d:
 
 jr_005_619e:
 	dec  de                                          ; $619e: $1b
+endc
+
+
+if def(VWF)
+
+Data_05_579fentry00::
+	db $1e, $35, $48, $39, $00
+Data_05_579fentry01::
+	db $2a, $39, $46, $3d, $43, $38, $00
+Data_05_579fentry02::
+	db $00
+Data_05_579fentry03::
+	db $00
+Data_05_579fentry04::
+	db $00
+Data_05_579fentry05::
+	db $00
+Data_05_579fentry06::
+	db $00
+Data_05_579fentry07::
+	db $00
+Data_05_579fentry08::
+	db $00
+Data_05_579fentry09::
+	db $00
+Data_05_579fentry0a::
+	db $00
+Data_05_579fentry0b::
+	db $00
+Data_05_579fentry0c::
+	db $00
+Data_05_579fentry0d::
+	db $00
+Data_05_579fentry0e::
+	db $00
+Data_05_579fentry0f::
+	db $00
+Data_05_579fentry10::
+	db $1b, $3a, $3a, $39, $37, $48, $3d, $43, $42, $10, $01, $0a, $10, $38, $49, $41, $41, $4d, $00
+Data_05_579fentry11::
+	db $1b, $3a, $3a, $39, $37, $48, $3d, $43, $42, $10, $01, $0a, $10, $2d, $35, $3f, $49, $46, $35, $00
+Data_05_579fentry12::
+	db $1b, $3a, $3a, $39, $37, $48, $3d, $43, $42, $10, $01, $0a, $10, $2d, $49, $41, $3d, $46, $39, $00
+Data_05_579fentry13::
+	db $1b, $3a, $3a, $39, $37, $48, $3d, $43, $42, $10, $01, $0a, $10, $27, $35, $46, $3d, $35, $00
+Data_05_579fentry14::
+	db $1b, $3a, $3a, $39, $37, $48, $3d, $43, $42, $10, $01, $0a, $10, $23, $46, $3d, $47, $00
+Data_05_579fentry15::
+	db $1b, $3a, $3a, $39, $37, $48, $3d, $43, $42, $10, $01, $0a, $10, $25, $43, $3c, $46, $35, $42, $00
+Data_05_579fentry16::
+	db $1b, $3a, $3a, $39, $37, $48, $3d, $43, $42, $10, $01, $0a, $10, $25, $35, $42, $42, $35, $00
+Data_05_579fentry17::
+	db $1b, $3a, $3a, $39, $37, $48, $3d, $43, $42, $10, $01, $0a, $10, $29, $46, $3d, $3c, $3d, $41, $39, $00
+Data_05_579fentry18::
+	db $1b, $3a, $3a, $39, $37, $48, $3d, $43, $42, $10, $01, $0a, $10, $2c, $39, $42, $3d, $00
+Data_05_579fentry19::
+	db $1b, $3a, $3a, $39, $37, $48, $3d, $43, $42, $10, $01, $0a, $10, $29, $3b, $35, $41, $3d, $00
+Data_05_579fentry1a::
+	db $1b, $3a, $3a, $39, $37, $48, $3d, $43, $42, $10, $01, $0a, $10, $33, $43, $42, $39, $38, $35, $00
+Data_05_579fentry1b::
+	db $1b, $3a, $3a, $39, $37, $48, $3d, $43, $42, $10, $01, $0a, $10, $1b, $4d, $35, $41, $39, $00
+Data_05_579fentry1c::
+	db $1b, $3a, $3a, $39, $37, $48, $3d, $43, $42, $10, $01, $0a, $10, $25, $35, $47, $49, $41, $3d, $00
+Data_05_579fentry1d::
+	db $1b, $3a, $3a, $39, $37, $48, $3d, $43, $42, $10, $01, $0a, $10, $33, $49, $46, $3d, $00
+Data_05_579fentry1e::
+	db $1b, $3a, $3a, $39, $37, $48, $3d, $43, $42, $10, $01, $0a, $10, $2e, $47, $49, $36, $35, $3f, $3d, $00
+Data_05_579fentry1f::
+	db $1b, $3a, $3a, $39, $37, $48, $3d, $43, $42, $10, $01, $0a, $10, $25, $35, $4d, $35, $41, $35, $00
+Data_05_579fentry20::
+	db $2d, $48, $35, $41, $3d, $42, $35, $00
+Data_05_579fentry21::
+	db $23, $42, $48, $39, $40, $40, $39, $37, $48, $00
+Data_05_579fentry22::
+	db $2d, $44, $3d, $46, $3d, $48, $10, $44, $43, $4b, $39, $46, $00
+Data_05_579fentry23::
+	db $21, $49, $48, $47, $00
+Data_05_579fentry24::
+	db $2d, $44, $39, $39, $38, $00
+Data_05_579fentry25::
+	db $1b, $37, $37, $49, $46, $35, $37, $4d, $00
+Data_05_579fentry26::
+	db $00
+Data_05_579fentry27::
+	db $00
+Data_05_579fentry28::
+	db $00
+Data_05_579fentry29::
+	db $00
+Data_05_579fentry2a::
+	db $00
+Data_05_579fentry2b::
+	db $00
+Data_05_579fentry2c::
+	db $00
+Data_05_579fentry2d::
+	db $00
+Data_05_579fentry2e::
+	db $00
+Data_05_579fentry2f::
+	db $00
+Data_05_579fentry30::
+	db $21, $46, $43, $4b, $48, $3c, $10, $1f, $4a, $39, $42, $48, $00
+Data_05_579fentry31::
+	db $2e, $46, $35, $3d, $42, $3d, $42, $3b, $10, $01, $0a, $10, $27, $43, $42, $00
+Data_05_579fentry32::
+	db $2e, $46, $35, $3d, $42, $3d, $42, $3b, $10, $01, $0a, $10, $2e, $49, $39, $47, $00
+Data_05_579fentry33::
+	db $2e, $46, $35, $3d, $42, $3d, $42, $3b, $10, $01, $0a, $10, $31, $39, $38, $00
+Data_05_579fentry34::
+	db $2e, $46, $35, $3d, $42, $3d, $42, $3b, $10, $01, $0a, $10, $2e, $3c, $49, $46, $47, $00
+Data_05_579fentry35::
+	db $2e, $46, $35, $3d, $42, $3d, $42, $3b, $10, $01, $0a, $10, $20, $46, $3d, $00
+Data_05_579fentry36::
+	db $00
+Data_05_579fentry37::
+	db $00
+Data_05_579fentry38::
+	db $00
+Data_05_579fentry39::
+	db $00
+Data_05_579fentry3a::
+	db $00
+Data_05_579fentry3b::
+	db $00
+Data_05_579fentry3c::
+	db $00
+Data_05_579fentry3d::
+	db $00
+Data_05_579fentry3e::
+	db $00
+Data_05_579fentry3f::
+	db $00
+Data_05_579fentry40::
+	db $1f, $4c, $44, $40, $43, $47, $3d, $43, $42, $e1, $10, $1e, $35, $4d, $10, $12, $00
+Data_05_579fentry41::
+	db $1f, $4c, $44, $40, $43, $47, $3d, $43, $42, $e1, $10, $1e, $35, $4d, $10, $13, $00
+Data_05_579fentry42::
+	db $2e, $46, $35, $3d, $42, $3d, $42, $3b, $10, $01, $0a, $10, $2d, $35, $3f, $49, $46, $35, $00
+Data_05_579fentry43::
+	db $2e, $46, $35, $3d, $42, $3d, $42, $3b, $10, $01, $0a, $10, $2d, $49, $41, $3d, $46, $39, $00
+Data_05_579fentry44::
+	db $2e, $46, $35, $3d, $42, $3d, $42, $3b, $10, $01, $0a, $10, $27, $35, $46, $3d, $35, $00
+Data_05_579fentry45::
+	db $2e, $46, $35, $3d, $42, $3d, $42, $3b, $10, $01, $0a, $10, $23, $46, $3d, $47, $00
+Data_05_579fentry46::
+	db $2e, $46, $35, $3d, $42, $3d, $42, $3b, $10, $01, $0a, $10, $25, $43, $3c, $46, $35, $42, $00
+Data_05_579fentry47::
+	db $2e, $46, $35, $3d, $42, $3d, $42, $3b, $10, $01, $0a, $10, $25, $35, $42, $42, $35, $00
+Data_05_579fentry48::
+	db $1b, $42, $3b, $46, $4d, $10, $38, $35, $4d, $10, $01, $0a, $10, $2d, $35, $3f, $49, $46, $35, $00
+Data_05_579fentry49::
+	db $1b, $42, $3b, $46, $4d, $10, $38, $35, $4d, $10, $01, $0a, $10, $2d, $49, $41, $3d, $46, $39, $00
+Data_05_579fentry4a::
+	db $1b, $42, $3b, $46, $4d, $10, $38, $35, $4d, $10, $01, $0a, $10, $27, $35, $46, $3d, $35, $00
+Data_05_579fentry4b::
+	db $1b, $42, $3b, $46, $4d, $10, $38, $35, $4d, $10, $01, $0a, $10, $23, $46, $3d, $47, $00
+Data_05_579fentry4c::
+	db $1b, $42, $3b, $46, $4d, $10, $38, $35, $4d, $10, $01, $0a, $10, $25, $43, $3c, $46, $35, $42, $00
+Data_05_579fentry4d::
+	db $1b, $42, $3b, $46, $4d, $10, $38, $35, $4d, $10, $01, $0a, $10, $25, $35, $42, $42, $35, $00
+Data_05_579fentry4e::
+	db $1b, $42, $3b, $39, $46, $10, $4a, $35, $40, $49, $39, $10, $01, $0a, $10, $2d, $35, $3f, $49, $46, $35, $00
+Data_05_579fentry4f::
+	db $1b, $42, $3b, $39, $46, $10, $4a, $35, $40, $49, $39, $10, $01, $0a, $10, $2d, $49, $41, $3d, $46, $39, $00
+Data_05_579fentry50::
+	db $1b, $42, $3b, $39, $46, $10, $4a, $35, $40, $49, $39, $10, $01, $0a, $10, $27, $35, $46, $3d, $35, $00
+Data_05_579fentry51::
+	db $1b, $42, $3b, $39, $46, $10, $4a, $35, $40, $49, $39, $10, $01, $0a, $10, $23, $46, $3d, $47, $00
+Data_05_579fentry52::
+	db $1b, $42, $3b, $39, $46, $10, $4a, $35, $40, $49, $39, $10, $01, $0a, $10, $25, $43, $3c, $46, $35, $42, $00
+Data_05_579fentry53::
+	db $1b, $42, $3b, $39, $46, $10, $4a, $35, $40, $49, $39, $10, $01, $0a, $10, $25, $35, $42, $42, $35, $00
+Data_05_579fentry54::
+	db $1c, $46, $43, $41, $3d, $38, $39, $10, $38, $35, $4d, $00
+Data_05_579fentry55::
+	db $30, $3d, $37, $48, $43, $46, $4d, $10, $3a, $40, $35, $3b, $00
+Data_05_579fentry56::
+	db $23, $37, $43, $42, $10, $38, $35, $48, $39, $00
+Data_05_579fentry57::
+	db $2e, $46, $35, $3d, $42, $3d, $42, $3b, $10, $37, $43, $49, $42, $48, $00
+Data_05_579fentry58::
+	db $2a, $46, $43, $44, $10, $46, $39, $44, $35, $3d, $46, $10, $38, $35, $4d, $00
+Data_05_579fentry59::
+	db $20, $43, $40, $38, $3d, $42, $3b, $10, $3a, $35, $42, $10, $38, $35, $4d, $00
+Data_05_579fentry5a::
+	db $2e, $46, $49, $48, $3c, $39, $46, $10, $38, $35, $4d, $00
+Data_05_579fentry5b::
+	db $1c, $43, $46, $47, $37, $3c, $48, $10, $38, $35, $4d, $00
+Data_05_579fentry5c::
+	db $2d, $35, $3f, $49, $46, $35, $10, $47, $3c, $43, $4b, $39, $46, $10, $38, $35, $4d, $00
+Data_05_579fentry5d::
+	db $25, $35, $42, $42, $35, $10, $3f, $3d, $48, $37, $3c, $39, $42, $10, $38, $35, $4d, $00
+Data_05_579fentry5e::
+	db $33, $49, $46, $3d, $10, $2d, $49, $41, $3d, $46, $39, $10, $47, $3c, $43, $44, $10, $38, $35, $4d, $00
+Data_05_579fentry5f::
+	db $23, $46, $3d, $47, $10, $47, $4b, $3d, $41, $10, $38, $35, $4d, $00
+Data_05_579fentry60::
+	db $2e, $39, $47, $48, $10, $44, $43, $3d, $42, $48, $00
+Data_05_579fentry61::
+	db $2d, $44, $43, $43, $42, $10, $38, $35, $4d, $00
+Data_05_579fentry62::
+	db $2a, $40, $35, $48, $39, $10, $47, $44, $3d, $42, $42, $3d, $42, $3b, $10, $38, $35, $4d, $00
+Data_05_579fentry63::
+	db $23, $46, $3d, $47, $10, $3d, $42, $4a, $3d, $48, $35, $48, $3d, $43, $42, $10, $38, $35, $4d, $00
+Data_05_579fentry64::
+	db $23, $46, $3d, $47, $10, $3d, $42, $4a, $3d, $48, $35, $48, $3d, $43, $42, $10, $38, $35, $4d, $10, $13, $00
+Data_05_579fentry65::
+	db $29, $3b, $35, $41, $3d, $10, $47, $49, $36, $47, $48, $3d, $48, $49, $48, $39, $10, $38, $35, $4d, $00
+Data_05_579fentry66::
+	db $23, $46, $3d, $47, $10, $3a, $35, $42, $41, $35, $3d, $40, $10, $38, $35, $4d, $00
+Data_05_579fentry67::
+	db $27, $35, $46, $3d, $35, $10, $3a, $35, $42, $41, $35, $3d, $40, $10, $38, $35, $4d, $00
+Data_05_579fentry68::
+	db $25, $35, $42, $42, $35, $10, $47, $3c, $43, $4b, $39, $46, $10, $38, $35, $4d, $00
+Data_05_579fentry69::
+	db $2c, $39, $3c, $39, $35, $46, $47, $35, $40, $10, $44, $46, $43, $41, $3d, $47, $39, $10, $38, $35, $4d, $00
+Data_05_579fentry6a::
+	db $2d, $49, $41, $3d, $46, $39, $10, $47, $4b, $3d, $41, $47, $49, $3d, $48, $10, $38, $35, $4d, $00
+Data_05_579fentry6b::
+	db $27, $35, $46, $3d, $35, $10, $3d, $42, $48, $39, $42, $47, $39, $10, $48, $46, $35, $3d, $42, $3d, $42, $3b, $10, $38, $35, $4d, $00
+Data_05_579fentry6c::
+	db $2d, $49, $41, $3d, $46, $39, $10, $47, $44, $3d, $38, $39, $46, $10, $38, $35, $4d, $00
+Data_05_579fentry6d::
+	db $27, $35, $46, $3d, $35, $10, $40, $39, $37, $48, $49, $46, $39, $10, $38, $35, $4d, $00
+Data_05_579fentry6e::
+	db $25, $43, $3c, $46, $35, $42, $10, $44, $46, $43, $41, $3d, $47, $39, $10, $13, $1b, $20, $14, $10, $38, $35, $4d, $00
+Data_05_579fentry6f::
+	db $2d, $35, $3f, $49, $46, $35, $10, $37, $40, $39, $35, $42, $3d, $42, $3b, $10, $38, $35, $4d, $00
+Data_05_579fentry70::
+	db $25, $43, $3c, $46, $35, $42, $10, $44, $46, $43, $41, $3d, $47, $39, $10, $12, $1b, $20, $12, $10, $38, $35, $4d, $00
+Data_05_579fentry71::
+	db $25, $35, $42, $42, $35, $10, $46, $39, $3c, $39, $35, $46, $47, $35, $40, $10, $38, $35, $4d, $00
+Data_05_579fentry72::
+	db $2e, $46, $35, $3d, $42, $3d, $42, $3b, $10, $36, $46, $39, $35, $3f, $00
+Data_05_579fentry73::
+	db $21, $46, $43, $4b, $48, $3c, $10, $44, $35, $48, $48, $39, $46, $42, $00
+Data_05_579fentry74::
+	db $25, $43, $3c, $46, $35, $42, $10, $39, $4a, $39, $42, $48, $10, $44, $43, $3d, $42, $48, $00
+Data_05_579fentry75::
+	db $27, $35, $46, $3d, $35, $10, $4b, $3d, $42, $38, $43, $4b, $10, $37, $40, $39, $35, $42, $10, $38, $35, $4d, $00
+Data_05_579fentry76::
+	db $27, $35, $46, $3d, $35, $10, $46, $39, $44, $35, $3d, $46, $10, $38, $35, $4d, $00
+Data_05_579fentry77::
+	db $00
+Data_05_579fentry78::
+	db $00
+Data_05_579fentry79::
+	db $00
+Data_05_579fentry7a::
+	db $00
+Data_05_579fentry7b::
+	db $00
+Data_05_579fentry7c::
+	db $00
+Data_05_579fentry7d::
+	db $00
+Data_05_579fentry7e::
+	db $00
+Data_05_579fentry7f::
+	db $00
+Data_05_579fentry80::
+	db $00
+Data_05_579fentry81::
+	db $00
+Data_05_579fentry82::
+	db $00
+Data_05_579fentry83::
+	db $00
+Data_05_579fentry84::
+	db $00
+Data_05_579fentry85::
+	db $00
+Data_05_579fentry86::
+	db $00
+Data_05_579fentry87::
+	db $00
+Data_05_579fentry88::
+	db $00
+Data_05_579fentry89::
+	db $00
+Data_05_579fentry8a::
+	db $00
+Data_05_579fentry8b::
+	db $00
+Data_05_579fentry8c::
+	db $00
+Data_05_579fentry8d::
+	db $00
+Data_05_579fentry8e::
+	db $00
+Data_05_579fentry8f::
+	db $00
+Data_05_579fentry90::
+	db $00
+Data_05_579fentry91::
+	db $00
+Data_05_579fentry92::
+	db $00
+Data_05_579fentry93::
+	db $00
+Data_05_579fentry94::
+	db $00
+Data_05_579fentry95::
+	db $00
+Data_05_579fentry96::
+	db $00
+Data_05_579fentry97::
+	db $00
+Data_05_579fentry98::
+	db $00
+Data_05_579fentry99::
+	db $00
+Data_05_579fentry9a::
+	db $00
+Data_05_579fentry9b::
+	db $00
+Data_05_579fentry9c::
+	db $00
+Data_05_579fentry9d::
+	db $00
+Data_05_579fentry9e::
+	db $00
+Data_05_579fentry9f::
+	db $00
+Data_05_579fentrya0::
+	db $00
+Data_05_579fentrya1::
+	db $00
+Data_05_579fentrya2::
+	db $00
+Data_05_579fentrya3::
+	db $00
+Data_05_579fentrya4::
+	db $00
+Data_05_579fentrya5::
+	db $00
+Data_05_579fentrya6::
+	db $00
+Data_05_579fentrya7::
+	db $00
+Data_05_579fentrya8::
+	db $00
+Data_05_579fentrya9::
+	db $00
+Data_05_579fentryaa::
+	db $00
+Data_05_579fentryab::
+	db $00
+Data_05_579fentryac::
+	db $00
+Data_05_579fentryad::
+	db $00
+Data_05_579fentryae::
+	db $00
+Data_05_579fentryaf::
+	db $00
+Data_05_579fentryb0::
+	db $00
+Data_05_579fentryb1::
+	db $00
+Data_05_579fentryb2::
+	db $00
+Data_05_579fentryb3::
+	db $00
+Data_05_579fentryb4::
+	db $00
+Data_05_579fentryb5::
+	db $00
+Data_05_579fentryb6::
+	db $00
+Data_05_579fentryb7::
+	db $00
+Data_05_579fentryb8::
+	db $00
+Data_05_579fentryb9::
+	db $00
+Data_05_579fentryba::
+	db $00
+Data_05_579fentrybb::
+	db $00
+Data_05_579fentrybc::
+	db $00
+Data_05_579fentrybd::
+	db $00
+Data_05_579fentrybe::
+	db $00
+Data_05_579fentrybf::
+	db $00
+Data_05_579fentryc0::
+	db $00
+Data_05_579fentryc1::
+	db $00
+Data_05_579fentryc2::
+	db $00
+Data_05_579fentryc3::
+	db $00
+Data_05_579fentryc4::
+	db $00
+Data_05_579fentryc5::
+	db $00
+Data_05_579fentryc6::
+	db $00
+Data_05_579fentryc7::
+	db $00
+Data_05_579fentryc8::
+	db $00
+Data_05_579fentryc9::
+	db $00
+Data_05_579fentryca::
+	db $00
+Data_05_579fentrycb::
+	db $00
+Data_05_579fentrycc::
+	db $00
+Data_05_579fentrycd::
+	db $00
+Data_05_579fentryce::
+	db $00
+Data_05_579fentrycf::
+	db $00
+Data_05_579fentryd0::
+	db $00
+Data_05_579fentryd1::
+	db $00
+Data_05_579fentryd2::
+	db $00
+Data_05_579fentryd3::
+	db $00
+Data_05_579fentryd4::
+	db $00
+Data_05_579fentryd5::
+	db $00
+Data_05_579fentryd6::
+	db $00
+Data_05_579fentryd7::
+	db $00
+Data_05_579fentryd8::
+	db $00
+Data_05_579fentryd9::
+	db $00
+Data_05_579fentryda::
+	db $00
+Data_05_579fentrydb::
+	db $00
+Data_05_579fentrydc::
+	db $00
+Data_05_579fentrydd::
+	db $00
+Data_05_579fentryde::
+	db $00
+Data_05_579fentrydf::
+	db $00
+Data_05_579fentrye0::
+	db $21, $46, $43, $4b, $48, $3c, $10, $01, $0a, $10, $2d, $35, $3f, $49, $46, $35, $00
+Data_05_579fentrye1::
+	db $21, $46, $43, $4b, $48, $3c, $10, $01, $0a, $10, $2d, $49, $41, $3d, $46, $39, $00
+Data_05_579fentrye2::
+	db $21, $46, $43, $4b, $48, $3c, $10, $01, $0a, $10, $27, $35, $46, $3d, $35, $00
+Data_05_579fentrye3::
+	db $21, $46, $43, $4b, $48, $3c, $10, $01, $0a, $10, $23, $46, $3d, $47, $00
+Data_05_579fentrye4::
+	db $21, $46, $43, $4b, $48, $3c, $10, $01, $0a, $10, $25, $43, $3c, $46, $35, $42, $00
+Data_05_579fentrye5::
+	db $21, $46, $43, $4b, $48, $3c, $10, $01, $0a, $10, $25, $35, $42, $42, $35, $00
+Data_05_579fentrye6::
+	db $21, $46, $43, $4b, $48, $3c, $10, $47, $48, $35, $3b, $39, $10, $01, $0a, $10, $2d, $35, $3f, $49, $46, $35, $00
+Data_05_579fentrye7::
+	db $21, $46, $43, $4b, $48, $3c, $10, $47, $48, $35, $3b, $39, $10, $01, $0a, $10, $2d, $49, $41, $3d, $46, $39, $00
+Data_05_579fentrye8::
+	db $21, $46, $43, $4b, $48, $3c, $10, $47, $48, $35, $3b, $39, $10, $01, $0a, $10, $27, $35, $46, $3d, $35, $00
+Data_05_579fentrye9::
+	db $21, $46, $43, $4b, $48, $3c, $10, $47, $48, $35, $3b, $39, $10, $01, $0a, $10, $23, $46, $3d, $47, $00
+Data_05_579fentryea::
+	db $21, $46, $43, $4b, $48, $3c, $10, $47, $48, $35, $3b, $39, $10, $01, $0a, $10, $25, $43, $3c, $46, $35, $42, $00
+Data_05_579fentryeb::
+	db $21, $46, $43, $4b, $48, $3c, $10, $47, $48, $35, $3b, $39, $10, $01, $0a, $10, $25, $35, $42, $42, $35, $00
+Data_05_579fentryec::
+	db $00
+Data_05_579fentryed::
+	db $00
+Data_05_579fentryee::
+	db $00
+Data_05_579fentryef::
+	db $00
+Data_05_579fentryf0::
+	db $00
+Data_05_579fentryf1::
+	db $00
+Data_05_579fentryf2::
+	db $00
+Data_05_579fentryf3::
+	db $00
+Data_05_579fentryf4::
+	db $00
+Data_05_579fentryf5::
+	db $00
+Data_05_579fentryf6::
+	db $00
+Data_05_579fentryf7::
+	db $00
+Data_05_579fentryf8::
+	db $2a, $46, $39, $47, $39, $42, $48, $10, $44, $43, $3d, $42, $48, $00
+Data_05_579fentryf9::
+	db $00
+Data_05_579fentryfa::
+	db $1b, $46, $3b, $49, $41, $39, $42, $48, $12, $00
+Data_05_579fentryfb::
+	db $1b, $46, $3b, $49, $41, $39, $42, $48, $13, $00
+Data_05_579fentryfc::
+	db $22, $3d, $42, $48, $10, $3d, $37, $43, $42, $00
+Data_05_579fentryfd::
+	db $00
+Data_05_579fentryfe::
+	db $2b, $49, $3d, $4e, $10, $40, $43, $43, $44, $00
+Data_05_579fentryff::
+	db $2a, $43, $3d, $42, $48, $47, $00
+Data_05_579fentry100::
+	db $2d, $35, $3f, $49, $46, $35, $10, $37, $40, $39, $35, $42, $3d, $42, $3b, $00
+Data_05_579fentry101::
+	db $2d, $35, $3f, $49, $46, $35, $10, $37, $35, $37, $48, $49, $47, $00
+Data_05_579fentry102::
+	db $33, $49, $46, $3d, $10, $2d, $35, $3f, $49, $46, $35, $10, $37, $40, $39, $35, $42, $3d, $42, $3b, $00
+Data_05_579fentry103::
+	db $2d, $49, $46, $44, $46, $3d, $47, $39, $10, $38, $39, $48, $39, $46, $3b, $39, $42, $48, $00
+Data_05_579fentry104::
+	db $2d, $35, $3f, $49, $46, $35, $10, $47, $3c, $43, $4b, $39, $46, $10, $12, $00
+Data_05_579fentry105::
+	db $2d, $35, $3f, $49, $46, $35, $10, $47, $3c, $43, $4b, $39, $46, $10, $44, $39, $39, $44, $10, $12, $00
+Data_05_579fentry106::
+	db $2a, $39, $39, $44, $3d, $42, $3b, $00
+Data_05_579fentry107::
+	db $27, $35, $46, $3d, $35, $10, $4b, $3d, $42, $38, $43, $4b, $10, $37, $40, $39, $35, $42, $3d, $42, $3b, $00
+Data_05_579fentry108::
+	db $2d, $35, $3f, $49, $46, $35, $10, $40, $35, $46, $3b, $39, $10, $44, $46, $43, $44, $00
+Data_05_579fentry109::
+	db $2d, $35, $3f, $49, $46, $35, $10, $40, $35, $46, $3b, $39, $10, $44, $46, $43, $44, $10, $29, $25, $00
+Data_05_579fentry10a::
+	db $2d, $35, $3f, $49, $46, $35, $10, $37, $3c, $35, $46, $41, $00
+Data_05_579fentry10b::
+	db $1c, $40, $43, $43, $38, $10, $48, $4d, $44, $39, $10, $3a, $43, $46, $48, $49, $42, $39, $00
+Data_05_579fentry10c::
+	db $2d, $35, $3f, $49, $46, $35, $10, $47, $41, $35, $40, $40, $10, $38, $35, $48, $39, $00
+Data_05_579fentry10d::
+	db $2d, $35, $3f, $49, $46, $35, $10, $3a, $35, $48, $3c, $39, $46, $10, $47, $48, $43, $46, $4d, $00
+Data_05_579fentry10e::
+	db $2d, $35, $3f, $49, $46, $35, $10, $41, $39, $38, $3d, $49, $41, $10, $39, $4a, $39, $42, $48, $00
+Data_05_579fentry10f::
+	db $2d, $35, $3f, $49, $46, $35, $10, $41, $35, $3e, $43, $46, $10, $39, $4a, $39, $42, $48, $00
+Data_05_579fentry110::
+	db $2d, $35, $3f, $49, $46, $35, $10, $41, $35, $3e, $43, $46, $10, $38, $35, $48, $39, $00
+Data_05_579fentry111::
+	db $25, $35, $4d, $35, $41, $35, $10, $2d, $35, $3f, $49, $46, $35, $10, $45, $49, $3d, $4e, $00
+Data_05_579fentry112::
+	db $2d, $35, $3f, $49, $46, $35, $10, $39, $42, $38, $3d, $42, $3b, $00
+Data_05_579fentry113::
+	db $2d, $49, $41, $3d, $46, $39, $10, $41, $43, $48, $3c, $39, $46, $00
+Data_05_579fentry114::
+	db $2d, $49, $41, $3d, $46, $39, $10, $44, $49, $42, $3d, $47, $3c, $41, $39, $42, $48, $00
+Data_05_579fentry115::
+	db $2d, $49, $41, $3d, $46, $39, $10, $44, $49, $42, $3d, $47, $3c, $41, $39, $42, $48, $10, $29, $25, $00
+Data_05_579fentry116::
+	db $2d, $49, $41, $3d, $46, $39, $10, $44, $49, $42, $3d, $47, $3c, $41, $39, $42, $48, $10, $13, $00
+Data_05_579fentry117::
+	db $2d, $49, $41, $3d, $46, $39, $10, $44, $49, $42, $3d, $47, $3c, $41, $39, $42, $48, $10, $13, $10, $29, $25, $00
+Data_05_579fentry118::
+	db $33, $49, $46, $3d, $10, $2d, $49, $41, $3d, $46, $39, $10, $47, $3c, $43, $44, $44, $3d, $42, $3b, $00
+Data_05_579fentry119::
+	db $2d, $49, $41, $3d, $46, $39, $10, $47, $4b, $3d, $41, $47, $49, $3d, $48, $10, $12, $00
+Data_05_579fentry11a::
+	db $2d, $49, $41, $3d, $46, $39, $10, $47, $4b, $3d, $41, $47, $49, $3d, $48, $10, $12, $10, $29, $25, $00
+Data_05_579fentry11b::
+	db $1e, $39, $40, $3d, $37, $3d, $43, $49, $47, $10, $48, $39, $35, $00
+Data_05_579fentry11c::
+	db $2d, $49, $41, $3d, $46, $39, $10, $47, $3c, $43, $4b, $39, $46, $10, $12, $00
+Data_05_579fentry11d::
+	db $2c, $39, $3c, $39, $35, $46, $47, $35, $40, $10, $44, $46, $43, $41, $3d, $47, $39, $00
+Data_05_579fentry11e::
+	db $2c, $39, $3c, $39, $35, $46, $47, $35, $40, $10, $44, $46, $43, $41, $3d, $47, $39, $10, $29, $25, $00
+Data_05_579fentry11f::
+	db $2d, $49, $41, $3d, $46, $39, $10, $47, $41, $35, $40, $40, $10, $38, $35, $48, $39, $00
+Data_05_579fentry120::
+	db $2d, $49, $41, $3d, $46, $39, $10, $47, $44, $3d, $38, $39, $46, $00
+Data_05_579fentry121::
+	db $25, $35, $4d, $35, $41, $35, $10, $2d, $49, $41, $3d, $46, $39, $10, $45, $49, $3d, $4e, $00
+Data_05_579fentry122::
+	db $2d, $49, $41, $3d, $46, $39, $10, $39, $42, $38, $3d, $42, $3b, $00
+Data_05_579fentry123::
+	db $25, $43, $3c, $46, $35, $42, $10, $44, $46, $43, $41, $3d, $47, $39, $10, $12, $1b, $20, $12, $00
+Data_05_579fentry124::
+	db $25, $43, $3c, $46, $35, $42, $10, $44, $46, $43, $41, $3d, $47, $39, $10, $13, $1b, $20, $14, $00
+Data_05_579fentry125::
+	db $25, $43, $3c, $46, $35, $42, $10, $44, $46, $43, $41, $3d, $47, $39, $10, $13, $1b, $20, $14, $10, $29, $25, $00
+Data_05_579fentry126::
+	db $33, $49, $46, $3d, $10, $46, $49, $41, $43, $46, $10, $25, $43, $3c, $46, $35, $42, $10, $12, $00
+Data_05_579fentry127::
+	db $2e, $46, $49, $48, $3c, $39, $46, $10, $44, $46, $43, $41, $3d, $47, $39, $00
+Data_05_579fentry128::
+	db $25, $43, $3c, $46, $35, $42, $10, $44, $46, $43, $41, $3d, $47, $39, $10, $48, $46, $49, $48, $3c, $39, $46, $10, $29, $25, $00
+Data_05_579fentry129::
+	db $27, $46, $2c, $43, $41, $35, $42, $37, $39, $00
+Data_05_579fentry12a::
+	db $25, $43, $3c, $46, $35, $42, $10, $47, $41, $35, $40, $40, $10, $38, $35, $48, $39, $00
+Data_05_579fentry12b::
+	db $25, $43, $3c, $46, $35, $42, $10, $39, $4c, $44, $40, $43, $47, $3d, $43, $42, $10, $42, $f2, $12, $00
+Data_05_579fentry12c::
+	db $25, $43, $3c, $46, $35, $42, $10, $44, $40, $35, $48, $39, $10, $47, $44, $3d, $42, $00
+Data_05_579fentry12d::
+	db $25, $43, $3c, $46, $35, $42, $10, $44, $40, $35, $48, $39, $10, $47, $44, $3d, $42, $10, $29, $25, $00
+Data_05_579fentry12e::
+	db $20, $35, $42, $37, $4d, $10, $44, $40, $35, $48, $39, $47, $00
+Data_05_579fentry12f::
+	db $25, $43, $3c, $46, $35, $42, $10, $3b, $43, $43, $38, $10, $47, $48, $43, $46, $4d, $00
+Data_05_579fentry130::
+	db $25, $43, $3c, $46, $35, $42, $10, $39, $4c, $44, $40, $43, $47, $3d, $43, $42, $10, $12, $00
+Data_05_579fentry131::
+	db $25, $43, $3c, $46, $35, $42, $10, $39, $4c, $44, $40, $43, $47, $3d, $43, $42, $10, $13, $00
+Data_05_579fentry132::
+	db $25, $43, $3c, $46, $35, $42, $10, $39, $4c, $44, $40, $43, $47, $3d, $43, $42, $10, $14, $00
+Data_05_579fentry133::
+	db $25, $43, $3c, $46, $35, $42, $10, $41, $39, $38, $3d, $49, $41, $10, $39, $4a, $39, $42, $48, $00
+Data_05_579fentry134::
+	db $25, $43, $3c, $46, $35, $42, $10, $41, $35, $3e, $43, $46, $10, $39, $4a, $39, $42, $48, $00
+Data_05_579fentry135::
+	db $25, $43, $3c, $46, $35, $42, $10, $41, $35, $3e, $43, $46, $10, $38, $35, $48, $39, $00
+Data_05_579fentry136::
+	db $2e, $46, $49, $48, $3c, $39, $46, $10, $44, $46, $43, $41, $3d, $47, $39, $10, $29, $25, $00
+Data_05_579fentry137::
+	db $25, $35, $4d, $35, $41, $35, $10, $25, $43, $3c, $46, $35, $42, $10, $45, $49, $3d, $4e, $00
+Data_05_579fentry138::
+	db $25, $43, $3c, $46, $35, $42, $10, $39, $42, $38, $3d, $42, $3b, $00
+Data_05_579fentry139::
+	db $23, $46, $3d, $47, $10, $3d, $42, $4a, $3d, $48, $35, $48, $3d, $43, $42, $00
+Data_05_579fentry13a::
+	db $23, $46, $3d, $47, $10, $3d, $42, $4a, $3d, $48, $35, $48, $3d, $43, $42, $10, $29, $25, $00
+Data_05_579fentry13b::
+	db $23, $46, $3d, $47, $10, $3a, $35, $42, $41, $35, $3d, $40, $00
+Data_05_579fentry13c::
+	db $23, $46, $3d, $47, $10, $3a, $35, $42, $41, $35, $3d, $40, $10, $29, $25, $00
+Data_05_579fentry13d::
+	db $23, $46, $3d, $47, $10, $38, $3d, $35, $46, $4d, $10, $46, $39, $35, $38, $00
+Data_05_579fentry13e::
+	db $23, $46, $3d, $47, $10, $38, $3d, $35, $46, $4d, $10, $49, $42, $46, $39, $35, $38, $00
+Data_05_579fentry13f::
+	db $23, $46, $3d, $47, $10, $38, $3d, $35, $46, $4d, $10, $48, $46, $35, $47, $3c, $00
+Data_05_579fentry140::
+	db $23, $46, $3d, $47, $10, $3d, $42, $4a, $3d, $48, $35, $48, $3d, $43, $42, $10, $13, $00
+Data_05_579fentry141::
+	db $23, $46, $3d, $47, $10, $3d, $42, $4a, $3d, $48, $35, $48, $3d, $43, $42, $10, $13, $10, $29, $25, $00
+Data_05_579fentry142::
+	db $23, $46, $3d, $47, $10, $47, $3c, $43, $4b, $39, $46, $00
+Data_05_579fentry143::
+	db $1e, $3d, $38, $42, $48, $10, $40, $43, $43, $3f, $10, $35, $3a, $48, $39, $46, $00
+Data_05_579fentry144::
+	db $23, $46, $3d, $47, $10, $47, $41, $35, $40, $40, $10, $38, $35, $48, $39, $00
+Data_05_579fentry145::
+	db $23, $46, $3d, $47, $10, $44, $40, $35, $4d, $48, $3d, $41, $39, $10, $12, $00
+Data_05_579fentry146::
+	db $23, $46, $3d, $47, $10, $45, $49, $3d, $4e, $00
+Data_05_579fentry147::
+	db $23, $46, $3d, $47, $10, $47, $4b, $3d, $41, $47, $49, $3d, $48, $00
+Data_05_579fentry148::
+	db $23, $46, $3d, $47, $10, $44, $46, $39, $47, $39, $42, $48, $10, $3c, $3d, $42, $48, $10, $29, $25, $00
+Data_05_579fentry149::
+	db $23, $46, $3d, $47, $10, $47, $4b, $3d, $41, $47, $49, $3d, $48, $10, $29, $25, $00
+Data_05_579fentry14a::
+	db $25, $35, $4d, $35, $41, $35, $10, $23, $46, $3d, $47, $10, $45, $49, $3d, $4e, $00
+Data_05_579fentry14b::
+	db $23, $46, $3d, $47, $10, $41, $39, $38, $3d, $49, $41, $10, $39, $4a, $39, $42, $48, $00
+Data_05_579fentry14c::
+	db $23, $46, $3d, $47, $10, $41, $35, $3e, $43, $46, $10, $39, $4a, $39, $42, $48, $00
+Data_05_579fentry14d::
+	db $23, $46, $3d, $47, $10, $41, $35, $3e, $43, $46, $10, $38, $35, $48, $39, $00
+Data_05_579fentry14e::
+	db $23, $46, $3d, $47, $10, $39, $42, $38, $3d, $42, $3b, $00
+Data_05_579fentry14f::
+	db $2b, $49, $3d, $4e, $10, $45, $49, $39, $47, $48, $3d, $43, $42, $10, $12, $00
+Data_05_579fentry150::
+	db $2b, $49, $3d, $4e, $10, $45, $49, $39, $47, $48, $3d, $43, $42, $10, $13, $00
+Data_05_579fentry151::
+	db $2b, $49, $3d, $4e, $10, $45, $49, $39, $47, $48, $3d, $43, $42, $10, $14, $00
+Data_05_579fentry152::
+	db $2b, $49, $3d, $4e, $10, $45, $49, $39, $47, $48, $3d, $43, $42, $10, $15, $00
+Data_05_579fentry153::
+	db $2b, $49, $3d, $4e, $10, $45, $49, $39, $47, $48, $3d, $43, $42, $10, $16, $00
+Data_05_579fentry154::
+	db $2b, $49, $3d, $4e, $10, $45, $49, $39, $47, $48, $3d, $43, $42, $10, $17, $00
+Data_05_579fentry155::
+	db $2b, $49, $3d, $4e, $10, $45, $49, $39, $47, $48, $3d, $43, $42, $10, $18, $00
+Data_05_579fentry156::
+	db $2b, $49, $3d, $4e, $10, $45, $49, $39, $47, $48, $3d, $43, $42, $10, $19, $00
+Data_05_579fentry157::
+	db $2b, $49, $3d, $4e, $10, $45, $49, $39, $47, $48, $3d, $43, $42, $10, $1a, $00
+Data_05_579fentry158::
+	db $2b, $49, $3d, $4e, $10, $13, $10, $45, $49, $39, $47, $48, $3d, $43, $42, $10, $12, $00
+Data_05_579fentry159::
+	db $2b, $49, $3d, $4e, $10, $13, $10, $45, $49, $39, $47, $48, $3d, $43, $42, $10, $13, $00
+Data_05_579fentry15a::
+	db $2b, $49, $3d, $4e, $10, $13, $10, $45, $49, $39, $47, $48, $3d, $43, $42, $10, $14, $00
+Data_05_579fentry15b::
+	db $2b, $49, $3d, $4e, $10, $13, $10, $45, $49, $39, $47, $48, $3d, $43, $42, $10, $15, $00
+Data_05_579fentry15c::
+	db $2b, $49, $3d, $4e, $10, $13, $10, $45, $49, $39, $47, $48, $3d, $43, $42, $10, $16, $00
+Data_05_579fentry15d::
+	db $2b, $49, $3d, $4e, $10, $13, $10, $45, $49, $39, $47, $48, $3d, $43, $42, $10, $17, $00
+Data_05_579fentry15e::
+	db $2b, $49, $3d, $4e, $10, $13, $10, $45, $49, $39, $47, $48, $3d, $43, $42, $10, $18, $00
+Data_05_579fentry15f::
+	db $2b, $49, $3d, $4e, $10, $13, $10, $45, $49, $39, $47, $48, $3d, $43, $42, $10, $19, $00
+Data_05_579fentry160::
+	db $2b, $49, $3d, $4e, $10, $13, $10, $45, $49, $39, $47, $48, $3d, $43, $42, $10, $1a, $00
+Data_05_579fentry161::
+	db $27, $35, $46, $3d, $35, $10, $46, $39, $44, $35, $3d, $46, $10, $47, $49, $37, $37, $39, $47, $47, $00
+Data_05_579fentry162::
+	db $27, $35, $46, $3d, $35, $10, $46, $39, $44, $35, $3d, $46, $10, $3a, $35, $3d, $40, $00
+Data_05_579fentry163::
+	db $27, $35, $46, $3d, $35, $10, $36, $43, $43, $3f, $00
+Data_05_579fentry164::
+	db $27, $35, $46, $3d, $35, $10, $3d, $42, $48, $39, $42, $47, $39, $10, $48, $46, $35, $3d, $42, $3d, $42, $3b, $00
+Data_05_579fentry165::
+	db $27, $35, $46, $3d, $35, $10, $3d, $42, $48, $39, $42, $47, $39, $10, $48, $46, $35, $3d, $42, $3d, $42, $3b, $10, $29, $25, $00
+Data_05_579fentry166::
+	db $27, $35, $46, $3d, $35, $10, $4b, $3d, $42, $38, $43, $4b, $10, $37, $40, $39, $35, $42, $3d, $42, $3b, $00
+Data_05_579fentry167::
+	db $27, $35, $46, $3d, $35, $10, $40, $39, $37, $48, $49, $46, $39, $00
+Data_05_579fentry168::
+	db $27, $35, $46, $3d, $35, $10, $3a, $35, $42, $41, $35, $3d, $40, $00
+Data_05_579fentry169::
+	db $27, $35, $46, $3d, $35, $10, $3a, $35, $42, $41, $35, $3d, $40, $10, $29, $25, $00
+Data_05_579fentry16a::
+	db $27, $35, $46, $3d, $35, $10, $40, $43, $37, $3f, $39, $48, $00
+Data_05_579fentry16b::
+	db $25, $35, $42, $42, $35, $10, $44, $46, $43, $44, $10, $36, $46, $39, $35, $3f, $00
+Data_05_579fentry16c::
+	db $27, $35, $46, $3d, $35, $10, $40, $43, $37, $3f, $39, $46, $00
+Data_05_579fentry16d::
+	db $27, $35, $46, $3d, $35, $10, $40, $43, $37, $3f, $39, $46, $10, $29, $25, $00
+Data_05_579fentry16e::
+	db $1f, $35, $48, $10, $36, $43, $46, $47, $37, $3c, $48, $00
+Data_05_579fentry16f::
+	db $27, $35, $46, $3d, $35, $10, $47, $41, $35, $40, $40, $10, $38, $35, $48, $39, $00
+Data_05_579fentry170::
+	db $27, $35, $46, $3d, $35, $10, $3c, $3d, $47, $48, $43, $46, $4d, $00
+Data_05_579fentry171::
+	db $27, $35, $46, $3d, $35, $10, $36, $43, $46, $47, $37, $3c, $48, $10, $37, $43, $43, $3f, $3d, $42, $3b, $00
+Data_05_579fentry172::
+	db $27, $35, $46, $3d, $35, $10, $36, $43, $46, $47, $37, $3c, $48, $10, $37, $43, $43, $3f, $3d, $42, $3b, $10, $29, $25, $00
+Data_05_579fentry173::
+	db $27, $35, $46, $3d, $35, $10, $44, $46, $39, $47, $39, $42, $48, $10, $3c, $3d, $42, $48, $10, $29, $25, $00
+Data_05_579fentry174::
+	db $27, $35, $46, $3d, $35, $10, $45, $49, $3d, $4e, $00
+Data_05_579fentry175::
+	db $27, $35, $46, $3d, $35, $10, $41, $39, $38, $3d, $49, $41, $10, $39, $4a, $39, $42, $48, $00
+Data_05_579fentry176::
+	db $27, $35, $46, $3d, $35, $10, $41, $35, $3e, $43, $46, $10, $39, $4a, $39, $42, $48, $00
+Data_05_579fentry177::
+	db $27, $35, $46, $3d, $35, $10, $41, $35, $3e, $43, $46, $10, $38, $35, $48, $39, $00
+Data_05_579fentry178::
+	db $27, $35, $46, $3d, $35, $10, $39, $42, $38, $3d, $42, $3b, $00
+Data_05_579fentry179::
+	db $25, $35, $4d, $35, $41, $35, $10, $27, $35, $46, $3d, $35, $10, $45, $49, $3d, $4e, $00
+Data_05_579fentry17a::
+	db $25, $35, $42, $42, $35, $10, $47, $3c, $43, $4b, $39, $46, $00
+Data_05_579fentry17b::
+	db $25, $35, $42, $42, $35, $10, $47, $3c, $43, $4b, $39, $46, $10, $29, $25, $00
+Data_05_579fentry17c::
+	db $25, $35, $4d, $35, $41, $35, $10, $25, $35, $42, $42, $35, $10, $45, $49, $3d, $4e, $00
+Data_05_579fentry17d::
+	db $25, $35, $42, $42, $35, $10, $3f, $3d, $48, $37, $3c, $39, $42, $00
+Data_05_579fentry17e::
+	db $25, $35, $42, $42, $35, $10, $3f, $3d, $48, $37, $3c, $39, $42, $10, $29, $25, $00
+Data_05_579fentry17f::
+	db $25, $35, $42, $42, $35, $10, $46, $39, $3c, $39, $35, $46, $47, $35, $40, $00
+Data_05_579fentry180::
+	db $25, $35, $42, $42, $35, $10, $46, $39, $3c, $39, $35, $46, $47, $35, $40, $10, $29, $25, $00
+Data_05_579fentry181::
+	db $25, $35, $42, $42, $35, $10, $44, $46, $43, $44, $10, $36, $46, $39, $35, $3f, $00
+Data_05_579fentry182::
+	db $25, $35, $42, $42, $35, $10, $40, $3d, $3f, $39, $47, $10, $3f, $3d, $38, $47, $00
+Data_05_579fentry183::
+	db $25, $35, $42, $42, $35, $10, $40, $3d, $3f, $39, $47, $10, $3f, $3d, $38, $47, $10, $29, $25, $00
+Data_05_579fentry184::
+	db $25, $35, $42, $42, $35, $10, $37, $43, $43, $3f, $3d, $42, $3b, $00
+Data_05_579fentry185::
+	db $25, $35, $42, $42, $35, $10, $47, $41, $35, $40, $40, $10, $38, $35, $48, $39, $00
+Data_05_579fentry186::
+	db $25, $35, $42, $42, $35, $10, $38, $35, $38, $10, $47, $48, $43, $46, $4d, $00
+Data_05_579fentry187::
+	db $25, $35, $42, $42, $35, $10, $44, $46, $39, $47, $39, $42, $48, $10, $3c, $3d, $42, $48, $10, $29, $25, $00
+Data_05_579fentry188::
+	db $25, $35, $42, $42, $35, $10, $37, $43, $43, $3f, $3d, $42, $3b, $10, $29, $25, $00
+Data_05_579fentry189::
+	db $25, $35, $42, $42, $35, $10, $41, $39, $38, $3d, $49, $41, $10, $39, $4a, $39, $42, $48, $00
+Data_05_579fentry18a::
+	db $25, $35, $42, $42, $35, $10, $41, $35, $3e, $43, $46, $10, $39, $4a, $39, $42, $48, $00
+Data_05_579fentry18b::
+	db $25, $35, $42, $42, $35, $10, $41, $35, $3e, $43, $46, $10, $38, $35, $48, $39, $00
+Data_05_579fentry18c::
+	db $25, $35, $42, $42, $35, $10, $39, $42, $38, $3d, $42, $3b, $00
+Data_05_579fentry18d::
+	db $25, $35, $42, $42, $35, $10, $38, $35, $4d, $10, $13, $00
+Data_05_579fentry18e::
+	db $25, $35, $42, $42, $35, $10, $38, $35, $4d, $10, $14, $00
+Data_05_579fentry18f::
+	db $29, $3b, $35, $41, $3d, $10, $39, $42, $38, $3d, $42, $3b, $00
+
+
+	ds $72e6-@, 0
+
+else
 	inc  b                                           ; $619f: $04
 	xor  d                                           ; $61a0: $aa
 	inc  b                                           ; $61a1: $04
@@ -10296,6 +12389,8 @@ jr_005_6e18:
 	nop                                              ; $72e4: $00
 	nop                                              ; $72e5: $00
 
+endc
+
 Jump_005_72e6:
 	ld   a, [wWramBank]                                  ; $72e6: $fa $93 $c2
 	push af                                          ; $72e9: $f5
@@ -11164,7 +13259,7 @@ Func_05_785b::
 	ld   [$cc69], a                                  ; $785c: $ea $69 $cc
 	ld   a, l                                        ; $785f: $7d
 	ld   [$cc6a], a                                  ; $7860: $ea $6a $cc
-	ld   a, GS_43                                      ; $7863: $3e $43
+	ld   a, GS_FLAG_SETTINGS                                      ; $7863: $3e $43
 	ld   [wGameState], a                                  ; $7865: $ea $a0 $c2
 	xor  a                                           ; $7868: $af
 	ld   [wGameSubstate], a                                  ; $7869: $ea $a1 $c2
@@ -11197,8 +13292,998 @@ jr_005_787f:
 
 if def(VWF)
 
-Gfx_EnDormRoomDayDetails::
-	INCBIN "en_dormRoomDayDetails.2bpp"
-.end::
+Data_05_579fentry190::
+	db $2d, $49, $41, $3d, $46, $39, $10, $41, $43, $48, $3c, $39, $46, $10, $29, $25, $00
+Data_05_579fentry191::
+	db $2d, $49, $41, $3d, $46, $39, $10, $41, $35, $3e, $43, $46, $10, $38, $35, $48, $39, $00
+Data_05_579fentry192::
+	db $2d, $49, $41, $3d, $46, $39, $10, $38, $35, $4d, $10, $13, $00
+Data_05_579fentry193::
+	db $2d, $49, $41, $3d, $46, $39, $10, $38, $35, $4d, $10, $14, $00
+Data_05_579fentry194::
+	db $1c, $46, $43, $41, $3d, $38, $39, $10, $01, $0a, $10, $2d, $35, $3f, $49, $46, $35, $00
+Data_05_579fentry195::
+	db $1c, $46, $43, $41, $3d, $38, $39, $10, $01, $0a, $10, $2d, $49, $41, $3d, $46, $39, $00
+Data_05_579fentry196::
+	db $1c, $46, $43, $41, $3d, $38, $39, $10, $01, $0a, $10, $27, $35, $46, $3d, $35, $00
+Data_05_579fentry197::
+	db $1c, $46, $43, $41, $3d, $38, $39, $10, $01, $0a, $10, $23, $46, $3d, $47, $00
+Data_05_579fentry198::
+	db $1c, $46, $43, $41, $3d, $38, $39, $10, $01, $0a, $10, $25, $43, $3c, $46, $35, $42, $00
+Data_05_579fentry199::
+	db $1c, $46, $43, $41, $3d, $38, $39, $10, $01, $0a, $10, $25, $35, $42, $42, $35, $00
+Data_05_579fentry19a::
+	db $25, $43, $3c, $46, $35, $42, $10, $38, $35, $4d, $10, $13, $00
+Data_05_579fentry19b::
+	db $25, $43, $3c, $46, $35, $42, $10, $38, $35, $4d, $10, $14, $00
+Data_05_579fentry19c::
+	db $2e, $47, $49, $36, $35, $3f, $3d, $10, $37, $43, $42, $4a, $43, $10, $12, $00
+Data_05_579fentry19d::
+	db $2e, $47, $49, $36, $35, $3f, $3d, $10, $37, $43, $42, $4a, $43, $10, $13, $00
+Data_05_579fentry19e::
+	db $2e, $47, $49, $36, $35, $3f, $3d, $10, $37, $43, $42, $4a, $43, $10, $14, $00
+Data_05_579fentry19f::
+	db $2e, $47, $49, $36, $35, $3f, $3d, $10, $37, $43, $42, $4a, $43, $10, $15, $00
+Data_05_579fentry1a0::
+	db $2e, $47, $49, $36, $35, $3f, $3d, $10, $37, $43, $42, $4a, $43, $10, $16, $00
+Data_05_579fentry1a1::
+	db $2e, $47, $49, $36, $35, $3f, $3d, $10, $37, $43, $42, $4a, $43, $10, $17, $00
+Data_05_579fentry1a2::
+	db $2e, $47, $49, $36, $35, $3f, $3d, $10, $37, $43, $42, $4a, $43, $10, $18, $00
+Data_05_579fentry1a3::
+	db $2e, $47, $49, $36, $35, $3f, $3d, $10, $37, $43, $42, $4a, $43, $10, $19, $00
+Data_05_579fentry1a4::
+	db $33, $49, $46, $3d, $10, $3a, $40, $35, $3b, $00
+Data_05_579fentry1a5::
+	db $29, $3a, $3a, $3d, $37, $39, $10, $4b, $39, $39, $3f, $10, $12, $10, $33, $49, $46, $3d, $00
+Data_05_579fentry1a6::
+	db $33, $49, $46, $3d, $10, $2d, $35, $3f, $49, $46, $35, $10, $37, $40, $39, $35, $42, $3d, $42, $3b, $10, $29, $25, $00
+Data_05_579fentry1a7::
+	db $29, $3a, $3a, $3d, $37, $39, $10, $4b, $39, $39, $3f, $10, $13, $10, $25, $35, $47, $49, $41, $3d, $00
+Data_05_579fentry1a8::
+	db $33, $49, $46, $3d, $10, $46, $49, $41, $43, $46, $10, $25, $43, $3c, $46, $35, $42, $10, $12, $10, $29, $25, $00
+Data_05_579fentry1a9::
+	db $33, $49, $46, $3d, $10, $2d, $49, $41, $3d, $46, $39, $10, $47, $3c, $43, $44, $44, $3d, $42, $3b, $10, $29, $25, $00
+Data_05_579fentry1aa::
+	db $2d, $35, $3f, $49, $46, $35, $10, $44, $46, $39, $47, $39, $42, $48, $10, $3c, $3d, $42, $48, $10, $29, $25, $00
+Data_05_579fentry1ab::
+	db $2d, $49, $41, $3d, $46, $39, $10, $44, $46, $39, $47, $39, $42, $48, $10, $3c, $3d, $42, $48, $10, $29, $25, $00
+Data_05_579fentry1ac::
+	db $29, $3a, $3a, $3d, $37, $39, $10, $4b, $39, $39, $3f, $10, $14, $10, $33, $49, $46, $3d, $00
+Data_05_579fentry1ad::
+	db $2d, $35, $3f, $49, $46, $35, $10, $37, $3c, $35, $46, $41, $10, $29, $25, $00
+Data_05_579fentry1ae::
+	db $27, $46, $2c, $43, $41, $35, $42, $37, $39, $10, $29, $25, $00
+Data_05_579fentry1af::
+	db $25, $35, $47, $49, $41, $3d, $10, $29, $25, $00
+Data_05_579fentry1b0::
+	db $33, $49, $46, $3d, $10, $29, $25, $00
+Data_05_579fentry1b1::
+	db $2e, $47, $49, $36, $35, $3f, $3d, $10, $29, $25, $00
+Data_05_579fentry1b2::
+	db $29, $3a, $3a, $3d, $37, $39, $10, $4b, $39, $39, $3f, $10, $15, $10, $25, $35, $47, $49, $41, $3d, $00
+Data_05_579fentry1b3::
+	db $25, $43, $3c, $46, $35, $42, $10, $44, $46, $39, $47, $39, $42, $48, $10, $3c, $3d, $42, $48, $10, $29, $25, $00
+Data_05_579fentry1b4::
+	db $20, $3d, $46, $47, $48, $10, $38, $35, $4d, $10, $2d, $35, $3f, $49, $46, $35, $00
+Data_05_579fentry1b5::
+	db $20, $3d, $46, $47, $48, $10, $38, $35, $4d, $10, $2d, $49, $41, $3d, $46, $39, $00
+Data_05_579fentry1b6::
+	db $20, $3d, $46, $47, $48, $10, $38, $35, $4d, $10, $27, $35, $46, $3d, $35, $00
+Data_05_579fentry1b7::
+	db $20, $3d, $46, $47, $48, $10, $38, $35, $4d, $10, $23, $46, $3d, $47, $00
+Data_05_579fentry1b8::
+	db $20, $3d, $46, $47, $48, $10, $38, $35, $4d, $10, $25, $43, $3c, $46, $35, $42, $00
+Data_05_579fentry1b9::
+	db $20, $3d, $46, $47, $48, $10, $38, $35, $4d, $10, $25, $35, $42, $42, $35, $00
+Data_05_579fentry1ba::
+	db $20, $40, $43, $46, $35, $40, $10, $1e, $3d, $4a, $3d, $42, $3d, $48, $4d, $00
+Data_05_579fentry1bb::
+	db $1c, $49, $48, $48, $39, $46, $3a, $40, $4d, $10, $31, $35, $40, $48, $4e, $00
+Data_05_579fentry1bc::
+	db $2d, $42, $39, $3b, $49, $46, $43, $37, $3c, $3f, $35, $00
+Data_05_579fentry1bd::
+	db $23, $46, $3d, $47, $10, $27, $35, $46, $3d, $43, $42, $39, $48, $48, $39, $00
+Data_05_579fentry1be::
+	db $27, $3d, $42, $3d, $10, $1c, $43, $48, $47, $00
+Data_05_579fentry1bf::
+	db $1c, $35, $41, $36, $43, $43, $10, $2c, $35, $3d, $42, $00
+Data_05_579fentry1c0::
+	db $2d, $35, $3f, $49, $46, $35, $10, $38, $35, $4d, $10, $13, $00
+Data_05_579fentry1c1::
+	db $2d, $35, $3f, $49, $46, $35, $10, $38, $35, $4d, $10, $14, $00
+Data_05_579fentry1c2::
+	db $27, $35, $46, $3d, $35, $10, $38, $35, $4d, $10, $13, $00
+Data_05_579fentry1c3::
+	db $27, $35, $46, $3d, $35, $10, $38, $35, $4d, $10, $14, $00
+Data_05_579fentry1c4::
+	db $23, $46, $3d, $47, $10, $38, $35, $4d, $10, $13, $00
+Data_05_579fentry1c5::
+	db $23, $46, $3d, $47, $10, $38, $35, $4d, $10, $14, $00
+Data_05_579fentry1c6::
+	db $2e, $46, $35, $3d, $42, $3d, $42, $3b, $10, $36, $46, $39, $35, $3f, $00
+Data_05_579fentry1c7::
+	db $2b, $49, $3d, $4e, $10, $37, $43, $49, $42, $48, $00
+Data_05_579fentry1c8::
+	db $2d, $49, $41, $3d, $46, $39, $10, $41, $39, $38, $3d, $49, $41, $10, $39, $4a, $39, $42, $48, $00
+Data_05_579fentry1c9::
+	db $2d, $49, $41, $3d, $46, $39, $10, $41, $35, $3e, $43, $46, $10, $39, $4a, $39, $42, $48, $00
+Data_05_579fentry1ca::
+	db $2d, $35, $3f, $49, $46, $35, $10, $37, $3c, $35, $46, $41, $10, $29, $25, $00
+Data_05_579fentry1cb::
+	db $2d, $49, $41, $3d, $46, $39, $10, $2d, $35, $3f, $49, $46, $35, $10, $3a, $3d, $3b, $3c, $48, $00
+Data_05_579fentry1cc::
+	db $2d, $44, $39, $37, $3d, $35, $40, $10, $41, $43, $4a, $39, $10, $2d, $35, $3f, $49, $46, $35, $00
+Data_05_579fentry1cd::
+	db $2d, $44, $39, $37, $3d, $35, $40, $10, $41, $43, $4a, $39, $10, $2d, $49, $41, $3d, $46, $39, $00
+Data_05_579fentry1ce::
+	db $2d, $44, $39, $37, $3d, $35, $40, $10, $41, $43, $4a, $39, $10, $27, $35, $46, $3d, $35, $00
+Data_05_579fentry1cf::
+	db $2d, $44, $39, $37, $3d, $35, $40, $10, $41, $43, $4a, $39, $10, $23, $46, $3d, $47, $00
+Data_05_579fentry1d0::
+	db $2d, $44, $39, $37, $3d, $35, $40, $10, $41, $43, $4a, $39, $10, $25, $43, $3c, $46, $35, $42, $00
+Data_05_579fentry1d1::
+	db $2d, $44, $39, $37, $3d, $35, $40, $10, $41, $43, $4a, $39, $10, $25, $35, $42, $42, $35, $00
+Data_05_579fentry1d2::
+	db $20, $3d, $42, $35, $40, $10, $36, $35, $48, $48, $40, $39, $00
+Data_05_579fentry1d3::
+	db $23, $48, $39, $41, $10, $01, $0a, $10, $28, $35, $41, $39, $44, $40, $35, $48, $39, $00
+Data_05_579fentry1d4::
+	db $2d, $35, $3f, $49, $46, $35, $10, $46, $39, $3c, $39, $35, $46, $47, $35, $40, $00
+Data_05_579fentry1d5::
+	db $27, $35, $46, $3d, $35, $10, $46, $39, $3c, $39, $35, $46, $47, $35, $40, $00
+Data_05_579fentry1d6::
+	db $23, $46, $3d, $47, $10, $42, $35, $41, $39, $00
+Data_05_579fentry1d7::
+	db $27, $3d, $42, $3d, $3b, $35, $41, $39, $10, $01, $0a, $10, $2a, $49, $47, $3c, $49, $44, $47, $00
+Data_05_579fentry1d8::
+	db $27, $3d, $42, $3d, $3b, $35, $41, $39, $10, $01, $0a, $10, $2c, $39, $38, $10, $40, $3d, $3b, $3c, $48, $00
+Data_05_579fentry1d9::
+	db $31, $39, $35, $46, $10, $40, $43, $43, $47, $39, $40, $4d, $00
+Data_05_579fentry1da::
+	db $00
+Data_05_579fentry1db::
+	db $00
+Data_05_579fentry1dc::
+	db $00
+Data_05_579fentry1dd::
+	db $00
+Data_05_579fentry1de::
+	db $00
+Data_05_579fentry1df::
+	db $00
+Data_05_579fentry1e0::
+	db $00
+Data_05_579fentry1e1::
+	db $00
+Data_05_579fentry1e2::
+	db $00
+Data_05_579fentry1e3::
+	db $00
+Data_05_579fentry1e4::
+	db $00
+Data_05_579fentry1e5::
+	db $00
+Data_05_579fentry1e6::
+	db $00
+Data_05_579fentry1e7::
+	db $00
+Data_05_579fentry1e8::
+	db $00
+Data_05_579fentry1e9::
+	db $00
+Data_05_579fentry1ea::
+	db $00
+Data_05_579fentry1eb::
+	db $00
+Data_05_579fentry1ec::
+	db $00
+Data_05_579fentry1ed::
+	db $00
+Data_05_579fentry1ee::
+	db $00
+Data_05_579fentry1ef::
+	db $00
+Data_05_579fentry1f0::
+	db $23, $48, $39, $41, $10, $01, $0a, $10, $2c, $39, $37, $43, $4a, $39, $46, $4d, $10, $38, $46, $3d, $42, $3f, $00
+Data_05_579fentry1f1::
+	db $23, $48, $39, $41, $10, $01, $0a, $10, $23, $42, $48, $10, $49, $44, $00
+Data_05_579fentry1f2::
+	db $23, $48, $39, $41, $10, $01, $0a, $10, $2d, $44, $3d, $46, $3d, $48, $10, $49, $44, $00
+Data_05_579fentry1f3::
+	db $23, $48, $39, $41, $10, $01, $0a, $10, $21, $49, $48, $47, $10, $49, $44, $00
+Data_05_579fentry1f4::
+	db $23, $48, $39, $41, $10, $01, $0a, $10, $2d, $44, $39, $39, $38, $10, $49, $44, $00
+Data_05_579fentry1f5::
+	db $23, $48, $39, $41, $10, $01, $0a, $10, $1b, $37, $37, $49, $46, $35, $37, $4d, $10, $49, $44, $00
+Data_05_579fentry1f6::
+	db $1f, $45, $49, $3d, $44, $10, $01, $0a, $10, $23, $42, $48, $10, $49, $44, $00
+Data_05_579fentry1f7::
+	db $1f, $45, $49, $3d, $44, $10, $01, $0a, $10, $2d, $44, $3d, $46, $3d, $48, $10, $49, $44, $00
+Data_05_579fentry1f8::
+	db $1f, $45, $49, $3d, $44, $10, $01, $0a, $10, $21, $49, $48, $47, $10, $49, $44, $00
+Data_05_579fentry1f9::
+	db $1f, $45, $49, $3d, $44, $10, $01, $0a, $10, $2d, $44, $39, $39, $38, $10, $49, $44, $00
+Data_05_579fentry1fa::
+	db $1f, $45, $49, $3d, $44, $10, $01, $0a, $10, $1b, $37, $37, $49, $46, $35, $37, $4d, $10, $49, $44, $00
+Data_05_579fentry1fb::
+	db $00
+Data_05_579fentry1fc::
+	db $00
+Data_05_579fentry1fd::
+	db $00
+Data_05_579fentry1fe::
+	db $1c, $46, $43, $41, $3d, $38, $39, $10, $01, $0a, $10, $29, $46, $3d, $3c, $3d, $41, $39, $00
+Data_05_579fentry1ff::
+	db $1c, $46, $43, $41, $3d, $38, $39, $10, $01, $0a, $10, $2c, $39, $42, $3d, $00
+Data_05_579fentry200::
+Data_05_579fentry201::
+Data_05_579fentry202::
+Data_05_579fentry203::
+Data_05_579fentry204::
+Data_05_579fentry205::
+Data_05_579fentry206::
+Data_05_579fentry207::
+Data_05_579fentry208::
+Data_05_579fentry209::
+Data_05_579fentry20a::
+Data_05_579fentry20b::
+Data_05_579fentry20c::
+Data_05_579fentry20d::
+Data_05_579fentry20e::
+Data_05_579fentry20f::
+Data_05_579fentry210::
+Data_05_579fentry211::
+Data_05_579fentry212::
+Data_05_579fentry213::
+Data_05_579fentry214::
+Data_05_579fentry215::
+Data_05_579fentry216::
+Data_05_579fentry217::
+Data_05_579fentry218::
+Data_05_579fentry219::
+Data_05_579fentry21a::
+Data_05_579fentry21b::
+Data_05_579fentry21c::
+Data_05_579fentry21d::
+Data_05_579fentry21e::
+Data_05_579fentry21f::
+Data_05_579fentry220::
+Data_05_579fentry221::
+Data_05_579fentry222::
+Data_05_579fentry223::
+Data_05_579fentry224::
+Data_05_579fentry225::
+Data_05_579fentry226::
+Data_05_579fentry227::
+Data_05_579fentry228::
+Data_05_579fentry229::
+Data_05_579fentry22a::
+Data_05_579fentry22b::
+Data_05_579fentry22c::
+Data_05_579fentry22d::
+Data_05_579fentry22e::
+Data_05_579fentry22f::
+Data_05_579fentry230::
+Data_05_579fentry231::
+Data_05_579fentry232::
+Data_05_579fentry233::
+Data_05_579fentry234::
+Data_05_579fentry235::
+Data_05_579fentry236::
+Data_05_579fentry237::
+Data_05_579fentry238::
+Data_05_579fentry239::
+Data_05_579fentry23a::
+Data_05_579fentry23b::
+Data_05_579fentry23c::
+Data_05_579fentry23d::
+Data_05_579fentry23e::
+Data_05_579fentry23f::
+Data_05_579fentry240::
+Data_05_579fentry241::
+Data_05_579fentry242::
+Data_05_579fentry243::
+Data_05_579fentry244::
+Data_05_579fentry245::
+Data_05_579fentry246::
+Data_05_579fentry247::
+Data_05_579fentry248::
+Data_05_579fentry249::
+Data_05_579fentry24a::
+Data_05_579fentry24b::
+Data_05_579fentry24c::
+Data_05_579fentry24d::
+Data_05_579fentry24e::
+Data_05_579fentry24f::
+Data_05_579fentry250::
+Data_05_579fentry251::
+Data_05_579fentry252::
+Data_05_579fentry253::
+Data_05_579fentry254::
+Data_05_579fentry255::
+Data_05_579fentry256::
+Data_05_579fentry257::
+Data_05_579fentry258::
+Data_05_579fentry259::
+Data_05_579fentry25a::
+Data_05_579fentry25b::
+Data_05_579fentry25c::
+Data_05_579fentry25d::
+Data_05_579fentry25e::
+Data_05_579fentry25f::
+Data_05_579fentry260::
+Data_05_579fentry261::
+Data_05_579fentry262::
+Data_05_579fentry263::
+Data_05_579fentry264::
+Data_05_579fentry265::
+Data_05_579fentry266::
+Data_05_579fentry267::
+Data_05_579fentry268::
+Data_05_579fentry269::
+Data_05_579fentry26a::
+Data_05_579fentry26b::
+Data_05_579fentry26c::
+Data_05_579fentry26d::
+Data_05_579fentry26e::
+Data_05_579fentry26f::
+Data_05_579fentry270::
+Data_05_579fentry271::
+Data_05_579fentry272::
+Data_05_579fentry273::
+Data_05_579fentry274::
+Data_05_579fentry275::
+Data_05_579fentry276::
+Data_05_579fentry277::
+Data_05_579fentry278::
+Data_05_579fentry279::
+Data_05_579fentry27a::
+Data_05_579fentry27b::
+Data_05_579fentry27c::
+Data_05_579fentry27d::
+Data_05_579fentry27e::
+Data_05_579fentry27f::
+Data_05_579fentry280::
+Data_05_579fentry281::
+Data_05_579fentry282::
+Data_05_579fentry283::
+Data_05_579fentry284::
+Data_05_579fentry285::
+Data_05_579fentry286::
+Data_05_579fentry287::
+Data_05_579fentry288::
+Data_05_579fentry289::
+Data_05_579fentry28a::
+Data_05_579fentry28b::
+Data_05_579fentry28c::
+Data_05_579fentry28d::
+Data_05_579fentry28e::
+Data_05_579fentry28f::
+Data_05_579fentry290::
+Data_05_579fentry291::
+Data_05_579fentry292::
+Data_05_579fentry293::
+Data_05_579fentry294::
+Data_05_579fentry295::
+Data_05_579fentry296::
+Data_05_579fentry297::
+Data_05_579fentry298::
+Data_05_579fentry299::
+Data_05_579fentry29a::
+Data_05_579fentry29b::
+Data_05_579fentry29c::
+Data_05_579fentry29d::
+Data_05_579fentry29e::
+Data_05_579fentry29f::
+Data_05_579fentry2a0::
+Data_05_579fentry2a1::
+Data_05_579fentry2a2::
+Data_05_579fentry2a3::
+Data_05_579fentry2a4::
+Data_05_579fentry2a5::
+Data_05_579fentry2a6::
+Data_05_579fentry2a7::
+Data_05_579fentry2a8::
+Data_05_579fentry2a9::
+Data_05_579fentry2aa::
+Data_05_579fentry2ab::
+Data_05_579fentry2ac::
+Data_05_579fentry2ad::
+Data_05_579fentry2ae::
+Data_05_579fentry2af::
+Data_05_579fentry2b0::
+Data_05_579fentry2b1::
+Data_05_579fentry2b2::
+Data_05_579fentry2b3::
+Data_05_579fentry2b4::
+Data_05_579fentry2b5::
+Data_05_579fentry2b6::
+Data_05_579fentry2b7::
+Data_05_579fentry2b8::
+Data_05_579fentry2b9::
+Data_05_579fentry2ba::
+Data_05_579fentry2bb::
+Data_05_579fentry2bc::
+Data_05_579fentry2bd::
+Data_05_579fentry2be::
+Data_05_579fentry2bf::
+Data_05_579fentry2c0::
+Data_05_579fentry2c1::
+Data_05_579fentry2c2::
+Data_05_579fentry2c3::
+Data_05_579fentry2c4::
+Data_05_579fentry2c5::
+Data_05_579fentry2c6::
+Data_05_579fentry2c7::
+Data_05_579fentry2c8::
+Data_05_579fentry2c9::
+Data_05_579fentry2ca::
+Data_05_579fentry2cb::
+Data_05_579fentry2cc::
+Data_05_579fentry2cd::
+Data_05_579fentry2ce::
+Data_05_579fentry2cf::
+Data_05_579fentry2d0::
+Data_05_579fentry2d1::
+Data_05_579fentry2d2::
+Data_05_579fentry2d3::
+Data_05_579fentry2d4::
+Data_05_579fentry2d5::
+Data_05_579fentry2d6::
+Data_05_579fentry2d7::
+Data_05_579fentry2d8::
+Data_05_579fentry2d9::
+Data_05_579fentry2da::
+Data_05_579fentry2db::
+Data_05_579fentry2dc::
+Data_05_579fentry2dd::
+Data_05_579fentry2de::
+Data_05_579fentry2df::
+Data_05_579fentry2e0::
+Data_05_579fentry2e1::
+Data_05_579fentry2e2::
+Data_05_579fentry2e3::
+Data_05_579fentry2e4::
+Data_05_579fentry2e5::
+Data_05_579fentry2e6::
+Data_05_579fentry2e7::
+Data_05_579fentry2e8::
+Data_05_579fentry2e9::
+Data_05_579fentry2ea::
+Data_05_579fentry2eb::
+Data_05_579fentry2ec::
+Data_05_579fentry2ed::
+Data_05_579fentry2ee::
+Data_05_579fentry2ef::
+Data_05_579fentry2f0::
+Data_05_579fentry2f1::
+Data_05_579fentry2f2::
+Data_05_579fentry2f3::
+Data_05_579fentry2f4::
+Data_05_579fentry2f5::
+Data_05_579fentry2f6::
+Data_05_579fentry2f7::
+Data_05_579fentry2f8::
+Data_05_579fentry2f9::
+Data_05_579fentry2fa::
+Data_05_579fentry2fb::
+Data_05_579fentry2fc::
+Data_05_579fentry2fd::
+Data_05_579fentry2fe::
+Data_05_579fentry2ff::
+Data_05_579fentry300::
+Data_05_579fentry301::
+Data_05_579fentry302::
+Data_05_579fentry303::
+Data_05_579fentry304::
+Data_05_579fentry305::
+Data_05_579fentry306::
+Data_05_579fentry307::
+Data_05_579fentry308::
+Data_05_579fentry309::
+Data_05_579fentry30a::
+Data_05_579fentry30b::
+Data_05_579fentry30c::
+Data_05_579fentry30d::
+Data_05_579fentry30e::
+Data_05_579fentry30f::
+Data_05_579fentry310::
+Data_05_579fentry311::
+Data_05_579fentry312::
+Data_05_579fentry313::
+Data_05_579fentry314::
+Data_05_579fentry315::
+Data_05_579fentry316::
+Data_05_579fentry317::
+Data_05_579fentry318::
+Data_05_579fentry319::
+Data_05_579fentry31a::
+Data_05_579fentry31b::
+Data_05_579fentry31c::
+Data_05_579fentry31d::
+Data_05_579fentry31e::
+Data_05_579fentry31f::
+Data_05_579fentry320::
+Data_05_579fentry321::
+Data_05_579fentry322::
+Data_05_579fentry323::
+Data_05_579fentry324::
+Data_05_579fentry325::
+Data_05_579fentry326::
+Data_05_579fentry327::
+Data_05_579fentry328::
+Data_05_579fentry329::
+Data_05_579fentry32a::
+Data_05_579fentry32b::
+Data_05_579fentry32c::
+Data_05_579fentry32d::
+Data_05_579fentry32e::
+Data_05_579fentry32f::
+Data_05_579fentry330::
+Data_05_579fentry331::
+Data_05_579fentry332::
+Data_05_579fentry333::
+Data_05_579fentry334::
+Data_05_579fentry335::
+Data_05_579fentry336::
+Data_05_579fentry337::
+Data_05_579fentry338::
+Data_05_579fentry339::
+Data_05_579fentry33a::
+Data_05_579fentry33b::
+Data_05_579fentry33c::
+Data_05_579fentry33d::
+Data_05_579fentry33e::
+Data_05_579fentry33f::
+Data_05_579fentry340::
+Data_05_579fentry341::
+Data_05_579fentry342::
+Data_05_579fentry343::
+Data_05_579fentry344::
+Data_05_579fentry345::
+Data_05_579fentry346::
+Data_05_579fentry347::
+Data_05_579fentry348::
+Data_05_579fentry349::
+Data_05_579fentry34a::
+Data_05_579fentry34b::
+Data_05_579fentry34c::
+Data_05_579fentry34d::
+Data_05_579fentry34e::
+Data_05_579fentry34f::
+Data_05_579fentry350::
+Data_05_579fentry351::
+Data_05_579fentry352::
+Data_05_579fentry353::
+Data_05_579fentry354::
+Data_05_579fentry355::
+Data_05_579fentry356::
+Data_05_579fentry357::
+Data_05_579fentry358::
+Data_05_579fentry359::
+Data_05_579fentry35a::
+Data_05_579fentry35b::
+Data_05_579fentry35c::
+Data_05_579fentry35d::
+Data_05_579fentry35e::
+Data_05_579fentry35f::
+Data_05_579fentry360::
+Data_05_579fentry361::
+Data_05_579fentry362::
+Data_05_579fentry363::
+Data_05_579fentry364::
+Data_05_579fentry365::
+Data_05_579fentry366::
+Data_05_579fentry367::
+Data_05_579fentry368::
+Data_05_579fentry369::
+Data_05_579fentry36a::
+Data_05_579fentry36b::
+Data_05_579fentry36c::
+Data_05_579fentry36d::
+Data_05_579fentry36e::
+Data_05_579fentry36f::
+Data_05_579fentry370::
+Data_05_579fentry371::
+Data_05_579fentry372::
+Data_05_579fentry373::
+Data_05_579fentry374::
+Data_05_579fentry375::
+Data_05_579fentry376::
+Data_05_579fentry377::
+Data_05_579fentry378::
+Data_05_579fentry379::
+Data_05_579fentry37a::
+Data_05_579fentry37b::
+Data_05_579fentry37c::
+Data_05_579fentry37d::
+Data_05_579fentry37e::
+Data_05_579fentry37f::
+Data_05_579fentry380::
+Data_05_579fentry381::
+Data_05_579fentry382::
+Data_05_579fentry383::
+Data_05_579fentry384::
+Data_05_579fentry385::
+Data_05_579fentry386::
+Data_05_579fentry387::
+Data_05_579fentry388::
+Data_05_579fentry389::
+Data_05_579fentry38a::
+Data_05_579fentry38b::
+Data_05_579fentry38c::
+Data_05_579fentry38d::
+Data_05_579fentry38e::
+Data_05_579fentry38f::
+Data_05_579fentry390::
+Data_05_579fentry391::
+Data_05_579fentry392::
+Data_05_579fentry393::
+Data_05_579fentry394::
+Data_05_579fentry395::
+Data_05_579fentry396::
+Data_05_579fentry397::
+Data_05_579fentry398::
+Data_05_579fentry399::
+Data_05_579fentry39a::
+Data_05_579fentry39b::
+Data_05_579fentry39c::
+Data_05_579fentry39d::
+Data_05_579fentry39e::
+Data_05_579fentry39f::
+Data_05_579fentry3a0::
+Data_05_579fentry3a1::
+Data_05_579fentry3a2::
+Data_05_579fentry3a3::
+Data_05_579fentry3a4::
+Data_05_579fentry3a5::
+Data_05_579fentry3a6::
+Data_05_579fentry3a7::
+Data_05_579fentry3a8::
+Data_05_579fentry3a9::
+Data_05_579fentry3aa::
+Data_05_579fentry3ab::
+Data_05_579fentry3ac::
+Data_05_579fentry3ad::
+Data_05_579fentry3ae::
+Data_05_579fentry3af::
+Data_05_579fentry3b0::
+Data_05_579fentry3b1::
+Data_05_579fentry3b2::
+Data_05_579fentry3b3::
+Data_05_579fentry3b4::
+Data_05_579fentry3b5::
+Data_05_579fentry3b6::
+Data_05_579fentry3b7::
+Data_05_579fentry3b8::
+Data_05_579fentry3b9::
+Data_05_579fentry3ba::
+Data_05_579fentry3bb::
+Data_05_579fentry3bc::
+Data_05_579fentry3bd::
+Data_05_579fentry3be::
+Data_05_579fentry3bf::
+Data_05_579fentry3c0::
+Data_05_579fentry3c1::
+Data_05_579fentry3c2::
+Data_05_579fentry3c3::
+Data_05_579fentry3c4::
+Data_05_579fentry3c5::
+Data_05_579fentry3c6::
+Data_05_579fentry3c7::
+Data_05_579fentry3c8::
+Data_05_579fentry3c9::
+Data_05_579fentry3ca::
+Data_05_579fentry3cb::
+Data_05_579fentry3cc::
+Data_05_579fentry3cd::
+Data_05_579fentry3ce::
+Data_05_579fentry3cf::
+Data_05_579fentry3d0::
+Data_05_579fentry3d1::
+Data_05_579fentry3d2::
+Data_05_579fentry3d3::
+Data_05_579fentry3d4::
+Data_05_579fentry3d5::
+Data_05_579fentry3d6::
+Data_05_579fentry3d7::
+Data_05_579fentry3d8::
+Data_05_579fentry3d9::
+Data_05_579fentry3da::
+Data_05_579fentry3db::
+Data_05_579fentry3dc::
+Data_05_579fentry3dd::
+Data_05_579fentry3de::
+Data_05_579fentry3df::
+Data_05_579fentry3e0::
+Data_05_579fentry3e1::
+Data_05_579fentry3e2::
+Data_05_579fentry3e3::
+Data_05_579fentry3e4::
+Data_05_579fentry3e5::
+Data_05_579fentry3e6::
+Data_05_579fentry3e7::
+Data_05_579fentry3e8::
+Data_05_579fentry3e9::
+Data_05_579fentry3ea::
+Data_05_579fentry3eb::
+Data_05_579fentry3ec::
+Data_05_579fentry3ed::
+Data_05_579fentry3ee::
+Data_05_579fentry3ef::
+Data_05_579fentry3f0::
+Data_05_579fentry3f1::
+Data_05_579fentry3f2::
+Data_05_579fentry3f3::
+Data_05_579fentry3f4::
+Data_05_579fentry3f5::
+Data_05_579fentry3f6::
+Data_05_579fentry3f7::
+Data_05_579fentry3f8::
+Data_05_579fentry3f9::
+Data_05_579fentry3fa::
+Data_05_579fentry3fb::
+Data_05_579fentry3fc::
+Data_05_579fentry3fd::
+Data_05_579fentry3fe::
+Data_05_579fentry3ff::
+Data_05_579fentry400::
+Data_05_579fentry401::
+Data_05_579fentry402::
+Data_05_579fentry403::
+Data_05_579fentry404::
+Data_05_579fentry405::
+Data_05_579fentry406::
+Data_05_579fentry407::
+Data_05_579fentry408::
+Data_05_579fentry409::
+Data_05_579fentry40a::
+Data_05_579fentry40b::
+Data_05_579fentry40c::
+Data_05_579fentry40d::
+Data_05_579fentry40e::
+Data_05_579fentry40f::
+Data_05_579fentry410::
+Data_05_579fentry411::
+Data_05_579fentry412::
+Data_05_579fentry413::
+Data_05_579fentry414::
+Data_05_579fentry415::
+Data_05_579fentry416::
+Data_05_579fentry417::
+Data_05_579fentry418::
+Data_05_579fentry419::
+Data_05_579fentry41a::
+Data_05_579fentry41b::
+Data_05_579fentry41c::
+Data_05_579fentry41d::
+Data_05_579fentry41e::
+Data_05_579fentry41f::
+Data_05_579fentry420::
+Data_05_579fentry421::
+Data_05_579fentry422::
+Data_05_579fentry423::
+Data_05_579fentry424::
+Data_05_579fentry425::
+Data_05_579fentry426::
+Data_05_579fentry427::
+Data_05_579fentry428::
+Data_05_579fentry429::
+Data_05_579fentry42a::
+Data_05_579fentry42b::
+Data_05_579fentry42c::
+Data_05_579fentry42d::
+Data_05_579fentry42e::
+Data_05_579fentry42f::
+Data_05_579fentry430::
+Data_05_579fentry431::
+Data_05_579fentry432::
+Data_05_579fentry433::
+Data_05_579fentry434::
+Data_05_579fentry435::
+Data_05_579fentry436::
+Data_05_579fentry437::
+Data_05_579fentry438::
+Data_05_579fentry439::
+Data_05_579fentry43a::
+Data_05_579fentry43b::
+Data_05_579fentry43c::
+Data_05_579fentry43d::
+Data_05_579fentry43e::
+Data_05_579fentry43f::
+Data_05_579fentry440::
+Data_05_579fentry441::
+Data_05_579fentry442::
+Data_05_579fentry443::
+Data_05_579fentry444::
+Data_05_579fentry445::
+Data_05_579fentry446::
+Data_05_579fentry447::
+Data_05_579fentry448::
+Data_05_579fentry449::
+Data_05_579fentry44a::
+Data_05_579fentry44b::
+Data_05_579fentry44c::
+Data_05_579fentry44d::
+Data_05_579fentry44e::
+Data_05_579fentry44f::
+Data_05_579fentry450::
+Data_05_579fentry451::
+Data_05_579fentry452::
+Data_05_579fentry453::
+Data_05_579fentry454::
+Data_05_579fentry455::
+Data_05_579fentry456::
+Data_05_579fentry457::
+Data_05_579fentry458::
+Data_05_579fentry459::
+Data_05_579fentry45a::
+Data_05_579fentry45b::
+Data_05_579fentry45c::
+Data_05_579fentry45d::
+Data_05_579fentry45e::
+Data_05_579fentry45f::
+Data_05_579fentry460::
+Data_05_579fentry461::
+Data_05_579fentry462::
+Data_05_579fentry463::
+Data_05_579fentry464::
+Data_05_579fentry465::
+Data_05_579fentry466::
+Data_05_579fentry467::
+Data_05_579fentry468::
+Data_05_579fentry469::
+Data_05_579fentry46a::
+Data_05_579fentry46b::
+Data_05_579fentry46c::
+Data_05_579fentry46d::
+Data_05_579fentry46e::
+Data_05_579fentry46f::
+Data_05_579fentry470::
+Data_05_579fentry471::
+Data_05_579fentry472::
+Data_05_579fentry473::
+Data_05_579fentry474::
+Data_05_579fentry475::
+Data_05_579fentry476::
+Data_05_579fentry477::
+Data_05_579fentry478::
+Data_05_579fentry479::
+Data_05_579fentry47a::
+Data_05_579fentry47b::
+Data_05_579fentry47c::
+Data_05_579fentry47d::
+Data_05_579fentry47e::
+Data_05_579fentry47f::
+Data_05_579fentry480::
+Data_05_579fentry481::
+Data_05_579fentry482::
+Data_05_579fentry483::
+Data_05_579fentry484::
+Data_05_579fentry485::
+Data_05_579fentry486::
+Data_05_579fentry487::
+Data_05_579fentry488::
+Data_05_579fentry489::
+Data_05_579fentry48a::
+Data_05_579fentry48b::
+Data_05_579fentry48c::
+Data_05_579fentry48d::
+Data_05_579fentry48e::
+Data_05_579fentry48f::
+Data_05_579fentry490::
+Data_05_579fentry491::
+Data_05_579fentry492::
+Data_05_579fentry493::
+Data_05_579fentry494::
+Data_05_579fentry495::
+Data_05_579fentry496::
+Data_05_579fentry497::
+Data_05_579fentry498::
+Data_05_579fentry499::
+Data_05_579fentry49a::
+Data_05_579fentry49b::
+Data_05_579fentry49c::
+Data_05_579fentry49d::
+Data_05_579fentry49e::
+Data_05_579fentry49f::
+Data_05_579fentry4a0::
+Data_05_579fentry4a1::
+Data_05_579fentry4a2::
+Data_05_579fentry4a3::
+Data_05_579fentry4a4::
+Data_05_579fentry4a5::
+Data_05_579fentry4a6::
+Data_05_579fentry4a7::
+Data_05_579fentry4a8::
+Data_05_579fentry4a9::
+Data_05_579fentry4aa::
+Data_05_579fentry4ab::
+Data_05_579fentry4ac::
+Data_05_579fentry4ad::
+Data_05_579fentry4ae::
+Data_05_579fentry4af::
+Data_05_579fentry4b0::
+Data_05_579fentry4b1::
+Data_05_579fentry4b2::
+Data_05_579fentry4b3::
+Data_05_579fentry4b4::
+Data_05_579fentry4b5::
+Data_05_579fentry4b6::
+Data_05_579fentry4b7::
+Data_05_579fentry4b8::
+Data_05_579fentry4b9::
+Data_05_579fentry4ba::
+Data_05_579fentry4bb::
+Data_05_579fentry4bc::
+Data_05_579fentry4bd::
+Data_05_579fentry4be::
+Data_05_579fentry4bf::
+Data_05_579fentry4c0::
+Data_05_579fentry4c1::
+Data_05_579fentry4c2::
+Data_05_579fentry4c3::
+Data_05_579fentry4c4::
+Data_05_579fentry4c5::
+Data_05_579fentry4c6::
+Data_05_579fentry4c7::
+Data_05_579fentry4c8::
+Data_05_579fentry4c9::
+Data_05_579fentry4ca::
+Data_05_579fentry4cb::
+Data_05_579fentry4cc::
+Data_05_579fentry4cd::
+Data_05_579fentry4ce::
+Data_05_579fentry4cf::
+Data_05_579fentry4d0::
+Data_05_579fentry4d1::
+Data_05_579fentry4d2::
+Data_05_579fentry4d3::
+Data_05_579fentry4d4::
+Data_05_579fentry4d5::
+Data_05_579fentry4d6::
+Data_05_579fentry4d7::
+Data_05_579fentry4d8::
+Data_05_579fentry4d9::
+Data_05_579fentry4da::
+Data_05_579fentry4db::
+Data_05_579fentry4dc::
+Data_05_579fentry4dd::
+Data_05_579fentry4de::
+Data_05_579fentry4df::
+Data_05_579fentry4e0::
+Data_05_579fentry4e1::
+Data_05_579fentry4e2::
+Data_05_579fentry4e3::
+Data_05_579fentry4e4::
+Data_05_579fentry4e5::
+Data_05_579fentry4e6::
+Data_05_579fentry4e7::
+Data_05_579fentry4e8::
+Data_05_579fentry4e9::
+Data_05_579fentry4ea::
+Data_05_579fentry4eb::
+Data_05_579fentry4ec::
+Data_05_579fentry4ed::
+Data_05_579fentry4ee::
+Data_05_579fentry4ef::
+Data_05_579fentry4f0::
+Data_05_579fentry4f1::
+Data_05_579fentry4f2::
+Data_05_579fentry4f3::
+Data_05_579fentry4f4::
+Data_05_579fentry4f5::
+Data_05_579fentry4f6::
+Data_05_579fentry4f7::
+Data_05_579fentry4f8::
+Data_05_579fentry4f9::
+Data_05_579fentry4fa::
+Data_05_579fentry4fb::
+Data_05_579fentry4fc::
+Data_05_579fentry4fd::
+Data_05_579fentry4fe::
+Data_05_579fentry4ff::
+	db $00
 
 endc

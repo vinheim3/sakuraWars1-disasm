@@ -1686,4 +1686,9 @@ EnLoadSaveScreenPopupGfx::
 	INCBIN "en_saveScreenPopups.2bpp"
 .end:
 
+	
+Gfx_EnDormRoomDayDetails::
+	INCBIN "en_dormRoomDayDetails.2bpp"
+.end::
+
 endc

@@ -60,7 +60,7 @@ def is_oneline(_scriptName, idx):
 
 tableItems = []
 existing_map = {}
-with open('sakura wars GB - misc 19:09:21.csv') as f:
+with open('sakura wars GB - misc 20:09:21.csv') as f:
     reader = csv.reader(f)
     for row in reader:
         if row[2] not in existing_map and row[4]:
@@ -91,11 +91,18 @@ comps.append("")
 
 for i, jp in enumerate(tableItems):
     if jp == "":
-        comps.append(f"{prefix}{i:02x}:")
-        tableItem = [0x10]*24
-        tableItem.append(0)
-        comps.append(stringB(tableItem))
-        continue
+        if scriptName == '_05_579f':
+            comps.append(f"{prefix}{i:02x}::")
+            comps.append(stringB([0]))
+            continue
+        elif scriptName == '_30_683a':
+            comps.append(f"{prefix}{i:02x}::")
+            tableItem = [0x10]*24
+            tableItem.append(0)
+            comps.append(stringB(tableItem))
+            continue
+        else:
+            raise Exception("blank entry")
 
     tableItem = existing_map[jp]
 
@@ -134,5 +141,5 @@ for i, jp in enumerate(tableItems):
         comps.append(stringB(bs))
 
 final_str = "\n".join(comps)
-# print(final_str)
+print(final_str)
 clipboard.copy(final_str)

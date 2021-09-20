@@ -80,7 +80,7 @@
 ;   _90_5118 (DONE + text fits)
 ;   _90_5234 (DONE)
 ;   _90_5ac9 (DONE + text fits)
-;   _05_579f (not translated)
+;   _05_579f (DONE)
 ;   _0c_5ad5 (DONE)
 ;   _30_683a (DONE)
 ;   _30_6e56 (DONE)

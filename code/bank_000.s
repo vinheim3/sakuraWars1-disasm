@@ -3313,7 +3313,7 @@ HandleGameState:
 	AddrBank GameState40_Inventory
 	AddrBank GameState41_TreasureChest
 	AddrBank GameState42_RomandoShop
-	AddrBank GameState43 ; can set various variables/flags?
+	AddrBank GameState43_FlagSettings
 	AddrBank GameState44 ; intro script?
 	AddrBank GameState45_DormRoom
 	AddrBank GameState46 ; transitions to intro scripts
