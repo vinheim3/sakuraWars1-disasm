@@ -4917,7 +4917,7 @@ jr_00c_5c2f:
 GameState3f_GameOver::
 	ld   a, [wGameSubstate]                                  ; $5e1c: $fa $a1 $c2
 	or   a                                           ; $5e1f: $b7
-	jp   nz, Jump_00c_5ffc                           ; $5e20: $c2 $fc $5f
+	jp   nz, GameOverSubstate1Main                           ; $5e20: $c2 $fc $5f
 
 	ld   a, $00                                      ; $5e23: $3e $00
 	call SafeSetAudVolForMultipleChannels                                       ; $5e25: $cd $e0 $1c
@@ -4941,15 +4941,9 @@ GameState3f_GameOver::
 
 	ld   a, $ff                                      ; $5e51: $3e $ff
 	ld   [$b0aa], a                                  ; $5e53: $ea $aa $b0
-	push af                                          ; $5e56: $f5
-	ld   a, $40                                      ; $5e57: $3e $40
-	ld   [wFarCallAddr], a                                  ; $5e59: $ea $98 $c2
-	ld   a, $45                                      ; $5e5c: $3e $45
-	ld   [wFarCallAddr+1], a                                  ; $5e5e: $ea $99 $c2
-	ld   a, $05                                      ; $5e61: $3e $05
-	ld   [wFarCallBank], a                                  ; $5e63: $ea $9a $c2
-	pop  af                                          ; $5e66: $f1
-	call FarCall                                       ; $5e67: $cd $62 $09
+
+	M_FarCall Func_05_4540
+
 	ld   [$b0ab], a                                  ; $5e6a: $ea $ab $b0
 	ld   a, [sCurrDay]                                  ; $5e6d: $fa $b0 $af
 	dec  a                                           ; $5e70: $3d
@@ -4960,15 +4954,9 @@ GameState3f_GameOver::
 	ld   l, $c8                                      ; $5e78: $2e $c8
 	call AequHtimesL                                       ; $5e7a: $cd $ac $0b
 	push hl                                          ; $5e7d: $e5
-	push af                                          ; $5e7e: $f5
-	ld   a, $4e                                      ; $5e7f: $3e $4e
-	ld   [wFarCallAddr], a                                  ; $5e81: $ea $98 $c2
-	ld   a, $42                                      ; $5e84: $3e $42
-	ld   [wFarCallAddr+1], a                                  ; $5e86: $ea $99 $c2
-	ld   a, $0a                                      ; $5e89: $3e $0a
-	ld   [wFarCallBank], a                                  ; $5e8b: $ea $9a $c2
-	pop  af                                          ; $5e8e: $f1
-	call FarCall                                       ; $5e8f: $cd $62 $09
+
+	M_FarCall GetCurrPoints
+
 	pop  bc                                          ; $5e92: $c1
 	add  hl, bc                                      ; $5e93: $09
 	jr   nc, jr_00c_5e99                             ; $5e94: $30 $03
@@ -4976,25 +4964,11 @@ GameState3f_GameOver::
 	ld   hl, $ffff                                   ; $5e96: $21 $ff $ff
 
 jr_00c_5e99:
-	push af                                          ; $5e99: $f5
-	ld   a, $3c                                      ; $5e9a: $3e $3c
-	ld   [wFarCallAddr], a                                  ; $5e9c: $ea $98 $c2
-	ld   a, $42                                      ; $5e9f: $3e $42
-	ld   [wFarCallAddr+1], a                                  ; $5ea1: $ea $99 $c2
-	ld   a, $0a                                      ; $5ea4: $3e $0a
-	ld   [wFarCallBank], a                                  ; $5ea6: $ea $9a $c2
-	pop  af                                          ; $5ea9: $f1
-	call FarCall                                       ; $5eaa: $cd $62 $09
+	M_FarCall SetPoints
+
 	ld   a, [$b1b2]                                  ; $5ead: $fa $b2 $b1
-	push af                                          ; $5eb0: $f5
-	ld   a, $1c                                      ; $5eb1: $3e $1c
-	ld   [wFarCallAddr], a                                  ; $5eb3: $ea $98 $c2
-	ld   a, $47                                      ; $5eb6: $3e $47
-	ld   [wFarCallAddr+1], a                                  ; $5eb8: $ea $99 $c2
-	ld   a, $0a                                      ; $5ebb: $3e $0a
-	ld   [wFarCallBank], a                                  ; $5ebd: $ea $9a $c2
-	pop  af                                          ; $5ec0: $f1
-	call FarCall                                       ; $5ec1: $cd $62 $09
+
+	M_FarCall Func_0a_471c
 
 jr_00c_5ec4:
 	ld   a, [wWramBank]                                  ; $5ec4: $fa $93 $c2
@@ -5069,15 +5043,9 @@ jr_00c_5ec4:
 	ld   d, $01                                      ; $5f74: $16 $01
 	ld   a, $9c                                      ; $5f76: $3e $9c
 	ld   e, a                                        ; $5f78: $5f
-	push af                                          ; $5f79: $f5
-	ld   a, $3c                                      ; $5f7a: $3e $3c
-	ld   [wFarCallAddr], a                                  ; $5f7c: $ea $98 $c2
-	ld   a, $40                                      ; $5f7f: $3e $40
-	ld   [wFarCallAddr+1], a                                  ; $5f81: $ea $99 $c2
-	ld   a, $01                                      ; $5f84: $3e $01
-	ld   [wFarCallBank], a                                  ; $5f86: $ea $9a $c2
-	pop  af                                          ; $5f89: $f1
-	call FarCall                                       ; $5f8a: $cd $62 $09
+
+	M_FarCall LoadType0NewAnimatedSpriteSpecDetails
+
 	ld   a, $00                                      ; $5f8d: $3e $00
 	ld   hl, $0000                                   ; $5f8f: $21 $00 $00
 	ld   d, h                                        ; $5f92: $54
@@ -5090,15 +5058,9 @@ jr_00c_5ec4:
 	ld   d, $01                                      ; $5fa3: $16 $01
 	ld   a, $a0                                      ; $5fa5: $3e $a0
 	ld   e, a                                        ; $5fa7: $5f
-	push af                                          ; $5fa8: $f5
-	ld   a, $3c                                      ; $5fa9: $3e $3c
-	ld   [wFarCallAddr], a                                  ; $5fab: $ea $98 $c2
-	ld   a, $40                                      ; $5fae: $3e $40
-	ld   [wFarCallAddr+1], a                                  ; $5fb0: $ea $99 $c2
-	ld   a, $01                                      ; $5fb3: $3e $01
-	ld   [wFarCallBank], a                                  ; $5fb5: $ea $9a $c2
-	pop  af                                          ; $5fb8: $f1
-	call FarCall                                       ; $5fb9: $cd $62 $09
+
+	M_FarCall LoadType0NewAnimatedSpriteSpecDetails
+
 	ld   a, $00                                      ; $5fbc: $3e $00
 	ld   hl, $0000                                   ; $5fbe: $21 $00 $00
 	ld   d, h                                        ; $5fc1: $54
@@ -5110,15 +5072,9 @@ jr_00c_5ec4:
 	ld   d, $01                                      ; $5fcf: $16 $01
 	ld   a, $a4                                      ; $5fd1: $3e $a4
 	ld   e, a                                        ; $5fd3: $5f
-	push af                                          ; $5fd4: $f5
-	ld   a, $3c                                      ; $5fd5: $3e $3c
-	ld   [wFarCallAddr], a                                  ; $5fd7: $ea $98 $c2
-	ld   a, $40                                      ; $5fda: $3e $40
-	ld   [wFarCallAddr+1], a                                  ; $5fdc: $ea $99 $c2
-	ld   a, $01                                      ; $5fdf: $3e $01
-	ld   [wFarCallBank], a                                  ; $5fe1: $ea $9a $c2
-	pop  af                                          ; $5fe4: $f1
-	call FarCall                                       ; $5fe5: $cd $62 $09
+
+	M_FarCall LoadType0NewAnimatedSpriteSpecDetails
+
 	ld   a, $10                                      ; $5fe8: $3e $10
 	call PlaySong                                       ; $5fea: $cd $92 $1a
 	call TurnOnLCD                                       ; $5fed: $cd $09 $09
@@ -5130,14 +5086,14 @@ jr_00c_5ec4:
 	ret                                              ; $5ffb: $c9
 
 
-Jump_00c_5ffc:
+GameOverSubstate1Main:
 	call ClearOam                                       ; $5ffc: $cd $d7 $0d
-	ld   bc, $6012                                   ; $5fff: $01 $12 $60
+	ld   bc, .return                                   ; $5fff: $01 $12 $60
 	push bc                                          ; $6002: $c5
 	ld   a, [$cc4c]                                  ; $6003: $fa $4c $cc
 	ld   b, $00                                      ; $6006: $06 $00
 	ld   c, a                                        ; $6008: $4f
-	ld   hl, $6016                                   ; $6009: $21 $16 $60
+	ld   hl, .animationHandlers                                   ; $6009: $21 $16 $60
 	add  hl, bc                                      ; $600c: $09
 	add  hl, bc                                      ; $600d: $09
 	ld   a, [hl+]                                    ; $600e: $2a
@@ -5145,20 +5101,19 @@ Jump_00c_5ffc:
 	ld   l, a                                        ; $6010: $6f
 	jp   hl                                          ; $6011: $e9
 
-
+.return:
 	call AnimateAllAnimatedSpriteSpecs                                       ; $6012: $cd $d3 $2e
 	ret                                              ; $6015: $c9
 
+.animationHandlers:
+	dw GameOverAnimationHandler0
+	dw GameOverAnimationHandler1
+	dw GameOverAnimationHandler2
+	dw GameOverAnimationHandler3
+	dw GameOverAnimationHandler4
 
-	jr   nz, jr_00c_6078                             ; $6016: $20 $60
 
-	ld   [hl], l                                     ; $6018: $75
-	ld   h, b                                        ; $6019: $60
-	ld   b, $61                                      ; $601a: $06 $61
-	ld   a, a                                        ; $601c: $7f
-	ld   h, c                                        ; $601d: $61
-	adc  [hl]                                        ; $601e: $8e
-	ld   h, c                                        ; $601f: $61
+GameOverAnimationHandler0:
 	ld   a, [$cc4d]                                  ; $6020: $fa $4d $cc
 	or   a                                           ; $6023: $b7
 	jr   nz, jr_00c_603e                             ; $6024: $20 $18
@@ -5207,6 +5162,7 @@ jr_00c_6058:
 	ret                                              ; $6074: $c9
 
 
+GameOverAnimationHandler1:
 	ld   hl, $cc4d                                   ; $6075: $21 $4d $cc
 
 jr_00c_6078:
@@ -5224,48 +5180,23 @@ jr_00c_6078:
 	push af                                          ; $6087: $f5
 	ld   a, [$cc4e]                                  ; $6088: $fa $4e $cc
 	call HLequAddrOfAnimSpriteSpecDetails                                       ; $608b: $cd $76 $30
-	push af                                          ; $608e: $f5
-	ld   a, $71                                      ; $608f: $3e $71
-	ld   [wFarCallAddr], a                                  ; $6091: $ea $98 $c2
-	ld   a, $40                                      ; $6094: $3e $40
-	ld   [wFarCallAddr+1], a                                  ; $6096: $ea $99 $c2
-	ld   a, $01                                      ; $6099: $3e $01
-	ld   [wFarCallBank], a                                  ; $609b: $ea $9a $c2
-	pop  af                                          ; $609e: $f1
-	call FarCall                                       ; $609f: $cd $62 $09
+
+	M_FarCall GetType0XandY
+
 	pop  af                                          ; $60a2: $f1
 	ld   c, a                                        ; $60a3: $4f
-	push af                                          ; $60a4: $f5
-	ld   a, $55                                      ; $60a5: $3e $55
-	ld   [wFarCallAddr], a                                  ; $60a7: $ea $98 $c2
-	ld   a, $40                                      ; $60aa: $3e $40
-	ld   [wFarCallAddr+1], a                                  ; $60ac: $ea $99 $c2
-	ld   a, $01                                      ; $60af: $3e $01
-	ld   [wFarCallBank], a                                  ; $60b1: $ea $9a $c2
-	pop  af                                          ; $60b4: $f1
-	call FarCall                                       ; $60b5: $cd $62 $09
+
+	M_FarCall SetType0XandY
+
 	ld   a, [$cc4f]                                  ; $60b8: $fa $4f $cc
 	call HLequAddrOfAnimSpriteSpecDetails                                       ; $60bb: $cd $76 $30
-	push af                                          ; $60be: $f5
-	ld   a, $71                                      ; $60bf: $3e $71
-	ld   [wFarCallAddr], a                                  ; $60c1: $ea $98 $c2
-	ld   a, $40                                      ; $60c4: $3e $40
-	ld   [wFarCallAddr+1], a                                  ; $60c6: $ea $99 $c2
-	ld   a, $01                                      ; $60c9: $3e $01
-	ld   [wFarCallBank], a                                  ; $60cb: $ea $9a $c2
-	pop  af                                          ; $60ce: $f1
-	call FarCall                                       ; $60cf: $cd $62 $09
+
+	M_FarCall GetType0XandY
+
 	pop  af                                          ; $60d2: $f1
 	ld   c, a                                        ; $60d3: $4f
-	push af                                          ; $60d4: $f5
-	ld   a, $55                                      ; $60d5: $3e $55
-	ld   [wFarCallAddr], a                                  ; $60d7: $ea $98 $c2
-	ld   a, $40                                      ; $60da: $3e $40
-	ld   [wFarCallAddr+1], a                                  ; $60dc: $ea $99 $c2
-	ld   a, $01                                      ; $60df: $3e $01
-	ld   [wFarCallBank], a                                  ; $60e1: $ea $9a $c2
-	pop  af                                          ; $60e4: $f1
-	call FarCall                                       ; $60e5: $cd $62 $09
+
+	M_FarCall SetType0XandY
 	ret                                              ; $60e8: $c9
 
 
@@ -5290,6 +5221,9 @@ jr_00c_60e9:
 	inc  b                                           ; $6102: $04
 	ld   b, $04                                      ; $6103: $06 $04
 	add  b                                           ; $6105: $80
+
+
+GameOverAnimationHandler2:
 	ld   hl, $cc4d                                   ; $6106: $21 $4d $cc
 	ld   a, [hl]                                     ; $6109: $7e
 	inc  [hl]                                        ; $610a: $34
@@ -5310,53 +5244,28 @@ jr_00c_60e9:
 	ld   [$cc4d], a                                  ; $611c: $ea $4d $cc
 	ret                                              ; $611f: $c9
 
-
 jr_00c_6120:
 	ld   a, [$cc4e]                                  ; $6120: $fa $4e $cc
 	call HLequAddrOfAnimSpriteSpecDetails                                       ; $6123: $cd $76 $30
-	push af                                          ; $6126: $f5
-	ld   a, $6a                                      ; $6127: $3e $6a
-	ld   [wFarCallAddr], a                                  ; $6129: $ea $98 $c2
-	ld   a, $40                                      ; $612c: $3e $40
-	ld   [wFarCallAddr+1], a                                  ; $612e: $ea $99 $c2
-	ld   a, $01                                      ; $6131: $3e $01
-	ld   [wFarCallBank], a                                  ; $6133: $ea $9a $c2
-	pop  af                                          ; $6136: $f1
-	call FarCall                                       ; $6137: $cd $62 $09
+
+	M_FarCall GetType0SpriteGroupAndSpecIdx
+
 	inc  c                                           ; $613a: $0c
-	push af                                          ; $613b: $f5
-	ld   a, $4b                                      ; $613c: $3e $4b
-	ld   [wFarCallAddr], a                                  ; $613e: $ea $98 $c2
-	ld   a, $40                                      ; $6141: $3e $40
-	ld   [wFarCallAddr+1], a                                  ; $6143: $ea $99 $c2
-	ld   a, $01                                      ; $6146: $3e $01
-	ld   [wFarCallBank], a                                  ; $6148: $ea $9a $c2
-	pop  af                                          ; $614b: $f1
-	call FarCall                                       ; $614c: $cd $62 $09
+
+	M_FarCall SetType0SpriteGroupAndSpecIdx
+
 	ld   a, [$cc4f]                                  ; $614f: $fa $4f $cc
 	call HLequAddrOfAnimSpriteSpecDetails                                       ; $6152: $cd $76 $30
-	push af                                          ; $6155: $f5
-	ld   a, $6a                                      ; $6156: $3e $6a
-	ld   [wFarCallAddr], a                                  ; $6158: $ea $98 $c2
-	ld   a, $40                                      ; $615b: $3e $40
-	ld   [wFarCallAddr+1], a                                  ; $615d: $ea $99 $c2
-	ld   a, $01                                      ; $6160: $3e $01
-	ld   [wFarCallBank], a                                  ; $6162: $ea $9a $c2
-	pop  af                                          ; $6165: $f1
-	call FarCall                                       ; $6166: $cd $62 $09
+
+	M_FarCall GetType0SpriteGroupAndSpecIdx
+
 	inc  c                                           ; $6169: $0c
-	push af                                          ; $616a: $f5
-	ld   a, $4b                                      ; $616b: $3e $4b
-	ld   [wFarCallAddr], a                                  ; $616d: $ea $98 $c2
-	ld   a, $40                                      ; $6170: $3e $40
-	ld   [wFarCallAddr+1], a                                  ; $6172: $ea $99 $c2
-	ld   a, $01                                      ; $6175: $3e $01
-	ld   [wFarCallBank], a                                  ; $6177: $ea $9a $c2
-	pop  af                                          ; $617a: $f1
-	call FarCall                                       ; $617b: $cd $62 $09
+
+	M_FarCall SetType0SpriteGroupAndSpecIdx
 	ret                                              ; $617e: $c9
 
 
+GameOverAnimationHandler3:
 	ld   a, [wInGameButtonsPressed]                                  ; $617f: $fa $10 $c2
 	and  $09                                         ; $6182: $e6 $09
 	ret  z                                           ; $6184: $c8
@@ -5368,6 +5277,7 @@ jr_00c_6120:
 	ret                                              ; $618d: $c9
 
 
+GameOverAnimationHandler4:
 	ld   a, [$cc4d]                                  ; $618e: $fa $4d $cc
 	or   a                                           ; $6191: $b7
 	jr   nz, jr_00c_61ac                             ; $6192: $20 $18

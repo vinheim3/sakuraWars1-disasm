@@ -6539,7 +6539,7 @@ Call_004_6a12:
 	add  hl, bc                                      ; $6a29: $09
 	jr   nc, :+                             ; $6a2a: $30 $03
 	ld   hl, $ffff                                   ; $6a2c: $21 $ff $ff
-:	M_FarCall Func_0a_423c
+:	M_FarCall SetPoints
 
 	pop  hl                                          ; $6a43: $e1
 	ld   a, [$cc96]                                  ; $6a44: $fa $96 $cc

@@ -119,29 +119,43 @@ LoadType0NewAnimatedSpriteSpecDetails::
 	ret                                                             ; $404a
 
 
+; B - sprite group to set
+; C - spec idx to set
+; HL - addr of anim sprite spec instance details
+SetType0SpriteGroupAndSpecIdx::
+	push af                                                         ; $404b
+
+; Retain absolute/relative position, or with spec group for ASSI0_CTRL
+	ld   a, [hl]                                                    ; $404c
+	and  $80                                                        ; $404d
+	or   b                                                          ; $404f
+	ld   [hl+], a                                                   ; $4050
+
+; Set ASSI0_SPEC_IDX
+	ld   [hl], c                                                    ; $4051
+
+	dec  hl                                                         ; $4052
+	pop  af                                                         ; $4053
+	ret                                                             ; $4054
+
+
+; B - X to set
+; C - Y to set
+; HL - addr of anim sprite spec instance details
+SetType0XandY::
+	push hl                                                         ; $4055
+	inc  hl                                                         ; $4056
+	inc  hl                                                         ; $4057
+
+; Set ASSI0_X, then ASSI0_Y
+	ld   [hl], b                                                    ; $4058
+	inc  hl                                                         ; $4059
+	ld   [hl], c                                                    ; $405a
+	pop  hl                                                         ; $405b
+	ret                                                             ; $405c
+
+
 ;
-	push af                                          ; $404b: $f5
-	ld   a, [hl]                                     ; $404c: $7e
-	and  $80                                         ; $404d: $e6 $80
-	or   b                                           ; $404f: $b0
-	ld   [hl+], a                                    ; $4050: $22
-	ld   [hl], c                                     ; $4051: $71
-	dec  hl                                          ; $4052: $2b
-	pop  af                                          ; $4053: $f1
-	ret                                              ; $4054: $c9
-
-
-Func_01_4055::
-	push hl                                          ; $4055: $e5
-	inc  hl                                          ; $4056: $23
-	inc  hl                                          ; $4057: $23
-	ld   [hl], b                                     ; $4058: $70
-	inc  hl                                          ; $4059: $23
-	ld   [hl], c                                     ; $405a: $71
-	pop  hl                                          ; $405b: $e1
-	ret                                              ; $405c: $c9
-
-
 	push hl                                          ; $405d: $e5
 	ld   a, [hl+]                                    ; $405e: $2a
 	and  $7f                                         ; $405f: $e6 $7f
@@ -156,23 +170,35 @@ Func_01_4055::
 	ret                                              ; $4069: $c9
 
 
-	ld   a, [hl+]                                    ; $406a: $2a
-	and  $7f                                         ; $406b: $e6 $7f
-	ld   b, a                                        ; $406d: $47
-	ld   a, [hl-]                                    ; $406e: $3a
-	ld   c, a                                        ; $406f: $4f
-	ret                                              ; $4070: $c9
+; HL - addr of anim sprite spec instance details
+; Returns sprite group in B, and spec idx in C
+GetType0SpriteGroupAndSpecIdx::
+; Non-bit7 bits of ASSI0_CTRL are the spec group
+	ld   a, [hl+]                                                   ; $406a
+	and  $7f                                                        ; $406b
+	ld   b, a                                                       ; $406d
+
+; Get ASSI0_SPEC_IDX
+	ld   a, [hl-]                                                   ; $406e
+	ld   c, a                                                       ; $406f
+	ret                                                             ; $4070
 
 
-	push hl                                          ; $4071: $e5
-	inc  hl                                          ; $4072: $23
-	inc  hl                                          ; $4073: $23
-	ld   a, [hl+]                                    ; $4074: $2a
-	ld   b, a                                        ; $4075: $47
-	ld   a, [hl+]                                    ; $4076: $2a
-	ld   c, a                                        ; $4077: $4f
-	pop  hl                                          ; $4078: $e1
-	ret                                              ; $4079: $c9
+; HL - addr of anim sprite spec instance details
+; Returns X in B and Y in C
+GetType0XandY::
+	push hl                                                         ; $4071
+
+; Get ASSI0_X in B and ASSI0_Y in C
+	inc  hl                                                         ; $4072
+	inc  hl                                                         ; $4073
+	ld   a, [hl+]                                                   ; $4074
+	ld   b, a                                                       ; $4075
+	ld   a, [hl+]                                                   ; $4076
+	ld   c, a                                                       ; $4077
+
+	pop  hl                                                         ; $4078
+	ret                                                             ; $4079
 
 
 ; B - x pos

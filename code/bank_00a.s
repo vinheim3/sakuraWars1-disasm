@@ -461,14 +461,14 @@ CheckIfFlagSet1::
 
 
 ; HL - points to set
-Func_0a_423c::
+SetPoints::
 ; Store HL in curr points
-	ld   de, sCurrPoints                                   ; $423c: $11 $00 $a1
-	ld   a, l                                        ; $423f: $7d
-	ld   [de], a                                     ; $4240: $12
-	inc  de                                          ; $4241: $13
-	ld   a, h                                        ; $4242: $7c
-	ld   [de], a                                     ; $4243: $12
+	ld   de, sCurrPoints                                            ; $423c
+	ld   a, l                                                       ; $423f
+	ld   [de], a                                                    ; $4240
+	inc  de                                                         ; $4241
+	ld   a, h                                                       ; $4242
+	ld   [de], a                                                    ; $4243
 
 ;
 	ld   hl, $a000                                   ; $4244: $21 $00 $a0
@@ -1303,6 +1303,7 @@ jr_00a_46fa:
 	ret                                              ; $471b: $c9
 
 
+Func_0a_471c::
 	ld   c, a                                        ; $471c: $4f
 	ld   b, $02                                      ; $471d: $06 $02
 
@@ -5873,7 +5874,7 @@ jr_00a_6bf7:
 
 	call HLequAddrOfAnimSpriteSpecDetails                                       ; $6c02: $cd $76 $30
 
-	M_FarCall Func_01_4055
+	M_FarCall SetType0XandY
 	
 	ld   a, c                                        ; $6c19: $79
 	add  $18                                         ; $6c1a: $c6 $18

@@ -4638,7 +4638,7 @@ jr_00d_5723:
 	set  3, a                                        ; $5777: $cb $df
 	ld   c, a                                        ; $5779: $4f
 
-	M_FarCall Func_01_4055
+	M_FarCall SetType0XandY
 	
 	ret                                              ; $578e: $c9
 
