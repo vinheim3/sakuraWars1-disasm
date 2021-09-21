@@ -530,8 +530,8 @@ wUntimedQuestionAnswer:: ; $cb92
 wTimedQuestionAnswer:: ; $cb93
     db
 
-wcb94:
-    ds 5-4
+wScriptRandomByte:: ; $cb94
+    db
 
 wNumBytesInScriptCalcStack:: ; $cb95
     db

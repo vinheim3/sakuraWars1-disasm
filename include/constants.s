@@ -269,6 +269,12 @@ DEF SMPL_5d = $5d
 DEF SMPL_69 = $69
 
 ; --
+; -- RPN
+; --
+
+DEF RPN_TIMED_ANSWER = $03
+
+; --
 ; -- Misc
 ; --
 

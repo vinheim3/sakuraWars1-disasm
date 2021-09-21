@@ -141,7 +141,7 @@ macro ScriptOpt_LoadScenery
     db $0e, \1
 endm
 
-macro ScriptOpt_0f
+macro ScriptOpt_SetPortrait
     db $0f, \1, \2
 endm
 

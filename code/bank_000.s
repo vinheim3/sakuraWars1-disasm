@@ -5653,115 +5653,115 @@ PlaySampledSound::
 	ret                                                             ; $1b91
 
 .sampleSources:
-	db $00, $40, $a5
-	db $ec, $6a, $a6
-	db $98, $62, $a9
-	db $04, $49, $ac
-	db $f0, $73, $ac
-	db $1c, $73, $ad
-	db $08, $43, $b0
-	db $34, $7c, $b0
-	db $60, $7b, $b1
-	db $0c, $6c, $b2
-	db $b8, $46, $b3
-	db $a4, $74, $b3
-	db $d0, $60, $b4
-	db $7c, $4b, $b5
-	db $68, $51, $b6
-	db $54, $62, $b7
-	db $c0, $63, $b8
-	db $ac, $45, $ba
-	db $18, $54, $bb
-	db $44, $5b, $bc
-	db $b0, $5c, $bd
-	db $5c, $68, $be
-	db $08, $67, $bf
-	db $74, $67, $c0
-	db $60, $67, $c1
-	db $cc, $63, $c2
-	db $b8, $77, $c2
-	db $64, $49, $c3
-	db $90, $52, $c3
-	db $fc, $69, $c3
-	db $28, $79, $c3
-	db $54, $57, $c4
-	db $40, $64, $c5
-	db $ac, $63, $c7
-	db $18, $59, $c9
-	db $04, $4e, $cb
-	db $30, $61, $cd
-	db $1c, $7a, $ce
-	db $08, $5d, $cf
-	db $b4, $7a, $cf
-	db $60, $5c, $d0
-	db $cc, $7e, $d0
-	db $f8, $59, $d1
-	db $64, $59, $d2
-	db $90, $74, $d2
-	db $bc, $5d, $d3
-	db $a8, $7f, $d3
-	db $54, $61, $d4
-	db $40, $42, $d5
-	db $2c, $58, $d5
-	db $18, $7b, $d5
-	db $44, $5b, $d6
-	db $f0, $49, $d7
-	db $dc, $78, $d7
-	db $c8, $79, $d8
-	db $34, $4b, $da
-	db $a0, $74, $da
-	db $0c, $5f, $db
-	db $f8, $4d, $dc
-	db $24, $42, $dd
-	db $90, $6d, $dd
-	db $bc, $4e, $de
-	db $a8, $63, $de
-	db $d4, $78, $de
-	db $00, $5b, $df
-	db $2c, $41, $e0
-	db $d8, $64, $e0
-	db $c4, $72, $e1
-	db $70, $41, $e2
-	db $5c, $67, $e2
-	db $08, $43, $e3
-	db $b4, $5f, $e3
-	db $20, $47, $e4
-	db $4c, $72, $e4
-	db $f8, $51, $e5
-	db $a4, $7f, $e5
-	db $50, $60, $e6
-	db $3c, $64, $e7
-	db $28, $4f, $e8
-	db $54, $46, $e9
-	db $80, $6d, $e9
-	db $2c, $5b, $ea
-	db $58, $40, $eb
-	db $44, $5e, $eb
-	db $f0, $67, $ec
-	db $9c, $5e, $ed
-	db $c8, $44, $ee
-	db $b4, $6b, $ee
-	db $a0, $4c, $ef
-	db $8c, $42, $f0
-	db $b8, $63, $f0
-	db $a4, $68, $f1
-	db $90, $4a, $f2
-	db $fc, $42, $f3
-	db $68, $63, $f3
-	db $94, $41, $f4
-	db $80, $68, $f4
-	db $2c, $4a, $f5
-	db $58, $66, $f5
-	db $04, $4a, $f6
-	db $70, $6a, $f6
-	db $dc, $4b, $f7
-	db $48, $74, $f7
-	db $34, $6b, $f8
-	db $a0, $45, $f9
-	db $cc, $68, $f9
-	db $78, $7f, $f9
-	db $a4, $65, $fa
-	db $d0, $42, $fb
+	AddrBank SampledVoice_00
+	AddrBank SampledVoice_01
+	AddrBank SampledVoice_02
+	AddrBank SampledVoice_03
+	AddrBank SampledVoice_04
+	AddrBank SampledVoice_05
+	AddrBank SampledVoice_06
+	AddrBank SampledVoice_07
+	AddrBank SampledVoice_08
+	AddrBank SampledVoice_09
+	AddrBank SampledVoice_0a
+	AddrBank SampledVoice_0b
+	AddrBank SampledVoice_0c
+	AddrBank SampledVoice_0d
+	AddrBank SampledVoice_0e
+	AddrBank SampledVoice_0f
+	AddrBank SampledVoice_10
+	AddrBank SampledVoice_11
+	AddrBank SampledVoice_12
+	AddrBank SampledVoice_13
+	AddrBank SampledVoice_14
+	AddrBank SampledVoice_15
+	AddrBank SampledVoice_16
+	AddrBank SampledVoice_17
+	AddrBank SampledVoice_18
+	AddrBank SampledVoice_19
+	AddrBank SampledVoice_1a
+	AddrBank SampledVoice_1b
+	AddrBank SampledVoice_1c
+	AddrBank SampledVoice_1d
+	AddrBank SampledVoice_1e
+	AddrBank SampledVoice_1f
+	AddrBank SampledVoice_20
+	AddrBank SampledVoice_21
+	AddrBank SampledVoice_22
+	AddrBank SampledVoice_23
+	AddrBank SampledVoice_24
+	AddrBank SampledVoice_25
+	AddrBank SampledVoice_26
+	AddrBank SampledVoice_27
+	AddrBank SampledVoice_28
+	AddrBank SampledVoice_29
+	AddrBank SampledVoice_2a
+	AddrBank SampledVoice_2b
+	AddrBank SampledVoice_2c
+	AddrBank SampledVoice_2d
+	AddrBank SampledVoice_2e
+	AddrBank SampledVoice_2f
+	AddrBank SampledVoice_30
+	AddrBank SampledVoice_31
+	AddrBank SampledVoice_32
+	AddrBank SampledVoice_33
+	AddrBank SampledVoice_34
+	AddrBank SampledVoice_35
+	AddrBank SampledVoice_36
+	AddrBank SampledVoice_37
+	AddrBank SampledVoice_38
+	AddrBank SampledVoice_39
+	AddrBank SampledVoice_3a
+	AddrBank SampledVoice_3b
+	AddrBank SampledVoice_3c
+	AddrBank SampledVoice_3d
+	AddrBank SampledVoice_3e
+	AddrBank SampledVoice_3f
+	AddrBank SampledVoice_40
+	AddrBank SampledVoice_41
+	AddrBank SampledVoice_42
+	AddrBank SampledVoice_43
+	AddrBank SampledVoice_44
+	AddrBank SampledVoice_45
+	AddrBank SampledVoice_46
+	AddrBank SampledVoice_47
+	AddrBank SampledVoice_48
+	AddrBank SampledVoice_49
+	AddrBank SampledVoice_4a
+	AddrBank SampledVoice_4b
+	AddrBank SampledVoice_4c
+	AddrBank SampledVoice_4d
+	AddrBank SampledVoice_4e
+	AddrBank SampledVoice_4f
+	AddrBank SampledVoice_50
+	AddrBank SampledVoice_51
+	AddrBank SampledVoice_52
+	AddrBank SampledVoice_53
+	AddrBank SampledVoice_54
+	AddrBank SampledVoice_55
+	AddrBank SampledVoice_56
+	AddrBank SampledVoice_57
+	AddrBank SampledVoice_58
+	AddrBank SampledVoice_59
+	AddrBank SampledVoice_5a
+	AddrBank SampledVoice_5b
+	AddrBank SampledVoice_5c
+	AddrBank SampledVoice_5d
+	AddrBank SampledVoice_5e
+	AddrBank SampledVoice_5f
+	AddrBank SampledVoice_60
+	AddrBank SampledVoice_61
+	AddrBank SampledVoice_62
+	AddrBank SampledVoice_63
+	AddrBank SampledVoice_64
+	AddrBank SampledVoice_65
+	AddrBank SampledVoice_66
+	AddrBank SampledVoice_67
+	AddrBank SampledVoice_68
+	AddrBank SampledVoice_69
+	AddrBank SampledVoice_6a
+	AddrBank SampledVoice_6b
+	AddrBank SampledVoice_6c
 
 
 Func_1cd9::

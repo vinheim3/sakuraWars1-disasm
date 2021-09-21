@@ -7415,7 +7415,7 @@ Script_006::
 endc
 	ScriptOpt_13 $04
 	ScriptOpt_LoadScenery $93
-	ScriptOpt_0f $00, $01
+	ScriptOpt_SetPortrait $00, $01
 	ScriptOpt_02
 	ScriptOpt_DisplayText
 		TEXT $a1, $fc, $2a5, $4aa, $90, $52, $52, $413, $2a1, $6e, $78, $fc, $9f
@@ -7430,7 +7430,7 @@ endc
 	ScriptOpt_DisplayText
 		TEXT $0d
 	ScriptOpt_ContinuePrompt
-	ScriptOpt_0f $00, $01
+	ScriptOpt_SetPortrait $00, $01
 	ScriptOpt_DisplayText
 		TEXT $56, $ff, $ff, $f9, $0d, $46d, $7c, $61, $76, $75, $67, $59, $f9
 	ScriptOpt_SetDelay $3c
@@ -7489,7 +7489,7 @@ endc
 		TEXT $0d
 	ScriptOpt_ContinuePrompt
 	ScriptOpt_0d $00, $00
-	ScriptOpt_0f $00, $01
+	ScriptOpt_SetPortrait $00, $01
 	ScriptOpt_2c $10
 	ScriptOpt_LoadScenery $b9
 	ScriptOpt_2c $02

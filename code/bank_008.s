@@ -676,7 +676,7 @@ ScriptEngineTable:
 	ScriptOpData ScriptOpcode1e, $04
 	;
 	ScriptOpData ScriptOpcode1f, $01
-	ScriptOpData ScriptOpcode20, $00
+	ScriptOpData ScriptOpcode20_GenRandomNum, $00
 	;
 	ScriptOpData ScriptOpcode21_EnterName, $01
 	ScriptOpData ScriptOpcode22_Stub, $00
@@ -739,10 +739,10 @@ HandleProcessingScriptCalcStack:
 
 ; Branch if bin ops code == 1 to 6
 	dec  a                                                          ; $44e1
-	jr   z, .CalcCode1_pushScriptByte                               ; $44e2
+	jr   z, ScriptCalcCode1_pushScriptByte                          ; $44e2
 
 	dec  a                                                          ; $44e4
-	jr   z, .CalcCode2_pushSpecialRamByte                           ; $44e5
+	jr   z, ScriptCalcCode2_pushSpecialRamByte                      ; $44e5
 
 	dec  a                                           ; $44e7: $3d
 	jp   z, ScriptCalcCode3_getSramByte2                            ; $44e8: $ca $6b $45
@@ -761,11 +761,13 @@ HandleProcessingScriptCalcStack:
 	pop  hl                                          ; $44fa: $e1
 	ret                                              ; $44fb: $c9
 
-.CalcCode1_pushScriptByte:
+
+ScriptCalcCode1_pushScriptByte:
 	call GetNextScriptOpcodeToProcess                               ; $44fc
 	jr   PushAOntoScriptCalcStack                                   ; $44ff
 
-.CalcCode2_pushSpecialRamByte:
+
+ScriptCalcCode2_pushSpecialRamByte:
 	call GetNextScriptOpcodeToProcess                               ; $4501: $cd $70 $42
 	sla  a                                           ; $4504: $cb $27
 	ld   b, $00                                      ; $4506: $06 $00
@@ -778,31 +780,37 @@ HandleProcessingScriptCalcStack:
 	jp   hl                                          ; $4510: $e9
 
 .table:
-	dw $4521
-	dw $4526
-	dw $452b
-	dw $4530
-	dw $4535
-	dw $453a
+	dw .entry0_currDay
+	dw .entry1_timeOfDay
+	dw .entry2_untimedAnswer
+	dw .entry3_timedAnswer
+	dw .entry4_battleWon
+	dw .entry5_randomNum
 	dw $453f
 	dw $4544
 
+.entry0_currDay:
 	ld   a, [sCurrDay]                                  ; $4521: $fa $b0 $af
 	jr   PushAOntoScriptCalcStack                                 ; $4524: $18 $23
 
+.entry1_timeOfDay:
 	ld   a, [wTimeOfDay]                                  ; $4526: $fa $20 $cb
 	jr   PushAOntoScriptCalcStack                                 ; $4529: $18 $1e
 
+.entry2_untimedAnswer:
 	ld   a, [wUntimedQuestionAnswer]                                  ; $452b: $fa $92 $cb
 	jr   PushAOntoScriptCalcStack                                 ; $452e: $18 $19
 
+.entry3_timedAnswer:
 	ld   a, [wTimedQuestionAnswer]                                  ; $4530: $fa $93 $cb
 	jr   PushAOntoScriptCalcStack                                 ; $4533: $18 $14
 
+.entry4_battleWon:
 	ld   a, [wBattleWon]                                  ; $4535: $fa $21 $cb
 	jr   PushAOntoScriptCalcStack                                 ; $4538: $18 $0f
 
-	ld   a, [$cb94]                                  ; $453a: $fa $94 $cb
+.entry5_randomNum:
+	ld   a, [wScriptRandomByte]                                  ; $453a: $fa $94 $cb
 	jr   PushAOntoScriptCalcStack                                 ; $453d: $18 $0a
 
 	ld   a, [$cb1e]                                  ; $453f: $fa $1e $cb
@@ -5868,14 +5876,15 @@ ScriptOpcode1c_SetPortraitAndCharacter_Main:
 
 
 ScriptOpcode1d_Init:
+;
 	call GetNextScriptOpcodeToProcess                               ; $67f6: $cd $70 $42
 	ld   h, a                                        ; $67f9: $67
 	call GetNextScriptOpcodeToProcess                               ; $67fa: $cd $70 $42
 	ld   l, a                                        ; $67fd: $6f
-	push hl                                          ; $67fe: $e5
 
+;
+	push hl                                          ; $67fe: $e5
 	M_FarCall GetSramByte2
-	
 	pop  hl                                          ; $6813: $e1
 	push af                                          ; $6814: $f5
 	
@@ -5887,10 +5896,10 @@ ScriptOpcode1d_Init:
 	jr   c, jr_008_6839                              ; $681c: $38 $1b
 
 	push hl                                          ; $681e: $e5
-
 	M_FarCall SetSramByte2
-
 	pop  hl                                          ; $6833: $e1
+
+;
 	pop  bc                                          ; $6834: $c1
 	sub  b                                           ; $6835: $90
 	ld   b, a                                        ; $6836: $47
@@ -6330,12 +6339,13 @@ ScriptOpcode1f_Main:
 	jp   DequeueAScriptOpcode                               ; $6b3e: $c3 $bc $40
 
 
-ScriptOpcode20_Init:
-ScriptOpcode20_Main:
+ScriptOpcode20_GenRandomNum_Init:
+ScriptOpcode20_GenRandomNum_Main:
 	call HandleProcessingScriptCalcStack                               ; $6b41: $cd $d1 $44
 	ld   [wRandomNumRange], a                                  ; $6b44: $ea $a5 $c2
+
 	call GetRandomNumInPreSpecifiedRange                                       ; $6b47: $cd $10 $0d
-	ld   [$cb94], a                                  ; $6b4a: $ea $94 $cb
+	ld   [wScriptRandomByte], a                                  ; $6b4a: $ea $94 $cb
 	ret                                              ; $6b4d: $c9
 
 

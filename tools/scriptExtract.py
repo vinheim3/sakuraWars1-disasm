@@ -63,7 +63,7 @@ class ScriptExtractor:
             "params": "b",
         },
         0x0f: {
-            "name": "ScriptOpt_0f", 
+            "name": "ScriptOpt_SetPortrait", 
             "params": "bb",
         },
         0x10: {

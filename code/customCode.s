@@ -1613,3 +1613,380 @@ AlterMiniGameHelpScreenAttrs::
 	ret
 
 endc
+
+
+SECTION "Custom misc $fb", ROMX[$69fc], BANK[$fb]
+
+if def(VWF)
+
+MiniGameResultsHook::
+; Tile map hook
+	ld   hl, $9800                                   ; $4fca: $21 $00 $98
+	ld   de, $7dc5                                   ; $4fcd: $11 $c5 $7d
+	call RLEXorCopy                                       ; $4fd0: $cd $d2 $09
+
+	ld   a, BANK(.layoutBox)
+	ldbc 6, 4
+	ld   de, .layoutBox
+	ld   hl, $9b68
+	call FarCopyLayout
+
+	ld   a, BANK(.results)
+	ldbc 9, 2
+	ld   de, .results
+	ld   hl, $9842
+	call FarCopyLayout
+
+	ld   a, BANK(.highScore)
+	ldbc 10, 3
+	ld   de, .highScore
+	ld   hl, $98a2
+	call FarCopyLayout
+
+	ld   a, BANK(.hiScorePopup)
+	ldbc 3, 1
+	ld   de, .hiScorePopup
+	ld   hl, $9b43
+	call FarCopyLayout
+
+	ld   a, BANK(.pointsEarned)
+	ldbc 10, 2
+	ld   de, .pointsEarned
+	ld   hl, $9962
+	call FarCopyLayout
+
+	ld   a, BANK(.ptsEarnedPopup)
+	ldbc 4, 1
+	ld   de, .ptsEarnedPopup
+	ld   hl, $9be2
+	call FarCopyLayout
+
+	ld   a, BANK(.currPtTotal)
+	ldbc 10, 4
+	ld   de, .currPtTotal
+	ld   hl, $99a2
+	call FarCopyLayout
+
+; Tile data hook
+	ld   a, $18                                      ; $4fd3: $3e $18
+	ld   hl, $8000                                   ; $4fd5: $21 $00 $80
+	ld   de, $46f7                                   ; $4fd8: $11 $f7 $46
+	call RLEXorCopy                                       ; $4fdb: $cd $d2 $09
+
+	ld   bc, $50
+	ld   de, $9000
+	ld   hl, .row1
+	call MemCopy
+
+	ld   bc, $50
+	ld   de, $9050
+	ld   hl, .row2
+	call MemCopy
+
+	ld   bc, $60
+	ld   de, $90a0
+	ld   hl, .row3
+	call MemCopy
+	
+	ld   bc, $60
+	ld   de, $9100
+	ld   hl, .row4
+	call MemCopy
+
+	ld   bc, $80
+	ld   de, $9160
+	ld   hl, .row5
+	call MemCopy
+
+	ld   bc, $80
+	ld   de, $91e0
+	ld   hl, .row6
+	call MemCopy
+
+	ld   bc, $a0
+	ld   de, $9260
+	ld   hl, .row7
+	call MemCopy
+
+	ld   bc, $a0
+	ld   de, $9300
+	ld   hl, .row8
+	call MemCopy
+
+	ld   bc, $20
+	ld   de, $93a0
+	ld   hl, .row9
+	call MemCopy
+
+	ld   bc, $a0
+	ld   de, $93c0
+	ld   hl, .row10
+	call MemCopy
+
+	ld   bc, $a0
+	ld   de, $9460
+	ld   hl, .row11
+	call MemCopy
+
+	ld   bc, $80
+	ld   de, $9500
+	ld   hl, .row12
+	call MemCopy
+
+	ld   bc, $a0
+	ld   de, $9580
+	ld   hl, .row13
+	call MemCopy
+
+	ld   bc, $a0
+	ld   de, $9620
+	ld   hl, .row14
+	call MemCopy
+
+	ld   bc, $a0
+	ld   de, $96c0
+	ld   hl, .row15
+	call MemCopy
+
+; Misc attributes
+	ld   a, $01
+	ldh  [rVBK], a
+
+	ld   a, BANK(.highScoreAttr)
+	ldbc 10, 3
+	ld   de, .highScoreAttr
+	ld   hl, $98a2
+	call FarCopyLayout
+
+	xor  a
+	ldh  [rVBK], a
+	ret
+.row1:
+	INCBIN "en_minigameResults.2bpp", 0, $50
+.row2:
+	INCBIN "en_minigameResults.2bpp", 10*$10, $50
+.row3:
+	INCBIN "en_minigameResults.2bpp", 20*$10, $60
+.row4:
+	INCBIN "en_minigameResults.2bpp", 30*$10, $60
+.row5:
+	INCBIN "en_minigameResults.2bpp", 40*$10, $80
+.row6:
+	INCBIN "en_minigameResults.2bpp", 50*$10, $80
+.row7:
+	INCBIN "en_minigameResults.2bpp", 60*$10, $a0
+.row8:
+	INCBIN "en_minigameResults.2bpp", 70*$10, $a0
+.row9:
+	INCBIN "en_minigameResults.2bpp", 82*$10, $20
+.row10:
+	INCBIN "en_minigameResults.2bpp", 90*$10, $a0
+.row11:
+	INCBIN "en_minigameResults.2bpp", 100*$10, $a0
+.row12:
+	INCBIN "en_minigameResults.2bpp", 111*$10, $80
+.row13:
+	INCBIN "en_minigameResults.2bpp", 120*$10, $a0
+.row14:
+	INCBIN "en_minigameResults.2bpp", 130*$10, $a0
+.row15:
+	INCBIN "en_minigameResults.2bpp", 140*$10, $a0
+.layoutBox:
+	db $00, $01, $02, $03, $04, $f6
+	db $05, $06, $07, $08, $09, $f6
+	db $0a, $0b, $0c, $0d, $0e, $0f
+	db $10, $11, $12, $13, $14, $15
+.results:
+	db $16, $17, $18, $19, $1a, $1b, $1c, $1d, $80
+	db $1e, $1f, $20, $21, $22, $23, $24, $25, $80
+.highScore:
+	db $26, $27, $28, $29, $2a, $2b, $2c, $2d, $2e, $2f
+	db $30, $31, $32, $33, $34, $35, $36, $37, $38, $39
+	db $80, $80, $3a, $3b, $80, $80, $80, $80, $80, $80
+.hiScorePopup:
+	db $80, $3a, $3b
+.pointsEarned:
+	db $3c, $3d, $3e, $3f, $40, $41, $42, $43, $44, $45
+	db $46, $47, $48, $49, $4a, $4b, $4c, $4d, $4e, $4f
+.ptsEarnedPopup:
+	db $3c, $3d, $3e, $3f
+.currPtTotal:
+	db $80, $50, $51, $52, $53, $54, $55, $56, $57, $80
+	db $58, $59, $5a, $5b, $5c, $5d, $5e, $5f, $60, $61
+	db $62, $63, $64, $65, $66, $67, $68, $69, $6a, $6b
+	db $6c, $6d, $6e, $6f, $70, $71, $72, $73, $74, $75
+.highScoreAttr:
+	db $01, $01, $01, $01, $01, $01, $01, $01, $01, $01
+	db $01, $01, $01, $01, $01, $01, $01, $01, $01, $01
+	db $01, $01, $01, $01, $01, $01, $01, $01, $01, $01
+
+
+EnLoadSakuraMiniGameGfx0::
+	ld   bc, $f0
+	ld   de, $9620
+	ld   hl, .row1
+	call MemCopy
+
+	ld   bc, $f0
+	ld   de, $9710
+	ld   hl, .row2_1
+	call MemCopy
+
+	ld   bc, $30
+	ld   de, $9270
+	ld   hl, .pts1
+	call MemCopy
+
+	ld   bc, $30
+	ld   de, $93a0
+	ld   hl, .pts2
+	call MemCopy
+
+	ld   bc, $30
+	ld   de, $9470
+	ld   hl, .pts3
+	call MemCopy
+
+	ld   bc, $30
+	ld   de, $9530
+	ld   hl, .pts4
+	call MemCopy
+
+	ld   bc, $20
+	ld   de, $9370
+	ld   hl, .logs1
+	call MemCopy
+
+	ld   bc, $20
+	ld   de, $9440
+	ld   hl, .logs2
+	call MemCopy
+
+	ld   bc, $20
+	ld   de, $9500
+	ld   hl, .logs3
+	call MemCopy
+
+	ret
+.row1:
+	INCBIN "en_sakuraMiniGameMain.2bpp", 3*$10, $f0
+.row2_1:
+	INCBIN "en_sakuraMiniGameMain.2bpp", 22*$10, $f0
+.pts1:
+	INCBIN "en_sakuraMiniGameMain.2bpp", 240*$10, $30
+.pts2:
+	INCBIN "en_sakuraMiniGameMain.2bpp", 260*$10, $30
+.pts3:
+	INCBIN "en_sakuraMiniGameMain.2bpp", 280*$10, $30
+.pts4:
+	INCBIN "en_sakuraMiniGameMain.2bpp", 300*$10, $30
+.logs1:
+	INCBIN "en_sakuraMiniGameMain.2bpp", 243*$10, $20
+.logs2:
+	INCBIN "en_sakuraMiniGameMain.2bpp", 263*$10, $20
+.logs3:
+	INCBIN "en_sakuraMiniGameMain.2bpp", 283*$10, $20
+
+
+EnLoadSakuraMiniGameGfx1::
+	ld   bc, $10
+	ld   de, $8800
+	ld   hl, .row2_2
+	call MemCopy
+
+	ld   bc, $100
+	ld   de, $8810
+	ld   hl, .row3
+	call MemCopy
+
+	ld   bc, $100
+	ld   de, $8910
+	ld   hl, .row4
+	call MemCopy
+
+	ld   bc, $e0
+	ld   de, $8a10
+	ld   hl, .row5
+	call MemCopy
+
+	ld   bc, $e0
+	ld   de, $8af0
+	ld   hl, .row6
+	call MemCopy
+
+	ld   bc, $e0
+	ld   de, $8bd0
+	ld   hl, .row7
+	call MemCopy
+
+	ld   bc, $20
+	ld   de, $8cb0
+	ld   hl, .row8
+	call MemCopy
+
+	ld   bc, $30
+	ld   de, $8cd0
+	ld   hl, .row9_1
+	call MemCopy
+
+	ld   bc, $60
+	ld   de, $8da0
+	ld   hl, .row9_2
+	call MemCopy
+
+	ld   bc, $10
+	ld   de, $8ea0
+	ld   hl, .row9_3
+	call MemCopy
+
+	ld   bc, $50
+	ld   de, $8eb0
+	ld   hl, .row10_1
+	call MemCopy
+
+	ld   bc, $50
+	ld   de, $8fa0
+	ld   hl, .row10_2
+	call MemCopy
+
+	ld   bc, $a0
+	ld   de, $8ff0
+	ld   hl, .row11
+	call MemCopy
+
+	ld   bc, $a0
+	ld   de, $9090
+	ld   hl, .row12
+	call MemCopy
+
+	ret
+.row2_2:
+	INCBIN "en_sakuraMiniGameMain.2bpp", 37*$10, $10
+.row3:
+	INCBIN "en_sakuraMiniGameMain.2bpp", 42*$10, $100
+.row4:
+	INCBIN "en_sakuraMiniGameMain.2bpp", 62*$10, $100
+.row5:
+	INCBIN "en_sakuraMiniGameMain.2bpp", 83*$10, $e0
+.row6:
+	INCBIN "en_sakuraMiniGameMain.2bpp", 103*$10, $e0
+.row7:
+	INCBIN "en_sakuraMiniGameMain.2bpp", 123*$10, $e0
+.row8:
+	INCBIN "en_sakuraMiniGameMain.2bpp", 153*$10, $20
+.row9_1:
+	INCBIN "en_sakuraMiniGameMain.2bpp", 165*$10, $30
+.row9_2:
+	INCBIN "en_sakuraMiniGameMain.2bpp", 168*$10, $60
+.row9_3:
+	INCBIN "en_sakuraMiniGameMain.2bpp", 174*$10, $10
+.row10_1:
+	INCBIN "en_sakuraMiniGameMain.2bpp", 185*$10, $50
+.row10_2:
+	INCBIN "en_sakuraMiniGameMain.2bpp", 190*$10, $50
+.row11:
+	INCBIN "en_sakuraMiniGameMain.2bpp", 205*$10, $a0
+.row12:
+	INCBIN "en_sakuraMiniGameMain.2bpp", 225*$10, $a0
+
+endc
