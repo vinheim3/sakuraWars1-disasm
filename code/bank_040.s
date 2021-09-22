@@ -6849,7 +6849,7 @@ endr
 else
 
 	db $00, $00, $00
-	db $03, $00, $00
+	ScriptSrc Script_001
 	db $73, $12, $00
 	db $5f, $15, $00
 	db $b0, $1b, $00

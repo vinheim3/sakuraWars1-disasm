@@ -46,6 +46,10 @@
 ; rgbgfx -o en_kannaMGPopup.2bpp -u -T en_kannaMGPopup.png
 ; rgbgfx -o en_minigameSelection.2bpp en_minigameSelection.png
 ; rgbgfx -o en_saveScreenPopups.2bpp -u -T en_saveScreenPopups.png
+; rgbgfx -o en_dmg.2bpp -u -T en_dmg.png
+; rgbgfx -o en_resetData.2bpp en_resetData.png
+; rgbgfx -o en_romandoShopCurrPts.2bpp en_romandoShopCurrPts.png
+; rgbgfx -o en_trainingSchedule.2bpp en_trainingSchedule.png
 ; tools/gfx.py 1bpp newLetters.png --from=png --interleave
 
 ; empty banks

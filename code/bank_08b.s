@@ -1691,4 +1691,132 @@ Gfx_EnDormRoomDayDetails::
 	INCBIN "en_dormRoomDayDetails.2bpp"
 .end::
 
+
+EnDMGScreen::
+	ld   bc, .layout-.gfx
+	ld   de, _VRAM+$800
+	ld   hl, .gfx
+	call MemCopy
+
+	ld   a, BANK(.layout)
+	ldbc 20, 18
+	ld   de, .layout
+	ld   hl, _SCRN0
+	call FarCopyLayout
+	ret
+
+.gfx:
+	INCBIN "en_dmg.2bpp"
+
+.layout:
+	db $80, $81, $82, $83, $84, $85, $82, $83, $84, $85, $82, $83, $84, $85, $82, $83, $84, $85, $86, $87
+	db $88, $89, $8a, $8b, $8c, $8d, $8a, $8b, $8c, $8d, $8a, $8b, $8c, $8d, $8a, $8b, $8c, $8d, $8e, $8f
+	db $90, $91, $92, $93, $94, $95, $96, $93, $94, $95, $96, $93, $94, $95, $96, $93, $94, $97, $98, $99
+	db $9a, $9b, $9c, $9d, $9e, $9f, $9f, $9f, $9f, $a0, $9f, $9f, $a1, $9f, $a2, $9f, $9f, $a3, $a4, $8d
+	db $a5, $a6, $a7, $a8, $a9, $aa, $ab, $ac, $ad, $ae, $af, $b0, $b1, $af, $b2, $a8, $b3, $b4, $b5, $b6
+	db $b7, $b8, $b9, $ba, $bb, $bc, $bd, $be, $bf, $c0, $c1, $c2, $c3, $c4, $c5, $c6, $9f, $c7, $c8, $c9
+	db $90, $ca, $cb, $cc, $cd, $ce, $cf, $d0, $d1, $d2, $d3, $d4, $d5, $d6, $d7, $d8, $9f, $c7, $d9, $99
+	db $9a, $9b, $da, $db, $dc, $dd, $de, $dd, $df, $e0, $b3, $e1, $af, $e2, $e3, $e4, $e5, $c7, $a4, $8d
+	db $a5, $a6, $e6, $e7, $e8, $e9, $ea, $eb, $ec, $ed, $ee, $ef, $f0, $f1, $f2, $9f, $9f, $c7, $b5, $b6
+	db $b7, $b8, $f3, $f4, $f5, $f6, $f7, $f8, $f9, $fa, $fb, $fc, $fa, $fd, $fe, $9f, $9f, $c7, $c8, $c9
+	db $90, $ca, $ff, $00, $01, $02, $02, $01, $01, $02, $02, $01, $01, $02, $02, $00, $01, $03, $d9, $99
+	db $9a, $9b, $8c, $04, $05, $06, $07, $08, $09, $0a, $0b, $0c, $0d, $0e, $0f, $10, $11, $8b, $a4, $8d
+	db $a5, $a6, $8d, $12, $13, $14, $15, $16, $17, $18, $19, $1a, $1b, $1c, $1d, $1e, $1f, $8c, $b5, $b6
+	db $b7, $20, $21, $22, $23, $24, $21, $22, $23, $24, $21, $22, $23, $24, $21, $22, $23, $24, $25, $c9
+	db $90, $8a, $26, $27, $28, $29, $2a, $8c, $2b, $2c, $2d, $2e, $2f, $8a, $30, $31, $32, $33, $8b, $99
+	db $9a, $8b, $34, $35, $36, $37, $38, $39, $3a, $3b, $3c, $3d, $3e, $3f, $40, $41, $42, $43, $8c, $8d
+	db $44, $45, $8d, $8a, $8b, $8c, $8d, $8a, $8b, $8c, $8d, $8a, $8b, $8c, $8d, $8a, $8b, $8c, $46, $47
+	db $48, $89, $49, $4a, $4b, $8d, $49, $4a, $4b, $8d, $49, $4a, $4b, $8d, $49, $4a, $4b, $8d, $4c, $4d
+
+
+EnResetDataHook::
+; Original tile attr hook
+	ld   de, RleXorTileAttr_ResetData
+	call RLEXorCopy
+
+	ld   a, BANK(.attrs)
+	ldbc 10, 8
+	ld   de, .attrs
+	ld   hl, $9865
+	call FarCopyLayout
+
+; Load new tile data
+	ld   bc, .layout-.gfx
+	ld   de, $9000
+	ld   hl, .gfx
+	call MemCopy
+
+; Original tile map hook
+	xor  a                                                          ; $403a
+	ldh  [rVBK], a                                                  ; $403b
+	ld   a, BANK(RleXorTileMap_ResetData)                           ; $403d
+	ld   hl, _SCRN0                                                 ; $403f
+	ld   de, RleXorTileMap_ResetData                                ; $4042
+	call RLEXorCopy                                                 ; $4045
+
+	ld   a, BANK(.layout)
+	ldbc 10, 8
+	ld   de, .layout
+	ld   hl, $9865
+	call FarCopyLayout
+
+	ret
+
+.gfx:
+	INCBIN "en_resetData.2bpp"
+.layout:
+	db $00, $01, $02, $03, $04, $05, $06, $07, $08, $09
+	db $0a, $0b, $0c, $0d, $0e, $0f, $10, $11, $12, $13
+	db $14, $15, $16, $17, $18, $19, $1a, $1b, $1c, $1d
+	db $1e, $1f, $20, $21, $22, $23, $24, $25, $26, $27
+	db $28, $29, $2a, $2b, $2c, $2d, $2e, $2f, $30, $31
+	db $32, $33, $34, $35, $36, $37, $38, $39, $3a, $3b
+	db $3c, $3d, $3e, $3f, $40, $41, $42, $43, $44, $45
+	db $46, $47, $48, $49, $4a, $4b, $4c, $4d, $4e, $4f
+.attrs:
+	db $08, $08, $08, $08, $08, $08, $08, $08, $08, $08
+	db $08, $08, $08, $08, $08, $08, $08, $08, $08, $08
+	db $08, $08, $08, $08, $08, $08, $08, $08, $08, $08
+	db $08, $08, $08, $08, $08, $08, $08, $08, $08, $08
+	db $08, $08, $08, $08, $08, $08, $08, $08, $08, $08
+	db $08, $08, $08, $08, $08, $08, $08, $08, $08, $08
+	db $08, $08, $08, $08, $08, $08, $08, $08, $08, $08
+	db $08, $08, $08, $08, $08, $08, $08, $08, $08, $08
+
+
+EnLoadRomandoShopCurrPtsTileData::
+	ld   bc, $10
+	ld   de, $d000+$c00
+	ld   hl, .gfx
+	call MemCopy
+
+	ld   bc, $70
+	ld   de, $d000+$d00
+	ld   hl, .gfx+$10
+	call MemCopy
+
+	ld   bc, $10
+	ld   de, $d000+$c10
+	ld   hl, .gfx+$80
+	call MemCopy
+
+	ld   bc, $10
+	ld   de, $d000+$c20
+	ld   hl, .gfx+$90
+	call MemCopy
+
+	ld   bc, $70
+	ld   de, $d000+$e00
+	ld   hl, .gfx+$a0
+	call MemCopy
+
+	ld   bc, $10
+	ld   de, $d000+$c30
+	ld   hl, .gfx+$110
+	call MemCopy
+	ret
+.gfx:
+	INCBIN "en_romandoShopCurrPts.2bpp"
+.end:
+
 endc

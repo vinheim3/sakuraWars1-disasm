@@ -7503,6 +7503,9 @@ GameState13_DMG::
 
 ; Copy to screen, then tile data
 	ld   a, BANK(RleXorTileMap_DMG)                                 ; $6dc7
+if def(VWF)
+	M_FarCall EnDMGScreen
+else
 	ld   hl, _SCRN0                                                 ; $6dc9
 	ld   de, RleXorTileMap_DMG                                      ; $6dcc
 	call RLEXorCopy                                                 ; $6dcf
@@ -7511,6 +7514,7 @@ GameState13_DMG::
 	ld   hl, _VRAM+$800                                             ; $6dd4
 	ld   de, RleXorGfx_DMG                                          ; $6dd7
 	call RLEXorCopy                                                 ; $6dda
+endc
 
 ; Clear window and scroll regs, then turn on LCD
 	xor  a                                                          ; $6ddd
@@ -7552,7 +7556,7 @@ GameState13_DMG::
 	db %11100100
 
 
-HandleDMG::
+SetDMGState::
 	ld   a, GS_DMG                                                  ; $6e0e
 	ld   [wGameState], a                                            ; $6e10
 	ld   a, $00                                                     ; $6e13

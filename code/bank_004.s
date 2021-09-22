@@ -10,18 +10,19 @@ SECTION "ROM Bank $004", ROMX[$4000], BANK[$4]
 GameState42_RomandoShop::
 	ld   a, [wGameSubstate]                                  ; $4000: $fa $a1 $c2
 	dec  a                                           ; $4003: $3d
-	jp   z, Jump_004_44ae                            ; $4004: $ca $ae $44
+	jp   z, RomandoShopSubstate1                            ; $4004: $ca $ae $44
 
 	dec  a                                           ; $4007: $3d
-	jp   z, Jump_004_44eb                            ; $4008: $ca $eb $44
+	jp   z, RomandoShopSubstate2                            ; $4008: $ca $eb $44
 
+; Substate 0
 	xor  a                                           ; $400b: $af
 	ld   [$cc57], a                                  ; $400c: $ea $57 $cc
 	ld   [$cc58], a                                  ; $400f: $ea $58 $cc
-	jp   Jump_004_4015                               ; $4012: $c3 $15 $40
+	jp   RomandoShopSubstate0                               ; $4012: $c3 $15 $40
 
 
-Jump_004_4015:
+RomandoShopSubstate0:
 	ld   a, [wWramBank]                                  ; $4015: $fa $93 $c2
 	push af                                          ; $4018: $f5
 	ld   a, $02                                      ; $4019: $3e $02
@@ -752,7 +753,7 @@ jr_004_44ac:
 	ret                                              ; $44ad: $c9
 
 
-Jump_004_44ae:
+RomandoShopSubstate1:
 	call Call_004_4253                               ; $44ae: $cd $53 $42
 	ld   a, [$cc58]                                  ; $44b1: $fa $58 $cc
 	ld   hl, $cc56                                   ; $44b4: $21 $56 $cc
@@ -792,10 +793,10 @@ jr_004_44da:
 	ld   [$cc57], a                                  ; $44e5: $ea $57 $cc
 
 jr_004_44e8:
-	jp   Jump_004_4015                               ; $44e8: $c3 $15 $40
+	jp   RomandoShopSubstate0                               ; $44e8: $c3 $15 $40
 
 
-Jump_004_44eb:
+RomandoShopSubstate2:
 	ld   a, [wWramBank]                                  ; $44eb: $fa $93 $c2
 	push af                                          ; $44ee: $f5
 	ld   a, $02                                      ; $44ef: $3e $02
@@ -892,7 +893,11 @@ Jump_004_44eb:
 	ld   a, $94                                      ; $4568: $3e $94
 	ld   hl, $d000                                   ; $456a: $21 $00 $d0
 	ld   de, $6cf3                                   ; $456d: $11 $f3 $6c
+if def(VWF)
+	call RomandoShopBank0_8000hHook
+else
 	call RLEXorCopy                                       ; $4570: $cd $d2 $09
+endc
 	ld   c, $80                                      ; $4573: $0e $80
 	ld   de, $8000                                   ; $4575: $11 $00 $80
 	ld   a, $07                                      ; $4578: $3e $07
@@ -936,7 +941,11 @@ Jump_004_44eb:
 	ld   bc, $1420                                   ; $45c2: $01 $20 $14
 	call FarCopyLayout                                       ; $45c5: $cd $2c $0b
 	ld   hl, $d400                                   ; $45c8: $21 $00 $d4
+if def(VWF)
+	call RomandoShopTileMapHook
+else
 	call FarCopyLayout                                       ; $45cb: $cd $2c $0b
+endc
 	ld   c, $81                                      ; $45ce: $0e $81
 	ld   de, $9800                                   ; $45d0: $11 $00 $98
 	ld   a, $07                                      ; $45d3: $3e $07
@@ -8582,4 +8591,26 @@ TileMap_DormRoomStatsLabels:
 	db $9d, $9e, $a9, $a9, $a4
 	db $9f, $a0, $a1, $a9, $a4
 	db $a2, $a3, $b3, $b4, $a4
+
+
+RomandoShopBank0_8000hHook:
+	call RLEXorCopy
+
+	M_FarCall EnLoadRomandoShopCurrPtsTileData
+	ret
+	
+
+RomandoShopTileMapHook:
+	call FarCopyLayout
+
+	ld   a, $c0
+	ld   [$d400+$c2], a
+	inc  a
+	ld   [$d400+$ca], a
+	inc  a
+	ld   [$d400+$e2], a
+	inc  a
+	ld   [$d400+$ea], a
+	ret
+
 endc

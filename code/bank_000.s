@@ -4652,7 +4652,7 @@ endr
 	cp   $11                                                        ; $15b4
 	jr   z, .isGBC                                                  ; $15b6
 
-	M_FarCall HandleDMG
+	M_FarCall SetDMGState
 	ret                                                             ; $15cc
 
 .isGBC:

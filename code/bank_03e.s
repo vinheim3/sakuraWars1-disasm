@@ -40,6 +40,9 @@ GameState12_ResetData::
 	ldh  [rVBK], a                                                  ; $402d
 	ld   a, BANK(RleXorTileAttr_ResetData)                          ; $402f
 	ld   hl, _SCRN0                                                 ; $4031
+if def(VWF)
+	M_FarCall EnResetDataHook
+else
 	ld   de, RleXorTileAttr_ResetData                               ; $4034
 	call RLEXorCopy                                                 ; $4037
 
@@ -50,6 +53,7 @@ GameState12_ResetData::
 	ld   hl, _SCRN0                                                 ; $403f
 	ld   de, RleXorTileMap_ResetData                                ; $4042
 	call RLEXorCopy                                                 ; $4045
+endc
 
 ; Load tile data
 	ld   a, BANK(RleXorTileData_ResetData)                          ; $4048
