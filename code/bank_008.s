@@ -5076,7 +5076,11 @@ ScriptOpcode18_UntimedQuestion_Init:
 	ld   [wWramBank], a                                  ; $6179: $ea $93 $c2
 	ldh  [rSVBK], a                                  ; $617c: $e0 $70
 	ld   hl, $d340                                   ; $617e: $21 $40 $d3
+if def(PORTRAITLESS_UNTIMED)
+	ld   bc, $0360
+else
 	ld   bc, $02a0                                   ; $6181: $01 $a0 $02
+endc
 	ld   de, $0000                                   ; $6184: $11 $00 $00
 	call CopyEthenDintoHL_BCtimes                                       ; $6187: $cd $9f $09
 	ld   a, $18                                      ; $618a: $3e $18
@@ -5090,33 +5094,37 @@ ScriptOpcode18_UntimedQuestion_Init:
 	ld   bc, $ffff                                   ; $6198: $01 $ff $ff
 	call GetNextScriptOpcodeToProcess                               ; $619b: $cd $70 $42
 
-	M_FarCall Func_0a_5682
+	M_FarCall InitUntimedQuestionsVars
 	
 	pop  de                                          ; $61b2: $d1
 	pop  hl                                          ; $61b3: $e1
 
-.loop_61b4:
+.nextAnswer:
 	push de                                          ; $61b4: $d5
 	push hl                                          ; $61b5: $e5
 	ld   b, $00                                      ; $61b6: $06 $00
 	ld   c, e                                        ; $61b8: $4b
 	call SetCurrKanjiColAndRowToDrawOn                                       ; $61b9: $cd $34 $14
+if def(PORTRAITLESS_UNTIMED)
+	call AddSpaceInUntimedAnswer
+else
 	ld   hl, $da80                                   ; $61bc: $21 $80 $da
+endc
 
-.loop_61bf:
+.nextAnswersKanji:
 	call GetNextScriptOpcodeToProcess                               ; $61bf: $cd $70 $42
 	ld   [hl+], a                                    ; $61c2: $22
 	or   a                                           ; $61c3: $b7
-	jr   z, .br_61d0                              ; $61c4: $28 $0a
+	jr   z, .toNextAnswer                              ; $61c4: $28 $0a
 
 	cp   $08                                         ; $61c6: $fe $08
-	jr   nc, .loop_61bf                             ; $61c8: $30 $f5
+	jr   nc, .nextAnswersKanji                             ; $61c8: $30 $f5
 
 	call GetNextScriptOpcodeToProcess                               ; $61ca: $cd $70 $42
 	ld   [hl+], a                                    ; $61cd: $22
-	jr   .loop_61bf                                 ; $61ce: $18 $ef
+	jr   .nextAnswersKanji                                 ; $61ce: $18 $ef
 
-.br_61d0:
+.toNextAnswer:
 	ld   hl, $d340                                   ; $61d0: $21 $40 $d3
 	xor  a                                           ; $61d3: $af
 	ld   de, $da80                                   ; $61d4: $11 $80 $da
@@ -5127,7 +5135,7 @@ ScriptOpcode18_UntimedQuestion_Init:
 	pop  de                                          ; $61df: $d1
 	inc  e                                           ; $61e0: $1c
 	dec  d                                           ; $61e1: $15
-	jr   nz, .loop_61b4                             ; $61e2: $20 $d0
+	jr   nz, .nextAnswer                             ; $61e2: $20 $d0
 
 	pop  hl                                          ; $61e4: $e1
 	pop  af                                          ; $61e5: $f1
@@ -8119,7 +8127,7 @@ ScriptOpcode30_Main:
 	ld   h, GS_MAIN_CONVO                                      ; $7745: $26 $3b
 	ld   l, $01                                      ; $7747: $2e $01
 
-	M_FarCall Func_0c_5a33
+	M_FarCall SetScheduleState
 	
 	ld   a, SO_02                                      ; $775d: $3e $02
 	call AddInterruptScriptOpcode                               ; $775f: $cd $ba $42
@@ -8153,5 +8161,15 @@ TextScriptByteBh:
 	call AddDictWordToConvoStructForCurrTextBox
 
 	jp ScriptOpcode01_DisplayText_Init.toNextDataByte
+
+endc
+
+if def(PORTRAITLESS_UNTIMED)
+
+AddSpaceInUntimedAnswer:
+	ld   hl, $da80
+	ld   a, " "
+	ld   [hl+], a
+	ret
 
 endc

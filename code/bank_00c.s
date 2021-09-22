@@ -4306,7 +4306,7 @@ jr_00c_5a12:
 	ret                                              ; $5a32: $c9
 
 
-Func_0c_5a33::
+SetScheduleState::
 	ld   a, h                                        ; $5a33: $7c
 	ld   [$cc2a], a                                  ; $5a34: $ea $2a $cc
 	ld   a, l                                        ; $5a37: $7d

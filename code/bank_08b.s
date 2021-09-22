@@ -1820,3 +1820,94 @@ EnLoadRomandoShopCurrPtsTileData::
 .end:
 
 endc
+
+if def(PORTRAITLESS_UNTIMED)
+
+_EnUntimedQuestionVramUpdateHookWide::
+	ld   a, BANK(.layout)
+	ldbc 20, 6
+	ld   de, .layout
+	ld   hl, $db00
+	call FarCopyLayout
+
+	ld   a, BANK(.attrs)
+	ldbc 20, 6
+	ld   de, .attrs
+	ld   hl, $dbc0
+	call FarCopyLayout
+
+	ld   c, $80
+	ld   de, $9960
+	ld   a, $02
+	ld   hl, $db00
+	ld   b, $0c
+	call EnqueueHDMATransfer
+
+	ld   c, $81
+	ld   de, $9960
+	ld   a, $02
+	ld   hl, $dbc0
+	ld   b, $0c
+	call EnqueueHDMATransfer
+	ret
+
+.layout:
+	db $f6, $80, $82, $84, $86, $88, $8a, $8c, $8e, $90, $92, $94, $96, $98, $9a, $9c, $9e, $a0, $a2, $f6
+	db $f7, $81, $83, $85, $87, $89, $8b, $8d, $8f, $91, $93, $95, $97, $99, $9b, $9d, $9f, $a1, $a3, $f7
+	db $f8, $a4, $a6, $a8, $aa, $ac, $ae, $b0, $b2, $b4, $b6, $b8, $ba, $bc, $be, $c0, $c2, $c4, $c6, $f8
+	db $f9, $a5, $a7, $a9, $ab, $ad, $af, $b1, $b3, $b5, $b7, $b9, $bb, $bd, $bf, $c1, $c3, $c5, $c7, $f9
+	db $f8, $c8, $ca, $cc, $ce, $d0, $d2, $d4, $d6, $d8, $da, $dc, $de, $e0, $e2, $e4, $e6, $e8, $ea, $f8
+	db $fa, $c9, $cb, $cd, $cf, $d1, $d3, $d5, $d7, $d9, $db, $dd, $df, $e1, $e3, $e5, $e7, $e9, $eb, $fa
+.attrs:
+	db $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $28
+	db $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $28
+	db $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $28
+	db $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $28
+	db $48, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $68
+	db $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $28
+
+
+_EnUntimedQuestionVramUpdateHookNarrow::
+	ld   a, BANK(.layout)
+	ldbc 20, 6
+	ld   de, .layout
+	ld   hl, $db00
+	call FarCopyLayout
+
+	ld   a, BANK(.attrs)
+	ldbc 20, 6
+	ld   de, .attrs
+	ld   hl, $dbc0
+	call FarCopyLayout
+
+	ld   c, $80
+	ld   de, $9960
+	ld   a, $02
+	ld   hl, $db00
+	ld   b, $0c
+	call EnqueueHDMATransfer
+
+	ld   c, $81
+	ld   de, $9960
+	ld   a, $02
+	ld   hl, $dbc0
+	ld   b, $0c
+	call EnqueueHDMATransfer
+	ret
+
+.layout:
+	db $f6, $d4, $d5, $d6, $d7, $80, $82, $84, $86, $88, $8a, $8c, $8e, $90, $92, $94, $96, $98, $9a, $f6
+	db $f7, $d8, $d9, $da, $db, $81, $83, $85, $87, $89, $8b, $8d, $8f, $91, $93, $95, $97, $99, $9b, $f7
+	db $f8, $dc, $dd, $de, $df, $9c, $9e, $a0, $a2, $a4, $a6, $a8, $aa, $ac, $ae, $b0, $b2, $b4, $b6, $f8
+	db $f9, $e0, $e1, $e2, $e3, $9d, $9f, $a1, $a3, $a5, $a7, $a9, $ab, $ad, $af, $b1, $b3, $b5, $b7, $f9
+	db $f8, $e4, $e5, $e6, $e7, $b8, $ba, $bc, $be, $c0, $c2, $c4, $c6, $c8, $ca, $cc, $ce, $d0, $d2, $f8
+	db $fa, $e8, $e9, $ea, $eb, $b9, $bb, $bd, $bf, $c1, $c3, $c5, $c7, $c9, $cb, $cd, $cf, $d1, $d3, $fa
+.attrs:
+	db $08, $09, $09, $09, $09, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $28
+	db $08, $09, $09, $09, $09, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $28
+	db $08, $09, $09, $09, $09, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $28
+	db $08, $09, $09, $09, $09, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $28
+	db $48, $09, $09, $09, $09, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $68
+	db $08, $09, $09, $09, $09, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $28
+
+endc

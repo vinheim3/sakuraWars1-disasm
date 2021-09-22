@@ -2552,7 +2552,7 @@ CharacterPortraitTileDatas:
 	db $c4, $5e, $91
 
 
-Func_0a_5682::
+InitUntimedQuestionsVars::
 	ld   [$cbdd], a                                  ; $5682: $ea $dd $cb
 	ld   a, h                                        ; $5685: $7c
 	ld   [$cbdc], a                                  ; $5686: $ea $dc $cb
@@ -2566,7 +2566,11 @@ Func_0a_5682::
 	ld   [wUntimedQuestionProcessStep], a                                  ; $5696: $ea $d8 $cb
 	ld   [wUntimedQuestionProcessMiscCounter], a                                  ; $5699: $ea $d9 $cb
 	ld   [$cbda], a                                  ; $569c: $ea $da $cb
+if def(PORTRAITLESS_UNTIMED)
+	call InitUntimedQuestionsHook
+else
 	ld   [$cbde], a                                  ; $569f: $ea $de $cb
+endc
 	ret                                              ; $56a2: $c9
 
 
@@ -2604,23 +2608,23 @@ HandleUntimedQuestionProcess::
 	ret                                              ; $56c8: $c9
 
 .table:
+	dw UntimedQuestionProcessStep0
 	dw UntimedQuestionProcessStep1
-	dw $57b5
-	dw $5816
+	dw UntimedQuestionProcessStep2
+	dw UntimedQuestionProcessStep3
 	dw UntimedQuestionProcessStep4
-	dw $5893
-	dw $58ba
-	dw $5893
-	dw $5906
+	dw UntimedQuestionProcessStep5
+	dw UntimedQuestionProcessStep6
+	dw UntimedQuestionProcessStep7
 
 
-UntimedQuestionProcessStep1:
-UntimedQuestionProcessStep4:
+UntimedQuestionProcessStep0:
+UntimedQuestionProcessStep3:
 	ld   hl, wUntimedQuestionProcessMiscCounter                                   ; $56d9: $21 $d9 $cb
 	ld   a, [hl]                                     ; $56dc: $7e
 	inc  [hl]                                        ; $56dd: $34
 	or   a                                           ; $56de: $b7
-	jr   nz, jr_00a_5711                             ; $56df: $20 $30
+	jr   nz, .afterInit                             ; $56df: $20 $30
 
 	xor  a                                           ; $56e1: $af
 	ld   [$cbde], a                                  ; $56e2: $ea $de $cb
@@ -2642,21 +2646,25 @@ UntimedQuestionProcessStep4:
 	ld   de, $7000                                   ; $570b: $11 $00 $70
 	call FarLoadPaletteValsFadeToValsAndSetFadeSpeed                                       ; $570e: $cd $48 $07
 
-jr_00a_5711:
+.afterInit:
 	ld   a, [wUntimedQuestionProcessMiscCounter]                                  ; $5711: $fa $d9 $cb
 	cp   $10                                         ; $5714: $fe $10
-	jr   nc, jr_00a_571f                             ; $5716: $30 $07
+	jr   nc, .afterFade                             ; $5716: $30 $07
 
 	ld   bc, $000c                                   ; $5718: $01 $0c $00
 	call FadePalettesAndSetRangeToUpdate                                       ; $571b: $cd $32 $08
 	ret                                              ; $571e: $c9
 
-jr_00a_571f:
+.afterFade:
 	ld   a, [wUntimedQuestionProcessStep]                                  ; $571f: $fa $d8 $cb
 	cp   $03                                         ; $5722: $fe $03
-	jr   z, jr_00a_575e                              ; $5724: $28 $38
+	jr   z, .step3                              ; $5724: $28 $38
 
+if def(PORTRAITLESS_UNTIMED)
+	ld   bc, 0
+else
 	ld   bc, $0001                                   ; $5726: $01 $01 $00
+endc
 	M_FarCall todo_DisplayCharacterPortrait
 
 	ld   de, $da08                                   ; $573d: $11 $08 $da
@@ -2668,31 +2676,24 @@ jr_00a_571f:
 	ld   de, $7fff                                   ; $574f: $11 $ff $7f
 	call CopyEthenDintoHL_BCtimes                                       ; $5752: $cd $9f $09
 
-jr_00a_5755:
+.toNextStep:
 	ld   hl, wUntimedQuestionProcessStep                                   ; $5755: $21 $d8 $cb
 	inc  [hl]                                        ; $5758: $34
 	xor  a                                           ; $5759: $af
 	ld   [wUntimedQuestionProcessMiscCounter], a                                  ; $575a: $ea $d9 $cb
 	ret                                              ; $575d: $c9
 
-
-jr_00a_575e:
+.step3:
 	ld   a, [$cbdf]                                  ; $575e: $fa $df $cb
 	bit  7, a                                        ; $5761: $cb $7f
-	jr   nz, jr_00a_5798                             ; $5763: $20 $33
+	jr   nz, .br_5798                             ; $5763: $20 $33
 
 	ld   b, a                                        ; $5765: $47
 	ld   a, [$cbe0]                                  ; $5766: $fa $e0 $cb
 	ld   c, a                                        ; $5769: $4f
-	push af                                          ; $576a: $f5
-	ld   a, $ba                                      ; $576b: $3e $ba
-	ld   [wFarCallAddr], a                                  ; $576d: $ea $98 $c2
-	ld   a, $54                                      ; $5770: $3e $54
-	ld   [wFarCallAddr+1], a                                  ; $5772: $ea $99 $c2
-	ld   a, $0a                                      ; $5775: $3e $0a
-	ld   [wFarCallBank], a                                  ; $5777: $ea $9a $c2
-	pop  af                                          ; $577a: $f1
-	call FarCall                                       ; $577b: $cd $62 $09
+
+	M_FarCall todo_DisplayCharacterPortrait
+
 	ld   de, $da08                                   ; $577e: $11 $08 $da
 	ld   hl, wBGPalettes+1*8                                   ; $5781: $21 $e6 $c2
 	ld   bc, $0010                                   ; $5784: $01 $10 $00
@@ -2701,9 +2702,9 @@ jr_00a_575e:
 	ld   bc, $0008                                   ; $578d: $01 $08 $00
 	ld   de, $7fff                                   ; $5790: $11 $ff $7f
 	call CopyEthenDintoHL_BCtimes                                       ; $5793: $cd $9f $09
-	jr   jr_00a_5755                                 ; $5796: $18 $bd
+	jr   .toNextStep                                 ; $5796: $18 $bd
 
-jr_00a_5798:
+.br_5798:
 	ld   hl, $d880                                   ; $5798: $21 $80 $d8
 	ld   bc, $00c0                                   ; $579b: $01 $c0 $00
 	ld   de, $0000                                   ; $579e: $11 $00 $00
@@ -2714,8 +2715,10 @@ jr_00a_5798:
 	ld   hl, $d880                                   ; $57ab: $21 $80 $d8
 	ld   b, $18                                      ; $57ae: $06 $18
 	call EnqueueHDMATransfer                                       ; $57b0: $cd $7c $02
-	jr   jr_00a_5755                                 ; $57b3: $18 $a0
+	jr   .toNextStep                                 ; $57b3: $18 $a0
 
+
+UntimedQuestionProcessStep1:
 	ld   hl, wUntimedQuestionProcessMiscCounter                                   ; $57b5: $21 $d9 $cb
 	ld   a, [hl]                                     ; $57b8: $7e
 	inc  [hl]                                        ; $57b9: $34
@@ -2731,8 +2734,14 @@ jr_00a_5798:
 	ld   de, $8800                                   ; $57c6: $11 $00 $88
 	ld   a, $02                                      ; $57c9: $3e $02
 	ld   hl, $d340                                   ; $57cb: $21 $40 $d3
+	
+if def(PORTRAITLESS_UNTIMED)
+	ld   b, $6c
+	call EnUntimedQuestionVramUpdateHookWide
+else
 	ld   b, $54                                      ; $57ce: $06 $54
 	call EnqueueHDMATransfer                                       ; $57d0: $cd $7c $02
+endc
 	xor  a                                           ; $57d3: $af
 	ld   [wStartingColorIdxToLoadCompDataFor], a                                  ; $57d4: $ea $62 $c3
 	ld   a, $0c                                      ; $57d7: $3e $0c
@@ -2769,12 +2778,13 @@ jr_00a_57f9:
 	ret                                              ; $5815: $c9
 
 
+UntimedQuestionProcessStep2:
 	ld   a, $02                                      ; $5816: $3e $02
 	ld   hl, $cbde                                   ; $5818: $21 $de $cb
 	call Call_00a_598f                               ; $581b: $cd $8f $59
 	ld   a, [wInGameButtonsPressed]                                  ; $581e: $fa $10 $c2
-	bit  0, a                                        ; $5821: $cb $47
-	jr   z, jr_00a_584d                              ; $5823: $28 $28
+	bit  PADB_A, a                                        ; $5821: $cb $47
+	jr   z, .notA                              ; $5823: $28 $28
 
 	ld   hl, $cbdb                                   ; $5825: $21 $db $cb
 	inc  [hl]                                        ; $5828: $34
@@ -2782,11 +2792,11 @@ jr_00a_57f9:
 	call PlaySoundEffect                                       ; $582b: $cd $df $1a
 	ld   a, [$cbdd]                                  ; $582e: $fa $dd $cb
 	or   a                                           ; $5831: $b7
-	jr   z, jr_00a_5844                              ; $5832: $28 $10
+	jr   z, .toNextStep                              ; $5832: $28 $10
 
 	ld   a, [$cbdc]                                  ; $5834: $fa $dc $cb
 	cp   [hl]                                        ; $5837: $be
-	jr   nz, jr_00a_5844                             ; $5838: $20 $0a
+	jr   nz, .toNextStep                             ; $5838: $20 $0a
 
 	ld   a, $06                                      ; $583a: $3e $06
 	ld   [wUntimedQuestionProcessStep], a                                  ; $583c: $ea $d8 $cb
@@ -2794,18 +2804,16 @@ jr_00a_57f9:
 	ld   [wUntimedQuestionProcessMiscCounter], a                                  ; $5840: $ea $d9 $cb
 	ret                                              ; $5843: $c9
 
-
-jr_00a_5844:
+.toNextStep:
 	ld   hl, wUntimedQuestionProcessStep                                   ; $5844: $21 $d8 $cb
 	inc  [hl]                                        ; $5847: $34
 	xor  a                                           ; $5848: $af
 	ld   [wUntimedQuestionProcessMiscCounter], a                                  ; $5849: $ea $d9 $cb
 	ret                                              ; $584c: $c9
 
-
-jr_00a_584d:
-	bit  6, a                                        ; $584d: $cb $77
-	jr   z, jr_00a_5872                              ; $584f: $28 $21
+.notA:
+	bit  PADB_UP, a                                        ; $584d: $cb $77
+	jr   z, .notAorUp                              ; $584f: $28 $21
 
 	ld   a, [$cbdb]                                  ; $5851: $fa $db $cb
 	call Call_00a_590d                               ; $5854: $cd $0d $59
@@ -2815,19 +2823,18 @@ jr_00a_584d:
 	dec  a                                           ; $585f: $3d
 	ld   [$cbdb], a                                  ; $5860: $ea $db $cb
 	bit  7, a                                        ; $5863: $cb $7f
-	jr   z, jr_00a_586e                              ; $5865: $28 $07
+	jr   z, .cont_586e                              ; $5865: $28 $07
 
 	ld   a, [$cbdc]                                  ; $5867: $fa $dc $cb
 	dec  a                                           ; $586a: $3d
 	ld   [$cbdb], a                                  ; $586b: $ea $db $cb
 
-jr_00a_586e:
+.cont_586e:
 	call Call_00a_594d                               ; $586e: $cd $4d $59
 	ret                                              ; $5871: $c9
 
-
-jr_00a_5872:
-	bit  7, a                                        ; $5872: $cb $7f
+.notAorUp:
+	bit  PADB_DOWN, a                                        ; $5872: $cb $7f
 	ret  z                                           ; $5874: $c8
 
 	ld   a, $20                                      ; $5875: $3e $20
@@ -2839,23 +2846,39 @@ jr_00a_5872:
 	ld   [$cbdb], a                                  ; $5884: $ea $db $cb
 	ld   hl, $cbdc                                   ; $5887: $21 $dc $cb
 	cp   [hl]                                        ; $588a: $be
-	jr   nz, jr_00a_586e                             ; $588b: $20 $e1
+	jr   nz, .cont_586e                             ; $588b: $20 $e1
 
 	xor  a                                           ; $588d: $af
 	ld   [$cbdb], a                                  ; $588e: $ea $db $cb
-	jr   jr_00a_586e                                 ; $5891: $18 $db
+	jr   .cont_586e                                 ; $5891: $18 $db
 
+
+UntimedQuestionProcessStep4:
+UntimedQuestionProcessStep6:
+if def(PORTRAITLESS_UNTIMED)
+	call EnClearUntimedQuestionTextbox
+else
 	call ClearTextBoxDimensionsAndSetDefaultTextStyle                                       ; $5893: $cd $09 $14
+endc
 	ld   hl, $d340                                   ; $5896: $21 $40 $d3
+if def(PORTRAITLESS_UNTIMED)
+	ld   bc, $360
+else
 	ld   bc, $02a0                                   ; $5899: $01 $a0 $02
+endc
 	ld   de, $0000                                   ; $589c: $11 $00 $00
 	call CopyEthenDintoHL_BCtimes                                       ; $589f: $cd $9f $09
 	ld   c, $81                                      ; $58a2: $0e $81
 	ld   de, $8800                                   ; $58a4: $11 $00 $88
 	ld   a, $02                                      ; $58a7: $3e $02
 	ld   hl, $d340                                   ; $58a9: $21 $40 $d3
+if def(PORTRAITLESS_UNTIMED)
+	ld   b, $6c
+	call EnUntimedQuestionVramUpdateHookNarrow
+else
 	ld   b, $54                                      ; $58ac: $06 $54
 	call EnqueueHDMATransfer                                       ; $58ae: $cd $7c $02
+endc
 	ld   hl, wUntimedQuestionProcessStep                                   ; $58b1: $21 $d8 $cb
 	inc  [hl]                                        ; $58b4: $34
 	xor  a                                           ; $58b5: $af
@@ -2863,6 +2886,7 @@ jr_00a_5872:
 	ret                                              ; $58b9: $c9
 
 
+UntimedQuestionProcessStep5:
 	ld   hl, wUntimedQuestionProcessMiscCounter                                   ; $58ba: $21 $d9 $cb
 	ld   a, [hl]                                     ; $58bd: $7e
 	inc  [hl]                                        ; $58be: $34
@@ -2902,6 +2926,8 @@ jr_00a_58e8:
 	call FarMemCopy                                       ; $58fd: $cd $b2 $09
 	ld   bc, $000b                                   ; $5900: $01 $0b $00
 	call SetBGandOBJPaletteRangesToUpdate                                       ; $5903: $cd $aa $04
+
+UntimedQuestionProcessStep7:
 	ld   a, [$cbdb]                                  ; $5906: $fa $db $cb
 	ld   [$cbda], a                                  ; $5909: $ea $da $cb
 	ret                                              ; $590c: $c9
@@ -2911,7 +2937,7 @@ Call_00a_590d:
 	sla  a                                           ; $590d: $cb $27
 	ld   b, $00                                      ; $590f: $06 $00
 	ld   c, a                                        ; $5911: $4f
-	ld   hl, $5947                                   ; $5912: $21 $47 $59
+	ld   hl, .table                                   ; $5912: $21 $47 $59
 	add  hl, bc                                      ; $5915: $09
 	ld   a, [hl+]                                    ; $5916: $2a
 	ld   h, [hl]                                     ; $5917: $66
@@ -2919,9 +2945,13 @@ Call_00a_590d:
 	push hl                                          ; $5919: $e5
 	ld   bc, $d340                                   ; $591a: $01 $40 $d3
 	add  hl, bc                                      ; $591d: $09
+if def(PORTRAITLESS_UNTIMED)
+	ld   b, $24
+else
 	ld   b, $1c                                      ; $591e: $06 $1c
+endc
 
-jr_00a_5920:
+.loop:
 	ld   a, [hl+]                                    ; $5920: $2a
 	ld   [hl+], a                                    ; $5921: $22
 	ld   a, [hl+]                                    ; $5922: $2a
@@ -2939,7 +2969,7 @@ jr_00a_5920:
 	ld   a, [hl+]                                    ; $592e: $2a
 	ld   [hl+], a                                    ; $592f: $22
 	dec  b                                           ; $5930: $05
-	jr   nz, jr_00a_5920                             ; $5931: $20 $ed
+	jr   nz, .loop                             ; $5931: $20 $ed
 
 	pop  bc                                          ; $5933: $c1
 	ld   hl, $8800                                   ; $5934: $21 $00 $88
@@ -2948,23 +2978,31 @@ jr_00a_5920:
 	ld   e, l                                        ; $5939: $5d
 	ld   hl, $d340                                   ; $593a: $21 $40 $d3
 	add  hl, bc                                      ; $593d: $09
+if def(PORTRAITLESS_UNTIMED)
+	ld   bc, $2481
+else
 	ld   bc, $1c81                                   ; $593e: $01 $81 $1c
+endc
 	ld   a, $02                                      ; $5941: $3e $02
 	call EnqueueHDMATransfer                                       ; $5943: $cd $7c $02
 	ret                                              ; $5946: $c9
 
+.table:
+	dw $0000
+if def(PORTRAITLESS_UNTIMED)
+	dw $240
+	dw $480
+else
+	dw $01c0
+	dw $0380
+endc
 
-	nop                                              ; $5947: $00
-	nop                                              ; $5948: $00
-	ret  nz                                          ; $5949: $c0
-
-	ld   bc, $0380                                   ; $594a: $01 $80 $03
 
 Call_00a_594d:
 	sla  a                                           ; $594d: $cb $27
 	ld   b, $00                                      ; $594f: $06 $00
 	ld   c, a                                        ; $5951: $4f
-	ld   hl, $5989                                   ; $5952: $21 $89 $59
+	ld   hl, .table                                   ; $5952: $21 $89 $59
 	add  hl, bc                                      ; $5955: $09
 	ld   a, [hl+]                                    ; $5956: $2a
 	ld   h, [hl]                                     ; $5957: $66
@@ -2973,9 +3011,13 @@ Call_00a_594d:
 	ld   bc, $d340                                   ; $595a: $01 $40 $d3
 	add  hl, bc                                      ; $595d: $09
 	ld   a, $ff                                      ; $595e: $3e $ff
+if def(PORTRAITLESS_UNTIMED)
+	ld   b, $24
+else
 	ld   b, $1c                                      ; $5960: $06 $1c
+endc
 
-jr_00a_5962:
+.loop:
 	inc  hl                                          ; $5962: $23
 	ld   [hl+], a                                    ; $5963: $22
 	inc  hl                                          ; $5964: $23
@@ -2993,7 +3035,7 @@ jr_00a_5962:
 	inc  hl                                          ; $5970: $23
 	ld   [hl+], a                                    ; $5971: $22
 	dec  b                                           ; $5972: $05
-	jr   nz, jr_00a_5962                             ; $5973: $20 $ed
+	jr   nz, .loop                             ; $5973: $20 $ed
 
 	pop  bc                                          ; $5975: $c1
 	ld   hl, $8800                                   ; $5976: $21 $00 $88
@@ -3002,17 +3044,25 @@ jr_00a_5962:
 	ld   e, l                                        ; $597b: $5d
 	ld   hl, $d340                                   ; $597c: $21 $40 $d3
 	add  hl, bc                                      ; $597f: $09
+if def(PORTRAITLESS_UNTIMED)
+	ld   bc, $2481
+else
 	ld   bc, $1c81                                   ; $5980: $01 $81 $1c
+endc
 	ld   a, $02                                      ; $5983: $3e $02
 	call EnqueueHDMATransfer                                       ; $5985: $cd $7c $02
 	ret                                              ; $5988: $c9
 
+.table:
+	dw $0000
+if def(PORTRAITLESS_UNTIMED)
+	dw $240
+	dw $480
+else
+	dw $01c0
+	dw $0380
+endc
 
-	nop                                              ; $5989: $00
-	nop                                              ; $598a: $00
-	ret  nz                                          ; $598b: $c0
-
-	ld   bc, $0380                                   ; $598c: $01 $80 $03
 
 Call_00a_598f:
 	push af                                          ; $598f: $f5
@@ -7385,5 +7435,38 @@ TitleMenuScreenVramBank1_8000h_hook:
 Gfx_EnTitleScreen:
 	INCBIN "en_titleScreen.2bpp"
 .end::
+
+endc
+
+if def(PORTRAITLESS_UNTIMED)
+
+InitUntimedQuestionsHook:
+	ld   [$cbde], a
+	call InitWideTextBoxDimensions
+	ret
+
+
+EnUntimedQuestionVramUpdateHookWide:
+	call EnqueueHDMATransfer
+	rst  WaitUntilVBlankIntHandledIfLCDOn
+
+	M_FarCall _EnUntimedQuestionVramUpdateHookWide
+	ret
+
+
+EnClearUntimedQuestionTextbox:
+	call ClearTextBoxDimensionsAndSetDefaultTextStyle
+	call InitWideTextBoxDimensions
+	ld   bc, $0e03
+	call SetKanjiTextBoxDimensions
+	ret
+
+
+EnUntimedQuestionVramUpdateHookNarrow:
+	call EnqueueHDMATransfer
+	rst  WaitUntilVBlankIntHandledIfLCDOn
+
+	M_FarCall _EnUntimedQuestionVramUpdateHookNarrow
+	ret
 
 endc
