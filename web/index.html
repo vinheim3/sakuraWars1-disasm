@@ -1181,6 +1181,62 @@
                         }
                     },
 
+                    loadGameResultTitles: function() {
+                        let addresses = [];
+                        for (let i = 0; i < 15; i++) {
+                            let offset = bankConv(0x11, 0x79fa+i*3);
+                            let addr = this.wordIn(offset);
+                            let bank = this.uint8view[offset+2];
+                            addresses.push(bankConv(bank, addr));
+                        }
+
+                        let sources = []
+                        let tileDataDest = 0x9000;
+                        let screenDest = 0x9802;
+                        let tileIdxStart = 0;
+                        for (let i = 0; i < 8; i++) {
+                            let addr = addresses[i];
+                            sources.push(['rleXorCopy', 0, addr, 0xd000, 'memory']);
+                            sources.push(['simpleCopy', 0x00, 0xd300, tileDataDest, 0x100, 'memory', 'memory']);
+                            sources.push(['simpleCopy', 0x00, 0xd400, tileDataDest+0x100, 0x100, 'memory', 'memory']);
+                            sources.push(['setBytes', 0, 0, screenDest, ...(new Array(0x10)).fill(0).map((_, i)=>i+tileIdxStart)]);
+                            sources.push(['setBytes', 0, 0, screenDest+0x20, ...(new Array(0x10)).fill(0).map((_, i)=>i+0x10+tileIdxStart)]);
+
+                            tileDataDest += 0x200;
+                            if (tileDataDest === 0x9800) tileDataDest = 0x8800;
+                            screenDest += 0x40;
+                            tileIdxStart += 0x20;
+                        }
+
+                        this.screens.push({
+                            name: 'Game results titles 1',
+                            sources: sources,
+                        });
+
+                        sources = []
+                        tileDataDest = 0x9000;
+                        screenDest = 0x9802;
+                        tileIdxStart = 0;
+                        for (let i = 8; i < 15; i++) {
+                            let addr = addresses[i];
+                            sources.push(['rleXorCopy', 0, addr, 0xd000, 'memory']);
+                            sources.push(['simpleCopy', 0x00, 0xd300, tileDataDest, 0x100, 'memory', 'memory']);
+                            sources.push(['simpleCopy', 0x00, 0xd400, tileDataDest+0x100, 0x100, 'memory', 'memory']);
+                            sources.push(['setBytes', 0, 0, screenDest, ...(new Array(0x10)).fill(0).map((_, i)=>i+tileIdxStart)]);
+                            sources.push(['setBytes', 0, 0, screenDest+0x20, ...(new Array(0x10)).fill(0).map((_, i)=>i+0x10+tileIdxStart)]);
+
+                            tileDataDest += 0x200;
+                            if (tileDataDest === 0x9800) tileDataDest = 0x8800;
+                            screenDest += 0x40;
+                            tileIdxStart += 0x20;
+                        }
+
+                        this.screens.push({
+                            name: 'Game results titles 2',
+                            sources: sources,
+                        });
+                    },
+
                     loadData: function() {
                         fetch('/sakuraWars1.gbc')
                             .then(response => checkStatus(response) && response.arrayBuffer())
@@ -1189,6 +1245,7 @@
 
                                 //this.loadPortraits();
                                 //this.loadScenery();
+                                //this.loadGameResultTitles();
 
                                 setTimeout(this.loadScreens, 5);
                             });

@@ -664,7 +664,7 @@ DisplayKannaMiniGameTitleScreenSpritesWithoutPressA:
 	cp   $80                                         ; $44e0: $fe $80
 	jr   c, jr_03f_44f1                              ; $44e2: $38 $0d
 
-; todo: when press A disappears, not when popup box appears
+; Sprites when press A disappears, not when popup box appears
 	ld   bc, $4040                                   ; $44e4: $01 $40 $40
 	ld   a, $0a                                      ; $44e7: $3e $0a
 	ld   [wSpriteGroup], a                                  ; $44e9: $ea $1a $c2

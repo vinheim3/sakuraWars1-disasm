@@ -473,7 +473,42 @@ wMainConvoReturnSubstate:: ; $cb2a
     db
 
 wcb2b:
-    ds $51-$2b
+    ds $f-$b
+
+; 0 - ground, 1 - upper, 2 - basement
+wExploreFloor:: ; $cb2f
+    db
+
+wcb30:
+    ds 7-0
+
+wExploreCursorX:: ; $cb37
+    db
+
+wcb38:
+    ds 9-8
+
+wExploreCursorY:: ; $cb39
+    db
+
+wExploreCurrRegionData:: ; $cb3a
+wExploreHoveredAreaIdx:: ; $cb3a
+    db
+wExploreHoverFloorTransition:: ; $cb3b
+    db
+wExploreHoveredAreaTileDataIdx:: ; $cb3c
+    db
+wExploreCurrRegionLeftX:: ; $cb3d
+    db
+wExploreCurrRegionRightX:: ; $cb3e
+    db
+wExploreCurrRegionTopY:: ; $cb3f
+    db
+wExploreCurrRegionBottomY:: ; $cb40
+    db
+
+wcb41:
+    ds $51-$41
 
 wScriptEngineIsRunning:: ; $cb51
     db

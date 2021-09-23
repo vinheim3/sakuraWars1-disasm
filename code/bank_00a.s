@@ -3191,15 +3191,9 @@ Call_00a_598f:
 	ld   bc, $0000                                   ; $5a2c: $01 $00 $00
 	call SetCurrKanjiColAndRowToDrawOn                                       ; $5a2f: $cd $34 $14
 	pop  hl                                          ; $5a32: $e1
-	push af                                          ; $5a33: $f5
-	ld   a, $4b                                      ; $5a34: $3e $4b
-	ld   [wFarCallAddr], a                                  ; $5a36: $ea $98 $c2
-	ld   a, $5b                                      ; $5a39: $3e $5b
-	ld   [wFarCallAddr+1], a                                  ; $5a3b: $ea $99 $c2
-	ld   a, $0a                                      ; $5a3e: $3e $0a
-	ld   [wFarCallBank], a                                  ; $5a40: $ea $9a $c2
-	pop  af                                          ; $5a43: $f1
-	call FarCall                                       ; $5a44: $cd $62 $09
+
+	M_FarCall Func_0a_5b4b
+
 	call FarPopulateKanjiConvoStructForCurrTextBox                                       ; $5a47: $cd $0c $10
 	xor  a                                           ; $5a4a: $af
 	ld   [$cbe3], a                                  ; $5a4b: $ea $e3 $cb
@@ -3411,7 +3405,7 @@ Func_0a_5b4b::
 	AddrBank Data_90_5ac9
 
 
-
+Func_0a_5b7a::
 	ld   c, $01                                      ; $5b7a: $0e $01
 	ld   de, $8000                                   ; $5b7c: $11 $00 $80
 	ld   a, $8d                                      ; $5b7f: $3e $8d

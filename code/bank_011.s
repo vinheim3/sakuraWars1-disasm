@@ -7567,35 +7567,23 @@ SetDMGState::
 GameState20_GameResults::
 	ld   a, [wGameSubstate]                                  ; $6e19: $fa $a1 $c2
 	rst  JumpTable                                         ; $6e1c: $df
-	adc  [hl]                                        ; $6e1d: $8e
-	ld   [hl], d                                     ; $6e1e: $72
-	dec  a                                           ; $6e1f: $3d
-	ld   [hl], e                                     ; $6e20: $73
-	ld   e, c                                        ; $6e21: $59
-	ld   [hl], e                                     ; $6e22: $73
-	add  hl, sp                                      ; $6e23: $39
-	ld   l, [hl]                                     ; $6e24: $6e
-	or   d                                           ; $6e25: $b2
-	ld   l, a                                        ; $6e26: $6f
-	ld   c, [hl]                                     ; $6e27: $4e
-	ld   [hl], b                                     ; $6e28: $70
-	or   $6f                                         ; $6e29: $f6 $6f
-	or   [hl]                                        ; $6e2b: $b6
-	ld   [hl], b                                     ; $6e2c: $70
-	jp   hl                                          ; $6e2d: $e9
+	dw GameResultsSubstate0
+	dw GameResultsSubstate1
+	dw GameResultsSubstate2
+	dw GameResultsSubstate3
+	dw GameResultsSubstate4
+	dw GameResultsSubstate5
+	dw GameResultsSubstate6
+	dw GameResultsSubstate7
+	dw GameResultsSubstate8
+	dw GameResultsSubstate9
+	dw GameResultsSubstateA
+	dw GameResultsSubstateB
+	dw GameResultsSubstateC
+	dw GameResultsSubstateD
 
 
-	ld   [hl], b                                     ; $6e2e: $70
-	ld   e, h                                        ; $6e2f: $5c
-	ld   [hl], c                                     ; $6e30: $71
-	ld   [hl], b                                     ; $6e31: $70
-	ld   [hl], c                                     ; $6e32: $71
-	cp   l                                           ; $6e33: $bd
-	ld   [hl], c                                     ; $6e34: $71
-	ld   sp, hl                                      ; $6e35: $f9
-	ld   [hl], c                                     ; $6e36: $71
-	ld   c, [hl]                                     ; $6e37: $4e
-	ld   [hl], d                                     ; $6e38: $72
+GameResultsSubstate3:
 	call TurnOffLCD                                       ; $6e39: $cd $e3 $08
 	ld   a, $00                                      ; $6e3c: $3e $00
 	call SafeSetAudVolForMultipleChannels                                       ; $6e3e: $cd $e0 $1c
@@ -7756,6 +7744,7 @@ jr_011_6ee1:
 	ret                                              ; $6fb1: $c9
 
 
+GameResultsSubstate4:
 	ld   a, [$ca0f]                                  ; $6fb2: $fa $0f $ca
 	ld   c, a                                        ; $6fb5: $4f
 	ld   b, $00                                      ; $6fb6: $06 $00
@@ -7802,6 +7791,7 @@ jr_011_6fec:
 	ret                                              ; $6ff5: $c9
 
 
+GameResultsSubstate6:
 	call ClearOam                                       ; $6ff6: $cd $d7 $0d
 	call AnimateAllAnimatedSpriteSpecs                                       ; $6ff9: $cd $d3 $2e
 	ld   a, [$c9ff]                                  ; $6ffc: $fa $ff $c9
@@ -7849,6 +7839,7 @@ jr_011_704d:
 	ret                                              ; $704d: $c9
 
 
+GameResultsSubstate5:
 	call ClearOam                                       ; $704e: $cd $d7 $0d
 	call AnimateAllAnimatedSpriteSpecs                                       ; $7051: $cd $d3 $2e
 	ld   bc, $0008                                   ; $7054: $01 $08 $00
@@ -7891,6 +7882,7 @@ jr_011_704d:
 	ret                                              ; $70b5: $c9
 
 
+GameResultsSubstate7:
 	call ClearOam                                       ; $70b6: $cd $d7 $0d
 	call AnimateAllAnimatedSpriteSpecs                                       ; $70b9: $cd $d3 $2e
 	call Call_011_7dfb                               ; $70bc: $cd $fb $7d
@@ -7899,42 +7891,28 @@ jr_011_704d:
 
 
 Call_011_70c3:
-Jump_011_70c3:
 	ld   a, [$ca13]                                  ; $70c3: $fa $13 $ca
 	rst  JumpTable                                         ; $70c6: $df
-	daa                                              ; $70c7: $27
-	ld   a, d                                        ; $70c8: $7a
-	db   $eb                                         ; $70c9: $eb
-	ld   a, b                                        ; $70ca: $78
-	pop  de                                          ; $70cb: $d1
-	ld   a, b                                        ; $70cc: $78
-	db   $db                                         ; $70cd: $db
-	ld   a, b                                        ; $70ce: $78
-	db   $eb                                         ; $70cf: $eb
-	ld   a, b                                        ; $70d0: $78
-	pop  de                                          ; $70d1: $d1
-	ld   a, b                                        ; $70d2: $78
-	db   $db                                         ; $70d3: $db
-	ld   a, b                                        ; $70d4: $78
-	db   $eb                                         ; $70d5: $eb
-	ld   a, b                                        ; $70d6: $78
-	pop  de                                          ; $70d7: $d1
-	ld   a, b                                        ; $70d8: $78
-	db   $db                                         ; $70d9: $db
-	ld   a, b                                        ; $70da: $78
-	db   $eb                                         ; $70db: $eb
-	ld   a, b                                        ; $70dc: $78
-	pop  de                                          ; $70dd: $d1
-	ld   a, b                                        ; $70de: $78
-	db   $db                                         ; $70df: $db
-	ld   a, b                                        ; $70e0: $78
-	db   $eb                                         ; $70e1: $eb
-	ld   a, b                                        ; $70e2: $78
-	bit  7, b                                        ; $70e3: $cb $78
-	db   $db                                         ; $70e5: $db
-	ld   a, b                                        ; $70e6: $78
-	jr   c, jr_011_7162                              ; $70e7: $38 $79
+	dw Func_11_7a27
+	dw $78eb
+	dw $78d1
+	dw $78db
+	dw $78eb
+	dw $78d1
+	dw $78db
+	dw $78eb
+	dw $78d1
+	dw $78db
+	dw $78eb
+	dw $78d1
+	dw $78db
+	dw $78eb
+	dw $78cb
+	dw $78db
+	dw $7938
 
+
+GameResultsSubstate8:
 	call ClearOam                                       ; $70e9: $cd $d7 $0d
 	call AnimateAllAnimatedSpriteSpecs                                       ; $70ec: $cd $d3 $2e
 	call Call_011_7dfb                               ; $70ef: $cd $fb $7d
@@ -8003,6 +7981,7 @@ jr_011_715b:
 	ret                                              ; $715b: $c9
 
 
+GameResultsSubstate9:
 	call ClearOam                                       ; $715c: $cd $d7 $0d
 	call AnimateAllAnimatedSpriteSpecs                                       ; $715f: $cd $d3 $2e
 
@@ -8019,6 +7998,7 @@ jr_011_716f:
 	ret                                              ; $716f: $c9
 
 
+GameResultsSubstateA:
 	call ClearOam                                       ; $7170: $cd $d7 $0d
 	call AnimateAllAnimatedSpriteSpecs                                       ; $7173: $cd $d3 $2e
 	call Call_011_7141                               ; $7176: $cd $41 $71
@@ -8061,25 +8041,18 @@ jr_011_71bc:
 	ret                                              ; $71bc: $c9
 
 
+GameResultsSubstateB:
 	call ClearOam                                       ; $71bd: $cd $d7 $0d
 	call AnimateAllAnimatedSpriteSpecs                                       ; $71c0: $cd $d3 $2e
 	call CheckIfReachedLastKanjiIdxInCurrTextBox                                       ; $71c3: $cd $71 $14
 	or   a                                           ; $71c6: $b7
 	jr   nz, jr_011_71e2                             ; $71c7: $20 $19
 
-	push af                                          ; $71c9: $f5
-	ld   a, $7a                                      ; $71ca: $3e $7a
-	ld   [wFarCallAddr], a                                  ; $71cc: $ea $98 $c2
-	ld   a, $5b                                      ; $71cf: $3e $5b
-	ld   [wFarCallAddr+1], a                                  ; $71d1: $ea $99 $c2
-	ld   a, $0a                                      ; $71d4: $3e $0a
-	ld   [wFarCallBank], a                                  ; $71d6: $ea $9a $c2
-	pop  af                                          ; $71d9: $f1
-	call FarCall                                       ; $71da: $cd $62 $09
+	M_FarCall Func_0a_5b7a
+
 	ld   hl, wGameSubstate                                   ; $71dd: $21 $a1 $c2
 	inc  [hl]                                        ; $71e0: $34
 	ret                                              ; $71e1: $c9
-
 
 jr_011_71e2:
 	ld   a, [wInGameButtonsHeld]                                  ; $71e2: $fa $0f $c2
@@ -8097,6 +8070,7 @@ jr_011_71f0:
 	jp   HDMAEnqueueNextTextBoxKanji                                       ; $71f6: $c3 $55 $10
 
 
+GameResultsSubstateC:
 	call ClearOam                                       ; $71f9: $cd $d7 $0d
 	call AnimateAllAnimatedSpriteSpecs                                       ; $71fc: $cd $d3 $2e
 	push af                                          ; $71ff: $f5
@@ -8140,6 +8114,7 @@ jr_011_724d:
 	ret                                              ; $724d: $c9
 
 
+GameResultsSubstateD:
 	xor  a                                           ; $724e: $af
 	ld   [wStartingColorIdxToLoadCompDataFor], a                                  ; $724f: $ea $62 $c3
 	ld   a, $40                                      ; $7252: $3e $40
@@ -8169,6 +8144,7 @@ jr_011_724d:
 	ret                                              ; $728d: $c9
 
 
+GameResultsSubstate0:
 	call TurnOffLCD                                       ; $728e: $cd $e3 $08
 	ld   a, $00                                      ; $7291: $3e $00
 	call SafeSetAudVolForMultipleChannels                                       ; $7293: $cd $e0 $1c
@@ -8239,6 +8215,7 @@ jr_011_724d:
 	ret                                              ; $733c: $c9
 
 
+GameResultsSubstate1:
 	ld   bc, $005a                                   ; $733d: $01 $5a $00
 
 jr_011_7340:
@@ -8263,6 +8240,7 @@ jr_011_7354:
 	ret                                              ; $7358: $c9
 
 
+GameResultsSubstate2:
 	xor  a                                           ; $7359: $af
 	ld   [wStartingColorIdxToLoadCompDataFor], a                                  ; $735a: $ea $62 $c3
 	ld   a, $40                                      ; $735d: $3e $40
@@ -9530,7 +9508,7 @@ jr_011_78d4:
 jr_011_78e4:
 	ld   hl, $ca13                                   ; $78e4: $21 $13 $ca
 	inc  [hl]                                        ; $78e7: $34
-	jp   Jump_011_70c3                               ; $78e8: $c3 $c3 $70
+	jp   Call_011_70c3                               ; $78e8: $c3 $c3 $70
 
 
 	ld   a, [$ca10]                                  ; $78eb: $fa $10 $ca
@@ -9592,7 +9570,7 @@ Call_011_792a:
 jr_011_7948:
 	xor  a                                           ; $7948: $af
 	ld   [$ca13], a                                  ; $7949: $ea $13 $ca
-	jp   Jump_011_70c3                               ; $794c: $c3 $c3 $70
+	jp   Call_011_70c3                               ; $794c: $c3 $c3 $70
 
 
 jr_011_794f:
@@ -9673,95 +9651,71 @@ Call_011_7986:
 
 	jr   nc, jr_011_7a2a                             ; $79c1: $30 $67
 
-	jr   c, jr_011_79c5                              ; $79c3: $38 $00
+	db $38, $00
+
 
 Call_011_79c5:
-jr_011_79c5:
+;
 	ld   a, [wWramBank]                                  ; $79c5: $fa $93 $c2
 	push af                                          ; $79c8: $f5
+
 	ld   a, $03                                      ; $79c9: $3e $03
 	ld   [wWramBank], a                                  ; $79cb: $ea $93 $c2
 	ldh  [rSVBK], a                                  ; $79ce: $e0 $70
+
+;
 	ld   a, [$ca12]                                  ; $79d0: $fa $12 $ca
 	ld   c, a                                        ; $79d3: $4f
 	add  a                                           ; $79d4: $87
 	add  c                                           ; $79d5: $81
 	ld   c, a                                        ; $79d6: $4f
 	ld   b, $00                                      ; $79d7: $06 $00
-	ld   hl, $79fa                                   ; $79d9: $21 $fa $79
+	ld   hl, .table                                   ; $79d9: $21 $fa $79
 	add  hl, bc                                      ; $79dc: $09
+
+;
 	ld   a, [hl+]                                    ; $79dd: $2a
 	ld   e, a                                        ; $79de: $5f
 	ld   a, [hl+]                                    ; $79df: $2a
 	ld   d, a                                        ; $79e0: $57
 	ld   a, [hl]                                     ; $79e1: $7e
+
+;
 	push af                                          ; $79e2: $f5
 	ld   hl, $d800                                   ; $79e3: $21 $00 $d8
 	ld   a, [$ca11]                                  ; $79e6: $fa $11 $ca
 	or   a                                           ; $79e9: $b7
-	jr   nz, jr_011_79ef                             ; $79ea: $20 $03
-
+	jr   nz, :+                             ; $79ea: $20 $03
 	ld   hl, $d000                                   ; $79ec: $21 $00 $d0
+:	pop  af                                          ; $79ef: $f1
 
-jr_011_79ef:
-	pop  af                                          ; $79ef: $f1
+; Copy tile data over and restore ram bank
 	call RLEXorCopy                                       ; $79f0: $cd $d2 $09
+
 	pop  af                                          ; $79f3: $f1
 	ld   [wWramBank], a                                  ; $79f4: $ea $93 $c2
 	ldh  [rSVBK], a                                  ; $79f7: $e0 $70
 	ret                                              ; $79f9: $c9
 
+.table:
+	db $00, $40, $19
+	db $1b, $50, $17
+	db $a0, $75, $18
+	db $20, $6d, $17
+	db $a4, $5e, $17
+	db $e5, $65, $17
+	db $6e, $46, $19
+	db $e4, $76, $1b
+	db $65, $5d, $1b
+	db $bb, $63, $1c
+	db $00, $40, $1c
+	db $75, $6d, $1c
+	db $45, $4b, $1c
+	db $cf, $7a, $1b
+	db $e3, $72, $1b
 
-	nop                                              ; $79fa: $00
-	ld   b, b                                        ; $79fb: $40
-	add  hl, de                                      ; $79fc: $19
-	dec  de                                          ; $79fd: $1b
-	ld   d, b                                        ; $79fe: $50
-	rla                                              ; $79ff: $17
-	and  b                                           ; $7a00: $a0
-	ld   [hl], l                                     ; $7a01: $75
-	jr   jr_011_7a24                                 ; $7a02: $18 $20
 
-	ld   l, l                                        ; $7a04: $6d
-	rla                                              ; $7a05: $17
-	and  h                                           ; $7a06: $a4
-	ld   e, [hl]                                     ; $7a07: $5e
-	rla                                              ; $7a08: $17
-	push hl                                          ; $7a09: $e5
-	ld   h, l                                        ; $7a0a: $65
-	rla                                              ; $7a0b: $17
-	ld   l, [hl]                                     ; $7a0c: $6e
-	ld   b, [hl]                                     ; $7a0d: $46
-	add  hl, de                                      ; $7a0e: $19
-	db   $e4                                         ; $7a0f: $e4
-	halt                                             ; $7a10: $76
-	dec  de                                          ; $7a11: $1b
-	ld   h, l                                        ; $7a12: $65
-	ld   e, l                                        ; $7a13: $5d
-	dec  de                                          ; $7a14: $1b
-	cp   e                                           ; $7a15: $bb
-	ld   h, e                                        ; $7a16: $63
-	inc  e                                           ; $7a17: $1c
-	nop                                              ; $7a18: $00
-	ld   b, b                                        ; $7a19: $40
-	inc  e                                           ; $7a1a: $1c
-	ld   [hl], l                                     ; $7a1b: $75
-	ld   l, l                                        ; $7a1c: $6d
-	inc  e                                           ; $7a1d: $1c
-	ld   b, l                                        ; $7a1e: $45
-	ld   c, e                                        ; $7a1f: $4b
-	inc  e                                           ; $7a20: $1c
-
-jr_011_7a21:
-	rst  WaitUntilVBlankIntHandledIfLCDOn                                         ; $7a21: $cf
-	ld   a, d                                        ; $7a22: $7a
-	dec  de                                          ; $7a23: $1b
-
-jr_011_7a24:
-	db   $e3                                         ; $7a24: $e3
-	ld   [hl], d                                     ; $7a25: $72
-	dec  de                                          ; $7a26: $1b
-
+Func_11_7a27:
 jr_011_7a27:
 	ld   hl, $ca14                                   ; $7a27: $21 $14 $ca
 

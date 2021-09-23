@@ -3428,6 +3428,7 @@ HDMAEnqueueNextTextBoxKanji::
 ; Preserve and set ram bank with tile data buffer
 	ld   a, [wWramBank]                                             ; $1055
 	push af                                                         ; $1058
+
 	ld   a, BANK(wKanjiTileDataBuffer)                              ; $1059
 	ld   [wWramBank], a                                             ; $105b
 	ldh  [rSVBK], a                                                 ; $105e

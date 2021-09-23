@@ -5681,7 +5681,7 @@ jr_079_5901:
 	rst  $30                                         ; $5916: $f7
 	add  l                                           ; $5917: $85
 	nop                                              ; $5918: $00
-	ld   bc, $cb3b                                   ; $5919: $01 $3b $cb
+	ld   bc, wExploreHoverFloorTransition                                   ; $5919: $01 $3b $cb
 	add  b                                           ; $591c: $80
 	ld   e, a                                        ; $591d: $5f
 	ld   bc, $030b                                   ; $591e: $01 $0b $03

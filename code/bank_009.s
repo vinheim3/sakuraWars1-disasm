@@ -308,11 +308,11 @@ jr_009_4246:
 	xor  a                                           ; $424f: $af
 	ld   [$cb36], a                                  ; $4250: $ea $36 $cb
 	ld   [$cb38], a                                  ; $4253: $ea $38 $cb
-	ld   [$cb2f], a                                  ; $4256: $ea $2f $cb
+	ld   [wExploreFloor], a                                  ; $4256: $ea $2f $cb
 	ld   a, $0e                                      ; $4259: $3e $0e
-	ld   [$cb37], a                                  ; $425b: $ea $37 $cb
+	ld   [wExploreCursorX], a                                  ; $425b: $ea $37 $cb
 	ld   a, $18                                      ; $425e: $3e $18
-	ld   [$cb39], a                                  ; $4260: $ea $39 $cb
+	ld   [wExploreCursorY], a                                  ; $4260: $ea $39 $cb
 	ld   a, GS_EXPLORE                                      ; $4263: $3e $39
 	ld   [wGameState], a                                  ; $4265: $ea $a0 $c2
 	xor  a                                           ; $4268: $af
@@ -396,11 +396,11 @@ jr_009_42bb:
 	ld   a, $07                                      ; $42c8: $3e $07
 	call SafeSetAudVolForMultipleChannels                                       ; $42ca: $cd $e0 $1c
 	xor  a                                           ; $42cd: $af
-	ld   [$cb2f], a                                  ; $42ce: $ea $2f $cb
+	ld   [wExploreFloor], a                                  ; $42ce: $ea $2f $cb
 	ld   a, $0e                                      ; $42d1: $3e $0e
-	ld   [$cb37], a                                  ; $42d3: $ea $37 $cb
+	ld   [wExploreCursorX], a                                  ; $42d3: $ea $37 $cb
 	ld   a, $18                                      ; $42d6: $3e $18
-	ld   [$cb39], a                                  ; $42d8: $ea $39 $cb
+	ld   [wExploreCursorY], a                                  ; $42d8: $ea $39 $cb
 
 ;
 	ld   a, [wDormRoomOptionsSetupIdx]                                  ; $42db: $fa $7e $cc
@@ -546,11 +546,11 @@ jr_009_43c7:
 	xor  a                                           ; $43d0: $af
 	ld   [$cb36], a                                  ; $43d1: $ea $36 $cb
 	ld   [$cb38], a                                  ; $43d4: $ea $38 $cb
-	ld   [$cb2f], a                                  ; $43d7: $ea $2f $cb
+	ld   [wExploreFloor], a                                  ; $43d7: $ea $2f $cb
 	ld   a, $0e                                      ; $43da: $3e $0e
-	ld   [$cb37], a                                  ; $43dc: $ea $37 $cb
+	ld   [wExploreCursorX], a                                  ; $43dc: $ea $37 $cb
 	ld   a, $18                                      ; $43df: $3e $18
-	ld   [$cb39], a                                  ; $43e1: $ea $39 $cb
+	ld   [wExploreCursorY], a                                  ; $43e1: $ea $39 $cb
 	ld   a, GS_EXPLORE                                      ; $43e4: $3e $39
 	ld   [wGameState], a                                  ; $43e6: $ea $a0 $c2
 	xor  a                                           ; $43e9: $af
@@ -604,11 +604,11 @@ jr_009_441d:
 	ld   a, $07                                      ; $4421: $3e $07
 	call SafeSetAudVolForMultipleChannels                                       ; $4423: $cd $e0 $1c
 	xor  a                                           ; $4426: $af
-	ld   [$cb2f], a                                  ; $4427: $ea $2f $cb
+	ld   [wExploreFloor], a                                  ; $4427: $ea $2f $cb
 	ld   a, $0e                                      ; $442a: $3e $0e
-	ld   [$cb37], a                                  ; $442c: $ea $37 $cb
+	ld   [wExploreCursorX], a                                  ; $442c: $ea $37 $cb
 	ld   a, $18                                      ; $442f: $3e $18
-	ld   [$cb39], a                                  ; $4431: $ea $39 $cb
+	ld   [wExploreCursorY], a                                  ; $4431: $ea $39 $cb
 	ld   a, [wDormRoomOptionsSetupIdx]                                  ; $4434: $fa $7e $cc
 	ld   h, GS_DAY_PERIOD_TRANSITION                                      ; $4437: $26 $38
 	ld   l, $00                                      ; $4439: $2e $00

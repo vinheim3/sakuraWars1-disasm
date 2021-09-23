@@ -6394,17 +6394,19 @@ jr_030_6327:
 GameState05_Credits::
 	ld   a, [wGameSubstate] ; $633e: $fa $a1 $c2
 	rst  JumpTable                                   ; $6341: $df
-	dw $6356
-	dw $6422
-	dw $64e9
-	dw $6636
-	dw $6b18
-	dw $6b34
-	dw $6b54
-	dw $6c5e
-	dw $71c1
-	dw $71d8
+	dw CreditsSubstate0
+	dw CreditsSubstate1
+	dw CreditsSubstate2
+	dw CreditsSubstate3
+	dw CreditsSubstate4
+	dw CreditsSubstate5
+	dw CreditsSubstate6
+	dw CreditsSubstate7
+	dw CreditsSubstate8
+	dw CreditsSubstate9
 
+
+CreditsSubstate0:
 	ld   a, [wWramBank]                                  ; $6356: $fa $93 $c2
 	push af                                          ; $6359: $f5
 	ld   a, $05                                      ; $635a: $3e $05
@@ -6496,6 +6498,7 @@ jr_030_63b7:
 	ret                                              ; $6421: $c9
 
 
+CreditsSubstate1:
 	call ClearOam                                       ; $6422: $cd $d7 $0d
 	ld   hl, $c6fe                                   ; $6425: $21 $fe $c6
 	call Call_030_7372                               ; $6428: $cd $72 $73
@@ -6617,6 +6620,7 @@ jr_030_64e8:
 	ret                                              ; $64e8: $c9
 
 
+CreditsSubstate2:
 	ld   a, [wWramBank]                                  ; $64e9: $fa $93 $c2
 	push af                                          ; $64ec: $f5
 	ld   a, $05                                      ; $64ed: $3e $05
@@ -6771,7 +6775,7 @@ jr_030_64e8:
 	rst  $38                                         ; $6611: $ff
 	ld   bc, $1e03                                   ; $6612: $01 $03 $1e
 	rra                                              ; $6615: $1f
-	jr   nz, jr_030_6639                             ; $6616: $20 $21
+	db $20, $21
 
 	rst  $38                                         ; $6618: $ff
 	ld   bc, $0204                                   ; $6619: $01 $04 $02
@@ -6793,9 +6797,10 @@ jr_030_64e8:
 	inc  l                                           ; $6631: $2c
 	rst  $38                                         ; $6632: $ff
 	ld   bc, $0004                                   ; $6633: $01 $04 $00
-	ld   hl, $c718                                   ; $6636: $21 $18 $c7
 
-jr_030_6639:
+
+CreditsSubstate3:
+	ld   hl, $c718                                   ; $6636: $21 $18 $c7
 	ld   a, [hl+]                                    ; $6639: $2a
 	ld   h, [hl]                                     ; $663a: $66
 	ld   l, a                                        ; $663b: $6f
@@ -6805,33 +6810,30 @@ jr_030_6639:
 	add  a                                           ; $663f: $87
 	ld   c, a                                        ; $6640: $4f
 	ld   b, $00                                      ; $6641: $06 $00
-	ld   hl, $6656                                   ; $6643: $21 $56 $66
+	ld   hl, .table                                   ; $6643: $21 $56 $66
 	add  hl, bc                                      ; $6646: $09
 	ld   a, [hl+]                                    ; $6647: $2a
 	ld   h, [hl]                                     ; $6648: $66
 	ld   l, a                                        ; $6649: $6f
-	ld   bc, $664f                                   ; $664a: $01 $4f $66
+	ld   bc, .return                                   ; $664a: $01 $4f $66
 	push bc                                          ; $664d: $c5
 	jp   hl                                          ; $664e: $e9
 
-
+.return:
 	ld   hl, $c718                                   ; $664f: $21 $18 $c7
 	ld   a, e                                        ; $6652: $7b
 	ld   [hl+], a                                    ; $6653: $22
 	ld   [hl], d                                     ; $6654: $72
 	ret                                              ; $6655: $c9
 
+.table:
+	dw .entry0
+	dw .entry1
+	dw .entry2
+	dw $6779
+	dw $670a
 
-	ld   h, b                                        ; $6656: $60
-	ld   h, [hl]                                     ; $6657: $66
-	ld   l, a                                        ; $6658: $6f
-	ld   h, [hl]                                     ; $6659: $66
-	adc  d                                           ; $665a: $8a
-	ld   h, [hl]                                     ; $665b: $66
-	ld   a, c                                        ; $665c: $79
-	ld   h, a                                        ; $665d: $67
-	ld   a, [bc]                                     ; $665e: $0a
-	ld   h, a                                        ; $665f: $67
+.entry0:
 	xor  a                                           ; $6660: $af
 	ld   [wSCX], a                                  ; $6661: $ea $07 $c2
 	ld   hl, wIE                                   ; $6664: $21 $0d $c2
@@ -6840,16 +6842,15 @@ jr_030_6639:
 	ld   [wGameSubstate], a                                  ; $666b: $ea $a1 $c2
 	ret                                              ; $666e: $c9
 
-
+.entry1:
 	push de                                          ; $666f: $d5
 	xor  a                                           ; $6670: $af
 	ld   b, $08                                      ; $6671: $06 $08
 	ld   hl, $c710                                   ; $6673: $21 $10 $c7
 
-jr_030_6676:
-	ld   [hl+], a                                    ; $6676: $22
+:	ld   [hl+], a                                    ; $6676: $22
 	dec  b                                           ; $6677: $05
-	jr   nz, jr_030_6676                             ; $6678: $20 $fc
+	jr   nz, :-                             ; $6678: $20 $fc
 
 	ld   bc, $801f                                   ; $667a: $01 $1f $80
 	ld   hl, $c704                                   ; $667d: $21 $04 $c7
@@ -6859,12 +6860,16 @@ jr_030_6676:
 	pop  de                                          ; $6688: $d1
 	ret                                              ; $6689: $c9
 
-
+.entry2:
+;
 	ld   a, [wWramBank]                                  ; $668a: $fa $93 $c2
 	push af                                          ; $668d: $f5
+
 	ld   a, $05                                      ; $668e: $3e $05
 	ld   [wWramBank], a                                  ; $6690: $ea $93 $c2
 	ldh  [rSVBK], a                                  ; $6693: $e0 $70
+
+;
 	ld   a, [de]                                     ; $6695: $1a
 	inc  de                                          ; $6696: $13
 	push de                                          ; $6697: $d5
@@ -6877,6 +6882,8 @@ jr_030_6676:
 	ld   de, $d000                                   ; $66a2: $11 $00 $d0
 	ld   bc, $0200                                   ; $66a5: $01 $00 $02
 	call FarMemCopy                                       ; $66a8: $cd $b2 $09
+
+;
 	pop  hl                                          ; $66ab: $e1
 	pop  af                                          ; $66ac: $f1
 	ld   [wWramBank], a                                  ; $66ad: $ea $93 $c2
@@ -7814,6 +7821,9 @@ jr_030_6af1:
 	jr   z, @+$47                                    ; $6b15: $28 $45
 
 	dec  [hl]                                        ; $6b17: $35
+
+
+CreditsSubstate4:
 	ld   hl, $c704                                   ; $6b18: $21 $04 $c7
 	call Call_030_7372                               ; $6b1b: $cd $72 $73
 	jr   c, jr_030_6b30                              ; $6b1e: $38 $10
@@ -7831,6 +7841,7 @@ jr_030_6b30:
 	ret                                              ; $6b33: $c9
 
 
+CreditsSubstate5:
 	ld   hl, $c704                                   ; $6b34: $21 $04 $c7
 	call Call_030_7372                               ; $6b37: $cd $72 $73
 	jr   c, jr_030_6b4c                              ; $6b3a: $38 $10
@@ -7851,6 +7862,7 @@ jr_030_6b4c:
 	ret                                              ; $6b53: $c9
 
 
+CreditsSubstate6:
 	ld   b, $00                                      ; $6b54: $06 $00
 	ld   hl, wBGPalettes                                   ; $6b56: $21 $de $c2
 	ld   c, $01                                      ; $6b59: $0e $01
@@ -8035,6 +8047,9 @@ jr_030_6c4f:
 	inc  bc                                          ; $6c5b: $03
 	inc  bc                                          ; $6c5c: $03
 	nop                                              ; $6c5d: $00
+
+
+CreditsSubstate7:
 	ld   a, [wInGameButtonsHeld]                                  ; $6c5e: $fa $0f $c2
 	and  $03                                         ; $6c61: $e6 $03
 	jr   z, jr_030_6c73                              ; $6c63: $28 $0e
@@ -9148,6 +9163,7 @@ jr_030_7015:
 	ret                                              ; $71c0: $c9
 
 
+CreditsSubstate8:
 	ld   a, $3c                                      ; $71c1: $3e $3c
 
 jr_030_71c3:
@@ -9173,6 +9189,7 @@ jr_030_71cf:
 	ret                                              ; $71d7: $c9
 
 
+CreditsSubstate9:
 	ld   b, $00                                      ; $71d8: $06 $00
 	ld   hl, wBGPalettes                                   ; $71da: $21 $de $c2
 	ld   c, BANK(Palettes_AllWhite)                                      ; $71dd: $0e $01
