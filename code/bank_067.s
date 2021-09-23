@@ -7623,7 +7623,7 @@ Call_067_5ac9:
 	add  hl, bc                                      ; $62dc: $09
 	rrca                                             ; $62dd: $0f
 	nop                                              ; $62de: $00
-	ld   bc, wtodo_VisitedTitleScreen                                   ; $62df: $01 $01 $c2
+	ld   bc, wVisitedTitleScreen                                   ; $62df: $01 $01 $c2
 	jp   hl                                          ; $62e2: $e9
 
 
@@ -7830,7 +7830,7 @@ Call_067_5ac9:
 	add  hl, bc                                      ; $63dd: $09
 	rrca                                             ; $63de: $0f
 	nop                                              ; $63df: $00
-	ld   bc, wtodo_VisitedTitleScreen                                   ; $63e0: $01 $01 $c2
+	ld   bc, wVisitedTitleScreen                                   ; $63e0: $01 $01 $c2
 	jp   hl                                          ; $63e3: $e9
 
 
@@ -8020,7 +8020,7 @@ jr_067_64c4:
 	add  hl, bc                                      ; $64ca: $09
 	rrca                                             ; $64cb: $0f
 	nop                                              ; $64cc: $00
-	ld   bc, wtodo_VisitedTitleScreen                                   ; $64cd: $01 $01 $c2
+	ld   bc, wVisitedTitleScreen                                   ; $64cd: $01 $01 $c2
 	jp   hl                                          ; $64d0: $e9
 
 
@@ -9931,7 +9931,7 @@ Call_067_6a03:
 	inc  d                                           ; $6e17: $14
 	rrca                                             ; $6e18: $0f
 	nop                                              ; $6e19: $00
-	ld   bc, wtodo_VisitedTitleScreen                                   ; $6e1a: $01 $01 $c2
+	ld   bc, wVisitedTitleScreen                                   ; $6e1a: $01 $01 $c2
 	jp   hl                                          ; $6e1d: $e9
 
 
@@ -10144,7 +10144,7 @@ Call_067_6a03:
 	inc  d                                           ; $6f20: $14
 	rrca                                             ; $6f21: $0f
 	nop                                              ; $6f22: $00
-	ld   bc, wtodo_VisitedTitleScreen                                   ; $6f23: $01 $01 $c2
+	ld   bc, wVisitedTitleScreen                                   ; $6f23: $01 $01 $c2
 	jp   hl                                          ; $6f26: $e9
 
 
@@ -10329,7 +10329,7 @@ Call_067_6a03:
 	inc  d                                           ; $700d: $14
 	rrca                                             ; $700e: $0f
 	nop                                              ; $700f: $00
-	ld   bc, wtodo_VisitedTitleScreen                                   ; $7010: $01 $01 $c2
+	ld   bc, wVisitedTitleScreen                                   ; $7010: $01 $01 $c2
 	jp   hl                                          ; $7013: $e9
 
 

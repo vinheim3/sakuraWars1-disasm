@@ -2311,7 +2311,7 @@ jr_09b_49fc:
 	nop                                              ; $4a03: $00
 	jr   nz, @-$5e                                   ; $4a04: $20 $a0
 
-	ld   bc, wtodo_VisitedTitleScreen                                   ; $4a06: $01 $01 $c2
+	ld   bc, wVisitedTitleScreen                                   ; $4a06: $01 $01 $c2
 	ld   [bc], a                                     ; $4a09: $02
 	ld   [hl+], a                                    ; $4a0a: $22
 	ld   [hl+], a                                    ; $4a0b: $22
@@ -2553,7 +2553,7 @@ jr_09b_4b0c:
 	nop                                              ; $4b13: $00
 	ld   h, b                                        ; $4b14: $60
 	and  b                                           ; $4b15: $a0
-	ld   bc, wtodo_VisitedTitleScreen                                   ; $4b16: $01 $01 $c2
+	ld   bc, wVisitedTitleScreen                                   ; $4b16: $01 $01 $c2
 	ld   [bc], a                                     ; $4b19: $02
 	jr   jr_09b_4b2b                                 ; $4b1a: $18 $0f
 

@@ -4926,7 +4926,7 @@ jr_00c_61c7:
 	ld   bc, $000f                                   ; $61e3: $01 $0f $00
 	ld   a, $01                                      ; $61e6: $3e $01
 
-	M_FarCall InitIntroScript
+	M_FarCall SetIntroScriptState
 	ret                                              ; $61fc: $c9
 
 
@@ -5266,7 +5266,7 @@ Call_00c_640f:
 	xor  a                                           ; $6417: $af
 	ld   de, $d880                                   ; $6418: $11 $80 $d8
 
-jr_00c_641b:
+.nextEntry:
 	push hl                                          ; $641b: $e5
 	push de                                          ; $641c: $d5
 	push af                                          ; $641d: $f5
@@ -5274,19 +5274,12 @@ jr_00c_641b:
 	ld   h, [hl]                                     ; $641f: $66
 	ld   l, a                                        ; $6420: $6f
 	or   h                                           ; $6421: $b4
-	jr   z, jr_00c_644f                              ; $6422: $28 $2b
+	jr   z, .tableDone                              ; $6422: $28 $2b
 
-	push af                                          ; $6424: $f5
-	ld   a, $de                                      ; $6425: $3e $de
-	ld   [wFarCallAddr], a                                  ; $6427: $ea $98 $c2
-	ld   a, $44                                      ; $642a: $3e $44
-	ld   [wFarCallAddr+1], a                                  ; $642c: $ea $99 $c2
-	ld   a, $09                                      ; $642f: $3e $09
-	ld   [wFarCallBank], a                                  ; $6431: $ea $9a $c2
-	pop  af                                          ; $6434: $f1
-	call FarCall                                       ; $6435: $cd $62 $09
+	M_FarCall CheckIfFlagSet2
+
 	or   a                                           ; $6438: $b7
-	jr   z, jr_00c_6445                              ; $6439: $28 $0a
+	jr   z, .toNextEntry                              ; $6439: $28 $0a
 
 	pop  af                                          ; $643b: $f1
 	pop  de                                          ; $643c: $d1
@@ -5297,16 +5290,16 @@ jr_00c_641b:
 	ld   hl, $cc56                                   ; $6441: $21 $56 $cc
 	inc  [hl]                                        ; $6444: $34
 
-jr_00c_6445:
+.toNextEntry:
 	pop  af                                          ; $6445: $f1
 	inc  a                                           ; $6446: $3c
 	pop  de                                          ; $6447: $d1
 	pop  hl                                          ; $6448: $e1
 	ld   bc, $0005                                   ; $6449: $01 $05 $00
 	add  hl, bc                                      ; $644c: $09
-	jr   jr_00c_641b                                 ; $644d: $18 $cc
+	jr   .nextEntry                                 ; $644d: $18 $cc
 
-jr_00c_644f:
+.tableDone:
 	pop  hl                                          ; $644f: $e1
 	pop  de                                          ; $6450: $d1
 	pop  af                                          ; $6451: $f1
@@ -5317,7 +5310,7 @@ jr_00c_644f:
 	ld   de, $d980                                   ; $645a: $11 $80 $d9
 	ld   hl, $d880                                   ; $645d: $21 $80 $d8
 
-jr_00c_6460:
+.loop_6460:
 	ld   a, [hl+]                                    ; $6460: $2a
 	push hl                                          ; $6461: $e5
 	push de                                          ; $6462: $d5
@@ -5330,7 +5323,7 @@ jr_00c_6460:
 	pop  bc                                          ; $646e: $c1
 	push bc                                          ; $646f: $c5
 	cp   c                                           ; $6470: $b9
-	jr   z, jr_00c_6481                              ; $6471: $28 $0e
+	jr   z, .cont_6481                              ; $6471: $28 $0e
 
 	pop  bc                                          ; $6473: $c1
 	pop  de                                          ; $6474: $d1
@@ -5345,14 +5338,14 @@ jr_00c_6460:
 	push de                                          ; $647f: $d5
 	push bc                                          ; $6480: $c5
 
-jr_00c_6481:
+.cont_6481:
 	pop  bc                                          ; $6481: $c1
 	pop  de                                          ; $6482: $d1
 	pop  hl                                          ; $6483: $e1
 	inc  b                                           ; $6484: $04
 	ld   a, [$cc56]                                  ; $6485: $fa $56 $cc
 	cp   b                                           ; $6488: $b8
-	jr   nz, jr_00c_6460                             ; $6489: $20 $d5
+	jr   nz, .loop_6460                             ; $6489: $20 $d5
 
 	ld   a, [$cc54]                                  ; $648b: $fa $54 $cc
 	sla  a                                           ; $648e: $cb $27
@@ -5439,17 +5432,11 @@ Call_00c_64d5:
 	dec  a                                           ; $650f: $3d
 	ld   h, $00                                      ; $6510: $26 $00
 	ld   l, a                                        ; $6512: $6f
-	ld   bc, $00f6                                   ; $6513: $01 $f6 $00
+	ld   bc, FLAG2_00f6                                   ; $6513: $01 $f6 $00
 	add  hl, bc                                      ; $6516: $09
-	push af                                          ; $6517: $f5
-	ld   a, $de                                      ; $6518: $3e $de
-	ld   [wFarCallAddr], a                                  ; $651a: $ea $98 $c2
-	ld   a, $44                                      ; $651d: $3e $44
-	ld   [wFarCallAddr+1], a                                  ; $651f: $ea $99 $c2
-	ld   a, $09                                      ; $6522: $3e $09
-	ld   [wFarCallBank], a                                  ; $6524: $ea $9a $c2
-	pop  af                                          ; $6527: $f1
-	call FarCall                                       ; $6528: $cd $62 $09
+
+	M_FarCall CheckIfFlagSet2
+
 	or   a                                           ; $652b: $b7
 	jr   z, jr_00c_6533                              ; $652c: $28 $05
 
@@ -5536,17 +5523,11 @@ Call_00c_6577:
 	dec  a                                           ; $65d4: $3d
 	ld   h, $00                                      ; $65d5: $26 $00
 	ld   l, a                                        ; $65d7: $6f
-	ld   bc, $00f6                                   ; $65d8: $01 $f6 $00
+	ld   bc, FLAG2_00f6                                   ; $65d8: $01 $f6 $00
 	add  hl, bc                                      ; $65db: $09
-	push af                                          ; $65dc: $f5
-	ld   a, $de                                      ; $65dd: $3e $de
-	ld   [wFarCallAddr], a                                  ; $65df: $ea $98 $c2
-	ld   a, $44                                      ; $65e2: $3e $44
-	ld   [wFarCallAddr+1], a                                  ; $65e4: $ea $99 $c2
-	ld   a, $09                                      ; $65e7: $3e $09
-	ld   [wFarCallBank], a                                  ; $65e9: $ea $9a $c2
-	pop  af                                          ; $65ec: $f1
-	call FarCall                                       ; $65ed: $cd $62 $09
+
+	M_FarCall CheckIfFlagSet2
+
 	or   a                                           ; $65f0: $b7
 	jr   z, jr_00c_6619                              ; $65f1: $28 $26
 
@@ -7073,18 +7054,12 @@ jr_00c_6f47:
 	push af                                          ; $6f8f: $f5
 	ld   h, $00                                      ; $6f90: $26 $00
 	ld   l, a                                        ; $6f92: $6f
-	ld   bc, $00f6                                   ; $6f93: $01 $f6 $00
+	ld   bc, FLAG2_00f6                                   ; $6f93: $01 $f6 $00
 	add  hl, bc                                      ; $6f96: $09
 	push hl                                          ; $6f97: $e5
-	push af                                          ; $6f98: $f5
-	ld   a, $de                                      ; $6f99: $3e $de
-	ld   [wFarCallAddr], a                                  ; $6f9b: $ea $98 $c2
-	ld   a, $44                                      ; $6f9e: $3e $44
-	ld   [wFarCallAddr+1], a                                  ; $6fa0: $ea $99 $c2
-	ld   a, $09                                      ; $6fa3: $3e $09
-	ld   [wFarCallBank], a                                  ; $6fa5: $ea $9a $c2
-	pop  af                                          ; $6fa8: $f1
-	call FarCall                                       ; $6fa9: $cd $62 $09
+
+	M_FarCall CheckIfFlagSet2
+
 	pop  hl                                          ; $6fac: $e1
 	cpl                                              ; $6fad: $2f
 	push af                                          ; $6fae: $f5
@@ -7328,7 +7303,7 @@ Call_00c_712f:
 	push bc                                          ; $712f: $c5
 	ld   b, $00                                      ; $7130: $06 $00
 	ld   c, a                                        ; $7132: $4f
-	ld   hl, $713d                                   ; $7133: $21 $3d $71
+	ld   hl, .data                                   ; $7133: $21 $3d $71
 	add  hl, bc                                      ; $7136: $09
 	add  hl, bc                                      ; $7137: $09
 	add  hl, bc                                      ; $7138: $09
@@ -7337,63 +7312,26 @@ Call_00c_712f:
 	pop  bc                                          ; $713b: $c1
 	ret                                              ; $713c: $c9
 
+macro Entry_0c_713d
+	dw \1
+	db \2, \3, \4
+endm
 
-	sub  h                                           ; $713d: $94
-	nop                                              ; $713e: $00
-	nop                                              ; $713f: $00
-	dec  c                                           ; $7140: $0d
-	ld   de, $0095                                   ; $7141: $11 $95 $00
-	ld   bc, $120e                                   ; $7144: $01 $0e $12
-	sub  [hl]                                        ; $7147: $96
-	nop                                              ; $7148: $00
-	ld   [bc], a                                     ; $7149: $02
-	rrca                                             ; $714a: $0f
-	inc  de                                          ; $714b: $13
-	sub  a                                           ; $714c: $97
-	nop                                              ; $714d: $00
-	inc  bc                                          ; $714e: $03
-	db   $10                                         ; $714f: $10
-	inc  d                                           ; $7150: $14
-	sbc  b                                           ; $7151: $98
-	nop                                              ; $7152: $00
-	inc  b                                           ; $7153: $04
-	ld   de, $9915                                   ; $7154: $11 $15 $99
-	nop                                              ; $7157: $00
-	dec  b                                           ; $7158: $05
-	ld   [de], a                                     ; $7159: $12
-	ld   d, $f0                                      ; $715a: $16 $f0
-	nop                                              ; $715c: $00
-	rlca                                             ; $715d: $07
-	inc  d                                           ; $715e: $14
-	add  b                                           ; $715f: $80
-	pop  af                                          ; $7160: $f1
-	nop                                              ; $7161: $00
-	ld   [$8115], sp                                 ; $7162: $08 $15 $81
-	ldh  a, [c]                                      ; $7165: $f2
-	nop                                              ; $7166: $00
-	add  hl, bc                                      ; $7167: $09
-	ld   d, $82                                      ; $7168: $16 $82
-	di                                               ; $716a: $f3
-	nop                                              ; $716b: $00
-	ld   a, [bc]                                     ; $716c: $0a
-	rla                                              ; $716d: $17
-	add  e                                           ; $716e: $83
-	db   $f4                                         ; $716f: $f4
-	nop                                              ; $7170: $00
-	dec  bc                                          ; $7171: $0b
-	jr   @-$7a                                       ; $7172: $18 $84
-
-	push af                                          ; $7174: $f5
-	nop                                              ; $7175: $00
-	inc  c                                           ; $7176: $0c
-	add  hl, de                                      ; $7177: $19
-	add  l                                           ; $7178: $85
-	db   $d3                                         ; $7179: $d3
-	nop                                              ; $717a: $00
-	ld   b, $13                                      ; $717b: $06 $13
-	add  [hl]                                        ; $717d: $86
-	nop                                              ; $717e: $00
-	nop                                              ; $717f: $00
+.data:
+	Entry_0c_713d FLAG2_0094, $00, $0d, $11
+	Entry_0c_713d FLAG2_0095, $01, $0e, $12
+	Entry_0c_713d FLAG2_0096, $02, $0f, $13
+	Entry_0c_713d FLAG2_0097, $03, $10, $14
+	Entry_0c_713d FLAG2_0098, $04, $11, $15
+	Entry_0c_713d FLAG2_0099, $05, $12, $16
+	Entry_0c_713d FLAG2_00f0, $07, $14, $80
+	Entry_0c_713d FLAG2_00f1, $08, $15, $81
+	Entry_0c_713d FLAG2_00f2, $09, $16, $82
+	Entry_0c_713d FLAG2_00f3, $0a, $17, $83
+	Entry_0c_713d FLAG2_00f4, $0b, $18, $84
+	Entry_0c_713d FLAG2_00f5, $0c, $19, $85
+	Entry_0c_713d FLAG2_00d3, $06, $13, $86
+	db $00, $00
 
 
 LCDCFunc09::
@@ -7569,15 +7507,8 @@ AequFFh_0c_7273::
 
 
 	ld   hl, $0002                                   ; $7276: $21 $02 $00
-	push af                                          ; $7279: $f5
-	ld   a, $35                                      ; $727a: $3e $35
-	ld   [wFarCallAddr], a                                  ; $727c: $ea $98 $c2
-	ld   a, $42                                      ; $727f: $3e $42
-	ld   [wFarCallAddr+1], a                                  ; $7281: $ea $99 $c2
-	ld   a, $0a                                      ; $7284: $3e $0a
-	ld   [wFarCallBank], a                                  ; $7286: $ea $9a $c2
-	pop  af                                          ; $7289: $f1
-	call FarCall                                       ; $728a: $cd $62 $09
+
+	M_FarCall CheckIfFlagSet1
 	ret                                              ; $728d: $c9
 
 
@@ -7587,15 +7518,9 @@ AequFFh_0c_728e::
 
 
 	ld   hl, $0002                                   ; $7291: $21 $02 $00
-	push af                                          ; $7294: $f5
-	ld   a, $35                                      ; $7295: $3e $35
-	ld   [wFarCallAddr], a                                  ; $7297: $ea $98 $c2
-	ld   a, $42                                      ; $729a: $3e $42
-	ld   [wFarCallAddr+1], a                                  ; $729c: $ea $99 $c2
-	ld   a, $0a                                      ; $729f: $3e $0a
-	ld   [wFarCallBank], a                                  ; $72a1: $ea $9a $c2
-	pop  af                                          ; $72a4: $f1
-	call FarCall                                       ; $72a5: $cd $62 $09
+
+	M_FarCall CheckIfFlagSet1
+
 	or   a                                           ; $72a8: $b7
 	ret  z                                           ; $72a9: $c8
 
@@ -7610,93 +7535,50 @@ AequFFh_0c_72af::
 
 
 	ld   hl, $0002                                   ; $72b2: $21 $02 $00
-	push af                                          ; $72b5: $f5
-	ld   a, $35                                      ; $72b6: $3e $35
-	ld   [wFarCallAddr], a                                  ; $72b8: $ea $98 $c2
-	ld   a, $42                                      ; $72bb: $3e $42
-	ld   [wFarCallAddr+1], a                                  ; $72bd: $ea $99 $c2
-	ld   a, $0a                                      ; $72c0: $3e $0a
-	ld   [wFarCallBank], a                                  ; $72c2: $ea $9a $c2
-	pop  af                                          ; $72c5: $f1
-	call FarCall                                       ; $72c6: $cd $62 $09
+
+	M_FarCall CheckIfFlagSet1
+
 	or   a                                           ; $72c9: $b7
 	ret  z                                           ; $72ca: $c8
 
 	ld   hl, $0014                                   ; $72cb: $21 $14 $00
-	push af                                          ; $72ce: $f5
-	ld   a, $35                                      ; $72cf: $3e $35
-	ld   [wFarCallAddr], a                                  ; $72d1: $ea $98 $c2
-	ld   a, $42                                      ; $72d4: $3e $42
-	ld   [wFarCallAddr+1], a                                  ; $72d6: $ea $99 $c2
-	ld   a, $0a                                      ; $72d9: $3e $0a
-	ld   [wFarCallBank], a                                  ; $72db: $ea $9a $c2
-	pop  af                                          ; $72de: $f1
-	call FarCall                                       ; $72df: $cd $62 $09
+
+	M_FarCall CheckIfFlagSet1
+
 	or   a                                           ; $72e2: $b7
 	ret  nz                                          ; $72e3: $c0
 
 	ld   hl, $0015                                   ; $72e4: $21 $15 $00
-	push af                                          ; $72e7: $f5
-	ld   a, $35                                      ; $72e8: $3e $35
-	ld   [wFarCallAddr], a                                  ; $72ea: $ea $98 $c2
-	ld   a, $42                                      ; $72ed: $3e $42
-	ld   [wFarCallAddr+1], a                                  ; $72ef: $ea $99 $c2
-	ld   a, $0a                                      ; $72f2: $3e $0a
-	ld   [wFarCallBank], a                                  ; $72f4: $ea $9a $c2
-	pop  af                                          ; $72f7: $f1
-	call FarCall                                       ; $72f8: $cd $62 $09
+
+	M_FarCall CheckIfFlagSet1
+
 	or   a                                           ; $72fb: $b7
 	ret  nz                                          ; $72fc: $c0
 
 	ld   hl, $0016                                   ; $72fd: $21 $16 $00
-	push af                                          ; $7300: $f5
-	ld   a, $35                                      ; $7301: $3e $35
-	ld   [wFarCallAddr], a                                  ; $7303: $ea $98 $c2
-	ld   a, $42                                      ; $7306: $3e $42
-	ld   [wFarCallAddr+1], a                                  ; $7308: $ea $99 $c2
-	ld   a, $0a                                      ; $730b: $3e $0a
-	ld   [wFarCallBank], a                                  ; $730d: $ea $9a $c2
-	pop  af                                          ; $7310: $f1
-	call FarCall                                       ; $7311: $cd $62 $09
+
+	M_FarCall CheckIfFlagSet1
+
 	or   a                                           ; $7314: $b7
 	ret  nz                                          ; $7315: $c0
 
 	ld   hl, $0017                                   ; $7316: $21 $17 $00
-	push af                                          ; $7319: $f5
-	ld   a, $35                                      ; $731a: $3e $35
-	ld   [wFarCallAddr], a                                  ; $731c: $ea $98 $c2
-	ld   a, $42                                      ; $731f: $3e $42
-	ld   [wFarCallAddr+1], a                                  ; $7321: $ea $99 $c2
-	ld   a, $0a                                      ; $7324: $3e $0a
-	ld   [wFarCallBank], a                                  ; $7326: $ea $9a $c2
-	pop  af                                          ; $7329: $f1
-	call FarCall                                       ; $732a: $cd $62 $09
+
+	M_FarCall CheckIfFlagSet1
+
 	or   a                                           ; $732d: $b7
 	ret  nz                                          ; $732e: $c0
 
 	ld   hl, $0018                                   ; $732f: $21 $18 $00
-	push af                                          ; $7332: $f5
-	ld   a, $35                                      ; $7333: $3e $35
-	ld   [wFarCallAddr], a                                  ; $7335: $ea $98 $c2
-	ld   a, $42                                      ; $7338: $3e $42
-	ld   [wFarCallAddr+1], a                                  ; $733a: $ea $99 $c2
-	ld   a, $0a                                      ; $733d: $3e $0a
-	ld   [wFarCallBank], a                                  ; $733f: $ea $9a $c2
-	pop  af                                          ; $7342: $f1
-	call FarCall                                       ; $7343: $cd $62 $09
+
+	M_FarCall CheckIfFlagSet1
+
 	or   a                                           ; $7346: $b7
 	ret  nz                                          ; $7347: $c0
 
 	ld   hl, $0019                                   ; $7348: $21 $19 $00
-	push af                                          ; $734b: $f5
-	ld   a, $35                                      ; $734c: $3e $35
-	ld   [wFarCallAddr], a                                  ; $734e: $ea $98 $c2
-	ld   a, $42                                      ; $7351: $3e $42
-	ld   [wFarCallAddr+1], a                                  ; $7353: $ea $99 $c2
-	ld   a, $0a                                      ; $7356: $3e $0a
-	ld   [wFarCallBank], a                                  ; $7358: $ea $9a $c2
-	pop  af                                          ; $735b: $f1
-	call FarCall                                       ; $735c: $cd $62 $09
+
+	M_FarCall CheckIfFlagSet1
 	ret                                              ; $735f: $c9
 
 
@@ -7705,7 +7587,7 @@ Func_0c_7360::
 	ret                                              ; $7374: $c9
 
 
-GameState44::
+GameState44_IntroScript::
 ; Branch based on substate
 	ld   a, [wGameSubstate]                                         ; $7375
 	dec  a                                                          ; $7378
@@ -7751,7 +7633,7 @@ GameState44::
 	M_FarCall InitScriptEngine
 	
 ;
-	ld   a, [$cc78]                                  ; $73f2: $fa $78 $cc
+	ld   a, [wIntroScriptSongIdx]                                  ; $73f2: $fa $78 $cc
 	ld   [wScriptSongToPlay], a                                  ; $73f5: $ea $c8 $cb
 	xor  a                                           ; $73f8: $af
 	ld   [$cba6], a                                  ; $73f9: $ea $a6 $cb
@@ -7936,13 +7818,13 @@ GameState44::
 	ret                                                             ; $758e
 
 
-; A - intro script control byte
+; A - song idx to play during intro script
 ; BC - script idx
 ; H - state to set after script engine done
 ; L - substate to set after script engine done
-InitIntroScript::
-;
-	ld   [$cc78], a                                  ; $758f: $ea $78 $cc
+SetIntroScriptState::
+; Set song to play
+	ld   [wIntroScriptSongIdx], a                                   ; $758f
 
 ; Set script idx
 	ld   a, b                                                       ; $7592
@@ -7957,14 +7839,14 @@ InitIntroScript::
 	ld   [wPostIntroScriptEngineGameSubstate], a                    ; $759f
 
 ; Start intro script state
-	ld   a, GS_44                                                   ; $75a2
+	ld   a, GS_INTRO_SCRIPT                                         ; $75a2
 	ld   [wGameState], a                                            ; $75a4
 	xor  a                                                          ; $75a7
 	ld   [wGameSubstate], a                                         ; $75a8
 	ret                                                             ; $75ab
 
 
-GameState46::
+GameState46_PreTitleScreen::
 	ld   a, [wGameSubstate]                                  ; $75ac: $fa $a1 $c2
 	sla  a                                           ; $75af: $cb $27
 	ld   h, $00                                      ; $75b1: $26 $00
@@ -7982,9 +7864,11 @@ GameState46::
 	dw .substate2
 	
 .substate0:
+; Clear music
 	xor  a                                           ; $75c2: $af
 	call PlaySong                                       ; $75c3: $cd $92 $1a
 
+;
 	M_FarCall Func_0a_426b
 	
 	ld   hl, wGameSubstate                                   ; $75da: $21 $a1 $c2
@@ -8003,7 +7887,7 @@ GameState46::
 	ld   bc, $0003                                   ; $7600: $01 $03 $00
 	xor  a                                           ; $7603: $af
 
-	M_FarCall InitIntroScript
+	M_FarCall SetIntroScriptState
 	
 	ret                                              ; $7618: $c9
 
@@ -8038,7 +7922,7 @@ GameState46::
 	ld   bc, $0003                                   ; $7670: $01 $03 $00
 	xor  a                                           ; $7673: $af
 
-	M_FarCall InitIntroScript
+	M_FarCall SetIntroScriptState
 	
 	ret                                              ; $7688: $c9
 
@@ -8048,27 +7932,27 @@ GameState46::
 	M_FarCall CheckIfFlagSet1
 	
 	or   a                                           ; $76a0: $b7
-	jr   nz, jr_00c_76c0                             ; $76a1: $20 $1d
+	jr   nz, .checkFlags                             ; $76a1: $20 $1d
 
 	ld   h, $46                                      ; $76a3: $26 $46
 	ld   l, $00                                      ; $76a5: $2e $00
 	ld   bc, $0005                                   ; $76a7: $01 $05 $00
 	xor  a                                           ; $76aa: $af
 
-	M_FarCall InitIntroScript
+	M_FarCall SetIntroScriptState
 	
 	ret                                              ; $76bf: $c9
 
-jr_00c_76c0:
-	ld   hl, $772e                                   ; $76c0: $21 $2e $77
+.checkFlags:
+	ld   hl, .table                                   ; $76c0: $21 $2e $77
 
-jr_00c_76c3:
+.nextEntry:
 	ld   a, [hl+]                                    ; $76c3: $2a
 	ld   c, a                                        ; $76c4: $4f
 	ld   a, [hl+]                                    ; $76c5: $2a
 	ld   b, a                                        ; $76c6: $47
 	bit  7, b                                        ; $76c7: $cb $78
-	jr   nz, jr_00c_7724                             ; $76c9: $20 $59
+	jr   nz, .toTitleScreen                             ; $76c9: $20 $59
 
 	ld   a, [hl+]                                    ; $76cb: $2a
 	ld   e, a                                        ; $76cc: $5f
@@ -8084,7 +7968,7 @@ jr_00c_76c3:
 	pop  hl                                          ; $76e7: $e1
 	pop  de                                          ; $76e8: $d1
 	or   a                                           ; $76e9: $b7
-	jr   z, jr_00c_76c3                              ; $76ea: $28 $d7
+	jr   z, .nextEntry                              ; $76ea: $28 $d7
 
 	push hl                                          ; $76ec: $e5
 	ld   h, d                                        ; $76ed: $62
@@ -8094,57 +7978,35 @@ jr_00c_76c3:
 	
 	pop  hl                                          ; $7703: $e1
 	or   a                                           ; $7704: $b7
-	jr   nz, jr_00c_76c3                             ; $7705: $20 $bc
+	jr   nz, .nextEntry                             ; $7705: $20 $bc
 
-	ld   h, $46                                      ; $7707: $26 $46
+	ld   h, GS_PRE_TITLE_SCREEN                                      ; $7707: $26 $46
 	ld   l, $00                                      ; $7709: $2e $00
 	ld   bc, $0010                                   ; $770b: $01 $10 $00
 	xor  a                                           ; $770e: $af
 
-	M_FarCall InitIntroScript
+	M_FarCall SetIntroScriptState
 	
 	ret                                              ; $7723: $c9
 
-jr_00c_7724:
+.toTitleScreen:
 	ld   a, GS_TITLE_SCREEN                                      ; $7724: $3e $36
 	ld   [wGameState], a                                  ; $7726: $ea $a0 $c2
 	xor  a                                           ; $7729: $af
 	ld   [wGameSubstate], a                                  ; $772a: $ea $a1 $c2
 	ret                                              ; $772d: $c9
 
-
-;
-	ld   [bc], a                                     ; $772e: $02
-	nop                                              ; $772f: $00
-	inc  bc                                          ; $7730: $03
-	nop                                              ; $7731: $00
-	inc  b                                           ; $7732: $04
-	nop                                              ; $7733: $00
-	dec  b                                           ; $7734: $05
-	nop                                              ; $7735: $00
-	ld   b, $00                                      ; $7736: $06 $00
-	rlca                                             ; $7738: $07
-	nop                                              ; $7739: $00
-	ld   [$0900], sp                                 ; $773a: $08 $00 $09
-	nop                                              ; $773d: $00
-	ld   a, [bc]                                     ; $773e: $0a
-	nop                                              ; $773f: $00
-	dec  bc                                          ; $7740: $0b
-	nop                                              ; $7741: $00
-	inc  c                                           ; $7742: $0c
-	nop                                              ; $7743: $00
-	dec  c                                           ; $7744: $0d
-	nop                                              ; $7745: $00
-	ld   c, $00                                      ; $7746: $0e $00
-	rrca                                             ; $7748: $0f
-	nop                                              ; $7749: $00
-	stop                                             ; $774a: $10 $00
-	ld   de, $1200                                   ; $774c: $11 $00 $12
-	nop                                              ; $774f: $00
-	inc  de                                          ; $7750: $13
-	nop                                              ; $7751: $00
-	rst  $38                                         ; $7752: $ff
-	rst  $38                                         ; $7753: $ff
+.table:
+	db $02, $00, $03, $00
+	db $04, $00, $05, $00
+	db $06, $00, $07, $00
+	db $08, $00, $09, $00
+	db $0a, $00, $0b, $00
+	db $0c, $00, $0d, $00
+	db $0e, $00, $0f, $00
+	db $10, $00, $11, $00
+	db $12, $00, $13, $00
+	db $ff, $ff
 
 
 GameState47_Prologue::
@@ -8397,17 +8259,17 @@ GameState47_Prologue::
 	call PlaySong                                                   ; $7920
 
 ; Set new game state and substate
-	ld   a, [wPostPrologueScriptEngineGameState]                    ; $7923
+	ld   a, [wPrologueReturnState]                                  ; $7923
 	ld   [wGameState], a                                            ; $7926
-	ld   a, [wPostPrologueScriptEngineGameSubstate]                 ; $7929
+	ld   a, [wPrologueReturnSubstate]                               ; $7929
 	ld   [wGameSubstate], a                                         ; $792c
 	ret                                                             ; $792f
 
 
 ; A -
 ; BC - script idx
-; H - game state after script engine done
-; L - game substate after script engine done
+; H - return state
+; L - return substate
 SetPrologueScriptState::
 ;
 	ld   [$cc9e], a                                  ; $7930: $ea $9e $cc
@@ -8420,9 +8282,9 @@ SetPrologueScriptState::
 	
 ; Set game state/substate to go to after the script is done
 	ld   a, h                                                       ; $793b
-	ld   [wPostPrologueScriptEngineGameState], a                    ; $793c
+	ld   [wPrologueReturnState], a                                  ; $793c
 	ld   a, l                                                       ; $793f
-	ld   [wPostPrologueScriptEngineGameSubstate], a                 ; $7940
+	ld   [wPrologueReturnSubstate], a                               ; $7940
 
 ; Start prologue state
 	ld   a, GS_PROLOGUE                                             ; $7943

@@ -210,7 +210,7 @@ BattleSubstate00:
 	sla  a                                           ; $419e: $cb $27
 	ld   b, $00                                      ; $41a0: $06 $00
 	ld   c, a                                        ; $41a2: $4f
-	ld   hl, $4294                                   ; $41a3: $21 $94 $42
+	ld   hl, Table_24_4294                                   ; $41a3: $21 $94 $42
 	add  hl, bc                                      ; $41a6: $09
 	ld   a, [hl+]                                    ; $41a7: $2a
 	ld   h, [hl]                                     ; $41a8: $66
@@ -309,16 +309,16 @@ jr_024_427e:
 	ret                                              ; $4293: $c9
 
 
-	call z, $cd00                                    ; $4294: $cc $00 $cd
-	nop                                              ; $4297: $00
-	adc  $00                                         ; $4298: $ce $00
-	rst  WaitUntilVBlankIntHandledIfLCDOn                                         ; $429a: $cf
-	nop                                              ; $429b: $00
-	ret  nc                                          ; $429c: $d0
+Table_24_4294:
+	dw FLAG2_00cc
+	dw FLAG2_00cd
+	dw FLAG2_00ce
+	dw FLAG2_00cf
+	dw FLAG2_00d0
+	dw FLAG2_00d1
 
-	nop                                              ; $429d: $00
-	pop  de                                          ; $429e: $d1
-	nop                                              ; $429f: $00
+
+
 	rst  $38                                         ; $42a0: $ff
 	ld   a, a                                        ; $42a1: $7f
 	db   $fc                                         ; $42a2: $fc

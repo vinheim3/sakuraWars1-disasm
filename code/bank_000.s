@@ -239,10 +239,11 @@ Reset:
 
 
 ToReset:
-	ld   a, [wIsGBC]                                  ; $021b: $fa $00 $c2
-	ld   b, a                                        ; $021e: $47
-	ld   a, [wtodo_VisitedTitleScreen]                                  ; $021f: $fa $01 $c2
-	ld   c, a                                        ; $0222: $4f
+; Preserve GBC flag, and if visited title screen
+	ld   a, [wIsGBC]                                                ; $021b
+	ld   b, a                                                       ; $021e
+	ld   a, [wVisitedTitleScreen]                                   ; $021f
+	ld   c, a                                                       ; $0222
 
 ; Clear wram (stop when hitting $bf)
 	xor  a                                                          ; $0223
@@ -251,10 +252,11 @@ ToReset:
 	bit  6, h                                                       ; $0228
 	jr   nz, :-                                                     ; $022a
 
-	ld   a, c                                        ; $022c: $79
-	ld   [wtodo_VisitedTitleScreen], a                                  ; $022d: $ea $01 $c2
-	ld   a, b                                        ; $0230: $78
-	jp   Reset                               ; $0231: $c3 $5b $01
+; Restore visited title screen flag, and re-set GBC flag
+	ld   a, c                                                       ; $022c
+	ld   [wVisitedTitleScreen], a                                   ; $022d
+	ld   a, b                                                       ; $0230
+	jp   Reset                                                      ; $0231
 
 
 SpriteGroupDataPointers:
@@ -3314,9 +3316,9 @@ HandleGameState:
 	AddrBank GameState41_TreasureChest
 	AddrBank GameState42_RomandoShop
 	AddrBank GameState43_FlagSettings
-	AddrBank GameState44 ; intro script?
+	AddrBank GameState44_IntroScript
 	AddrBank GameState45_DormRoom
-	AddrBank GameState46 ; transitions to intro scripts
+	AddrBank GameState46_PreTitleScreen
 	AddrBank GameState47_Prologue
 	AddrBank GameState48 ; bugged
 	AddrBank GameState49_DayPassed
@@ -4661,10 +4663,11 @@ endr
 if def(TV_HACK)
 	call HackHook
 else
-	ld   a, [wtodo_VisitedTitleScreen]                                  ; $15cd: $fa $01 $c2
+; Skip intro state if we're soft-resetting
+	ld   a, [wVisitedTitleScreen]                                   ; $15cd
 endc
-	or   a                                           ; $15d0: $b7
-	jr   nz, jr_000_15dd                             ; $15d1: $20 $0a
+	or   a                                                          ; $15d0
+	jr   nz, .skipIntro                                             ; $15d1
 
 ; Set intro game state
 	ld   a, GS_INTRO                                                ; $15d3
@@ -4673,12 +4676,13 @@ endc
 	ld   [wGameSubstate], a                                         ; $15d9
 	ret                                                             ; $15dc
 
-jr_000_15dd:
-	ld   a, GS_46                                      ; $15dd: $3e $46
-	ld   [wGameState], a                                  ; $15df: $ea $a0 $c2
-	xor  a                                           ; $15e2: $af
-	ld   [wGameSubstate], a                                  ; $15e3: $ea $a1 $c2
-	ret                                              ; $15e6: $c9
+.skipIntro:
+; Else go to the pre-title screen state where a script may play
+	ld   a, GS_PRE_TITLE_SCREEN                                     ; $15dd
+	ld   [wGameState], a                                            ; $15df
+	xor  a                                                          ; $15e2
+	ld   [wGameSubstate], a                                         ; $15e3
+	ret                                                             ; $15e6
 
 
 GameState01_Stub:
@@ -11175,7 +11179,7 @@ HackHook:
 	ld   a, $ff
 	M_FarCall SetOrUnsetFlag1
 
-	ld   a, [wtodo_VisitedTitleScreen]
+	ld   a, [wVisitedTitleScreen]
 	ret
 endc
 

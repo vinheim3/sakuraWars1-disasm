@@ -10100,7 +10100,7 @@ jr_065_6876:
 	ld   a, [bc]                                     ; $6d7f: $0a
 	rrca                                             ; $6d80: $0f
 	nop                                              ; $6d81: $00
-	ld   bc, wtodo_VisitedTitleScreen                                   ; $6d82: $01 $01 $c2
+	ld   bc, wVisitedTitleScreen                                   ; $6d82: $01 $01 $c2
 	or   d                                           ; $6d85: $b2
 	call nz, $ffc9                                   ; $6d86: $c4 $c9 $ff
 	rst  $38                                         ; $6d89: $ff
@@ -10365,7 +10365,7 @@ Jump_065_6d8d:
 	ld   a, [bc]                                     ; $6eb2: $0a
 	rrca                                             ; $6eb3: $0f
 	nop                                              ; $6eb4: $00
-	ld   bc, wtodo_VisitedTitleScreen                                   ; $6eb5: $01 $01 $c2
+	ld   bc, wVisitedTitleScreen                                   ; $6eb5: $01 $01 $c2
 	or   d                                           ; $6eb8: $b2
 	call nz, $ffc9                                   ; $6eb9: $c4 $c9 $ff
 	rst  $38                                         ; $6ebc: $ff
@@ -10654,7 +10654,7 @@ Jump_065_6d8d:
 	ld   a, [bc]                                     ; $6ffa: $0a
 	rrca                                             ; $6ffb: $0f
 	nop                                              ; $6ffc: $00
-	ld   bc, wtodo_VisitedTitleScreen                                   ; $6ffd: $01 $01 $c2
+	ld   bc, wVisitedTitleScreen                                   ; $6ffd: $01 $01 $c2
 	or   d                                           ; $7000: $b2
 	call nz, $ffc9                                   ; $7001: $c4 $c9 $ff
 	rst  $38                                         ; $7004: $ff
@@ -10942,7 +10942,7 @@ Jump_065_6d8d:
 	ld   a, [bc]                                     ; $7143: $0a
 	rrca                                             ; $7144: $0f
 	nop                                              ; $7145: $00
-	ld   bc, wtodo_VisitedTitleScreen                                   ; $7146: $01 $01 $c2
+	ld   bc, wVisitedTitleScreen                                   ; $7146: $01 $01 $c2
 	or   d                                           ; $7149: $b2
 	call nz, $ffc9                                   ; $714a: $c4 $c9 $ff
 	rst  $38                                         ; $714d: $ff
@@ -11220,7 +11220,7 @@ Jump_065_6d8d:
 	ld   a, [bc]                                     ; $727c: $0a
 	rrca                                             ; $727d: $0f
 	nop                                              ; $727e: $00
-	ld   bc, wtodo_VisitedTitleScreen                                   ; $727f: $01 $01 $c2
+	ld   bc, wVisitedTitleScreen                                   ; $727f: $01 $01 $c2
 	or   d                                           ; $7282: $b2
 	call nz, $ffc9                                   ; $7283: $c4 $c9 $ff
 	rst  $38                                         ; $7286: $ff
@@ -11487,7 +11487,7 @@ Jump_065_6d8d:
 	ld   a, [bc]                                     ; $73b0: $0a
 	rrca                                             ; $73b1: $0f
 	nop                                              ; $73b2: $00
-	ld   bc, wtodo_VisitedTitleScreen                                   ; $73b3: $01 $01 $c2
+	ld   bc, wVisitedTitleScreen                                   ; $73b3: $01 $01 $c2
 	or   d                                           ; $73b6: $b2
 	call nz, $ffc9                                   ; $73b7: $c4 $c9 $ff
 	rst  $38                                         ; $73ba: $ff
@@ -11780,7 +11780,7 @@ Jump_065_7452:
 	ld   a, [bc]                                     ; $74f7: $0a
 	rrca                                             ; $74f8: $0f
 	nop                                              ; $74f9: $00
-	ld   bc, wtodo_VisitedTitleScreen                                   ; $74fa: $01 $01 $c2
+	ld   bc, wVisitedTitleScreen                                   ; $74fa: $01 $01 $c2
 	or   d                                           ; $74fd: $b2
 	call nz, $ffc9                                   ; $74fe: $c4 $c9 $ff
 	rst  $38                                         ; $7501: $ff

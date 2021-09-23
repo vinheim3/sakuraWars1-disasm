@@ -3047,11 +3047,12 @@ IntroSubstate5_JupiterMain:
 
 
 IntroSubstate6_NextGameState:
-	ld   a, GS_46                                      ; $5051: $3e $46
-	ld   [wGameState], a                                  ; $5053: $ea $a0 $c2
-	xor  a                                           ; $5056: $af
-	ld   [wGameSubstate], a                                  ; $5057: $ea $a1 $c2
-	ret                                              ; $505a: $c9
+; Go to state where we may play a script before the title screen
+	ld   a, GS_PRE_TITLE_SCREEN                                     ; $5051
+	ld   [wGameState], a                                            ; $5053
+	xor  a                                                          ; $5056
+	ld   [wGameSubstate], a                                         ; $5057
+	ret                                                             ; $505a
 
 
 ; B - src rom bank for initial color vals
@@ -9251,7 +9252,7 @@ jr_030_721d:
 	ld   bc, $003f                                   ; $722f: $01 $3f $00
 	call SetBGandOBJPaletteRangesToUpdate                                       ; $7232: $cd $aa $04
 	call TurnOffLCD                                       ; $7235: $cd $e3 $08
-	ld   h, GS_46                                      ; $7238: $26 $46
+	ld   h, GS_PRE_TITLE_SCREEN                                      ; $7238: $26 $46
 	ld   l, $00                                      ; $723a: $2e $00
 
 	M_FarCall Func_11_7e57

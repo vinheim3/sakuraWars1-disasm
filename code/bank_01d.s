@@ -4563,7 +4563,7 @@ jr_01d_67b2:
 	rst  $30                                         ; $67c6: $f7
 	rlca                                             ; $67c7: $07
 	ld   bc, $0006                                   ; $67c8: $01 $06 $00
-	jp   wtodo_VisitedTitleScreen                                       ; $67cb: $c3 $01 $c2
+	jp   wVisitedTitleScreen                                       ; $67cb: $c3 $01 $c2
 
 
 	nop                                              ; $67ce: $00

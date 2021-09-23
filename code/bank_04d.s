@@ -1834,7 +1834,7 @@ jr_04d_4523:
 	inc  b                                           ; $483b: $04
 	rrca                                             ; $483c: $0f
 	nop                                              ; $483d: $00
-	ld   bc, wtodo_VisitedTitleScreen                                   ; $483e: $01 $01 $c2
+	ld   bc, wVisitedTitleScreen                                   ; $483e: $01 $01 $c2
 	call nc, $ddef                                   ; $4841: $d4 $ef $dd
 	ld   e, d                                        ; $4844: $5a
 	ld   [bc], a                                     ; $4845: $02
@@ -1971,7 +1971,7 @@ jr_04d_4523:
 	inc  b                                           ; $48d8: $04
 	rrca                                             ; $48d9: $0f
 	nop                                              ; $48da: $00
-	ld   bc, wtodo_VisitedTitleScreen                                   ; $48db: $01 $01 $c2
+	ld   bc, wVisitedTitleScreen                                   ; $48db: $01 $01 $c2
 	call nc, $efdd                                   ; $48de: $d4 $dd $ef
 	ld   [bc], a                                     ; $48e1: $02
 	ld   c, b                                        ; $48e2: $48

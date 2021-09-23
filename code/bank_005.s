@@ -3369,15 +3369,9 @@ jr_005_5616:
 	ld   a, [$cc6b]                                  ; $564e: $fa $6b $cc
 	dec  a                                           ; $5651: $3d
 	ld   h, a                                        ; $5652: $67
-	push af                                          ; $5653: $f5
-	ld   a, $de                                      ; $5654: $3e $de
-	ld   [wFarCallAddr], a                                  ; $5656: $ea $98 $c2
-	ld   a, $44                                      ; $5659: $3e $44
-	ld   [wFarCallAddr+1], a                                  ; $565b: $ea $99 $c2
-	ld   a, $09                                      ; $565e: $3e $09
-	ld   [wFarCallBank], a                                  ; $5660: $ea $9a $c2
-	pop  af                                          ; $5663: $f1
-	call FarCall                                       ; $5664: $cd $62 $09
+
+	M_FarCall CheckIfFlagSet2
+
 	or   a                                           ; $5667: $b7
 	jr   nz, jr_005_567e                             ; $5668: $20 $14
 
@@ -12558,15 +12552,9 @@ jr_005_73f1:
 	ld   a, [$cc6d]                                  ; $7403: $fa $6d $cc
 	ld   l, a                                        ; $7406: $6f
 	push hl                                          ; $7407: $e5
-	push af                                          ; $7408: $f5
-	ld   a, $de                                      ; $7409: $3e $de
-	ld   [wFarCallAddr], a                                  ; $740b: $ea $98 $c2
-	ld   a, $44                                      ; $740e: $3e $44
-	ld   [wFarCallAddr+1], a                                  ; $7410: $ea $99 $c2
-	ld   a, $09                                      ; $7413: $3e $09
-	ld   [wFarCallBank], a                                  ; $7415: $ea $9a $c2
-	pop  af                                          ; $7418: $f1
-	call FarCall                                       ; $7419: $cd $62 $09
+
+	M_FarCall CheckIfFlagSet2
+
 	pop  hl                                          ; $741c: $e1
 	cpl                                              ; $741d: $2f
 	push af                                          ; $741e: $f5

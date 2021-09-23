@@ -3657,7 +3657,7 @@ Jump_047_505a:
 	ld   [bc], a                                     ; $50e8: $02
 	rrca                                             ; $50e9: $0f
 	nop                                              ; $50ea: $00
-	ld   bc, wtodo_VisitedTitleScreen                                   ; $50eb: $01 $01 $c2
+	ld   bc, wVisitedTitleScreen                                   ; $50eb: $01 $01 $c2
 	jp   hl                                          ; $50ee: $e9
 
 
@@ -3868,7 +3868,7 @@ Jump_047_505a:
 	ld   [bc], a                                     ; $51f0: $02
 	rrca                                             ; $51f1: $0f
 	nop                                              ; $51f2: $00
-	ld   bc, wtodo_VisitedTitleScreen                                   ; $51f3: $01 $01 $c2
+	ld   bc, wVisitedTitleScreen                                   ; $51f3: $01 $01 $c2
 	jp   hl                                          ; $51f6: $e9
 
 
@@ -4041,7 +4041,7 @@ Jump_047_505a:
 	ld   [bc], a                                     ; $52cc: $02
 	rrca                                             ; $52cd: $0f
 	nop                                              ; $52ce: $00
-	ld   bc, wtodo_VisitedTitleScreen                                   ; $52cf: $01 $01 $c2
+	ld   bc, wVisitedTitleScreen                                   ; $52cf: $01 $01 $c2
 	jp   hl                                          ; $52d2: $e9
 
 

@@ -447,22 +447,16 @@ jr_021_4214:
 	ld   a, [wNapOrTrainIdx]                                  ; $4215: $fa $6d $ca
 	dec  a                                           ; $4218: $3d
 	sla  a                                           ; $4219: $cb $27
-	ld   hl, $42ba                                   ; $421b: $21 $ba $42
+	ld   hl, Table_21_42ba                                   ; $421b: $21 $ba $42
 	ld   b, $00                                      ; $421e: $06 $00
 	ld   c, a                                        ; $4220: $4f
 	add  hl, bc                                      ; $4221: $09
 	ld   a, [hl+]                                    ; $4222: $2a
 	ld   h, [hl]                                     ; $4223: $66
 	ld   l, a                                        ; $4224: $6f
-	push af                                          ; $4225: $f5
-	ld   a, $de                                      ; $4226: $3e $de
-	ld   [wFarCallAddr], a                                  ; $4228: $ea $98 $c2
-	ld   a, $44                                      ; $422b: $3e $44
-	ld   [wFarCallAddr+1], a                                  ; $422d: $ea $99 $c2
-	ld   a, $09                                      ; $4230: $3e $09
-	ld   [wFarCallBank], a                                  ; $4232: $ea $9a $c2
-	pop  af                                          ; $4235: $f1
-	call FarCall                                       ; $4236: $cd $62 $09
+
+	M_FarCall CheckIfFlagSet2
+
 	pop  bc                                          ; $4239: $c1
 	ld   c, $00                                      ; $423a: $0e $00
 	and  a                                           ; $423c: $a7
@@ -482,18 +476,12 @@ jr_021_4241:
 	ld   bc, $0000                                   ; $424d: $01 $00 $00
 
 jr_021_4250:
-	ld   hl, $00f6                                   ; $4250: $21 $f6 $00
+	ld   hl, FLAG2_00f6                                   ; $4250: $21 $f6 $00
 	add  hl, bc                                      ; $4253: $09
 	push bc                                          ; $4254: $c5
-	push af                                          ; $4255: $f5
-	ld   a, $de                                      ; $4256: $3e $de
-	ld   [wFarCallAddr], a                                  ; $4258: $ea $98 $c2
-	ld   a, $44                                      ; $425b: $3e $44
-	ld   [wFarCallAddr+1], a                                  ; $425d: $ea $99 $c2
-	ld   a, $09                                      ; $4260: $3e $09
-	ld   [wFarCallBank], a                                  ; $4262: $ea $9a $c2
-	pop  af                                          ; $4265: $f1
-	call FarCall                                       ; $4266: $cd $62 $09
+
+	M_FarCall CheckIfFlagSet2
+
 	pop  bc                                          ; $4269: $c1
 	and  a                                           ; $426a: $a7
 	jr   z, jr_021_427c                              ; $426b: $28 $0f
@@ -563,18 +551,16 @@ jr_021_427c:
 	nop                                              ; $42b7: $00
 	ld   b, a                                        ; $42b8: $47
 	nop                                              ; $42b9: $00
-	sub  h                                           ; $42ba: $94
-	nop                                              ; $42bb: $00
-	sub  l                                           ; $42bc: $95
-	nop                                              ; $42bd: $00
-	sub  [hl]                                        ; $42be: $96
-	nop                                              ; $42bf: $00
-	sub  a                                           ; $42c0: $97
-	nop                                              ; $42c1: $00
-	sbc  b                                           ; $42c2: $98
-	nop                                              ; $42c3: $00
-	sbc  c                                           ; $42c4: $99
-	nop                                              ; $42c5: $00
+
+
+Table_21_42ba:
+	dw FLAG2_0094
+	dw FLAG2_0095
+	dw FLAG2_0096
+	dw FLAG2_0097
+	dw FLAG2_0098
+	dw FLAG2_0099
+
 
 Call_021_42c6:
 	xor  a                                           ; $42c6: $af
@@ -652,16 +638,10 @@ jr_021_4346:
 
 jr_021_4348:
 	push bc                                          ; $4348: $c5
-	ld   hl, $0094                                   ; $4349: $21 $94 $00
-	push af                                          ; $434c: $f5
-	ld   a, $de                                      ; $434d: $3e $de
-	ld   [wFarCallAddr], a                                  ; $434f: $ea $98 $c2
-	ld   a, $44                                      ; $4352: $3e $44
-	ld   [wFarCallAddr+1], a                                  ; $4354: $ea $99 $c2
-	ld   a, $09                                      ; $4357: $3e $09
-	ld   [wFarCallBank], a                                  ; $4359: $ea $9a $c2
-	pop  af                                          ; $435c: $f1
-	call FarCall                                       ; $435d: $cd $62 $09
+	ld   hl, FLAG2_0094                                   ; $4349: $21 $94 $00
+
+	M_FarCall CheckIfFlagSet2
+
 	pop  bc                                          ; $4360: $c1
 	ld   c, $00                                      ; $4361: $0e $00
 	and  a                                           ; $4363: $a7
@@ -794,18 +774,12 @@ Jump_021_4403:
 	ld   bc, $0000                                   ; $440c: $01 $00 $00
 
 jr_021_440f:
-	ld   hl, $00f6                                   ; $440f: $21 $f6 $00
+	ld   hl, FLAG2_00f6                                   ; $440f: $21 $f6 $00
 	add  hl, bc                                      ; $4412: $09
 	push bc                                          ; $4413: $c5
-	push af                                          ; $4414: $f5
-	ld   a, $de                                      ; $4415: $3e $de
-	ld   [wFarCallAddr], a                                  ; $4417: $ea $98 $c2
-	ld   a, $44                                      ; $441a: $3e $44
-	ld   [wFarCallAddr+1], a                                  ; $441c: $ea $99 $c2
-	ld   a, $09                                      ; $441f: $3e $09
-	ld   [wFarCallBank], a                                  ; $4421: $ea $9a $c2
-	pop  af                                          ; $4424: $f1
-	call FarCall                                       ; $4425: $cd $62 $09
+
+	M_FarCall CheckIfFlagSet2
+
 	pop  bc                                          ; $4428: $c1
 	and  a                                           ; $4429: $a7
 	jr   z, jr_021_443b                              ; $442a: $28 $0f

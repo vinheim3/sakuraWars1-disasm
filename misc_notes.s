@@ -79,6 +79,17 @@
 ; TODO: optimize kanna's title screen tile usage
 
 
+; Flag 1 outstanding
+; search for CheckIfNextFlagSet1
+; just bank $0a done
+; script opcode $08
+
+; Flag 2 outstanding
+; 5:5652, 5:7407 - flag setting state
+; 9:4a56 - day/period transition
+; script opcode $04
+
+
 ; tools/instantText.py battle Table_24_71b0
 ;   battle text in bank $24 (DONE + text fits)
 ;   _90_5087 (DONE + text fits)

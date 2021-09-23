@@ -290,8 +290,11 @@ jr_00a_4161:
 	inc  b                                           ; $4179: $04
 	nop                                              ; $417a: $00
 	dec  b                                           ; $417b: $05
-	ld   bc, $0021                                   ; $417c: $01 $21 $00
-	and  b                                           ; $417f: $a0
+	db $01 
+	
+	
+Func_0a_417d:
+	ld   hl, sSramVals1 ; $417d: $21 $00 $a0
 	call Call_00a_431e                               ; $4180: $cd $1e $43
 	call Call_00a_40d3                               ; $4183: $cd $d3 $40
 	ret                                              ; $4186: $c9
@@ -301,81 +304,103 @@ Stub_0a_4187:
 	ret                                              ; $4187: $c9
 
 
+; A - if non-0, set, else unset
+; HL - flag idx, bit 5 set if affecting flags, else unset if setting a val
 SetSramValOrFlag1:
-	push bc                                          ; $4188: $c5
-	push de                                          ; $4189: $d5
-	push hl                                          ; $418a: $e5
-	bit  5, h                                        ; $418b: $cb $6c
-	jr   nz, jr_00a_419c                             ; $418d: $20 $0d
+	push bc                                                         ; $4188
+	push de                                                         ; $4189
+	push hl                                                         ; $418a
 
-	push af                                          ; $418f: $f5
-	ld   a, h                                        ; $4190: $7c
-	and  $03                                         ; $4191: $e6 $03
-	ld   h, a                                        ; $4193: $67
-	pop  af                                          ; $4194: $f1
-	ld   bc, $a000                                   ; $4195: $01 $00 $a0
-	add  hl, bc                                      ; $4198: $09
-	ld   [hl], a                                     ; $4199: $77
-	jr   jr_00a_41d1                                 ; $419a: $18 $35
+; Jump if bit 5 set on H
+	bit  5, h                                                       ; $418b
+	jr   nz, .setOrUnsetFlag                                        ; $418d
 
-jr_00a_419c:
-	push af                                          ; $419c: $f5
-	ld   a, h                                        ; $419d: $7c
-	and  $03                                         ; $419e: $e6 $03
-	ld   h, a                                        ; $41a0: $67
-	pop  af                                          ; $41a1: $f1
-	ld   b, $00                                      ; $41a2: $06 $00
-	ld   c, b                                        ; $41a4: $48
-	srl  h                                           ; $41a5: $cb $3c
-	rr   l                                           ; $41a7: $cb $1d
-	rl   c                                           ; $41a9: $cb $11
-	srl  h                                           ; $41ab: $cb $3c
-	rr   l                                           ; $41ad: $cb $1d
-	rl   c                                           ; $41af: $cb $11
-	srl  h                                           ; $41b1: $cb $3c
-	rr   l                                           ; $41b3: $cb $1d
-	rl   c                                           ; $41b5: $cb $11
-	ld   d, h                                        ; $41b7: $54
-	ld   e, l                                        ; $41b8: $5d
-	ld   hl, BitTable                                   ; $41b9: $21 $26 $42
-	add  hl, bc                                      ; $41bc: $09
-	or   a                                           ; $41bd: $b7
-	jr   z, jr_00a_41c9                              ; $41be: $28 $09
+	push af                                                         ; $418f
 
-	ld   a, [hl]                                     ; $41c0: $7e
-	ld   hl, sGlobalFlags1                                   ; $41c1: $21 $80 $a0
-	add  hl, de                                      ; $41c4: $19
-	or   [hl]                                        ; $41c5: $b6
-	ld   [hl], a                                     ; $41c6: $77
-	jr   jr_00a_41d1                                 ; $41c7: $18 $08
+; HL allows access up to $a2ff, and offset into sram vals block 1
+	ld   a, h                                                       ; $4190
+	and  $03                                                        ; $4191
+	ld   h, a                                                       ; $4193
+	pop  af                                                         ; $4194
+	ld   bc, sSramVals1                                             ; $4195
+	add  hl, bc                                                     ; $4198
 
-jr_00a_41c9:
-	ld   a, [hl]                                     ; $41c9: $7e
-	cpl                                              ; $41ca: $2f
-	ld   hl, sGlobalFlags1                                   ; $41cb: $21 $80 $a0
-	add  hl, de                                      ; $41ce: $19
-	and  [hl]                                        ; $41cf: $a6
-	ld   [hl], a                                     ; $41d0: $77
+; Set sram val and jump
+	ld   [hl], a                                                    ; $4199
+	jr   .end                                                       ; $419a
 
-jr_00a_41d1:
-	pop  hl                                          ; $41d1: $e1
-	pop  de                                          ; $41d2: $d1
-	pop  bc                                          ; $41d3: $c1
-	jp   $417d                                       ; $41d4: $c3 $7d $41
+.setOrUnsetFlag:
+; HL can allow access up to $a2ff
+	push af                                                         ; $419c
+	ld   a, h                                                       ; $419d
+	and  $03                                                        ; $419e
+	ld   h, a                                                       ; $41a0
+	pop  af                                                         ; $41a1
+
+; Clear BC
+	ld   b, $00                                                     ; $41a2
+	ld   c, b                                                       ; $41a4
+
+; Low 3 bits of C is low 3 bits of L inverted
+	srl  h                                                          ; $41a5
+	rr   l                                                          ; $41a7
+	rl   c                                                          ; $41a9
+
+	srl  h                                                          ; $41ab
+	rr   l                                                          ; $41ad
+	rl   c                                                          ; $41af
+
+	srl  h                                                          ; $41b1
+	rr   l                                                          ; $41b3
+	rl   c                                                          ; $41b5
+
+; DE = orig HL / 8
+	ld   d, h                                                       ; $41b7
+	ld   e, l                                                       ; $41b8
+
+; Get appropriate bit based on orig low 3 bits of L, and branch based on set/unset
+	ld   hl, BitTable                                               ; $41b9
+	add  hl, bc                                                     ; $41bc
+	or   a                                                          ; $41bd
+	jr   z, .unset                                                  ; $41be
+
+; If setting, or global flag byte with bit set
+	ld   a, [hl]                                                    ; $41c0
+	ld   hl, sGlobalFlags1                                          ; $41c1
+	add  hl, de                                                     ; $41c4
+	or   [hl]                                                       ; $41c5
+	ld   [hl], a                                                    ; $41c6
+	jr   .end                                                       ; $41c7
+
+.unset:
+; If unsetting, set other bits, and 'and' with global flag byte to unset
+	ld   a, [hl]                                                    ; $41c9
+	cpl                                                             ; $41ca
+	ld   hl, sGlobalFlags1                                          ; $41cb
+	add  hl, de                                                     ; $41ce
+	and  [hl]                                                       ; $41cf
+	ld   [hl], a                                                    ; $41d0
+
+.end:
+	pop  hl                                                         ; $41d1
+	pop  de                                                         ; $41d2
+	pop  bc                                                         ; $41d3
+	jp   Func_0a_417d                                       ; $41d4: $c3 $7d $41
 
 
+; HL - byte offset to set
 SetSramByte1::
-	set  4, h                                        ; $41d7: $cb $e4
-	res  5, h                                        ; $41d9: $cb $ac
-	jp   SetSramValOrFlag1                               ; $41db: $c3 $88 $41
+	set  4, h                                                       ; $41d7
+	res  5, h                                                       ; $41d9
+	jp   SetSramValOrFlag1                                          ; $41db
 
 
 ; A - if non-0, set, else unset
 ; HL - flag to set/unset
 SetOrUnsetFlag1::
-	res  4, h                                        ; $41de: $cb $a4
-	set  5, h                                        ; $41e0: $cb $ec
-	jp   SetSramValOrFlag1                               ; $41e2: $c3 $88 $41
+	res  4, h                                                       ; $41de
+	set  5, h                                                       ; $41e0
+	jp   SetSramValOrFlag1                                          ; $41e2
 
 
 GetSramValOrFlag1:
@@ -390,7 +415,7 @@ GetSramValOrFlag1:
 	ld   a, h                                        ; $41ec: $7c
 	and  $03                                         ; $41ed: $e6 $03
 	ld   h, a                                        ; $41ef: $67
-	ld   bc, $a000                                   ; $41f0: $01 $00 $a0
+	ld   bc, sSramVals1                                   ; $41f0: $01 $00 $a0
 	add  hl, bc                                      ; $41f3: $09
 	ld   a, [hl]                                     ; $41f4: $7e
 	jr   .done                                 ; $41f5: $18 $29
@@ -3513,7 +3538,7 @@ Call_00a_5bf7:
 	call ClearOam                                       ; $5c34: $cd $d7 $0d
 	call ClearBaseAnimSpriteSpecDetails                                       ; $5c37: $cd $c9 $2e
 	ld   a, $ff                                      ; $5c3a: $3e $ff
-	ld   [wtodo_VisitedTitleScreen], a                                  ; $5c3c: $ea $01 $c2
+	ld   [wVisitedTitleScreen], a                                  ; $5c3c: $ea $01 $c2
 	xor  a                                           ; $5c3f: $af
 	ld   [wTitleScreenGirlHairAnimIdx], a                                  ; $5c40: $ea $12 $cc
 	ld   [wTitleScreenFrameCountForUpdatingMiddleBitTileMapAttr], a                                  ; $5c43: $ea $13 $cc
@@ -4327,7 +4352,7 @@ TitleScreenSubstate0:
 	call ClearBaseAnimSpriteSpecDetails                                       ; $6200: $cd $c9 $2e
 
 	ld   a, $ff                                      ; $6203: $3e $ff
-	ld   [wtodo_VisitedTitleScreen], a                                  ; $6205: $ea $01 $c2
+	ld   [wVisitedTitleScreen], a                                  ; $6205: $ea $01 $c2
 
 ; Initial counter before having girl blink is $f0-$ff
 	ld   a, $10                                                     ; $6208
@@ -7189,7 +7214,7 @@ TitleMenuScreenAnimationHandlerD:
 	ret                                              ; $748a: $c9
 
 .romandoShop:
-	ld   hl, $0002                                   ; $748b: $21 $02 $00
+	ld   hl, FLAG1_0002                                   ; $748b: $21 $02 $00
 
 	M_FarCall CheckIfFlagSet1
 
@@ -7234,7 +7259,7 @@ TitleMenuScreenAnimationHandlerD:
 	ld   l, $02                                      ; $7507: $2e $02
 	ld   a, [$c653]                                  ; $7509: $fa $53 $c6
 
-	M_FarCall InitIntroScript
+	M_FarCall SetIntroScriptState
 	ret                                              ; $7520: $c9
 
 .treasureChest:
@@ -7257,7 +7282,7 @@ TitleMenuScreenAnimationHandlerD:
 	jr   .cont_7502                                 ; $755a: $18 $a6
 
 .miniGames:
-	ld   hl, $0002                                   ; $755c: $21 $02 $00
+	ld   hl, FLAG1_0002                                   ; $755c: $21 $02 $00
 
 	M_FarCall CheckIfFlagSet1
 

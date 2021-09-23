@@ -31,7 +31,7 @@ wc1f4:
 wIsGBC:: ; $c200
     db
 
-wtodo_VisitedTitleScreen:: ; $c201
+wVisitedTitleScreen:: ; $c201
     db
 
 wIsDoubleSpeed:: ; $c202
@@ -664,8 +664,8 @@ wPostIntroScriptEngineGameSubstate:: ; $cc75
 wIntroScriptIdx:: ; $cc76
     dw
 
-wcc78:
-    ds 9-8
+wIntroScriptSongIdx:: ; $cc78
+    db
 
 wDormRoomAnimationStep:: ; $cc79
     db
@@ -703,10 +703,10 @@ wPrologueMainSubSubstate:: ; $cc98
 wPrologueMiscCounter:: ; $cc99
     db
 
-wPostPrologueScriptEngineGameState:: ; $cc9a
+wPrologueReturnState:: ; $cc9a
     db
 
-wPostPrologueScriptEngineGameSubstate:: ; $cc9b
+wPrologueReturnSubstate:: ; $cc9b
     db
 
 wPrologueScriptIdx:: ; $cc9c

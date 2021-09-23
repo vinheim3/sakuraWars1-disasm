@@ -9643,9 +9643,9 @@ Call_011_7986:
 
 	ld   [$1062], sp                                 ; $79b7: $08 $62 $10
 	ld   h, e                                        ; $79ba: $63
-	jr   jr_011_7a21                                 ; $79bb: $18 $64
+	db $18, $64
 
-	jr   nz, jr_011_7a24                             ; $79bd: $20 $65
+	db $20, $65
 
 	jr   z, jr_011_7a27                              ; $79bf: $28 $66
 
@@ -9880,16 +9880,8 @@ Call_011_7af9:
 	ret                                              ; $7b0d: $c9
 
 
-Call_011_7b0e:
-	push af                                          ; $7b0e: $f5
-	ld   a, $de                                      ; $7b0f: $3e $de
-	ld   [wFarCallAddr], a                                  ; $7b11: $ea $98 $c2
-	ld   a, $44                                      ; $7b14: $3e $44
-	ld   [wFarCallAddr+1], a                                  ; $7b16: $ea $99 $c2
-	ld   a, $09                                      ; $7b19: $3e $09
-	ld   [wFarCallBank], a                                  ; $7b1b: $ea $9a $c2
-	pop  af                                          ; $7b1e: $f1
-	call FarCall                                       ; $7b1f: $cd $62 $09
+JpCheckIfFlagSet2:
+	M_FarCall CheckIfFlagSet2
 	ret                                              ; $7b22: $c9
 
 
@@ -9902,26 +9894,26 @@ Call_011_7b23:
 	ld   hl, $0060                                   ; $7b32: $21 $60 $00
 	call Call_011_7af9                               ; $7b35: $cd $f9 $7a
 	ld   [$ca25], a                                  ; $7b38: $ea $25 $ca
-	ld   hl, $00d2                                   ; $7b3b: $21 $d2 $00
-	call Call_011_7b0e                               ; $7b3e: $cd $0e $7b
+	ld   hl, FLAG2_00d2                                   ; $7b3b: $21 $d2 $00
+	call JpCheckIfFlagSet2                               ; $7b3e: $cd $0e $7b
 	ld   [$ca26], a                                  ; $7b41: $ea $26 $ca
-	ld   hl, $0006                                   ; $7b44: $21 $06 $00
-	call Call_011_7b0e                               ; $7b47: $cd $0e $7b
+	ld   hl, FLAG2_0006                                   ; $7b44: $21 $06 $00
+	call JpCheckIfFlagSet2                               ; $7b47: $cd $0e $7b
 	ld   [$ca27], a                                  ; $7b4a: $ea $27 $ca
-	ld   hl, $00a5                                   ; $7b4d: $21 $a5 $00
-	call Call_011_7b0e                               ; $7b50: $cd $0e $7b
+	ld   hl, FLAG2_00a5                                   ; $7b4d: $21 $a5 $00
+	call JpCheckIfFlagSet2                               ; $7b50: $cd $0e $7b
 	ld   [$ca28], a                                  ; $7b53: $ea $28 $ca
-	ld   hl, $00a7                                   ; $7b56: $21 $a7 $00
-	call Call_011_7b0e                               ; $7b59: $cd $0e $7b
+	ld   hl, FLAG2_00a7                                   ; $7b56: $21 $a7 $00
+	call JpCheckIfFlagSet2                               ; $7b59: $cd $0e $7b
 	ld   [$ca29], a                                  ; $7b5c: $ea $29 $ca
-	ld   hl, $00ac                                   ; $7b5f: $21 $ac $00
-	call Call_011_7b0e                               ; $7b62: $cd $0e $7b
+	ld   hl, FLAG2_00ac                                   ; $7b5f: $21 $ac $00
+	call JpCheckIfFlagSet2                               ; $7b62: $cd $0e $7b
 	ld   [$ca2a], a                                  ; $7b65: $ea $2a $ca
-	ld   hl, $00b2                                   ; $7b68: $21 $b2 $00
-	call Call_011_7b0e                               ; $7b6b: $cd $0e $7b
+	ld   hl, FLAG2_00b2                                   ; $7b68: $21 $b2 $00
+	call JpCheckIfFlagSet2                               ; $7b6b: $cd $0e $7b
 	ld   [$ca2b], a                                  ; $7b6e: $ea $2b $ca
-	ld   hl, $00a1                                   ; $7b71: $21 $a1 $00
-	call Call_011_7b0e                               ; $7b74: $cd $0e $7b
+	ld   hl, FLAG2_00a1                                   ; $7b71: $21 $a1 $00
+	call JpCheckIfFlagSet2                               ; $7b74: $cd $0e $7b
 	ld   [$ca2c], a                                  ; $7b77: $ea $2c $ca
 	call Call_011_7bb9                               ; $7b7a: $cd $b9 $7b
 	cp   $ff                                         ; $7b7d: $fe $ff

@@ -3785,15 +3785,8 @@ jr_031_58e7:
 	ld   b, $00                                      ; $58e7: $06 $00
 	ld   hl, $0300                                   ; $58e9: $21 $00 $03
 	add  hl, bc                                      ; $58ec: $09
-	push af                                          ; $58ed: $f5
-	ld   a, $35                                      ; $58ee: $3e $35
-	ld   [wFarCallAddr], a                                  ; $58f0: $ea $98 $c2
-	ld   a, $42                                      ; $58f3: $3e $42
-	ld   [wFarCallAddr+1], a                                  ; $58f5: $ea $99 $c2
-	ld   a, $0a                                      ; $58f8: $3e $0a
-	ld   [wFarCallBank], a                                  ; $58fa: $ea $9a $c2
-	pop  af                                          ; $58fd: $f1
-	call FarCall                                       ; $58fe: $cd $62 $09
+
+	M_FarCall CheckIfFlagSet1
 	ret                                              ; $5901: $c9
 
 

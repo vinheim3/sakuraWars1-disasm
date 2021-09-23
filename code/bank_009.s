@@ -685,7 +685,7 @@ GetSramValOrFlag2:
 	ld   a, h                                        ; $4498: $7c
 	and  $07                                         ; $4499: $e6 $07
 	ld   h, a                                        ; $449b: $67
-	ld   bc, sCurrDay                                   ; $449c: $01 $b0 $af
+	ld   bc, sSramVals2                                   ; $449c: $01 $b0 $af
 	add  hl, bc                                      ; $449f: $09
 	ld   a, [hl]                                     ; $44a0: $7e
 	jr   .done                                 ; $44a1: $18 $29
@@ -722,7 +722,7 @@ GetSramValOrFlag2:
 	ld   a, [hl]                                     ; $44c2: $7e
 
 ;
-	ld   hl, $b0b0                                   ; $44c3: $21 $b0 $b0
+	ld   hl, sGlobalFlags2                                   ; $44c3: $21 $b0 $b0
 	add  hl, de                                      ; $44c6: $19
 	and  [hl]                                        ; $44c7: $a6
 	jr   z, .done                              ; $44c8: $28 $02
@@ -764,7 +764,7 @@ SetSramValOrFlag2:
 	and  $07                                         ; $44ed: $e6 $07
 	ld   h, a                                        ; $44ef: $67
 	pop  af                                          ; $44f0: $f1
-	ld   bc, sCurrDay                                   ; $44f1: $01 $b0 $af
+	ld   bc, sSramVals2                                   ; $44f1: $01 $b0 $af
 	add  hl, bc                                      ; $44f4: $09
 	ld   [hl], a                                     ; $44f5: $77
 	jr   .done                                 ; $44f6: $18 $35
@@ -794,7 +794,7 @@ SetSramValOrFlag2:
 	jr   z, .br_4525                              ; $451a: $28 $09
 
 	ld   a, [hl]                                     ; $451c: $7e
-	ld   hl, $b0b0                                   ; $451d: $21 $b0 $b0
+	ld   hl, sGlobalFlags2                                   ; $451d: $21 $b0 $b0
 	add  hl, de                                      ; $4520: $19
 	or   [hl]                                        ; $4521: $b6
 	ld   [hl], a                                     ; $4522: $77
@@ -803,7 +803,7 @@ SetSramValOrFlag2:
 .br_4525:
 	ld   a, [hl]                                     ; $4525: $7e
 	cpl                                              ; $4526: $2f
-	ld   hl, $b0b0                                   ; $4527: $21 $b0 $b0
+	ld   hl, sGlobalFlags2                                   ; $4527: $21 $b0 $b0
 	add  hl, de                                      ; $452a: $19
 	and  [hl]                                        ; $452b: $a6
 	ld   [hl], a                                     ; $452c: $77
@@ -6088,7 +6088,7 @@ jr_009_6523:
 	ld   bc, $0012                                   ; $652a: $01 $12 $00
 	ld   a, [$c653]                                  ; $652d: $fa $53 $c6
 
-	M_FarCall InitIntroScript
+	M_FarCall SetIntroScriptState
 	ret                                              ; $6544: $c9
 
 

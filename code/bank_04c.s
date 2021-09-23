@@ -9843,7 +9843,7 @@ jr_04c_6b7d:
 	nop                                              ; $6d32: $00
 	ld   b, $43                                      ; $6d33: $06 $43
 	ld   [$000f], sp                                 ; $6d35: $08 $0f $00
-	ld   bc, wtodo_VisitedTitleScreen                                   ; $6d38: $01 $01 $c2
+	ld   bc, wVisitedTitleScreen                                   ; $6d38: $01 $01 $c2
 	jp   hl                                          ; $6d3b: $e9
 
 
@@ -10043,7 +10043,7 @@ Jump_04c_6d65:
 	nop                                              ; $6e33: $00
 	ld   b, $01                                      ; $6e34: $06 $01
 	ld   [$000f], sp                                 ; $6e36: $08 $0f $00
-	ld   bc, wtodo_VisitedTitleScreen                                   ; $6e39: $01 $01 $c2
+	ld   bc, wVisitedTitleScreen                                   ; $6e39: $01 $01 $c2
 	jp   hl                                          ; $6e3c: $e9
 
 
@@ -10230,7 +10230,7 @@ Jump_04c_6efb:
 	nop                                              ; $6f20: $00
 	ld   b, $01                                      ; $6f21: $06 $01
 	ld   [$000f], sp                                 ; $6f23: $08 $0f $00
-	ld   bc, wtodo_VisitedTitleScreen                                   ; $6f26: $01 $01 $c2
+	ld   bc, wVisitedTitleScreen                                   ; $6f26: $01 $01 $c2
 	jp   hl                                          ; $6f29: $e9
 
 

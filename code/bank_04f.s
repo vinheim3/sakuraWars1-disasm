@@ -672,7 +672,7 @@ jr_04f_4193:
 	nop                                              ; $4347: $00
 	ld   b, $3a                                      ; $4348: $06 $3a
 	ld   [$000f], sp                                 ; $434a: $08 $0f $00
-	ld   bc, wtodo_VisitedTitleScreen                                   ; $434d: $01 $01 $c2
+	ld   bc, wVisitedTitleScreen                                   ; $434d: $01 $01 $c2
 	jp   hl                                          ; $4350: $e9
 
 
@@ -869,7 +869,7 @@ jr_04f_4193:
 	rlca                                             ; $444b: $07
 	rrca                                             ; $444c: $0f
 	nop                                              ; $444d: $00
-	ld   bc, wtodo_VisitedTitleScreen                                   ; $444e: $01 $01 $c2
+	ld   bc, wVisitedTitleScreen                                   ; $444e: $01 $01 $c2
 	jp   hl                                          ; $4451: $e9
 
 
@@ -1055,7 +1055,7 @@ jr_04f_4193:
 	rlca                                             ; $4538: $07
 	rrca                                             ; $4539: $0f
 	nop                                              ; $453a: $00
-	ld   bc, wtodo_VisitedTitleScreen                                   ; $453b: $01 $01 $c2
+	ld   bc, wVisitedTitleScreen                                   ; $453b: $01 $01 $c2
 	jp   hl                                          ; $453e: $e9
 
 

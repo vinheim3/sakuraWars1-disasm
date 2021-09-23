@@ -5384,7 +5384,7 @@ jr_041_6996:
 	add  hl, bc                                      ; $6bc1: $09
 	rrca                                             ; $6bc2: $0f
 	nop                                              ; $6bc3: $00
-	ld   bc, wtodo_VisitedTitleScreen                                   ; $6bc4: $01 $01 $c2
+	ld   bc, wVisitedTitleScreen                                   ; $6bc4: $01 $01 $c2
 	push hl                                          ; $6bc7: $e5
 	xor  [hl]                                        ; $6bc8: $ae
 	jp   nz, $aee5                                   ; $6bc9: $c2 $e5 $ae
@@ -5498,7 +5498,7 @@ jr_041_6996:
 	nop                                              ; $6c40: $00
 	rrca                                             ; $6c41: $0f
 	nop                                              ; $6c42: $00
-	ld   bc, wtodo_VisitedTitleScreen                                   ; $6c43: $01 $01 $c2
+	ld   bc, wVisitedTitleScreen                                   ; $6c43: $01 $01 $c2
 	push hl                                          ; $6c46: $e5
 	xor  [hl]                                        ; $6c47: $ae
 	jp   nz, $aee5                                   ; $6c48: $c2 $e5 $ae
@@ -5631,7 +5631,7 @@ jr_041_6996:
 	nop                                              ; $6cd5: $00
 	rrca                                             ; $6cd6: $0f
 	nop                                              ; $6cd7: $00
-	ld   bc, wtodo_VisitedTitleScreen                                   ; $6cd8: $01 $01 $c2
+	ld   bc, wVisitedTitleScreen                                   ; $6cd8: $01 $01 $c2
 	push hl                                          ; $6cdb: $e5
 	xor  [hl]                                        ; $6cdc: $ae
 	jp   nz, $aee5                                   ; $6cdd: $c2 $e5 $ae
