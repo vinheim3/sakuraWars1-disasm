@@ -725,7 +725,7 @@ jr_00c_44d0:
 	ld   [hl], a                                     ; $44d5: $77
 	ld   a, [$cb35]                                  ; $44d6: $fa $35 $cb
 	call HLequAddrOfAnimSpriteSpecDetails                                       ; $44d9: $cd $76 $30
-	ld   de, $7762                                   ; $44dc: $11 $62 $77
+	ld   de, AnimatedSpriteSpecs_7762                                   ; $44dc: $11 $62 $77
 	ld   a, [$cb43]                                  ; $44df: $fa $43 $cb
 	push af                                          ; $44e2: $f5
 	ld   a, $1c                                      ; $44e3: $3e $1c
@@ -1302,7 +1302,7 @@ jr_00c_4848:
 	ld   a, [hl]                                     ; $4851: $7e
 	ld   h, d                                        ; $4852: $62
 	ld   l, e                                        ; $4853: $6b
-	ld   de, $7762                                   ; $4854: $11 $62 $77
+	ld   de, AnimatedSpriteSpecs_7762                                   ; $4854: $11 $62 $77
 	push af                                          ; $4857: $f5
 	ld   a, $1c                                      ; $4858: $3e $1c
 	ld   [wFarCallAddr], a                                  ; $485a: $ea $98 $c2
@@ -1528,15 +1528,8 @@ jr_00c_4991:
 	ld   a, [$cb22]                                  ; $499d: $fa $22 $cb
 	ld   d, a                                        ; $49a0: $57
 	ld   a, [$c653]                                  ; $49a1: $fa $53 $c6
-	push af                                          ; $49a4: $f5
-	ld   a, $20                                      ; $49a5: $3e $20
-	ld   [wFarCallAddr], a                                  ; $49a7: $ea $98 $c2
-	ld   a, $48                                      ; $49aa: $3e $48
-	ld   [wFarCallAddr+1], a                                  ; $49ac: $ea $99 $c2
-	ld   a, $09                                      ; $49af: $3e $09
-	ld   [wFarCallBank], a                                  ; $49b1: $ea $9a $c2
-	pop  af                                          ; $49b4: $f1
-	call FarCall                                       ; $49b5: $cd $62 $09
+
+	M_FarCall SetMainConvoState
 	ret                                              ; $49b8: $c9
 
 
@@ -3456,7 +3449,7 @@ Call_00c_53fd:
 GameState3e_Schedule::
 	ld   a, [wGameSubstate]                                  ; $540f: $fa $a1 $c2
 	or   a                                           ; $5412: $b7
-	jp   nz, Jump_00c_55ac                           ; $5413: $c2 $ac $55
+	jp   nz, ScheduleSubstate1                           ; $5413: $c2 $ac $55
 
 	ld   a, [wWramBank]                                  ; $5416: $fa $93 $c2
 	push af                                          ; $5419: $f5
@@ -3481,16 +3474,28 @@ GameState3e_Schedule::
 	ld   de, $4b9e                                   ; $5447: $11 $9e $4b
 	ld   hl, $9800                                   ; $544a: $21 $00 $98
 	ld   bc, $1412                                   ; $544d: $01 $12 $14
+if def(VWF)
+	call ScheduleTileAttrHook
+else
 	call FarCopyLayout                                       ; $5450: $cd $2c $0b
+endc
 	xor  a                                           ; $5453: $af
 	ldh  [rVBK], a                                   ; $5454: $e0 $4f
 	ld   a, $a0                                      ; $5456: $3e $a0
 	ld   hl, $9800                                   ; $5458: $21 $00 $98
+if def(VWF)
+	call ScheduleTileMapHook
+else
 	call FarCopyLayout                                       ; $545b: $cd $2c $0b
+endc
 	ld   a, $92                                      ; $545e: $3e $92
 	ld   hl, $8000                                   ; $5460: $21 $00 $80
 	ld   de, $6110                                   ; $5463: $11 $10 $61
+if def(VWF)
+	call ScheduleBank0_8000hHook
+else
 	call RLEXorCopy                                       ; $5466: $cd $d2 $09
+endc
 	ld   hl, $9500                                   ; $5469: $21 $00 $95
 	ld   bc, $0120                                   ; $546c: $01 $20 $01
 	ld   de, $0000                                   ; $546f: $11 $00 $00
@@ -3547,27 +3552,15 @@ GameState3e_Schedule::
 	ld   [$cc33], a                                  ; $54f7: $ea $33 $cc
 	call StartAnimatingAnimatedSpriteSpec                                       ; $54fa: $cd $14 $30
 	call HLequAddrOfAnimSpriteSpecDetails                                       ; $54fd: $cd $76 $30
-	push af                                          ; $5500: $f5
-	ld   a, $a0                                      ; $5501: $3e $a0
-	ld   [wFarCallAddr], a                                  ; $5503: $ea $98 $c2
-	ld   a, $44                                      ; $5506: $3e $44
-	ld   [wFarCallAddr+1], a                                  ; $5508: $ea $99 $c2
-	ld   a, $01                                      ; $550b: $3e $01
-	ld   [wFarCallBank], a                                  ; $550d: $ea $9a $c2
-	pop  af                                          ; $5510: $f1
-	call FarCall                                       ; $5511: $cd $62 $09
+
+	M_FarCall Func_01_44a0
+
 	ld   a, $20                                      ; $5514: $3e $20
 	ld   b, $21                                      ; $5516: $06 $21
 	ld   c, $22                                      ; $5518: $0e $22
-	push af                                          ; $551a: $f5
-	ld   a, $ab                                      ; $551b: $3e $ab
-	ld   [wFarCallAddr], a                                  ; $551d: $ea $98 $c2
-	ld   a, $44                                      ; $5520: $3e $44
-	ld   [wFarCallAddr+1], a                                  ; $5522: $ea $99 $c2
-	ld   a, $01                                      ; $5525: $3e $01
-	ld   [wFarCallBank], a                                  ; $5527: $ea $9a $c2
-	pop  af                                          ; $552a: $f1
-	call FarCall                                       ; $552b: $cd $62 $09
+
+	M_FarCall Func_01_44ab
+
 	ld   a, $01                                      ; $552e: $3e $01
 	ld   hl, $0000                                   ; $5530: $21 $00 $00
 	ld   d, h                                        ; $5533: $54
@@ -3642,7 +3635,7 @@ GameState3e_Schedule::
 	ld   [hl], b                                     ; $55aa: $70
 	ld   l, b                                        ; $55ab: $68
 
-Jump_00c_55ac:
+ScheduleSubstate1:
 	ld   a, [wWramBank]                                  ; $55ac: $fa $93 $c2
 	push af                                          ; $55af: $f5
 	ld   a, $02                                      ; $55b0: $3e $02
@@ -4015,7 +4008,7 @@ jr_00c_57f8:
 	call StartAnimatingAnimatedSpriteSpec                                       ; $5818: $cd $14 $30
 	call HLequAddrOfAnimSpriteSpecDetails                                       ; $581b: $cd $76 $30
 	ld   bc, $5048                                   ; $581e: $01 $48 $50
-	ld   de, $7762                                   ; $5821: $11 $62 $77
+	ld   de, AnimatedSpriteSpecs_7762                                   ; $5821: $11 $62 $77
 	ld   a, $17                                      ; $5824: $3e $17
 	push af                                          ; $5826: $f5
 	ld   a, $03                                      ; $5827: $3e $03
@@ -4053,17 +4046,10 @@ jr_00c_583f:
 	call StartAnimatingAnimatedSpriteSpec                                       ; $585e: $cd $14 $30
 	call HLequAddrOfAnimSpriteSpecDetails                                       ; $5861: $cd $76 $30
 	ld   bc, $5048                                   ; $5864: $01 $48 $50
-	ld   de, $7762                                   ; $5867: $11 $62 $77
+	ld   de, AnimatedSpriteSpecs_7762                                   ; $5867: $11 $62 $77
 	ld   a, $15                                      ; $586a: $3e $15
-	push af                                          ; $586c: $f5
-	ld   a, $03                                      ; $586d: $3e $03
-	ld   [wFarCallAddr], a                                  ; $586f: $ea $98 $c2
-	ld   a, $41                                      ; $5872: $3e $41
-	ld   [wFarCallAddr+1], a                                  ; $5874: $ea $99 $c2
-	ld   a, $01                                      ; $5877: $3e $01
-	ld   [wFarCallBank], a                                  ; $5879: $ea $9a $c2
-	pop  af                                          ; $587c: $f1
-	call FarCall                                       ; $587d: $cd $62 $09
+
+	M_FarCall LoadType1NewAnimatedSpriteSpecDetails
 
 jr_00c_5880:
 	ld   a, [wInGameButtonsPressed]                                  ; $5880: $fa $10 $c2
@@ -4088,7 +4074,7 @@ jr_00c_5880:
 	ld   [$cc38], a                                  ; $589d: $ea $38 $cc
 	ld   a, [$cc36]                                  ; $58a0: $fa $36 $cc
 	call HLequAddrOfAnimSpriteSpecDetails                                       ; $58a3: $cd $76 $30
-	ld   de, $7762                                   ; $58a6: $11 $62 $77
+	ld   de, AnimatedSpriteSpecs_7762                                   ; $58a6: $11 $62 $77
 	ld   a, $15                                      ; $58a9: $3e $15
 	push af                                          ; $58ab: $f5
 	ld   a, $1c                                      ; $58ac: $3e $1c
@@ -4117,7 +4103,7 @@ jr_00c_58c5:
 	ld   [$cc38], a                                  ; $58d1: $ea $38 $cc
 	ld   a, [$cc36]                                  ; $58d4: $fa $36 $cc
 	call HLequAddrOfAnimSpriteSpecDetails                                       ; $58d7: $cd $76 $30
-	ld   de, $7762                                   ; $58da: $11 $62 $77
+	ld   de, AnimatedSpriteSpecs_7762                                   ; $58da: $11 $62 $77
 	ld   a, $16                                      ; $58dd: $3e $16
 	push af                                          ; $58df: $f5
 	ld   a, $1c                                      ; $58e0: $3e $1c
@@ -4169,7 +4155,7 @@ jr_00c_590d:
 	call StartAnimatingAnimatedSpriteSpec                                       ; $5927: $cd $14 $30
 	call HLequAddrOfAnimSpriteSpecDetails                                       ; $592a: $cd $76 $30
 	ld   bc, $5048                                   ; $592d: $01 $48 $50
-	ld   de, $7762                                   ; $5930: $11 $62 $77
+	ld   de, AnimatedSpriteSpecs_7762                                   ; $5930: $11 $62 $77
 	ld   a, $18                                      ; $5933: $3e $18
 	push af                                          ; $5935: $f5
 	ld   a, $03                                      ; $5936: $3e $03
@@ -4220,7 +4206,7 @@ jr_00c_594f:
 	call StartAnimatingAnimatedSpriteSpec                                       ; $5987: $cd $14 $30
 	call HLequAddrOfAnimSpriteSpecDetails                                       ; $598a: $cd $76 $30
 	ld   bc, $5048                                   ; $598d: $01 $48 $50
-	ld   de, $7762                                   ; $5990: $11 $62 $77
+	ld   de, AnimatedSpriteSpecs_7762                                   ; $5990: $11 $62 $77
 	ld   a, $19                                      ; $5993: $3e $19
 	push af                                          ; $5995: $f5
 	ld   a, $03                                      ; $5996: $3e $03
@@ -4239,15 +4225,9 @@ jr_00c_594f:
 jr_00c_59af:
 	ld   a, [$cc36]                                  ; $59af: $fa $36 $cc
 	call HLequAddrOfAnimSpriteSpecDetails                                       ; $59b2: $cd $76 $30
-	push af                                          ; $59b5: $f5
-	ld   a, $43                                      ; $59b6: $3e $43
-	ld   [wFarCallAddr], a                                  ; $59b8: $ea $98 $c2
-	ld   a, $41                                      ; $59bb: $3e $41
-	ld   [wFarCallAddr+1], a                                  ; $59bd: $ea $99 $c2
-	ld   a, $01                                      ; $59c0: $3e $01
-	ld   [wFarCallBank], a                                  ; $59c2: $ea $9a $c2
-	pop  af                                          ; $59c5: $f1
-	call FarCall                                       ; $59c6: $cd $62 $09
+
+	M_FarCall Func_01_4143
+
 	bit  7, b                                        ; $59c9: $cb $78
 	ret  z                                           ; $59cb: $c8
 
@@ -4328,45 +4308,27 @@ Call_00c_5a45:
 	add  b                                           ; $5a52: $80
 	ld   l, a                                        ; $5a53: $6f
 	ld   h, $00                                      ; $5a54: $26 $00
-	ld   bc, $5a78                                   ; $5a56: $01 $78 $5a
+	ld   bc, .data                                  ; $5a56: $01 $78 $5a
 	add  hl, bc                                      ; $5a59: $09
 	ld   a, [hl+]                                    ; $5a5a: $2a
 	ld   b, a                                        ; $5a5b: $47
 	ld   a, [hl+]                                    ; $5a5c: $2a
 	ld   c, a                                        ; $5a5d: $4f
-	ld   de, $7762                                   ; $5a5e: $11 $62 $77
+	ld   de, AnimatedSpriteSpecs_7762                                   ; $5a5e: $11 $62 $77
 	ld   a, [hl+]                                    ; $5a61: $2a
 	pop  hl                                          ; $5a62: $e1
-	push af                                          ; $5a63: $f5
-	ld   a, $03                                      ; $5a64: $3e $03
-	ld   [wFarCallAddr], a                                  ; $5a66: $ea $98 $c2
-	ld   a, $41                                      ; $5a69: $3e $41
-	ld   [wFarCallAddr+1], a                                  ; $5a6b: $ea $99 $c2
-	ld   a, $01                                      ; $5a6e: $3e $01
-	ld   [wFarCallBank], a                                  ; $5a70: $ea $9a $c2
-	pop  af                                          ; $5a73: $f1
-	call FarCall                                       ; $5a74: $cd $62 $09
+
+	M_FarCall LoadType1NewAnimatedSpriteSpecDetails
 	ret                                              ; $5a77: $c9
 
+.data:
+	db $18, $50, $12
+	db $28, $50, $12
+	db $38, $50, $12
+	db $48, $50, $12
+	db $58, $50, $12
+	db $80, $40, $13
 
-	db $18, $50
-
-	ld   [de], a                                     ; $5a7a: $12
-	jr   z, @+$52                                    ; $5a7b: $28 $50
-
-	ld   [de], a                                     ; $5a7d: $12
-	db $38, $50
-
-	ld   [de], a                                     ; $5a80: $12
-	ld   c, b                                        ; $5a81: $48
-	ld   d, b                                        ; $5a82: $50
-	ld   [de], a                                     ; $5a83: $12
-	ld   e, b                                        ; $5a84: $58
-	ld   d, b                                        ; $5a85: $50
-	ld   [de], a                                     ; $5a86: $12
-	add  b                                           ; $5a87: $80
-	ld   b, b                                        ; $5a88: $40
-	inc  de                                          ; $5a89: $13
 
 Call_00c_5a8a:
 	ld   hl, $dcd7                                   ; $5a8a: $21 $d7 $dc
@@ -4389,7 +4351,7 @@ jr_00c_5a98:
 	ld   a, [$cc35]                                  ; $5a9d: $fa $35 $cc
 	call StartAnimatingAnimatedSpriteSpec                                       ; $5aa0: $cd $14 $30
 	call HLequAddrOfAnimSpriteSpecDetails                                       ; $5aa3: $cd $76 $30
-	ld   de, $7762                                   ; $5aa6: $11 $62 $77
+	ld   de, AnimatedSpriteSpecs_7762                                   ; $5aa6: $11 $62 $77
 	ld   a, $14                                      ; $5aa9: $3e $14
 	push af                                          ; $5aab: $f5
 	ld   a, $03                                      ; $5aac: $3e $03
@@ -5326,15 +5288,8 @@ jr_00c_61c7:
 	ld   l, $00                                      ; $61e1: $2e $00
 	ld   bc, $000f                                   ; $61e3: $01 $0f $00
 	ld   a, $01                                      ; $61e6: $3e $01
-	push af                                          ; $61e8: $f5
-	ld   a, $8f                                      ; $61e9: $3e $8f
-	ld   [wFarCallAddr], a                                  ; $61eb: $ea $98 $c2
-	ld   a, $75                                      ; $61ee: $3e $75
-	ld   [wFarCallAddr+1], a                                  ; $61f0: $ea $99 $c2
-	ld   a, $0c                                      ; $61f3: $3e $0c
-	ld   [wFarCallBank], a                                  ; $61f5: $ea $9a $c2
-	pop  af                                          ; $61f8: $f1
-	call FarCall                                       ; $61f9: $cd $62 $09
+
+	M_FarCall InitIntroScript
 	ret                                              ; $61fc: $c9
 
 
@@ -8870,4 +8825,121 @@ Data_0c_5ad5entry08:
 	db $2f, $42, $35, $36, $40, $39, $10, $48, $43, $10, $47, $39, $40, $39, $37, $48, $00
 Data_0c_5ad5entry09:
 	db $2d, $37, $3c, $39, $38, $49, $40, $39, $10, $37, $43, $42, $3a, $3d, $46, $41, $39, $38, $00
+
+
+ScheduleTileAttrHook:
+	call FarCopyLayout
+	push bc
+	push de
+
+	ld   a, BANK(.gfx)
+	ld   bc, .layoutStats-.gfx
+	ld   de, $9000
+	ld   hl, .gfx
+	call FarMemCopy
+
+	ld   a, BANK(.layoutStats)
+	ldbc 5, 6
+	ld   de, .layoutStats
+	ld   hl, $9801
+	call FarCopyLayout
+
+	ld   a, BANK(.layoutTime)
+	ldbc 1, 4
+	ld   de, .layoutTime
+	ld   hl, $9902
+	call FarCopyLayout
+
+	ld   bc, .layoutCheck-.layoutDays
+	ld   de, $98e3
+	ld   hl, .layoutDays
+	call MemCopy
+
+	ld   a, BANK(.layoutCheck)
+	ldbc 2, 4
+	ld   de, .layoutCheck
+	ld   hl, $9910
+	call FarCopyLayout
+
+	pop  de
+	pop  bc
+	ret
+
+.gfx:
+	INCBIN "en_scheduleStateBG.2bpp"
+.layoutStats:
+	db $0c, $0c, $0c, $0c, $0c
+	db $0c, $0c, $0c, $0c, $0c
+	db $0c, $0c, $0c, $0c, $0c
+	db $0c, $0c, $0c, $0c, $0c
+	db $0c, $0c, $0c, $0c, $0c
+	db $0c, $0c, $0c, $0c, $0c
+.layoutTime:
+	db $0d
+	db $0d
+	db $0d
+	db $0d
+.layoutDays:
+	db $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0b, $0b
+.layoutCheck:
+	db $0b, $0b
+	db $0b, $0b
+	db $0b, $0b
+	db $0b, $0b
+
+
+ScheduleTileMapHook:
+	call FarCopyLayout
+
+	ld   a, BANK(.layoutStats)
+	ldbc 5, 6
+	ld   de, .layoutStats
+	ld   hl, $9801
+	call FarCopyLayout
+
+	ld   a, BANK(.layoutTime)
+	ldbc 1, 4
+	ld   de, .layoutTime
+	ld   hl, $9902
+	call FarCopyLayout
+
+	ld   bc, .layoutCheck-.layoutDays
+	ld   de, $98e3
+	ld   hl, .layoutDays
+	call MemCopy
+
+	ld   a, BANK(.layoutCheck)
+	ldbc 2, 4
+	ld   de, .layoutCheck
+	ld   hl, $9910
+	call FarCopyLayout
+
+	ret
+.layoutStats:
+	db $00, $01, $02, $03, $04
+	db $09, $0a, $0b, $0c, $0d
+	db $11, $12, $13, $14, $15
+	db $19, $1a, $1b, $08, $04
+	db $1f, $20, $21, $08, $04
+	db $22, $23, $24, $25, $26
+.layoutTime:
+	db $05
+	db $0e
+	db $16
+	db $1c
+.layoutDays:
+	db $27, $28, $29, $2a, $2b, $2c, $2d, $2e, $2f, $30, $31, $32
+.layoutCheck:
+	db $06, $07
+	db $0f, $10
+	db $17, $18
+	db $1d, $1e
+
+
+ScheduleBank0_8000hHook:
+	call RLEXorCopy
+
+	M_FarCall ScheduleTileDataHook
+	ret
+
 endc

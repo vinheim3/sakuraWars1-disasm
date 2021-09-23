@@ -196,20 +196,20 @@ SpriteGroup1Pointers::
 	dw $4a14
 	dw $4a18
 	dw $4a1c
-	dw $4a20
-	dw $4a38
-	dw $4a50
-	dw $4a68
+	dw SpriteGroup1_Idx8ch
+	dw SpriteGroup1_Idx8dh
+	dw SpriteGroup1_Idx8eh
+	dw SpriteGroup1_Idx8fh_ScheduleConfirm
 	dw $4a78
 	dw $4a90
 	dw $4a98
 	dw $4aa0
 	dw $4aa8
 	dw $4ac8
-	dw $4ae8
-	dw $4b28
-	dw $4b68
-	dw $4ba8
+	dw SpriteGroup1_Idx96h_SchedulePopupText
+	dw SpriteGroup1_Idx97h
+	dw SpriteGroup1_Idx98h
+	dw SpriteGroup1_Idx99h
 	dw $4bb8
 	dw $4bc8
 	dw SpriteGroup1_Idx9ch_GameOverLeftKanji1
@@ -1853,84 +1853,43 @@ jr_00e_4986:
 	ld   [$1484], sp                                 ; $4a19: $08 $84 $14
 	db   $10                                         ; $4a1c: $10
 	ld   [$1486], sp                                 ; $4a1d: $08 $86 $14
-	rra                                              ; $4a20: $1f
-	rla                                              ; $4a21: $17
-	inc  a                                           ; $4a22: $3c
-	rlca                                             ; $4a23: $07
-	rra                                              ; $4a24: $1f
-	rrca                                             ; $4a25: $0f
-	ld   [bc], a                                     ; $4a26: $02
-	rlca                                             ; $4a27: $07
-	rra                                              ; $4a28: $1f
-	rlca                                             ; $4a29: $07
-	ld   a, [hl-]                                    ; $4a2a: $3a
-	rlca                                             ; $4a2b: $07
-	rrca                                             ; $4a2c: $0f
-	rla                                              ; $4a2d: $17
-	jr   nc, jr_00e_4a37                             ; $4a2e: $30 $07
 
-	rrca                                             ; $4a30: $0f
-	rrca                                             ; $4a31: $0f
-	ld   [bc], a                                     ; $4a32: $02
-	rlca                                             ; $4a33: $07
-	rrca                                             ; $4a34: $0f
-	rlca                                             ; $4a35: $07
-	nop                                              ; $4a36: $00
 
-jr_00e_4a37:
-	rla                                              ; $4a37: $17
-	rra                                              ; $4a38: $1f
-	rla                                              ; $4a39: $17
-	inc  a                                           ; $4a3a: $3c
-	ld   bc, $0f1f                                   ; $4a3b: $01 $1f $0f
-	ld   [bc], a                                     ; $4a3e: $02
-	ld   bc, $071f                                   ; $4a3f: $01 $1f $07
-	ld   a, [hl-]                                    ; $4a42: $3a
-	ld   bc, $170f                                   ; $4a43: $01 $0f $17
-	jr   nc, jr_00e_4a49                             ; $4a46: $30 $01
+SpriteGroup1_Idx8ch:
+	db $1f, $17, $3c, $07
+	db $1f, $0f, $02, $07
+	db $1f, $07, $3a, $07
+	db $0f, $17, $30, $07
+	db $0f, $0f, $02, $07
+	db $0f, $07, $00, $17
 
-	rrca                                             ; $4a48: $0f
 
-jr_00e_4a49:
-	rrca                                             ; $4a49: $0f
-	ld   [bc], a                                     ; $4a4a: $02
-	ld   bc, $070f                                   ; $4a4b: $01 $0f $07
-	nop                                              ; $4a4e: $00
-	ld   de, $171f                                   ; $4a4f: $11 $1f $17
-	inc  a                                           ; $4a52: $3c
-	ld   b, $1f                                      ; $4a53: $06 $1f
-	rrca                                             ; $4a55: $0f
-	ld   [bc], a                                     ; $4a56: $02
-	ld   b, $1f                                      ; $4a57: $06 $1f
-	rlca                                             ; $4a59: $07
-	ld   a, [hl-]                                    ; $4a5a: $3a
-	ld   b, $0f                                      ; $4a5b: $06 $0f
-	rla                                              ; $4a5d: $17
-	jr   nc, jr_00e_4a66                             ; $4a5e: $30 $06
+SpriteGroup1_Idx8dh:
+	db $1f, $17, $3c, $01
+	db $1f, $0f, $02, $01
+	db $1f, $07, $3a, $01
+	db $0f, $17, $30, $01
+	db $0f, $0f, $02, $01
+	db $0f, $07, $00, $11
+	
+	
+SpriteGroup1_Idx8eh:
+	db $1f, $17, $3c, $06
+	db $1f, $0f, $02, $06
+	db $1f, $07, $3a, $06
+	db $0f, $17, $30, $06
+	db $0f, $0f, $02, $06
+	db $0f, $07, $00, $16
+	
+	
+SpriteGroup1_Idx8fh_ScheduleConfirm:
+	db $20, $10, $38, $04
+	db $20, $08, $36, $04
+	db $10, $10, $34, $04
+	db $10, $08, $32, $14
 
-	rrca                                             ; $4a60: $0f
-	rrca                                             ; $4a61: $0f
-	ld   [bc], a                                     ; $4a62: $02
-	ld   b, $0f                                      ; $4a63: $06 $0f
-	rlca                                             ; $4a65: $07
 
-jr_00e_4a66:
-	nop                                              ; $4a66: $00
-	ld   d, $20                                      ; $4a67: $16 $20
-	db   $10                                         ; $4a69: $10
-	jr   c, jr_00e_4a70                              ; $4a6a: $38 $04
 
-	jr   nz, @+$0a                                   ; $4a6c: $20 $08
-
-	ld   [hl], $04                                   ; $4a6e: $36 $04
-
-jr_00e_4a70:
-	db   $10                                         ; $4a70: $10
-	db   $10                                         ; $4a71: $10
-	inc  [hl]                                        ; $4a72: $34
-	inc  b                                           ; $4a73: $04
-	db   $10                                         ; $4a74: $10
-	ld   [$1432], sp                                 ; $4a75: $08 $32 $14
 	rra                                              ; $4a78: $1f
 	rla                                              ; $4a79: $17
 	inc  a                                           ; $4a7a: $3c
@@ -2005,7 +1964,7 @@ jr_00e_4aa6:
 
 	inc  bc                                          ; $4acb: $03
 	db   $10                                         ; $4acc: $10
-	jr   jr_00e_4ae9                                 ; $4acd: $18 $1a
+	db $18, $1a
 
 	inc  bc                                          ; $4acf: $03
 	db   $10                                         ; $4ad0: $10
@@ -2028,199 +1987,84 @@ jr_00e_4aa6:
 
 jr_00e_4ae7:
 	inc  de                                          ; $4ae7: $13
-	db   $10                                         ; $4ae8: $10
 
-jr_00e_4ae9:
-	jr   nz, jr_00e_4b07                             ; $4ae9: $20 $1c
 
-	inc  bc                                          ; $4aeb: $03
-	db   $10                                         ; $4aec: $10
-	jr   @+$1c                                       ; $4aed: $18 $1a
+SpriteGroup1_Idx96h_SchedulePopupText:
+	db $10, $20, $1c, $03
+	db $10, $18, $1a, $03
+	db $10, $10, $18, $03
+	db $10, $08, $16, $03
+	db $10, $00, $14, $03
+	db $10, $f8, $12, $03
+	db $10, $f0, $10, $03
+	db $10, $e8, $0e, $03
+	db $20, $20, $26, $03
+if def(VWF)
+	db $20, $18, $42, $03
+	db $20, $10, $24, $03
+	db $20, $08, $22, $03
+else
+	db $20, $18, $24, $03
+	db $20, $10, $22, $03
+	db $20, $08, $20, $03
+endc
+	db $20, $00, $2a, $03
+	db $20, $e8, $2c, $43
+	db $20, $f8, $20, $03
+	db $20, $f0, $1e, $13
 
-	inc  bc                                          ; $4aef: $03
-	db   $10                                         ; $4af0: $10
-	db   $10                                         ; $4af1: $10
-	jr   @+$05                                       ; $4af2: $18 $03
 
-	db   $10                                         ; $4af4: $10
-	ld   [$0316], sp                                 ; $4af5: $08 $16 $03
-	stop                                             ; $4af8: $10 $00
-	inc  d                                           ; $4afa: $14
-	inc  bc                                          ; $4afb: $03
-	db   $10                                         ; $4afc: $10
-	ld   hl, sp+$12                                  ; $4afd: $f8 $12
-	inc  bc                                          ; $4aff: $03
-	db   $10                                         ; $4b00: $10
-	ldh  a, [rAUD1SWEEP]                             ; $4b01: $f0 $10
-	inc  bc                                          ; $4b03: $03
-	db   $10                                         ; $4b04: $10
-	add  sp, $0e                                     ; $4b05: $e8 $0e
+SpriteGroup1_Idx97h:
+	db $10, $20, $1c, $03
+	db $10, $18, $1a, $03
+	db $10, $10, $18, $03
+	db $10, $08, $16, $03
+	db $10, $00, $14, $03
+	db $10, $f8, $12, $03
+	db $10, $f0, $10, $03
+	db $10, $e8, $0e, $03
+	db $20, $00, $0c, $43
+	db $20, $e8, $28, $03
+	db $20, $20, $26, $03
+if def(VWF)
+	db $20, $18, $42, $03
+	db $20, $10, $24, $03
+	db $20, $08, $22, $03
+else
+	db $20, $18, $24, $03
+	db $20, $10, $22, $03
+	db $20, $08, $20, $03
+endc
+	db $20, $f8, $20, $03
+	db $20, $f0, $1e, $13
 
-jr_00e_4b07:
-	inc  bc                                          ; $4b07: $03
-	jr   nz, @+$22                                   ; $4b08: $20 $20
 
-	ld   h, $03                                      ; $4b0a: $26 $03
-	jr   nz, jr_00e_4b26                             ; $4b0c: $20 $18
+SpriteGroup1_Idx98h:
+	db $10, $20, $1c, $03
+	db $10, $18, $1a, $03
+	db $10, $10, $18, $03
+	db $10, $08, $16, $03
+	db $10, $00, $14, $03
+	db $10, $f8, $12, $03
+	db $10, $f0, $10, $03
+	db $10, $e8, $0e, $03
+	db $20, $e8, $2c, $43
+	db $20, $00, $0c, $43
+	db $20, $20, $26, $03
+if def(VWF)
+	db $20, $18, $42, $03
+	db $20, $10, $24, $03
+	db $20, $08, $22, $03
+else
+	db $20, $18, $24, $03
+	db $20, $10, $22, $03
+	db $20, $08, $20, $03
+endc
+	db $20, $f8, $20, $03
+	db $20, $f0, $1e, $13
 
-	inc  h                                           ; $4b0e: $24
-	inc  bc                                          ; $4b0f: $03
-	jr   nz, jr_00e_4b22                             ; $4b10: $20 $10
 
-	ld   [hl+], a                                    ; $4b12: $22
-	inc  bc                                          ; $4b13: $03
-	jr   nz, jr_00e_4b1e                             ; $4b14: $20 $08
-
-jr_00e_4b16:
-	jr   nz, jr_00e_4b1b                             ; $4b16: $20 $03
-
-	jr   nz, jr_00e_4b1a                             ; $4b18: $20 $00
-
-jr_00e_4b1a:
-	ld   a, [hl+]                                    ; $4b1a: $2a
-
-jr_00e_4b1b:
-	inc  bc                                          ; $4b1b: $03
-	jr   nz, @-$16                                   ; $4b1c: $20 $e8
-
-jr_00e_4b1e:
-	inc  l                                           ; $4b1e: $2c
-	ld   b, e                                        ; $4b1f: $43
-	jr   nz, jr_00e_4b1a                             ; $4b20: $20 $f8
-
-jr_00e_4b22:
-	jr   nz, @+$05                                   ; $4b22: $20 $03
-
-	jr   nz, jr_00e_4b16                             ; $4b24: $20 $f0
-
-jr_00e_4b26:
-	ld   e, $13                                      ; $4b26: $1e $13
-	db   $10                                         ; $4b28: $10
-	jr   nz, jr_00e_4b47                             ; $4b29: $20 $1c
-
-	inc  bc                                          ; $4b2b: $03
-	db   $10                                         ; $4b2c: $10
-	jr   @+$1c                                       ; $4b2d: $18 $1a
-
-	inc  bc                                          ; $4b2f: $03
-	db   $10                                         ; $4b30: $10
-	db   $10                                         ; $4b31: $10
-	jr   @+$05                                       ; $4b32: $18 $03
-
-	db   $10                                         ; $4b34: $10
-	ld   [$0316], sp                                 ; $4b35: $08 $16 $03
-	stop                                             ; $4b38: $10 $00
-	inc  d                                           ; $4b3a: $14
-	inc  bc                                          ; $4b3b: $03
-	db   $10                                         ; $4b3c: $10
-	ld   hl, sp+$12                                  ; $4b3d: $f8 $12
-	inc  bc                                          ; $4b3f: $03
-	db   $10                                         ; $4b40: $10
-	ldh  a, [rAUD1SWEEP]                             ; $4b41: $f0 $10
-	inc  bc                                          ; $4b43: $03
-	db   $10                                         ; $4b44: $10
-	add  sp, $0e                                     ; $4b45: $e8 $0e
-
-jr_00e_4b47:
-	inc  bc                                          ; $4b47: $03
-	jr   nz, jr_00e_4b4a                             ; $4b48: $20 $00
-
-jr_00e_4b4a:
-	inc  c                                           ; $4b4a: $0c
-	ld   b, e                                        ; $4b4b: $43
-	jr   nz, @-$16                                   ; $4b4c: $20 $e8
-
-	jr   z, @+$05                                    ; $4b4e: $28 $03
-
-	jr   nz, jr_00e_4b72                             ; $4b50: $20 $20
-
-	ld   h, $03                                      ; $4b52: $26 $03
-	jr   nz, @+$1a                                   ; $4b54: $20 $18
-
-jr_00e_4b56:
-	inc  h                                           ; $4b56: $24
-	inc  bc                                          ; $4b57: $03
-	jr   nz, @+$12                                   ; $4b58: $20 $10
-
-jr_00e_4b5a:
-	ld   [hl+], a                                    ; $4b5a: $22
-	inc  bc                                          ; $4b5b: $03
-	jr   nz, jr_00e_4b66                             ; $4b5c: $20 $08
-
-	jr   nz, @+$05                                   ; $4b5e: $20 $03
-
-	jr   nz, jr_00e_4b5a                             ; $4b60: $20 $f8
-
-	jr   nz, @+$05                                   ; $4b62: $20 $03
-
-	jr   nz, jr_00e_4b56                             ; $4b64: $20 $f0
-
-jr_00e_4b66:
-	ld   e, $13                                      ; $4b66: $1e $13
-	db   $10                                         ; $4b68: $10
-	jr   nz, jr_00e_4b87                             ; $4b69: $20 $1c
-
-	inc  bc                                          ; $4b6b: $03
-	db   $10                                         ; $4b6c: $10
-	jr   @+$1c                                       ; $4b6d: $18 $1a
-
-	inc  bc                                          ; $4b6f: $03
-	db   $10                                         ; $4b70: $10
-	db   $10                                         ; $4b71: $10
-
-jr_00e_4b72:
-	jr   @+$05                                       ; $4b72: $18 $03
-
-	db   $10                                         ; $4b74: $10
-	ld   [$0316], sp                                 ; $4b75: $08 $16 $03
-	stop                                             ; $4b78: $10 $00
-	inc  d                                           ; $4b7a: $14
-	inc  bc                                          ; $4b7b: $03
-	db   $10                                         ; $4b7c: $10
-	ld   hl, sp+$12                                  ; $4b7d: $f8 $12
-	inc  bc                                          ; $4b7f: $03
-	db   $10                                         ; $4b80: $10
-	ldh  a, [rAUD1SWEEP]                             ; $4b81: $f0 $10
-	inc  bc                                          ; $4b83: $03
-	db   $10                                         ; $4b84: $10
-	add  sp, $0e                                     ; $4b85: $e8 $0e
-
-jr_00e_4b87:
-	inc  bc                                          ; $4b87: $03
-	jr   nz, jr_00e_4b72                             ; $4b88: $20 $e8
-
-	inc  l                                           ; $4b8a: $2c
-	ld   b, e                                        ; $4b8b: $43
-	jr   nz, jr_00e_4b8e                             ; $4b8c: $20 $00
-
-jr_00e_4b8e:
-	inc  c                                           ; $4b8e: $0c
-	ld   b, e                                        ; $4b8f: $43
-	jr   nz, jr_00e_4bb2                             ; $4b90: $20 $20
-
-	ld   h, $03                                      ; $4b92: $26 $03
-	jr   nz, @+$1a                                   ; $4b94: $20 $18
-
-jr_00e_4b96:
-	inc  h                                           ; $4b96: $24
-	inc  bc                                          ; $4b97: $03
-	jr   nz, jr_00e_4baa                             ; $4b98: $20 $10
-
-jr_00e_4b9a:
-	ld   [hl+], a                                    ; $4b9a: $22
-	inc  bc                                          ; $4b9b: $03
-	jr   nz, jr_00e_4ba6                             ; $4b9c: $20 $08
-
-	jr   nz, @+$05                                   ; $4b9e: $20 $03
-
-	jr   nz, jr_00e_4b9a                             ; $4ba0: $20 $f8
-
-	jr   nz, @+$05                                   ; $4ba2: $20 $03
-
-	jr   nz, jr_00e_4b96                             ; $4ba4: $20 $f0
-
-jr_00e_4ba6:
-	ld   e, $13                                      ; $4ba6: $1e $13
+SpriteGroup1_Idx99h:
 	inc  de                                          ; $4ba8: $13
 	inc  de                                          ; $4ba9: $13
 

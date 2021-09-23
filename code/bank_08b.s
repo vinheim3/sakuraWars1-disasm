@@ -1819,6 +1819,49 @@ EnLoadRomandoShopCurrPtsTileData::
 	INCBIN "en_romandoShopCurrPts.2bpp"
 .end:
 
+
+ScheduleTileDataHook::
+	ld   a, $84
+	ld   [$92e2], a
+	ld   [$92e4], a
+	ld   a, $02
+	ld   [$92e3], a
+	ld   [$92e5], a
+
+; Popup title
+	ld   bc, 8*2*$10
+	ld   de, $80e0
+	ld   hl, .gfx
+	call MemCopy
+
+; Yes
+	ld   bc, 2*2*$10
+	ld   de, $81e0
+	ld   hl, .gfx+9*2*$10
+	call MemCopy
+
+; No pt.1
+	ld   bc, 2*2*$10
+	ld   de, $8220
+	ld   hl, .gfx+12*2*$10
+	call MemCopy
+
+; No pt.2
+	ld   bc, 1*2*$10
+	ld   de, $8420
+	ld   hl, .gfx+14*2*$10
+	call MemCopy
+
+; Confirm
+	ld   bc, $80
+	ld   de, $8320
+	ld   hl, .gfx+16*2*$10
+	call MemCopy
+
+	ret
+.gfx:
+	INCBIN "en_scheduleStateOBJ.2bpp"
+
 endc
 
 if def(PORTRAITLESS_UNTIMED)

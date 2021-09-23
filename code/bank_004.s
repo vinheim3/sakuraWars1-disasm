@@ -6089,15 +6089,8 @@ jr_004_65ee:
 	ld   a, [wDormRoomReturnSubstate]                                  ; $6642: $fa $7d $cc
 	ld   l, a                                        ; $6645: $6f
 	ld   a, [$c653]                                  ; $6646: $fa $53 $c6
-	push af                                          ; $6649: $f5
-	ld   a, $20                                      ; $664a: $3e $20
-	ld   [wFarCallAddr], a                                  ; $664c: $ea $98 $c2
-	ld   a, $48                                      ; $664f: $3e $48
-	ld   [wFarCallAddr+1], a                                  ; $6651: $ea $99 $c2
-	ld   a, $09                                      ; $6654: $3e $09
-	ld   [wFarCallBank], a                                  ; $6656: $ea $9a $c2
-	pop  af                                          ; $6659: $f1
-	call FarCall                                       ; $665a: $cd $62 $09
+
+	M_FarCall SetMainConvoState
 	ret                                              ; $665d: $c9
 
 

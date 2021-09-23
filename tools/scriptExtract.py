@@ -273,6 +273,7 @@ class ScriptExtractor:
         if char == "(": return [0x01, 0x03]
         if char == ")": return [0x01, 0x04]
         if char == "*": return [0x01, 0x1c]
+        if char == "&": return [0x01, 0x1d]
         if char == "=": return [0x01, 0x0d]
         if char == ":": return [0x01, 0x15]
         if char == "%": return [0x01, 0x0e]
@@ -319,6 +320,8 @@ class ScriptExtractor:
                 total += 5
             elif char in '"-+<>=/*':
                 total += 6
+            elif char in "&":
+                total += 7
             else:
                 total += 8
         return total
@@ -710,9 +713,6 @@ if __name__ == "__main__":
         with open('sakura wars GB - 19:09:21.csv') as f:
             reader = csv.reader(f)
             for scriptNum, offset, orig, blank, english, char, dupe1, dupe2 in reader:
-                # todo: temp - remove
-                if english:
-                    english = english.replace('&', '')
                 if not scriptNum:
                     continue
 

@@ -50,6 +50,8 @@
 ; rgbgfx -o en_resetData.2bpp en_resetData.png
 ; rgbgfx -o en_romandoShopCurrPts.2bpp en_romandoShopCurrPts.png
 ; rgbgfx -o en_trainingSchedule.2bpp en_trainingSchedule.png
+; rgbgfx -o en_scheduleStateBG.2bpp -u -T en_scheduleStateBG.png
+; rgbgfx -o en_scheduleStateOBJ.2bpp -h en_scheduleStateOBJ.png
 ; tools/gfx.py 1bpp newLetters.png --from=png --interleave
 
 ; empty banks

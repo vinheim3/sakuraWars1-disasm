@@ -2539,96 +2539,60 @@ jr_001_7710:
 	add  d                                           ; $775f: $82
 	ld   d, e                                        ; $7760: $53
 	ld   [hl], a                                     ; $7761: $77
-	cp   a                                           ; $7762: $bf
-	ld   [hl], a                                     ; $7763: $77
-	adc  $77                                         ; $7764: $ce $77
-	rst  $28                                         ; $7766: $ef
-	ld   [hl], a                                     ; $7767: $77
-	inc  de                                          ; $7768: $13
-	ld   a, b                                        ; $7769: $78
-	ld   d, $78                                      ; $776a: $16 $78
-	ld   [hl+], a                                    ; $776c: $22
-	ld   a, b                                        ; $776d: $78
-	inc  [hl]                                        ; $776e: $34
-	ld   a, b                                        ; $776f: $78
-	ld   b, [hl]                                     ; $7770: $46
-	ld   a, b                                        ; $7771: $78
-	ld   e, b                                        ; $7772: $58
-	ld   a, b                                        ; $7773: $78
-	ld   e, b                                        ; $7774: $58
-	ld   a, b                                        ; $7775: $78
-	ld   e, b                                        ; $7776: $58
-	ld   a, b                                        ; $7777: $78
-	ld   a, a                                        ; $7778: $7f
-	ld   a, b                                        ; $7779: $78
-	sbc  d                                           ; $777a: $9a
-	ld   a, b                                        ; $777b: $78
-	sbc  l                                           ; $777c: $9d
-	ld   a, b                                        ; $777d: $78
-	xor  c                                           ; $777e: $a9
-	ld   a, b                                        ; $777f: $78
-	xor  h                                           ; $7780: $ac
-	ld   a, b                                        ; $7781: $78
-	pop  bc                                          ; $7782: $c1
-	ld   a, b                                        ; $7783: $78
-	push hl                                          ; $7784: $e5
-	ld   a, b                                        ; $7785: $78
-	sub  $78                                         ; $7786: $d6 $78
-	db   $f4                                         ; $7788: $f4
-	ld   a, b                                        ; $7789: $78
-	db   $fd                                         ; $778a: $fd
-	ld   a, b                                        ; $778b: $78
-	ld   b, $79                                      ; $778c: $06 $79
-	add  hl, bc                                      ; $778e: $09
-	ld   a, c                                        ; $778f: $79
-	inc  c                                           ; $7790: $0c
-	ld   a, c                                        ; $7791: $79
-	dec  d                                           ; $7792: $15
-	ld   a, c                                        ; $7793: $79
-	ld   e, $79                                      ; $7794: $1e $79
-	daa                                              ; $7796: $27
-	ld   a, c                                        ; $7797: $79
-	inc  sp                                          ; $7798: $33
-	ld   a, c                                        ; $7799: $79
-	ccf                                              ; $779a: $3f
-	ld   a, c                                        ; $779b: $79
-	ld   e, l                                        ; $779c: $5d
-	ld   a, c                                        ; $779d: $79
-	ld   h, [hl]                                     ; $779e: $66
-	ld   a, c                                        ; $779f: $79
-	ld   a, [hl]                                     ; $77a0: $7e
-	ld   a, c                                        ; $77a1: $79
-	sub  b                                           ; $77a2: $90
-	ld   a, c                                        ; $77a3: $79
-	sbc  h                                           ; $77a4: $9c
-	ld   a, c                                        ; $77a5: $79
-	xor  [hl]                                        ; $77a6: $ae
-	ld   a, c                                        ; $77a7: $79
-	ret  nz                                          ; $77a8: $c0
 
-	ld   a, c                                        ; $77a9: $79
-	ret  c                                           ; $77aa: $d8
 
-	ld   a, c                                        ; $77ab: $79
-	ld   [$fc79], a                                  ; $77ac: $ea $79 $fc
-	ld   a, c                                        ; $77af: $79
-	ld   c, $7a                                      ; $77b0: $0e $7a
-	rla                                              ; $77b2: $17
-	ld   a, d                                        ; $77b3: $7a
-	ld   [hl-], a                                    ; $77b4: $32
-	ld   a, d                                        ; $77b5: $7a
-	ld   c, d                                        ; $77b6: $4a
-	ld   a, d                                        ; $77b7: $7a
-	ld   h, d                                        ; $77b8: $62
-	ld   a, d                                        ; $77b9: $7a
-	ld   [hl], a                                     ; $77ba: $77
-	ld   a, d                                        ; $77bb: $7a
-	sbc  b                                           ; $77bc: $98
-	ld   a, d                                        ; $77bd: $7a
-	db   $dd                                         ; $77be: $dd
-	ld   a, d                                        ; $77bf: $7a
-	cp   a                                           ; $77c0: $bf
-	ld   a, d                                        ; $77c1: $7a
+AnimatedSpriteSpecs_7762::
+	dw $77bf
+	dw $77ce
+	dw $77ef
+	dw $7813
+	dw $7816
+	dw $7822
+	dw $7834
+	dw $7846
+	dw $7858
+	dw $7858
+	dw $7858
+	dw $787f
+	dw $789a
+	dw $789d
+	dw $78a9
+	dw $78ac
+	dw $78c1
+	dw AnimatedSpriteSpec7762_11-3
+	dw AnimatedSpriteSpec7762_12-3
+	dw AnimatedSpriteSpec7762_13-3
+	dw AnimatedSpriteSpec7762_14-3
+	dw AnimatedSpriteSpec7762_15-3
+	dw AnimatedSpriteSpec7762_16-3
+	dw $790c
+	dw $7915
+	dw $791e
+	dw $7927
+	dw $7933
+	dw $793f
+	dw $795d
+	dw $7966
+	dw $797e
+	dw $7990
+	dw $799c
+	dw $79ae
+	dw $79c0
+	dw $79d8
+	dw $79ea
+	dw $79fc
+	dw $7a0e
+	dw $7a17
+	dw $7a32
+	dw $7a4a
+	dw $7a62
+	dw $7a77
+	dw $7a98
+	dw $7add
+	dw $7abf
+
+
+
 	ld   bc, $0435                                   ; $77c2: $01 $35 $04
 	ld   bc, $0436                                   ; $77c5: $01 $36 $04
 	ld   bc, $0437                                   ; $77c8: $01 $37 $04
@@ -2755,38 +2719,49 @@ jr_001_7710:
 	ld   bc, $0875                                   ; $78d0: $01 $75 $08
 	ld   bc, $0874                                   ; $78d3: $01 $74 $08
 	add  d                                           ; $78d6: $82
-	call nz, $0178                                   ; $78d7: $c4 $78 $01
-	adc  h                                           ; $78da: $8c
-	add  hl, bc                                      ; $78db: $09
-	ld   bc, $098d                                   ; $78dc: $01 $8d $09
-	ld   bc, $098e                                   ; $78df: $01 $8e $09
-	ld   bc, $098d                                   ; $78e2: $01 $8d $09
-	add  d                                           ; $78e5: $82
-	reti                                             ; $78e6: $d9
+	db $c4, $78 
+	
+	
+AnimatedSpriteSpec7762_12:
+:	db $01, $8c, $09
+	db $01, $8d, $09
+	db $01, $8e, $09
+	db $01, $8d, $09
+	AnimJump :-
 
 
-	ld   a, b                                        ; $78e7: $78
-	ld   bc, $0999                                   ; $78e8: $01 $99 $09
-	ld   bc, $099a                                   ; $78eb: $01 $9a $09
-	ld   bc, $099b                                   ; $78ee: $01 $9b $09
-	ld   bc, $099a                                   ; $78f1: $01 $9a $09
-	add  d                                           ; $78f4: $82
-	add  sp, $78                                     ; $78f5: $e8 $78
-	add  b                                           ; $78f7: $80
-	rrca                                             ; $78f8: $0f
-	nop                                              ; $78f9: $00
-	ld   bc, $168f                                   ; $78fa: $01 $8f $16
-	add  d                                           ; $78fd: $82
-	rst  $30                                         ; $78fe: $f7
-	ld   a, b                                        ; $78ff: $78
+AnimatedSpriteSpec7762_11:
+:	db $01, $99, $09
+	db $01, $9a, $09
+	db $01, $9b, $09
+	db $01, $9a, $09
+	AnimJump :-
+
+
+AnimatedSpriteSpec7762_13:
+:	AnimHide $0f
+	db $01, $8f, $16
+	AnimJump :-
+
+
+AnimatedSpriteSpec7762_14:
 	ld   bc, $1092                                   ; $7900: $01 $92 $10
 	add  b                                           ; $7903: $80
 	stop                                             ; $7904: $10 $00
 	add  d                                           ; $7906: $82
 	nop                                              ; $7907: $00
 	ld   a, c                                        ; $7908: $79
-	ld   bc, $0096                                   ; $7909: $01 $96 $00
+
+
+AnimatedSpriteSpec7762_15:
+	db $01, $96, $00
+
+
+AnimatedSpriteSpec7762_16:
 	ld   bc, $0097                                   ; $790c: $01 $97 $00
+
+
+;
 	ld   bc, $0293                                   ; $790f: $01 $93 $02
 	ld   bc, $0294                                   ; $7912: $01 $94 $02
 	ld   bc, $0298                                   ; $7915: $01 $98 $02

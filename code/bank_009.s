@@ -503,15 +503,8 @@ jr_009_4354:
 	ld   a, [$cb22]                                  ; $4380: $fa $22 $cb
 	ld   d, a                                        ; $4383: $57
 	pop  af                                          ; $4384: $f1
-	push af                                          ; $4385: $f5
-	ld   a, $20                                      ; $4386: $3e $20
-	ld   [wFarCallAddr], a                                  ; $4388: $ea $98 $c2
-	ld   a, $48                                      ; $438b: $3e $48
-	ld   [wFarCallAddr+1], a                                  ; $438d: $ea $99 $c2
-	ld   a, $09                                      ; $4390: $3e $09
-	ld   [wFarCallBank], a                                  ; $4392: $ea $9a $c2
-	pop  af                                          ; $4395: $f1
-	call FarCall                                       ; $4396: $cd $62 $09
+
+	M_FarCall SetMainConvoState
 
 jr_009_4399:
 	pop  af                                          ; $4399: $f1
