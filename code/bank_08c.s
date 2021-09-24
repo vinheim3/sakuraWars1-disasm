@@ -7,6 +7,9 @@ INCLUDE "includes.s"
 
 SECTION "ROM Bank $08c", ROMX[$4000], BANK[$8c]
 
+if def(VWF)
+	INCBIN "en_exploreDescripts.2bpp"
+else
 	rst  $38                                         ; $4000: $ff
 	rst  $38                                         ; $4001: $ff
 	nop                                              ; $4002: $00
@@ -1172,8 +1175,6 @@ jr_08c_4378:
 	ld   bc, $0101                                   ; $44f3: $01 $01 $01
 	ld   bc, $0101                                   ; $44f6: $01 $01 $01
 	ld   bc, $0101                                   ; $44f9: $01 $01 $01
-
-Call_08c_44fc:
 	ld   bc, $ff01                                   ; $44fc: $01 $01 $ff
 	rst  $38                                         ; $44ff: $ff
 	rst  $38                                         ; $4500: $ff
@@ -8617,8 +8618,6 @@ jr_08c_647a:
 	ld   bc, $0101                                   ; $64f3: $01 $01 $01
 	ld   bc, $0101                                   ; $64f6: $01 $01 $01
 	ld   bc, $8181                                   ; $64f9: $01 $81 $81
-
-Call_08c_64fc:
 	ld   bc, $ff01                                   ; $64fc: $01 $01 $ff
 	rst  $38                                         ; $64ff: $ff
 	rst  $38                                         ; $6500: $ff
@@ -11245,6 +11244,8 @@ jr_08c_6cdc:
 	nop                                              ; $6ffd: $00
 	nop                                              ; $6ffe: $00
 	nop                                              ; $6fff: $00
+endc
+
 	nop                                              ; $7000: $00
 	nop                                              ; $7001: $00
 	inc  bc                                          ; $7002: $03
@@ -12176,7 +12177,7 @@ jr_08c_7415:
 	nop                                              ; $741f: $00
 	ld   a, h                                        ; $7420: $7c
 	ld   a, h                                        ; $7421: $7c
-	call nz, Call_08c_44fc                           ; $7422: $c4 $fc $44
+	call nz, $44fc                           ; $7422: $c4 $fc $44
 	db   $fc                                         ; $7425: $fc
 	db   $fc                                         ; $7426: $fc
 	sbc  h                                           ; $7427: $9c
@@ -12232,7 +12233,7 @@ jr_08c_7459:
 	nop                                              ; $745f: $00
 	ld   a, h                                        ; $7460: $7c
 	ld   a, h                                        ; $7461: $7c
-	call nz, Call_08c_44fc                           ; $7462: $c4 $fc $44
+	call nz, $44fc                           ; $7462: $c4 $fc $44
 	db   $fc                                         ; $7465: $fc
 	db   $fc                                         ; $7466: $fc
 	sbc  h                                           ; $7467: $9c
@@ -12289,7 +12290,7 @@ jr_08c_748a:
 	nop                                              ; $74a1: $00
 	inc  a                                           ; $74a2: $3c
 	inc  a                                           ; $74a3: $3c
-	call nz, Call_08c_64fc                           ; $74a4: $c4 $fc $64
+	call nz, $64fc                           ; $74a4: $c4 $fc $64
 	db   $fc                                         ; $74a7: $fc
 	cp   $9a                                         ; $74a8: $fe $9a
 	cp   $0a                                         ; $74aa: $fe $0a
@@ -12344,7 +12345,7 @@ jr_08c_74ca:
 	nop                                              ; $74e1: $00
 	inc  a                                           ; $74e2: $3c
 	inc  a                                           ; $74e3: $3c
-	call nz, Call_08c_64fc                           ; $74e4: $c4 $fc $64
+	call nz, $64fc                           ; $74e4: $c4 $fc $64
 	db   $fc                                         ; $74e7: $fc
 	cp   $9a                                         ; $74e8: $fe $9a
 	cp   $0a                                         ; $74ea: $fe $0a

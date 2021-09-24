@@ -52,6 +52,9 @@
 ; rgbgfx -o en_trainingSchedule.2bpp en_trainingSchedule.png
 ; rgbgfx -o en_scheduleStateBG.2bpp -u -T en_scheduleStateBG.png
 ; rgbgfx -o en_scheduleStateOBJ.2bpp -h en_scheduleStateOBJ.png
+; tools/gfx.py 2bpp en_creditsHeaders.png --interleave
+; rgbgfx -o en_endResultsTitle.2bpp -u -T en_endResultsTitle.png
+; tools/gfx.py 2bpp en_exploreDescripts.png
 ; tools/gfx.py 1bpp newLetters.png --from=png --interleave
 
 ; empty banks
@@ -63,7 +66,7 @@
 ; 0x41 - 0x6a
 
 ; hook banks
-; $ff ($13c), $fd ($3ed), $fb ($155), $a4 ($45), $8b ($36), $85 ($73f)
+; $ff ($13c), $fd ($3ed), $fb ($155), $a4 ($45), $8b ($36), $85 ($4c3)
 ; $6b ($30f9) -> $6a, $40, $3f, $35, $31
 
 ; To 'day passed'

@@ -13626,4 +13626,45 @@ EnLoadSceneryScheduleGfx1::
 	call FarMemCopy
 	ret
 
+
+EndResultsTitleMapAndTileDataHook::
+; Original tile map
+	ld   hl, $9800                                   ; $72c4: $21 $00 $98
+	ld   de, $419e                                   ; $72c7: $11 $9e $41
+	call RLEXorCopy                                       ; $72ca: $cd $d2 $09
+
+; Tile map hook
+	ld   a, BANK(.layout)
+	ldbc 16, 3
+	ld   de, .layout
+	ld   hl, $98e2
+	call FarCopyLayout
+
+	ld   b, 16
+	ld   a, $14
+	ld   hl, $98c2
+:	ld   [hl+], a
+	dec  b
+	jr   nz, :-
+	
+; Original tile data
+	ld   a, $1a                                      ; $72cd: $3e $1a
+	ld   hl, $8800                                   ; $72cf: $21 $00 $88
+	ld   de, $67e0                                   ; $72d2: $11 $e0 $67
+	call RLEXorCopy                                       ; $72d5: $cd $d2 $09
+
+; Tile data hook
+	ld   bc, .layout-.gfx
+	ld   de, $9200
+	ld   hl, .gfx
+	call MemCopy
+
+	ret
+.gfx:
+	INCBIN "en_endResultsTitle.2bpp"
+.layout:
+	db $20, $21, $22, $22, $22, $23, $24, $25, $26, $27, $22, $22, $22, $23, $28, $22
+	db $29, $2a, $2b, $22, $22, $2c, $2d, $2e, $2f, $30, $22, $31, $22, $2c, $32, $31
+	db $33, $34, $35, $36, $37, $38, $22, $39, $3a, $3b, $3c, $3d, $3e, $3f, $40, $41
+
 endc

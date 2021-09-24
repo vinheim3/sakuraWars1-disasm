@@ -7603,16 +7603,22 @@ GameResultsSubstate3:
 	ld   hl, $8800                                   ; $6e62: $21 $00 $88
 	ld   bc, $0400                                   ; $6e65: $01 $00 $04
 	call MemClear                                       ; $6e68: $cd $95 $09
+
+;
 	ld   a, $1c                                      ; $6e6b: $3e $1c
 	ld   de, $6073                                   ; $6e6d: $11 $73 $60
 	ld   hl, $9800                                   ; $6e70: $21 $00 $98
 	ld   bc, $1415                                   ; $6e73: $01 $15 $14
 	call FarCopyLayout                                       ; $6e76: $cd $2c $0b
+
+;
 	xor  a                                           ; $6e79: $af
 	ldh  [rVBK], a                                   ; $6e7a: $e0 $4f
 	ld   a, $1c                                      ; $6e7c: $3e $1c
 	ld   hl, $9800                                   ; $6e7e: $21 $00 $98
 	call FarCopyLayout                                       ; $6e81: $cd $2c $0b
+
+;
 	ld   a, $15                                      ; $6e84: $3e $15
 	ld   hl, $8000                                   ; $6e86: $21 $00 $80
 	ld   de, $4000                                   ; $6e89: $11 $00 $40
@@ -8158,22 +8164,34 @@ GameResultsSubstate0:
 	call ClearDisplayRegsAllowVBlankInt                                       ; $72a8: $cd $59 $0b
 	ld   a, $03                                      ; $72ab: $3e $03
 	ld   [wLCDC], a                                  ; $72ad: $ea $03 $c2
+
+;
 	ld   a, $01                                      ; $72b0: $3e $01
 	ldh  [rVBK], a                                   ; $72b2: $e0 $4f
 	ld   a, $1e                                      ; $72b4: $3e $1e
 	ld   hl, $9800                                   ; $72b6: $21 $00 $98
 	ld   de, $48c4                                   ; $72b9: $11 $c4 $48
 	call RLEXorCopy                                       ; $72bc: $cd $d2 $09
+
+;
 	xor  a                                           ; $72bf: $af
 	ldh  [rVBK], a                                   ; $72c0: $e0 $4f
 	ld   a, $1e                                      ; $72c2: $3e $1e
+if def(VWF)
+	M_FarCall EndResultsTitleMapAndTileDataHook
+else
 	ld   hl, $9800                                   ; $72c4: $21 $00 $98
 	ld   de, $419e                                   ; $72c7: $11 $9e $41
 	call RLEXorCopy                                       ; $72ca: $cd $d2 $09
+
+;
 	ld   a, $1a                                      ; $72cd: $3e $1a
 	ld   hl, $8800                                   ; $72cf: $21 $00 $88
 	ld   de, $67e0                                   ; $72d2: $11 $e0 $67
 	call RLEXorCopy                                       ; $72d5: $cd $d2 $09
+endc
+
+;
 	xor  a                                           ; $72d8: $af
 	ld   [wWX], a                                  ; $72d9: $ea $09 $c2
 	ld   [wWY], a                                  ; $72dc: $ea $0a $c2

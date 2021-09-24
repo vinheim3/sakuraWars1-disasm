@@ -1120,6 +1120,26 @@
                             isGBC: true,
                             is8000: true,
                         },
+                        {
+                            name: "Game results detail (gs $20)",
+                            sources: [
+                                ['rleXorCopy', 0x15, 0x4000, 0x8000, 'memory'],
+                                ['screenCopy', 0x1c, 0x6073, 0x1800, 'rom', 'vram1', 0x14, 0x15],
+                                ['screenCopy', 0x1c, 0x6073+0x14*0x15, 0x9800, 'rom', 'memory', 0x14, 0x15],
+                                ['simpleCopy', 0x1e, 0x6d7c, 0x0000, 0x40, 'rom', 'bgPalettes'],
+                            ],
+                            isGBC: true,
+                        },
+                        {
+                            name: "Game results title (gs $20)",
+                            sources: [
+                                ['rleXorCopy', 0x1a, 0x67e0, 0x8800, 'memory'],
+                                ['rleXorCopy', 0x1e, 0x419e, 0x9800, 'memory'],
+                                ['rleXorCopy', 0x1e, 0x48c4, 0x1800, 'vram1'],
+                                ['simpleCopy', 0x1e, 0x7c4e, 0x0000, 0x40, 'rom', 'bgPalettes'],
+                            ],
+                            isGBC: true,
+                        },
                     ],
                 },
                 methods: {
