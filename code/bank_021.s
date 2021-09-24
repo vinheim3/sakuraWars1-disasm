@@ -109,6 +109,54 @@ SetNapOrTrainState::
 	dec  b                                           ; $4080: $05
 
 
+if def(VWF)
+
+Data_21_4081::
+	dw Data_21_4081entry00-Data_21_4081
+	dw Data_21_4081entry01-Data_21_4081
+	dw Data_21_4081entry02-Data_21_4081
+	dw Data_21_4081entry03-Data_21_4081
+	dw Data_21_4081entry04-Data_21_4081
+	dw Data_21_4081entry05-Data_21_4081
+	dw Data_21_4081entry06-Data_21_4081
+	dw Data_21_4081entry07-Data_21_4081
+	dw Data_21_4081entry08-Data_21_4081
+	dw Data_21_4081entry09-Data_21_4081
+	dw Data_21_4081entry0a-Data_21_4081
+	dw Data_21_4081entry0b-Data_21_4081
+	dw Data_21_4081entry0c-Data_21_4081
+	dw Data_21_4081entry0d-Data_21_4081
+	dw Data_21_4081entry0e-Data_21_4081
+	dw Data_21_4081entry0f-Data_21_4081
+	dw Data_21_4081entry10-Data_21_4081
+	dw Data_21_4081entry11-Data_21_4081
+	dw Data_21_4081entry12-Data_21_4081
+
+Data_21_4081entry00::
+	db $21, $46, $39, $35, $48, $fa, $00
+Data_21_4081entry01::
+	db $21, $46, $39, $35, $48, $fa, $00
+Data_21_4081entry02::
+	db $21, $46, $39, $35, $48, $fa, $00
+Data_21_4081entry03::
+	db $21, $46, $39, $35, $48, $fa, $00
+Data_21_4081entry04::
+	db $1b, $4b, $39, $47, $43, $41, $39, $fa, $00
+Data_21_4081entry05::
+	db $21, $46, $39, $35, $48, $fa, $00
+Data_21_4081entry06::
+	db $21, $43, $43, $38, $10, $40, $49, $37, $3f, $fa, $00
+Data_21_4081entry07::
+	db $21, $43, $43, $38, $10, $40, $49, $37, $3f, $fa, $00
+Data_21_4081entry08::
+	db $21, $43, $43, $38, $10, $40, $49, $37, $3f, $fa, $00
+Data_21_4081entry09::
+	db $21, $43, $43, $38, $10, $40, $49, $37, $3f, $fa, $00
+
+	ds $410a-@, 0
+
+else
+
 	ld   h, $00                                      ; $4081: $26 $00
 	ld   a, [hl+]                                    ; $4083: $2a
 	nop                                              ; $4084: $00
@@ -245,6 +293,8 @@ SetNapOrTrainState::
 	ld   c, [hl]                                     ; $4107: $4e
 	ld   c, [hl]                                     ; $4108: $4e
 	nop                                              ; $4109: $00
+
+endc
 
 
 ;
@@ -9367,5 +9417,25 @@ TileMap_TrainingStatsLabels:
 	db $3d, $3e, $46, $46, $24
 	db $3f, $40, $41, $46, $24
 	db $42, $43, $44, $45, $24
+
+
+Data_21_4081entry0a::
+	db $33, $43, $49, $10, $3b, $43, $48, $10, $48, $3c, $3d, $47, $fa, $00
+Data_21_4081entry0b::
+	db $21, $43, $43, $38, $10, $40, $49, $37, $3f, $fa, $00
+Data_21_4081entry0c::
+	db $28, $43, $fa, $00
+Data_21_4081entry0d::
+	db $28, $43, $fa, $00
+Data_21_4081entry0e::
+	db $2e, $3c, $35, $48, $10, $4b, $43, $42, $01, $01, $48, $10, $38, $43, $f2, $00
+Data_21_4081entry0f::
+	db $28, $43, $fa, $00
+Data_21_4081entry10::
+	db $2e, $3c, $35, $48, $10, $35, $3d, $42, $01, $01, $48, $10, $3b, $43, $42, $42, $35, $10, $37, $49, $48, $10, $3d, $48, $f2, $00
+Data_21_4081entry11::
+	db $28, $43, $fa, $00
+Data_21_4081entry12::
+	db $34, $4e, $4e, $f2, $f2, $f2, $00
 
 endc

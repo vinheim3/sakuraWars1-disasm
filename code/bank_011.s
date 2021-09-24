@@ -8300,6 +8300,10 @@ Call_011_738d:
 	cp   $ff                                         ; $73bb: $fe $ff
 	jr   z, .orFFh                              ; $73bd: $28 $15
 
+if def(VWF)
+	M_FarCall PopulateCreditRankingsText
+	ret
+else
 	add  a                                           ; $73bf: $87
 	ld   l, a                                        ; $73c0: $6f
 	ld   h, $00                                      ; $73c1: $26 $00
@@ -8313,6 +8317,7 @@ Call_011_738d:
 	call PopulateKanjiConvoStructForCurrTextBox                                       ; $73ce: $cd $27 $10
 	xor  a                                           ; $73d1: $af
 	jr   .done                                 ; $73d2: $18 $02
+endc
 
 .orFFh:
 	or   $ff                                         ; $73d4: $f6 $ff
@@ -9487,6 +9492,9 @@ jr_011_7889:
 	ld   d, h                                        ; $78c8: $54
 	sbc  a                                           ; $78c9: $9f
 	nop                                              ; $78ca: $00
+
+
+;
 	ld   a, [$ca1a]                                  ; $78cb: $fa $1a $ca
 	dec  a                                           ; $78ce: $3d
 	jr   jr_011_78d4                                 ; $78cf: $18 $03

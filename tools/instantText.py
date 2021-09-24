@@ -60,7 +60,8 @@ def is_oneline(_scriptName, idx):
 
 tableItems = []
 existing_map = {}
-with open('sakura wars GB - misc 20:09:21.csv') as f:
+# with open('sakura wars GB - misc 20:09:21.csv') as f:
+with open('sakura wars GB - misc 2 24:09:21.csv') as f:
     reader = csv.reader(f)
     for row in reader:
         if row[2] not in existing_map and row[4]:

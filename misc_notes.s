@@ -63,7 +63,8 @@
 ; 0x41 - 0x6a
 
 ; hook banks
-; $ff, $fd, $fb, $a4, $8b, $85 -> $6b, $6a, $40, $3f, $35, $31
+; $ff ($13c), $fd ($3ed), $fb ($155), $a4 ($45), $8b ($36), $85 ($73f)
+; $6b ($30f9) -> $6a, $40, $3f, $35, $31
 
 ; To 'day passed'
 ; New game
@@ -106,18 +107,18 @@
 ;   _90_5234 (DONE)
 ;   _90_5ac9 (DONE + text fits)
 ;   _05_579f (DONE)
-;   _0c_5ad5 (DONE)
+;   _0c_5ad5 (DONE + text fits)
 ;   _30_683a (DONE)
 ;   _30_6e56 (DONE)
 ;   _30_77d4 (DONE)
 ;   _31_441e (DONE)
 ;   _31_595e (DONE + text fits)
 ;   _0d_618f (DONE + text fits)
-;   _3e_46d1
-;   _3e_59ea
-;   _10_6070
-;   _11_7422
-;   _21_4081
+;   _3e_46d1 (DONE)
+;   _3e_59ea (DONE)
+;   _10_6070 (DONE)
+;   _11_7422 (DONE)
+;   _21_4081 (DONE + doesnt matter if text fits)
 ; tools/scriptExtract.py
 
 

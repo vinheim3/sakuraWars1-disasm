@@ -476,6 +476,18 @@ LoadMariaMiniGameTitleScreenGfx1::
 
 
 LoadSettingsEnTileData::
+; Original code
+	ld   hl, $d200                                   ; $4960: $21 $00 $d2
+	ld   b, $60                                      ; $4963: $06 $60
+	call EnqueueHDMATransfer                                       ; $4965: $cd $7c $02
+	rst  WaitUntilVBlankIntHandledIfLCDOn                                         ; $4968: $cf
+
+	ld   a, $16                                      ; $4969: $3e $16
+	ld   hl, $d000                                   ; $496b: $21 $00 $d0
+	ld   de, $5793                                   ; $496e: $11 $93 $57
+	call RLEXorCopy
+
+; New code
 	ld   bc, $c0
 	ld   de, $d1a0
 	ld   hl, Gfx_EnSettings
@@ -506,6 +518,41 @@ LoadSettingsEnTileData::
 	ld   hl, Gfx_EnSettings+$c0+$240+$280+$80+$140
 	call MemCopy
 	ret
+
+
+EnLoadSceneryScheduleLayout::
+	ld   a, BANK(.layout)
+	ldbc 15, 9
+	ld   de, .layout
+	ld   hl, $d140+$23
+	call FarCopyLayout
+
+	ld   a, BANK(.attrs)
+	ldbc 15, 9
+	ld   de, .attrs
+	ld   hl, $d000+$23
+	call FarCopyLayout
+	ret
+.layout:
+	db $1a, $1b, $1c, $1d, $1e, $1f, $20, $21, $22, $23, $24, $04, $05, $06, $07
+	db $08, $09, $0a, $0b, $0c, $0d, $0e, $0f, $10, $11, $12, $13, $14, $15, $16
+	db $17, $18, $19, $1a, $1b, $1c, $1d, $1e, $1f, $20, $21, $22, $23, $24, $25
+	db $26, $27, $28, $29, $2a, $2b, $2c, $2d, $2e, $2f, $30, $31, $32, $33, $34
+	db $35, $36, $37, $38, $39, $3a, $3b, $3c, $3d, $3e, $3f, $40, $41, $42, $43
+	db $44, $45, $46, $47, $48, $49, $4a, $4b, $4c, $4d, $4e, $4f, $50, $51, $52
+	db $53, $54, $55, $56, $57, $58, $59, $5a, $5b, $5c, $5d, $5e, $5f, $60, $61
+	db $62, $63, $64, $65, $66, $67, $68, $69, $6a, $6b, $6c, $6d, $6e, $6f, $70
+	db $71, $72, $73, $74, $75, $76, $77, $78, $79, $7a, $7b, $7c, $7d, $7e, $7f
+.attrs:
+	db $03, $03, $03, $03, $03, $03, $03, $03, $03, $03, $03, $0b, $0b, $0b, $0b
+	db $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b
+	db $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b
+	db $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b
+	db $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b
+	db $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b
+	db $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b
+	db $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b
+	db $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b
 
 
 Gfx_EnSettings:

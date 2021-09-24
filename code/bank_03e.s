@@ -598,7 +598,7 @@ jr_03e_423d:
 
 
 jr_03e_44a9:
-	call $471e                                       ; $44a9: $cd $1e $47
+	call Func_3e_471e                                       ; $44a9: $cd $1e $47
 	ld   a, [wInGameButtonsHeld]                                  ; $44ac: $fa $0f $c2
 	bit  4, a                                        ; $44af: $cb $67
 	jr   z, jr_03e_44b8                              ; $44b1: $28 $05
@@ -940,6 +940,32 @@ Call_03e_4685:
 	ld   bc, $0302                                   ; $46cc: $01 $02 $03
 	inc  b                                           ; $46cf: $04
 	dec  b                                           ; $46d0: $05
+
+if def(VWF)
+
+Data_3e_46d1::
+	dw Data_3e_46d1entry00-Data_3e_46d1
+	dw Data_3e_46d1entry01-Data_3e_46d1
+	dw Data_3e_46d1entry02-Data_3e_46d1
+	dw Data_3e_46d1entry03-Data_3e_46d1
+	dw Data_3e_46d1entry04-Data_3e_46d1
+	dw Data_3e_46d1entry05-Data_3e_46d1
+
+Data_3e_46d1entry00::
+	db $f2, $f2, $f2, $10, $2c, $39, $38, $10, $40, $3d, $3b, $3c, $48, $fa, $00
+
+Data_3e_46d1entry02::
+	db $2c, $46, $46, $39, $38, $10, $40, $3d, $3b, $3c, $48, $fa, $00
+Data_3e_46d1entry03::
+	db $2c, $39, $38, $f2, $f2, $f2, $10, $26, $3d, $3b, $3c, $48, $fa, $00
+Data_3e_46d1entry04::
+	db $29, $3f, $35, $4d, $e1, $10, $3c, $39, $46, $39, $10, $4b, $39, $10, $3b, $43, $fa, $00
+Data_3e_46d1entry05::
+	db $1b, $3c, $fa, $00
+
+	ds $471e-@, 0
+	
+else
 	inc  c                                           ; $46d1: $0c
 	nop                                              ; $46d2: $00
 	jr   jr_03e_46d5                                 ; $46d3: $18 $00
@@ -1017,11 +1043,13 @@ jr_03e_46d9:
 	nop                                              ; $4719: $00
 	ld   d, b                                        ; $471a: $50
 	ld   [hl], c                                     ; $471b: $71
-	ld   a, [$fa00]                                  ; $471c: $fa $00 $fa
-	inc  sp                                          ; $471f: $33
-	ret                                              ; $4720: $c9
+	db $fa, $00
 
-
+endc
+	
+	
+Func_3e_471e:
+	ld   a, [$c933]  ; $471e: $fa $33 $c9
 	cp   $00                                         ; $4721: $fe $00
 	ret  nz                                          ; $4723: $c0
 
@@ -1379,6 +1407,10 @@ GameState17_Settings::
 	ld   c, $80                                      ; $4959: $0e $80
 	ld   de, $8200                                   ; $495b: $11 $00 $82
 	ld   a, $03                                      ; $495e: $3e $03
+
+if def(VWF)
+	M_FarCall LoadSettingsEnTileData
+else
 	ld   hl, $d200                                   ; $4960: $21 $00 $d2
 	ld   b, $60                                      ; $4963: $06 $60
 	call EnqueueHDMATransfer                                       ; $4965: $cd $7c $02
@@ -1388,9 +1420,6 @@ GameState17_Settings::
 	ld   a, $16                                      ; $4969: $3e $16
 	ld   hl, $d000                                   ; $496b: $21 $00 $d0
 	ld   de, $5793                                   ; $496e: $11 $93 $57
-if def(VWF)
-	call SettingsTileDataHook
-else
 	call RLEXorCopy                                       ; $4971: $cd $d2 $09
 endc
 	rst  WaitUntilVBlankIntHandledIfLCDOn                                         ; $4974: $cf
@@ -3957,6 +3986,58 @@ Call_03e_59bf:
 	ld   [$c9ae], a                                  ; $59e6: $ea $ae $c9
 	ret                                              ; $59e9: $c9
 
+if def(VWF)
+
+Data_3e_59ea::
+	dw Data_3e_59eaentry00-Data_3e_59ea
+	dw Data_3e_59eaentry01-Data_3e_59ea
+	dw Data_3e_59eaentry02-Data_3e_59ea
+	dw Data_3e_59eaentry03-Data_3e_59ea
+	dw Data_3e_59eaentry04-Data_3e_59ea
+	dw Data_3e_59eaentry05-Data_3e_59ea
+	dw Data_3e_59eaentry06-Data_3e_59ea
+	dw Data_3e_59eaentry07-Data_3e_59ea
+	dw Data_3e_59eaentry08-Data_3e_59ea
+	dw Data_3e_59eaentry09-Data_3e_59ea
+	dw Data_3e_59eaentry0a-Data_3e_59ea
+	dw Data_3e_59eaentry0b-Data_3e_59ea
+	dw Data_3e_59eaentry0c-Data_3e_59ea
+	dw Data_3e_59eaentry0d-Data_3e_59ea
+	dw Data_3e_59eaentry0e-Data_3e_59ea
+	dw Data_3e_59eaentry0f-Data_3e_59ea
+
+Data_3e_59eaentry00::
+	db $1b, $00
+Data_3e_59eaentry01::
+	db $1c, $00
+Data_3e_59eaentry02::
+	db $29, $42, $39, $00
+Data_3e_59eaentry03::
+	db $2e, $4b, $43, $00
+Data_3e_59eaentry04::
+	db $2e, $3c, $46, $39, $39, $00
+Data_3e_59eaentry05::
+	db $20, $43, $49, $46, $00
+Data_3e_59eaentry06::
+	db $20, $3d, $4a, $39, $00
+Data_3e_59eaentry07::
+	db $2d, $3d, $4c, $00
+Data_3e_59eaentry08::
+	db $2d, $39, $4a, $39, $42, $00
+Data_3e_59eaentry09::
+	db $1f, $3d, $3b, $3c, $48, $00
+Data_3e_59eaentry0a::
+	db $28, $3d, $42, $39, $00
+Data_3e_59eaentry0b::
+	db $2e, $39, $42, $00
+Data_3e_59eaentry0c::
+	db $2a, $35, $47, $47, $00
+Data_3e_59eaentry0d::
+	db $20, $35, $3d, $40, $00
+
+	ds $5a4d-@, 0
+
+else
 
 	jr   nz, jr_03e_59ec                             ; $59ea: $20 $00
 
@@ -4053,6 +4134,8 @@ jr_03e_59f8:
 	sub  [hl]                                        ; $5a4a: $96
 	sbc  a                                           ; $5a4b: $9f
 	nop                                              ; $5a4c: $00
+
+endc
 
 Call_03e_5a4d:
 	push af                                          ; $5a4d: $f5
@@ -9623,13 +9706,6 @@ SetSakuraMiniGameTitleScreenState::
 
 if def(VWF)
 
-SettingsTileDataHook:
-	call RLEXorCopy
-
-	M_FarCall LoadSettingsEnTileData
-	ret
-
-
 SettingsTileMapHook:
 	call RLEXorCopy
 
@@ -9663,5 +9739,15 @@ SakuraMiniGameTitleScreenBank1_8800hHook:
 
 	M_FarCall LoadSakuraMiniGameTitleScreenGfx1
 	ret
+
+
+Data_3e_46d1entry01::
+	db $2c, $39, $38, $10, $40, $3d, $3b, $3c, $48, $fa, $00
+
+
+Data_3e_59eaentry0e::
+	db $1b, $37, $39, $38, $fa, $00
+Data_3e_59eaentry0f::
+	db $29, $3f, $35, $4d, $e1, $10, $3c, $39, $46, $39, $10, $4b, $39, $10, $3b, $43, $f2, $00
 
 endc
