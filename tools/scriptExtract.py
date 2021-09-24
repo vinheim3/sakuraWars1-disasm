@@ -557,7 +557,8 @@ class ScriptExtractor:
 
                 for i, textbox in enumerate(textboxes):
                     if i != 0:
-                        # comps.append("\tScriptOpt_SetDelay $3c")
+                        if self.scriptNum == 6:
+                            comps.append("\tScriptOpt_SetDelay $3c")
                         # comps.append("\tScriptOpt_DisplayText")
                         # comps.append("\t\tTEXT $0d")
                         comps.append("\tScriptOpt_ContinuePrompt")

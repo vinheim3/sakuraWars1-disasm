@@ -245,22 +245,24 @@ SetNapOrTrainState::
 	ld   c, [hl]                                     ; $4107: $4e
 	ld   c, [hl]                                     ; $4108: $4e
 	nop                                              ; $4109: $00
+
+
+;
 	ld   a, [$ca94]                                  ; $410a: $fa $94 $ca
 	and  a                                           ; $410d: $a7
-	jr   z, jr_021_411b                              ; $410e: $28 $0b
+	jr   z, .done                              ; $410e: $28 $0b
 
 	call CheckIfReachedLastKanjiIdxInCurrTextBox                                       ; $4110: $cd $71 $14
 	or   a                                           ; $4113: $b7
-	jr   nz, jr_021_4118                             ; $4114: $20 $02
+	jr   nz, .enqueue                             ; $4114: $20 $02
 
 	scf                                              ; $4116: $37
 	ret                                              ; $4117: $c9
 
-jr_021_4118:
+.enqueue:
 	jp   HDMAEnqueueNextTextBoxKanji                                       ; $4118: $c3 $55 $10
 
-
-jr_021_411b:
+.done:
 	ret                                              ; $411b: $c9
 
 

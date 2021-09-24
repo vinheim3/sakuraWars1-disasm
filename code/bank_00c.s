@@ -1602,25 +1602,27 @@ Call_00c_49b9:
 	ld   b, $00                                      ; $49bc: $06 $00
 	ld   c, a                                        ; $49be: $4f
 	sla  c                                           ; $49bf: $cb $21
-	ld   hl, $49c9                                   ; $49c1: $21 $c9 $49
+	ld   hl, .table                                   ; $49c1: $21 $c9 $49
 	add  hl, bc                                      ; $49c4: $09
 	ld   a, [hl+]                                    ; $49c5: $2a
 	ld   h, [hl]                                     ; $49c6: $66
 	ld   l, a                                        ; $49c7: $6f
 	jp   hl                                          ; $49c8: $e9
 
+.table:
+	dw .entry0
+	dw $4a26
+	dw $4a52
+	dw $4a81
+	dw $4aa0
 
-	db   $d3                                         ; $49c9: $d3
-	ld   c, c                                        ; $49ca: $49
-	ld   h, $4a                                      ; $49cb: $26 $4a
-	ld   d, d                                        ; $49cd: $52
-	ld   c, d                                        ; $49ce: $4a
-	add  c                                           ; $49cf: $81
-	ld   c, d                                        ; $49d0: $4a
-	and  b                                           ; $49d1: $a0
-	ld   c, d                                        ; $49d2: $4a
+.entry0:
 	ld   a, [$cb34]                                  ; $49d3: $fa $34 $cb
+if def(VWF)
+	cp   $01
+else
 	cp   $69                                         ; $49d6: $fe $69
+endc
 	ret  c                                           ; $49d8: $d8
 
 	ld   a, [wExploreCursorY]                                  ; $49d9: $fa $39 $cb
