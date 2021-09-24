@@ -709,7 +709,7 @@ ScriptEngineTable:
 	ScriptOpData ScriptOpcode34_PreSpecifiedDelay, $01
 
 
-Func_08_44b3::
+StartAndProcessScriptCalcStack::
 	ld   [wBaseScriptBank], a                                  ; $44b3: $ea $8c $cb
 	ld   [wCurrScriptBank], a                                  ; $44b6: $ea $8f $cb
 	ld   a, h                                        ; $44b9: $7c

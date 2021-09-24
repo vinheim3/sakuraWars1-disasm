@@ -1218,15 +1218,9 @@ jr_010_47d6:
 
 Call_010_47da:
 	ld   a, [$c8b2]                                  ; $47da: $fa $b2 $c8
-	push af                                          ; $47dd: $f5
-	ld   a, $aa                                      ; $47de: $3e $aa
-	ld   [wFarCallAddr], a                                  ; $47e0: $ea $98 $c2
-	ld   a, $46                                      ; $47e3: $3e $46
-	ld   [wFarCallAddr+1], a                                  ; $47e5: $ea $99 $c2
-	ld   a, $0a                                      ; $47e8: $3e $0a
-	ld   [wFarCallBank], a                                  ; $47ea: $ea $9a $c2
-	pop  af                                          ; $47ed: $f1
-	call FarCall                                       ; $47ee: $cd $62 $09
+
+	M_FarCall Func_0a_46aa
+
 	call Call_010_4b9f                               ; $47f1: $cd $9f $4b
 	ret                                              ; $47f4: $c9
 

@@ -12592,15 +12592,9 @@ jr_005_7441:
 	call FarCall                                       ; $7459: $cd $62 $09
 	pop  hl                                          ; $745c: $e1
 	inc  a                                           ; $745d: $3c
-	push af                                          ; $745e: $f5
-	ld   a, $30                                      ; $745f: $3e $30
-	ld   [wFarCallAddr], a                                  ; $7461: $ea $98 $c2
-	ld   a, $45                                      ; $7464: $3e $45
-	ld   [wFarCallAddr+1], a                                  ; $7466: $ea $99 $c2
-	ld   a, $09                                      ; $7469: $3e $09
-	ld   [wFarCallBank], a                                  ; $746b: $ea $9a $c2
-	pop  af                                          ; $746e: $f1
-	call FarCall                                       ; $746f: $cd $62 $09
+
+	M_FarCall SetSramByte2
+
 	call Call_005_756d                               ; $7472: $cd $6d $75
 	jr   jr_005_7435                                 ; $7475: $18 $be
 

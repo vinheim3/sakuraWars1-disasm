@@ -740,8 +740,14 @@ wPointerToInstantTileDataBuffer:: ; $cf23
 wSavedSceneryIdx:: ; $cf25
     dw
 
-wcf27:
-    ds $1000-$f27
+wInstantCrossedTile:: ; $cf27
+    db
+
+wInstantCharWidth:: ; $cf28
+    db
+
+wcf29:
+    ds $1000-$f29
 
 wStackTop:: ; $d000
 
@@ -772,6 +778,12 @@ w2_d000:
 
 wTitleScreenPressStartRowTileMap:: ; $d880
     ds SCRN_VX_B
+
+w2_d8a0:
+    ds $c9e-$8a0
+
+wNextMainConvoScriptIdx:: ; $dc9e
+    dw
 
 SECTION "WRAM 3", WRAMX[$d000], BANK[$3]
 

@@ -7,6 +7,7 @@ import clipboard
 import time
 from util import bankConv, getRom, conv, bankAddr, wordIn, stringB, groupBytes
 from common_words import get_chosen
+from openpyxl import load_workbook
 
 
 class ScriptExtractor:
@@ -683,6 +684,14 @@ class ScriptExtractor:
 
 
 if __name__ == "__main__":
+    quotePrefixed = []
+    wb = load_workbook('sakura wars GB - 24:09:21.xlsx')
+    ws = wb['temp']
+    for i, row in enumerate(ws.rows):
+        english = row[4]
+        if english.quotePrefix:
+            quotePrefixed.append(i)
+
     data = getRom()
     baseTable = bankConv('40:5728')
 
@@ -713,9 +722,12 @@ if __name__ == "__main__":
     if translate:
         with open('sakura wars GB - 19:09:21.csv') as f:
             reader = csv.reader(f)
-            for scriptNum, offset, orig, blank, english, char, dupe1, dupe2 in reader:
+            for i, (scriptNum, offset, orig, blank, english, char, dupe1, dupe2) in enumerate(reader):
                 if not scriptNum:
                     continue
+
+                if i in quotePrefixed:
+                    english = f"'{english}"
 
                 # Special cases starting with a space/s
                 if (int(scriptNum), int(offset)) in (

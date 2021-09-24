@@ -118,9 +118,9 @@ DPTransition01:
 	ld   [$cb22], a                                  ; $4106: $ea $22 $cb
 	ld   a, [$dc9d]                                  ; $4109: $fa $9d $dc
 	ld   [$cb23], a                                  ; $410c: $ea $23 $cb
-	ld   a, [$dc9e]                                  ; $410f: $fa $9e $dc
+	ld   a, [wNextMainConvoScriptIdx]                                  ; $410f: $fa $9e $dc
 	ld   [wMainConvoScriptIdx], a                                  ; $4112: $ea $24 $cb
-	ld   a, [$dc9f]                                  ; $4115: $fa $9f $dc
+	ld   a, [wNextMainConvoScriptIdx+1]                                  ; $4115: $fa $9f $dc
 	and  $03                                         ; $4118: $e6 $03
 	ld   [wMainConvoScriptIdx+1], a                                  ; $411a: $ea $25 $cb
 	ld   h, $38                                      ; $411d: $26 $38
@@ -247,9 +247,9 @@ DPTransition18:
 	ld   [$cb22], a                                  ; $41dc: $ea $22 $cb
 	ld   a, [$dc9d]                                  ; $41df: $fa $9d $dc
 	ld   [$cb23], a                                  ; $41e2: $ea $23 $cb
-	ld   a, [$dc9e]                                  ; $41e5: $fa $9e $dc
+	ld   a, [wNextMainConvoScriptIdx]                                  ; $41e5: $fa $9e $dc
 	ld   [wMainConvoScriptIdx], a                                  ; $41e8: $ea $24 $cb
-	ld   a, [$dc9f]                                  ; $41eb: $fa $9f $dc
+	ld   a, [wNextMainConvoScriptIdx+1]                                  ; $41eb: $fa $9f $dc
 	and  $03                                         ; $41ee: $e6 $03
 	ld   [wMainConvoScriptIdx+1], a                                  ; $41f0: $ea $25 $cb
 	ld   h, $38                                      ; $41f3: $26 $38
@@ -489,9 +489,9 @@ jr_009_4354:
 	ld   [$cb22], a                                  ; $435d: $ea $22 $cb
 	ld   a, [$dc9d]                                  ; $4360: $fa $9d $dc
 	ld   [$cb23], a                                  ; $4363: $ea $23 $cb
-	ld   a, [$dc9e]                                  ; $4366: $fa $9e $dc
+	ld   a, [wNextMainConvoScriptIdx]                                  ; $4366: $fa $9e $dc
 	ld   [wMainConvoScriptIdx], a                                  ; $4369: $ea $24 $cb
-	ld   a, [$dc9f]                                  ; $436c: $fa $9f $dc
+	ld   a, [wNextMainConvoScriptIdx+1]                                  ; $436c: $fa $9f $dc
 	and  $03                                         ; $436f: $e6 $03
 	ld   [wMainConvoScriptIdx+1], a                                  ; $4371: $ea $25 $cb
 	ld   h, $38                                      ; $4374: $26 $38
@@ -1367,7 +1367,7 @@ jr_009_4900:
 Call_009_4912:
 	xor  a                                           ; $4912: $af
 
-Jump_009_4913:
+.bigLoop:
 ;
 	ld   [$dc90], a                                  ; $4913: $ea $90 $dc
 	ld   b, $00                                      ; $4916: $06 $00
@@ -1407,8 +1407,10 @@ Jump_009_4913:
 	add  hl, bc                                      ; $4948: $09
 	xor  a                                           ; $4949: $af
 
-jr_009_494a:
+.nextDayGroupEntry:
 	ld   [$dc91], a                                  ; $494a: $ea $91 $dc
+
+;
 	push de                                          ; $494d: $d5
 	push hl                                          ; $494e: $e5
 	ld   a, $40                                      ; $494f: $3e $40
@@ -1418,11 +1420,13 @@ jr_009_494a:
 	call Call_009_4a16                               ; $495a: $cd $16 $4a
 	pop  hl                                          ; $495d: $e1
 	pop  de                                          ; $495e: $d1
+
+;
 	or   a                                           ; $495f: $b7
-	jr   z, jr_009_498c                              ; $4960: $28 $2a
+	jr   z, .end                              ; $4960: $28 $2a
 
 	bit  7, a                                        ; $4962: $cb $7f
-	jr   nz, jr_009_4981                             ; $4964: $20 $1b
+	jr   nz, .toNextDayGroupEntry                             ; $4964: $20 $1b
 
 	ld   a, [$dc9c]                                  ; $4966: $fa $9c $dc
 	ld   [de], a                                     ; $4969: $12
@@ -1430,33 +1434,35 @@ jr_009_494a:
 	ld   a, [$dc9d]                                  ; $496b: $fa $9d $dc
 	ld   [de], a                                     ; $496e: $12
 	inc  de                                          ; $496f: $13
-	ld   a, [$dc9e]                                  ; $4970: $fa $9e $dc
+	ld   a, [wNextMainConvoScriptIdx]                                  ; $4970: $fa $9e $dc
 	ld   [de], a                                     ; $4973: $12
 	inc  de                                          ; $4974: $13
-	ld   a, [$dc9f]                                  ; $4975: $fa $9f $dc
+	ld   a, [wNextMainConvoScriptIdx+1]                                  ; $4975: $fa $9f $dc
 	ld   [de], a                                     ; $4978: $12
 	inc  de                                          ; $4979: $13
 	ld   a, [$dc91]                                  ; $497a: $fa $91 $dc
 	inc  a                                           ; $497d: $3c
 	ld   [$dc91], a                                  ; $497e: $ea $91 $dc
 
-jr_009_4981:
+.toNextDayGroupEntry:
 	ld   bc, $0008                                   ; $4981: $01 $08 $00
 	add  hl, bc                                      ; $4984: $09
 	ld   a, [$dc91]                                  ; $4985: $fa $91 $dc
 	cp   $10                                         ; $4988: $fe $10
-	jr   c, jr_009_494a                              ; $498a: $38 $be
+	jr   c, .nextDayGroupEntry                              ; $498a: $38 $be
 
-jr_009_498c:
+.end:
 	ld   a, [$dc90]                                  ; $498c: $fa $90 $dc
 	inc  a                                           ; $498f: $3c
 	cp   $10                                         ; $4990: $fe $10
-	jp   c, Jump_009_4913                            ; $4992: $da $13 $49
+	jp   c, .bigLoop                            ; $4992: $da $13 $49
 
 	ret                                              ; $4995: $c9
 
 
+; Entries per group are for hour in the day
 Table_09_4996:
+; Day 1 - 8
 	dw Data_40_4000-$4000
 	dw Data_40_4031-$4000
 	dw $0162
@@ -1474,6 +1480,7 @@ Table_09_4996:
 	dw $04ce
 	dw $04e7
 
+; Day 9 - 16
 	dw $04e8
 	dw $0521
 	dw $06ba
@@ -1491,6 +1498,7 @@ Table_09_4996:
 	dw $0aa6
 	dw $0ab7
 
+; Day 17 - 24
 	dw $0ab8
 	dw $0b31
 	dw $0d02
@@ -1508,6 +1516,7 @@ Table_09_4996:
 	dw $11a6
 	dw $11ef
 
+; Day 25 - 32
 	dw $11f0
 	dw $1279
 	dw $139a
@@ -1527,11 +1536,13 @@ Table_09_4996:
 
 
 Call_009_4a16:
+; No more entries for the day group once the 1st byte == 0
 	ld   hl, $dc94                                   ; $4a16: $21 $94 $dc
 	ld   a, [hl+]                                    ; $4a19: $2a
 	or   a                                           ; $4a1a: $b7
 	ret  z                                           ; $4a1b: $c8
 
+;
 	ld   a, [$dc90]                                  ; $4a1c: $fa $90 $dc
 	ld   b, a                                        ; $4a1f: $47
 	inc  hl                                          ; $4a20: $23
@@ -1545,7 +1556,6 @@ Call_009_4a16:
 	ld   a, $ff                                      ; $4a2b: $3e $ff
 	ret                                              ; $4a2d: $c9
 
-
 Jump_009_4a2e:
 	ld   hl, $dc9c                                   ; $4a2e: $21 $9c $dc
 	xor  a                                           ; $4a31: $af
@@ -1554,25 +1564,28 @@ Jump_009_4a2e:
 	ld   [hl+], a                                    ; $4a34: $22
 	ld   [hl+], a                                    ; $4a35: $22
 
-;
+; todo: 1st byte into dc9c and B
 	ld   hl, $dc94                                   ; $4a36: $21 $94 $dc
 	ld   a, [hl+]                                    ; $4a39: $2a
 	ld   b, a                                        ; $4a3a: $47
 	and  $7f                                         ; $4a3b: $e6 $7f
 	ld   [$dc9c], a                                  ; $4a3d: $ea $9c $dc
 
-;
+; todo: 2nd byte into dc9e and E
 	ld   a, [hl+]                                    ; $4a40: $2a
 	ld   e, a                                        ; $4a41: $5f
-	ld   [$dc9e], a                                  ; $4a42: $ea $9e $dc
+	ld   [wNextMainConvoScriptIdx], a                                  ; $4a42: $ea $9e $dc
 
-;
+; todo: 3rd byte into dc9f and D
 	ld   a, [hl+]                                    ; $4a45: $2a
 	ld   d, a                                        ; $4a46: $57
-	ld   [$dc9f], a                                  ; $4a47: $ea $9f $dc
+	ld   [wNextMainConvoScriptIdx+1], a                                  ; $4a47: $ea $9f $dc
+
+; Jump if bit 7 clear on the 1st byte
 	bit  7, b                                        ; $4a4a: $cb $78
 	jr   z, .br_4a60                              ; $4a4c: $28 $12
 
+; todo: de becomes a flag 2 that we check
 	push hl                                          ; $4a4e: $e5
 	ld   l, e                                        ; $4a4f: $6b
 	ld   a, d                                        ; $4a50: $7a
@@ -1582,14 +1595,17 @@ Jump_009_4a2e:
 	call CheckIfFlagSet2                               ; $4a56: $cd $de $44
 	pop  hl                                          ; $4a59: $e1
 
+; Jump if the flag is not set
 	or   a                                           ; $4a5a: $b7
 	jr   z, .br_4a60                              ; $4a5b: $28 $03
 
 .retFFh:
+;
 	ld   a, $ff                                      ; $4a5d: $3e $ff
 	ret                                              ; $4a5f: $c9
 
 .br_4a60:
+; todo: 4th byte's nybbles+1 determines BC
 	ld   a, [hl]                                     ; $4a60: $7e
 	swap a                                           ; $4a61: $cb $37
 	and  $0f                                         ; $4a63: $e6 $0f
@@ -1599,7 +1615,7 @@ Jump_009_4a2e:
 	ld   c, a                                        ; $4a69: $4f
 	inc  c                                           ; $4a6a: $0c
 
-;
+; Jump if the current day of the week is not between the 2 days (inclusive) in the 4th btye
 	ld   a, [sCurrDay]                                  ; $4a6b: $fa $b0 $af
 	and  $07                                         ; $4a6e: $e6 $07
 	cp   b                                           ; $4a70: $b8
@@ -1608,6 +1624,7 @@ Jump_009_4a2e:
 	cp   c                                           ; $4a73: $b9
 	jr   nc, .retFFh                             ; $4a74: $30 $e7
 
+;
 	ld   a, [hl+]                                    ; $4a76: $2a
 	ld   c, a                                        ; $4a77: $4f
 	ld   a, [hl+]                                    ; $4a78: $2a
@@ -1618,7 +1635,7 @@ Jump_009_4a2e:
 	ld   hl, $4000                                   ; $4a7e: $21 $00 $40
 	add  hl, bc                                      ; $4a81: $09
 
-	M_FarCall Func_08_44b3
+	M_FarCall StartAndProcessScriptCalcStack
 
 	pop  hl                                          ; $4a96: $e1
 	or   a                                           ; $4a97: $b7
@@ -1657,9 +1674,9 @@ jr_009_4aa6:
 	ld   a, [hl+]                                    ; $4abf: $2a
 	ld   [$dc9c], a                                  ; $4ac0: $ea $9c $dc
 	ld   a, [hl+]                                    ; $4ac3: $2a
-	ld   [$dc9e], a                                  ; $4ac4: $ea $9e $dc
+	ld   [wNextMainConvoScriptIdx], a                                  ; $4ac4: $ea $9e $dc
 	ld   a, [hl]                                     ; $4ac7: $7e
-	ld   [$dc9f], a                                  ; $4ac8: $ea $9f $dc
+	ld   [wNextMainConvoScriptIdx+1], a                                  ; $4ac8: $ea $9f $dc
 	and  $f0                                         ; $4acb: $e6 $f0
 	swap a                                           ; $4acd: $cb $37
 	ld   [$dc9d], a                                  ; $4acf: $ea $9d $dc
@@ -1775,10 +1792,10 @@ jr_009_4b57:
 	ld   a, [$dc9d]                                  ; $4b78: $fa $9d $dc
 	ld   [de], a                                     ; $4b7b: $12
 	inc  de                                          ; $4b7c: $13
-	ld   a, [$dc9e]                                  ; $4b7d: $fa $9e $dc
+	ld   a, [wNextMainConvoScriptIdx]                                  ; $4b7d: $fa $9e $dc
 	ld   [de], a                                     ; $4b80: $12
 	inc  de                                          ; $4b81: $13
-	ld   a, [$dc9f]                                  ; $4b82: $fa $9f $dc
+	ld   a, [wNextMainConvoScriptIdx+1]                                  ; $4b82: $fa $9f $dc
 	ld   [de], a                                     ; $4b85: $12
 	inc  de                                          ; $4b86: $13
 	ld   a, [$dc91]                                  ; $4b87: $fa $91 $dc
@@ -1880,9 +1897,9 @@ jr_009_4bd7:
 	ld   a, [hl+]                                    ; $4c02: $2a
 	ld   [$dc9c], a                                  ; $4c03: $ea $9c $dc
 	ld   a, [hl+]                                    ; $4c06: $2a
-	ld   [$dc9e], a                                  ; $4c07: $ea $9e $dc
+	ld   [wNextMainConvoScriptIdx], a                                  ; $4c07: $ea $9e $dc
 	ld   a, [hl]                                     ; $4c0a: $7e
-	ld   [$dc9f], a                                  ; $4c0b: $ea $9f $dc
+	ld   [wNextMainConvoScriptIdx+1], a                                  ; $4c0b: $ea $9f $dc
 	and  $f0                                         ; $4c0e: $e6 $f0
 	swap a                                           ; $4c10: $cb $37
 	ld   [$dc9d], a                                  ; $4c12: $ea $9d $dc
@@ -1949,9 +1966,9 @@ jr_009_4c41:
 	xor  a                                           ; $4c6d: $af
 	ld   [$dc9c], a                                  ; $4c6e: $ea $9c $dc
 	ld   a, [hl+]                                    ; $4c71: $2a
-	ld   [$dc9e], a                                  ; $4c72: $ea $9e $dc
+	ld   [wNextMainConvoScriptIdx], a                                  ; $4c72: $ea $9e $dc
 	ld   a, [hl]                                     ; $4c75: $7e
-	ld   [$dc9f], a                                  ; $4c76: $ea $9f $dc
+	ld   [wNextMainConvoScriptIdx+1], a                                  ; $4c76: $ea $9f $dc
 	and  $f0                                         ; $4c79: $e6 $f0
 	swap a                                           ; $4c7b: $cb $37
 	ld   [$dc9d], a                                  ; $4c7d: $ea $9d $dc
@@ -2590,9 +2607,9 @@ Call_009_4f49:
 	pop  hl                                          ; $4f67: $e1
 	ld   a, [$dc9d]                                  ; $4f68: $fa $9d $dc
 	ld   [hl+], a                                    ; $4f6b: $22
-	ld   a, [$dc9e]                                  ; $4f6c: $fa $9e $dc
+	ld   a, [wNextMainConvoScriptIdx]                                  ; $4f6c: $fa $9e $dc
 	ld   [hl+], a                                    ; $4f6f: $22
-	ld   a, [$dc9f]                                  ; $4f70: $fa $9f $dc
+	ld   a, [wNextMainConvoScriptIdx+1]                                  ; $4f70: $fa $9f $dc
 	ld   [hl+], a                                    ; $4f73: $22
 	ld   a, $ff                                      ; $4f74: $3e $ff
 	ret                                              ; $4f76: $c9

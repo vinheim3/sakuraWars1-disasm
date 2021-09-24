@@ -9869,6 +9869,32 @@ InstantSaveKanjiIdx:
 	jp   LoadInstantText.instantSaveRet
 
 
+; Returns width+1 pixel space in B
+GetCharWidth:
+	push af
+	ld   b, $08
+	ld   a, [wCurrKanjiDataQuarterBankOffset]
+	cp   $00
+	jr   nz, .notPage0Kanji
+
+; Page 0 kanji
+	ld   a, [wSavedKanjiIdx]
+	call GetCharWidth0
+	jr   .gotWidth
+
+.notPage0Kanji:
+	cp   $01
+	jr   nz, .gotWidth
+
+; Page 1 kanji
+	ld   a, [wSavedKanjiIdx]
+	call GetCharWidth1
+
+.gotWidth:
+	pop  af
+	ret
+
+
 ; DE - src addr
 ; HL - dest addr
 ; trashes A, B, C, HL
@@ -9881,6 +9907,18 @@ VWFLoadInstantKanjiTileDataWithTextStyle:
 ; Load single tile into a buffer
 	ld   hl, wInstantTextSingleTileDataBuffer
 	call LoadKanjiTileDataWithTextStyle
+
+; Cache if we cross into next tile
+	call GetCharWidth
+	ld   a, b
+	ld   [wInstantCharWidth], a
+	ld   a, [wKanjiPixelInTileIdx]
+	add  b
+	cp   $08
+	ld   a, 0
+	jr   c, :+
+	inc  a
+:	ld   [wInstantCrossedTile], a
 
 ; Shift a given byte in the buffer B times, with remainder in C
 	ld   a, [wKanjiPixelInTileIdx]
@@ -9923,12 +9961,16 @@ VWFLoadInstantKanjiTileDataWithTextStyle:
 	ld   [hl+], a
 	push hl
 
+	ld   a, [wInstantCrossedTile]
+	and  a
+	jr   z, :+
+
 ; Store shifted remainder into curr remainder buffer
 	ld   de, $1f
 	add  hl, de
 	ld   a, c
 	ld   [hl], a
-	pop  hl
+:	pop  hl
 
 	pop  de
 	inc  de
@@ -9938,25 +9980,9 @@ VWFLoadInstantKanjiTileDataWithTextStyle:
 
 ; Get char width so we know how where to draw to next
 .fromNoShift:
-	ld   b, $08
-	ld   a, [wCurrKanjiDataQuarterBankOffset]
-	cp   $00
-	jr   nz, .notPage0Kanji
+	ld   a, [wInstantCharWidth]
+	ld   b, a
 
-; Page 0 kanji
-	ld   a, [wSavedKanjiIdx]
-	call GetCharWidth0
-	jr   .gotWidth
-
-.notPage0Kanji:
-	cp   $01
-	jr   nz, .gotWidth
-
-; Page 1 kanji
-	ld   a, [wSavedKanjiIdx]
-	call GetCharWidth1
-
-.gotWidth:
 	ld   a, [wKanjiPixelInTileIdx]
 	add  b
 	sub  $08
@@ -10044,25 +10070,8 @@ VWFLoadKanjiTileDataWithTextStyle:
 
 ; Get char width so we know how where to draw to next
 .fromNoShift:
-	ld   b, $08
-	ld   a, [wCurrKanjiDataQuarterBankOffset]
-	cp   $00
-	jr   nz, .notPage0Kanji
+	call GetCharWidth
 
-; Page 0 kanji
-	ld   a, [wSavedKanjiIdx]
-	call GetCharWidth0
-	jr   .gotWidth
-
-.notPage0Kanji:
-	cp   $01
-	jr   nz, .gotWidth
-
-; Page 1 kanji
-	ld   a, [wSavedKanjiIdx]
-	call GetCharWidth1
-
-.gotWidth:
 	ld   a, [wKanjiPixelInTileIdx]
 	add  b
 	sub  $08

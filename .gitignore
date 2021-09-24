@@ -3,6 +3,7 @@
 *.sav
 *.sym
 *.csv
+*.xlsx
 *.tbl
 temp.s
 gfx_new.*

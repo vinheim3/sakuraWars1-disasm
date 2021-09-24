@@ -1240,6 +1240,7 @@ jr_00a_4691:
 	ret                                              ; $46a9: $c9
 
 
+Func_0a_46aa::
 	call HLequAddrOfFileData                               ; $46aa: $cd $a6 $43
 	ld   de, sPlayerName                                   ; $46ad: $11 $aa $af
 	ld   bc, $044e                                   ; $46b0: $01 $4e $04
