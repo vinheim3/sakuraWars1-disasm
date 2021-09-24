@@ -1739,9 +1739,13 @@ jr_00a_4978:
 ; A - data loading step
 ; HL - scenery idx
 LoadSceneryTileDataLayoutAndPalettes::
+if def(VWF)
+	call SaveSceneryIdx
+else
 	ld   b, a                                        ; $4997: $47
 	ld   a, h                                        ; $4998: $7c
 	or   l                                           ; $4999: $b5
+endc
 	jp   z, Jump_00a_4a94                            ; $499a: $ca $94 $4a
 
 	ld   a, b                                        ; $499d: $78
@@ -1758,7 +1762,7 @@ LoadSceneryTileDataLayoutAndPalettes::
 	jp   z, Jump_00a_4a55                            ; $49af: $ca $55 $4a
 
 	push hl                                          ; $49b2: $e5
-	call Call_00a_5438                               ; $49b3: $cd $38 $54
+	call LoadSceneryLayout                               ; $49b3: $cd $38 $54
 	pop  hl                                          ; $49b6: $e1
 	push hl                                          ; $49b7: $e5
 
@@ -1777,8 +1781,12 @@ LoadSceneryTileDataLayoutAndPalettes::
 	ld   d, a                                        ; $49c9: $57
 	ld   a, [hl]                                     ; $49ca: $7e
 	ld   hl, $d000                                   ; $49cb: $21 $00 $d0
+if def(VWF)
+	call SceneryBank0_9000hHook
+else
 	call RLEXorCopy                                       ; $49ce: $cd $d2 $09
-	
+endc
+
 ;
 	ld   c, $80                                      ; $49d1: $0e $80
 	ld   de, $9000                                   ; $49d3: $11 $00 $90
@@ -1832,7 +1840,11 @@ Jump_00a_4a04:
 	ld   d, a                                        ; $4a1a: $57
 	ld   a, [hl]                                     ; $4a1b: $7e
 	ld   hl, $d000                                   ; $4a1c: $21 $00 $d0
+if def(VWF)
+	call SceneryBank1_9000hHook
+else
 	call RLEXorCopy                                       ; $4a1f: $cd $d2 $09
+endc
 	ld   c, $81                                      ; $4a22: $0e $81
 	ld   de, $9000                                   ; $4a24: $11 $00 $90
 	ld   a, $07                                      ; $4a27: $3e $07
@@ -1959,9 +1971,9 @@ GetPointerToSceneryDataSources:
 	ret                                                             ; $4afb
 
 macro ScenerySources
-	AddrBank \1 ; bank 0 tile data
-	AddrBank \2 ; bank 1 tile data
-	AddrBank \3 ; tilemap+attrs
+	AddrBank \1 ; bank 0 tile data (rle xor copy $800 to $d000->$9000)
+	AddrBank \2 ; bank 1 tile data (rle xor copy $800 to $d000->$9000)
+	AddrBank \3 ; tilemap+attrs (20x10 or $14x$0a)
 	AddrBank \4 ; 3 BG palettes (3-5) used for the scenery
 endm
 .table:
@@ -2159,14 +2171,14 @@ endm
 	db $5e, $46, $78, $b2, $7f, $84, $b0, $5d, $85, $e3, $77, $85
 	db $ce, $53, $76, $bd, $7f, $83, $20, $5c, $85, $fb, $77, $85
 	db $55, $6f, $75, $3b, $7f, $78, $f0, $63, $85, $43, $78, $85
-	db $a5, $43, $7f, $59, $6d, $85, $80, $65, $85, $5b, $78, $85
+	db $a5, $43, $7f, $59, $6d, $85, $80, $65, $85, $5b, $78, $85 ; Scenery $c2
 	db $5d, $5f, $70, $cf, $7b, $7a, $10, $67, $85, $73, $78, $85
 	db $7f, $70, $74, $82, $7a, $7f, $a0, $68, $85, $8b, $78, $85
 
 
 
 ; HL - scenery idx
-Call_00a_5438::
+LoadSceneryLayout::
 	ld   a, h                                        ; $5438: $7c
 	or   l                                           ; $5439: $b5
 	jr   nz, .non0scenery                             ; $543a: $20 $2a
@@ -2249,7 +2261,11 @@ jr_00a_549e:
 	jr   nz, jr_00a_549e                             ; $54b1: $20 $eb
 
 	pop  af                                          ; $54b3: $f1
+if def(VWF)
+	jp   SceneryLayoutHook
+else
 	ld   [wWramBank], a                                  ; $54b4: $ea $93 $c2
+endc
 	ldh  [rSVBK], a                                  ; $54b7: $e0 $70
 	ret                                              ; $54b9: $c9
 
@@ -7454,6 +7470,57 @@ TitleMenuScreenVramBank1_8000h_hook:
 Gfx_EnTitleScreen:
 	INCBIN "en_titleScreen.2bpp"
 .end::
+
+
+SaveSceneryIdx:
+	push af
+	ld   a, h
+	ld   [wSavedSceneryIdx+1], a
+	ld   a, l
+	ld   [wSavedSceneryIdx], a
+	pop  af
+; Original
+	ld   b, a
+	ld   a, h
+	or   l
+	ret
+
+
+SceneryBank0_9000hHook:
+	call RLEXorCopy
+
+	ld   a, [wSavedSceneryIdx]
+	cp   $c2
+	ret  nz
+
+	M_FarCall EnLoadSceneryScheduleGfx0
+	ret
+
+
+SceneryBank1_9000hHook:
+	call RLEXorCopy
+
+	ld   a, [wSavedSceneryIdx]
+	cp   $c2
+	ret  nz
+
+	M_FarCall EnLoadSceneryScheduleGfx1
+	ret
+
+
+SceneryLayoutHook:
+	push af
+
+	ld   a, [wSavedSceneryIdx]
+	cp   $c2
+	jr   nz, :+
+
+	M_FarCall EnLoadSceneryScheduleLayout
+
+:	pop  af
+	ld   [wWramBank], a
+	ld   [rSVBK], a
+	ret
 
 endc
 

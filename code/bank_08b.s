@@ -1862,6 +1862,11 @@ ScheduleTileDataHook::
 .gfx:
 	INCBIN "en_scheduleStateOBJ.2bpp"
 
+
+Gfx_TrainingShchedule::
+	INCBIN "en_trainingSchedule.2bpp"
+.end::
+
 endc
 
 if def(PORTRAITLESS_UNTIMED)

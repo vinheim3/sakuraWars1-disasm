@@ -8275,15 +8275,21 @@ Call_011_738d:
 	call SetCurrKanjiColAndRowToDrawOn                                       ; $739c: $cd $34 $14
 	xor  a                                           ; $739f: $af
 	ld   [$ca3a], a                                  ; $73a0: $ea $3a $ca
+
+;
 	ld   a, [$ca1d]                                  ; $73a3: $fa $1d $ca
 	add  a                                           ; $73a6: $87
 	ld   c, a                                        ; $73a7: $4f
 	ld   b, $00                                      ; $73a8: $06 $00
-	ld   hl, $73d7                                   ; $73aa: $21 $d7 $73
+	ld   hl, .table                                   ; $73aa: $21 $d7 $73
 	add  hl, bc                                      ; $73ad: $09
+
+;
 	ld   a, [hl+]                                    ; $73ae: $2a
 	ld   b, [hl]                                     ; $73af: $46
 	ld   c, a                                        ; $73b0: $4f
+
+;
 	ld   hl, $ca3b                                   ; $73b1: $21 $3b $ca
 	ld   a, [hl]                                     ; $73b4: $7e
 	inc  [hl]                                        ; $73b5: $34
@@ -8292,7 +8298,7 @@ Call_011_738d:
 	add  hl, bc                                      ; $73b9: $09
 	ld   a, [hl]                                     ; $73ba: $7e
 	cp   $ff                                         ; $73bb: $fe $ff
-	jr   z, jr_011_73d4                              ; $73bd: $28 $15
+	jr   z, .orFFh                              ; $73bd: $28 $15
 
 	add  a                                           ; $73bf: $87
 	ld   l, a                                        ; $73c0: $6f
@@ -8306,40 +8312,32 @@ Call_011_738d:
 	add  hl, bc                                      ; $73cd: $09
 	call PopulateKanjiConvoStructForCurrTextBox                                       ; $73ce: $cd $27 $10
 	xor  a                                           ; $73d1: $af
-	jr   jr_011_73d6                                 ; $73d2: $18 $02
+	jr   .done                                 ; $73d2: $18 $02
 
-jr_011_73d4:
+.orFFh:
 	or   $ff                                         ; $73d4: $f6 $ff
 
-jr_011_73d6:
+.done:
 	ret                                              ; $73d6: $c9
 
+.table:
+	dw $73f5
+	dw $73f8
+	dw $73fb
+	dw $73fe
+	dw $7401
+	dw $7404
+	dw $7407
+	dw $740a
+	dw $740d
+	dw $7410
+	dw $7413
+	dw $7416
+	dw $7419
+	dw $741c
+	dw $741f
 
-	push af                                          ; $73d7: $f5
-	ld   [hl], e                                     ; $73d8: $73
-	ld   hl, sp+$73                                  ; $73d9: $f8 $73
-	ei                                               ; $73db: $fb
-	ld   [hl], e                                     ; $73dc: $73
-	cp   $73                                         ; $73dd: $fe $73
-	ld   bc, $0474                                   ; $73df: $01 $74 $04
-	ld   [hl], h                                     ; $73e2: $74
-	rlca                                             ; $73e3: $07
-	ld   [hl], h                                     ; $73e4: $74
-	ld   a, [bc]                                     ; $73e5: $0a
-	ld   [hl], h                                     ; $73e6: $74
-	dec  c                                           ; $73e7: $0d
-	ld   [hl], h                                     ; $73e8: $74
-	db   $10                                         ; $73e9: $10
-	ld   [hl], h                                     ; $73ea: $74
-	inc  de                                          ; $73eb: $13
-	ld   [hl], h                                     ; $73ec: $74
-	ld   d, $74                                      ; $73ed: $16 $74
-	add  hl, de                                      ; $73ef: $19
-	ld   [hl], h                                     ; $73f0: $74
-	inc  e                                           ; $73f1: $1c
-	ld   [hl], h                                     ; $73f2: $74
-	rra                                              ; $73f3: $1f
-	ld   [hl], h                                     ; $73f4: $74
+
 	nop                                              ; $73f5: $00
 	ld   bc, $02ff                                   ; $73f6: $01 $ff $02
 	inc  bc                                          ; $73f9: $03
@@ -8376,6 +8374,9 @@ jr_011_73d6:
 	ld   a, [de]                                     ; $741f: $1a
 	dec  de                                          ; $7420: $1b
 	rst  $38                                         ; $7421: $ff
+
+
+;
 	inc  a                                           ; $7422: $3c
 	nop                                              ; $7423: $00
 	ld   h, b                                        ; $7424: $60

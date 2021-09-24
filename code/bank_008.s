@@ -2299,7 +2299,7 @@ jr_008_4ed0:
 	ld   l, a                                        ; $4edd: $6f
 	ld   h, $00                                      ; $4ede: $26 $00
 
-	M_FarCall Call_00a_5438
+	M_FarCall LoadSceneryLayout
 	
 	ld   c, $80                                      ; $4ef4: $0e $80
 	ld   de, $9800                                   ; $4ef6: $11 $00 $98
@@ -2372,7 +2372,7 @@ jr_008_4f77:
 	ld   l, a                                        ; $4f7d: $6f
 	ld   h, $00                                      ; $4f7e: $26 $00
 
-	M_FarCall Call_00a_5438
+	M_FarCall LoadSceneryLayout
 	
 	ld   a, [$cba8]                                  ; $4f94: $fa $a8 $cb
 	ld   h, a                                        ; $4f97: $67
@@ -3080,7 +3080,7 @@ todo_Opcode23Entry3:
 	ld   l, a                                        ; $544d: $6f
 	ld   h, $00                                      ; $544e: $26 $00
 
-	M_FarCall Call_00a_5438
+	M_FarCall LoadSceneryLayout
 	
 	ld   a, [$cba8]                                  ; $5464: $fa $a8 $cb
 	ld   h, a                                        ; $5467: $67
@@ -3634,7 +3634,7 @@ jr_008_57a5:
 	ld   l, a                                        ; $57ab: $6f
 	ld   h, $00                                      ; $57ac: $26 $00
 
-	M_FarCall Call_00a_5438
+	M_FarCall LoadSceneryLayout
 	
 	ld   c, $80                                      ; $57c2: $0e $80
 	ld   de, $9800                                   ; $57c4: $11 $00 $98
@@ -4910,7 +4910,7 @@ jr_008_5fff:
 	ld   l, a                                        ; $6019: $6f
 	ld   h, $00                                      ; $601a: $26 $00
 
-	M_FarCall Call_00a_5438
+	M_FarCall LoadSceneryLayout
 	
 	ld   c, $80                                      ; $6030: $0e $80
 	ld   de, $9800                                   ; $6032: $11 $00 $98
@@ -4983,7 +4983,7 @@ todo_Opcode1bEntry2:
 	ld   l, a                                        ; $60b9: $6f
 	ld   h, $00                                      ; $60ba: $26 $00
 
-	M_FarCall Call_00a_5438
+	M_FarCall LoadSceneryLayout
 	
 	ld   h, $00                                      ; $60d0: $26 $00
 	ld   a, [$cbae]                                  ; $60d2: $fa $ae $cb
@@ -6618,7 +6618,7 @@ jr_008_6cf8:
 	ld   l, a                                        ; $6cfb: $6f
 	ld   h, $00                                      ; $6cfc: $26 $00
 
-	M_FarCall Call_00a_5438
+	M_FarCall LoadSceneryLayout
 	
 	ld   c, $80                                      ; $6d12: $0e $80
 	ld   de, $9800                                   ; $6d14: $11 $00 $98
@@ -6944,7 +6944,7 @@ jr_008_6f02:
 	ld   l, a                                        ; $6f08: $6f
 	ld   h, $00                                      ; $6f09: $26 $00
 
-	M_FarCall Call_00a_5438
+	M_FarCall LoadSceneryLayout
 	
 	ld   c, $80                                      ; $6f1f: $0e $80
 	ld   de, $9800                                   ; $6f21: $11 $00 $98

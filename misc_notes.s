@@ -63,7 +63,15 @@
 ; 0x41 - 0x6a
 
 ; hook banks
-; 0xff, 0xfd, 0xfb, 0xa4, 0x8b
+; $ff, $fd, $fb, $a4, $8b, $85 -> $6b, $6a, $40, $3f, $35, $31
+
+; To 'day passed'
+; New game
+; File load
+; Day passed
+; DPT as a return state to dorm room
+
+; TODO: sources of scripts
 
 ; Minigames
 ; cb1d=0 for practice

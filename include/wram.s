@@ -721,6 +721,7 @@ wCurrAudChannelTimes5:: ; $cdab
 wcdac:
     ds $f00-$dac
 
+; todo: wrap these in an 'if def(VWF)'
 wInstantTextSingleTileDataBuffer:: ; $cf00
     ds $20
 
@@ -736,8 +737,11 @@ wEnqueue2VwfTiles:: ; $cf22
 wPointerToInstantTileDataBuffer:: ; $cf23
     dw
 
-wcf25:
-    ds $1000-$f25
+wSavedSceneryIdx:: ; $cf25
+    dw
+
+wcf27:
+    ds $1000-$f27
 
 wStackTop:: ; $d000
 
