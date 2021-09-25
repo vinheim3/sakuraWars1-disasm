@@ -846,6 +846,9 @@ RomandoShopSubstate2:
 	ld   b, d                                        ; $4533: $42
 	ld   c, a                                        ; $4534: $4f
 	adc  $4f                                         ; $4535: $ce $4f
+
+
+;
 	ld   hl, $cc51                                   ; $4537: $21 $51 $cc
 	ld   a, [hl]                                     ; $453a: $7e
 	inc  [hl]                                        ; $453b: $34
@@ -879,6 +882,9 @@ RomandoShopSubstate2:
 	ld   b, [hl]                                     ; $455a: $46
 	add  l                                           ; $455b: $85
 	ld   b, [hl]                                     ; $455c: $46
+
+
+;
 	ld   a, [wWramBank]                                  ; $455d: $fa $93 $c2
 	push af                                          ; $4560: $f5
 	ld   a, $07                                      ; $4561: $3e $07
@@ -2138,10 +2144,12 @@ Call_004_4d78:
 	push bc                                          ; $4d96: $c5
 	ld   hl, $d000                                   ; $4d97: $21 $00 $d0
 	add  hl, bc                                      ; $4d9a: $09
-	ld   a, $a4                                      ; $4d9b: $3e $a4
-	ld   de, $4399                                   ; $4d9d: $11 $99 $43
+	ld   a, BANK(TileAttr_RomandoTreasureInvConfirmPopup)                                      ; $4d9b: $3e $a4
+	ld   de, TileAttr_RomandoTreasureInvConfirmPopup                                   ; $4d9d: $11 $99 $43
 	ld   bc, $0804                                   ; $4da0: $01 $04 $08
 	call FarCopyLayout                                       ; $4da3: $cd $2c $0b
+
+; TileMap_RomandoTreasureInvConfirmPopup
 	pop  bc                                          ; $4da6: $c1
 	ld   hl, $d400                                   ; $4da7: $21 $00 $d4
 	add  hl, bc                                      ; $4daa: $09

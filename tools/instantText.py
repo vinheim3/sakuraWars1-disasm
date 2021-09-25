@@ -60,8 +60,8 @@ def is_oneline(_scriptName, idx):
 
 tableItems = []
 existing_map = {}
-# with open('sakura wars GB - misc 20:09:21.csv') as f:
-with open('sakura wars GB - misc 2 24:09:21.csv') as f:
+with open('sakura wars GB - misc 25:09:21.csv') as f:
+# with open('sakura wars GB - misc 2 24:09:21.csv') as f:
     reader = csv.reader(f)
     for row in reader:
         if row[2] not in existing_map and row[4]:
@@ -113,12 +113,15 @@ for i, jp in enumerate(tableItems):
     limit = get_limit(scriptName, i)
     lines = tableItem.split('\n')
     if limit:
-        for line in lines:
+        for j, line in enumerate(lines):
             textboxes = ScriptExtractor.convertEnglish(line, limit)
+            if not textboxes:
+                continue
+
             try:
                 assert len(textboxes) == 1
             except AssertionError:
-                print(lines, i, jp)
+                print(lines, line, i, jp)
                 raise
 
             textbox = textboxes[0]
@@ -126,7 +129,10 @@ for i, jp in enumerate(tableItems):
                 # print(i, line, 'breached')
                 print(line, limit)
 
-            textbox.append(0)
+            if j != len(lines)-1:
+                textbox.append(0x0d)
+            else:
+                textbox.append(0)
             comps.append(stringB(textbox))
 
     else:

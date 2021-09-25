@@ -822,70 +822,26 @@ jr_0a4_4368:
 	sub  e                                           ; $4396: $93
 	sub  h                                           ; $4397: $94
 	rst  $38                                         ; $4398: $ff
-	inc  b                                           ; $4399: $04
-	inc  b                                           ; $439a: $04
-	inc  b                                           ; $439b: $04
-	inc  b                                           ; $439c: $04
-	inc  b                                           ; $439d: $04
-	inc  b                                           ; $439e: $04
-	inc  b                                           ; $439f: $04
-	inc  b                                           ; $43a0: $04
-	inc  b                                           ; $43a1: $04
-	inc  b                                           ; $43a2: $04
-	inc  b                                           ; $43a3: $04
-	inc  b                                           ; $43a4: $04
-	inc  b                                           ; $43a5: $04
-	inc  b                                           ; $43a6: $04
-	inc  b                                           ; $43a7: $04
-	inc  b                                           ; $43a8: $04
-	inc  b                                           ; $43a9: $04
-	inc  b                                           ; $43aa: $04
-	inc  b                                           ; $43ab: $04
-	inc  b                                           ; $43ac: $04
-	inc  b                                           ; $43ad: $04
-	inc  b                                           ; $43ae: $04
-	inc  b                                           ; $43af: $04
-	inc  b                                           ; $43b0: $04
-	inc  b                                           ; $43b1: $04
-	inc  b                                           ; $43b2: $04
-	inc  b                                           ; $43b3: $04
-	inc  b                                           ; $43b4: $04
-	inc  b                                           ; $43b5: $04
-	inc  b                                           ; $43b6: $04
-	inc  b                                           ; $43b7: $04
-	inc  b                                           ; $43b8: $04
-	adc  d                                           ; $43b9: $8a
-	adc  e                                           ; $43ba: $8b
-	adc  h                                           ; $43bb: $8c
-	adc  l                                           ; $43bc: $8d
-	adc  [hl]                                        ; $43bd: $8e
-	adc  a                                           ; $43be: $8f
-	sub  b                                           ; $43bf: $90
-	sub  c                                           ; $43c0: $91
-	sub  d                                           ; $43c1: $92
-	sub  e                                           ; $43c2: $93
-	sub  h                                           ; $43c3: $94
-	sub  l                                           ; $43c4: $95
-	sub  [hl]                                        ; $43c5: $96
-	sub  a                                           ; $43c6: $97
-	sbc  b                                           ; $43c7: $98
-	sbc  c                                           ; $43c8: $99
-	sbc  d                                           ; $43c9: $9a
-	sbc  e                                           ; $43ca: $9b
-	sbc  h                                           ; $43cb: $9c
-	sbc  l                                           ; $43cc: $9d
-	sbc  [hl]                                        ; $43cd: $9e
-	sbc  [hl]                                        ; $43ce: $9e
-	sbc  a                                           ; $43cf: $9f
-	and  b                                           ; $43d0: $a0
-	and  c                                           ; $43d1: $a1
-	and  d                                           ; $43d2: $a2
-	and  e                                           ; $43d3: $a3
-	and  h                                           ; $43d4: $a4
-	and  l                                           ; $43d5: $a5
-	and  [hl]                                        ; $43d6: $a6
-	and  a                                           ; $43d7: $a7
-	xor  b                                           ; $43d8: $a8
+
+
+TileAttr_RomandoTreasureInvConfirmPopup::
+	db $04, $04, $04, $04, $04, $04, $04, $04
+	db $04, $04, $04, $04, $04, $04, $04, $04
+	db $04, $04, $04, $04, $04, $04, $04, $04
+	db $04, $04, $04, $04, $04, $04, $04, $04
+
+
+TileMap_RomandoTreasureInvConfirmPopup::
+	db $8a, $8b, $8c, $8d, $8e, $8f, $90, $91
+	db $92, $93, $94, $95, $96, $97, $98, $99
+if def(VWF)
+	db $9a, $9b, $9c, $9d, $9e, $9f, $a0, $cf
+else
+	db $9a, $9b, $9c, $9d, $9e, $9e, $9f, $a0
+endc
+	db $a1, $a2, $a3, $a4, $a5, $a6, $a7, $a8
+
+
 	nop                                              ; $43d9: $00
 	add  hl, hl                                      ; $43da: $29
 	ld   [bc], a                                     ; $43db: $02

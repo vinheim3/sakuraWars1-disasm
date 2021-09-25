@@ -4935,10 +4935,10 @@ jr_00c_61c7:
 GameState40_Inventory::
 	ld   a, [wGameSubstate]                                  ; $61fd: $fa $a1 $c2
 	dec  a                                           ; $6200: $3d
-	jp   z, Jump_00c_670d                            ; $6201: $ca $0d $67
+	jp   z, InventorySubstate1                            ; $6201: $ca $0d $67
 
 	dec  a                                           ; $6204: $3d
-	jp   z, Jump_00c_6710                            ; $6205: $ca $10 $67
+	jp   z, InventorySubstate2                            ; $6205: $ca $10 $67
 
 	xor  a                                           ; $6208: $af
 	ld   [$cc57], a                                  ; $6209: $ea $57 $cc
@@ -5694,11 +5694,11 @@ jr_00c_670b:
 	ret                                              ; $670c: $c9
 
 
-Jump_00c_670d:
+InventorySubstate1:
 	jp   Jump_00c_6212                               ; $670d: $c3 $12 $62
 
 
-Jump_00c_6710:
+InventorySubstate2:
 	ld   a, [wWramBank]                                  ; $6710: $fa $93 $c2
 	push af                                          ; $6713: $f5
 	ld   a, $02                                      ; $6714: $3e $02
@@ -5794,7 +5794,11 @@ Jump_00c_6710:
 	ld   a, $94                                      ; $678d: $3e $94
 	ld   hl, $d000                                   ; $678f: $21 $00 $d0
 	ld   de, $6cf3                                   ; $6792: $11 $f3 $6c
+if def(VWF)
+	call InventoryBank0_8000hHook
+else
 	call RLEXorCopy                                       ; $6795: $cd $d2 $09
+endc
 	ld   c, $80                                      ; $6798: $0e $80
 	ld   de, $8000                                   ; $679a: $11 $00 $80
 	ld   a, $07                                      ; $679d: $3e $07
@@ -6835,10 +6839,12 @@ Call_00c_6e21:
 	push bc                                          ; $6e3f: $c5
 	ld   hl, $d000                                   ; $6e40: $21 $00 $d0
 	add  hl, bc                                      ; $6e43: $09
-	ld   a, $a4                                      ; $6e44: $3e $a4
-	ld   de, $4399                                   ; $6e46: $11 $99 $43
+	ld   a, BANK(TileAttr_RomandoTreasureInvConfirmPopup)                                      ; $6e44: $3e $a4
+	ld   de, TileAttr_RomandoTreasureInvConfirmPopup                                   ; $6e46: $11 $99 $43
 	ld   bc, $0804                                   ; $6e49: $01 $04 $08
 	call FarCopyLayout                                       ; $6e4c: $cd $2c $0b
+
+; TileMap_RomandoTreasureInvConfirmPopup
 	pop  bc                                          ; $6e4f: $c1
 	ld   hl, $d400                                   ; $6e50: $21 $00 $d4
 	add  hl, bc                                      ; $6e53: $09
@@ -8309,25 +8315,25 @@ Data_0c_5ad5::
 	dw Data_0c_5ad5entry08-Data_0c_5ad5
 	dw Data_0c_5ad5entry09-Data_0c_5ad5
 
-Data_0c_5ad5entry00:
+Data_0c_5ad5entry00::
 	db $1f, $42, $48, $39, $46, $10, $4d, $43, $49, $46, $10, $47, $37, $3c, $39, $38, $49, $40, $39, $00
-Data_0c_5ad5entry01:
+Data_0c_5ad5entry01::
 	db $2c, $39, $37, $39, $3d, $4a, $39, $10, $48, $46, $35, $3d, $42, $3d, $42, $3b, $10, $3a, $46, $43, $41, $10, $2d, $35, $3f, $49, $46, $35, $00
-Data_0c_5ad5entry02:
+Data_0c_5ad5entry02::
 	db $2c, $39, $37, $39, $3d, $4a, $39, $10, $48, $46, $35, $3d, $42, $3d, $42, $3b, $10, $3a, $46, $43, $41, $10, $2d, $49, $41, $3d, $46, $39, $00
-Data_0c_5ad5entry03:
+Data_0c_5ad5entry03::
 	db $2c, $39, $37, $39, $3d, $4a, $39, $10, $48, $46, $35, $3d, $42, $3d, $42, $3b, $10, $3a, $46, $43, $41, $10, $27, $35, $46, $3d, $35, $00
-Data_0c_5ad5entry04:
+Data_0c_5ad5entry04::
 	db $2c, $39, $37, $39, $3d, $4a, $39, $10, $48, $46, $35, $3d, $42, $3d, $42, $3b, $10, $3a, $46, $43, $41, $10, $23, $46, $3d, $47, $00
-Data_0c_5ad5entry05:
+Data_0c_5ad5entry05::
 	db $2c, $39, $37, $39, $3d, $4a, $39, $10, $48, $46, $35, $3d, $42, $3d, $42, $3b, $10, $3a, $46, $43, $41, $10, $25, $43, $3c, $46, $35, $42, $00
-Data_0c_5ad5entry06:
+Data_0c_5ad5entry06::
 	db $2c, $39, $37, $39, $3d, $4a, $39, $10, $48, $46, $35, $3d, $42, $3d, $42, $3b, $10, $3a, $46, $43, $41, $10, $25, $35, $42, $42, $35, $00
-Data_0c_5ad5entry07:
+Data_0c_5ad5entry07::
 	db $2c, $39, $47, $48, $10, $35, $42, $38, $10, $46, $39, $37, $43, $4a, $39, $46, $10, $47, $48, $35, $41, $3d, $42, $35, $00
-Data_0c_5ad5entry08:
+Data_0c_5ad5entry08::
 	db $2f, $42, $35, $36, $40, $39, $10, $48, $43, $10, $47, $39, $40, $39, $37, $48, $00
-Data_0c_5ad5entry09:
+Data_0c_5ad5entry09::
 	db $2d, $37, $3c, $39, $38, $49, $40, $39, $10, $37, $43, $42, $3a, $3d, $46, $41, $39, $38, $00
 
 
@@ -8444,6 +8450,13 @@ ScheduleBank0_8000hHook:
 	call RLEXorCopy
 
 	M_FarCall ScheduleTileDataHook
+	ret
+
+
+InventoryBank0_8000hHook:
+	call RLEXorCopy
+
+	M_FarCall LoadRomandoTreasureInvPopup
 	ret
 
 endc

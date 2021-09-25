@@ -4653,7 +4653,11 @@ TreasureChestSubstate2:
 	ld   a, $94                                      ; $5be0: $3e $94
 	ld   hl, $d000                                   ; $5be2: $21 $00 $d0
 	ld   de, $6cf3                                   ; $5be5: $11 $f3 $6c
+if def(VWF)
+	call TreasureChestBank0_8000hHook
+else
 	call RLEXorCopy                                       ; $5be8: $cd $d2 $09
+endc
 	ld   c, $80                                      ; $5beb: $0e $80
 	ld   de, $8000                                   ; $5bed: $11 $00 $80
 	ld   a, $07                                      ; $5bf0: $3e $07
@@ -5725,10 +5729,12 @@ Call_009_62a4:
 	push bc                                          ; $62c2: $c5
 	ld   hl, $d000                                   ; $62c3: $21 $00 $d0
 	add  hl, bc                                      ; $62c6: $09
-	ld   a, $a4                                      ; $62c7: $3e $a4
-	ld   de, $4399                                   ; $62c9: $11 $99 $43
+	ld   a, BANK(TileAttr_RomandoTreasureInvConfirmPopup)                                      ; $62c7: $3e $a4
+	ld   de, TileAttr_RomandoTreasureInvConfirmPopup                                   ; $62c9: $11 $99 $43
 	ld   bc, $0804                                   ; $62cc: $01 $04 $08
 	call FarCopyLayout                                       ; $62cf: $cd $2c $0b
+
+; TileMap_RomandoTreasureInvConfirmPopup
 	pop  bc                                          ; $62d2: $c1
 	ld   hl, $d400                                   ; $62d3: $21 $00 $d4
 	add  hl, bc                                      ; $62d6: $09
@@ -6753,3 +6759,14 @@ SetTreasureChestState::
 	xor  a                                           ; $6968: $af
 	ld   [wGameSubstate], a                                  ; $6969: $ea $a1 $c2
 	ret                                              ; $696c: $c9
+
+
+if def(VWF)
+
+TreasureChestBank0_8000hHook:
+	call RLEXorCopy
+
+	M_FarCall LoadRomandoTreasureInvPopup
+	ret
+
+endc

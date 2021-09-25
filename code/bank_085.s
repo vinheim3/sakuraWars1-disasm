@@ -13667,4 +13667,68 @@ EndResultsTitleMapAndTileDataHook::
 	db $29, $2a, $2b, $22, $22, $2c, $2d, $2e, $2f, $30, $22, $31, $22, $2c, $32, $31
 	db $33, $34, $35, $36, $37, $38, $22, $39, $3a, $3b, $3c, $3d, $3e, $3f, $40, $41
 
+
+EnLoadRomandoShopCurrPtsTileData::
+	ld   bc, $10
+	ld   de, $d000+$c00
+	ld   hl, .gfx
+	call MemCopy
+
+	ld   bc, $70
+	ld   de, $d000+$d00
+	ld   hl, .gfx+$10
+	call MemCopy
+
+	ld   bc, $10
+	ld   de, $d000+$c10
+	ld   hl, .gfx+$80
+	call MemCopy
+
+	ld   bc, $10
+	ld   de, $d000+$c20
+	ld   hl, .gfx+$90
+	call MemCopy
+
+	ld   bc, $70
+	ld   de, $d000+$e00
+	ld   hl, .gfx+$a0
+	call MemCopy
+
+	ld   bc, $10
+	ld   de, $d000+$c30
+	ld   hl, .gfx+$110
+	call MemCopy
+
+	M_FarCall LoadRomandoTreasureInvPopup
+	ret
+.gfx:
+	INCBIN "en_romandoShopCurrPts.2bpp"
+.end:
+
+
+LoadRomandoTreasureInvPopup::
+	ld   bc, $80*2
+	ld   de, $d000+$8a0
+	ld   hl, .gfx
+	call MemCopy
+
+	ld   bc, $70
+	ld   de, $d000+$9a0
+	ld   hl, .gfx+$100
+	call MemCopy
+
+	ld   bc, $80
+	ld   de, $d000+$a10
+	ld   hl, .gfx+$180
+	call MemCopy
+
+	ld   bc, $10
+	ld   de, $d000+$cf0
+	ld   hl, .gfx+$170
+	call MemCopy
+	ret
+
+.gfx::
+	INCBIN "en_romandoTreasureInvPopup.2bpp"
+
 endc
