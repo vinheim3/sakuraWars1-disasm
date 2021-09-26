@@ -25,7 +25,7 @@
 ; rgbgfx -o en_irisMGTitleScreenSpr.2bpp -h en_irisMGTitleScreenSpr.png
 ; rgbgfx -o en_kannaMiniGameTitleScreen.2bpp en_kannaMiniGameTitleScreen.png
 ; rgbgfx -o en_kannaMGTitleScreenSpr.2bpp -h en_kannaMGTitleScreenSpr.png
-; rgbgfx -o en_kohranMiniGameTitleScreen.2bpp en_kohranMiniGameTitleScreen.png
+; rgbgfx -o en_kohranMiniGameTitleScreen.2bpp -u -T en_kohranMiniGameTitleScreen.png
 ; rgbgfx -o en_kohranMGTitleScreenSpr.2bpp -h en_kohranMGTitleScreenSpr.png
 ; rgbgfx -o en_sakuraMGHelpScreen.2bpp -u -T en_sakuraMGHelpScreen.png
 ; rgbgfx -o en_sumireMGHelpScreen.2bpp -u -T en_sumireMGHelpScreen.png
@@ -68,7 +68,7 @@
 
 ; hook banks
 ; $ff ($13c), $fd ($3ed), $fb ($155), $a4 ($45), $8b ($19f), $85 ($4c3)
-; $6b ($30f9) -> $6a, $40, $3f, $35, $31
+; $6b ($2409), $2b ($c98), $1f () -> $6a, $40, $3f, $35, $31
 
 ; To 'day passed'
 ; New game
@@ -99,7 +99,6 @@
 
 ; Flag 2 outstanding
 ; 5:5652, 5:7407 - flag setting state
-; 9:4a56 - day/period transition
 ; script opcode $04
 
 

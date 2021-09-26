@@ -899,7 +899,7 @@ ScriptCalcCode6_CheckIfFlagSet1:
 
 ; A - script byte used for RPN func
 ScriptCalcFuncs:
-; RPC funcs start from $10, as double idx into below table
+; RPN funcs start from $10, as double idx into below table
 	sub  $10                                                        ; $45e0
 	sla  a                                                          ; $45e2
 	ld   b, $00                                                     ; $45e4

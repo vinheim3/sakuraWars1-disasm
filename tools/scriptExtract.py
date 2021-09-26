@@ -781,6 +781,8 @@ if __name__ == "__main__":
         if 0x13 <= scriptNum < 0x100:
             continue
 
+        # if scriptNum != 564: continue
+
         if scriptNum not in fullEnglishMap:
             fullEnglishMap[scriptNum] = {}
 

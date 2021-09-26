@@ -8119,10 +8119,11 @@ Palettes_KohranMiniGameTitleScreen::
 	db $ff, $7f, $00, $1b, $08, $21, $84, $0c
 	db $11, $50, $ff, $7f, $ef, $3d, $84, $0c
 	db $ff, $7f, $ef, $3d, $08, $21, $84, $0c
-	db $ff, $7f, $ef, $3d, $08, $21, $e0, $7f
 if def(VWF)
-	db $11, $50, $ef, $3d, $08, $21, $84, $0c
+	db $25, $0d, $ef, $3d, $08, $21, $ff, $03
+	db $ff, $7f, $ef, $3d, $25, $0d, $ff, $03
 else
+	db $ff, $7f, $ef, $3d, $08, $21, $e0, $7f
 	db $00, $00, $00, $00, $00, $00, $00, $00
 endc
 
@@ -8131,10 +8132,11 @@ endc
 	db $ff, $7f, $ff, $7f, $6f, $08, $32, $7f
 	db $ff, $7f, $ff, $7f, $00, $1b, $32, $7f
 	db $ff, $7f, $ff, $03, $ff, $7f, $84, $0c
-	db $ff, $7f, $ef, $3d, $08, $21, $e0, $7f
 if def(VWF)
-	db $00, $00, $00, $00, $11, $50, $00, $00
+	db $ff, $7f, $ef, $3d, $08, $21, $ff, $7f
+	db $ff, $7f, $ef, $3d, $25, $0d, $ff, $03
 else
+	db $ff, $7f, $ef, $3d, $08, $21, $e0, $7f
 	db $00, $00, $00, $00, $00, $00, $00, $00
 endc
 	db $00, $00, $00, $00, $00, $00, $00, $00
@@ -9784,7 +9786,11 @@ TileAttr_KohranMiniGameTSPracticeBox::
 	db $0d, $0d, $0d, $0d, $0d, $0d, $0d, $0d
 	db $0d, $0d, $0d, $0d, $0d, $0d, $0d, $0d
 	db $0d, $0d, $0d, $0d, $0d, $0d, $0d, $0d
+if def(VWF)
+	db $0d, $8d, $0d, $0d, $0d, $0d, $0d, $0d
+else
 	db $0d, $0d, $0d, $0d, $0d, $0d, $0d, $0d
+endc
 
 
 TileMap_KohranMiniGameTSPracticeBox::
@@ -9811,7 +9817,11 @@ TileAttr_KohranMiniGameTSDifficultyBox::
 	db $0d, $0d, $0d, $0d, $0d, $0d, $0d, $0d
 	db $0d, $0d, $0d, $0d, $0d, $0d, $0d, $0d
 	db $0d, $0d, $0d, $0d, $0d, $0d, $0d, $0d
+if def(VWF)
+	db $0d, $8d, $0d, $0d, $0d, $0d, $0d, $0d
+else
 	db $0d, $0d, $0d, $0d, $0d, $0d, $0d, $0d
+endc
 
 
 TileMap_KohranMiniGameTSDifficultyBox::

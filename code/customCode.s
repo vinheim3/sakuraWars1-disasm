@@ -1494,9 +1494,14 @@ LoadKohranMiniGameTitleScreenGfx0::
 	call RLEXorCopy                                       ; $6de7: $cd $d2 $09
 
 ; New tiles
-	ld   bc, .end-.gfx
-	ld   de, $d000+$900
-	ld   hl, .gfx
+	ld   bc, $10
+	ld   de, $d000+$8b0
+	ld   hl, $d000+$cf0
+	call MemCopy
+
+	ld   bc, .end-.gfx-$10
+	ld   de, $d000+$8d0
+	ld   hl, .gfx+$10
 	call MemCopy
 
 ; Original code pt. 2
@@ -1519,15 +1524,30 @@ LoadKohranMiniGameTitleScreenGfxSpr::
 	call RLEXorCopy                                       ; $6dbc: $cd $d2 $09
 
 ; Edits
-	ld   b, $10
-	ld   hl, $d000+$2e0
-:	ld   a, [hl]
-	and  $fc
-	or   $01
-	ld   [hl+], a
-	ld   a, [hl]
-	or   $03
-	ld   [hl+], a
+	xor  a
+	ld   [$d000+$25b], a
+	ld   [$d000+$25d], a
+	ld   [$d000+$25f], a
+
+	ld   a, $3e
+	ld   [$d000+$273], a
+	ld   a, $38
+	ld   [$d000+$275], a
+	ld   a, $30
+	ld   [$d000+$277], a
+	ld   a, $10
+	ld   [$d000+$279], a
+
+	ld   a, $0c
+	ld   [$d000+$30e], a
+	xor  a
+	ld   [$d000+$30f], a
+	ld   a, $08
+	ld   [$d000+$310], a
+	xor  a
+	ld   b, 13
+	ld   hl, $d000+$311
+:	ld   [hl+], a
 	dec  b
 	jr   nz, :-
 
@@ -1535,13 +1555,6 @@ LoadKohranMiniGameTitleScreenGfxSpr::
 	ld   de, $d000+$3e0
 	ld   hl, .gfx
 	call MemCopy
-
-	ld   a, [$d000+$1f0+2]
-	and  $fc
-	ld   [$d000+$1f0+2], a
-	ld   a, [$d000+$1f0+3]
-	and  $fc
-	ld   [$d000+$1f0+3], a
 
 ; Original code pt. 2
 	ld   c, $80                                      ; $6dbf: $0e $80
@@ -1600,11 +1613,6 @@ TileMap_SumireMiniGameHelpScreen::
 	db $28, $29, $2a, $2b, $2c, $2d, $2e, $2f, $30, $31, $32, $33, $34, $35, $36, $37, $38, $39, $3a, $3b
 	db $3c, $3d, $3e, $94, $3f, $40, $94, $41, $42, $43, $44, $45, $46, $47, $48, $49, $4a, $4b, $4c, $4d
 	db $4e, $4e, $4e, $4e, $4e, $4e, $4e, $4e, $4e, $4e, $4e, $4e, $4e, $4e, $4e, $4e, $4e, $4e, $4e, $4e
-
-
-Gfx_SumireMiniGameHelpScreen::
-	INCBIN "en_sumireMGHelpScreen.2bpp"
-.end::
 
 
 TileMap_MariaMiniGameHelpScreen::
