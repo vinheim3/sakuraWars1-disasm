@@ -7504,6 +7504,9 @@ Call_09c_614c:
 	nop                                              ; $614c: $00
 	rst  $30                                         ; $614d: $f7
 	nop                                              ; $614e: $00
+
+
+TileDatas_YuriPortraits::
 	ldh  a, [rIE]                                    ; $614f: $f0 $ff
 	ldh  [rIE], a                                    ; $6151: $e0 $ff
 	pop  bc                                          ; $6153: $c1

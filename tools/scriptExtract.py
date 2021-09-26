@@ -576,86 +576,92 @@ class ScriptExtractor:
             extra_comps = []
             totalBytes += 1
 
-            for param in params:
-                if param == 'b':
-                    byte = self.rom[self.start+address+offset]
-                    offset += 1
-                    param_comps.append(f"${byte:02x}")
-                    totalBytes += 1
-                elif param == 'r':
-                    offset += 2
-                    totalBytes += 2
-                    param_comps.append(f".ref_{details['ref']:x}")
-                elif param == 'R':
-                    # exit early
-                    if param_comps:
-                        comps.append(f"\t{name} {', '.join(param_comps)}")
-                    else:
-                        comps.append(f"\t{name}")
-                    comps.extend(details['rpn'])
-                    totalBytes += details['rpnLen']
-                    break
-                elif param == 't':
-                    text_comps = []
-                    param_comps.append(f"; {address+offset}")
+            if self.scriptNum == 633 and address == 2350:
+                offset += 2
+                param_comps.append(f"$0d")
+                param_comps.append(f"$04")
+                totalBytes += 2
+            else:
+                for param in params:
+                    if param == 'b':
+                        byte = self.rom[self.start+address+offset]
+                        offset += 1
+                        param_comps.append(f"${byte:02x}")
+                        totalBytes += 1
+                    elif param == 'r':
+                        offset += 2
+                        totalBytes += 2
+                        param_comps.append(f".ref_{details['ref']:x}")
+                    elif param == 'R':
+                        # exit early
+                        if param_comps:
+                            comps.append(f"\t{name} {', '.join(param_comps)}")
+                        else:
+                            comps.append(f"\t{name}")
+                        comps.extend(details['rpn'])
+                        totalBytes += details['rpnLen']
+                        break
+                    elif param == 't':
+                        text_comps = []
+                        param_comps.append(f"; {address+offset}")
 
-                    if address + offset in self.englishMap:
-                        english = self.englishMap[address+offset]
-                        limit = 112
-                        if name == 'ScriptOpt_TimedQuestion':
-                            limit = 128
-                        textboxes = self.convertEnglish(english, limit=limit)
-                        assert len(textboxes) == 1
-                        if 0x0d in textboxes[0]:
-                            print(self.scriptNum, address+offset)
+                        if address + offset in self.englishMap:
+                            english = self.englishMap[address+offset]
+                            limit = 112
+                            if name == 'ScriptOpt_TimedQuestion':
+                                limit = 128
+                            textboxes = self.convertEnglish(english, limit=limit)
+                            assert len(textboxes) == 1
+                            if 0x0d in textboxes[0]:
+                                print(self.scriptNum, address+offset)
 
-                        for line in self.englishMap[address+offset].split('\n'):
-                            comps.append(f"; {line}")
-                        
-                        for i, textbox in enumerate(textboxes):
-                            paramStr = ','.join(f"${kanji:02x}" for kanji in textbox)
-                            extra_comps.append(f"\t\tTEXT {paramStr}")
-                            totalBytes += len(textbox) + 1
+                            for line in self.englishMap[address+offset].split('\n'):
+                                comps.append(f"; {line}")
+                            
+                            for i, textbox in enumerate(textboxes):
+                                paramStr = ','.join(f"${kanji:02x}" for kanji in textbox)
+                                extra_comps.append(f"\t\tTEXT {paramStr}")
+                                totalBytes += len(textbox) + 1
 
-                        while True:
-                            byte = self.rom[self.start+address+offset]
-                            offset += 1
-                            if byte == 0:
-                                break
-                            if byte <= 8 or byte == 0x0a:
+                            while True:
+                                byte = self.rom[self.start+address+offset]
                                 offset += 1
-                    else:
-                        while True:
-                            byte = self.rom[self.start+address+offset]
+                                if byte == 0:
+                                    break
+                                if byte <= 8 or byte == 0x0a:
+                                    offset += 1
+                        else:
+                            while True:
+                                byte = self.rom[self.start+address+offset]
+                                offset += 1
+                                totalBytes += 1
+                                if byte == 0:
+                                    break
+
+                                if byte < 8:
+                                    b2 = self.rom[self.start+address+offset]
+                                    offset += 1
+                                    totalBytes += 1
+                                    text_comps.append(f"${byte:1x}{b2:02x}")
+                                elif byte in (0x08, 0x0a):
+                                    b2 = self.rom[self.start+address+offset]
+                                    offset += 1
+                                    totalBytes += 1
+                                    text_comps.append(f"${byte:02x}")
+                                    text_comps.append(f"${b2:02x}")
+                                else:
+                                    text_comps.append(f"${byte:02x}")
+                            extra_comps.append("\t\tTEXT " + ", ".join(text_comps))
+
+                        if 'imedQuestion' in name:
+                            nb = self.rom[self.start+address+offset]
                             offset += 1
                             totalBytes += 1
-                            if byte == 0:
-                                break
+                            extra_comps.append(f"\t\tdb ${nb:02x}")
 
-                            if byte < 8:
-                                b2 = self.rom[self.start+address+offset]
-                                offset += 1
-                                totalBytes += 1
-                                text_comps.append(f"${byte:1x}{b2:02x}")
-                            elif byte in (0x08, 0x0a):
-                                b2 = self.rom[self.start+address+offset]
-                                offset += 1
-                                totalBytes += 1
-                                text_comps.append(f"${byte:02x}")
-                                text_comps.append(f"${b2:02x}")
-                            else:
-                                text_comps.append(f"${byte:02x}")
-                        extra_comps.append("\t\tTEXT " + ", ".join(text_comps))
-
-                    if 'imedQuestion' in name:
-                        nb = self.rom[self.start+address+offset]
-                        offset += 1
-                        totalBytes += 1
-                        extra_comps.append(f"\t\tdb ${nb:02x}")
-
-                    # param_comps.append(f"; {address+1:02x}")
-                else:
-                    raise Exception(f"param: {param}")
+                        # param_comps.append(f"; {address+1:02x}")
+                    else:
+                        raise Exception(f"param: {param}")
 
             if param == 'R':
                 continue
@@ -680,7 +686,18 @@ class ScriptExtractor:
             self.instructions = {}
 
         self.genRefs(getRefs=False)
-        return self.genComps()
+        # Continue prompts where omitted
+        if self.scriptNum == 330:
+            self.instructions[493] = self.simpleCodes[0x0a]
+        if self.scriptNum == 500:
+            self.instructions[480] = self.simpleCodes[0x0a]
+
+        comps, totalBytes = self.genComps()
+
+        if self.scriptNum in (330, 500):
+            totalBytes += 1
+
+        return comps, totalBytes
 
 
 if __name__ == "__main__":

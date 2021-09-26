@@ -2574,7 +2574,7 @@ jr_00a_562c:
 
 
 CharacterPortraitTileDatas:
-	AddrBank Data_a2_4813
+	AddrBank TileDatas_Player
 	db $28, $55, $95
 	db $30, $63, $93
 	db $35, $67, $98
@@ -2587,7 +2587,7 @@ CharacterPortraitTileDatas:
 	db $f0, $73, $93
 	db $1a, $49, $9b
 	db $82, $75, $9f
-	db $4f, $61, $9c
+	AddrBank TileDatas_YuriPortraits
 	db $82, $78, $9f
 	db $4f, $65, $9c
 	db $4f, $69, $9c

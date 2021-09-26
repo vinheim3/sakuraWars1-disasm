@@ -1201,6 +1201,26 @@
                         }
                     },
 
+                    loadYuriPortraits: function() {
+                        let portraitSrc = bankConv(0xa, 0x564c) + 3 * 0x0d;
+                        let bank = this.uint8view[portraitSrc+2];
+                        let addr = this.wordIn(portraitSrc);
+
+                        for (let i = 0; i < 5; i++) {
+                            this.screens.push({
+                                name: `Yuri ${i}`,
+                                sources: [
+                                    ['simpleCopy', bank, addr, 0x9000, 0x400],
+                                    ['screenCopy', 0x91, 0x5bd0+i*28, 0x9800, 'rom', 'memory', 4, 6],
+                                ],
+                                rowsShown: 6,
+                                canvasHeight: 6 * 8,
+                                colsShown: 4,
+                                canvasWidth: 4 * 8,
+                            })
+                        }
+                    },
+
                     loadGameResultTitles: function() {
                         let addresses = [];
                         for (let i = 0; i < 15; i++) {
@@ -1266,6 +1286,7 @@
                                 //this.loadPortraits();
                                 //this.loadScenery();
                                 //this.loadGameResultTitles();
+                                this.loadYuriPortraits();
 
                                 setTimeout(this.loadScreens, 5);
                             });

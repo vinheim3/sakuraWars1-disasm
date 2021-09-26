@@ -1826,7 +1826,7 @@ jr_0a2_47da:
 	ld   bc, $0000                                   ; $4810: $01 $00 $00
 
 
-Data_a2_4813::
+TileDatas_Player::
 	rst  $38                                         ; $4813: $ff
 	nop                                              ; $4814: $00
 	rst  $38                                         ; $4815: $ff
