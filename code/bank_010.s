@@ -7575,15 +7575,9 @@ SumireMiniGameTitleScreenSubstate0:
 	jr   z, jr_010_6f98                              ; $6f77: $28 $1f
 
 	ld   hl, $011c                                   ; $6f79: $21 $1c $01
-	push af                                          ; $6f7c: $f5
-	ld   a, $d7                                      ; $6f7d: $3e $d7
-	ld   [wFarCallAddr], a                                  ; $6f7f: $ea $98 $c2
-	ld   a, $71                                      ; $6f82: $3e $71
-	ld   [wFarCallAddr+1], a                                  ; $6f84: $ea $99 $c2
-	ld   a, $0c                                      ; $6f87: $3e $0c
-	ld   [wFarCallBank], a                                  ; $6f89: $ea $9a $c2
-	pop  af                                          ; $6f8c: $f1
-	call FarCall                                       ; $6f8d: $cd $62 $09
+
+	M_FarCall CheckIfNextFlagSet1
+
 	or   a                                           ; $6f90: $b7
 	jr   z, jr_010_6f98                              ; $6f91: $28 $05
 

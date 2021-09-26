@@ -983,15 +983,9 @@ jr_00a_44c3:
 
 jr_00a_44d4:
 	ld   hl, $0190                                   ; $44d4: $21 $90 $01
-	push af                                          ; $44d7: $f5
-	ld   a, $d7                                      ; $44d8: $3e $d7
-	ld   [wFarCallAddr], a                                  ; $44da: $ea $98 $c2
-	ld   a, $71                                      ; $44dd: $3e $71
-	ld   [wFarCallAddr+1], a                                  ; $44df: $ea $99 $c2
-	ld   a, $0c                                      ; $44e2: $3e $0c
-	ld   [wFarCallBank], a                                  ; $44e4: $ea $9a $c2
-	pop  af                                          ; $44e7: $f1
-	call FarCall                                       ; $44e8: $cd $62 $09
+
+	M_FarCall CheckIfNextFlagSet1
+
 	ld   hl, $00d3                                   ; $44eb: $21 $d3 $00
 	push af                                          ; $44ee: $f5
 	ld   a, $37                                      ; $44ef: $3e $37
@@ -1003,15 +997,9 @@ jr_00a_44d4:
 	pop  af                                          ; $44fe: $f1
 	call FarCall                                       ; $44ff: $cd $62 $09
 	ld   hl, $01dc                                   ; $4502: $21 $dc $01
-	push af                                          ; $4505: $f5
-	ld   a, $d7                                      ; $4506: $3e $d7
-	ld   [wFarCallAddr], a                                  ; $4508: $ea $98 $c2
-	ld   a, $71                                      ; $450b: $3e $71
-	ld   [wFarCallAddr+1], a                                  ; $450d: $ea $99 $c2
-	ld   a, $0c                                      ; $4510: $3e $0c
-	ld   [wFarCallBank], a                                  ; $4512: $ea $9a $c2
-	pop  af                                          ; $4515: $f1
-	call FarCall                                       ; $4516: $cd $62 $09
+
+	M_FarCall CheckIfNextFlagSet1
+
 	ld   hl, $00f0                                   ; $4519: $21 $f0 $00
 	push af                                          ; $451c: $f5
 	ld   a, $37                                      ; $451d: $3e $37
@@ -1023,15 +1011,9 @@ jr_00a_44d4:
 	pop  af                                          ; $452c: $f1
 	call FarCall                                       ; $452d: $cd $62 $09
 	ld   hl, $01e8                                   ; $4530: $21 $e8 $01
-	push af                                          ; $4533: $f5
-	ld   a, $d7                                      ; $4534: $3e $d7
-	ld   [wFarCallAddr], a                                  ; $4536: $ea $98 $c2
-	ld   a, $71                                      ; $4539: $3e $71
-	ld   [wFarCallAddr+1], a                                  ; $453b: $ea $99 $c2
-	ld   a, $0c                                      ; $453e: $3e $0c
-	ld   [wFarCallBank], a                                  ; $4540: $ea $9a $c2
-	pop  af                                          ; $4543: $f1
-	call FarCall                                       ; $4544: $cd $62 $09
+
+	M_FarCall CheckIfNextFlagSet1
+
 	ld   hl, $00f1                                   ; $4547: $21 $f1 $00
 	push af                                          ; $454a: $f5
 	ld   a, $37                                      ; $454b: $3e $37
@@ -1043,15 +1025,9 @@ jr_00a_44d4:
 	pop  af                                          ; $455a: $f1
 	call FarCall                                       ; $455b: $cd $62 $09
 	ld   hl, $01ec                                   ; $455e: $21 $ec $01
-	push af                                          ; $4561: $f5
-	ld   a, $d7                                      ; $4562: $3e $d7
-	ld   [wFarCallAddr], a                                  ; $4564: $ea $98 $c2
-	ld   a, $71                                      ; $4567: $3e $71
-	ld   [wFarCallAddr+1], a                                  ; $4569: $ea $99 $c2
-	ld   a, $0c                                      ; $456c: $3e $0c
-	ld   [wFarCallBank], a                                  ; $456e: $ea $9a $c2
-	pop  af                                          ; $4571: $f1
-	call FarCall                                       ; $4572: $cd $62 $09
+
+	M_FarCall CheckIfNextFlagSet1
+
 	ld   hl, $00f2                                   ; $4575: $21 $f2 $00
 	push af                                          ; $4578: $f5
 	ld   a, $37                                      ; $4579: $3e $37
@@ -1063,15 +1039,9 @@ jr_00a_44d4:
 	pop  af                                          ; $4588: $f1
 	call FarCall                                       ; $4589: $cd $62 $09
 	ld   hl, $01f0                                   ; $458c: $21 $f0 $01
-	push af                                          ; $458f: $f5
-	ld   a, $d7                                      ; $4590: $3e $d7
-	ld   [wFarCallAddr], a                                  ; $4592: $ea $98 $c2
-	ld   a, $71                                      ; $4595: $3e $71
-	ld   [wFarCallAddr+1], a                                  ; $4597: $ea $99 $c2
-	ld   a, $0c                                      ; $459a: $3e $0c
-	ld   [wFarCallBank], a                                  ; $459c: $ea $9a $c2
-	pop  af                                          ; $459f: $f1
-	call FarCall                                       ; $45a0: $cd $62 $09
+
+	M_FarCall CheckIfNextFlagSet1
+
 	ld   hl, $00f3                                   ; $45a3: $21 $f3 $00
 	push af                                          ; $45a6: $f5
 	ld   a, $37                                      ; $45a7: $3e $37
@@ -1083,15 +1053,9 @@ jr_00a_44d4:
 	pop  af                                          ; $45b6: $f1
 	call FarCall                                       ; $45b7: $cd $62 $09
 	ld   hl, $01f4                                   ; $45ba: $21 $f4 $01
-	push af                                          ; $45bd: $f5
-	ld   a, $d7                                      ; $45be: $3e $d7
-	ld   [wFarCallAddr], a                                  ; $45c0: $ea $98 $c2
-	ld   a, $71                                      ; $45c3: $3e $71
-	ld   [wFarCallAddr+1], a                                  ; $45c5: $ea $99 $c2
-	ld   a, $0c                                      ; $45c8: $3e $0c
-	ld   [wFarCallBank], a                                  ; $45ca: $ea $9a $c2
-	pop  af                                          ; $45cd: $f1
-	call FarCall                                       ; $45ce: $cd $62 $09
+
+	M_FarCall CheckIfNextFlagSet1
+
 	ld   hl, $00f4                                   ; $45d1: $21 $f4 $00
 	push af                                          ; $45d4: $f5
 	ld   a, $37                                      ; $45d5: $3e $37
@@ -1103,15 +1067,9 @@ jr_00a_44d4:
 	pop  af                                          ; $45e4: $f1
 	call FarCall                                       ; $45e5: $cd $62 $09
 	ld   hl, $01f8                                   ; $45e8: $21 $f8 $01
-	push af                                          ; $45eb: $f5
-	ld   a, $d7                                      ; $45ec: $3e $d7
-	ld   [wFarCallAddr], a                                  ; $45ee: $ea $98 $c2
-	ld   a, $71                                      ; $45f1: $3e $71
-	ld   [wFarCallAddr+1], a                                  ; $45f3: $ea $99 $c2
-	ld   a, $0c                                      ; $45f6: $3e $0c
-	ld   [wFarCallBank], a                                  ; $45f8: $ea $9a $c2
-	pop  af                                          ; $45fb: $f1
-	call FarCall                                       ; $45fc: $cd $62 $09
+
+	M_FarCall CheckIfNextFlagSet1
+
 	ld   hl, $00f5                                   ; $45ff: $21 $f5 $00
 	push af                                          ; $4602: $f5
 	ld   a, $37                                      ; $4603: $3e $37

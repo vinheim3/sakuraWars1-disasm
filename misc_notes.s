@@ -94,8 +94,7 @@
 
 ; Flag 1 outstanding
 ; search for CheckIfNextFlagSet1
-; just bank $0a done
-; script opcode $08
+; Call_004_42df
 
 ; Flag 2 outstanding
 ; 5:5652, 5:7407 - flag setting state

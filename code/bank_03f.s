@@ -32,15 +32,9 @@ KannaMiniGameTitleScreenSubstate0:
 	jr   z, jr_03f_4049                              ; $4028: $28 $1f
 
 	ld   hl, $012c                                   ; $402a: $21 $2c $01
-	push af                                          ; $402d: $f5
-	ld   a, $d7                                      ; $402e: $3e $d7
-	ld   [wFarCallAddr], a                                  ; $4030: $ea $98 $c2
-	ld   a, $71                                      ; $4033: $3e $71
-	ld   [wFarCallAddr+1], a                                  ; $4035: $ea $99 $c2
-	ld   a, $0c                                      ; $4038: $3e $0c
-	ld   [wFarCallBank], a                                  ; $403a: $ea $9a $c2
-	pop  af                                          ; $403d: $f1
-	call FarCall                                       ; $403e: $cd $62 $09
+
+	M_FarCall CheckIfNextFlagSet1
+
 	or   a                                           ; $4041: $b7
 	jr   z, jr_03f_4049                              ; $4042: $28 $05
 

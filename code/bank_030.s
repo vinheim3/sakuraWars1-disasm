@@ -11204,15 +11204,8 @@ Call_030_7d50:
 	ld   a, [hl+]                                    ; $7d58: $2a
 	ld   h, [hl]                                     ; $7d59: $66
 	ld   l, a                                        ; $7d5a: $6f
-	push af                                          ; $7d5b: $f5
-	ld   a, $d7                                      ; $7d5c: $3e $d7
-	ld   [wFarCallAddr], a                                  ; $7d5e: $ea $98 $c2
-	ld   a, $71                                      ; $7d61: $3e $71
-	ld   [wFarCallAddr+1], a                                  ; $7d63: $ea $99 $c2
-	ld   a, $0c                                      ; $7d66: $3e $0c
-	ld   [wFarCallBank], a                                  ; $7d68: $ea $9a $c2
-	pop  af                                          ; $7d6b: $f1
-	call FarCall                                       ; $7d6c: $cd $62 $09
+
+	M_FarCall CheckIfNextFlagSet1
 	ret                                              ; $7d6f: $c9
 
 

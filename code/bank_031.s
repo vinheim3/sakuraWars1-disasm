@@ -2414,15 +2414,9 @@ jr_031_4f24:
 	push hl                                          ; $4f28: $e5
 	ld   l, b                                        ; $4f29: $68
 	ld   h, a                                        ; $4f2a: $67
-	push af                                          ; $4f2b: $f5
-	ld   a, $d7                                      ; $4f2c: $3e $d7
-	ld   [wFarCallAddr], a                                  ; $4f2e: $ea $98 $c2
-	ld   a, $71                                      ; $4f31: $3e $71
-	ld   [wFarCallAddr+1], a                                  ; $4f33: $ea $99 $c2
-	ld   a, $0c                                      ; $4f36: $3e $0c
-	ld   [wFarCallBank], a                                  ; $4f38: $ea $9a $c2
-	pop  af                                          ; $4f3b: $f1
-	call FarCall                                       ; $4f3c: $cd $62 $09
+
+	M_FarCall CheckIfNextFlagSet1
+
 	pop  hl                                          ; $4f3f: $e1
 	or   a                                           ; $4f40: $b7
 	jr   nz, jr_031_4f51                             ; $4f41: $20 $0e
@@ -3895,15 +3889,8 @@ Call_031_598b:
 	ld   a, [hl+]                                    ; $5993: $2a
 	ld   h, [hl]                                     ; $5994: $66
 	ld   l, a                                        ; $5995: $6f
-	push af                                          ; $5996: $f5
-	ld   a, $d7                                      ; $5997: $3e $d7
-	ld   [wFarCallAddr], a                                  ; $5999: $ea $98 $c2
-	ld   a, $71                                      ; $599c: $3e $71
-	ld   [wFarCallAddr+1], a                                  ; $599e: $ea $99 $c2
-	ld   a, $0c                                      ; $59a1: $3e $0c
-	ld   [wFarCallBank], a                                  ; $59a3: $ea $9a $c2
-	pop  af                                          ; $59a6: $f1
-	call FarCall                                       ; $59a7: $cd $62 $09
+
+	M_FarCall CheckIfNextFlagSet1
 	ret                                              ; $59aa: $c9
 
 

@@ -571,15 +571,8 @@ Call_00c_43c4:
 	ld   b, $01                                      ; $43d9: $06 $01
 
 jr_00c_43db:
-	push af                                          ; $43db: $f5
-	ld   a, $d7                                      ; $43dc: $3e $d7
-	ld   [wFarCallAddr], a                                  ; $43de: $ea $98 $c2
-	ld   a, $71                                      ; $43e1: $3e $71
-	ld   [wFarCallAddr+1], a                                  ; $43e3: $ea $99 $c2
-	ld   a, $0c                                      ; $43e6: $3e $0c
-	ld   [wFarCallBank], a                                  ; $43e8: $ea $9a $c2
-	pop  af                                          ; $43eb: $f1
-	call FarCall                                       ; $43ec: $cd $62 $09
+	M_FarCall CheckIfNextFlagSet1
+
 	or   a                                           ; $43ef: $b7
 	jr   z, jr_00c_43f6                              ; $43f0: $28 $04
 
@@ -7890,7 +7883,7 @@ GameState46_PreTitleScreen::
 	ld   [$b0ab], a                                  ; $75f5: $ea $ab $b0
 	xor  a                                           ; $75f8: $af
 	ld   [$b0aa], a                                  ; $75f9: $ea $aa $b0
-	ld   h, $46                                      ; $75fc: $26 $46
+	ld   h, GS_PRE_TITLE_SCREEN                                      ; $75fc: $26 $46
 	ld   l, $00                                      ; $75fe: $2e $00
 	ld   bc, $0003                                   ; $7600: $01 $03 $00
 	xor  a                                           ; $7603: $af

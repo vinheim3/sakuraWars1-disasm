@@ -1403,4 +1403,208 @@ Gfx_SumireMiniGameHelpScreen::
 	INCBIN "en_sumireMGHelpScreen.2bpp"
 .end::
 
+
+_HackHook::
+	ld   hl, $20
+	ld   a, $ff
+	M_FarCall SetOrUnsetFlag1
+	ld   hl, $21
+	ld   a, $ff
+	M_FarCall SetOrUnsetFlag1
+	ld   hl, $22
+	ld   a, $ff
+	M_FarCall SetOrUnsetFlag1
+	ld   hl, $23
+	ld   a, $ff
+	M_FarCall SetOrUnsetFlag1
+	ld   hl, $24
+	ld   a, $ff
+	M_FarCall SetOrUnsetFlag1
+	ld   hl, $25
+	ld   a, $ff
+	M_FarCall SetOrUnsetFlag1
+	ld   hl, $26
+	ld   a, $ff
+	M_FarCall SetOrUnsetFlag1
+	ld   hl, $27
+	ld   a, $ff
+	M_FarCall SetOrUnsetFlag1
+	ld   hl, $28
+	ld   a, $ff
+	M_FarCall SetOrUnsetFlag1
+	ld   hl, $29
+	ld   a, $ff
+	M_FarCall SetOrUnsetFlag1
+	ld   hl, $2a
+	ld   a, $ff
+	M_FarCall SetOrUnsetFlag1
+	ld   hl, $2b
+	ld   a, $ff
+	M_FarCall SetOrUnsetFlag1
+	ld   hl, $0204
+	ld   a, $ff
+	M_FarCall SetOrUnsetFlag1
+	ld   hl, $0188
+	ld   a, $ff
+	M_FarCall SetOrUnsetFlag1
+	ld   hl, $01e8
+	ld   a, $ff
+	M_FarCall SetOrUnsetFlag1
+	ld   hl, $01ec
+	ld   a, $ff
+	M_FarCall SetOrUnsetFlag1
+	ld   hl, $01f0
+	ld   a, $ff
+	M_FarCall SetOrUnsetFlag1
+	ld   hl, $01f4
+	ld   a, $ff
+	M_FarCall SetOrUnsetFlag1
+	ld   hl, $01f8
+	ld   a, $ff
+	M_FarCall SetOrUnsetFlag1
+	ld   hl, $018c
+	ld   a, $ff
+	M_FarCall SetOrUnsetFlag1
+	ld   hl, $0148
+	ld   a, $ff
+	M_FarCall SetOrUnsetFlag1
+	ld   hl, $014c
+	ld   a, $ff
+	M_FarCall SetOrUnsetFlag1
+	ld   hl, $0150
+	ld   a, $ff
+	M_FarCall SetOrUnsetFlag1
+	ld   hl, $0154
+	ld   a, $ff
+	M_FarCall SetOrUnsetFlag1
+	ld   hl, $0158
+	ld   a, $ff
+	M_FarCall SetOrUnsetFlag1
+	ld   hl, $015c
+	ld   a, $ff
+	M_FarCall SetOrUnsetFlag1
+	ld   hl, $0118
+	ld   a, $ff
+	M_FarCall SetOrUnsetFlag1
+	ld   hl, $011c
+	ld   a, $ff
+	M_FarCall SetOrUnsetFlag1
+	ld   hl, $0120
+	ld   a, $ff
+	M_FarCall SetOrUnsetFlag1
+	ld   hl, $0124
+	ld   a, $ff
+	M_FarCall SetOrUnsetFlag1
+	ld   hl, $0128
+	ld   a, $ff
+	M_FarCall SetOrUnsetFlag1
+	ld   hl, $012c
+	ld   a, $ff
+	M_FarCall SetOrUnsetFlag1
+	ld   hl, $01ac
+	ld   a, $ff
+	M_FarCall SetOrUnsetFlag1
+	ld   hl, $01b0
+	ld   a, $ff
+	M_FarCall SetOrUnsetFlag1
+	ld   hl, $0160
+	ld   a, $ff
+	M_FarCall SetOrUnsetFlag1
+	ld   hl, $0161
+	ld   a, $ff
+	M_FarCall SetOrUnsetFlag1
+	ld   hl, $0162
+	ld   a, $ff
+	M_FarCall SetOrUnsetFlag1
+	ld   hl, $0163
+	ld   a, $ff
+	M_FarCall SetOrUnsetFlag1
+	ld   hl, $0164
+	ld   a, $ff
+	M_FarCall SetOrUnsetFlag1
+	ld   hl, $0165
+	ld   a, $ff
+	M_FarCall SetOrUnsetFlag1
+	ld   hl, $0166
+	ld   a, $ff
+	M_FarCall SetOrUnsetFlag1
+	ld   hl, $0167
+	ld   a, $ff
+	M_FarCall SetOrUnsetFlag1
+	ld   hl, $0168
+	ld   a, $ff
+	M_FarCall SetOrUnsetFlag1
+	ld   hl, $0169
+	ld   a, $ff
+	M_FarCall SetOrUnsetFlag1
+	ld   hl, $016a
+	ld   a, $ff
+	M_FarCall SetOrUnsetFlag1
+	ld   hl, $016b
+	ld   a, $ff
+	M_FarCall SetOrUnsetFlag1
+	ld   hl, $016c
+	ld   a, $ff
+	M_FarCall SetOrUnsetFlag1
+	ld   hl, $016d
+	ld   a, $ff
+	M_FarCall SetOrUnsetFlag1
+	ld   hl, $016e
+	ld   a, $ff
+	M_FarCall SetOrUnsetFlag1
+	ld   hl, $016f
+	ld   a, $ff
+	M_FarCall SetOrUnsetFlag1
+	ld   hl, $0170
+	ld   a, $ff
+	M_FarCall SetOrUnsetFlag1
+	ld   hl, $0171
+	ld   a, $ff
+	M_FarCall SetOrUnsetFlag1
+	ld   hl, $0172
+	ld   a, $ff
+	M_FarCall SetOrUnsetFlag1
+	ld   hl, $0173
+	ld   a, $ff
+	M_FarCall SetOrUnsetFlag1
+	ld   hl, $0174
+	ld   a, $ff
+	M_FarCall SetOrUnsetFlag1
+	ld   hl, $0175
+	ld   a, $ff
+	M_FarCall SetOrUnsetFlag1
+	ld   hl, $0176
+	ld   a, $ff
+	M_FarCall SetOrUnsetFlag1
+	ld   hl, $0177
+	ld   a, $ff
+	M_FarCall SetOrUnsetFlag1
+	ld   hl, $0178
+	ld   a, $ff
+	M_FarCall SetOrUnsetFlag1
+	ld   hl, $0179
+	ld   a, $ff
+	M_FarCall SetOrUnsetFlag1
+	ld   hl, $017a
+	ld   a, $ff
+	M_FarCall SetOrUnsetFlag1
+	ld   hl, $017b
+	ld   a, $ff
+	M_FarCall SetOrUnsetFlag1
+	ld   hl, $017c
+	ld   a, $ff
+	M_FarCall SetOrUnsetFlag1
+	ld   hl, $017d
+	ld   a, $ff
+	M_FarCall SetOrUnsetFlag1
+	ld   hl, $017e
+	ld   a, $ff
+	M_FarCall SetOrUnsetFlag1
+	ld   hl, $017f
+	ld   a, $ff
+	M_FarCall SetOrUnsetFlag1
+
+	ld   a, [wVisitedTitleScreen]
+	ret
+
 endc

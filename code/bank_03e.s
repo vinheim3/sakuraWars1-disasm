@@ -1951,15 +1951,8 @@ jr_03e_4ca3:
 	ld   hl, $018c                                   ; $4cbd: $21 $8c $01
 
 jr_03e_4cc0:
-	push af                                          ; $4cc0: $f5
-	ld   a, $d7                                      ; $4cc1: $3e $d7
-	ld   [wFarCallAddr], a                                  ; $4cc3: $ea $98 $c2
-	ld   a, $71                                      ; $4cc6: $3e $71
-	ld   [wFarCallAddr+1], a                                  ; $4cc8: $ea $99 $c2
-	ld   a, $0c                                      ; $4ccb: $3e $0c
-	ld   [wFarCallBank], a                                  ; $4ccd: $ea $9a $c2
-	pop  af                                          ; $4cd0: $f1
-	call FarCall                                       ; $4cd1: $cd $62 $09
+	M_FarCall CheckIfNextFlagSet1
+
 	or   a                                           ; $4cd4: $b7
 	jr   nz, jr_03e_4cdb                             ; $4cd5: $20 $04
 
@@ -7139,15 +7132,9 @@ KohranMiniGameTitleScreenSubstate0:
 	jr   z, jr_03e_6d54                              ; $6d33: $28 $1f
 
 	ld   hl, $0128                                   ; $6d35: $21 $28 $01
-	push af                                          ; $6d38: $f5
-	ld   a, $d7                                      ; $6d39: $3e $d7
-	ld   [wFarCallAddr], a                                  ; $6d3b: $ea $98 $c2
-	ld   a, $71                                      ; $6d3e: $3e $71
-	ld   [wFarCallAddr+1], a                                  ; $6d40: $ea $99 $c2
-	ld   a, $0c                                      ; $6d43: $3e $0c
-	ld   [wFarCallBank], a                                  ; $6d45: $ea $9a $c2
-	pop  af                                          ; $6d48: $f1
-	call FarCall                                       ; $6d49: $cd $62 $09
+
+	M_FarCall CheckIfNextFlagSet1
+
 	or   a                                           ; $6d4c: $b7
 	jr   z, jr_03e_6d54                              ; $6d4d: $28 $05
 
@@ -7981,15 +7968,9 @@ IrisMiniGameTitleScreenSubstate1:
 	jr   z, jr_03e_735d                              ; $733c: $28 $1f
 
 	ld   hl, $0124                                   ; $733e: $21 $24 $01
-	push af                                          ; $7341: $f5
-	ld   a, $d7                                      ; $7342: $3e $d7
-	ld   [wFarCallAddr], a                                  ; $7344: $ea $98 $c2
-	ld   a, $71                                      ; $7347: $3e $71
-	ld   [wFarCallAddr+1], a                                  ; $7349: $ea $99 $c2
-	ld   a, $0c                                      ; $734c: $3e $0c
-	ld   [wFarCallBank], a                                  ; $734e: $ea $9a $c2
-	pop  af                                          ; $7351: $f1
-	call FarCall                                       ; $7352: $cd $62 $09
+
+	M_FarCall CheckIfNextFlagSet1
+
 	or   a                                           ; $7355: $b7
 	jr   z, jr_03e_735d                              ; $7356: $28 $05
 
