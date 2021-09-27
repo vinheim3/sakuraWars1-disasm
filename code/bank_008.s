@@ -6421,7 +6421,7 @@ ScriptOpcode24_Credits_Init:
 	call GetNextScriptOpcodeToProcess                               ; $6bb1: $cd $70 $42
 	ld   [hl-], a                                    ; $6bb4: $32
 
-	M_FarCall Func_04_6fbb
+	M_FarCall GivePostGameRewards
 	
 	pop  hl                                          ; $6bc9: $e1
 

@@ -279,7 +279,20 @@ wMiniGamesReturnSubstate:: ; $c69a
     db
 
 wc69b:
-    ds $8af-$69b
+    ds $ae-$9b
+
+wTVAdapterBarcodeLengths:: ; $c6ae
+    ds 8
+.end::
+
+wTVAdapterRewardsStruct:: ; $c6b6
+    ds $3f
+
+wTVAdapterRewardsCheckByte:: ; $c6f5
+    db
+
+wc6f6:
+    ds $8af-$6f6
 
 wSaveScreenPopUpBottomRowSpriteSpecIdxUsed:: ; $c8af
     db
@@ -759,10 +772,13 @@ wKanjiTileDataBuffer:: ; $d000
 wIdxUsedForKanjiTileDataBuffer:: ; $d100
     db
 
+wCommsRewardsStruct:: ; $d101
+    db ; unknown size
+
 if def(VWF)
 
-w1_d101:
-    ds $20-1
+w1_d102:
+    ds $20-2
 
 wSingleTileDataBuffer:: ; $d120
     ds $20

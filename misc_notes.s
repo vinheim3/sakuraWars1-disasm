@@ -77,6 +77,7 @@
 ; DPT as a return state to dorm room
 
 ; TODO: sources of scripts
+; TODO: comms reward constants for tv adapter big pts
 
 ; Minigames
 ; cb1d=0 for practice

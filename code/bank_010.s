@@ -2736,7 +2736,7 @@ jr_010_52f3:
 
 	ld   hl, $c8ca                                   ; $52f8: $21 $ca $c8
 
-	M_FarCall Func_04_6c3a
+	M_FarCall GiveIRBasedRewards
 
 jr_010_530f:
 	ld   a, $01                                      ; $530f: $3e $01
@@ -3279,18 +3279,19 @@ TVCommsSubstate1_CheckConnection:
 
 
 TVCommsSubstate2_Main:
-	di                                               ; $568c: $f3
+	di                                                              ; $568c
 
-.loop:
-	call Func_10_5845                                       ; $568d: $cd $45 $58
-	or   a                                           ; $5690: $b7
-	jr   z, .br_56a9                              ; $5691: $28 $16
+.checkBarcode:
+; When this func returns successful, give rewards accrued
+	call ScanBarcode                                                ; $568d
+	or   a                                                          ; $5690
+	jr   z, .giveRewards                                            ; $5691
 
 ; Update input, breaking out of loop if B pressed
 	call PollInput                                                  ; $5693
 	ld   a, [wInGameButtonsPressed]                                 ; $5696
 	and  PADF_B                                                     ; $5699
-	jr   z, .loop                                                   ; $569b
+	jr   z, .checkBarcode                                           ; $569b
 
 ; Go to fade out substate, and play sound
 	ld   a, $06                                                     ; $569d
@@ -3300,18 +3301,18 @@ TVCommsSubstate2_Main:
 	call PlaySoundEffect                                            ; $56a4
 	jr   .done                                                      ; $56a7
 
-.br_56a9:
-	ld   hl, $c6b6                                   ; $56a9: $21 $b6 $c6
-
-	M_FarCall Func_04_6c3a
+.giveRewards:
+; This will set flags, and add pts
+	ld   hl, wTVAdapterRewardsStruct                                ; $56a9
+	M_FarCall GiveIRBasedRewards
 
 ; To next substate. going down success route, then end route
-	ld   hl, wGameSubstate                                   ; $56c0: $21 $a1 $c2
-	inc  [hl]                                        ; $56c3: $34
+	ld   hl, wGameSubstate                                          ; $56c0
+	inc  [hl]                                                       ; $56c3
 
 .done:
-	ei                                               ; $56c4: $fb
-	ret                                              ; $56c5: $c9
+	ei                                                              ; $56c4
+	ret                                                             ; $56c5
 
 
 TVCommsSubstate3_DisplaySuccessfulBox:
@@ -3460,10 +3461,12 @@ SetTVCommsState:
 	ret                                                             ; $57b2
 
 
-Call_010_57b3:
+; Returns length in a range of 0-3 if successful, else $ff
+CheckBarcodeBarLength:
 	ld   hl, rRP                                   ; $57b3: $21 $56 $ff
 	ld   bc, $05b0                                   ; $57b6: $01 $b0 $05
 
+; Wait for bit 4 set
 .loop1:
 	dec  bc                                          ; $57b9: $0b
 	ld   a, b                                        ; $57ba: $78
@@ -3473,6 +3476,7 @@ Call_010_57b3:
 	bit  4, [hl]                                     ; $57be: $cb $66
 	jr   z, .loop1                              ; $57c0: $28 $f7
 
+; Wait for bit 4 clear before $11 loops, storing loops in B
 	xor  a                                           ; $57c2: $af
 
 .loop2:
@@ -3484,6 +3488,8 @@ Call_010_57b3:
 	jr   nz, .loop2                             ; $57ca: $20 $f7
 
 	ld   b, a                                        ; $57cc: $47
+
+; Wait for bit 4 set before $28 loops, adding loops to B into A
 	xor  a                                           ; $57cd: $af
 
 .loop3:
@@ -3495,17 +3501,22 @@ Call_010_57b3:
 	jr   z, .loop3                              ; $57d5: $28 $f7
 
 	add  b                                           ; $57d7: $80
+
+; B to total pair idx
 	ld   b, $00                                      ; $57d8: $06 $00
 	ld   hl, .table                                   ; $57da: $21 $f6 $57
 
 .loop4:
+; If below 1st byte in a pair, return -1
 	cp   [hl]                                        ; $57dd: $be
 	jr   c, .returnFFh                              ; $57de: $38 $08
 
+; If between 1st byte and 2nd byte-1, jump
 	inc  hl                                          ; $57e0: $23
 	cp   [hl]                                        ; $57e1: $be
 	jr   c, .endLoop                              ; $57e2: $38 $08
 
+; Next pair entry
 	inc  hl                                          ; $57e4: $23
 	inc  b                                           ; $57e5: $04
 	jr   .loop4                                 ; $57e6: $18 $f5
@@ -3522,15 +3533,20 @@ Call_010_57b3:
 	or   e                                           ; $57f1: $b3
 	jr   nz, :-                             ; $57f2: $20 $fb
 
+; Save pair idx in A
 	ld   a, b                                        ; $57f4: $78
 	ret                                              ; $57f5: $c9
 
 .table:
-	db $04, $09, $0a, $0f, $10, $15, $16, $1b, $ff
+	db $04, $09
+	db $0a, $0f
+	db $10, $15
+	db $16, $1b
+	db $ff
 
 
 ; Returns A = 0 on success, else $ff
-CheckTVAdapterIRPulseTimings:
+CheckBarcodeStartBar:
 	ld   hl, rRP                                   ; $57ff: $21 $56 $ff
 
 ; Now wait for rRP to return bit 4 set (after checking it cleared before)
@@ -3609,114 +3625,165 @@ CheckTVAdapterIRPulseTimings:
 	
 	
 ; Returns A=0 when successful
-Func_10_5845:
+; Returns 1 if start bar is incorrect
+; Returns 2 if the initial bars after are incorrect
+; Returns 5 if rewards struct length byte given as >$40
+; Returns 6 if the rewards bars are incorrect
+; Returns 7 if the check byte bars are incorrect
+; Returns 9 if the total bar bytes does not equal the last check byte
+; See GiveIRBasedRewards for populating the barcode rewards struct
+DEF BARCODE_XOR_BYTE = $c6b3
+DEF BARCODE_REWARDS_LENGTH = $c6b4
+ASSERT wTVAdapterBarcodeLengths.end-3 == $c6b3
+ASSERT wTVAdapterBarcodeLengths.end-2 == $c6b4
+ScanBarcode:
+; --
+; -- Starting bar
+; --
 ; todo: call func, returning 1 if 1/$ff, else jumping
-	call CheckTVAdapterIRPulseTimings ; $5845: $cd $ff $57
+	call CheckBarcodeStartBar ; $5845: $cd $ff $57
 	or   a                                           ; $5848: $b7
-	jr   z, .timingsGood                              ; $5849: $28 $03
+	jr   z, .notError1                              ; $5849: $28 $03
 
 	ld   a, $01                                      ; $584b: $3e $01
 	ret                                              ; $584d: $c9
 
-.timingsGood:
-	ld   hl, $c6ae                                   ; $584e: $21 $ae $c6
-	ld   b, $20                                      ; $5851: $06 $20
+.notError1:
+; --
+; -- Getting bar lengths
+; --
+; Process $20 bars, 2 bits each (8 bytes)
+	ld   hl, wTVAdapterBarcodeLengths                                   ; $584e: $21 $ae $c6
+	ld   b, 8 * 4                                      ; $5851: $06 $20
 
-.loop_5853:
+.loop1:
+; Get bar length
 	push bc                                          ; $5853: $c5
 	push hl                                          ; $5854: $e5
-	call Call_010_57b3                               ; $5855: $cd $b3 $57
+	call CheckBarcodeBarLength                               ; $5855: $cd $b3 $57
 	pop  hl                                          ; $5858: $e1
 	pop  bc                                          ; $5859: $c1
 
+; Error 2 if any length is of invalid length
 	cp   $ff                                         ; $585a: $fe $ff
-	jr   nz, .br_5861                             ; $585c: $20 $03
+	jr   nz, .notError2                             ; $585c: $20 $03
 
 	ld   a, $02                                      ; $585e: $3e $02
 	ret                                              ; $5860: $c9
 
-.br_5861:
+.notError2:
+; Store 2 bits per bar
 	srl  a                                           ; $5861: $cb $3f
 	rr   [hl]                                        ; $5863: $cb $1e
 	srl  a                                           ; $5865: $cb $3f
 	rr   [hl]                                        ; $5867: $cb $1e
+
+; Every 4 bars, go to next struct byte
 	ld   a, b                                        ; $5869: $78
 	dec  a                                           ; $586a: $3d
 	and  $03                                         ; $586b: $e6 $03
 	jr   nz, :+                             ; $586d: $20 $01
 	inc  hl                                          ; $586f: $23
-:	dec  b                                           ; $5870: $05
-	jr   nz, .loop_5853                             ; $5871: $20 $e0
 
-	ld   a, [$c6b4]                                  ; $5873: $fa $b4 $c6
+; To next bar
+:	dec  b                                           ; $5870: $05
+	jr   nz, .loop1                             ; $5871: $20 $e0
+
+; --
+; -- Rewards length byte
+; --
+; Length byte must be < $40
+	ld   a, [BARCODE_REWARDS_LENGTH]                                  ; $5873: $fa $b4 $c6
 	or   a                                           ; $5876: $b7
 	jr   z, .return05h                              ; $5877: $28 $04
 
 	cp   $40                                         ; $5879: $fe $40
-	jr   c, .br_5880                              ; $587b: $38 $03
+	jr   c, .notError5                              ; $587b: $38 $03
 
 .return05h:
 	ld   a, $05                                      ; $587d: $3e $05
 	ret                                              ; $587f: $c9
 
-.br_5880:
-	ld   a, [$c6b4]                                  ; $5880: $fa $b4 $c6
+.notError5:
+; B = length byte * 4 (num bars to read)
+	ld   a, [BARCODE_REWARDS_LENGTH]                                  ; $5880: $fa $b4 $c6
 	sla  a                                           ; $5883: $cb $27
 	sla  a                                           ; $5885: $cb $27
 	ld   b, a                                        ; $5887: $47
-	ld   hl, $c6b6                                   ; $5888: $21 $b6 $c6
 
-.loop_588b:
+; --
+; -- Populating rewards struct
+; --
+;
+	ld   hl, wTVAdapterRewardsStruct                                   ; $5888: $21 $b6 $c6
+
+.loop2:
 	push bc                                          ; $588b: $c5
 	push hl                                          ; $588c: $e5
-	call Call_010_57b3                               ; $588d: $cd $b3 $57
+	call CheckBarcodeBarLength                               ; $588d: $cd $b3 $57
 	pop  hl                                          ; $5890: $e1
 	pop  bc                                          ; $5891: $c1
 
 	cp   $ff                                         ; $5892: $fe $ff
-	jr   nz, .br_5899                             ; $5894: $20 $03
+	jr   nz, .notError6                             ; $5894: $20 $03
 
 	ld   a, $06                                      ; $5896: $3e $06
 	ret                                              ; $5898: $c9
 
-.br_5899:
+.notError6:
+; Store 2 bits per bar
 	srl  a                                           ; $5899: $cb $3f
 	rr   [hl]                                        ; $589b: $cb $1e
 	srl  a                                           ; $589d: $cb $3f
 	rr   [hl]                                        ; $589f: $cb $1e
+
+; Every 4 bars, go to next struct byte
 	ld   a, b                                        ; $58a1: $78
 	dec  a                                           ; $58a2: $3d
 	and  $03                                         ; $58a3: $e6 $03
 	jr   nz, :+                             ; $58a5: $20 $01
 	inc  hl                                          ; $58a7: $23
-:	dec  b                                           ; $58a8: $05
-	jr   nz, .loop_588b                             ; $58a9: $20 $e0
 
+; To next bar
+:	dec  b                                           ; $58a8: $05
+	jr   nz, .loop2                             ; $58a9: $20 $e0
+
+; --
+; -- Check byte
+; --
+;
 	ld   b, $04                                      ; $58ab: $06 $04
 
-.loop_58ad:
+.loop3:
 	push bc                                          ; $58ad: $c5
-	call Call_010_57b3                               ; $58ae: $cd $b3 $57
+	call CheckBarcodeBarLength                               ; $58ae: $cd $b3 $57
 	pop  bc                                          ; $58b1: $c1
+
 	cp   $ff                                         ; $58b2: $fe $ff
-	jr   nz, .br_58b9                             ; $58b4: $20 $03
+	jr   nz, .notError7                             ; $58b4: $20 $03
 
 	ld   a, $07                                      ; $58b6: $3e $07
 	ret                                              ; $58b8: $c9
 
-.br_58b9:
-	ld   hl, $c6f5                                   ; $58b9: $21 $f5 $c6
+.notError7:
+	ld   hl, wTVAdapterRewardsCheckByte                                   ; $58b9: $21 $f5 $c6
 	srl  a                                           ; $58bc: $cb $3f
 	rr   [hl]                                        ; $58be: $cb $1e
 	srl  a                                           ; $58c0: $cb $3f
 	rr   [hl]                                        ; $58c2: $cb $1e
 	dec  b                                           ; $58c4: $05
-	jr   nz, .loop_58ad                             ; $58c5: $20 $e6
+	jr   nz, .loop3                             ; $58c5: $20 $e6
 
-	ld   hl, $c6ae                                   ; $58c7: $21 $ae $c6
-	ld   a, [$c6b4]                                  ; $58ca: $fa $b4 $c6
+; --
+; -- Final processing
+; --
+; B = total bytes, except the check byte
+	ld   hl, wTVAdapterBarcodeLengths                                   ; $58c7: $21 $ae $c6
+	ld   a, [BARCODE_REWARDS_LENGTH]                                  ; $58ca: $fa $b4 $c6
 	add  $07                                         ; $58cd: $c6 $07
 	ld   b, a                                        ; $58cf: $47
+
+; Add all the bytes together
 	ld   a, [hl+]                                    ; $58d0: $2a
 
 :	add  [hl]                                        ; $58d1: $86
@@ -3724,19 +3791,23 @@ Func_10_5845:
 	dec  b                                           ; $58d3: $05
 	jr   nz, :-                             ; $58d4: $20 $fb
 
-	ld   hl, $c6f5                                   ; $58d6: $21 $f5 $c6
+; It must equal the check byte
+	ld   hl, wTVAdapterRewardsCheckByte                                   ; $58d6: $21 $f5 $c6
 	cp   [hl]                                        ; $58d9: $be
-	jr   z, .br_58df                              ; $58da: $28 $03
+	jr   z, .notError9                              ; $58da: $28 $03
 
 	ld   a, $09                                      ; $58dc: $3e $09
 	ret                                              ; $58de: $c9
 
-.br_58df:
-	ld   a, [$c6b4]                                  ; $58df: $fa $b4 $c6
+.notError9:
+; For every barcode reward struct byte..
+	ld   a, [BARCODE_REWARDS_LENGTH]                                  ; $58df: $fa $b4 $c6
 	ld   b, a                                        ; $58e2: $47
-	ld   a, [$c6b3]                                  ; $58e3: $fa $b3 $c6
+	ld   a, [BARCODE_XOR_BYTE]                                  ; $58e3: $fa $b3 $c6
 	ld   c, a                                        ; $58e6: $4f
-	ld   hl, $c6b6                                   ; $58e7: $21 $b6 $c6
+
+; Adjust it using xor
+	ld   hl, wTVAdapterRewardsStruct                                   ; $58e7: $21 $b6 $c6
 
 :	ld   a, [hl]                                     ; $58ea: $7e
 	xor  c                                           ; $58eb: $a9
@@ -3744,6 +3815,7 @@ Func_10_5845:
 	dec  b                                           ; $58ed: $05
 	jr   nz, :-                             ; $58ee: $20 $fa
 
+; Return successful
 	xor  a                                           ; $58f0: $af
 	ret                                              ; $58f1: $c9
 
