@@ -3463,81 +3463,82 @@ SetTVCommsState:
 
 ; Returns length in a range of 0-3 if successful, else $ff
 CheckBarcodeBarLength:
-	ld   hl, rRP                                   ; $57b3: $21 $56 $ff
-	ld   bc, $05b0                                   ; $57b6: $01 $b0 $05
+	ld   hl, rRP                                                    ; $57b3
+	ld   bc, $05b0                                                  ; $57b6
 
 ; Wait for bit 4 set
-.loop1:
-	dec  bc                                          ; $57b9: $0b
-	ld   a, b                                        ; $57ba: $78
-	or   c                                           ; $57bb: $b1
-	jr   z, .returnFFh                              ; $57bc: $28 $2a
+.waitForBitSet1:
+	dec  bc                                                         ; $57b9
+	ld   a, b                                                       ; $57ba
+	or   c                                                          ; $57bb
+	jr   z, .returnFFh                                              ; $57bc
 
-	bit  4, [hl]                                     ; $57be: $cb $66
-	jr   z, .loop1                              ; $57c0: $28 $f7
+	bit  4, [hl]                                                    ; $57be
+	jr   z, .waitForBitSet1                                         ; $57c0
 
 ; Wait for bit 4 clear before $11 loops, storing loops in B
-	xor  a                                           ; $57c2: $af
+	xor  a                                                          ; $57c2
 
-.loop2:
-	inc  a                                           ; $57c3: $3c
-	cp   $11                                         ; $57c4: $fe $11
-	jr   z, .returnFFh                              ; $57c6: $28 $20
+.waitForBitClear:
+	inc  a                                                          ; $57c3
+	cp   $11                                                        ; $57c4
+	jr   z, .returnFFh                                              ; $57c6
 
-	bit  4, [hl]                                     ; $57c8: $cb $66
-	jr   nz, .loop2                             ; $57ca: $20 $f7
+	bit  4, [hl]                                                    ; $57c8
+	jr   nz, .waitForBitClear                                       ; $57ca
 
-	ld   b, a                                        ; $57cc: $47
+	ld   b, a                                                       ; $57cc
 
-; Wait for bit 4 set before $28 loops, adding loops to B into A
-	xor  a                                           ; $57cd: $af
+; Wait for bit 4 set before $28 loops, A = loops + B
+	xor  a                                                          ; $57cd
 
-.loop3:
-	inc  a                                           ; $57ce: $3c
-	cp   $28                                         ; $57cf: $fe $28
-	jr   z, .returnFFh                              ; $57d1: $28 $15
+.waitForBitSet2:
+	inc  a                                                          ; $57ce
+	cp   $28                                                        ; $57cf
+	jr   z, .returnFFh                                              ; $57d1
 
-	bit  4, [hl]                                     ; $57d3: $cb $66
-	jr   z, .loop3                              ; $57d5: $28 $f7
+	bit  4, [hl]                                                    ; $57d3
+	jr   z, .waitForBitSet2                                         ; $57d5
 
-	add  b                                           ; $57d7: $80
+	add  b                                                          ; $57d7
 
 ; B to total pair idx
-	ld   b, $00                                      ; $57d8: $06 $00
-	ld   hl, .table                                   ; $57da: $21 $f6 $57
+	ld   b, $00                                                     ; $57d8
+	ld   hl, .pairsData                                             ; $57da
 
-.loop4:
+.nextPair:
 ; If below 1st byte in a pair, return -1
-	cp   [hl]                                        ; $57dd: $be
-	jr   c, .returnFFh                              ; $57de: $38 $08
+	cp   [hl]                                                       ; $57dd
+	jr   c, .returnFFh                                              ; $57de
 
-; If between 1st byte and 2nd byte-1, jump
-	inc  hl                                          ; $57e0: $23
-	cp   [hl]                                        ; $57e1: $be
-	jr   c, .endLoop                              ; $57e2: $38 $08
+; If between 1st byte and 2nd byte-1 inclusive, we've found the length
+	inc  hl                                                         ; $57e0
+	cp   [hl]                                                       ; $57e1
+	jr   c, .endLoop                                                ; $57e2
 
-; Next pair entry
-	inc  hl                                          ; $57e4: $23
-	inc  b                                           ; $57e5: $04
-	jr   .loop4                                 ; $57e6: $18 $f5
+; To next pair entry
+	inc  hl                                                         ; $57e4
+	inc  b                                                          ; $57e5
+	jr   .nextPair                                                  ; $57e6
 
 .returnFFh:
-	ld   b, $ff                                      ; $57e8: $06 $ff
-	jr   .endLoop                                 ; $57ea: $18 $00
+	ld   b, $ff                                                     ; $57e8
+	jr   .endLoop                                                   ; $57ea
 
 .endLoop:
-	ld   de, $00bf                                   ; $57ec: $11 $bf $00
+; Wait for signal fade
+	ld   de, $00bf                                                  ; $57ec
 
-:	dec  de                                          ; $57ef: $1b
-	ld   a, d                                        ; $57f0: $7a
-	or   e                                           ; $57f1: $b3
-	jr   nz, :-                             ; $57f2: $20 $fb
+:	dec  de                                                         ; $57ef
+	ld   a, d                                                       ; $57f0
+	or   e                                                          ; $57f1
+	jr   nz, :-                                                     ; $57f2
 
 ; Save pair idx in A
-	ld   a, b                                        ; $57f4: $78
-	ret                                              ; $57f5: $c9
+	ld   a, b                                                       ; $57f4
+	ret                                                             ; $57f5
 
-.table:
+.pairsData:
 	db $04, $09
 	db $0a, $0f
 	db $10, $15
@@ -3547,81 +3548,82 @@ CheckBarcodeBarLength:
 
 ; Returns A = 0 on success, else $ff
 CheckBarcodeStartBar:
-	ld   hl, rRP                                   ; $57ff: $21 $56 $ff
+	ld   hl, rRP                                                    ; $57ff
 
 ; Now wait for rRP to return bit 4 set (after checking it cleared before)
-	ld   bc, $05b0                                   ; $5802: $01 $b0 $05
+	ld   bc, $05b0                                                  ; $5802
 
-.loop1:
-	dec  bc                                          ; $5805: $0b
-	ld   a, b                                        ; $5806: $78
-	or   c                                           ; $5807: $b1
-	jr   z, .returnFFh                              ; $5808: $28 $2a
+.waitForBitSet1:
+	dec  bc                                                         ; $5805
+	ld   a, b                                                       ; $5806
+	or   c                                                          ; $5807
+	jr   z, .returnFFh                                              ; $5808
 
-	bit  4, [hl]                                     ; $580a: $cb $66
-	jr   z, .loop1                              ; $580c: $28 $f7
+	bit  4, [hl]                                                    ; $580a
+	jr   z, .waitForBitSet1                                         ; $580c
 
 ; ; Loop $11 times waiting bit 4 to be cleared again
-	xor  a                                           ; $580e: $af
+	xor  a                                                          ; $580e
 
-.loop2:
-	inc  a                                           ; $580f: $3c
-	cp   $11                                         ; $5810: $fe $11
-	jr   z, .returnFFh                              ; $5812: $28 $20
+.waitForBitClear:
+	inc  a                                                          ; $580f
+	cp   $11                                                        ; $5810
+	jr   z, .returnFFh                                              ; $5812
 
-	bit  4, [hl]                                     ; $5814: $cb $66
-	jr   nz, .loop2                             ; $5816: $20 $f7
+	bit  4, [hl]                                                    ; $5814
+	jr   nz, .waitForBitClear                                       ; $5816
 
 ; Store num loops in B, then wait $28 times for bit 4 to be set again
-	ld   b, a                                        ; $5818: $47
-	xor  a                                           ; $5819: $af
+	ld   b, a                                                       ; $5818
+	xor  a                                                          ; $5819
 
-.loop3:
-	inc  a                                           ; $581a: $3c
-	cp   $28                                         ; $581b: $fe $28
-	jr   z, .returnFFh                              ; $581d: $28 $15
+.waitForBitSet2:
+	inc  a                                                          ; $581a
+	cp   $28                                                        ; $581b
+	jr   z, .returnFFh                                              ; $581d
 
-	bit  4, [hl]                                     ; $581f: $cb $66
-	jr   z, .loop3                              ; $5821: $28 $f7
+	bit  4, [hl]                                                    ; $581f
+	jr   z, .waitForBitSet2                                         ; $5821
 
 ; Add num loops onto prev num loops
-	add  b                                           ; $5823: $80
+	add  b                                                          ; $5823
 
 ; The below simply checks that the total loops above is between $1c and $20 inclusive
-	ld   b, $00                                      ; $5824: $06 $00
-	ld   hl, .data                                   ; $5826: $21 $42 $58
+	ld   b, $00                                                     ; $5824
+	ld   hl, .pairData                                              ; $5826
 
-.loop4:
-	cp   [hl]                                        ; $5829: $be
-	jr   c, .returnFFh                              ; $582a: $38 $08
+.nextPair:
+	cp   [hl]                                                       ; $5829
+	jr   c, .returnFFh                                              ; $582a
 
-	inc  hl                                          ; $582c: $23
-	cp   [hl]                                        ; $582d: $be
-	jr   c, .endLoop                              ; $582e: $38 $08
+	inc  hl                                                         ; $582c
+	cp   [hl]                                                       ; $582d
+	jr   c, .endLoop                                                ; $582e
 
-	inc  hl                                          ; $5830: $23
-	inc  b                                           ; $5831: $04
-	jr   .loop4                                 ; $5832: $18 $f5
+	inc  hl                                                         ; $5830
+	inc  b                                                          ; $5831
+	jr   .nextPair                                                  ; $5832
 
 .returnFFh:
 ; If above loop done more than once, or any other failures in algo, returns $ff
-	ld   b, $ff                                      ; $5834: $06 $ff
-	jr   .endLoop                                 ; $5836: $18 $00
+	ld   b, $ff                                                     ; $5834
+	jr   .endLoop                                                   ; $5836
 
 .endLoop:
-; Loop value used for rRP timing
-	ld   de, $00bf                                   ; $5838: $11 $bf $00
+; Wait for signal fade
+	ld   de, $00bf                                                  ; $5838
 
-:	dec  de                                          ; $583b: $1b
-	ld   a, d                                        ; $583c: $7a
-	or   e                                           ; $583d: $b3
-	jr   nz, :-                             ; $583e: $20 $fb
+:	dec  de                                                         ; $583b
+	ld   a, d                                                       ; $583c
+	or   e                                                          ; $583d
+	jr   nz, :-                                                     ; $583e
 
-	ld   a, b                                        ; $5840: $78
-	ret                                              ; $5841: $c9
+	ld   a, b                                                       ; $5840
+	ret                                                             ; $5841
 
-.data:
-	db $1c, $21, $ff 
+.pairData:
+	db $1c, $21
+	db $ff
 	
 	
 ; Returns A=0 when successful
@@ -3640,184 +3642,184 @@ ScanBarcode:
 ; --
 ; -- Starting bar
 ; --
-; todo: call func, returning 1 if 1/$ff, else jumping
-	call CheckBarcodeStartBar ; $5845: $cd $ff $57
-	or   a                                           ; $5848: $b7
-	jr   z, .notError1                              ; $5849: $28 $03
+; Check barcode starting bar, returning error 1 if $ff, else jump
+	call CheckBarcodeStartBar                                       ; $5845
+	or   a                                                          ; $5848
+	jr   z, .notError1                                              ; $5849
 
-	ld   a, $01                                      ; $584b: $3e $01
-	ret                                              ; $584d: $c9
+	ld   a, $01                                                     ; $584b
+	ret                                                             ; $584d
 
 .notError1:
 ; --
 ; -- Getting bar lengths
 ; --
 ; Process $20 bars, 2 bits each (8 bytes)
-	ld   hl, wTVAdapterBarcodeLengths                                   ; $584e: $21 $ae $c6
-	ld   b, 8 * 4                                      ; $5851: $06 $20
+	ld   hl, wTVAdapterBarcodeLengths                               ; $584e
+	ld   b, 8 * 4                                                   ; $5851
 
-.loop1:
+.loopPopulatingInitialBarLengths:
 ; Get bar length
-	push bc                                          ; $5853: $c5
-	push hl                                          ; $5854: $e5
-	call CheckBarcodeBarLength                               ; $5855: $cd $b3 $57
-	pop  hl                                          ; $5858: $e1
-	pop  bc                                          ; $5859: $c1
+	push bc                                                         ; $5853
+	push hl                                                         ; $5854
+	call CheckBarcodeBarLength                                      ; $5855
+	pop  hl                                                         ; $5858
+	pop  bc                                                         ; $5859
 
 ; Error 2 if any length is of invalid length
-	cp   $ff                                         ; $585a: $fe $ff
-	jr   nz, .notError2                             ; $585c: $20 $03
+	cp   $ff                                                        ; $585a
+	jr   nz, .notError2                                             ; $585c
 
-	ld   a, $02                                      ; $585e: $3e $02
-	ret                                              ; $5860: $c9
+	ld   a, $02                                                     ; $585e
+	ret                                                             ; $5860
 
 .notError2:
 ; Store 2 bits per bar
-	srl  a                                           ; $5861: $cb $3f
-	rr   [hl]                                        ; $5863: $cb $1e
-	srl  a                                           ; $5865: $cb $3f
-	rr   [hl]                                        ; $5867: $cb $1e
+	srl  a                                                          ; $5861
+	rr   [hl]                                                       ; $5863
+	srl  a                                                          ; $5865
+	rr   [hl]                                                       ; $5867
 
 ; Every 4 bars, go to next struct byte
-	ld   a, b                                        ; $5869: $78
-	dec  a                                           ; $586a: $3d
-	and  $03                                         ; $586b: $e6 $03
-	jr   nz, :+                             ; $586d: $20 $01
-	inc  hl                                          ; $586f: $23
+	ld   a, b                                                       ; $5869
+	dec  a                                                          ; $586a
+	and  $03                                                        ; $586b
+	jr   nz, :+                                                     ; $586d
+	inc  hl                                                         ; $586f
 
 ; To next bar
-:	dec  b                                           ; $5870: $05
-	jr   nz, .loop1                             ; $5871: $20 $e0
+:	dec  b                                                          ; $5870
+	jr   nz, .loopPopulatingInitialBarLengths                       ; $5871
 
 ; --
 ; -- Rewards length byte
 ; --
 ; Length byte must be < $40
-	ld   a, [BARCODE_REWARDS_LENGTH]                                  ; $5873: $fa $b4 $c6
-	or   a                                           ; $5876: $b7
-	jr   z, .return05h                              ; $5877: $28 $04
+	ld   a, [BARCODE_REWARDS_LENGTH]                                ; $5873
+	or   a                                                          ; $5876
+	jr   z, .return05h                                              ; $5877
 
-	cp   $40                                         ; $5879: $fe $40
-	jr   c, .notError5                              ; $587b: $38 $03
+	cp   $40                                                        ; $5879
+	jr   c, .notError5                                              ; $587b
 
 .return05h:
-	ld   a, $05                                      ; $587d: $3e $05
-	ret                                              ; $587f: $c9
+	ld   a, $05                                                     ; $587d
+	ret                                                             ; $587f
 
 .notError5:
 ; B = length byte * 4 (num bars to read)
-	ld   a, [BARCODE_REWARDS_LENGTH]                                  ; $5880: $fa $b4 $c6
-	sla  a                                           ; $5883: $cb $27
-	sla  a                                           ; $5885: $cb $27
-	ld   b, a                                        ; $5887: $47
+	ld   a, [BARCODE_REWARDS_LENGTH]                                ; $5880
+	sla  a                                                          ; $5883
+	sla  a                                                          ; $5885
+	ld   b, a                                                       ; $5887
 
 ; --
 ; -- Populating rewards struct
 ; --
-;
-	ld   hl, wTVAdapterRewardsStruct                                   ; $5888: $21 $b6 $c6
+; Next bars determine bytes in rewards struct
+	ld   hl, wTVAdapterRewardsStruct                                ; $5888
 
-.loop2:
-	push bc                                          ; $588b: $c5
-	push hl                                          ; $588c: $e5
-	call CheckBarcodeBarLength                               ; $588d: $cd $b3 $57
-	pop  hl                                          ; $5890: $e1
-	pop  bc                                          ; $5891: $c1
+.loopPopulatingRewardsStruct:
+	push bc                                                         ; $588b
+	push hl                                                         ; $588c
+	call CheckBarcodeBarLength                                      ; $588d
+	pop  hl                                                         ; $5890
+	pop  bc                                                         ; $5891
 
-	cp   $ff                                         ; $5892: $fe $ff
-	jr   nz, .notError6                             ; $5894: $20 $03
+	cp   $ff                                                        ; $5892
+	jr   nz, .notError6                                             ; $5894
 
-	ld   a, $06                                      ; $5896: $3e $06
-	ret                                              ; $5898: $c9
+	ld   a, $06                                                     ; $5896
+	ret                                                             ; $5898
 
 .notError6:
 ; Store 2 bits per bar
-	srl  a                                           ; $5899: $cb $3f
-	rr   [hl]                                        ; $589b: $cb $1e
-	srl  a                                           ; $589d: $cb $3f
-	rr   [hl]                                        ; $589f: $cb $1e
+	srl  a                                                          ; $5899
+	rr   [hl]                                                       ; $589b
+	srl  a                                                          ; $589d
+	rr   [hl]                                                       ; $589f
 
 ; Every 4 bars, go to next struct byte
-	ld   a, b                                        ; $58a1: $78
-	dec  a                                           ; $58a2: $3d
-	and  $03                                         ; $58a3: $e6 $03
-	jr   nz, :+                             ; $58a5: $20 $01
-	inc  hl                                          ; $58a7: $23
+	ld   a, b                                                       ; $58a1
+	dec  a                                                          ; $58a2
+	and  $03                                                        ; $58a3
+	jr   nz, :+                                                     ; $58a5
+	inc  hl                                                         ; $58a7
 
 ; To next bar
-:	dec  b                                           ; $58a8: $05
-	jr   nz, .loop2                             ; $58a9: $20 $e0
+:	dec  b                                                          ; $58a8
+	jr   nz, .loopPopulatingRewardsStruct                           ; $58a9
 
 ; --
 ; -- Check byte
 ; --
-;
-	ld   b, $04                                      ; $58ab: $06 $04
+; 4 more bars determine the check byte
+	ld   b, $04                                                     ; $58ab
 
-.loop3:
-	push bc                                          ; $58ad: $c5
-	call CheckBarcodeBarLength                               ; $58ae: $cd $b3 $57
-	pop  bc                                          ; $58b1: $c1
+.loopPopulatingCheckByte:
+	push bc                                                         ; $58ad
+	call CheckBarcodeBarLength                                      ; $58ae
+	pop  bc                                                         ; $58b1
 
-	cp   $ff                                         ; $58b2: $fe $ff
-	jr   nz, .notError7                             ; $58b4: $20 $03
+	cp   $ff                                                        ; $58b2
+	jr   nz, .notError7                                             ; $58b4
 
-	ld   a, $07                                      ; $58b6: $3e $07
-	ret                                              ; $58b8: $c9
+	ld   a, $07                                                     ; $58b6
+	ret                                                             ; $58b8
 
 .notError7:
-	ld   hl, wTVAdapterRewardsCheckByte                                   ; $58b9: $21 $f5 $c6
-	srl  a                                           ; $58bc: $cb $3f
-	rr   [hl]                                        ; $58be: $cb $1e
-	srl  a                                           ; $58c0: $cb $3f
-	rr   [hl]                                        ; $58c2: $cb $1e
-	dec  b                                           ; $58c4: $05
-	jr   nz, .loop3                             ; $58c5: $20 $e6
+	ld   hl, wTVAdapterRewardsCheckByte                             ; $58b9
+	srl  a                                                          ; $58bc
+	rr   [hl]                                                       ; $58be
+	srl  a                                                          ; $58c0
+	rr   [hl]                                                       ; $58c2
+	dec  b                                                          ; $58c4
+	jr   nz, .loopPopulatingCheckByte                               ; $58c5
 
 ; --
 ; -- Final processing
 ; --
 ; B = total bytes, except the check byte
-	ld   hl, wTVAdapterBarcodeLengths                                   ; $58c7: $21 $ae $c6
-	ld   a, [BARCODE_REWARDS_LENGTH]                                  ; $58ca: $fa $b4 $c6
-	add  $07                                         ; $58cd: $c6 $07
-	ld   b, a                                        ; $58cf: $47
+	ld   hl, wTVAdapterBarcodeLengths                               ; $58c7
+	ld   a, [BARCODE_REWARDS_LENGTH]                                ; $58ca
+	add  $07                                                        ; $58cd
+	ld   b, a                                                       ; $58cf
 
 ; Add all the bytes together
-	ld   a, [hl+]                                    ; $58d0: $2a
+	ld   a, [hl+]                                                   ; $58d0
 
-:	add  [hl]                                        ; $58d1: $86
-	inc  hl                                          ; $58d2: $23
-	dec  b                                           ; $58d3: $05
-	jr   nz, :-                             ; $58d4: $20 $fb
+:	add  [hl]                                                       ; $58d1
+	inc  hl                                                         ; $58d2
+	dec  b                                                          ; $58d3
+	jr   nz, :-                                                     ; $58d4
 
 ; It must equal the check byte
-	ld   hl, wTVAdapterRewardsCheckByte                                   ; $58d6: $21 $f5 $c6
-	cp   [hl]                                        ; $58d9: $be
-	jr   z, .notError9                              ; $58da: $28 $03
+	ld   hl, wTVAdapterRewardsCheckByte                             ; $58d6
+	cp   [hl]                                                       ; $58d9
+	jr   z, .notError9                                              ; $58da
 
-	ld   a, $09                                      ; $58dc: $3e $09
-	ret                                              ; $58de: $c9
+	ld   a, $09                                                     ; $58dc
+	ret                                                             ; $58de
 
 .notError9:
 ; For every barcode reward struct byte..
-	ld   a, [BARCODE_REWARDS_LENGTH]                                  ; $58df: $fa $b4 $c6
-	ld   b, a                                        ; $58e2: $47
-	ld   a, [BARCODE_XOR_BYTE]                                  ; $58e3: $fa $b3 $c6
-	ld   c, a                                        ; $58e6: $4f
+	ld   a, [BARCODE_REWARDS_LENGTH]                                ; $58df
+	ld   b, a                                                       ; $58e2
+	ld   a, [BARCODE_XOR_BYTE]                                      ; $58e3
+	ld   c, a                                                       ; $58e6
 
 ; Adjust it using xor
-	ld   hl, wTVAdapterRewardsStruct                                   ; $58e7: $21 $b6 $c6
+	ld   hl, wTVAdapterRewardsStruct                                ; $58e7
 
-:	ld   a, [hl]                                     ; $58ea: $7e
-	xor  c                                           ; $58eb: $a9
-	ld   [hl+], a                                    ; $58ec: $22
-	dec  b                                           ; $58ed: $05
-	jr   nz, :-                             ; $58ee: $20 $fa
+:	ld   a, [hl]                                                    ; $58ea
+	xor  c                                                          ; $58eb
+	ld   [hl+], a                                                   ; $58ec
+	dec  b                                                          ; $58ed
+	jr   nz, :-                                                     ; $58ee
 
 ; Return successful
-	xor  a                                           ; $58f0: $af
-	ret                                              ; $58f1: $c9
+	xor  a                                                          ; $58f0
+	ret                                                             ; $58f1
 
 
 ; Returns A=0 if successful

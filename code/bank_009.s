@@ -6058,7 +6058,7 @@ jr_009_64d7:
 	ld   h, GS_TREASURE_CHEST                                      ; $64d7: $26 $41
 	ld   l, $01                                      ; $64d9: $2e $01
 
-	M_FarCall SetGirlEventImagesState
+	M_FarCall SetEventGalleryState
 	ret                                              ; $64ef: $c9
 
 

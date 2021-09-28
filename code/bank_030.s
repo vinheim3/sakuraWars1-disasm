@@ -10574,15 +10574,15 @@ jr_030_796f:
 	ret                                              ; $7990: $c9
 
 
-GameState09_GirlVoiceSounds::
+GameState09_VoiceMode::
 	ld   a, [wGameSubstate]                                  ; $7991: $fa $a1 $c2
 	rst  JumpTable                                         ; $7994: $df
-	sbc  e                                           ; $7995: $9b
-	ld   a, c                                        ; $7996: $79
-	ld   a, d                                        ; $7997: $7a
-	ld   a, d                                        ; $7998: $7a
-	add  h                                           ; $7999: $84
-	ld   a, d                                        ; $799a: $7a
+	dw VoiceModeSubstate0
+	dw VoiceModeSubstate1
+	dw VoiceModeSubstate2
+
+
+VoiceModeSubstate0:
 	call TurnOffLCD                                       ; $799b: $cd $e3 $08
 	call ClearDisplayRegsAllowVBlankInt                                       ; $799e: $cd $59 $0b
 	ld   a, LCDCF_OFF|LCDCF_OBJ16|LCDCF_OBJON|LCDCF_BGON                                      ; $79a1: $3e $07
@@ -10596,12 +10596,21 @@ GameState09_GirlVoiceSounds::
 	ld   [wBaseInitialStickyCounter], a                                  ; $79b4: $ea $13 $c2
 	ld   a, $04                                      ; $79b7: $3e $04
 	ld   [wBaseRepeatedStickyCounter], a                                  ; $79b9: $ea $14 $c2
+
+;
 	xor  a                                           ; $79bc: $af
 	ldh  [rVBK], a                                   ; $79bd: $e0 $4f
+
 	ld   a, $34                                      ; $79bf: $3e $34
 	ld   hl, $8800                                   ; $79c1: $21 $00 $88
 	ld   de, $45e0                                   ; $79c4: $11 $e0 $45
+if def(VWF)
+	call VoiceModeBank0_8800hHook
+else
 	call RLEXorCopy                                       ; $79c7: $cd $d2 $09
+endc
+
+;
 	ld   a, $01                                      ; $79ca: $3e $01
 	ldh  [rVBK], a                                   ; $79cc: $e0 $4f
 	ld   a, $32                                      ; $79ce: $3e $32
@@ -10615,11 +10624,20 @@ GameState09_GirlVoiceSounds::
 	ld   de, $4b8c                                   ; $79e2: $11 $8c $4b
 	ld   bc, $1420                                   ; $79e5: $01 $20 $14
 	call FarCopyLayout                                       ; $79e8: $cd $2c $0b
+
+;
 	xor  a                                           ; $79eb: $af
 	ldh  [rVBK], a                                   ; $79ec: $e0 $4f
+
 	ld   hl, $9800                                   ; $79ee: $21 $00 $98
 	ld   a, $34                                      ; $79f1: $3e $34
+if def(VWF)
+	call VoiceModeTileMapHook
+else
 	call FarCopyLayout                                       ; $79f3: $cd $2c $0b
+endc
+
+;
 	ld   a, [wWramBank]                                  ; $79f6: $fa $93 $c2
 	push af                                          ; $79f9: $f5
 	ld   a, $05                                      ; $79fa: $3e $05
@@ -10681,12 +10699,14 @@ jr_030_7a37:
 	ret                                              ; $7a79: $c9
 
 
+VoiceModeSubstate1:
 	call ClearOam                                       ; $7a7a: $cd $d7 $0d
 	call Call_030_7ad6                               ; $7a7d: $cd $d6 $7a
 	call Call_030_7c53                               ; $7a80: $cd $53 $7c
 	ret                                              ; $7a83: $c9
 
 
+VoiceModeSubstate2:
 	ld   b, $33                                      ; $7a84: $06 $33
 	ld   hl, $7f6f                                   ; $7a86: $21 $6f $7f
 	ld   c, BANK(Palettes_AllWhite)                                      ; $7a89: $0e $01
@@ -11487,6 +11507,20 @@ MiniGameSelectionBank1_9000hHook:
 	call RLEXorCopy
 
 	M_FarCall EnLoadMiniGameSelectionGfx1
+	ret
+
+
+VoiceModeBank0_8800hHook:
+	call RLEXorCopy
+
+	M_FarCall EnLoadVoiceModeGfx0
+	ret
+
+
+VoiceModeTileMapHook:
+	call FarCopyLayout
+
+	M_FarCall EnLoadVoiceModeTileMap
 	ret
 
 endc

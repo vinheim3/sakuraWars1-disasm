@@ -2472,15 +2472,15 @@ jr_031_4f51:
 	rst  $10                                         ; $4f89: $d7
 
 
-GameState08_GirlEventImages::
+GameState08_EventGallery::
 	ld   a, [wGameSubstate]                                  ; $4f8a: $fa $a1 $c2
 	rst  JumpTable                                         ; $4f8d: $df
-	sub  h                                           ; $4f8e: $94
-	ld   c, a                                        ; $4f8f: $4f
-	ld   l, a                                        ; $4f90: $6f
-	ld   d, c                                        ; $4f91: $51
-	ld   d, d                                        ; $4f92: $52
-	ld   d, c                                        ; $4f93: $51
+	dw EventGallerySubstate0_Init
+	dw EventGallerySubstate1_Main
+	dw EventGallerySubstate2_Exit
+
+
+EventGallerySubstate0_Init:
 	call TurnOffLCD                                       ; $4f94: $cd $e3 $08
 	call ClearDisplayRegsAllowVBlankInt                                       ; $4f97: $cd $59 $0b
 	ld   a, [wLCDC]                                  ; $4f9a: $fa $03 $c2
@@ -2557,24 +2557,43 @@ GameState08_GirlEventImages::
 	pop  af                                          ; $5048: $f1
 	ld   [wWramBank], a                                  ; $5049: $ea $93 $c2
 	ldh  [rSVBK], a                                  ; $504c: $e0 $70
+
+;
 	ld   a, $01                                      ; $504e: $3e $01
 	ldh  [rVBK], a                                   ; $5050: $e0 $4f
+
 	ld   a, $34                                      ; $5052: $3e $34
 	ld   hl, $8800                                   ; $5054: $21 $00 $88
 	ld   de, $731a                                   ; $5057: $11 $1a $73
+if def(VWF)
+	call EventGalleryBank1_8800hHook
+else
 	call RLEXorCopy                                       ; $505a: $cd $d2 $09
+endc
+
+;
 	ld   a, $01                                      ; $505d: $3e $01
 	ldh  [rVBK], a                                   ; $505f: $e0 $4f
+
 	ld   hl, $9965                                   ; $5061: $21 $65 $99
 	ld   a, $32                                      ; $5064: $3e $32
 	ld   de, $7ede                                   ; $5066: $11 $de $7e
 	ld   bc, $0e06                                   ; $5069: $01 $06 $0e
 	call FarCopyLayout                                       ; $506c: $cd $2c $0b
+
+;
 	xor  a                                           ; $506f: $af
 	ldh  [rVBK], a                                   ; $5070: $e0 $4f
+
 	ld   hl, $9965                                   ; $5072: $21 $65 $99
 	ld   a, $32                                      ; $5075: $3e $32
+if def(VWF)
+	call EventGalleryTileMapHook
+else
 	call FarCopyLayout                                       ; $5077: $cd $2c $0b
+endc
+
+;
 	ld   a, [wWramBank]                                  ; $507a: $fa $93 $c2
 	push af                                          ; $507d: $f5
 	ld   a, $05                                      ; $507e: $3e $05
@@ -2673,6 +2692,7 @@ jr_031_50b9:
 	ret                                              ; $5151: $c9
 
 
+EventGallerySubstate2_Exit:
 	ld   b, $00                                      ; $5152: $06 $00
 	ld   hl, wBGPalettes                                   ; $5154: $21 $de $c2
 	ld   c, $01                                      ; $5157: $0e $01
@@ -2686,6 +2706,7 @@ jr_031_50b9:
 	ret                                              ; $516e: $c9
 
 
+EventGallerySubstate1_Main:
 	call ClearOam                                       ; $516f: $cd $d7 $0d
 	ld   bc, $5185                                   ; $5172: $01 $85 $51
 	push bc                                          ; $5175: $c5
@@ -3579,12 +3600,12 @@ Jump_031_5798:
 	ret                                              ; $57cf: $c9
 
 
-SetGirlEventImagesState::
+SetEventGalleryState::
 	ld   a, h                                        ; $57d0: $7c
 	ld   [$c678], a                                  ; $57d1: $ea $78 $c6
 	ld   a, l                                        ; $57d4: $7d
 	ld   [$c679], a                                  ; $57d5: $ea $79 $c6
-	ld   a, GS_GIRL_EVENT_IMAGES                                      ; $57d8: $3e $08
+	ld   a, GS_EVENT_GALLERY                                      ; $57d8: $3e $08
 	ld   [wGameState], a                                  ; $57da: $ea $a0 $c2
 	xor  a                                           ; $57dd: $af
 	ld   [wGameSubstate], a                                  ; $57de: $ea $a1 $c2
@@ -4116,5 +4137,61 @@ Data_31_595eentry05::
 	db $25, $35, $42, $42, $35, $00
 Data_31_595eentry06::
 	db $29, $48, $3c, $39, $46, $00
+
+
+EventGalleryBank1_8800hHook:
+	call RLEXorCopy
+
+; Replacements
+	ld   bc, $40
+	ld   de, $89c0
+	ld   hl, .gfx
+	call MemCopy
+
+	ld   bc, $40
+	ld   de, $8a00
+	ld   hl, .gfx+$80
+	call MemCopy
+
+	ld   bc, $20
+	ld   de, $8ab0
+	ld   hl, .gfx+$50
+	call MemCopy
+
+	ld   bc, $20
+	ld   de, $8ae0
+	ld   hl, .gfx+$d0
+	call MemCopy
+
+; Singles
+	ld   bc, $10
+	ld   de, $8880
+	ld   hl, .gfx+$40
+	call MemCopy
+
+	ld   bc, $10
+	ld   de, $8890
+	ld   hl, .gfx+$c0
+	call MemCopy
+
+	ld   bc, $10
+	ld   de, $88a0
+	ld   hl, .gfx+$70
+	call MemCopy
+	ret
+.gfx:
+	INCBIN "en_eventGallery.2bpp"
+
+
+EventGalleryTileMapHook:
+	call FarCopyLayout
+
+	ld   a, $88
+	ld   [$99a9], a
+	inc  a
+	ld   [$99c9], a
+	inc  a
+	ld   [$9a0e], a
+	ret
 
 endc

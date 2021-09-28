@@ -1667,6 +1667,48 @@ AlterMiniGameHelpScreenAttrs::
 	ld   [$d000+$14d], a
 	ret
 
+
+EnLoadVoiceModeGfx0::
+	ld   bc, .end-.gfx
+	ld   de, $8d20
+	ld   hl, .gfx
+	call MemCopy
+	ret
+.gfx:
+	INCBIN "en_voiceMode.2bpp"
+.end:
+
+
+EnLoadVoiceModeTileMap::
+	ld   a, BANK(.title)
+	ldbc 10, 2
+	ld   de, .title
+	ld   hl, $9825
+	call FarCopyLayout
+
+	ld   a, BANK(.names)
+	ldbc 5, 12
+	ld   de, .names
+	ld   hl, $9886
+	call FarCopyLayout
+	ret 
+.title:
+	db $d2, $d3, $d4, $d5, $d6, $dc, $dd, $de, $df, $e0
+	db $d7, $d8, $d9, $da, $db, $e1, $e2, $e3, $e4, $e5
+.names:
+	db $e6, $e7, $e8, $e9, $ea
+	db $eb, $ec, $ed, $ee, $ef
+	db $f0, $f1, $f2, $f3, $f4
+	db $f5, $f6, $f7, $f8, $f9
+	db $fa, $fb, $fc, $fd, $fe
+	db $ff, $00, $01, $02, $03
+	db $04, $05, $06, $07, $08
+	db $09, $0a, $0b, $0c, $0d
+	db $0e, $0f, $10, $11, $12
+	db $13, $14, $15, $16, $17
+	db $18, $19, $1a, $1b, $1c
+	db $1d, $1e, $1f, $20, $21
+
 endc
 
 

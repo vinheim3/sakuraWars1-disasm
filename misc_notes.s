@@ -57,6 +57,8 @@
 ; tools/gfx.py 2bpp en_exploreDescripts.png
 ; rgbgfx -o en_romandoTreasureInvPopup.2bpp en_romandoTreasureInvPopup.png
 ; rgbgfx -o en_gameOverSprites.2bpp -h en_gameOverSprites.png
+; rgbgfx -o en_eventGallery.2bpp en_eventGallery.png
+; rgbgfx -o en_voiceMode.2bpp en_voiceMode.png
 ; tools/gfx.py 1bpp newLetters.png --from=png --interleave
 
 ; empty banks
@@ -69,7 +71,7 @@
 
 ; hook banks
 ; $ff ($13c), $fd ($3ed), $fb ($155), $a4 ($45), $8b ($19f), $85 ($4c3)
-; $6b ($2323), $2b ($c98), $1f ($33a) -> $6a, $40, $3f, $35, $31
+; $6b ($2323), $2b ($59e), $1f ($33a) -> $6a, $40, $3f, $35, $31
 
 ; To 'day passed'
 ; New game

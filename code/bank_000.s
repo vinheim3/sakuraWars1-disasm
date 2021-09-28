@@ -3256,8 +3256,8 @@ HandleGameState:
 	AddrBank GameState05_Credits
 	AddrBank GameState06_SoundMode
 	AddrBank GameState07_SceneryImages
-	AddrBank GameState08_GirlEventImages
-	AddrBank GameState09_GirlVoiceSounds
+	AddrBank GameState08_EventGallery
+	AddrBank GameState09_VoiceMode
 	AddrBank GameState0a ; like sound mode but bugged
 	AddrBank GameState0b_KannaMiniGameMain
 	AddrBank GameState0c_SakuraMiniGameMain
