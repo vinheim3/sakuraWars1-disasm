@@ -262,6 +262,10 @@ jr_08f_40ec:
 	nop                                              ; $40fd: $00
 	nop                                              ; $40fe: $00
 	nop                                              ; $40ff: $00
+
+if def(VWF)
+	INCBIN "en_exploreStairs.2bpp"
+else
 	ld   bc, $0701                                   ; $4100: $01 $01 $07
 	ld   b, $1f                                      ; $4103: $06 $1f
 	jr   jr_08f_4146                                 ; $4105: $18 $3f
@@ -636,6 +640,9 @@ jr_08f_42d6:
 	cp   $fe                                         ; $42fc: $fe $fe
 	nop                                              ; $42fe: $00
 	nop                                              ; $42ff: $00
+endc
+
+
 	nop                                              ; $4300: $00
 	nop                                              ; $4301: $00
 	nop                                              ; $4302: $00

@@ -8340,7 +8340,7 @@ GameState48::
 	xor  a                                           ; $691c: $af
 	ld   [$cbf7], a                                  ; $691d: $ea $f7 $cb
 	ld   [$cbf8], a                                  ; $6920: $ea $f8 $cb
-	ld   [$cbf9], a                                  ; $6923: $ea $f9 $cb
+	ld   [wPortraitGalleryChosenPerson], a                                  ; $6923: $ea $f9 $cb
 	ld   [$cbfa], a                                  ; $6926: $ea $fa $cb
 	ld   a, $01                                      ; $6929: $3e $01
 	ld   [$cbfb], a                                  ; $692b: $ea $fb $cb
@@ -8664,7 +8664,7 @@ Jump_00b_6b3a:
 	add  hl, bc                                      ; $6b85: $09
 	ld   a, [hl]                                     ; $6b86: $7e
 	ld   c, a                                        ; $6b87: $4f
-	ld   a, [$cbf9]                                  ; $6b88: $fa $f9 $cb
+	ld   a, [wPortraitGalleryChosenPerson]                                  ; $6b88: $fa $f9 $cb
 	and  $f0                                         ; $6b8b: $e6 $f0
 	swap a                                           ; $6b8d: $cb $37
 	ld   b, a                                        ; $6b8f: $47
@@ -8774,7 +8774,7 @@ jr_00b_6c38:
 	jr   z, jr_00b_6c4d                              ; $6c3a: $28 $11
 
 jr_00b_6c3c:
-	ld   hl, $cbf9                                   ; $6c3c: $21 $f9 $cb
+	ld   hl, wPortraitGalleryChosenPerson                                   ; $6c3c: $21 $f9 $cb
 	dec  [hl]                                        ; $6c3f: $35
 	call Call_00b_6c70                               ; $6c40: $cd $70 $6c
 	ld   bc, $d000                                   ; $6c43: $01 $00 $d0
@@ -8789,7 +8789,7 @@ jr_00b_6c4d:
 	jr   z, jr_00b_6c69                              ; $6c4f: $28 $18
 
 jr_00b_6c51:
-	ld   hl, $cbf9                                   ; $6c51: $21 $f9 $cb
+	ld   hl, wPortraitGalleryChosenPerson                                   ; $6c51: $21 $f9 $cb
 	inc  [hl]                                        ; $6c54: $34
 	call Call_00b_6c70                               ; $6c55: $cd $70 $6c
 	ld   bc, $d000                                   ; $6c58: $01 $00 $d0
@@ -8811,11 +8811,11 @@ jr_00b_6c69:
 
 
 Call_00b_6c70:
-	ld   a, [$cbf9]                                  ; $6c70: $fa $f9 $cb
+	ld   a, [wPortraitGalleryChosenPerson]                                  ; $6c70: $fa $f9 $cb
 	swap a                                           ; $6c73: $cb $37
 	and  $0f                                         ; $6c75: $e6 $0f
 	ld   h, a                                        ; $6c77: $67
-	ld   a, [$cbf9]                                  ; $6c78: $fa $f9 $cb
+	ld   a, [wPortraitGalleryChosenPerson]                                  ; $6c78: $fa $f9 $cb
 	swap a                                           ; $6c7b: $cb $37
 	and  $f0                                         ; $6c7d: $e6 $f0
 	ld   l, a                                        ; $6c7f: $6f

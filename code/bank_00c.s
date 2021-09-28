@@ -360,7 +360,7 @@ ExploreSubstate9:
 	call ReserveBaseAnimSpriteSpecAndInstance                                       ; $42aa: $cd $4b $2f
 	ld   [$cb35], a                                  ; $42ad: $ea $35 $cb
 	call StartAnimatingAnimatedSpriteSpec                                       ; $42b0: $cd $14 $30
-	call Call_00c_4461                               ; $42b3: $cd $61 $44
+	call ExploreLoadCursorTileDataAndSetSpriteDetails                               ; $42b3: $cd $61 $44
 	xor  a                                           ; $42b6: $af
 	ld   [$cb2b], a                                  ; $42b7: $ea $2b $cb
 	ld   [$cb2c], a                                  ; $42ba: $ea $2c $cb
@@ -673,35 +673,34 @@ jr_00c_445c:
 	ret                                              ; $4460: $c9
 
 
-Call_00c_4461:
+ExploreLoadCursorTileDataAndSetSpriteDetails:
+;
 	ld   a, [$cb35]                                  ; $4461: $fa $35 $cb
 	call HLequAddrOfAnimSpriteSpecDetails                                       ; $4464: $cd $76 $30
+
+;
 	ld   a, [wExploreCursorX]                                  ; $4467: $fa $37 $cb
 	ld   b, a                                        ; $446a: $47
 	ld   a, [wExploreCursorY]                                  ; $446b: $fa $39 $cb
 	ld   c, a                                        ; $446e: $4f
-	push af                                          ; $446f: $f5
-	ld   a, $2f                                      ; $4470: $3e $2f
-	ld   [wFarCallAddr], a                                  ; $4472: $ea $98 $c2
-	ld   a, $41                                      ; $4475: $3e $41
-	ld   [wFarCallAddr+1], a                                  ; $4477: $ea $99 $c2
-	ld   a, $01                                      ; $447a: $3e $01
-	ld   [wFarCallBank], a                                  ; $447c: $ea $9a $c2
-	pop  af                                          ; $447f: $f1
-	call FarCall                                       ; $4480: $cd $62 $09
+
+	M_FarCall SetType1AnimSpriteSpecInstanceCoords
+
+;
 	ld   a, [wExploreHoverFloorTransition]                                  ; $4483: $fa $3b $cb
 	bit  7, a                                        ; $4486: $cb $7f
-	jp   nz, Jump_00c_44f7                           ; $4488: $c2 $f7 $44
+	jp   nz, .upstairs                           ; $4488: $c2 $f7 $44
 
 	bit  6, a                                        ; $448b: $cb $77
-	jp   nz, Jump_00c_450a                           ; $448d: $c2 $0a $45
+	jp   nz, .downstairs                           ; $448d: $c2 $0a $45
 
-	ld   a, [$b1b7]                                  ; $4490: $fa $b7 $b1
+;
+	ld   a, [sCursorType]                                  ; $4490: $fa $b7 $b1
 	dec  a                                           ; $4493: $3d
-	jr   z, jr_00c_44ac                              ; $4494: $28 $16
+	jr   z, .petalCursor                              ; $4494: $28 $16
 
 	dec  a                                           ; $4496: $3d
-	jr   z, jr_00c_44bf                              ; $4497: $28 $26
+	jr   z, .candyCursor                              ; $4497: $28 $26
 
 	ld   c, $00                                      ; $4499: $0e $00
 	ld   de, $8100                                   ; $449b: $11 $00 $81
@@ -710,9 +709,9 @@ Call_00c_4461:
 	ld   b, $10                                      ; $44a3: $06 $10
 	call EnqueueHDMATransfer                                       ; $44a5: $cd $7c $02
 	ld   a, $08                                      ; $44a8: $3e $08
-	jr   jr_00c_44d0                                 ; $44aa: $18 $24
+	jr   .end                                 ; $44aa: $18 $24
 
-jr_00c_44ac:
+.petalCursor:
 	ld   c, $00                                      ; $44ac: $0e $00
 	ld   de, $8100                                   ; $44ae: $11 $00 $81
 	ld   a, $8f                                      ; $44b1: $3e $8f
@@ -720,9 +719,9 @@ jr_00c_44ac:
 	ld   b, $20                                      ; $44b6: $06 $20
 	call EnqueueHDMATransfer                                       ; $44b8: $cd $7c $02
 	ld   a, $0b                                      ; $44bb: $3e $0b
-	jr   jr_00c_44d0                                 ; $44bd: $18 $11
+	jr   .end                                 ; $44bd: $18 $11
 
-jr_00c_44bf:
+.candyCursor:
 	ld   c, $00                                      ; $44bf: $0e $00
 	ld   de, $8100                                   ; $44c1: $11 $00 $81
 	ld   a, $8f                                      ; $44c4: $3e $8f
@@ -731,7 +730,7 @@ jr_00c_44bf:
 	call EnqueueHDMATransfer                                       ; $44cb: $cd $7c $02
 	ld   a, $0c                                      ; $44ce: $3e $0c
 
-jr_00c_44d0:
+.end:
 	ld   hl, $cb43                                   ; $44d0: $21 $43 $cb
 	cp   [hl]                                        ; $44d3: $be
 	ret  z                                           ; $44d4: $c8
@@ -741,19 +740,11 @@ jr_00c_44d0:
 	call HLequAddrOfAnimSpriteSpecDetails                                       ; $44d9: $cd $76 $30
 	ld   de, AnimatedSpriteSpecs_7762                                   ; $44dc: $11 $62 $77
 	ld   a, [$cb43]                                  ; $44df: $fa $43 $cb
-	push af                                          ; $44e2: $f5
-	ld   a, $1c                                      ; $44e3: $3e $1c
-	ld   [wFarCallAddr], a                                  ; $44e5: $ea $98 $c2
-	ld   a, $41                                      ; $44e8: $3e $41
-	ld   [wFarCallAddr+1], a                                  ; $44ea: $ea $99 $c2
-	ld   a, $01                                      ; $44ed: $3e $01
-	ld   [wFarCallBank], a                                  ; $44ef: $ea $9a $c2
-	pop  af                                          ; $44f2: $f1
-	call FarCall                                       ; $44f3: $cd $62 $09
+
+	M_FarCall LoadType1NewAnimatedSpriteSpecAddress
 	ret                                              ; $44f6: $c9
 
-
-Jump_00c_44f7:
+.upstairs:
 	ld   c, $00                                      ; $44f7: $0e $00
 	ld   de, $8100                                   ; $44f9: $11 $00 $81
 	ld   a, $8f                                      ; $44fc: $3e $8f
@@ -761,9 +752,9 @@ Jump_00c_44f7:
 	ld   b, $10                                      ; $4501: $06 $10
 	call EnqueueHDMATransfer                                       ; $4503: $cd $7c $02
 	ld   a, $08                                      ; $4506: $3e $08
-	jr   jr_00c_44d0                                 ; $4508: $18 $c6
+	jr   .end                                 ; $4508: $18 $c6
 
-Jump_00c_450a:
+.downstairs:
 	ld   c, $00                                      ; $450a: $0e $00
 	ld   de, $8100                                   ; $450c: $11 $00 $81
 	ld   a, $8f                                      ; $450f: $3e $8f
@@ -771,7 +762,7 @@ Jump_00c_450a:
 	ld   b, $10                                      ; $4514: $06 $10
 	call EnqueueHDMATransfer                                       ; $4516: $cd $7c $02
 	ld   a, $08                                      ; $4519: $3e $08
-	jr   jr_00c_44d0                                 ; $451b: $18 $b3
+	jr   .end                                 ; $451b: $18 $b3
 
 
 Jump_00c_451d:
@@ -909,7 +900,7 @@ jr_00c_45a4:
 	ld   de, wExploreCurrRegionData                                   ; $45fd: $11 $3a $cb
 	ld   bc, $0007                                   ; $4600: $01 $07 $00
 	call MemCopy                                       ; $4603: $cd $a9 $09
-	call Call_00c_4461                               ; $4606: $cd $61 $44
+	call ExploreLoadCursorTileDataAndSetSpriteDetails                               ; $4606: $cd $61 $44
 	call EnqueueExploreHoverDescriptionTileData                               ; $4609: $cd $9e $47
 	call Call_00c_47b5                               ; $460c: $cd $b5 $47
 	call ExploreHandleAPressed                                       ; $460f: $cd $7c $48

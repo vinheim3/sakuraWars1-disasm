@@ -1850,7 +1850,7 @@ MiniGameResultsHook::
 	ldh  [rVBK], a
 
 	ld   a, BANK(.highScoreAttr)
-	ldbc 10, 3
+	ldbc 8, 3
 	ld   de, .highScoreAttr
 	ld   hl, $98a2
 	call FarCopyLayout
@@ -1875,7 +1875,7 @@ MiniGameResultsHook::
 .row8:
 	INCBIN "en_minigameResults.2bpp", 70*$10, $a0
 .row9:
-	INCBIN "en_minigameResults.2bpp", 82*$10, $20
+	INCBIN "en_minigameResults.2bpp", 81*$10, $20
 .row10:
 	INCBIN "en_minigameResults.2bpp", 90*$10, $a0
 .row11:
@@ -1899,7 +1899,7 @@ MiniGameResultsHook::
 .highScore:
 	db $26, $27, $28, $29, $2a, $2b, $2c, $2d, $2e, $2f
 	db $30, $31, $32, $33, $34, $35, $36, $37, $38, $39
-	db $80, $80, $3a, $3b, $80, $80, $80, $80, $80, $80
+	db $80, $3a, $3b, $80, $80, $80, $80, $80, $80, $80
 .hiScorePopup:
 	db $80, $3a, $3b
 .pointsEarned:
@@ -1913,9 +1913,9 @@ MiniGameResultsHook::
 	db $62, $63, $64, $65, $66, $67, $68, $69, $6a, $6b
 	db $6c, $6d, $6e, $6f, $70, $71, $72, $73, $74, $75
 .highScoreAttr:
-	db $01, $01, $01, $01, $01, $01, $01, $01, $01, $01
-	db $01, $01, $01, $01, $01, $01, $01, $01, $01, $01
-	db $01, $01, $01, $01, $01, $01, $01, $01, $01, $01
+	db $01, $01, $01, $01, $01, $01, $01, $01
+	db $01, $01, $01, $01, $01, $01, $01, $01
+	db $01, $01, $01, $01, $01, $01, $01, $01
 
 
 EnLoadSakuraMiniGameGfx0::

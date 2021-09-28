@@ -36,7 +36,13 @@ sTextSpeedBaseCounter:: ; $b1b3
     db
 
 sb1b4:
-    ds $fff-$1b4
+    ds 7-4
+
+sCursorType:: ; $b1b7
+    db
+
+sb1b8:
+    ds $fff-$1b8
 
 sRandomSeed:: ; $bfff
     db

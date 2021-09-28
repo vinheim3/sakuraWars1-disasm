@@ -1057,13 +1057,15 @@ jr_031_4620:
 	nop                                              ; $4632: $00
 
 
-GameState07_SceneryImages::
+GameState07_PortraitMode::
 	ld   a, [wGameSubstate]                                  ; $4633: $fa $a1 $c2
 	rst  JumpTable                                         ; $4636: $df
-	dec  a                                           ; $4637: $3d
-	ld   b, [hl]                                     ; $4638: $46
-	call nz, $9347                                   ; $4639: $c4 $47 $93
-	ld   b, a                                        ; $463c: $47
+	dw PortraitModeSubstate0
+	dw PortraitModeSubstate1
+	dw PortraitModeSubstate2
+	
+
+PortraitModeSubstate0:
 	call TurnOffLCD                                       ; $463d: $cd $e3 $08
 	call ClearDisplayRegsAllowVBlankInt                                       ; $4640: $cd $59 $0b
 	ld   a, [wLCDC]                                  ; $4643: $fa $03 $c2
@@ -1107,12 +1109,21 @@ GameState07_SceneryImages::
 	ld   [wFarCallBank], a                                  ; $469d: $ea $9a $c2
 	pop  af                                          ; $46a0: $f1
 	call FarCall                                       ; $46a1: $cd $62 $09
+
+;
 	ld   a, $01                                      ; $46a4: $3e $01
 	ldh  [rVBK], a                                   ; $46a6: $e0 $4f
+
 	ld   a, $34                                      ; $46a8: $3e $34
 	ld   hl, $8800                                   ; $46aa: $21 $00 $88
 	ld   de, $61ba                                   ; $46ad: $11 $ba $61
+if def(VWF)
+	call PortraitGalleryBank1_8800hHook
+else
 	call RLEXorCopy                                       ; $46b0: $cd $d2 $09
+endc
+
+;
 	ld   a, $01                                      ; $46b3: $3e $01
 	ldh  [rVBK], a                                   ; $46b5: $e0 $4f
 	ld   hl, $9965                                   ; $46b7: $21 $65 $99
@@ -1120,11 +1131,20 @@ GameState07_SceneryImages::
 	ld   de, $46e0                                   ; $46bc: $11 $e0 $46
 	ld   bc, $0e06                                   ; $46bf: $01 $06 $0e
 	call FarCopyLayout                                       ; $46c2: $cd $2c $0b
+
+;
 	xor  a                                           ; $46c5: $af
 	ldh  [rVBK], a                                   ; $46c6: $e0 $4f
+
 	ld   hl, $9965                                   ; $46c8: $21 $65 $99
 	ld   a, $35                                      ; $46cb: $3e $35
+if def(VWF)
+	call PortraitGalleryTileMap
+else
 	call FarCopyLayout                                       ; $46cd: $cd $2c $0b
+endc
+
+;
 	ld   a, [wWramBank]                                  ; $46d0: $fa $93 $c2
 	push af                                          ; $46d3: $f5
 	ld   a, $05                                      ; $46d4: $3e $05
@@ -1143,7 +1163,7 @@ GameState07_SceneryImages::
 	ld   [$cbf7], a                                  ; $46f1: $ea $f7 $cb
 	ld   [$cbf8], a                                  ; $46f4: $ea $f8 $cb
 	xor  a                                           ; $46f7: $af
-	ld   [$cbf9], a                                  ; $46f8: $ea $f9 $cb
+	ld   [wPortraitGalleryChosenPerson], a                                  ; $46f8: $ea $f9 $cb
 	ld   [$c686], a                                  ; $46fb: $ea $86 $c6
 	ld   [$cbfa], a                                  ; $46fe: $ea $fa $cb
 	ld   [$c687], a                                  ; $4701: $ea $87 $c6
@@ -1154,7 +1174,7 @@ GameState07_SceneryImages::
 	ldh  [rSVBK], a                                  ; $470d: $e0 $70
 
 jr_031_470f:
-	ld   hl, $cbf9                                   ; $470f: $21 $f9 $cb
+	ld   hl, wPortraitGalleryChosenPerson                                   ; $470f: $21 $f9 $cb
 	ld   a, [hl]                                     ; $4712: $7e
 	inc  a                                           ; $4713: $3c
 	and  $0f                                         ; $4714: $e6 $0f
@@ -1213,6 +1233,7 @@ jr_031_470f:
 	ret                                              ; $4792: $c9
 
 
+PortraitModeSubstate2:
 	ld   b, $00                                      ; $4793: $06 $00
 	ld   hl, wBGPalettes                                   ; $4795: $21 $de $c2
 	ld   c, $01                                      ; $4798: $0e $01
@@ -1235,6 +1256,7 @@ jr_031_470f:
 	ret                                              ; $47c3: $c9
 
 
+PortraitModeSubstate1:
 	call ClearOam                                       ; $47c4: $cd $d7 $0d
 	ld   bc, $47da                                   ; $47c7: $01 $da $47
 	push bc                                          ; $47ca: $c5
@@ -1316,7 +1338,7 @@ jr_031_4833:
 	bit  4, a                                        ; $4833: $cb $67
 	jr   z, jr_031_484c                              ; $4835: $28 $15
 
-	ld   a, [$cbf9]                                  ; $4837: $fa $f9 $cb
+	ld   a, [wPortraitGalleryChosenPerson]                                  ; $4837: $fa $f9 $cb
 	or   a                                           ; $483a: $b7
 	jr   z, jr_031_4841                              ; $483b: $28 $04
 
@@ -1343,11 +1365,11 @@ jr_031_484c:
 	bit  6, a                                        ; $485a: $cb $77
 	jr   z, jr_031_487e                              ; $485c: $28 $20
 
-	ld   a, [$cbf9]                                  ; $485e: $fa $f9 $cb
+	ld   a, [wPortraitGalleryChosenPerson]                                  ; $485e: $fa $f9 $cb
 	push af                                          ; $4861: $f5
 
 jr_031_4862:
-	ld   hl, $cbf9                                   ; $4862: $21 $f9 $cb
+	ld   hl, wPortraitGalleryChosenPerson                                   ; $4862: $21 $f9 $cb
 	ld   a, [hl]                                     ; $4865: $7e
 	dec  a                                           ; $4866: $3d
 	and  $0f                                         ; $4867: $e6 $0f
@@ -1358,7 +1380,7 @@ jr_031_4862:
 	bit  7, [hl]                                     ; $4871: $cb $7e
 	jr   nz, jr_031_4862                             ; $4873: $20 $ed
 
-	ld   a, [$cbf9]                                  ; $4875: $fa $f9 $cb
+	ld   a, [wPortraitGalleryChosenPerson]                                  ; $4875: $fa $f9 $cb
 	pop  bc                                          ; $4878: $c1
 	cp   b                                           ; $4879: $b8
 	jr   z, jr_031_48b3                              ; $487a: $28 $37
@@ -1369,11 +1391,11 @@ jr_031_487e:
 	bit  7, a                                        ; $487e: $cb $7f
 	jr   z, jr_031_48a2                              ; $4880: $28 $20
 
-	ld   a, [$cbf9]                                  ; $4882: $fa $f9 $cb
+	ld   a, [wPortraitGalleryChosenPerson]                                  ; $4882: $fa $f9 $cb
 	push af                                          ; $4885: $f5
 
 jr_031_4886:
-	ld   hl, $cbf9                                   ; $4886: $21 $f9 $cb
+	ld   hl, wPortraitGalleryChosenPerson                                   ; $4886: $21 $f9 $cb
 	ld   a, [hl]                                     ; $4889: $7e
 	inc  a                                           ; $488a: $3c
 	and  $0f                                         ; $488b: $e6 $0f
@@ -1384,7 +1406,7 @@ jr_031_4886:
 	bit  7, [hl]                                     ; $4895: $cb $7e
 	jr   nz, jr_031_4886                             ; $4897: $20 $ed
 
-	ld   a, [$cbf9]                                  ; $4899: $fa $f9 $cb
+	ld   a, [wPortraitGalleryChosenPerson]                                  ; $4899: $fa $f9 $cb
 	pop  bc                                          ; $489c: $c1
 	cp   b                                           ; $489d: $b8
 	jr   z, jr_031_48b3                              ; $489e: $28 $13
@@ -1692,7 +1714,7 @@ jr_031_4a5e:
 	bit  5, a                                        ; $4a61: $cb $6f
 	jr   z, jr_031_4a7a                              ; $4a63: $28 $15
 
-	ld   a, [$cbf9]                                  ; $4a65: $fa $f9 $cb
+	ld   a, [wPortraitGalleryChosenPerson]                                  ; $4a65: $fa $f9 $cb
 	or   a                                           ; $4a68: $b7
 	jr   z, jr_031_4a6f                              ; $4a69: $28 $04
 
@@ -1893,7 +1915,7 @@ jr_031_4ade:
 	ret                                              ; $4bc6: $c9
 
 
-	ld   a, [$cbf9]                                  ; $4bc7: $fa $f9 $cb
+	ld   a, [wPortraitGalleryChosenPerson]                                  ; $4bc7: $fa $f9 $cb
 	or   a                                           ; $4bca: $b7
 	jr   z, jr_031_4c40                              ; $4bcb: $28 $73
 
@@ -1972,7 +1994,7 @@ jr_031_4c40:
 	ld   a, $06                                      ; $4c4d: $3e $06
 	ld   [wWramBank], a                                  ; $4c4f: $ea $93 $c2
 	ldh  [rSVBK], a                                  ; $4c52: $e0 $70
-	ld   a, [$cbf9]                                  ; $4c54: $fa $f9 $cb
+	ld   a, [wPortraitGalleryChosenPerson]                                  ; $4c54: $fa $f9 $cb
 	or   a                                           ; $4c57: $b7
 	jr   nz, jr_031_4c5e                             ; $4c58: $20 $04
 
@@ -1987,7 +2009,7 @@ jr_031_4c5e:
 
 jr_031_4c66:
 	ld   c, a                                        ; $4c66: $4f
-	ld   a, [$cbf9]                                  ; $4c67: $fa $f9 $cb
+	ld   a, [wPortraitGalleryChosenPerson]                                  ; $4c67: $fa $f9 $cb
 	and  $0f                                         ; $4c6a: $e6 $0f
 	ld   b, a                                        ; $4c6c: $47
 	push af                                          ; $4c6d: $f5
@@ -2029,7 +2051,7 @@ jr_031_4c66:
 	or   a                                           ; $4cbc: $b7
 	jp   nz, Jump_031_4d58                           ; $4cbd: $c2 $58 $4d
 
-	ld   a, [$cbf9]                                  ; $4cc0: $fa $f9 $cb
+	ld   a, [wPortraitGalleryChosenPerson]                                  ; $4cc0: $fa $f9 $cb
 	or   a                                           ; $4cc3: $b7
 	jr   z, jr_031_4cf1                              ; $4cc4: $28 $2b
 
@@ -2133,7 +2155,7 @@ Jump_031_4d58:
 
 
 Call_031_4d90:
-	ld   a, [$cbf9]                                  ; $4d90: $fa $f9 $cb
+	ld   a, [wPortraitGalleryChosenPerson]                                  ; $4d90: $fa $f9 $cb
 	and  $0f                                         ; $4d93: $e6 $0f
 	ld   h, a                                        ; $4d95: $67
 	ld   a, [$c686]                                  ; $4d96: $fa $86 $c6
@@ -2147,7 +2169,7 @@ Call_031_4d90:
 
 
 Call_031_4da4:
-	ld   a, [$cbf9]                                  ; $4da4: $fa $f9 $cb
+	ld   a, [wPortraitGalleryChosenPerson]                                  ; $4da4: $fa $f9 $cb
 	and  $0f                                         ; $4da7: $e6 $0f
 	ld   h, a                                        ; $4da9: $67
 	xor  a                                           ; $4daa: $af
@@ -2156,7 +2178,7 @@ Call_031_4da4:
 
 
 Call_031_4dad:
-	ld   a, [$cbf9]                                  ; $4dad: $fa $f9 $cb
+	ld   a, [wPortraitGalleryChosenPerson]                                  ; $4dad: $fa $f9 $cb
 	and  $0f                                         ; $4db0: $e6 $0f
 	ld   h, a                                        ; $4db2: $67
 	ld   a, [$c686]                                  ; $4db3: $fa $86 $c6
@@ -2218,11 +2240,15 @@ Call_031_4e03:
 	ld   a, $05                                      ; $4e07: $3e $05
 	ld   [wWramBank], a                                  ; $4e09: $ea $93 $c2
 	ldh  [rSVBK], a                                  ; $4e0c: $e0 $70
-	ld   a, [$cbf9]                                  ; $4e0e: $fa $f9 $cb
+	ld   a, [wPortraitGalleryChosenPerson]                                  ; $4e0e: $fa $f9 $cb
 	or   a                                           ; $4e11: $b7
 	jr   z, jr_031_4e2e                              ; $4e12: $28 $1a
 
+if def(VWF)
+	call PortraitGalleryNonNonePlayerHook
+else
 	ld   hl, $d0c6                                   ; $4e14: $21 $c6 $d0
+endc
 	call Call_031_4e8d                               ; $4e17: $cd $8d $4e
 	ld   a, [$c686]                                  ; $4e1a: $fa $86 $c6
 	ld   hl, $d0c9                                   ; $4e1d: $21 $c9 $d0
@@ -2234,7 +2260,7 @@ Call_031_4e03:
 
 jr_031_4e2e:
 	ld   hl, $d0c6                                   ; $4e2e: $21 $c6 $d0
-	call Call_031_4e5f                               ; $4e31: $cd $5f $4e
+	call LoadPortraitGalleryNonePlayerIntoRam                               ; $4e31: $cd $5f $4e
 	ld   hl, $d0c9                                   ; $4e34: $21 $c9 $d0
 	call Call_031_4e6d                               ; $4e37: $cd $6d $4e
 	ld   hl, $d0cc                                   ; $4e3a: $21 $cc $d0
@@ -2256,9 +2282,13 @@ jr_031_4e40:
 	ret                                              ; $4e5e: $c9
 
 
-Call_031_4e5f:
+LoadPortraitGalleryNonePlayerIntoRam:
+if def(VWF)
+	jp   PortraitGalleryNonePlayerHook
+else
 	ld   a, $8e                                      ; $4e5f: $3e $8e
 	ld   [hl+], a                                    ; $4e61: $22
+endc
 	inc  a                                           ; $4e62: $3c
 	ld   [hl+], a                                    ; $4e63: $22
 	inc  a                                           ; $4e64: $3c
@@ -4192,6 +4222,83 @@ EventGalleryTileMapHook:
 	ld   [$99c9], a
 	inc  a
 	ld   [$9a0e], a
+	ret
+
+
+PortraitGalleryBank1_8800hHook:
+	call RLEXorCopy
+
+	ld   bc, .end-.gfx
+	ld   de, $9000
+	ld   hl, .gfx
+	call MemCopy
+	ret
+.gfx:
+	INCBIN "en_portraitGallery.2bpp"
+.end:
+
+
+PortraitGalleryTileMap:
+	call FarCopyLayout
+
+	ld   a, BANK(.mainLayout)
+	ldbc 13, 2
+	ld   de, .mainLayout
+	ld   hl, $9965
+	call FarCopyLayout
+
+	ld   a, $11
+	ld   [$9a0c], a
+	inc  a
+	ld   [$9a0d], a
+	inc  a
+	ld   [$9a0e], a
+
+	ld   a, $25
+	ld   [$9a10], a
+	inc  a
+	ld   [$9a11], a
+	ret
+.mainLayout:
+	db $00, $01, $02, $03, $04, $05, $06, $07, $08, $09, $0a, $0b, $0c
+	db $14, $15, $16, $17, $18, $19, $1a, $1b, $1c, $1d, $1e, $1f, $20
+
+
+PortraitGalleryNonePlayerHook:
+	dec  hl
+	ld   a, $0d
+	ld   [hl+], a
+	inc  a
+	ld   [hl+], a
+	inc  a
+	ld   [hl+], a
+	inc  a
+	ld   [hl+], a
+
+	ld   de, $1c
+	add  hl, de
+	ld   a, $21
+	ld   [hl+], a
+	inc  a
+	ld   [hl+], a
+	inc  a
+	ld   [hl+], a
+	inc  a
+	ld   [hl+], a
+	ret
+
+
+PortraitGalleryNonNonePlayerHook:
+	push af
+
+	ld   a, $27
+	ld   [$d0c5], a
+	ld   [$d0c8], a
+	ld   [$d0e5], a
+	ld   [$d0e8], a
+
+	pop  af
+	ld   hl, $d0c6
 	ret
 
 endc

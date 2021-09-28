@@ -11265,12 +11265,12 @@ GetSelectedSampledSoundIdx:
 	ret                                              ; $7d96: $c9
 
 .girlsSampledSounds:
-	dw Data_30_7db5
-	dw Data_30_7dc0
-	dw Data_30_7dcb
-	dw Data_30_7dd6
-	dw Data_30_7de2
-	dw Data_30_7ded
+	dw SakuraSampledSounds
+	dw SumireSampledSounds
+	dw MariaSampledSounds
+	dw IrisSampledSounds
+	dw KohranSampledSounds
+	dw KannaSampledSounds
 
 
 GetNumSampledSoundsForGirl:
@@ -11292,7 +11292,7 @@ GetNumSampledSoundsForGirl:
 	dec  bc                                          ; $7db4: $0b
 
 
-Data_30_7db5:
+SakuraSampledSounds:
 	db $25
 	db $26
 	db $27
@@ -11306,7 +11306,7 @@ Data_30_7db5:
 	db $00
 
 
-Data_30_7dc0:
+SumireSampledSounds:
 	db $31
 	db $32
 	db $33
@@ -11320,7 +11320,7 @@ Data_30_7dc0:
 	db $01
 	
 	
-Data_30_7dcb:
+MariaSampledSounds:
 	db $3d
 	db $3e
 	db $3f
@@ -11334,7 +11334,7 @@ Data_30_7dcb:
 	db $02
 
 
-Data_30_7dd6:
+IrisSampledSounds:
 	db $49
 	db $4a
 	db $4b
@@ -11349,7 +11349,7 @@ Data_30_7dd6:
 	db $04
 
 
-Data_30_7de2:
+KohranSampledSounds:
 	db $55
 	db $56
 	db $57
@@ -11363,7 +11363,7 @@ Data_30_7de2:
 	db $05
 
 
-Data_30_7ded:
+KannaSampledSounds:
 	db $61
 	db $62
 	db $63

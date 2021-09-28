@@ -5544,7 +5544,7 @@ jr_014_58aa:
 	ld   b, $00                                      ; $58ac: $06 $00
 	ld   a, h                                        ; $58ae: $7c
 	nop                                              ; $58af: $00
-	call c, $cbf9                                    ; $58b0: $dc $f9 $cb
+	call c, wPortraitGalleryChosenPerson                                    ; $58b0: $dc $f9 $cb
 	db   $fc                                         ; $58b3: $fc
 	db   $e4                                         ; $58b4: $e4
 	db   $fc                                         ; $58b5: $fc

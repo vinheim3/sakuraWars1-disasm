@@ -3255,7 +3255,7 @@ HandleGameState:
 	AddrBank GameState04_IrisMiniGameMain
 	AddrBank GameState05_Credits
 	AddrBank GameState06_SoundMode
-	AddrBank GameState07_SceneryImages
+	AddrBank GameState07_PortraitMode
 	AddrBank GameState08_EventGallery
 	AddrBank GameState09_VoiceMode
 	AddrBank GameState0a ; like sound mode but bugged
@@ -5609,6 +5609,17 @@ jr_000_1b63:
 
 
 ; A - sound idx
+; todo: put in constants:
+;   $00-$06 - ending sequence voices
+;   $07-$0c - hidden ending (Thank goodness)
+;   $0d-$12 - hidden ending (The captain)
+;   $13-$18 - hidden ending (Didn't get chance)
+;   $19-$1e - hidden ending (Here..)
+;   $1f-$24 - hidden ending (It's a ticket)
+;   $25-$2d - Sakura unk
+;   $2e-$2f - Sakura minigame
+;   $30 - Sakura unk
+;   etc
 PlaySampledSound::
 	push af                                                         ; $1b64
 	push bc                                                         ; $1b65

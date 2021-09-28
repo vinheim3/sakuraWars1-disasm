@@ -2318,7 +2318,7 @@ Call_03e_4ead:
 	ld   [$c976], a                                  ; $4ec1: $ea $76 $c9
 	ld   a, [$b1b6]                                  ; $4ec4: $fa $b6 $b1
 	ld   [$c973], a                                  ; $4ec7: $ea $73 $c9
-	ld   a, [$b1b7]                                  ; $4eca: $fa $b7 $b1
+	ld   a, [sCursorType]                                  ; $4eca: $fa $b7 $b1
 	ld   [$c974], a                                  ; $4ecd: $ea $74 $c9
 	ld   a, [$b1b8]                                  ; $4ed0: $fa $b8 $b1
 	ld   [$c975], a                                  ; $4ed3: $ea $75 $c9
@@ -2337,7 +2337,7 @@ Call_03e_4ed7:
 	ld   a, [$c973]                                  ; $4eee: $fa $73 $c9
 	ld   [$b1b6], a                                  ; $4ef1: $ea $b6 $b1
 	ld   a, [$c974]                                  ; $4ef4: $fa $74 $c9
-	ld   [$b1b7], a                                  ; $4ef7: $ea $b7 $b1
+	ld   [sCursorType], a                                  ; $4ef7: $ea $b7 $b1
 	ld   a, [$c975]                                  ; $4efa: $fa $75 $c9
 	ld   [$b1b8], a                                  ; $4efd: $ea $b8 $b1
 	ld   a, [$c97e]                                  ; $4f00: $fa $7e $c9

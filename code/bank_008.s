@@ -658,7 +658,7 @@ ScriptEngineTable:
 	;
 	ScriptOpData ScriptOpcode14, $01
 	;
-	ScriptOpData ScriptOpcode15, $02
+	ScriptOpData ScriptOpcode15_PlaySampledSound, $02
 	;
 	ScriptOpData ScriptOpcode16, $03
 	ds 5, 0
@@ -4189,7 +4189,7 @@ ScriptOpcode14_Main:
 	ret                                              ; $5b6f: $c9
 
 
-ScriptOpcode15_Init:
+ScriptOpcode15_PlaySampledSound_Init:
 	ld   a, $15                                      ; $5b70: $3e $15
 	call EnqueueAScriptOpcode                               ; $5b72: $cd $97 $40
 	xor  a                                           ; $5b75: $af
@@ -4202,7 +4202,7 @@ ScriptOpcode15_Init:
 	ret                                              ; $5b80: $c9
 
 
-ScriptOpcode15_Main:
+ScriptOpcode15_PlaySampledSound_Main:
 	xor  a                                           ; $5b81: $af
 	ld   [wScriptEngineContsRunningThisMainLoop], a                                  ; $5b82: $ea $52 $cb
 	ld   a, [hl]                                     ; $5b85: $7e
@@ -4214,28 +4214,28 @@ ScriptOpcode15_Main:
 
 	call DequeueAScriptOpcode                               ; $5b8c: $cd $bc $40
 	call GetNextScriptOpcodeToProcess                               ; $5b8f: $cd $70 $42
+if def(ENDING_SAMPLES)
+	cp   EnSampledSounds.end-EnSampledSounds
+else
 	cp   $0d                                         ; $5b92: $fe $0d
+endc
 	ret  nc                                          ; $5b94: $d0
 
 	ld   h, $00                                      ; $5b95: $26 $00
 	ld   l, a                                        ; $5b97: $6f
-	ld   bc, $5ba1                                   ; $5b98: $01 $a1 $5b
+if def(ENDING_SAMPLES)
+	ld   bc, EnSampledSounds
+else
+	ld   bc, .table                                   ; $5b98: $01 $a1 $5b
+endc
 	add  hl, bc                                      ; $5b9b: $09
 	ld   a, [hl]                                     ; $5b9c: $7e
 	call PlaySampledSound                                       ; $5b9d: $cd $64 $1b
 	ret                                              ; $5ba0: $c9
 
-
-	nop                                              ; $5ba1: $00
-	ld   bc, $0302                                   ; $5ba2: $01 $02 $03
-	inc  b                                           ; $5ba5: $04
-	dec  b                                           ; $5ba6: $05
-	ld   b, $30                                      ; $5ba7: $06 $30
-	inc  a                                           ; $5ba9: $3c
-	ld   c, b                                        ; $5baa: $48
-	ld   d, h                                        ; $5bab: $54
-	ld   h, b                                        ; $5bac: $60
-	ld   l, h                                        ; $5bad: $6c
+.table:
+	db $00, $01, $02, $03, $04, $05, $06
+	db $30, $3c, $48, $54, $60, $6c
 
 jr_008_5bae:
 	dec  hl                                          ; $5bae: $2b
@@ -8171,5 +8171,20 @@ AddSpaceInUntimedAnswer:
 	ld   a, " "
 	ld   [hl+], a
 	ret
+
+endc
+
+if def(ENDING_SAMPLES)
+
+EnSampledSounds:
+	db $00, $01, $02, $03, $04, $05, $06
+	db $30, $3c, $48, $54, $60, $6c
+; $0d+
+	db $07, $08, $09, $0a, $0b, $0c
+	db $0d, $0e, $0f, $10, $11, $12
+	db $13, $14, $15, $16, $17, $18
+	db $19, $1a, $1b, $1c, $1d, $1e
+	db $1f, $20, $21, $22, $23, $24
+.end:
 
 endc

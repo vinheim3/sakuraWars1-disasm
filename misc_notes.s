@@ -59,6 +59,8 @@
 ; rgbgfx -o en_gameOverSprites.2bpp -h en_gameOverSprites.png
 ; rgbgfx -o en_eventGallery.2bpp en_eventGallery.png
 ; rgbgfx -o en_voiceMode.2bpp en_voiceMode.png
+; tools/gfx.py 2bpp en_exploreStairs.png --interleave
+; rgbgfx -o en_portraitGallery.2bpp en_portraitGallery.png
 ; tools/gfx.py 1bpp newLetters.png --from=png --interleave
 
 ; empty banks

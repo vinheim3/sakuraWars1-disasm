@@ -9,6 +9,8 @@ from util import bankConv, getRom, conv, bankAddr, wordIn, stringB, groupBytes
 from common_words import get_chosen
 from openpyxl import load_workbook
 
+ENDING_SAMPLES = False
+
 
 class ScriptExtractor:
     binopsMap = {
@@ -692,10 +694,40 @@ class ScriptExtractor:
         if self.scriptNum == 500:
             self.instructions[480] = self.simpleCodes[0x0a]
 
+        # Ending sequence voice samples
+        if ENDING_SAMPLES:
+            ending_sample_offset = 6
+            if self.scriptNum == 736:
+                # Kohran
+                self.instructions[3358] = {
+                    "name": f"db $15, {ending_sample_offset+0x0b}", 
+                    "params": ""
+                }
+                self.instructions[3399] = {
+                    "name": f"db $15, {ending_sample_offset+0x11}", 
+                    "params": ""
+                }
+                self.instructions[3439] = {
+                    "name": f"db $15, {ending_sample_offset+0x17}", 
+                    "params": ""
+                }
+                self.instructions[3475] = {
+                    "name": f"db $15, {ending_sample_offset+0x1d}", 
+                    "params": ""
+                }
+                self.instructions[3550] = {
+                    "name": f"db $15, {ending_sample_offset+0x23}", 
+                    "params": ""
+                }
+
         comps, totalBytes = self.genComps()
 
         if self.scriptNum in (330, 500):
             totalBytes += 1
+
+        if ENDING_SAMPLES:
+            if self.scriptNum == 736:
+                totalBytes += 5 * 2
 
         return comps, totalBytes
 

@@ -618,7 +618,13 @@ wUntimedQuestionProcessMiscCounter:: ; $cbd9
     db
 
 wcbda:
-    ds $c02-$bda
+    ds $f9-$da
+
+wPortraitGalleryChosenPerson:: ; $cbf9
+    db
+
+wcbfa:
+    ds $c02-$bfa
 
 wTitleScreenAnimationStep:: ; $cc02
     db
