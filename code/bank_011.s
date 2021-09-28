@@ -371,7 +371,7 @@ jr_011_425c:
 	jr   nz, jr_011_4293                             ; $427e: $20 $13
 
 	call Call_011_4b81                               ; $4280: $cd $81 $4b
-	ld   [wBattleWon], a                                  ; $4283: $ea $21 $cb
+	ld   [wMiniGameTrainingBattleRank], a                                  ; $4283: $ea $21 $cb
 	ld   a, [$c809]                                  ; $4286: $fa $09 $c8
 	ld   [wGameState], a                                  ; $4289: $ea $a0 $c2
 	ld   a, [$c80a]                                  ; $428c: $fa $0a $c8
@@ -3055,7 +3055,7 @@ jr_011_51df:
 	jr   nz, jr_011_5216                             ; $5201: $20 $13
 
 	ld   a, [$c82d]                                  ; $5203: $fa $2d $c8
-	ld   [wBattleWon], a                                  ; $5206: $ea $21 $cb
+	ld   [wMiniGameTrainingBattleRank], a                                  ; $5206: $ea $21 $cb
 	ld   a, [$c837]                                  ; $5209: $fa $37 $c8
 	ld   [wGameState], a                                  ; $520c: $ea $a0 $c2
 	ld   a, [$c838]                                  ; $520f: $fa $38 $c8
@@ -5478,7 +5478,7 @@ jr_011_6204:
 	jr   z, jr_011_6286                              ; $623a: $28 $4a
 
 	call Call_011_6a86                               ; $623c: $cd $86 $6a
-	ld   [wBattleWon], a                                  ; $623f: $ea $21 $cb
+	ld   [wMiniGameTrainingBattleRank], a                                  ; $623f: $ea $21 $cb
 	ld   a, [$c8ad]                                  ; $6242: $fa $ad $c8
 	ld   [wGameState], a                                  ; $6245: $ea $a0 $c2
 	ld   a, [$c8ae]                                  ; $6248: $fa $ae $c8

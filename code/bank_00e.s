@@ -213,13 +213,13 @@ SpriteGroup1Pointers::
 	dw $4bb8
 	dw $4bc8
 	dw SpriteGroup1_Idx9ch_GameOverLeftKanji1
-	dw SpriteGroup1_Idx9dh
-	dw $4c50
-	dw $4c90
+	dw SpriteGroup1_Idx9dh_GameOverLeftKanji2
+	dw SpriteGroup1_Idx9eh_GameOverLeftKanji3
+	dw SpriteGroup1_Idx9fh_GameOverLeftKanji4
 	dw SpriteGroup1_Idxa0h_GameOverRightKanji1
-	dw SpriteGroup1_Idxa1h
-	dw $4d3c
-	dw $4d78
+	dw SpriteGroup1_Idxa1h_GameOverRightKanji2
+	dw SpriteGroup1_Idxa2h_GameOverRightKanji3
+	dw SpriteGroup1_Idxa3h_GameOverRightKanji4
 	dw SpriteGroup1_Idxa4h_GameOverPlayerSprite
 	dw SpriteGroup1_Idxa5h
 	dw $4e18
@@ -2107,7 +2107,10 @@ jr_00e_4bb2:
 	db $11 
 	
 	
+if def(VWF)
+else
 SpriteGroup1_Idx9ch_GameOverLeftKanji1:
+endc
 	db $30, $29, $14, $03
 	db $30, $20, $18, $03
 	db $30, $18, $16, $03
@@ -2124,201 +2127,106 @@ SpriteGroup1_Idx9ch_GameOverLeftKanji1:
 	db $10, $08, $00, $13
 
 
-SpriteGroup1_Idx9dh:
-	jr   c, jr_00e_4c1a                              ; $4c10: $38 $08
-
-jr_00e_4c12:
-	ld   [hl], d                                     ; $4c12: $72
-	inc  bc                                          ; $4c13: $03
-	jr   nc, jr_00e_4c1e                             ; $4c14: $30 $08
-
-	ld   l, $03                                      ; $4c16: $2e $03
-	jr   nc, @+$2e                                   ; $4c18: $30 $2c
-
-jr_00e_4c1a:
-	ld   [hl], d                                     ; $4c1a: $72
-	inc  bc                                          ; $4c1b: $03
-	jr   nc, @+$2a                                   ; $4c1c: $30 $28
-
-jr_00e_4c1e:
-	inc  [hl]                                        ; $4c1e: $34
-	inc  bc                                          ; $4c1f: $03
-	jr   nc, @+$22                                   ; $4c20: $30 $20
-
-	ld   [hl-], a                                    ; $4c22: $32
-	inc  bc                                          ; $4c23: $03
-	jr   nc, @+$1a                                   ; $4c24: $30 $18
-
-	jr   nc, jr_00e_4c2b                             ; $4c26: $30 $03
-
-	jr   nz, jr_00e_4c52                             ; $4c28: $20 $28
-
-	inc  l                                           ; $4c2a: $2c
-
-jr_00e_4c2b:
-	inc  bc                                          ; $4c2b: $03
-	jr   nz, @+$22                                   ; $4c2c: $20 $20
-
-	ld   a, [hl+]                                    ; $4c2e: $2a
-	inc  bc                                          ; $4c2f: $03
-	jr   nz, jr_00e_4c4a                             ; $4c30: $20 $18
-
-	jr   z, @+$05                                    ; $4c32: $28 $03
-
-	jr   nz, @+$12                                   ; $4c34: $20 $10
-
-	ld   h, $03                                      ; $4c36: $26 $03
-	jr   nz, @+$0a                                   ; $4c38: $20 $08
-
-	inc  h                                           ; $4c3a: $24
-	inc  bc                                          ; $4c3b: $03
-	db   $10                                         ; $4c3c: $10
-	jr   z, @+$24                                    ; $4c3d: $28 $22
-
-	inc  bc                                          ; $4c3f: $03
-	db   $10                                         ; $4c40: $10
-	jr   nz, @+$22                                   ; $4c41: $20 $20
-
-	inc  bc                                          ; $4c43: $03
-	db   $10                                         ; $4c44: $10
-	jr   @+$20                                       ; $4c45: $18 $1e
-
-	inc  bc                                          ; $4c47: $03
-	db   $10                                         ; $4c48: $10
-	db   $10                                         ; $4c49: $10
-
-jr_00e_4c4a:
-	inc  e                                           ; $4c4a: $1c
-	inc  bc                                          ; $4c4b: $03
-	db   $10                                         ; $4c4c: $10
-	ld   [$131a], sp                                 ; $4c4d: $08 $1a $13
-	jr   c, jr_00e_4c5a                              ; $4c50: $38 $08
-
-jr_00e_4c52:
-	ld   l, h                                        ; $4c52: $6c
-	inc  bc                                          ; $4c53: $03
-	inc  [hl]                                        ; $4c54: $34
-	ld   l, $70                                      ; $4c55: $2e $70
-	inc  bc                                          ; $4c57: $03
-	jr   nc, @+$2a                                   ; $4c58: $30 $28
-
-jr_00e_4c5a:
-	inc  [hl]                                        ; $4c5a: $34
-	inc  bc                                          ; $4c5b: $03
-	jr   nc, @+$22                                   ; $4c5c: $30 $20
-
-	ld   [hl-], a                                    ; $4c5e: $32
-	inc  bc                                          ; $4c5f: $03
-	jr   nc, jr_00e_4c7a                             ; $4c60: $30 $18
-
-	jr   nc, @+$05                                   ; $4c62: $30 $03
-
-	jr   nc, jr_00e_4c6e                             ; $4c64: $30 $08
-
-	ld   l, $03                                      ; $4c66: $2e $03
-	jr   nz, jr_00e_4c92                             ; $4c68: $20 $28
-
-	inc  l                                           ; $4c6a: $2c
-	inc  bc                                          ; $4c6b: $03
-	jr   nz, @+$22                                   ; $4c6c: $20 $20
-
-jr_00e_4c6e:
-	ld   a, [hl+]                                    ; $4c6e: $2a
-	inc  bc                                          ; $4c6f: $03
-	jr   nz, jr_00e_4c8a                             ; $4c70: $20 $18
-
-	jr   z, @+$05                                    ; $4c72: $28 $03
-
-	jr   nz, @+$12                                   ; $4c74: $20 $10
-
-	ld   h, $03                                      ; $4c76: $26 $03
-	jr   nz, @+$0a                                   ; $4c78: $20 $08
-
-jr_00e_4c7a:
-	inc  h                                           ; $4c7a: $24
-	inc  bc                                          ; $4c7b: $03
-	db   $10                                         ; $4c7c: $10
-	jr   z, @+$24                                    ; $4c7d: $28 $22
-
-	inc  bc                                          ; $4c7f: $03
-	db   $10                                         ; $4c80: $10
-	jr   nz, jr_00e_4ca3                             ; $4c81: $20 $20
-
-	inc  bc                                          ; $4c83: $03
-	db   $10                                         ; $4c84: $10
-	jr   @+$20                                       ; $4c85: $18 $1e
-
-	inc  bc                                          ; $4c87: $03
-	db   $10                                         ; $4c88: $10
-	db   $10                                         ; $4c89: $10
-
-jr_00e_4c8a:
-	inc  e                                           ; $4c8a: $1c
-	inc  bc                                          ; $4c8b: $03
-	db   $10                                         ; $4c8c: $10
-	ld   [$131a], sp                                 ; $4c8d: $08 $1a $13
-	jr   nc, @+$2a                                   ; $4c90: $30 $28
-
-jr_00e_4c92:
-	inc  [hl]                                        ; $4c92: $34
-	inc  bc                                          ; $4c93: $03
-	jr   nc, @+$22                                   ; $4c94: $30 $20
-
-	ld   [hl-], a                                    ; $4c96: $32
-	inc  bc                                          ; $4c97: $03
-	jr   nc, jr_00e_4cb2                             ; $4c98: $30 $18
-
-	jr   nc, @+$05                                   ; $4c9a: $30 $03
-
-	jr   nc, jr_00e_4ca6                             ; $4c9c: $30 $08
-
-	ld   l, $03                                      ; $4c9e: $2e $03
-	db $20, $28
-
-	inc  l                                           ; $4ca2: $2c
-
-jr_00e_4ca3:
-	inc  bc                                          ; $4ca3: $03
-	jr   nz, @+$22                                   ; $4ca4: $20 $20
-
-jr_00e_4ca6:
-	ld   a, [hl+]                                    ; $4ca6: $2a
-	inc  bc                                          ; $4ca7: $03
-	jr   nz, jr_00e_4cc2                             ; $4ca8: $20 $18
-
-	jr   z, @+$05                                    ; $4caa: $28 $03
-
-	jr   nz, @+$12                                   ; $4cac: $20 $10
-
-	ld   h, $03                                      ; $4cae: $26 $03
-	jr   nz, @+$0a                                   ; $4cb0: $20 $08
-
-jr_00e_4cb2:
-	inc  h                                           ; $4cb2: $24
-	inc  bc                                          ; $4cb3: $03
-	db   $10                                         ; $4cb4: $10
-	jr   z, @+$24                                    ; $4cb5: $28 $22
-
-	inc  bc                                          ; $4cb7: $03
-	db   $10                                         ; $4cb8: $10
-	db $20, $20
-
-	inc  bc                                          ; $4cbb: $03
-	db   $10                                         ; $4cbc: $10
-	jr   @+$20                                       ; $4cbd: $18 $1e
-
-	inc  bc                                          ; $4cbf: $03
-	db   $10                                         ; $4cc0: $10
-	db   $10                                         ; $4cc1: $10
-
-jr_00e_4cc2:
-	inc  e                                           ; $4cc2: $1c
-	inc  bc                                          ; $4cc3: $03
-	db   $10                                         ; $4cc4: $10
-	ld   [$131a], sp                                 ; $4cc5: $08 $1a $13
+SpriteGroup1_Idx9dh_GameOverLeftKanji2:
+if def(VWF)
+	db $38, $18, $f0, $0b
+	db $08, $08, $3c, $0b
+	db $18, $08, $3e, $0b
+	db $28, $08, $40, $0b
+	db $08, $10, $42, $0b
+	db $18, $10, $44, $0b
+	db $28, $10, $46, $0b
+	db $08, $18, $48, $0b
+	db $18, $18, $4a, $0b
+	db $28, $18, $4c, $0b
+	db $08, $20, $4e, $0b
+	db $18, $20, $50, $0b
+	db $28, $20, $52, $0b
+	db $08, $28, $54, $0b
+	db $18, $28, $56, $0b
+	db $28, $28, $58, $1b
+else
+	db $38, $08, $72, $03
+	db $30, $08, $2e, $03
+	db $30, $2c, $72, $03
+	db $30, $28, $34, $03
+	db $30, $20, $32, $03
+	db $30, $18, $30, $03
+	db $20, $28, $2c, $03
+	db $20, $20, $2a, $03
+	db $20, $18, $28, $03
+	db $20, $10, $26, $03
+	db $20, $08, $24, $03
+	db $10, $28, $22, $03
+	db $10, $20, $20, $03
+	db $10, $18, $1e, $03
+	db $10, $10, $1c, $03
+	db $10, $08, $1a, $13
+endc
 
 
+SpriteGroup1_Idx9eh_GameOverLeftKanji3:
+if def(VWF)
+	db $38, $18, $70, $03
+	db $08, $08, $78, $0b
+	db $18, $08, $7a, $0b
+	db $28, $08, $7c, $0b
+	db $08, $10, $7e, $0b
+	db $18, $10, $80, $0b
+	db $28, $10, $82, $0b
+	db $08, $18, $84, $0b
+	db $18, $18, $86, $0b
+	db $28, $18, $88, $0b
+	db $08, $20, $8a, $0b
+	db $18, $20, $8c, $0b
+	db $28, $20, $8e, $0b
+	db $08, $28, $90, $0b
+	db $18, $28, $92, $0b
+	db $28, $28, $94, $1b
+else
+	db $38, $08, $6c, $03
+	db $34, $2e, $70, $03
+	db $30, $28, $34, $03
+	db $30, $20, $32, $03
+	db $30, $18, $30, $03
+	db $30, $08, $2e, $03
+	db $20, $28, $2c, $03
+	db $20, $20, $2a, $03
+	db $20, $18, $28, $03
+	db $20, $10, $26, $03
+	db $20, $08, $24, $03
+	db $10, $28, $22, $03
+	db $10, $20, $20, $03
+	db $10, $18, $1e, $03
+	db $10, $10, $1c, $03
+	db $10, $08, $1a, $13
+endc
+
+
+if def(VWF)
+else
+SpriteGroup1_Idx9fh_GameOverLeftKanji4:
+endc
+	db $30, $28, $34, $03
+	db $30, $20, $32, $03
+	db $30, $18, $30, $03
+	db $30, $08, $2e, $03
+	db $20, $28, $2c, $03
+	db $20, $20, $2a, $03
+	db $20, $18, $28, $03
+	db $20, $10, $26, $03
+	db $20, $08, $24, $03
+	db $10, $28, $22, $03
+	db $10, $20, $20, $03
+	db $10, $18, $1e, $03
+	db $10, $10, $1c, $03
+	db $10, $08, $1a, $13
+
+
+if def(VWF)
+else
 SpriteGroup1_Idxa0h_GameOverRightKanji1:
+endc
 	db $30, $28, $50, $03
 	db $30, $20, $4e, $03
 	db $30, $18, $4c, $03
@@ -2335,196 +2243,65 @@ SpriteGroup1_Idxa0h_GameOverRightKanji1:
 	db $10, $08, $36, $13
 
 
-SpriteGroup1_Idxa1h:
-	jr   c, jr_00e_4d22                              ; $4d00: $38 $20
+if def(VWF)
+else
+SpriteGroup1_Idxa1h_GameOverRightKanji2:
+endc
+	db $38, $20, $72, $03
+	db $30, $2b, $74, $03
+	db $30, $20, $6a, $03
+	db $30, $18, $68, $03
+	db $30, $08, $66, $03
+	db $20, $28, $64, $03
+	db $20, $20, $62, $03
+	db $20, $18, $60, $03
+	db $20, $10, $5e, $03
+	db $20, $08, $5c, $03
+	db $10, $28, $5a, $03
+	db $10, $20, $58, $03
+	db $10, $18, $56, $03
+	db $10, $10, $54, $03
+	db $10, $08, $52, $13
 
-jr_00e_4d02:
-	ld   [hl], d                                     ; $4d02: $72
-	inc  bc                                          ; $4d03: $03
-	jr   nc, jr_00e_4d31                             ; $4d04: $30 $2b
 
-	ld   [hl], h                                     ; $4d06: $74
-	inc  bc                                          ; $4d07: $03
-	jr   nc, @+$22                                   ; $4d08: $30 $20
+if def(VWF)
+else
+SpriteGroup1_Idxa2h_GameOverRightKanji3:
+endc
+	db $3e, $20, $70, $03
+	db $35, $2a, $6e, $03
+	db $30, $20, $6a, $03
+	db $30, $18, $68, $03
+	db $30, $08, $66, $03
+	db $20, $28, $64, $03
+	db $20, $20, $62, $03
+	db $20, $18, $60, $03
+	db $20, $10, $5e, $03
+	db $20, $08, $5c, $03
+	db $10, $28, $5a, $03
+	db $10, $20, $58, $03
+	db $10, $18, $56, $03
+	db $10, $10, $54, $03
+	db $10, $08, $52, $13
 
-	ld   l, d                                        ; $4d0a: $6a
-	inc  bc                                          ; $4d0b: $03
-	jr   nc, jr_00e_4d26                             ; $4d0c: $30 $18
 
-	ld   l, b                                        ; $4d0e: $68
-	inc  bc                                          ; $4d0f: $03
-	jr   nc, jr_00e_4d1a                             ; $4d10: $30 $08
-
-	ld   h, [hl]                                     ; $4d12: $66
-	inc  bc                                          ; $4d13: $03
-	jr   nz, jr_00e_4d3e                             ; $4d14: $20 $28
-
-	ld   h, h                                        ; $4d16: $64
-	inc  bc                                          ; $4d17: $03
-	jr   nz, @+$22                                   ; $4d18: $20 $20
-
-jr_00e_4d1a:
-	ld   h, d                                        ; $4d1a: $62
-	inc  bc                                          ; $4d1b: $03
-	jr   nz, jr_00e_4d36                             ; $4d1c: $20 $18
-
-	ld   h, b                                        ; $4d1e: $60
-	inc  bc                                          ; $4d1f: $03
-	jr   nz, @+$12                                   ; $4d20: $20 $10
-
-jr_00e_4d22:
-	ld   e, [hl]                                     ; $4d22: $5e
-	inc  bc                                          ; $4d23: $03
-	jr   nz, @+$0a                                   ; $4d24: $20 $08
-
-jr_00e_4d26:
-	ld   e, h                                        ; $4d26: $5c
-	inc  bc                                          ; $4d27: $03
-	db   $10                                         ; $4d28: $10
-	jr   z, @+$5c                                    ; $4d29: $28 $5a
-
-	inc  bc                                          ; $4d2b: $03
-	db   $10                                         ; $4d2c: $10
-
-jr_00e_4d2d:
-	jr   nz, jr_00e_4d87                             ; $4d2d: $20 $58
-
-jr_00e_4d2f:
-	inc  bc                                          ; $4d2f: $03
-	db   $10                                         ; $4d30: $10
-
-jr_00e_4d31:
-	jr   @+$58                                       ; $4d31: $18 $56
-
-	inc  bc                                          ; $4d33: $03
-	db   $10                                         ; $4d34: $10
-	db   $10                                         ; $4d35: $10
-
-jr_00e_4d36:
-	ld   d, h                                        ; $4d36: $54
-	inc  bc                                          ; $4d37: $03
-	db   $10                                         ; $4d38: $10
-	ld   [$1352], sp                                 ; $4d39: $08 $52 $13
-	ld   a, $20                                      ; $4d3c: $3e $20
-
-jr_00e_4d3e:
-	ld   [hl], b                                     ; $4d3e: $70
-	inc  bc                                          ; $4d3f: $03
-	dec  [hl]                                        ; $4d40: $35
-	ld   a, [hl+]                                    ; $4d41: $2a
-	ld   l, [hl]                                     ; $4d42: $6e
-	inc  bc                                          ; $4d43: $03
-	jr   nc, @+$22                                   ; $4d44: $30 $20
-
-	ld   l, d                                        ; $4d46: $6a
-	inc  bc                                          ; $4d47: $03
-	jr   nc, jr_00e_4d62                             ; $4d48: $30 $18
-
-	ld   l, b                                        ; $4d4a: $68
-	inc  bc                                          ; $4d4b: $03
-	jr   nc, jr_00e_4d56                             ; $4d4c: $30 $08
-
-	ld   h, [hl]                                     ; $4d4e: $66
-	inc  bc                                          ; $4d4f: $03
-	jr   nz, jr_00e_4d7a                             ; $4d50: $20 $28
-
-	ld   h, h                                        ; $4d52: $64
-	inc  bc                                          ; $4d53: $03
-	jr   nz, @+$22                                   ; $4d54: $20 $20
-
-jr_00e_4d56:
-	ld   h, d                                        ; $4d56: $62
-	inc  bc                                          ; $4d57: $03
-	jr   nz, jr_00e_4d72                             ; $4d58: $20 $18
-
-	ld   h, b                                        ; $4d5a: $60
-	inc  bc                                          ; $4d5b: $03
-	jr   nz, @+$12                                   ; $4d5c: $20 $10
-
-	ld   e, [hl]                                     ; $4d5e: $5e
-	inc  bc                                          ; $4d5f: $03
-	jr   nz, @+$0a                                   ; $4d60: $20 $08
-
-jr_00e_4d62:
-	ld   e, h                                        ; $4d62: $5c
-	inc  bc                                          ; $4d63: $03
-	db   $10                                         ; $4d64: $10
-	jr   z, @+$5c                                    ; $4d65: $28 $5a
-
-	inc  bc                                          ; $4d67: $03
-	db   $10                                         ; $4d68: $10
-	db $20, $58
-
-	inc  bc                                          ; $4d6b: $03
-	db   $10                                         ; $4d6c: $10
-	db $18, $56
-
-	inc  bc                                          ; $4d6f: $03
-	db   $10                                         ; $4d70: $10
-	db   $10                                         ; $4d71: $10
-
-jr_00e_4d72:
-	ld   d, h                                        ; $4d72: $54
-	inc  bc                                          ; $4d73: $03
-	db   $10                                         ; $4d74: $10
-	ld   [$1352], sp                                 ; $4d75: $08 $52 $13
-	jr   nc, @+$22                                   ; $4d78: $30 $20
-
-jr_00e_4d7a:
-	ld   l, d                                        ; $4d7a: $6a
-	inc  bc                                          ; $4d7b: $03
-	jr   nc, jr_00e_4d96                             ; $4d7c: $30 $18
-
-	ld   l, b                                        ; $4d7e: $68
-	inc  bc                                          ; $4d7f: $03
-	jr   nc, jr_00e_4d8a                             ; $4d80: $30 $08
-
-	ld   h, [hl]                                     ; $4d82: $66
-	inc  bc                                          ; $4d83: $03
-	db $20, $28
-
-	ld   h, h                                        ; $4d86: $64
-
-jr_00e_4d87:
-	inc  bc                                          ; $4d87: $03
-	jr   nz, @+$22                                   ; $4d88: $20 $20
-
-jr_00e_4d8a:
-	ld   h, d                                        ; $4d8a: $62
-	inc  bc                                          ; $4d8b: $03
-	jr   nz, jr_00e_4da6                             ; $4d8c: $20 $18
-
-	ld   h, b                                        ; $4d8e: $60
-	inc  bc                                          ; $4d8f: $03
-	jr   nz, @+$12                                   ; $4d90: $20 $10
-
-	ld   e, [hl]                                     ; $4d92: $5e
-	inc  bc                                          ; $4d93: $03
-	jr   nz, @+$0a                                   ; $4d94: $20 $08
-
-jr_00e_4d96:
-	ld   e, h                                        ; $4d96: $5c
-	inc  bc                                          ; $4d97: $03
-	db   $10                                         ; $4d98: $10
-	jr   z, @+$5c                                    ; $4d99: $28 $5a
-
-	inc  bc                                          ; $4d9b: $03
-	db   $10                                         ; $4d9c: $10
-	jr   nz, @+$5a                                   ; $4d9d: $20 $58
-
-	inc  bc                                          ; $4d9f: $03
-	db   $10                                         ; $4da0: $10
-	jr   @+$58                                       ; $4da1: $18 $56
-
-	inc  bc                                          ; $4da3: $03
-	db   $10                                         ; $4da4: $10
-	db   $10                                         ; $4da5: $10
-
-jr_00e_4da6:
-	ld   d, h                                        ; $4da6: $54
-	inc  bc                                          ; $4da7: $03
-	db   $10                                         ; $4da8: $10
-	ld   [$1352], sp                                 ; $4da9: $08 $52 $13
+if def(VWF)
+else
+SpriteGroup1_Idxa3h_GameOverRightKanji4:
+endc
+	db $30, $20, $6a, $03
+	db $30, $18, $68, $03
+	db $30, $08, $66, $03
+	db $20, $28, $64, $03
+	db $20, $20, $62, $03
+	db $20, $18, $60, $03
+	db $20, $10, $5e, $03
+	db $20, $08, $5c, $03
+	db $10, $28, $5a, $03
+	db $10, $20, $58, $03
+	db $10, $18, $56, $03
+	db $10, $10, $54, $03
+	db $10, $08, $52, $13
 
 
 SpriteGroup1_Idxa4h_GameOverPlayerSprite:
@@ -11648,5 +11425,109 @@ SpriteGroupC_Idx2fh_DormRoomSaturday:
 	db $10, $00, $32, $0f
 	db $10, $08, $34, $0f
 	db $10, $10, $36, $1f
+
+endc
 	
+
+if def(VWF)
+
+SpriteGroup1_Idx9ch_GameOverLeftKanji1:
+	db $08, $08, $00, $0b
+	db $18, $08, $02, $0b
+	db $28, $08, $04, $0b
+	db $08, $10, $06, $0b
+	db $18, $10, $08, $0b
+	db $28, $10, $0a, $0b
+	db $08, $18, $0c, $0b
+	db $18, $18, $0e, $0b
+	db $28, $18, $10, $0b
+	db $08, $20, $12, $0b
+	db $18, $20, $14, $0b
+	db $28, $20, $16, $0b
+	db $08, $28, $18, $0b
+	db $18, $28, $1a, $0b
+	db $28, $28, $1c, $1b
+SpriteGroup1_Idx9fh_GameOverLeftKanji4:
+	db $08, $08, $b4, $0b
+	db $18, $08, $b6, $0b
+	db $28, $08, $b8, $0b
+	db $08, $10, $ba, $0b
+	db $18, $10, $bc, $0b
+	db $28, $10, $be, $0b
+	db $08, $18, $c0, $0b
+	db $18, $18, $c2, $0b
+	db $28, $18, $c4, $0b
+	db $08, $20, $c6, $0b
+	db $18, $20, $c8, $0b
+	db $28, $20, $ca, $0b
+	db $08, $28, $cc, $0b
+	db $18, $28, $ce, $0b
+	db $28, $28, $d0, $1b
+SpriteGroup1_Idxa0h_GameOverRightKanji1:
+	db $08, $08, $1e, $0b
+	db $18, $08, $20, $0b
+	db $28, $08, $22, $0b
+	db $08, $10, $24, $0b
+	db $18, $10, $26, $0b
+	db $28, $10, $28, $0b
+	db $08, $18, $2a, $0b
+	db $18, $18, $2c, $0b
+	db $28, $18, $2e, $0b
+	db $08, $20, $30, $0b
+	db $18, $20, $32, $0b
+	db $28, $20, $34, $0b
+	db $08, $28, $36, $0b
+	db $18, $28, $38, $0b
+	db $28, $28, $3a, $1b
+SpriteGroup1_Idxa1h_GameOverRightKanji2:
+	db $38, $28, $72, $03
+	db $08, $08, $5a, $0b
+	db $18, $08, $5c, $0b
+	db $28, $08, $5e, $0b
+	db $08, $10, $60, $0b
+	db $18, $10, $62, $0b
+	db $28, $10, $64, $0b
+	db $08, $18, $66, $0b
+	db $18, $18, $68, $0b
+	db $28, $18, $6a, $0b
+	db $08, $20, $6c, $0b
+	db $18, $20, $6e, $0b
+	db $28, $20, $70, $0b
+	db $08, $28, $72, $0b
+	db $18, $28, $74, $0b
+	db $28, $28, $76, $1b
+SpriteGroup1_Idxa2h_GameOverRightKanji3:
+	db $38, $28, $70, $03
+	db $08, $08, $96, $0b
+	db $18, $08, $98, $0b
+	db $28, $08, $9a, $0b
+	db $08, $10, $9c, $0b
+	db $18, $10, $9e, $0b
+	db $28, $10, $a0, $0b
+	db $08, $18, $a2, $0b
+	db $18, $18, $a4, $0b
+	db $28, $18, $a6, $0b
+	db $08, $20, $a8, $0b
+	db $18, $20, $aa, $0b
+	db $28, $20, $ac, $0b
+	db $08, $28, $ae, $0b
+	db $18, $28, $b0, $0b
+	db $28, $28, $b2, $1b
+SpriteGroup1_Idxa3h_GameOverRightKanji4:
+	db $08, $08, $d2, $0b
+	db $18, $08, $d4, $0b
+	db $28, $08, $d6, $0b
+	db $08, $10, $d8, $0b
+	db $18, $10, $da, $0b
+	db $28, $10, $dc, $0b
+	db $08, $18, $de, $0b
+	db $18, $18, $e0, $0b
+	db $28, $18, $e2, $0b
+	db $08, $20, $e4, $0b
+	db $18, $20, $e6, $0b
+	db $28, $20, $e8, $0b
+	db $08, $28, $ea, $0b
+	db $18, $28, $ec, $1b
+	;db $30, $28, $ee, $1b
+
 endc

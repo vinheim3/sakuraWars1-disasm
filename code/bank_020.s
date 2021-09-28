@@ -186,7 +186,7 @@ SumireMiniGameMainSubstate2:
 	jr   z, jr_020_4139                              ; $4122: $28 $15
 
 	ld   a, [$ca5e]                                  ; $4124: $fa $5e $ca
-	ld   [wBattleWon], a                                  ; $4127: $ea $21 $cb
+	ld   [wMiniGameTrainingBattleRank], a                                  ; $4127: $ea $21 $cb
 	call ClearDisplayRegsAllowVBlankInt                                       ; $412a: $cd $59 $0b
 	ld   a, [$ca4e]                                  ; $412d: $fa $4e $ca
 	ld   [wGameState], a                                  ; $4130: $ea $a0 $c2
@@ -6459,7 +6459,7 @@ jr_020_62fe:
 	jr   z, jr_020_6342                              ; $632e: $28 $12
 
 	ld   a, [$ca60]                                  ; $6330: $fa $60 $ca
-	ld   [wBattleWon], a                                  ; $6333: $ea $21 $cb
+	ld   [wMiniGameTrainingBattleRank], a                                  ; $6333: $ea $21 $cb
 	ld   a, [$ca4e]                                  ; $6336: $fa $4e $ca
 	ld   [wGameState], a                                  ; $6339: $ea $a0 $c2
 	ld   a, [$ca4f]                                  ; $633c: $fa $4f $ca

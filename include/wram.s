@@ -416,7 +416,13 @@ wSettingsScreenFaceIconShown:: ; $c97b
     db
 
 wc97c:
-    ds $a4c-$97c
+    ds $ac-$7c
+
+wPushUpsCurrPushupToDo:: ; $c9ac
+    db
+
+wc9ad:
+    ds $a4c-$9ad
 
 wNapOrTrainReturnState:: ; $ca4c
     db
@@ -464,7 +470,7 @@ wcb17:
 wTimeOfDay:: ; $cb20
     db
 
-wBattleWon:: ; $cb21
+wMiniGameTrainingBattleRank:: ; $cb21
     db
 
 wcb22:

@@ -784,7 +784,7 @@ ScriptCalcCode2_pushSpecialRamByte:
 	dw .entry1_timeOfDay
 	dw .entry2_untimedAnswer
 	dw .entry3_timedAnswer
-	dw .entry4_battleWon
+	dw .entry4_miniGameTrainingBattleRank
 	dw .entry5_randomNum
 	dw $453f
 	dw $4544
@@ -805,8 +805,8 @@ ScriptCalcCode2_pushSpecialRamByte:
 	ld   a, [wTimedQuestionAnswer]                                  ; $4530: $fa $93 $cb
 	jr   PushAOntoScriptCalcStack                                 ; $4533: $18 $14
 
-.entry4_battleWon:
-	ld   a, [wBattleWon]                                  ; $4535: $fa $21 $cb
+.entry4_miniGameTrainingBattleRank:
+	ld   a, [wMiniGameTrainingBattleRank]                                  ; $4535: $fa $21 $cb
 	jr   PushAOntoScriptCalcStack                                 ; $4538: $18 $0f
 
 .entry5_randomNum:

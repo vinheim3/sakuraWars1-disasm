@@ -4509,26 +4509,39 @@ jr_00c_5c2f:
 
 
 GameState3f_GameOver::
+;
 	ld   a, [wGameSubstate]                                  ; $5e1c: $fa $a1 $c2
 	or   a                                           ; $5e1f: $b7
 	jp   nz, GameOverSubstate1Main                           ; $5e20: $c2 $fc $5f
 
+;
 	ld   a, $00                                      ; $5e23: $3e $00
 	call SafeSetAudVolForMultipleChannels                                       ; $5e25: $cd $e0 $1c
+
 	xor  a                                           ; $5e28: $af
 	call PlaySong                                       ; $5e29: $cd $92 $1a
+
+;
 	call TurnOffLCD                                       ; $5e2c: $cd $e3 $08
 	call ClearDisplayRegsAllowVBlankInt                                       ; $5e2f: $cd $59 $0b
+
 	ld   a, [wLCDC]                                  ; $5e32: $fa $03 $c2
 	and  $e0                                         ; $5e35: $e6 $e0
 	or   $07                                         ; $5e37: $f6 $07
 	ld   [wLCDC], a                                  ; $5e39: $ea $03 $c2
+
+;
 	ld   a, $ff                                      ; $5e3c: $3e $ff
 	ld   [wInGameInputsEnabled], a                                  ; $5e3e: $ea $0e $c2
+
 	call ClearOam                                       ; $5e41: $cd $d7 $0d
 	call ClearBaseAnimSpriteSpecDetails                                       ; $5e44: $cd $c9 $2e
+
+;
 	xor  a                                           ; $5e47: $af
 	ld   [$b0aa], a                                  ; $5e48: $ea $aa $b0
+
+;
 	ld   a, [$b1b2]                                  ; $5e4b: $fa $b2 $b1
 	or   a                                           ; $5e4e: $b7
 	jr   nz, jr_00c_5ec4                             ; $5e4f: $20 $73
@@ -4539,41 +4552,53 @@ GameState3f_GameOver::
 	M_FarCall Func_05_4540
 
 	ld   [$b0ab], a                                  ; $5e6a: $ea $ab $b0
+
+;
 	ld   a, [sCurrDay]                                  ; $5e6d: $fa $b0 $af
 	dec  a                                           ; $5e70: $3d
 	ld   h, a                                        ; $5e71: $67
 	ld   l, $07                                      ; $5e72: $2e $07
 	call HLequHdivModL                                       ; $5e74: $cd $fb $0b
+
+;
 	inc  h                                           ; $5e77: $24
 	ld   l, $c8                                      ; $5e78: $2e $c8
 	call AequHtimesL                                       ; $5e7a: $cd $ac $0b
 	push hl                                          ; $5e7d: $e5
 
+;
 	M_FarCall GetCurrPoints
 
 	pop  bc                                          ; $5e92: $c1
 	add  hl, bc                                      ; $5e93: $09
-	jr   nc, jr_00c_5e99                             ; $5e94: $30 $03
-
+	jr   nc, :+                             ; $5e94: $30 $03
 	ld   hl, $ffff                                   ; $5e96: $21 $ff $ff
-
-jr_00c_5e99:
-	M_FarCall SetPoints
+:	M_FarCall SetPoints
 
 	ld   a, [$b1b2]                                  ; $5ead: $fa $b2 $b1
 
 	M_FarCall Func_0a_471c
 
 jr_00c_5ec4:
+;
 	ld   a, [wWramBank]                                  ; $5ec4: $fa $93 $c2
 	push af                                          ; $5ec7: $f5
+
 	ld   a, $07                                      ; $5ec8: $3e $07
 	ld   [wWramBank], a                                  ; $5eca: $ea $93 $c2
 	ldh  [rSVBK], a                                  ; $5ecd: $e0 $70
+
+;
 	ld   a, $97                                      ; $5ecf: $3e $97
+if def(VWF)
+	call GameOverBank0_8000hHook
+else
 	ld   hl, $d000                                   ; $5ed1: $21 $00 $d0
+endc
 	ld   de, $4690                                   ; $5ed4: $11 $90 $46
 	call RLEXorCopy                                       ; $5ed7: $cd $d2 $09
+
+;
 	ld   c, $80                                      ; $5eda: $0e $80
 	ld   de, $8000                                   ; $5edc: $11 $00 $80
 	ld   a, $07                                      ; $5edf: $3e $07
@@ -8450,6 +8475,14 @@ InventoryBank0_8000hHook:
 	call RLEXorCopy
 
 	M_FarCall LoadRomandoTreasureInvPopup
+	ret
+
+
+GameOverBank0_8000hHook:
+	M_FarCall LoadGameOverSprites
+
+	ld   a, $97
+	ld   hl, $d000
 	ret
 
 endc

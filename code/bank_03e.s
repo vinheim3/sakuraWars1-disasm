@@ -704,7 +704,7 @@ jr_03e_4515:
 
 jr_03e_4573:
 	ld   a, c                                        ; $4573: $79
-	ld   [wBattleWon], a                                  ; $4574: $ea $21 $cb
+	ld   [wMiniGameTrainingBattleRank], a                                  ; $4574: $ea $21 $cb
 	ret                                              ; $4577: $c9
 
 
@@ -3365,16 +3365,14 @@ jr_03e_5524:
 GameState19_PushUps::
 	ld   a, [wGameSubstate]                                  ; $5562: $fa $a1 $c2
 	rst  JumpTable                                         ; $5565: $df
-	ld   [hl], b                                     ; $5566: $70
-	ld   d, l                                        ; $5567: $55
-	xor  a                                           ; $5568: $af
-	ld   d, a                                        ; $5569: $57
-	dec  b                                           ; $556a: $05
-	ld   e, b                                        ; $556b: $58
-	rra                                              ; $556c: $1f
-	ld   e, b                                        ; $556d: $58
-	ld   [hl], l                                     ; $556e: $75
-	ld   e, c                                        ; $556f: $59
+	dw PushUpsSubstate0
+	dw PushUpsSubstate1
+	dw PushUpsSubstate2
+	dw PushUpsSubstate3
+	dw PushUpsSubstate4
+
+
+PushUpsSubstate0:
 	ld   a, $01                                      ; $5570: $3e $01
 	ld   hl, $7000                                   ; $5572: $21 $00 $70
 	ld   de, wBGPalettes                                   ; $5575: $11 $de $c2
@@ -3551,7 +3549,7 @@ jr_03e_563e:
 	ld   [wWX], a                                  ; $56fa: $ea $09 $c2
 	ld   [wSCX], a                                  ; $56fd: $ea $07 $c2
 	ld   [wSCY], a                                  ; $5700: $ea $08 $c2
-	ld   [$c9ac], a                                  ; $5703: $ea $ac $c9
+	ld   [wPushUpsCurrPushupToDo], a                                  ; $5703: $ea $ac $c9
 	call ClearBaseAnimSpriteSpecDetails                                       ; $5706: $cd $c9 $2e
 	ld   a, $01                                      ; $5709: $3e $01
 	ld   hl, $0000                                   ; $570b: $21 $00 $00
@@ -3617,7 +3615,7 @@ jr_03e_563e:
 	ld   [wWramBank], a                                  ; $579b: $ea $93 $c2
 	ldh  [rSVBK], a                                  ; $579e: $e0 $70
 	ld   a, $0f                                      ; $57a0: $3e $0f
-	call Call_03e_59bf                               ; $57a2: $cd $bf $59
+	call PopulatePushUpsTextBoxText                               ; $57a2: $cd $bf $59
 	ld   hl, wGameSubstate                                   ; $57a5: $21 $a1 $c2
 	inc  [hl]                                        ; $57a8: $34
 	ld   a, $3c                                      ; $57a9: $3e $3c
@@ -3625,6 +3623,7 @@ jr_03e_563e:
 	ret                                              ; $57ae: $c9
 
 
+PushUpsSubstate1:
 	call ClearOam                                       ; $57af: $cd $d7 $0d
 	call AnimateAllAnimatedSpriteSpecs                                       ; $57b2: $cd $d3 $2e
 	call CheckIfReachedLastKanjiIdxInCurrTextBox                                       ; $57b5: $cd $71 $14
@@ -3646,7 +3645,6 @@ jr_03e_57c9:
 	call HDMAEnqueueNextTextBoxKanji                                       ; $57cf: $cd $55 $10
 	ret                                              ; $57d2: $c9
 
-
 jr_03e_57d3:
 	push af                                          ; $57d3: $f5
 	ld   a, $aa                                      ; $57d4: $3e $aa
@@ -3662,9 +3660,13 @@ jr_03e_57d3:
 
 	ld   a, $36                                      ; $57ea: $3e $36
 	call Call_03e_5a4d                               ; $57ec: $cd $4d $5a
-	ld   a, [$c9ac]                                  ; $57ef: $fa $ac $c9
+
+; Display relevant text for pushup to do
+	ld   a, [wPushUpsCurrPushupToDo]                                  ; $57ef: $fa $ac $c9
 	add  $02                                         ; $57f2: $c6 $02
-	call Call_03e_59bf                               ; $57f4: $cd $bf $59
+	call PopulatePushUpsTextBoxText                               ; $57f4: $cd $bf $59
+
+;
 	xor  a                                           ; $57f7: $af
 	ld   [$c9a8], a                                  ; $57f8: $ea $a8 $c9
 	ld   a, $1a                                      ; $57fb: $3e $1a
@@ -3676,6 +3678,7 @@ jr_03e_5804:
 	ret                                              ; $5804: $c9
 
 
+PushUpsSubstate2:
 	call ClearOam                                       ; $5805: $cd $d7 $0d
 	call AnimateAllAnimatedSpriteSpecs                                       ; $5808: $cd $d3 $2e
 	ld   c, $81                                      ; $580b: $0e $81
@@ -3689,31 +3692,33 @@ jr_03e_5804:
 	ret                                              ; $581e: $c9
 
 
+PushUpsSubstate3:
+;
 	call ClearOam                                       ; $581f: $cd $d7 $0d
 	call AnimateAllAnimatedSpriteSpecs                                       ; $5822: $cd $d3 $2e
+
+;
 	call CheckIfReachedLastKanjiIdxInCurrTextBox                                       ; $5825: $cd $71 $14
 	or   a                                           ; $5828: $b7
-	jr   z, jr_03e_582e                              ; $5829: $28 $03
+	jr   z, :+                              ; $5829: $28 $03
 
 	call HDMAEnqueueNextTextBoxKanji                                       ; $582b: $cd $55 $10
 
-jr_03e_582e:
-	ld   a, [$c9a8]                                  ; $582e: $fa $a8 $c9
+;
+:	ld   a, [$c9a8]                                  ; $582e: $fa $a8 $c9
 	rst  JumpTable                                         ; $5831: $df
-	ld   a, $58                                      ; $5832: $3e $58
-	ld   l, [hl]                                     ; $5834: $6e
-	ld   e, b                                        ; $5835: $58
-	add  l                                           ; $5836: $85
-	ld   e, b                                        ; $5837: $58
-	db   $dd                                         ; $5838: $dd
-	ld   e, b                                        ; $5839: $58
-	ld   c, e                                        ; $583a: $4b
-	ld   e, c                                        ; $583b: $59
-	ld   l, d                                        ; $583c: $6a
-	ld   e, c                                        ; $583d: $59
-	ld   a, [$c9ac]                                  ; $583e: $fa $ac $c9
+	dw Func_3e_583e
+	dw Func_3e_586e
+	dw Func_3e_5885
+	dw Func_3e_58dd
+	dw Func_3e_594b
+	dw Func_3e_596a
+
+
+Func_3e_583e:
+	ld   a, [wPushUpsCurrPushupToDo]                                  ; $583e: $fa $ac $c9
 	cp   $0a                                         ; $5841: $fe $0a
-	jr   nz, jr_03e_5855                             ; $5843: $20 $10
+	jr   nz, .br_5855                             ; $5843: $20 $10
 
 	ld   a, $3a                                      ; $5845: $3e $3a
 	call Call_03e_5a4d                               ; $5847: $cd $4d $5a
@@ -3723,11 +3728,10 @@ jr_03e_582e:
 	ld   [$c9a8], a                                  ; $5851: $ea $a8 $c9
 	ret                                              ; $5854: $c9
 
-
-jr_03e_5855:
+.br_5855:
 	ld   hl, $c9a9                                   ; $5855: $21 $a9 $c9
 	dec  [hl]                                        ; $5858: $35
-	jr   nz, jr_03e_586d                             ; $5859: $20 $12
+	jr   nz, .done                             ; $5859: $20 $12
 
 	ld   a, $36                                      ; $585b: $3e $36
 	call Call_03e_5a4d                               ; $585d: $cd $4d $5a
@@ -3738,13 +3742,14 @@ jr_03e_5855:
 	ld   hl, $c9a8                                   ; $5869: $21 $a8 $c9
 	inc  [hl]                                        ; $586c: $34
 
-jr_03e_586d:
+.done:
 	ret                                              ; $586d: $c9
 
 
+Func_3e_586e:
 	ld   hl, $c9a9                                   ; $586e: $21 $a9 $c9
 	dec  [hl]                                        ; $5871: $35
-	jr   nz, jr_03e_5884                             ; $5872: $20 $10
+	jr   nz, .done                             ; $5872: $20 $10
 
 	ld   a, $1a                                      ; $5874: $3e $1a
 	ld   [$c9a9], a                                  ; $5876: $ea $a9 $c9
@@ -3754,28 +3759,29 @@ jr_03e_586d:
 	inc  [hl]                                        ; $5881: $34
 	ld   a, $00                                      ; $5882: $3e $00
 
-jr_03e_5884:
+.done:
 	ret                                              ; $5884: $c9
 
 
+Func_3e_5885:
 	ld   hl, $c9a9                                   ; $5885: $21 $a9 $c9
 	dec  [hl]                                        ; $5888: $35
-	jr   z, jr_03e_5892                              ; $5889: $28 $07
+	jr   z, .br_5892                              ; $5889: $28 $07
 
 	ld   a, [wInGameButtonsPressed]                                  ; $588b: $fa $10 $c2
-	bit  0, a                                        ; $588e: $cb $47
-	jr   z, jr_03e_58b4                              ; $5890: $28 $22
+	bit  PADB_A, a                                        ; $588e: $cb $47
+	jr   z, .done                              ; $5890: $28 $22
 
-jr_03e_5892:
+.br_5892:
 	ld   a, $3c                                      ; $5892: $3e $3c
 	ld   [$c9a9], a                                  ; $5894: $ea $a9 $c9
-	ld   hl, $c9ac                                   ; $5897: $21 $ac $c9
+	ld   hl, wPushUpsCurrPushupToDo                                   ; $5897: $21 $ac $c9
 	ld   a, [hl]                                     ; $589a: $7e
 	add  a                                           ; $589b: $87
 	add  a                                           ; $589c: $87
 	ld   c, a                                        ; $589d: $4f
 	ld   b, $00                                      ; $589e: $06 $00
-	ld   hl, $58b5                                   ; $58a0: $21 $b5 $58
+	ld   hl, .table                                   ; $58a0: $21 $b5 $58
 	add  hl, bc                                      ; $58a3: $09
 	ld   a, [hl+]                                    ; $58a4: $2a
 	ld   [$c9aa], a                                  ; $58a5: $ea $aa $c9
@@ -3786,39 +3792,23 @@ jr_03e_5892:
 	ld   hl, $c9a8                                   ; $58b0: $21 $a8 $c9
 	inc  [hl]                                        ; $58b3: $34
 
-jr_03e_58b4:
+.done:
 	ret                                              ; $58b4: $c9
 
+.table:
+	db $3c, $00, $04, $00
+	db $78, $00, $08, $00
+	db $b4, $00, $0c, $00
+	db $f0, $00, $10, $00
+	db $2c, $01, $14, $00
+	db $68, $01, $1e, $00
+	db $a4, $01, $23, $00
+	db $e0, $01, $30, $00
+	db $1c, $02, $36, $00
+	db $58, $02, $50, $00
 
-	inc  a                                           ; $58b5: $3c
-	nop                                              ; $58b6: $00
-	inc  b                                           ; $58b7: $04
-	nop                                              ; $58b8: $00
-	ld   a, b                                        ; $58b9: $78
-	nop                                              ; $58ba: $00
-	ld   [$b400], sp                                 ; $58bb: $08 $00 $b4
-	nop                                              ; $58be: $00
-	inc  c                                           ; $58bf: $0c
-	nop                                              ; $58c0: $00
-	ldh  a, [rP1]                                    ; $58c1: $f0 $00
-	stop                                             ; $58c3: $10 $00
-	inc  l                                           ; $58c5: $2c
-	ld   bc, $0014                                   ; $58c6: $01 $14 $00
-	ld   l, b                                        ; $58c9: $68
-	ld   bc, $001e                                   ; $58ca: $01 $1e $00
-	and  h                                           ; $58cd: $a4
-	ld   bc, $0023                                   ; $58ce: $01 $23 $00
-	ldh  [rSB], a                                    ; $58d1: $e0 $01
-	jr   nc, jr_03e_58d5                             ; $58d3: $30 $00
 
-jr_03e_58d5:
-	inc  e                                           ; $58d5: $1c
-	ld   [bc], a                                     ; $58d6: $02
-	ld   [hl], $00                                   ; $58d7: $36 $00
-	ld   e, b                                        ; $58d9: $58
-	ld   [bc], a                                     ; $58da: $02
-	ld   d, b                                        ; $58db: $50
-	nop                                              ; $58dc: $00
+Func_3e_58dd:
 	ld   hl, $c9aa                                   ; $58dd: $21 $aa $c9
 	ld   a, [hl+]                                    ; $58e0: $2a
 	ld   d, [hl]                                     ; $58e1: $56
@@ -3828,11 +3818,11 @@ jr_03e_58d5:
 	ld   [hl-], a                                    ; $58e5: $32
 	ld   [hl], e                                     ; $58e6: $73
 	or   e                                           ; $58e7: $b3
-	jr   z, jr_03e_593b                              ; $58e8: $28 $51
+	jr   z, .br_593b                              ; $58e8: $28 $51
 
 	ld   a, [wInGameButtonsPressed]                                  ; $58ea: $fa $10 $c2
 	bit  0, a                                        ; $58ed: $cb $47
-	jr   z, jr_03e_593a                              ; $58ef: $28 $49
+	jr   z, .done                              ; $58ef: $28 $49
 
 	ld   a, [$c9a7]                                  ; $58f1: $fa $a7 $c9
 	call HLequAddrOfAnimSpriteSpecDetails                                       ; $58f4: $cd $76 $30
@@ -3848,15 +3838,14 @@ jr_03e_58d5:
 	call FarCall                                       ; $590b: $cd $62 $09
 	ld   a, $4b                                      ; $590e: $3e $4b
 	cp   c                                           ; $5910: $b9
-	jr   nz, jr_03e_5918                             ; $5911: $20 $05
+	jr   nz, :+                             ; $5911: $20 $05
 
 	ld   a, $34                                      ; $5913: $3e $34
 	call Call_03e_5a4d                               ; $5915: $cd $4d $5a
 
-jr_03e_5918:
-	ld   hl, $c9ad                                   ; $5918: $21 $ad $c9
+:	ld   hl, $c9ad                                   ; $5918: $21 $ad $c9
 	dec  [hl]                                        ; $591b: $35
-	jr   nz, jr_03e_593a                             ; $591c: $20 $1c
+	jr   nz, .done                             ; $591c: $20 $1c
 
 	ld   a, $35                                      ; $591e: $3e $35
 	call Call_03e_5a4d                               ; $5920: $cd $4d $5a
@@ -3864,20 +3853,19 @@ jr_03e_5918:
 	ld   [$c9a9], a                                  ; $5925: $ea $a9 $c9
 	xor  a                                           ; $5928: $af
 	ld   [$c9a8], a                                  ; $5929: $ea $a8 $c9
-	ld   hl, $c9ac                                   ; $592c: $21 $ac $c9
+	ld   hl, wPushUpsCurrPushupToDo                                   ; $592c: $21 $ac $c9
 	inc  [hl]                                        ; $592f: $34
 	ld   a, [hl]                                     ; $5930: $7e
 	add  $02                                         ; $5931: $c6 $02
 	cp   $0c                                         ; $5933: $fe $0c
-	jr   z, jr_03e_593a                              ; $5935: $28 $03
+	jr   z, .done                              ; $5935: $28 $03
 
-	call Call_03e_59bf                               ; $5937: $cd $bf $59
+	call PopulatePushUpsTextBoxText                               ; $5937: $cd $bf $59
 
-jr_03e_593a:
+.done:
 	ret                                              ; $593a: $c9
 
-
-jr_03e_593b:
+.br_593b:
 	ld   a, $39                                      ; $593b: $3e $39
 	call Call_03e_5a4d                               ; $593d: $cd $4d $5a
 	ld   a, $3c                                      ; $5940: $3e $3c
@@ -3887,29 +3875,31 @@ jr_03e_593b:
 	ret                                              ; $594a: $c9
 
 
+Func_3e_594b:
 	ld   hl, $c9a8                                   ; $594b: $21 $a8 $c9
 	inc  [hl]                                        ; $594e: $34
 	ld   c, $0e                                      ; $594f: $0e $0e
 	ld   b, $02                                      ; $5951: $06 $02
-	ld   a, [$c9ac]                                  ; $5953: $fa $ac $c9
+	ld   a, [wPushUpsCurrPushupToDo]                                  ; $5953: $fa $ac $c9
 	cp   $0a                                         ; $5956: $fe $0a
-	jr   z, jr_03e_5964                              ; $5958: $28 $0a
+	jr   z, .done                              ; $5958: $28 $0a
 
 	ld   c, $0c                                      ; $595a: $0e $0c
 	dec  b                                           ; $595c: $05
 	cp   $06                                         ; $595d: $fe $06
-	jr   nc, jr_03e_5964                             ; $595f: $30 $03
+	jr   nc, .done                             ; $595f: $30 $03
 
 	ld   c, $0d                                      ; $5961: $0e $0d
 	dec  b                                           ; $5963: $05
 
-jr_03e_5964:
+.done:
 	ld   a, b                                        ; $5964: $78
-	ld   [wBattleWon], a                                  ; $5965: $ea $21 $cb
+	ld   [wMiniGameTrainingBattleRank], a                                  ; $5965: $ea $21 $cb
 	ld   a, c                                        ; $5968: $79
 	ret                                              ; $5969: $c9
 
 
+Func_3e_596a:
 	ld   hl, $c9a9                                   ; $596a: $21 $a9 $c9
 	dec  [hl]                                        ; $596d: $35
 	jr   nz, jr_03e_5974                             ; $596e: $20 $04
@@ -3921,6 +3911,7 @@ jr_03e_5974:
 	ret                                              ; $5974: $c9
 
 
+PushUpsSubstate4:
 	ld   a, [wWramBank]                                  ; $5975: $fa $93 $c2
 	push af                                          ; $5978: $f5
 	ld   a, $03                                      ; $5979: $3e $03
@@ -3955,7 +3946,9 @@ jr_03e_5974:
 	ret                                              ; $59be: $c9
 
 
-Call_03e_59bf:
+; A - text idx
+PopulatePushUpsTextBoxText:
+;
 	push af                                          ; $59bf: $f5
 	call InitWideTextBoxDimensions                                       ; $59c0: $cd $ec $0f
 	call ClearTextBoxDimensionsAndSetDefaultTextStyle                                       ; $59c3: $cd $09 $14
@@ -3964,17 +3957,24 @@ Call_03e_59bf:
 	ld   bc, $0000                                   ; $59cc: $01 $00 $00
 	call SetCurrKanjiColAndRowToDrawOn                                       ; $59cf: $cd $34 $14
 	pop  af                                          ; $59d2: $f1
+
+;
 	add  a                                           ; $59d3: $87
 	ld   h, $00                                      ; $59d4: $26 $00
 	ld   l, a                                        ; $59d6: $6f
-	ld   bc, $59ea                                   ; $59d7: $01 $ea $59
+	ld   bc, Data_3e_59ea                                   ; $59d7: $01 $ea $59
 	add  hl, bc                                      ; $59da: $09
+
+;
 	ld   a, [hl+]                                    ; $59db: $2a
 	ld   h, [hl]                                     ; $59dc: $66
 	ld   l, a                                        ; $59dd: $6f
-	ld   bc, $59ea                                   ; $59de: $01 $ea $59
+	ld   bc, Data_3e_59ea                                   ; $59de: $01 $ea $59
 	add  hl, bc                                      ; $59e1: $09
+
+;
 	call PopulateKanjiConvoStructForCurrTextBox                                       ; $59e2: $cd $27 $10
+
 	xor  a                                           ; $59e5: $af
 	ld   [$c9ae], a                                  ; $59e6: $ea $ae $c9
 	ret                                              ; $59e9: $c9
@@ -4032,6 +4032,7 @@ Data_3e_59eaentry0d::
 
 else
 
+Data_3e_59ea:
 	jr   nz, jr_03e_59ec                             ; $59ea: $20 $00
 
 jr_03e_59ec:

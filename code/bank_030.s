@@ -4312,7 +4312,7 @@ jr_030_583a:
 	jr   nz, jr_030_586c                             ; $5857: $20 $13
 
 	ld   a, [$c720]                                  ; $5859: $fa $20 $c7
-	ld   [wBattleWon], a                                  ; $585c: $ea $21 $cb
+	ld   [wMiniGameTrainingBattleRank], a                                  ; $585c: $ea $21 $cb
 	ld   a, [$c71c]                                  ; $585f: $fa $1c $c7
 	ld   [wGameState], a                                  ; $5862: $ea $a0 $c2
 	ld   a, [$c71d]                                  ; $5865: $fa $1d $c7

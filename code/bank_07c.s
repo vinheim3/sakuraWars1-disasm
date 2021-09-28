@@ -932,7 +932,7 @@ jr_07c_4412:
 	ld   [bc], a                                     ; $4423: $02
 	add  h                                           ; $4424: $84
 	ld   a, [bc]                                     ; $4425: $0a
-	ld   bc, wBattleWon                                   ; $4426: $01 $21 $cb
+	ld   bc, wMiniGameTrainingBattleRank                                   ; $4426: $01 $21 $cb
 	add  b                                           ; $4429: $80
 	ret  z                                           ; $442a: $c8
 

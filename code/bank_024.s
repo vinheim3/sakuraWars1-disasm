@@ -3825,7 +3825,7 @@ Jump_024_5947:
 	ld   a, [wBattleReturnSubstate]                                  ; $595b: $fa $51 $ca
 	ld   [wGameSubstate], a                                  ; $595e: $ea $a1 $c2
 	ld   a, [$ca85]                                  ; $5961: $fa $85 $ca
-	ld   [wBattleWon], a                                  ; $5964: $ea $21 $cb
+	ld   [wMiniGameTrainingBattleRank], a                                  ; $5964: $ea $21 $cb
 	ld   a, [wBattleReturnState]                                  ; $5967: $fa $50 $ca
 	ld   [wGameState], a                                  ; $596a: $ea $a0 $c2
 	ld   a, [wBattleReturnSubstate]                                  ; $596d: $fa $51 $ca
@@ -3841,7 +3841,7 @@ jr_024_5974:
 	ld   a, [wBattleReturnSubstate]                                  ; $597c: $fa $51 $ca
 	ld   e, a                                        ; $597f: $5f
 	ld   a, [$ca85]                                  ; $5980: $fa $85 $ca
-	ld   [wBattleWon], a                                  ; $5983: $ea $21 $cb
+	ld   [wMiniGameTrainingBattleRank], a                                  ; $5983: $ea $21 $cb
 	ld   a, [wBattleReturnState]                                  ; $5986: $fa $50 $ca
 	ld   [wGameState], a                                  ; $5989: $ea $a0 $c2
 	ld   a, [wBattleReturnSubstate]                                  ; $598c: $fa $51 $ca
