@@ -73,7 +73,7 @@
 
 ; hook banks
 ; $ff ($13c), $fd ($3ed), $fb ($155), $a4 ($45), $8b ($19f), $85 ($4c3)
-; $6b ($2323), $2b ($59e), $1f ($33a) -> $6a, $40, $3f, $35, $31
+; $6b ($7d6), $2b ($59e), $1f ($33a) -> $6a, $40, $3f, $35, $31
 
 ; To 'day passed'
 ; New game
@@ -96,6 +96,7 @@
 ; IMPORTANT
 ; When adding new characters, add map+width in scriptExtract, and width in getCharWidth
 ; TODO: optimize kanna's title screen tile usage
+; TODO: redo special case when a textbox text is supposed to be centered or slightly indented
 
 
 ; Flag 1 outstanding

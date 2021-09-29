@@ -8158,7 +8158,7 @@ if def(VWF)
 
 TextScriptByteBh:
 	call GetNextScriptOpcodeToProcess
-	call AddDictWordToConvoStructForCurrTextBox
+	M_FarCall AddDictWordToConvoStructForCurrTextBox
 
 	jp ScriptOpcode01_DisplayText_Init.toNextDataByte
 

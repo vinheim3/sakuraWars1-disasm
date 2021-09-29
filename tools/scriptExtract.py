@@ -184,21 +184,85 @@ class ScriptExtractor:
 
     @staticmethod
     def convertEnglish(english, limit=112, dictionary=False):
-        words = english.split()
+        lines = english.split('\n')
         textboxes = []
         lineCounter = 0
         colCounter = 0
         boxBytes = []
         spaceLen = 3
-
         currTextStyle = 3
 
-        for i, word in enumerate(words):
-            wordLen = ScriptExtractor.getWordLength(word)
-            calc = colCounter + wordLen
-            if i != 0:
-                calc += spaceLen
-            if calc >= limit:
+        bigMap = {
+            "You see...\nBlah blah blah...\nSo here we are.": [[0x0b, 0x00]],
+            "I get where you're coming from, Sakura, but you realize doing that in the middle of the night bothers everyone, don't you?":  [[0x0b, 0x04], [0x0b, 0x0a]],
+            "I believe the correct answer is Kohran. It seems like she's been conducting a large-scale experiment lately.":  [[0x0b, 0x07], [0x0b, 0x0c]],
+            "The answer is probably Iris. She's likely floating through the air in her sleep, sheets and all.":  [[0x0b, 0x05], [0x0b, 0x22]],
+            "Hmm... Nails...\n... Props?\nThat's it!":  [[0x0b, 0x01]],
+            "Sometimes when I get nice and buzzed, I just start singing. Still, though, \"eerie\"...?":  [[0x0b, 0x03], [0x0b, 0x5e]],
+            "I like to take a midnight swim on occasion, and one time, I forgot to bring a towel.":  [[0x0b, 0x02], [0x0b, 0x37]],
+            "I figure because these markings only appear in the training room and near her room.":  [[0x0b, 0x06], [0x0b, 0x45]],
+        }
+        if english in bigMap:
+            return bigMap[english]
+
+        for j, line in enumerate(lines):
+            words = line.split()
+
+            for i, word in enumerate(words):
+                wordLen = ScriptExtractor.getWordLength(word)
+                calc = colCounter + wordLen
+                if i != 0:
+                    calc += spaceLen
+                if calc >= limit:
+                    lineCounter += 1
+                    colCounter = 0
+                    if lineCounter >= 3:
+                        textboxes.append(boxBytes)
+                        boxBytes = []
+                        lineCounter = 0
+                        
+                        if currTextStyle != 3:
+                            boxBytes.extend([0x0a, currTextStyle])
+                    else:
+                        boxBytes.append(0x0d)
+                else:
+                    if colCounter != 0:
+                        boxBytes.append(0x10)
+
+                # Add word
+                wordIdx = 0
+                while wordIdx < len(word):
+                    if word[wordIdx:wordIdx+6] in ('<name>', '<player>', '<Player>'):
+                        boxBytes.extend([0x08, 0x00])
+                        wordIdx += 6
+                        continue
+
+                    if dictionary:
+                        seekIdx = wordIdx+1
+                        while seekIdx < len(word) and word[seekIdx] != 0:
+                            seekIdx += 1
+
+                        curr_word = word[wordIdx:seekIdx]
+                        if curr_word in ScriptExtractor.chosen_words:
+                            boxBytes.extend([0x0b, ScriptExtractor.chosen_words[curr_word]])
+                            wordIdx = seekIdx
+                            continue
+
+                    if word[wordIdx] == "'":
+                        if wordIdx != len(word)-1 and word[wordIdx+1] in "0123456789":
+                            currTextStyle = int(word[wordIdx+1])
+                            boxBytes.extend([0x0a, currTextStyle])
+                            wordIdx += 2
+                            continue
+
+                    boxBytes.extend(ScriptExtractor.getCharVal(word[wordIdx]))
+                    wordIdx += 1
+
+                if colCounter != 0:
+                    colCounter += spaceLen
+                colCounter += wordLen
+
+            if j != len(lines)-1:
                 lineCounter += 1
                 colCounter = 0
                 if lineCounter >= 3:
@@ -210,42 +274,6 @@ class ScriptExtractor:
                         boxBytes.extend([0x0a, currTextStyle])
                 else:
                     boxBytes.append(0x0d)
-            else:
-                if colCounter != 0:
-                    boxBytes.append(0x10)
-
-            # Add word
-            wordIdx = 0
-            while wordIdx < len(word):
-                if word[wordIdx:wordIdx+6] in ('<name>', '<player>', '<Player>'):
-                    boxBytes.extend([0x08, 0x00])
-                    wordIdx += 6
-                    continue
-
-                if dictionary:
-                    seekIdx = wordIdx+1
-                    while seekIdx < len(word) and word[seekIdx] != 0:
-                        seekIdx += 1
-
-                    curr_word = word[wordIdx:seekIdx]
-                    if curr_word in ScriptExtractor.chosen_words:
-                        boxBytes.extend([0x0b, ScriptExtractor.chosen_words[curr_word]])
-                        wordIdx = seekIdx
-                        continue
-
-                if word[wordIdx] == "'":
-                    if wordIdx != len(word)-1 and word[wordIdx+1] in "0123456789":
-                        currTextStyle = int(word[wordIdx+1])
-                        boxBytes.extend([0x0a, currTextStyle])
-                        wordIdx += 2
-                        continue
-
-                boxBytes.extend(ScriptExtractor.getCharVal(word[wordIdx]))
-                wordIdx += 1
-
-            if colCounter != 0:
-                colCounter += spaceLen
-            colCounter += wordLen
 
         if boxBytes:
             textboxes.append(boxBytes)
@@ -562,6 +590,7 @@ class ScriptExtractor:
                     if i != 0:
                         if self.scriptNum == 6:
                             comps.append("\tScriptOpt_SetDelay $3c")
+                            totalBytes += 1
                         # comps.append("\tScriptOpt_DisplayText")
                         # comps.append("\t\tTEXT $0d")
                         comps.append("\tScriptOpt_ContinuePrompt")
@@ -792,6 +821,13 @@ if __name__ == "__main__":
                 ):
                     if english and english[0] != "=" and english[0] != " ":
                         english = f" {english}"
+
+                # Remove the odd leading new line
+                if english.startswith('\n'):
+                    english = english[1:]
+                if english.startswith('\n'):
+                    raise Exception(f"leading newline {scriptNum} {offset}")
+
                 elif (int(scriptNum), int(offset)) in (
                     (18, 117),
                     (18, 694),

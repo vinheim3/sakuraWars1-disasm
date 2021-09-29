@@ -1467,4 +1467,799 @@ _HackHook::
 	ld   a, [wVisitedTitleScreen]
 	ret
 
+
+	; A - dict idx
+AddDictWordToConvoStructForCurrTextBox::
+; HL = pointer to entry
+	ld   hl, .table
+	ld   b, 0
+	ld   c, a
+	add  hl, bc
+	add  hl, bc
+
+; HL = pointer to text
+	ld   a, [hl+]
+	ld   h, [hl]
+	ld   l, a
+
+; Add letters to convo struct
+:	ld   a, [hl+]
+	and  a
+	ret  z
+
+	push hl
+	call AddKanjiToConvoStructForCurrTextBox
+	pop  hl
+	jr   :-
+
+.table:
+	dw .item00
+	dw .item01
+	dw .item02
+	dw .item03
+	dw .item04
+	dw .item05
+	dw .item06
+	dw .item07
+	dw .item08
+	dw .item09
+	dw .item0a
+	dw .item0b
+	dw .item0c
+	dw .item0d
+	dw .item0e
+	dw .item0f
+	dw .item10
+	dw .item11
+	dw .item12
+	dw .item13
+	dw .item14
+	dw .item15
+	dw .item16
+	dw .item17
+	dw .item18
+	dw .item19
+	dw .item1a
+	dw .item1b
+	dw .item1c
+	dw .item1d
+	dw .item1e
+	dw .item1f
+	dw .item20
+	dw .item21
+	dw .item22
+	dw .item23
+	dw .item24
+	dw .item25
+	dw .item26
+	dw .item27
+	dw .item28
+	dw .item29
+	dw .item2a
+	dw .item2b
+	dw .item2c
+	dw .item2d
+	dw .item2e
+	dw .item2f
+	dw .item30
+	dw .item31
+	dw .item32
+	dw .item33
+	dw .item34
+	dw .item35
+	dw .item36
+	dw .item37
+	dw .item38
+	dw .item39
+	dw .item3a
+	dw .item3b
+	dw .item3c
+	dw .item3d
+	dw .item3e
+	dw .item3f
+	dw .item40
+	dw .item41
+	dw .item42
+	dw .item43
+	dw .item44
+	dw .item45
+	dw .item46
+	dw .item47
+	dw .item48
+	dw .item49
+	dw .item4a
+	dw .item4b
+	dw .item4c
+	dw .item4d
+	dw .item4e
+	dw .item4f
+	dw .item50
+	dw .item51
+	dw .item52
+	dw .item53
+	dw .item54
+	dw .item55
+	dw .item56
+	dw .item57
+	dw .item58
+	dw .item59
+	dw .item5a
+	dw .item5b
+	dw .item5c
+	dw .item5d
+	dw .item5e
+	dw .item5f
+	dw .item60
+	dw .item61
+	dw .item62
+	dw .item63
+	dw .item64
+	dw .item65
+	dw .item66
+	dw .item67
+	dw .item68
+	dw .item69
+	dw .item6a
+	dw .item6b
+	dw .item6c
+	dw .item6d
+	dw .item6e
+	dw .item6f
+	dw .item70
+	dw .item71
+	dw .item72
+	dw .item73
+	dw .item74
+	dw .item75
+	dw .item76
+	dw .item77
+	dw .item78
+	dw .item79
+	dw .item7a
+	dw .item7b
+	dw .item7c
+	dw .item7d
+	dw .item7e
+	dw .item7f
+	dw .item80
+	dw .item81
+	dw .item82
+	dw .item83
+	dw .item84
+	dw .item85
+	dw .item86
+	dw .item87
+	dw .item88
+	dw .item89
+	dw .item8a
+	dw .item8b
+	dw .item8c
+	dw .item8d
+	dw .item8e
+	dw .item8f
+	dw .item90
+	dw .item91
+	dw .item92
+	dw .item93
+	dw .item94
+	dw .item95
+	dw .item96
+	dw .item97
+	dw .item98
+	dw .item99
+	dw .item9a
+	dw .item9b
+	dw .item9c
+	dw .item9d
+	dw .item9e
+	dw .item9f
+	dw .itema0
+	dw .itema1
+	dw .itema2
+	dw .itema3
+	dw .itema4
+	dw .itema5
+	dw .itema6
+	dw .itema7
+	dw .itema8
+	dw .itema9
+	dw .itemaa
+	dw .itemab
+	dw .itemac
+	dw .itemad
+	dw .itemae
+	dw .itemaf
+	dw .itemb0
+	dw .itemb1
+	dw .itemb2
+	dw .itemb3
+	dw .itemb4
+	dw .itemb5
+	dw .itemb6
+	dw .itemb7
+	dw .itemb8
+	dw .itemb9
+	dw .itemba
+	dw .itembb
+	dw .itembc
+	dw .itembd
+	dw .itembe
+	dw .itembf
+	dw .itemc0
+	dw .itemc1
+	dw .itemc2
+	dw .itemc3
+	dw .itemc4
+	dw .itemc5
+	dw .itemc6
+	dw .itemc7
+	dw .itemc8
+	dw .itemc9
+	dw .itemca
+	dw .itemcb
+	dw .itemcc
+	dw .itemcd
+	dw .itemce
+	dw .itemcf
+	dw .itemd0
+	dw .itemd1
+	dw .itemd2
+	dw .itemd3
+	dw .itemd4
+	dw .itemd5
+	dw .itemd6
+	dw .itemd7
+	dw .itemd8
+	dw .itemd9
+	dw .itemda
+	dw .itemdb
+	dw .itemdc
+	dw .itemdd
+	dw .itemde
+	dw .itemdf
+	dw .iteme0
+	dw .iteme1
+	dw .iteme2
+	dw .iteme3
+	dw .iteme4
+	dw .iteme5
+	dw .iteme6
+	dw .iteme7
+	dw .iteme8
+	dw .iteme9
+	dw .itemea
+	dw .itemeb
+	dw .itemec
+	dw .itemed
+	dw .itemee
+	dw .itemef
+	dw .itemf0
+	dw .itemf1
+	dw .itemf2
+	dw .itemf3
+	dw .itemf4
+	dw .itemf5
+	dw .itemf6
+	dw .itemf7
+	dw .itemf8
+	dw .itemf9
+	dw .itemfa
+	dw .itemfb
+	dw .itemfc
+	dw .itemfd
+	dw .itemfe
+	dw .itemff
+.item00:
+	db "You see...\nBlah blah blah...\nSo here we are.", 0
+.item01:
+	db "Hmm... Nails...\n... Props?\nThat", $01, $01, "s it!", 0
+.item02:
+	db "I like to take a midnight\nswim on occasion, and one\ntime, I forgot to bring a", 0
+.item03:
+	db "Sometimes when I get nice\nand buzzed, I just start\nsinging. Still, though,", 0
+.item04:
+	db "I get where you", $01, $01, "re coming\nfrom, Sakura, but you\nrealize doing that in the", 0
+.item05:
+	db "The answer is probably\nIris. She", $01, $01, "s likely floating\nthrough the air in her", 0
+.item06:
+	db "I figure because these\nmarkings only appear in\nthe training room and", 0
+.item07:
+	db "I believe the correct\nanswer is Kohran. It\nseems like she", $01, $01, "s been", 0
+.item08:
+	db "the", 0
+.item09:
+	db "Could", 0
+.item0a:
+	db "middle of the night\nbothers everyone, don", $01, $01, "t\nyou?", 0
+.item0b:
+	db "Maybe", 0
+.item0c:
+	db "conducting a large", $01, $0a, "scale\nexperiment lately.", 0
+.item0d:
+	db "Alright", 0
+.item0e:
+	db "something", 0
+.item0f:
+	db "mystery", 0
+.item10:
+	db "question", 0
+.item11:
+	db "blah", 0
+.item12:
+	db "night", 0
+.item13:
+	db "manager", 0
+.item14:
+	db "hammering", 0
+.item15:
+	db "Maria", 0
+.item16:
+	db "Sakura", 0
+.item17:
+	db "Kohran", 0
+.item18:
+	db "training", 0
+.item19:
+	db "that", 0
+.item1a:
+	db "hallway", 0
+.item1b:
+	db "you", 0
+.item1c:
+	db "middle", 0
+.item1d:
+	db "think", 0
+.item1e:
+	db "probably", 0
+.item1f:
+	db "someone", 0
+.item20:
+	db "singing", 0
+.item21:
+	db "explosions", 0
+.item22:
+	db "sleep, sheets and all.", 0
+.item23:
+	db "and", 0
+.item24:
+	db "here", 0
+.item25:
+	db "Kanna", 0
+.item26:
+	db "thinking", 0
+.item27:
+	db "impressed", 0
+.item28:
+	db "right", 0
+.item29:
+	db "water", 0
+.item2a:
+	db "next", 0
+.item2b:
+	db "Sumire", 0
+.item2c:
+	db "ridiculous", 0
+.item2d:
+	db "Understood", 0
+.item2e:
+	db "You", 0
+.item2f:
+	db "about", 0
+.item30:
+	db "could", 0
+.item31:
+	db "might", 0
+.item32:
+	db "Captain", 0
+.item33:
+	db "been", 0
+.item34:
+	db "find", 0
+.item35:
+	db "Iris", 0
+.item36:
+	db "answer", 0
+.item37:
+	db "towel", 0
+.item38:
+	db "Blah", 0
+.item39:
+	db "her", 0
+.item3a:
+	db "Someone", 0
+.item3b:
+	db "Singing", 0
+.item3c:
+	db "like", 0
+.item3d:
+	db "What", 0
+.item3e:
+	db "Nails", 0
+.item3f:
+	db "Props", 0
+.item40:
+	db "would", 0
+.item41:
+	db "lately", 0
+.item42:
+	db "Yoneda", 0
+.item43:
+	db "likely", 0
+.item44:
+	db "experiment", 0
+.item45:
+	db "near her room.", 0
+.item46:
+	db "know", 0
+.item47:
+	db "room", 0
+.item48:
+	db "doing", 0
+.item49:
+	db "drunk", 0
+.item4a:
+	db "Water", 0
+.item4b:
+	db "seriously", 0
+.item4c:
+	db "see", 0
+.item4d:
+	db "trying", 0
+.item4e:
+	db "brings", 0
+.item4f:
+	db "Please", 0
+.item50:
+	db "theater", 0
+.item51:
+	db "through", 0
+.item52:
+	db "suppose", 0
+.item53:
+	db "exactly", 0
+.item54:
+	db "getting", 0
+.item55:
+	db "this", 0
+.item56:
+	db "Okay", 0
+.item57:
+	db "time", 0
+.item58:
+	db "just", 0
+.item59:
+	db "pool", 0
+.item5a:
+	db "wrong", 0
+.item5b:
+	db "nails", 0
+.item5c:
+	db "everyone", 0
+.item5d:
+	db "Probably", 0
+.item5e:
+	db $01, $02, "eerie", $01, $02, "...?", 0
+.item5f:
+	db "performance", 0
+.item60:
+	db "Ohhhohohoho", 0
+.item61:
+	db "overloading", 0
+.item62:
+	db "who", 0
+.item63:
+	db "with", 0
+.item64:
+	db "have", 0
+.item65:
+	db "were", 0
+.item66:
+	db "harder", 0
+.item67:
+	db "forgetting", 0
+.item68:
+	db "conducting", 0
+.item69:
+	db "all", 0
+.item6a:
+	db "But", 0
+.item6b:
+	db "worry", 0
+.item6c:
+	db "Ogami", 0
+.item6d:
+	db "Sorry", 0
+.item6e:
+	db "sweat", 0
+.item6f:
+	db "bring", 0
+.item70:
+	db "sleep", 0
+.item71:
+	db "morning", 0
+.item72:
+	db "already", 0
+.item73:
+	db "disturb", 0
+.item74:
+	db "because", 0
+.item75:
+	db "ballads", 0
+.item76:
+	db "are", 0
+.item77:
+	db "from", 0
+.item78:
+	db "mysteries", 0
+.item79:
+	db "Sometimes", 0
+.item7a:
+	db "Apologies", 0
+.item7b:
+	db "screaming", 0
+.item7c:
+	db "The", 0
+.item7d:
+	db "not", 0
+.item7e:
+	db "one", 0
+.item7f:
+	db "she", 0
+.item80:
+	db "your", 0
+.item81:
+	db "help", 0
+.item82:
+	db "then", 0
+.item83:
+	db "some", 0
+.item84:
+	db "onto", 0
+.item85:
+	db "much", 0
+.item86:
+	db "today", 0
+.item87:
+	db "sorry", 0
+.item88:
+	db "later", 0
+.item89:
+	db "these", 0
+.item8a:
+	db "start", 0
+.item8b:
+	db "sound", 0
+.item8c:
+	db "hobby", 0
+.item8d:
+	db "being", 0
+.item8e:
+	db "Think", 0
+.item8f:
+	db "others", 0
+.item90:
+	db "before", 0
+.item91:
+	db "repair", 0
+.item92:
+	db "during", 0
+.item93:
+	db "ghosts", 0
+.item94:
+	db "theory", 0
+.item95:
+	db "figure", 0
+.item96:
+	db "sheets", 0
+.item97:
+	db "voices", 0
+.item98:
+	db "swimming", 0
+.item99:
+	db "anything", 0
+.item9a:
+	db "midnight", 0
+.item9b:
+	db "occasion", 0
+.item9c:
+	db "bringing", 0
+.item9d:
+	db "Swimming", 0
+.item9e:
+	db "markings", 0
+.item9f:
+	db "floating", 0
+.itema0:
+	db "get", 0
+.itema1:
+	db "but", 0
+.itema2:
+	db "Hmm", 0
+.itema3:
+	db "concentration", 0
+.itema4:
+	db "for", 0
+.itema5:
+	db "now", 0
+.itema6:
+	db "take", 0
+.itema7:
+	db "must", 0
+.itema8:
+	db "alright", 0
+.itema9:
+	db "repairs", 0
+.itemaa:
+	db "realize", 0
+.itemab:
+	db "bothers", 0
+.itemac:
+	db "daytime", 0
+.itemad:
+	db "revenge", 0
+.itemae:
+	db "imagine", 0
+.itemaf:
+	db "serious", 0
+.itemb0:
+	db "minutes", 0
+.itemb1:
+	db "without", 0
+.itemb2:
+	db "smashed", 0
+.itemb3:
+	db "fusebox", 0
+.itemb4:
+	db "believe", 0
+.itemb5:
+	db "correct", 0
+.itemb6:
+	db "Wailing", 0
+.itemb7:
+	db "frustrations", 0
+.itemb8:
+	db "why", 0
+.itemb9:
+	db "was", 0
+.itemba:
+	db "too", 0
+.itembb:
+	db "usual", 0
+.itembc:
+	db "halls", 0
+.itembd:
+	db "their", 0
+.itembe:
+	db "after", 0
+.itembf:
+	db "which", 0
+.itemc0:
+	db "floor", 0
+.itemc1:
+	db "walls", 0
+.itemc2:
+	db "eerie", 0
+.itemc3:
+	db "explanation", 0
+.itemc4:
+	db "foolishness", 0
+.itemc5:
+	db "unthinkable", 0
+.itemc6:
+	db "responsible", 0
+.itemc7:
+	db "daydreaming", 0
+.itemc8:
+	db "electricity", 0
+.itemc9:
+	db "experiments", 0
+.itemca:
+	db "Good", 0
+.itemcb:
+	db "them", 0
+.itemcc:
+	db "away", 0
+.itemcd:
+	db "prop", 0
+.itemce:
+	db "That", 0
+.itemcf:
+	db "Wait", 0
+.itemd0:
+	db "fine", 0
+.itemd1:
+	db "swim", 0
+.itemd2:
+	db "when", 0
+.itemd3:
+	db "case", 0
+.itemd4:
+	db "only", 0
+.itemd5:
+	db "Haha", 0
+.itemd6:
+	db "towel.", 0
+.itemd7:
+	db "voodoo", 0
+.itemd8:
+	db "coming", 0
+.itemd9:
+	db "little", 0
+.itemda:
+	db "absurd", 0
+.itemdb:
+	db "people", 0
+.itemdc:
+	db "nobody", 0
+.itemdd:
+	db "pardon", 0
+.itemde:
+	db "forgot", 0
+.itemdf:
+	db "forget", 0
+.iteme0:
+	db "Nobody", 0
+.iteme1:
+	db "sticky", 0
+.iteme2:
+	db "cracks", 0
+.iteme3:
+	db "appear", 0
+.iteme4:
+	db "caused", 0
+.iteme5:
+	db "things", 0
+.iteme6:
+	db "around", 0
+.iteme7:
+	db "clumsy", 0
+.iteme8:
+	db "buzzed", 0
+.iteme9:
+	db "though", 0
+.itemea:
+	db "dreams", 0
+.itemeb:
+	db "guitar", 0
+.itemec:
+	db "earned", 0
+.itemed:
+	db "Kayama", 0
+.itemee:
+	db "friend", 0
+.itemef:
+	db "paranormal", 0
+.itemf0:
+	db "distracted", 0
+.itemf1:
+	db "infidelity", 0
+.itemf2:
+	db "completely", 0
+.itemf3:
+	db "Enthusiast", 0
+.itemf4:
+	db "themselves", 0
+.itemf5:
+	db "everything", 0
+.itemf6:
+	db "understand", 0
+.itemf7:
+	db "apparently", 0
+.itemf8:
+	db "supposedly", 0
+.itemf9:
+	db "throughout", 0
+.itemfa:
+	db "nightmares", 0
+.itemfb:
+	db "And", 0
+.itemfc:
+	db "beautiful", 0
+.itemfd:
+	db "spreading", 0
+.itemfe:
+	db "occurring", 0
+.itemff:
+	db "perfectly", 0
+
 endc
