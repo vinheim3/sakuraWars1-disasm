@@ -183,10 +183,10 @@ class ScriptExtractor:
         self.englishMap = {}
 
     @staticmethod
-    def convertEnglish(english, limit=112, dictionary=False):
+    def convertEnglish(english, limit=112, dictionary=False, startingLine=None):
         lines = english.split('\n')
         textboxes = []
-        lineCounter = 0
+        lineCounter = startingLine or 0
         colCounter = 0
         boxBytes = []
         spaceLen = 3
@@ -203,7 +203,7 @@ class ScriptExtractor:
             "I figure because these markings only appear in the training room and near her room.":  [[0x0b, 0x06], [0x0b, 0x45]],
         }
         if english in bigMap:
-            return bigMap[english]
+            return bigMap[english], 0
 
         for j, line in enumerate(lines):
             words = line.split()
@@ -278,7 +278,7 @@ class ScriptExtractor:
         if boxBytes:
             textboxes.append(boxBytes)
             
-        return textboxes
+        return textboxes, lineCounter
 
     @staticmethod
     def getCharVal(char):
@@ -563,6 +563,9 @@ class ScriptExtractor:
         comps = ["\tStartScript", "", f"Script_{self.scriptNum:03x}::"]
         addresses = sorted(self.instructions.keys())
         retainedRefs = set(self.jumpAddresses)
+
+        lineCounter = 0
+
         for address in addresses:
             if address in retainedRefs:
                 comps.append(f".ref_{address:x}:")
@@ -579,12 +582,17 @@ class ScriptExtractor:
 
             if params == 't' and address+1 in self.englishMap:
                 english = self.englishMap[address+1]
-                textboxes = self.convertEnglish(english, dictionary=True)
+                if prompted is False:
+                    comps.append(f"\tdb $01, $0d, $00")
+                    totalBytes += 3
+                    lineCounter += 1
+                else:
+                    lineCounter = 0
+                textboxes, lineCounter = self.convertEnglish(
+                    english, dictionary=True, startingLine=lineCounter,
+                )
                 for line in self.englishMap[address+1].split('\n'):
                     comps.append(f"; {line}")
-                if prompted is False:
-                    comps.append("\tScriptOpt_ContinuePrompt")
-                    totalBytes += 1
 
                 for i, textbox in enumerate(textboxes):
                     if i != 0:
@@ -641,7 +649,7 @@ class ScriptExtractor:
                             limit = 112
                             if name == 'ScriptOpt_TimedQuestion':
                                 limit = 128
-                            textboxes = self.convertEnglish(english, limit=limit)
+                            textboxes, _ = self.convertEnglish(english, limit=limit)
                             assert len(textboxes) == 1
                             if 0x0d in textboxes[0]:
                                 print(self.scriptNum, address+offset)
@@ -885,7 +893,7 @@ if __name__ == "__main__":
 include "macros.s"
 include "charmap.s"
 
-SECTION "Bank $00", ROM0[$200]
+SECTION "Bank $00", ROM0[$150]
 
 {final_comps}
 """
@@ -899,7 +907,7 @@ SECTION "Bank $00", ROM0[$200]
             os.chdir('..')
 
             with open('scriptBuild/sakuraWars1.gbc', 'rb') as f:
-                compiledBytes = f.read()[0x200:0x200+totalBytes]
+                compiledBytes = f.read()[0x150:0x150+totalBytes]
             
             if totalBytes + bankBytes < 0x4000:
                 bankData[currBank].extend(["\tStartScript", "", f"Script_{scriptNum:03x}::"])
