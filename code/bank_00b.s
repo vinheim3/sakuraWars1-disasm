@@ -8293,50 +8293,51 @@ jr_00b_68ab:
 
 
 GameState48::
+;
 	ld   a, [wGameSubstate]                                  ; $68b6: $fa $a1 $c2
 	or   a                                           ; $68b9: $b7
-	jp   nz, Jump_00b_6949                           ; $68ba: $c2 $49 $69
+	jp   nz, GS48_Substate1                           ; $68ba: $c2 $49 $69
 
+;
 	call TurnOffLCD                                       ; $68bd: $cd $e3 $08
 	call ClearDisplayRegsAllowVBlankInt                                       ; $68c0: $cd $59 $0b
+
 	ld   a, [wLCDC]                                  ; $68c3: $fa $03 $c2
 	and  $e0                                         ; $68c6: $e6 $e0
 	or   $07                                         ; $68c8: $f6 $07
 	ld   [wLCDC], a                                  ; $68ca: $ea $03 $c2
+
+;
 	ld   a, $ff                                      ; $68cd: $3e $ff
 	ld   [wInGameInputsEnabled], a                                  ; $68cf: $ea $0e $c2
+
 	call ClearOam                                       ; $68d2: $cd $d7 $0d
 	call ClearBaseAnimSpriteSpecDetails                                       ; $68d5: $cd $c9 $2e
+
+;
 	ld   a, [wWramBank]                                  ; $68d8: $fa $93 $c2
 	push af                                          ; $68db: $f5
+
 	ld   a, $06                                      ; $68dc: $3e $06
 	ld   [wWramBank], a                                  ; $68de: $ea $93 $c2
 	ldh  [rSVBK], a                                  ; $68e1: $e0 $70
+
+;
 	ld   a, $9a                                      ; $68e3: $3e $9a
 	ld   hl, $d000                                   ; $68e5: $21 $00 $d0
 	ld   de, $7e23                                   ; $68e8: $11 $23 $7e
 	call RLEXorCopy                                       ; $68eb: $cd $d2 $09
+
+;
 	pop  af                                          ; $68ee: $f1
 	ld   [wWramBank], a                                  ; $68ef: $ea $93 $c2
 	ldh  [rSVBK], a                                  ; $68f2: $e0 $70
-	push af                                          ; $68f4: $f5
-	ld   a, $1a                                      ; $68f5: $3e $1a
-	ld   [wFarCallAddr], a                                  ; $68f7: $ea $98 $c2
-	ld   a, $48                                      ; $68fa: $3e $48
-	ld   [wFarCallAddr+1], a                                  ; $68fc: $ea $99 $c2
-	ld   a, $0a                                      ; $68ff: $3e $0a
-	ld   [wFarCallBank], a                                  ; $6901: $ea $9a $c2
-	pop  af                                          ; $6904: $f1
-	call FarCall                                       ; $6905: $cd $62 $09
-	push af                                          ; $6908: $f5
-	ld   a, $34                                      ; $6909: $3e $34
-	ld   [wFarCallAddr], a                                  ; $690b: $ea $98 $c2
-	ld   a, $49                                      ; $690e: $3e $49
-	ld   [wFarCallAddr+1], a                                  ; $6910: $ea $99 $c2
-	ld   a, $0a                                      ; $6913: $3e $0a
-	ld   [wFarCallBank], a                                  ; $6915: $ea $9a $c2
-	pop  af                                          ; $6918: $f1
-	call FarCall                                       ; $6919: $cd $62 $09
+
+;
+	M_FarCall todo_ClearsAndLoadsGfxForConvoScreens
+	M_FarCall Func_0a_4934
+	
+;
 	xor  a                                           ; $691c: $af
 	ld   [$cbf7], a                                  ; $691d: $ea $f7 $cb
 	ld   [$cbf8], a                                  ; $6920: $ea $f8 $cb
@@ -8352,69 +8353,61 @@ GameState48::
 	xor  a                                           ; $693a: $af
 	ld   [$cc00], a                                  ; $693b: $ea $00 $cc
 	ld   [$cc01], a                                  ; $693e: $ea $01 $cc
+
+;
 	call TurnOnLCD                                       ; $6941: $cd $09 $09
 	ld   hl, wGameSubstate                                   ; $6944: $21 $a1 $c2
 	inc  [hl]                                        ; $6947: $34
 	ret                                              ; $6948: $c9
 
 
-Jump_00b_6949:
+GS48_Substate1:
+;
 	call ClearOam                                       ; $6949: $cd $d7 $0d
-	ld   bc, $695f                                   ; $694c: $01 $5f $69
+
+	ld   bc, .return                                   ; $694c: $01 $5f $69
 	push bc                                          ; $694f: $c5
+
+;
 	ld   a, [$cbf7]                                  ; $6950: $fa $f7 $cb
 	ld   h, $00                                      ; $6953: $26 $00
 	ld   l, a                                        ; $6955: $6f
 	add  hl, hl                                      ; $6956: $29
-	ld   bc, $6962                                   ; $6957: $01 $62 $69
+	ld   bc, .table                                   ; $6957: $01 $62 $69
 	add  hl, bc                                      ; $695a: $09
+
+;
 	ld   a, [hl+]                                    ; $695b: $2a
 	ld   h, [hl]                                     ; $695c: $66
 	ld   l, a                                        ; $695d: $6f
 	jp   hl                                          ; $695e: $e9
 
-
+.return:
 	jp   AnimateAllAnimatedSpriteSpecs                                       ; $695f: $c3 $d3 $2e
 
+.table:
+	dw GS48_AnimationHandler00
+	dw GS48_AnimationHandler01
+	dw GS48_AnimationHandler02
+	dw GS48_AnimationHandler03
+	dw GS48_AnimationHandler04
+	dw GS48_AnimationHandler05
+	dw GS48_AnimationHandler06
+	dw GS48_AnimationHandler07
+	dw GS48_AnimationHandler08
+	dw GS48_AnimationHandler09
+	dw GS48_AnimationHandler0a
+	dw GS48_AnimationHandler0b
+	dw GS48_AnimationHandler0c
+	dw GS48_AnimationHandler0d
+	dw GS48_AnimationHandler0e
+	dw GS48_AnimationHandler0f
+	dw GS48_AnimationHandler10
+	dw GS48_AnimationHandler11
+	dw GS48_AnimationHandler12
 
-	adc  b                                           ; $6962: $88
-	ld   l, c                                        ; $6963: $69
-	sub  c                                           ; $6964: $91
-	ld   l, c                                        ; $6965: $69
-	ld   b, h                                        ; $6966: $44
-	ld   l, d                                        ; $6967: $6a
-	ret  nz                                          ; $6968: $c0
 
-	ld   l, d                                        ; $6969: $6a
-	ld   [hl], h                                     ; $696a: $74
-	ld   l, e                                        ; $696b: $6b
-	or   e                                           ; $696c: $b3
-	ld   l, e                                        ; $696d: $6b
-	add  [hl]                                        ; $696e: $86
-	ld   l, h                                        ; $696f: $6c
-	adc  a                                           ; $6970: $8f
-	ld   l, h                                        ; $6971: $6c
-	db   $ec                                         ; $6972: $ec
-	ld   l, h                                        ; $6973: $6c
-	ld   [hl], a                                     ; $6974: $77
-	ld   l, l                                        ; $6975: $6d
-	ldh  [c], a                                      ; $6976: $e2
-	ld   l, l                                        ; $6977: $6d
-	rlca                                             ; $6978: $07
-	ld   l, [hl]                                     ; $6979: $6e
-	ld   a, [hl]                                     ; $697a: $7e
-	ld   l, [hl]                                     ; $697b: $6e
-	add  a                                           ; $697c: $87
-	ld   l, [hl]                                     ; $697d: $6e
-	ld   a, [hl-]                                    ; $697e: $3a
-	ld   l, a                                        ; $697f: $6f
-	or   [hl]                                        ; $6980: $b6
-	ld   l, a                                        ; $6981: $6f
-	dec  bc                                          ; $6982: $0b
-	ld   [hl], b                                     ; $6983: $70
-	jp   nz, $e270                                   ; $6984: $c2 $70 $e2
-
-	ld   [hl], b                                     ; $6987: $70
+GS48_AnimationHandler00:
 	ld   hl, $cbf7                                   ; $6988: $21 $f7 $cb
 	inc  [hl]                                        ; $698b: $34
 	xor  a                                           ; $698c: $af
@@ -8422,6 +8415,7 @@ Jump_00b_6949:
 	ret                                              ; $6990: $c9
 
 
+GS48_AnimationHandler01:
 	ld   a, [$cbf8]                                  ; $6991: $fa $f8 $cb
 	or   a                                           ; $6994: $b7
 	jr   nz, jr_00b_69b0                             ; $6995: $20 $19
@@ -8452,15 +8446,9 @@ jr_00b_69b0:
 	call FarMemCopy                                       ; $69c8: $cd $b2 $09
 	ld   bc, $0433                                   ; $69cb: $01 $33 $04
 	call SetBGandOBJPaletteRangesToUpdate                                       ; $69ce: $cd $aa $04
-	push af                                          ; $69d1: $f5
-	ld   a, $02                                      ; $69d2: $3e $02
-	ld   [wFarCallAddr], a                                  ; $69d4: $ea $98 $c2
-	ld   a, $64                                      ; $69d7: $3e $64
-	ld   [wFarCallAddr+1], a                                  ; $69d9: $ea $99 $c2
-	ld   a, $0b                                      ; $69dc: $3e $0b
-	ld   [wFarCallBank], a                                  ; $69de: $ea $9a $c2
-	pop  af                                          ; $69e1: $f1
-	call FarCall                                       ; $69e2: $cd $62 $09
+
+	M_FarCall Call_00b_6402
+
 	ld   a, [wWramBank]                                  ; $69e5: $fa $93 $c2
 	push af                                          ; $69e8: $f5
 	ld   a, $02                                      ; $69e9: $3e $02
@@ -8502,6 +8490,7 @@ jr_00b_69b0:
 	ret                                              ; $6a43: $c9
 
 
+GS48_AnimationHandler02:
 	ld   hl, $cbf8                                   ; $6a44: $21 $f8 $cb
 	ld   a, [hl]                                     ; $6a47: $7e
 	inc  [hl]                                        ; $6a48: $34
@@ -8521,29 +8510,15 @@ jr_00b_69b0:
 
 
 jr_00b_6a5d:
-	push af                                          ; $6a5d: $f5
-	ld   a, $46                                      ; $6a5e: $3e $46
-	ld   [wFarCallAddr], a                                  ; $6a60: $ea $98 $c2
-	ld   a, $64                                      ; $6a63: $3e $64
-	ld   [wFarCallAddr+1], a                                  ; $6a65: $ea $99 $c2
-	ld   a, $0b                                      ; $6a68: $3e $0b
-	ld   [wFarCallBank], a                                  ; $6a6a: $ea $9a $c2
-	pop  af                                          ; $6a6d: $f1
-	call FarCall                                       ; $6a6e: $cd $62 $09
+	M_FarCall Func_0b_6446
 
 jr_00b_6a71:
 	call Call_00b_6c70                               ; $6a71: $cd $70 $6c
 	ld   a, [$cbf8]                                  ; $6a74: $fa $f8 $cb
 	dec  a                                           ; $6a77: $3d
-	push af                                          ; $6a78: $f5
-	ld   a, $00                                      ; $6a79: $3e $00
-	ld   [wFarCallAddr], a                                  ; $6a7b: $ea $98 $c2
-	ld   a, $40                                      ; $6a7e: $3e $40
-	ld   [wFarCallAddr+1], a                                  ; $6a80: $ea $99 $c2
-	ld   a, $0b                                      ; $6a83: $3e $0b
-	ld   [wFarCallBank], a                                  ; $6a85: $ea $9a $c2
-	pop  af                                          ; $6a88: $f1
-	call FarCall                                       ; $6a89: $cd $62 $09
+
+	M_FarCall Func_0b_4000
+
 	or   a                                           ; $6a8c: $b7
 	ret  nz                                          ; $6a8d: $c0
 
@@ -8570,29 +8545,17 @@ jr_00b_6a71:
 	ret                                              ; $6abf: $c9
 
 
+GS48_AnimationHandler03:
 	ld   a, [$cbf8]                                  ; $6ac0: $fa $f8 $cb
 	or   a                                           ; $6ac3: $b7
 	jp   nz, Jump_00b_6b3a                           ; $6ac4: $c2 $3a $6b
 
-	push af                                          ; $6ac7: $f5
-	ld   a, $1a                                      ; $6ac8: $3e $1a
-	ld   [wFarCallAddr], a                                  ; $6aca: $ea $98 $c2
-	ld   a, $64                                      ; $6acd: $3e $64
-	ld   [wFarCallAddr+1], a                                  ; $6acf: $ea $99 $c2
-	ld   a, $0b                                      ; $6ad2: $3e $0b
-	ld   [wFarCallBank], a                                  ; $6ad4: $ea $9a $c2
-	pop  af                                          ; $6ad7: $f1
-	call FarCall                                       ; $6ad8: $cd $62 $09
+	M_FarCall Func_0b_641a
+
 	call Call_00b_6c70                               ; $6adb: $cd $70 $6c
-	push af                                          ; $6ade: $f5
-	ld   a, $03                                      ; $6adf: $3e $03
-	ld   [wFarCallAddr], a                                  ; $6ae1: $ea $98 $c2
-	ld   a, $59                                      ; $6ae4: $3e $59
-	ld   [wFarCallAddr+1], a                                  ; $6ae6: $ea $99 $c2
-	ld   a, $0b                                      ; $6ae9: $3e $0b
-	ld   [wFarCallBank], a                                  ; $6aeb: $ea $9a $c2
-	pop  af                                          ; $6aee: $f1
-	call FarCall                                       ; $6aef: $cd $62 $09
+
+	M_FarCall Func_0b_5903
+
 	ld   c, $80                                      ; $6af2: $0e $80
 	ld   de, $9800                                   ; $6af4: $11 $00 $98
 	ld   a, $02                                      ; $6af7: $3e $02
@@ -8654,6 +8617,7 @@ Jump_00b_6b3a:
 	ret                                              ; $6b73: $c9
 
 
+GS48_AnimationHandler04:
 	ld   a, [wWramBank]                                  ; $6b74: $fa $93 $c2
 	push af                                          ; $6b77: $f5
 	ld   a, $06                                      ; $6b78: $3e $06
@@ -8668,15 +8632,9 @@ Jump_00b_6b3a:
 	and  $f0                                         ; $6b8b: $e6 $f0
 	swap a                                           ; $6b8d: $cb $37
 	ld   b, a                                        ; $6b8f: $47
-	push af                                          ; $6b90: $f5
-	ld   a, $ba                                      ; $6b91: $3e $ba
-	ld   [wFarCallAddr], a                                  ; $6b93: $ea $98 $c2
-	ld   a, $54                                      ; $6b96: $3e $54
-	ld   [wFarCallAddr+1], a                                  ; $6b98: $ea $99 $c2
-	ld   a, $0a                                      ; $6b9b: $3e $0a
-	ld   [wFarCallBank], a                                  ; $6b9d: $ea $9a $c2
-	pop  af                                          ; $6ba0: $f1
-	call FarCall                                       ; $6ba1: $cd $62 $09
+
+	M_FarCall todo_DisplayCharacterPortrait
+
 	pop  af                                          ; $6ba4: $f1
 	ld   [wWramBank], a                                  ; $6ba5: $ea $93 $c2
 	ldh  [rSVBK], a                                  ; $6ba8: $e0 $70
@@ -8687,6 +8645,7 @@ Jump_00b_6b3a:
 	ret                                              ; $6bb2: $c9
 
 
+GS48_AnimationHandler05:
 	call Call_00b_6c70                               ; $6bb3: $cd $70 $6c
 	ld   a, h                                        ; $6bb6: $7c
 	or   l                                           ; $6bb7: $b5
@@ -8696,15 +8655,8 @@ Jump_00b_6b3a:
 	sla  a                                           ; $6bbd: $cb $27
 	and  $03                                         ; $6bbf: $e6 $03
 	set  0, a                                        ; $6bc1: $cb $c7
-	push af                                          ; $6bc3: $f5
-	ld   a, $3b                                      ; $6bc4: $3e $3b
-	ld   [wFarCallAddr], a                                  ; $6bc6: $ea $98 $c2
-	ld   a, $65                                      ; $6bc9: $3e $65
-	ld   [wFarCallAddr+1], a                                  ; $6bcb: $ea $99 $c2
-	ld   a, $0b                                      ; $6bce: $3e $0b
-	ld   [wFarCallBank], a                                  ; $6bd0: $ea $9a $c2
-	pop  af                                          ; $6bd3: $f1
-	call FarCall                                       ; $6bd4: $cd $62 $09
+
+	M_FarCall Func_0b_653b
 
 jr_00b_6bd7:
 	ld   a, [wInGameButtonsPressed]                                  ; $6bd7: $fa $10 $c2
@@ -8825,6 +8777,7 @@ Call_00b_6c70:
 	ret                                              ; $6c85: $c9
 
 
+GS48_AnimationHandler06:
 	ld   hl, $cbf7                                   ; $6c86: $21 $f7 $cb
 	inc  [hl]                                        ; $6c89: $34
 	xor  a                                           ; $6c8a: $af
@@ -8832,6 +8785,7 @@ Call_00b_6c70:
 	ret                                              ; $6c8e: $c9
 
 
+GS48_AnimationHandler07:
 	ld   a, [$cbf8]                                  ; $6c8f: $fa $f8 $cb
 	or   a                                           ; $6c92: $b7
 	jr   nz, jr_00b_6cae                             ; $6c93: $20 $19
@@ -8862,15 +8816,9 @@ jr_00b_6cae:
 	call FarMemCopy                                       ; $6cc6: $cd $b2 $09
 	ld   bc, $0433                                   ; $6cc9: $01 $33 $04
 	call SetBGandOBJPaletteRangesToUpdate                                       ; $6ccc: $cd $aa $04
-	push af                                          ; $6ccf: $f5
-	ld   a, $02                                      ; $6cd0: $3e $02
-	ld   [wFarCallAddr], a                                  ; $6cd2: $ea $98 $c2
-	ld   a, $64                                      ; $6cd5: $3e $64
-	ld   [wFarCallAddr+1], a                                  ; $6cd7: $ea $99 $c2
-	ld   a, $0b                                      ; $6cda: $3e $0b
-	ld   [wFarCallBank], a                                  ; $6cdc: $ea $9a $c2
-	pop  af                                          ; $6cdf: $f1
-	call FarCall                                       ; $6ce0: $cd $62 $09
+
+	M_FarCall Call_00b_6402
+
 	ld   hl, $cbf7                                   ; $6ce3: $21 $f7 $cb
 	inc  [hl]                                        ; $6ce6: $34
 	xor  a                                           ; $6ce7: $af
@@ -8878,6 +8826,7 @@ jr_00b_6cae:
 	ret                                              ; $6ceb: $c9
 
 
+GS48_AnimationHandler08:
 	ld   hl, $cbf8                                   ; $6cec: $21 $f8 $cb
 	ld   a, [hl]                                     ; $6cef: $7e
 	inc  [hl]                                        ; $6cf0: $34
@@ -8885,25 +8834,12 @@ jr_00b_6cae:
 	jr   nz, jr_00b_6d22                             ; $6cf2: $20 $2e
 
 	ld   a, [$cbfb]                                  ; $6cf4: $fa $fb $cb
-	push af                                          ; $6cf7: $f5
-	ld   a, $cd                                      ; $6cf8: $3e $cd
-	ld   [wFarCallAddr], a                                  ; $6cfa: $ea $98 $c2
-	ld   a, $66                                      ; $6cfd: $3e $66
-	ld   [wFarCallAddr+1], a                                  ; $6cff: $ea $99 $c2
-	ld   a, $0b                                      ; $6d02: $3e $0b
-	ld   [wFarCallBank], a                                  ; $6d04: $ea $9a $c2
-	pop  af                                          ; $6d07: $f1
-	call FarCall                                       ; $6d08: $cd $62 $09
+
+	M_FarCall Func_0b_66cd
+
 	ld   [$cbfc], a                                  ; $6d0b: $ea $fc $cb
-	push af                                          ; $6d0e: $f5
-	ld   a, $1a                                      ; $6d0f: $3e $1a
-	ld   [wFarCallAddr], a                                  ; $6d11: $ea $98 $c2
-	ld   a, $64                                      ; $6d14: $3e $64
-	ld   [wFarCallAddr+1], a                                  ; $6d16: $ea $99 $c2
-	ld   a, $0b                                      ; $6d19: $3e $0b
-	ld   [wFarCallBank], a                                  ; $6d1b: $ea $9a $c2
-	pop  af                                          ; $6d1e: $f1
-	call FarCall                                       ; $6d1f: $cd $62 $09
+
+	M_FarCall Func_0b_641a
 
 jr_00b_6d22:
 	ld   a, [$cbf8]                                  ; $6d22: $fa $f8 $cb
@@ -8911,15 +8847,9 @@ jr_00b_6d22:
 	ld   h, a                                        ; $6d26: $67
 	ld   a, [$cbfb]                                  ; $6d27: $fa $fb $cb
 	ld   l, a                                        ; $6d2a: $6f
-	push af                                          ; $6d2b: $f5
-	ld   a, $70                                      ; $6d2c: $3e $70
-	ld   [wFarCallAddr], a                                  ; $6d2e: $ea $98 $c2
-	ld   a, $59                                      ; $6d31: $3e $59
-	ld   [wFarCallAddr+1], a                                  ; $6d33: $ea $99 $c2
-	ld   a, $0b                                      ; $6d36: $3e $0b
-	ld   [wFarCallBank], a                                  ; $6d38: $ea $9a $c2
-	pop  af                                          ; $6d3b: $f1
-	call FarCall                                       ; $6d3c: $cd $62 $09
+
+	M_FarCall Func_0b_5970
+
 	bit  7, a                                        ; $6d3f: $cb $7f
 	ret  nz                                          ; $6d41: $c0
 
@@ -8947,6 +8877,7 @@ jr_00b_6d22:
 	ret                                              ; $6d76: $c9
 
 
+GS48_AnimationHandler09:
 	ld   a, [$cbf8]                                  ; $6d77: $fa $f8 $cb
 	or   a                                           ; $6d7a: $b7
 	jp   nz, Jump_00b_6da8                           ; $6d7b: $c2 $a8 $6d
@@ -9000,19 +8931,14 @@ Jump_00b_6da8:
 	ret                                              ; $6de1: $c9
 
 
+GS48_AnimationHandler0a:
 	ld   a, [$cbfd]                                  ; $6de2: $fa $fd $cb
 	and  $0f                                         ; $6de5: $e6 $0f
 	ld   b, a                                        ; $6de7: $47
 	ld   c, $00                                      ; $6de8: $0e $00
-	push af                                          ; $6dea: $f5
-	ld   a, $ba                                      ; $6deb: $3e $ba
-	ld   [wFarCallAddr], a                                  ; $6ded: $ea $98 $c2
-	ld   a, $54                                      ; $6df0: $3e $54
-	ld   [wFarCallAddr+1], a                                  ; $6df2: $ea $99 $c2
-	ld   a, $0a                                      ; $6df5: $3e $0a
-	ld   [wFarCallBank], a                                  ; $6df7: $ea $9a $c2
-	pop  af                                          ; $6dfa: $f1
-	call FarCall                                       ; $6dfb: $cd $62 $09
+
+	M_FarCall todo_DisplayCharacterPortrait
+
 	ld   hl, $cbf7                                   ; $6dfe: $21 $f7 $cb
 	inc  [hl]                                        ; $6e01: $34
 	xor  a                                           ; $6e02: $af
@@ -9020,6 +8946,7 @@ Jump_00b_6da8:
 	ret                                              ; $6e06: $c9
 
 
+GS48_AnimationHandler0b:
 	ld   a, [wInGameButtonsPressed]                                  ; $6e07: $fa $10 $c2
 	bit  1, a                                        ; $6e0a: $cb $4f
 	jr   z, jr_00b_6e18                              ; $6e0c: $28 $0a
@@ -9054,15 +8981,8 @@ jr_00b_6e26:
 	and  $03                                         ; $6e35: $e6 $03
 	set  0, a                                        ; $6e37: $cb $c7
 	ld   l, a                                        ; $6e39: $6f
-	push af                                          ; $6e3a: $f5
-	ld   a, $33                                      ; $6e3b: $3e $33
-	ld   [wFarCallAddr], a                                  ; $6e3d: $ea $98 $c2
-	ld   a, $68                                      ; $6e40: $3e $68
-	ld   [wFarCallAddr+1], a                                  ; $6e42: $ea $99 $c2
-	ld   a, $0b                                      ; $6e45: $3e $0b
-	ld   [wFarCallBank], a                                  ; $6e47: $ea $9a $c2
-	pop  af                                          ; $6e4a: $f1
-	call FarCall                                       ; $6e4b: $cd $62 $09
+
+	M_FarCall Func_0b_6833
 
 jr_00b_6e4e:
 	ld   a, [wInGameButtonsHeld]                                  ; $6e4e: $fa $0f $c2
@@ -9101,6 +9021,7 @@ jr_00b_6e74:
 	ret                                              ; $6e7d: $c9
 
 
+GS48_AnimationHandler0c:
 	ld   hl, $cbf7                                   ; $6e7e: $21 $f7 $cb
 	inc  [hl]                                        ; $6e81: $34
 	xor  a                                           ; $6e82: $af
@@ -9108,6 +9029,7 @@ jr_00b_6e74:
 	ret                                              ; $6e86: $c9
 
 
+GS48_AnimationHandler0d:
 	ld   a, [$cbf8]                                  ; $6e87: $fa $f8 $cb
 	or   a                                           ; $6e8a: $b7
 	jr   nz, jr_00b_6ea6                             ; $6e8b: $20 $19
@@ -9138,15 +9060,9 @@ jr_00b_6ea6:
 	call FarMemCopy                                       ; $6ebe: $cd $b2 $09
 	ld   bc, $0433                                   ; $6ec1: $01 $33 $04
 	call SetBGandOBJPaletteRangesToUpdate                                       ; $6ec4: $cd $aa $04
-	push af                                          ; $6ec7: $f5
-	ld   a, $02                                      ; $6ec8: $3e $02
-	ld   [wFarCallAddr], a                                  ; $6eca: $ea $98 $c2
-	ld   a, $64                                      ; $6ecd: $3e $64
-	ld   [wFarCallAddr+1], a                                  ; $6ecf: $ea $99 $c2
-	ld   a, $0b                                      ; $6ed2: $3e $0b
-	ld   [wFarCallBank], a                                  ; $6ed4: $ea $9a $c2
-	pop  af                                          ; $6ed7: $f1
-	call FarCall                                       ; $6ed8: $cd $62 $09
+
+	M_FarCall Call_00b_6402
+
 	ld   a, [wWramBank]                                  ; $6edb: $fa $93 $c2
 	push af                                          ; $6ede: $f5
 	ld   a, $02                                      ; $6edf: $3e $02
@@ -9188,6 +9104,7 @@ jr_00b_6ea6:
 	ret                                              ; $6f39: $c9
 
 
+GS48_AnimationHandler0e:
 	ld   hl, $cbf8                                   ; $6f3a: $21 $f8 $cb
 	ld   a, [hl]                                     ; $6f3d: $7e
 	inc  [hl]                                        ; $6f3e: $34
@@ -9195,15 +9112,9 @@ jr_00b_6ea6:
 	jr   nz, jr_00b_6f5c                             ; $6f40: $20 $1a
 
 	ld   a, [$cbfe]                                  ; $6f42: $fa $fe $cb
-	push af                                          ; $6f45: $f5
-	ld   a, $9c                                      ; $6f46: $3e $9c
-	ld   [wFarCallAddr], a                                  ; $6f48: $ea $98 $c2
-	ld   a, $61                                      ; $6f4b: $3e $61
-	ld   [wFarCallAddr+1], a                                  ; $6f4d: $ea $99 $c2
-	ld   a, $0b                                      ; $6f50: $3e $0b
-	ld   [wFarCallBank], a                                  ; $6f52: $ea $9a $c2
-	pop  af                                          ; $6f55: $f1
-	call FarCall                                       ; $6f56: $cd $62 $09
+
+	M_FarCall Func_0b_619c
+
 	ld   [$cbff], a                                  ; $6f59: $ea $ff $cb
 
 jr_00b_6f5c:
@@ -9212,15 +9123,9 @@ jr_00b_6f5c:
 	ld   h, a                                        ; $6f60: $67
 	ld   a, [$cbfe]                                  ; $6f61: $fa $fe $cb
 	ld   l, a                                        ; $6f64: $6f
-	push af                                          ; $6f65: $f5
-	ld   a, $6c                                      ; $6f66: $3e $6c
-	ld   [wFarCallAddr], a                                  ; $6f68: $ea $98 $c2
-	ld   a, $5c                                      ; $6f6b: $3e $5c
-	ld   [wFarCallAddr+1], a                                  ; $6f6d: $ea $99 $c2
-	ld   a, $0b                                      ; $6f70: $3e $0b
-	ld   [wFarCallBank], a                                  ; $6f72: $ea $9a $c2
-	pop  af                                          ; $6f75: $f1
-	call FarCall                                       ; $6f76: $cd $62 $09
+
+	M_FarCall Func_0b_5c6c
+
 	bit  7, a                                        ; $6f79: $cb $7f
 	ret  nz                                          ; $6f7b: $c0
 
@@ -9251,6 +9156,7 @@ jr_00b_6f5c:
 	ret                                              ; $6fb5: $c9
 
 
+GS48_AnimationHandler0f:
 	ld   hl, $cbf8                                   ; $6fb6: $21 $f8 $cb
 	ld   a, [hl]                                     ; $6fb9: $7e
 	inc  [hl]                                        ; $6fba: $34
@@ -9260,15 +9166,9 @@ jr_00b_6f5c:
 	ld   h, [hl]                                     ; $6fc0: $66
 	ld   l, a                                        ; $6fc1: $6f
 	ld   a, b                                        ; $6fc2: $78
-	push af                                          ; $6fc3: $f5
-	ld   a, $97                                      ; $6fc4: $3e $97
-	ld   [wFarCallAddr], a                                  ; $6fc6: $ea $98 $c2
-	ld   a, $49                                      ; $6fc9: $3e $49
-	ld   [wFarCallAddr+1], a                                  ; $6fcb: $ea $99 $c2
-	ld   a, $0a                                      ; $6fce: $3e $0a
-	ld   [wFarCallBank], a                                  ; $6fd0: $ea $9a $c2
-	pop  af                                          ; $6fd3: $f1
-	call FarCall                                       ; $6fd4: $cd $62 $09
+
+	M_FarCall LoadSceneryTileDataLayoutAndPalettes
+
 	or   a                                           ; $6fd7: $b7
 	ret  nz                                          ; $6fd8: $c0
 
@@ -9295,31 +9195,19 @@ jr_00b_6f5c:
 	ret                                              ; $700a: $c9
 
 
+GS48_AnimationHandler10:
 	ld   a, [$cbf8]                                  ; $700b: $fa $f8 $cb
 	or   a                                           ; $700e: $b7
 	jp   nz, Jump_00b_7088                           ; $700f: $c2 $88 $70
 
-	push af                                          ; $7012: $f5
-	ld   a, $1a                                      ; $7013: $3e $1a
-	ld   [wFarCallAddr], a                                  ; $7015: $ea $98 $c2
-	ld   a, $64                                      ; $7018: $3e $64
-	ld   [wFarCallAddr+1], a                                  ; $701a: $ea $99 $c2
-	ld   a, $0b                                      ; $701d: $3e $0b
-	ld   [wFarCallBank], a                                  ; $701f: $ea $9a $c2
-	pop  af                                          ; $7022: $f1
-	call FarCall                                       ; $7023: $cd $62 $09
+	M_FarCall Func_0b_641a
+
 	ld   h, $00                                      ; $7026: $26 $00
 	ld   a, [$cbfe]                                  ; $7028: $fa $fe $cb
 	ld   l, a                                        ; $702b: $6f
-	push af                                          ; $702c: $f5
-	ld   a, $82                                      ; $702d: $3e $82
-	ld   [wFarCallAddr], a                                  ; $702f: $ea $98 $c2
-	ld   a, $61                                      ; $7032: $3e $61
-	ld   [wFarCallAddr+1], a                                  ; $7034: $ea $99 $c2
-	ld   a, $0b                                      ; $7037: $3e $0b
-	ld   [wFarCallBank], a                                  ; $7039: $ea $9a $c2
-	pop  af                                          ; $703c: $f1
-	call FarCall                                       ; $703d: $cd $62 $09
+
+	M_FarCall Func_0b_6182
+
 	ld   c, $80                                      ; $7040: $0e $80
 	ld   de, $9800                                   ; $7042: $11 $00 $98
 	ld   a, $02                                      ; $7045: $3e $02
@@ -9381,16 +9269,11 @@ Jump_00b_7088:
 	ret                                              ; $70c1: $c9
 
 
+GS48_AnimationHandler11:
 	ld   bc, $0000                                   ; $70c2: $01 $00 $00
-	push af                                          ; $70c5: $f5
-	ld   a, $ba                                      ; $70c6: $3e $ba
-	ld   [wFarCallAddr], a                                  ; $70c8: $ea $98 $c2
-	ld   a, $54                                      ; $70cb: $3e $54
-	ld   [wFarCallAddr+1], a                                  ; $70cd: $ea $99 $c2
-	ld   a, $0a                                      ; $70d0: $3e $0a
-	ld   [wFarCallBank], a                                  ; $70d2: $ea $9a $c2
-	pop  af                                          ; $70d5: $f1
-	call FarCall                                       ; $70d6: $cd $62 $09
+
+	M_FarCall todo_DisplayCharacterPortrait
+
 	ld   hl, $cbf7                                   ; $70d9: $21 $f7 $cb
 	inc  [hl]                                        ; $70dc: $34
 	xor  a                                           ; $70dd: $af
@@ -9398,6 +9281,7 @@ Jump_00b_7088:
 	ret                                              ; $70e1: $c9
 
 
+GS48_AnimationHandler12:
 	ld   a, [wInGameButtonsPressed]                                  ; $70e2: $fa $10 $c2
 	bit  1, a                                        ; $70e5: $cb $4f
 	jr   z, jr_00b_70f3                              ; $70e7: $28 $0a
@@ -9408,7 +9292,6 @@ Jump_00b_7088:
 	ld   [wGameSubstate], a                                  ; $70ef: $ea $a1 $c2
 	ret                                              ; $70f2: $c9
 
-
 jr_00b_70f3:
 	bit  2, a                                        ; $70f3: $cb $57
 	jr   z, jr_00b_7101                              ; $70f5: $28 $0a
@@ -9418,7 +9301,6 @@ jr_00b_70f3:
 	xor  a                                           ; $70fc: $af
 	ld   [$cbf8], a                                  ; $70fd: $ea $f8 $cb
 	ret                                              ; $7100: $c9
-
 
 jr_00b_7101:
 	ld   a, [$cbff]                                  ; $7101: $fa $ff $cb
@@ -9432,15 +9314,8 @@ jr_00b_7101:
 	and  $03                                         ; $7110: $e6 $03
 	set  0, a                                        ; $7112: $cb $c7
 	ld   l, a                                        ; $7114: $6f
-	push af                                          ; $7115: $f5
-	ld   a, $15                                      ; $7116: $3e $15
-	ld   [wFarCallAddr], a                                  ; $7118: $ea $98 $c2
-	ld   a, $63                                      ; $711b: $3e $63
-	ld   [wFarCallAddr+1], a                                  ; $711d: $ea $99 $c2
-	ld   a, $0b                                      ; $7120: $3e $0b
-	ld   [wFarCallBank], a                                  ; $7122: $ea $9a $c2
-	pop  af                                          ; $7125: $f1
-	call FarCall                                       ; $7126: $cd $62 $09
+
+	M_FarCall Func_0b_6315
 
 jr_00b_7129:
 	ld   a, [wInGameButtonsHeld]                                  ; $7129: $fa $0f $c2
@@ -9499,6 +9374,9 @@ Call_00b_7159:
 	inc  b                                           ; $716a: $04
 	ld   b, $08                                      ; $716b: $06 $08
 	ld   a, [bc]                                     ; $716d: $0a
+
+
+;
 	push hl                                          ; $716e: $e5
 	call Call_00b_7159                               ; $716f: $cd $59 $71
 	push af                                          ; $7172: $f5

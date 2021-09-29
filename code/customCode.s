@@ -246,6 +246,11 @@ LoadSumireMiniGameTitleScreenGfx0::
 	ld   hl, .newLeft1
 	call MemCopy
 
+	ld   bc, 1*$10
+	ld   de, $d000+$40
+	ld   hl, .newB1
+	call MemCopy
+
 	ld   bc, 2*$10
 	ld   de, $d000+$dd0
 	ld   hl, .newLeft2
@@ -320,6 +325,8 @@ LoadSumireMiniGameTitleScreenGfx0::
 	INCBIN "en_sumireMiniGameTitleScreen.2bpp", 47*$10, 2*$10
 .newLeft2:
 	INCBIN "en_sumireMiniGameTitleScreen.2bpp", 67*$10, 2*$10
+.newB1:
+	INCBIN "en_sumireMiniGameTitleScreen.2bpp", 27*$10, 1*$10
 .newLeft3:
 	INCBIN "en_sumireMiniGameTitleScreen.2bpp", 88*$10, 2*$10
 .newLeft4:

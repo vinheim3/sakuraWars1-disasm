@@ -2182,15 +2182,12 @@ SetSaveScreenState::
 GameState0f_GameBoyComms::
 	ld   a, [wGameSubstate]                                  ; $4ea4: $fa $a1 $c2
 	rst  JumpTable                                         ; $4ea7: $df
-	or   d                                           ; $4ea8: $b2
-	ld   c, [hl]                                     ; $4ea9: $4e
-	xor  e                                           ; $4eaa: $ab
-	ld   c, a                                        ; $4eab: $4f
-	sbc  $4f                                         ; $4eac: $de $4f
-	db   $ec                                         ; $4eae: $ec
-	ld   c, a                                        ; $4eaf: $4f
-	db   $fd                                         ; $4eb0: $fd
-	ld   c, a                                        ; $4eb1: $4f
+	dw $4eb2
+	dw $4fab
+	dw $4fde
+	dw $4fec
+	dw $4ffd
+
 	call TurnOffLCD                                       ; $4eb2: $cd $e3 $08
 	ld   a, $00                                      ; $4eb5: $3e $00
 	call SafeSetAudVolForMultipleChannels                                       ; $4eb7: $cd $e0 $1c
@@ -2601,12 +2598,13 @@ SetGameboyCommsState:
 GameState10_PocketSakuraComms::
 	ld   a, [wGameSubstate]                                  ; $51bf: $fa $a1 $c2
 	rst  JumpTable                                         ; $51c2: $df
-	call wEnterNameNumCharsEntered                                       ; $51c3: $cd $51 $c9
-	ld   d, d                                        ; $51c6: $52
-	ld   hl, $2f53                                   ; $51c7: $21 $53 $2f
-	ld   d, e                                        ; $51ca: $53
-	ld   b, b                                        ; $51cb: $40
-	ld   d, e                                        ; $51cc: $53
+	dw $51cd
+	dw $52c9
+	dw $5321
+	dw $532f
+	dw $5340
+
+
 	call TurnOffLCD                                       ; $51cd: $cd $e3 $08
 	ld   a, $00                                      ; $51d0: $3e $00
 	call SafeSetAudVolForMultipleChannels                                       ; $51d2: $cd $e0 $1c
@@ -4960,22 +4958,22 @@ jr_010_5fe8:
 	ldh  [rSVBK], a                                  ; $601b: $e0 $70
 	ld   a, [$c926]                                  ; $601d: $fa $26 $c9
 	cp   $02                                         ; $6020: $fe $02
-	jr   c, jr_010_603a                              ; $6022: $38 $16
+	jr   c, .br_603a                              ; $6022: $38 $16
 
 	dec  a                                           ; $6024: $3d
 	dec  a                                           ; $6025: $3d
 	ld   [$c926], a                                  ; $6026: $ea $26 $c9
 	ld   hl, $6076                                   ; $6029: $21 $76 $60
 	ld   de, $da00                                   ; $602c: $11 $00 $da
-	call Call_010_60a0                               ; $602f: $cd $a0 $60
+	call MemCopyWhileNon0                               ; $602f: $cd $a0 $60
 	call Call_010_60a9                               ; $6032: $cd $a9 $60
-	call Call_010_60a0                               ; $6035: $cd $a0 $60
-	jr   jr_010_6058                                 ; $6038: $18 $1e
+	call MemCopyWhileNon0                               ; $6035: $cd $a0 $60
+	jr   .cont_6058                                 ; $6038: $18 $1e
 
-jr_010_603a:
+.br_603a:
 	ld   a, [$c926]                                  ; $603a: $fa $26 $c9
 	cp   $01                                         ; $603d: $fe $01
-	jr   c, jr_010_6058                              ; $603f: $38 $17
+	jr   c, .cont_6058                              ; $603f: $38 $17
 
 	dec  a                                           ; $6041: $3d
 	ld   [$c926], a                                  ; $6042: $ea $26 $c9
@@ -4987,9 +4985,9 @@ jr_010_603a:
 	add  hl, bc                                      ; $604e: $09
 	ld   de, $da00                                   ; $604f: $11 $00 $da
 	call Call_010_60c9                               ; $6052: $cd $c9 $60
-	call Call_010_60a0                               ; $6055: $cd $a0 $60
+	call MemCopyWhileNon0                               ; $6055: $cd $a0 $60
 
-jr_010_6058:
+.cont_6058:
 	ld   a, $00                                      ; $6058: $3e $00
 	ld   [de], a                                     ; $605a: $12
 	ld   hl, $da00                                   ; $605b: $21 $00 $da
@@ -5065,18 +5063,21 @@ else
 
 endc
 
-Call_010_60a0:
-jr_010_60a0:
-	ld   a, [hl+]                                    ; $60a0: $2a
-	or   a                                           ; $60a1: $b7
-	jr   z, jr_010_60a8                              ; $60a2: $28 $04
 
-	ld   [de], a                                     ; $60a4: $12
-	inc  de                                          ; $60a5: $13
-	jr   jr_010_60a0                                 ; $60a6: $18 $f8
+; DE - dest addr
+; HL - src addr
+MemCopyWhileNon0:
+.loop:
+	ld   a, [hl+]                                                   ; $60a0
+	or   a                                                          ; $60a1
+	jr   z, .done                                                   ; $60a2
 
-jr_010_60a8:
-	ret                                              ; $60a8: $c9
+	ld   [de], a                                                    ; $60a4
+	inc  de                                                         ; $60a5
+	jr   .loop                                                      ; $60a6
+
+.done:
+	ret                                                             ; $60a8
 
 
 ; DE -
@@ -8701,14 +8702,13 @@ jr_010_7692:
 GameState23::
 	ld   a, [wGameSubstate]                                  ; $76f3: $fa $a1 $c2
 	rst  JumpTable                                         ; $76f6: $df
-	ld   bc, $fd77                                   ; $76f7: $01 $77 $fd
-	ld   [hl], a                                     ; $76fa: $77
-	dec  de                                          ; $76fb: $1b
-	ld   a, b                                        ; $76fc: $78
-	add  hl, hl                                      ; $76fd: $29
-	ld   a, b                                        ; $76fe: $78
-	ld   a, [hl-]                                    ; $76ff: $3a
-	ld   a, b                                        ; $7700: $78
+	dw $7701
+	dw $77fd
+	dw $781b
+	dw $7829
+	dw $783a
+
+
 	call TurnOffLCD                                       ; $7701: $cd $e3 $08
 	ld   a, $00                                      ; $7704: $3e $00
 	call SafeSetAudVolForMultipleChannels                                       ; $7706: $cd $e0 $1c

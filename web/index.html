@@ -1065,6 +1065,34 @@
                             canvasHeight: 32*8,
                         },
                         {
+                            name: "Gameboy Comms (gs $0f)",
+                            sources: [
+                                ['rleXorCopy', 0x1d, 0x7d89, 0x1800, 'vram1'],
+                                ['rleXorCopy', 0x12, 0x7dee, 0x9800],
+
+                                ['rleXorCopy', 0x1e, 0x432e, 0x1000, 'vram1'],
+                                ['rleXorCopy', 0x1b, 0x4000, 0x9000],
+                                ['simpleCopy', 0x1e, 0x7a0e, 0x0000, 0x40, 'rom', 'bgPalettes'],
+                            ],
+                            isGBC: true,
+                            rowsShown: 32,
+                            canvasHeight: 32*8,
+                        },
+                        {
+                            name: "Pocket Sakura Comms (gs $10)",
+                            sources: [
+                                ['rleXorCopy', 0x1d, 0x7be3, 0x1800, 'vram1'],
+                                ['rleXorCopy', 0x1d, 0x69ad, 0x9800],
+
+                                ['rleXorCopy', 0x1e, 0x4e0b, 0x1000, 'vram1'],
+                                ['rleXorCopy', 0x1b, 0x4f14, 0x9000],
+                                ['simpleCopy', 0x1e, 0x7a0e, 0x0000, 0x40, 'rom', 'bgPalettes'],
+                            ],
+                            isGBC: true,
+                            rowsShown: 32,
+                            canvasHeight: 32*8,
+                        },
+                        {
                             name: "Sound Test (gs $30)",
                             sources: [
                                 ['rleXorCopy', 0x2d, 0x7feb, 0x1800, 'vram1'],
@@ -1286,7 +1314,7 @@
                                 //this.loadPortraits();
                                 //this.loadScenery();
                                 //this.loadGameResultTitles();
-                                this.loadYuriPortraits();
+                                //this.loadYuriPortraits();
 
                                 setTimeout(this.loadScreens, 5);
                             });
