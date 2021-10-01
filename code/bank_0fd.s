@@ -12458,4 +12458,117 @@ EnLoadKannaMiniGameGfx1::
 .row10_2:
 	INCBIN "en_kannaMiniGameMain.2bpp", 94*$10, 6*$10
 
+
+EnLoadNewTVCommsTileMap::
+	ld   a, BANK(.layout)
+	ldbc 20, 19
+	ld   de, .layout
+	ld   hl, $99c0
+	call FarCopyLayout
+	ret
+.layout:
+	db $80, $81, $82, $83, $84, $85, $86, $87, $88, $89, $8a, $8b, $8c, $8d, $8e, $8f, $90, $91, $92, $80
+	db $80, $93, $94, $95, $96, $97, $98, $99, $9a, $9b, $9c, $9d, $9e, $9f, $a0, $a1, $a2, $a3, $99, $80
+	db $80, $80, $a4, $a5, $a6, $a7, $a8, $a9, $aa, $ab, $ac, $ad, $ae, $af, $b0, $b1, $b2, $b3, $80, $80
+	db $80, $80, $b4, $b5, $b6, $b7, $b8, $b9, $ba, $bb, $bc, $bd, $be, $bf, $c0, $c1, $c2, $c3, $80, $80
+	db $c4, $c5, $c5, $c5, $c5, $c5, $c5, $c5, $c5, $c5, $c5, $c5, $c5, $c5, $c5, $c5, $c5, $c5, $c5, $c6
+	db $c7, $c8, $c9, $ca, $cb, $cc, $cd, $ce, $cf, $d0, $d1, $d2, $d3, $d4, $d5, $d6, $d7, $d8, $d9, $da
+	db $db, $dc, $dd, $de, $df, $e0, $e1, $e2, $e3, $e4, $e5, $e6, $e7, $e8, $e9, $ea, $eb, $ec, $ed, $da
+	db $db, $80, $ee, $ef, $f0, $f1, $f2, $f3, $f4, $f5, $f6, $f7, $f8, $f9, $fa, $fb, $fc, $fd, $80, $da
+	db $db, $80, $fe, $ff, $00, $01, $02, $03, $04, $05, $06, $07, $08, $09, $0a, $0b, $0c, $0d, $80, $da
+	db $0e, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $10
+	db $80, $80, $11, $12, $13, $14, $15, $16, $17, $18, $19, $1a, $1b, $1c, $1d, $1e, $1f, $80, $80, $80
+	db $80, $80, $20, $21, $22, $23, $24, $25, $26, $27, $28, $29, $2a, $2b, $2c, $2d, $2e, $2f, $80, $80
+	db $80, $80, $30, $31, $32, $33, $34, $35, $36, $37, $38, $39, $3a, $3b, $3c, $3d, $3e, $3f, $80, $80
+	db $80, $80, $40, $41, $42, $43, $44, $45, $46, $47, $48, $49, $4a, $4b, $4c, $80, $80, $80, $80, $80
+	db $80, $80, $80, $c4, $c5, $4d, $4e, $c5, $c5, $c5, $4f, $c5, $4f, $c5, $c5, $c5, $c6, $ce, $ce, $ce
+	db $80, $80, $80, $db, $80, $50, $51, $52, $53, $54, $55, $56, $57, $58, $59, $80, $da, $ce, $ce, $ce
+	db $d4, $d4, $d4, $db, $80, $80, $5a, $5b, $5c, $5d, $5e, $5f, $60, $61, $80, $80, $da, $ce, $ce, $ce
+	db $da, $da, $da, $0e, $0f, $0f, $62, $63, $64, $65, $66, $67, $68, $69, $0f, $0f, $10, $ce, $ce, $ce
+
+
+EnLoadNewGBCCommsTileMap::
+	ld   hl, $9800                                   ; $4f0d: $21 $00 $98
+	ld   de, $7dee                                   ; $4f10: $11 $ee $7d
+	call RLEXorCopy                                       ; $4f13: $cd $d2 $09
+	ld   a, $1b                                      ; $4f16: $3e $1b
+	ld   hl, $9000                                   ; $4f18: $21 $00 $90
+	ld   de, $4000                                   ; $4f1b: $11 $00 $40
+	call RLEXorCopy
+
+	ld   a, BANK(.layout1)
+	ldbc 20, 4
+	ld   de, .layout1
+	ld   hl, $99c0
+	call FarCopyLayout
+
+	ld   a, BANK(.layout2)
+	ldbc 16, 6
+	ld   de, .layout2
+	ld   hl, $9a42
+	call FarCopyLayout
+
+	ld   a, BANK(.layout3)
+	ldbc 14, 4
+	ld   de, .layout3
+	ld   hl, $9b03
+	call FarCopyLayout
+	ret
+.layout1:
+	db $80, $81, $82, $83, $84, $85, $86, $87, $88, $89, $8a, $8b, $8c, $8d, $8e, $8f, $90, $91, $92, $92
+	db $93, $94, $95, $96, $97, $98, $99, $9a, $9b, $9c, $9d, $9e, $9f, $a0, $9f, $a1, $a2, $a3, $92, $92
+	db $a4, $a5, $a6, $a7, $a8, $a9, $aa, $ab, $ac, $ad, $ae, $af, $b0, $b1, $b2, $b3, $b4, $b5, $b6, $b7
+	db $92, $92, $92, $92, $92, $92, $92, $92, $92, $92, $92, $92, $92, $92, $92, $92, $92, $92, $b8, $92
+.layout2:
+	db $b9, $ba, $ba, $ba, $ba, $ba, $ba, $ba, $ba, $ba, $ba, $ba, $ba, $ba, $ba, $bb
+	db $bc, $bd, $92, $92, $92, $92, $be, $92, $bf, $92, $92, $c0, $c1, $92, $c2, $c3
+	db $bc, $c4, $c5, $c6, $c7, $c8, $c9, $ca, $cb, $cc, $cd, $ce, $cf, $d0, $d1, $c3
+	db $bc, $92, $d2, $d3, $d4, $d5, $d6, $d7, $d8, $d9, $da, $db, $dc, $92, $92, $c3
+	db $bc, $92, $dd, $de, $df, $e0, $e1, $e2, $e3, $e4, $e5, $e6, $e7, $e8, $92, $c3
+	db $e9, $ea, $ea, $ea, $ea, $ea, $ea, $ea, $ea, $ea, $ea, $ea, $ea, $ea, $ea, $eb
+.layout3:
+	db $b9, $ba, $ec, $ed, $ba, $ba, $ba, $ee, $ba, $ef, $ba, $ba, $ba, $bb
+	db $bc, $92, $f0, $f1, $f2, $f3, $f4, $f5, $f6, $f7, $f8, $f9, $92, $c3
+	db $bc, $92, $92, $fa, $fb, $fc, $fd, $fe, $ff, $00, $01, $92, $92, $c3
+	db $e9, $ea, $ea, $02, $03, $04, $05, $06, $02, $07, $08, $ea, $ea, $eb
+
+
+EnLoadNewPocketSakuraTileMap::
+	ld   hl, $9800                                   ; $520e: $21 $00 $98
+	ld   de, $69ad                                   ; $5211: $11 $ad $69
+	call RLEXorCopy                                       ; $5214: $cd $d2 $09
+	ld   a, $1b                                      ; $5217: $3e $1b
+	ld   hl, $9000                                   ; $5219: $21 $00 $90
+	ld   de, $4f14                                   ; $521c: $11 $14 $4f
+	call RLEXorCopy                                       ; $521f: $cd $d2 $09
+
+	ld   a, BANK(.layout1)
+	ldbc 20, 3
+	ld   de, .layout1
+	ld   hl, $99e0
+	call FarCopyLayout
+
+	ld   a, BANK(.layout2)
+	ldbc 16, 10
+	ld   de, .layout2
+	ld   hl, $9a42
+	call FarCopyLayout
+
+	ret
+.layout1:
+	db $80, $80, $81, $82, $83, $84, $85, $86, $87, $88, $89, $8a, $8b, $8c, $8d, $8e, $8f, $90, $80, $80
+	db $91, $91, $92, $93, $94, $95, $96, $97, $98, $99, $9a, $9b, $9c, $9d, $9e, $9f, $a0, $a1, $91, $91
+	db $91, $91, $91, $91, $91, $a2, $a3, $a4, $a5, $a6, $a7, $a8, $a9, $aa, $91, $91, $91, $91, $91, $91
+.layout2:
+	db $ab, $ac, $ad, $ad, $ad, $ad, $ad, $ad, $ad, $ad, $ad, $ad, $ad, $ad, $ae, $af
+	db $b0, $b1, $b2, $91, $91, $91, $b3, $91, $b3, $91, $91, $b4, $b5, $91, $b6, $b7
+	db $b0, $b8, $b9, $ba, $bb, $bc, $bd, $be, $bf, $c0, $c1, $c2, $c3, $c4, $c5, $b7
+	db $b0, $c6, $c7, $c8, $c9, $ca, $cb, $cc, $cd, $ce, $cf, $d0, $d1, $91, $91, $b7
+	db $b0, $c6, $d2, $d3, $d4, $d5, $d6, $d7, $d8, $d9, $da, $db, $dc, $91, $91, $b7
+	db $dd, $de, $df, $df, $df, $df, $df, $df, $df, $df, $df, $df, $df, $df, $e0, $e1
+	db $ab, $ac, $ad, $e2, $e3, $ad, $ad, $ad, $e4, $ad, $e5, $ad, $ad, $ad, $e6, $af
+	db $b0, $c6, $91, $e7, $e8, $ba, $bb, $bc, $e9, $ea, $eb, $ec, $ed, $91, $ee, $b7
+	db $b0, $c6, $91, $91, $ef, $f0, $f1, $f2, $f3, $f4, $f5, $f6, $91, $91, $ee, $b7
+	db $dd, $de, $df, $df, $f7, $f8, $f9, $fa, $fb, $f7, $fc, $fd, $df, $df, $fe, $e1
+
 endc

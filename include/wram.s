@@ -738,7 +738,13 @@ wPrologueScriptIdx:: ; $cc9c
     dw
 
 wcc9e:
-    ds $dab-$c9e
+    ds $da9-$c9e
+
+wCurrAudChannelIdx:: ; $cda9
+    db
+
+wcdaa:
+    ds $b-$a
 
 wCurrAudChannelTimes5:: ; $cdab
     db

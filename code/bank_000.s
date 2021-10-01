@@ -6509,7 +6509,7 @@ endr
 ;
 	ld   a, [$ffd2]                                  ; $20f8: $fa $d2 $ff
 	and  $03                                         ; $20fb: $e6 $03
-	ld   [$cda9], a                                  ; $20fd: $ea $a9 $cd
+	ld   [wCurrAudChannelIdx], a                                  ; $20fd: $ea $a9 $cd
 
 ;
 	ld   b, a                                        ; $2100: $47
@@ -6619,7 +6619,7 @@ endr
 	and  a                                           ; $21a5: $a7
 	jr   z, .cont_21e0                              ; $21a6: $28 $38
 
-	ld   a, [$cda9]                                  ; $21a8: $fa $a9 $cd
+	ld   a, [wCurrAudChannelIdx]                                  ; $21a8: $fa $a9 $cd
 	cp   $02                                         ; $21ab: $fe $02
 	jr   nz, .cont_21e0                             ; $21ad: $20 $31
 
@@ -6710,7 +6710,7 @@ endr
 	and  $0f                                         ; $2282: $e6 $0f
 	ld   d, a                                        ; $2284: $57
 	ld   [$ffd7], a                                  ; $2285: $ea $d7 $ff
-	ld   a, [$cda9]                                  ; $2288: $fa $a9 $cd
+	ld   a, [wCurrAudChannelIdx]                                  ; $2288: $fa $a9 $cd
 	cp   $02                                         ; $228b: $fe $02
 	jr   z, .br_22c5                              ; $228d: $28 $36
 
@@ -6725,7 +6725,7 @@ endr
 	ld   a, [hl+]                                    ; $2298: $2a
 	swap a                                           ; $2299: $cb $37
 	ld   [$ffd8], a                                  ; $229b: $ea $d8 $ff
-	ld   a, [$cda9]                                  ; $229e: $fa $a9 $cd
+	ld   a, [wCurrAudChannelIdx]                                  ; $229e: $fa $a9 $cd
 	cp   $02                                         ; $22a1: $fe $02
 	jr   z, .br_22cc                              ; $22a3: $28 $27
 
@@ -6778,7 +6778,7 @@ endr
 	ld   l, a                                        ; $22f5: $6f
 	pop  de                                          ; $22f6: $d1
 	add  hl, de                                      ; $22f7: $19
-	ld   c, $30                                      ; $22f8: $0e $30
+	ld   c, LOW(_AUD3WAVERAM)                                      ; $22f8: $0e $30
 	ld   b, $10                                      ; $22fa: $06 $10
 :	ld   a, [hl+]                                    ; $22fc: $2a
 	ldh  [c], a                                      ; $22fd: $e2
@@ -6862,7 +6862,7 @@ jr_000_2361:
 	ld   [$ffd0], a                                  ; $2361: $ea $d0 $ff
 	ld   [$ffd1], a                                  ; $2364: $ea $d1 $ff
 	ld   [$ffef], a                                  ; $2367: $ea $ef $ff
-	ld   a, [$cda9]                                  ; $236a: $fa $a9 $cd
+	ld   a, [wCurrAudChannelIdx]                                  ; $236a: $fa $a9 $cd
 	cp   $02                                         ; $236d: $fe $02
 	jr   nz, jr_000_237d                             ; $236f: $20 $0c
 
@@ -6895,7 +6895,7 @@ jr_000_238d:
 
 jr_000_2391:
 	ld   b, a                                        ; $2391: $47
-	ld   a, [$cda9]                                  ; $2392: $fa $a9 $cd
+	ld   a, [wCurrAudChannelIdx]                                  ; $2392: $fa $a9 $cd
 	cp   $02                                         ; $2395: $fe $02
 	jr   z, jr_000_23a4                              ; $2397: $28 $0b
 
@@ -6912,7 +6912,7 @@ jr_000_23a4:
 
 	and  $0f                                         ; $23a8: $e6 $0f
 	ld   b, a                                        ; $23aa: $47
-	ld   a, [$cda9]                                  ; $23ab: $fa $a9 $cd
+	ld   a, [wCurrAudChannelIdx]                                  ; $23ab: $fa $a9 $cd
 	cp   $02                                         ; $23ae: $fe $02
 	jr   z, jr_000_23c3                              ; $23b0: $28 $11
 
@@ -6991,7 +6991,7 @@ Jump_000_23ff:
 	jp   Jump_000_2316                               ; $2417: $c3 $16 $23
 
 
-	ld   a, [$cda9]                                  ; $241a: $fa $a9 $cd
+	ld   a, [wCurrAudChannelIdx]                                  ; $241a: $fa $a9 $cd
 	cp   $02                                         ; $241d: $fe $02
 	jr   z, jr_000_2428                              ; $241f: $28 $07
 
@@ -7011,7 +7011,6 @@ jr_000_2428:
 	jr   z, jr_000_243a                              ; $2435: $28 $03
 
 	jp   Jump_000_2316                               ; $2437: $c3 $16 $23
-
 
 jr_000_243a:
 	xor  a                                           ; $243a: $af
@@ -7035,7 +7034,7 @@ jr_000_243a:
 	ld   l, a                                        ; $2458: $6f
 	pop  de                                          ; $2459: $d1
 	add  hl, de                                      ; $245a: $19
-	ld   c, $30                                      ; $245b: $0e $30
+	ld   c, LOW(_AUD3WAVERAM)                                      ; $245b: $0e $30
 	ld   b, $10                                      ; $245d: $06 $10
 
 jr_000_245f:
@@ -7049,7 +7048,7 @@ jr_000_245f:
 	jp   Jump_000_2316                               ; $2466: $c3 $16 $23
 
 
-	ld   a, [$cda9]                                  ; $2469: $fa $a9 $cd
+	ld   a, [wCurrAudChannelIdx]                                  ; $2469: $fa $a9 $cd
 	cp   $02                                         ; $246c: $fe $02
 	jr   z, jr_000_2482                              ; $246e: $28 $12
 
@@ -7332,7 +7331,7 @@ jr_000_2606:
 	ld   [$ffe3], a                                  ; $2607: $ea $e3 $ff
 	ld   a, $80                                      ; $260a: $3e $80
 	ld   [$ffe4], a                                  ; $260c: $ea $e4 $ff
-	ld   a, [$cda9]                                  ; $260f: $fa $a9 $cd
+	ld   a, [wCurrAudChannelIdx]                                  ; $260f: $fa $a9 $cd
 	cp   $02                                         ; $2612: $fe $02
 	jr   z, jr_000_261a                              ; $2614: $28 $04
 
@@ -7382,7 +7381,7 @@ jr_000_264d:
 	ld   [$ffd9], a                                  ; $264e: $ea $d9 $ff
 
 jr_000_2651:
-	ld   a, [$cda9]                                  ; $2651: $fa $a9 $cd
+	ld   a, [wCurrAudChannelIdx]                                  ; $2651: $fa $a9 $cd
 	cp   $03                                         ; $2654: $fe $03
 	jr   nz, jr_000_2674                             ; $2656: $20 $1c
 
@@ -7456,7 +7455,7 @@ jr_000_26a8:
 	xor  a                                           ; $26a8: $af
 	ld   [$ffdf], a                                  ; $26a9: $ea $df $ff
 	call Call_000_293b                               ; $26ac: $cd $3b $29
-	ld   a, [$cda9]                                  ; $26af: $fa $a9 $cd
+	ld   a, [wCurrAudChannelIdx]                                  ; $26af: $fa $a9 $cd
 	cp   $02                                         ; $26b2: $fe $02
 	jr   nz, jr_000_26be                             ; $26b4: $20 $08
 
@@ -7468,17 +7467,19 @@ jr_000_26be:
 	push hl                                          ; $26be: $e5
 	call Call_000_27a6                               ; $26bf: $cd $a6 $27
 	pop  hl                                          ; $26c2: $e1
-	ld   a, [$cda9]                                  ; $26c3: $fa $a9 $cd
+
+; 
+	ld   a, [wCurrAudChannelIdx]                                  ; $26c3: $fa $a9 $cd
 	and  a                                           ; $26c6: $a7
 
 ; aud 1 sweep
 	ld   a, [$ffda]                                  ; $26c7: $fa $da $ff
-	ld   c, $10                                      ; $26ca: $0e $10
+	ld   c, AUD_SWEEP_OR_WAVENA                                      ; $26ca: $0e $10
 	call z, SetAudHwReg                            ; $26cc: $cc $29 $28
 
 ; freq low
 	ld   a, l                                        ; $26cf: $7d
-	ld   c, $13                                      ; $26d0: $0e $13
+	ld   c, AUD_FREQ_LO_OR_NOISE_POLY                                      ; $26d0: $0e $13
 	call SetAudHwReg                               ; $26d2: $cd $29 $28
 	ld   a, l                                        ; $26d5: $7d
 	cp   $02                                         ; $26d6: $fe $02
@@ -7495,7 +7496,7 @@ jr_000_26e2:
 
 jr_000_26e4:
 	ld   [$ffe3], a                                  ; $26e4: $ea $e3 $ff
-	ld   a, [$cda9]                                  ; $26e7: $fa $a9 $cd
+	ld   a, [wCurrAudChannelIdx]                                  ; $26e7: $fa $a9 $cd
 	cp   $02                                         ; $26ea: $fe $02
 	jr   z, jr_000_2722                              ; $26ec: $28 $34
 
@@ -7506,7 +7507,7 @@ jr_000_26e4:
 	ld   a, [$ffd6]                                  ; $26f2: $fa $d6 $ff
 	and  $c0                                         ; $26f5: $e6 $c0
 	or   $3f                                         ; $26f7: $f6 $3f
-	ld   c, $11                                      ; $26f9: $0e $11
+	ld   c, AUD_LEN                                      ; $26f9: $0e $11
 	call SetAudHwReg                               ; $26fb: $cd $29 $28
 
 jr_000_26fe:
@@ -7518,7 +7519,7 @@ jr_000_2703:
 	ld   [$ffe4], a                                  ; $2703: $ea $e4 $ff
 
 ; Set lo freq reg
-	ld   c, $14                                      ; $2706: $0e $14
+	ld   c, AUD_FREQ_HI_OR_NOISE_GO                                      ; $2706: $0e $14
 	call SetAudHwReg                               ; $2708: $cd $29 $28
 	call ClearLenPartOfChannelAudLen                               ; $270b: $cd $3c $28
 
@@ -7548,7 +7549,7 @@ jr_000_2722:
 	and  $07                                         ; $272e: $e6 $07
 	jr   jr_000_2703                                 ; $2730: $18 $d1
 
-	ld   a, [$cda9]                                  ; $2732: $fa $a9 $cd
+	ld   a, [wCurrAudChannelIdx]                                  ; $2732: $fa $a9 $cd
 	cp   $02                                         ; $2735: $fe $02
 	ret  z                                           ; $2737: $c8
 
@@ -7596,9 +7597,10 @@ jr_000_276b:
 	ld   [$ffd8], a                                  ; $2774: $ea $d8 $ff
 	jr   Call_000_27b8                                 ; $2777: $18 $3f
 
+
 Call_000_2779:
 	call Call_000_293b                               ; $2779: $cd $3b $29
-	ld   a, [$cda9]                                  ; $277c: $fa $a9 $cd
+	ld   a, [wCurrAudChannelIdx]                                  ; $277c: $fa $a9 $cd
 	cp   $03                                         ; $277f: $fe $03
 	ret  z                                           ; $2781: $c8
 
@@ -7623,14 +7625,14 @@ Call_000_2779:
 ; freq lo
 	ld   a, [$ffe3]                                  ; $279d: $fa $e3 $ff
 	add  [hl]                                        ; $27a0: $86
-	ld   c, $13                                      ; $27a1: $0e $13
+	ld   c, AUD_FREQ_LO_OR_NOISE_POLY                                     ; $27a1: $0e $13
 	jp   SetAudHwReg                               ; $27a3: $c3 $29 $28
 
 
 Call_000_27a6:
-	ld   a, [$cda9]                                  ; $27a6: $fa $a9 $cd
+	ld   a, [wCurrAudChannelIdx]                                  ; $27a6: $fa $a9 $cd
 	cp   $02                                         ; $27a9: $fe $02
-	jp   z, Jump_000_2832                            ; $27ab: $ca $32 $28
+	jp   z, SetWavLevel                            ; $27ab: $ca $32 $28
 
 	ld   a, [$ffdd]                                  ; $27ae: $fa $dd $ff
 	and  a                                           ; $27b1: $a7
@@ -7714,7 +7716,7 @@ jr_000_2809:
 
 jr_000_2812:
 	ld   a, [wCurrAudChannelTimes5]                                  ; $2812: $fa $ab $cd
-	add  $12                                         ; $2815: $c6 $12
+	add  AUD_ENV_OR_WAVLEVEL                                         ; $2815: $c6 $12
 	ld   c, a                                        ; $2817: $4f
 	ldh  a, [c]                                      ; $2818: $f2
 	cp   b                                           ; $2819: $b8
@@ -7725,14 +7727,14 @@ jr_000_2812:
 
 ; freq hi
 	ld   a, [$ffe4]                                  ; $281d: $fa $e4 $ff
-	ld   c, $14                                      ; $2820: $0e $14
+	ld   c, AUD_FREQ_HI_OR_NOISE_GO                                      ; $2820: $0e $14
 	call SetAudHwReg                               ; $2822: $cd $29 $28
 	call ClearLenPartOfChannelAudLen                               ; $2825: $cd $3c $28
 	ret                                              ; $2828: $c9
 
 
 ; A - value to set
-; C - aud reg offset to write to +$10, ie with C = $11, aud2 writes to ff16
+; C - aud reg offset to write for channel, +$10
 SetAudHwReg:
 	ld   b, a                                                       ; $2829
 	
@@ -7747,17 +7749,16 @@ SetAudHwReg:
 	ret                                                             ; $2831
 
 
-Jump_000_2832:
-; env
+SetWavLevel:
 	ld   a, [$ffd8]                                  ; $2832: $fa $d8 $ff
 	call Call_000_2c06                               ; $2835: $cd $06 $2c
-	ld   c, $12                                      ; $2838: $0e $12
+	ld   c, AUD_ENV_OR_WAVLEVEL                                      ; $2838: $0e $12
 	jr   SetAudHwReg                                 ; $283a: $18 $ed
 
 
 ClearLenPartOfChannelAudLen:
 ; C = low byte of len/wave pattern regs
-	ld   c, $11                                      ; $283c: $0e $11
+	ld   c, AUD_LEN                                      ; $283c: $0e $11
 	ld   a, [wCurrAudChannelTimes5]                                  ; $283e: $fa $ab $cd
 	add  c                                           ; $2841: $81
 	ld   c, a                                        ; $2842: $4f
@@ -7795,7 +7796,7 @@ Call_000_285d:
 	jp   z, Jump_000_2923                            ; $286b: $ca $23 $29
 
 jr_000_286e:
-	ld   a, [$cda9]                                  ; $286e: $fa $a9 $cd
+	ld   a, [wCurrAudChannelIdx]                                  ; $286e: $fa $a9 $cd
 	cp   $02                                         ; $2871: $fe $02
 	jr   z, jr_000_287a                              ; $2873: $28 $05
 
@@ -7827,7 +7828,7 @@ jr_000_288c:
 	dec  b                                           ; $288f: $05
 	jr   nz, jr_000_2887                             ; $2890: $20 $f5
 
-	ld   a, [$cda9]                                  ; $2892: $fa $a9 $cd
+	ld   a, [wCurrAudChannelIdx]                                  ; $2892: $fa $a9 $cd
 	cp   $02                                         ; $2895: $fe $02
 	jr   z, jr_000_2848                              ; $2897: $28 $af
 
@@ -10200,6 +10201,28 @@ ClearVwfTileBuffers:
 
 	pop  hl
 	pop  af
+	ret
+
+
+	; B - cols
+; C - rows
+; HL - start address
+CommsLayoutSwapSource::
+.nextRow:
+	push bc
+	push hl
+:	ld   a, [hl]
+	or   $08
+	and  $9f
+	ld   [hl+], a
+	dec  b
+	jr   nz, :-
+	pop  hl
+	ld   de, $20
+	add  hl, de
+	pop  bc
+	dec  c
+	jr   nz, .nextRow
 	ret
 
 endc

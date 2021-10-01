@@ -61,6 +61,10 @@
 ; rgbgfx -o en_voiceMode.2bpp en_voiceMode.png
 ; tools/gfx.py 2bpp en_exploreStairs.png --interleave
 ; rgbgfx -o en_portraitGallery.2bpp en_portraitGallery.png
+; rgbgfx -o en_settingsOnOff.2bpp en_settingsOnOff.png
+; rgbgfx -o en_tvadapter.2bpp -u -T en_tvadapter.png
+; rgbgfx -o en_gameboyComms.2bpp -u -T en_gameboyComms.png
+; rgbgfx -o en_pocketSakura.2bpp -u -T en_pocketSakura.png
 ; tools/gfx.py 1bpp newLetters.png --from=png --interleave
 
 ; empty banks
@@ -72,8 +76,9 @@
 ; 0x41 - 0x6a
 
 ; hook banks
-; $ff ($13c), $fd ($3ed), $fb ($155), $a4 ($45), $8b ($19f), $85 ($4c3)
-; $6b ($7d6), $2b ($59e), $1f ($33a) -> $6a, $40, $3f, $35, $31
+; $ff ($13c), $fd ($276), $fb ($155), $a4 ($45), $8b ($19f), $85 ($4c3)
+; $6b ($7d6), $2b ($59e), $1f ($24e), $40 ($798), $3f ($42b), $35 ()
+; -> $31, $2f, $2a
 
 ; To 'day passed'
 ; New game
@@ -82,7 +87,6 @@
 ; DPT as a return state to dorm room
 
 ; TODO: sources of scripts
-; TODO: comms reward constants for tv adapter big pts
 
 ; Minigames
 ; cb1d=0 for practice

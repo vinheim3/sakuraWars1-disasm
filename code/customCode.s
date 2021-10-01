@@ -346,6 +346,11 @@ LoadSumireMiniGameTitleScreenGfx0::
 
 
 LoadSumireMiniGameTitleScreenGfx1::
+	ld   a, $17                                      ; $6fbd: $3e $17
+	ld   hl, $d000                                   ; $6fbf: $21 $00 $d0
+	ld   de, $5763                                   ; $6fc2: $11 $63 $57
+	call RLEXorCopy
+
 ; $9000 - new tiles
 	ld   bc, 5*$10
 	ld   de, $d000+$a0
@@ -524,7 +529,31 @@ LoadSettingsEnTileData::
 	ld   de, $d0a0
 	ld   hl, Gfx_EnSettings+$c0+$240+$280+$80+$140
 	call MemCopy
+
+; On/Off
+	ld   bc, $30
+	ld   de, $d000+$300
+	ld   hl, .gfxOnOff
+	call MemCopy
+
+	ld   bc, $30
+	ld   de, $d000+$400
+	ld   hl, .gfxOnOff+$30
+	call MemCopy
+
+	ld   bc, $30
+	ld   de, $d000+$500
+	ld   hl, .gfxOnOff+$60
+	call MemCopy
+
+	ld   bc, $30
+	ld   de, $d000+$600
+	ld   hl, .gfxOnOff+$90
+	call MemCopy
 	ret
+
+.gfxOnOff:
+	INCBIN "en_settingsOnOff.2bpp"
 
 
 EnLoadSceneryScheduleLayout::
@@ -1649,6 +1678,13 @@ Gfx_MariaMiniGameHelpScreen::
 
 
 AlterMiniGameHelpScreenAttrs::
+	ld   a, $07
+	ld   [$d000+$e6], a
+	ld   [$d000+$ed], a
+	ld   [$d000+$14a], a
+	ld   [$d000+$14b], a
+	ld   [$d000+$14c], a
+
 	ld   bc, $240
 	ld   hl, $d000
 :	ld   a, [hl]

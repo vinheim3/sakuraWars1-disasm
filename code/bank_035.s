@@ -2061,3 +2061,54 @@ jr_035_4922:
 	ldh  [$03], a                                    ; $4934: $e0 $03
 	rst  $38                                         ; $4936: $ff
 	ld   a, a                                        ; $4937: $7f
+
+if def(VWF)
+	ds $100, 0
+
+EnLoadNewPocketSakuraAttrsAndTileData::
+; Original
+	ld   hl, $9800                                   ; $51f5: $21 $00 $98
+	ld   de, $7be3                                   ; $51f8: $11 $e3 $7b
+	call RLEXorCopy                                       ; $51fb: $cd $d2 $09
+	ld   a, $1e                                      ; $51fe: $3e $1e
+	ld   hl, $9000                                   ; $5200: $21 $00 $90
+	ld   de, $4e0b                                   ; $5203: $11 $0b $4e
+	call RLEXorCopy                                       ; $5206: $cd $d2 $09
+
+; New
+	ld   bc, .end-.gfx
+	ld   de, $8800
+	ld   hl, .gfx
+	call MemCopy
+
+	ldbc 20, 3
+	ld   hl, $99e0
+	call CommsLayoutSwapSource
+
+	ldbc 16, 10
+	ld   hl, $9a42
+	call CommsLayoutSwapSource
+
+; Replace tile attr ram copy code
+	ld   a, [wWramBank]                                             ; $55e4
+	push af                                                         ; $55e7
+
+	ld   a, $03                             ; $55e8
+	ld   [wWramBank], a                                             ; $55ea
+	ldh  [rSVBK], a                                                 ; $55ed
+
+	ld   bc, $400
+	ld   de, $d400
+	ld   hl, $9800
+	call MemCopy
+
+	pop  af                                                         ; $5605
+	ld   [wWramBank], a                                             ; $5606
+	ldh  [rSVBK], a                                                 ; $5609
+
+	ret
+.gfx:
+	INCBIN "en_pocketSakura.2bpp"
+.end:
+
+endc

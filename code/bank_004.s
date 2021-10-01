@@ -5596,38 +5596,38 @@ endm
 	CommsRewardEntry FLAG1_KANNA_EX_MODE, CommsUnlockRomandoShopItem
 	CommsRewardEntry FLAG1_ORIHIME_PHOTO, CommsUnlockRomandoShopItem
 	CommsRewardEntry FLAG1_RENI_PHOTO, CommsUnlockRomandoShopItem
-	CommsRewardEntry $160, CommsAdd1000Pts
-	CommsRewardEntry $161, CommsAdd1000Pts
-	CommsRewardEntry $162, CommsAdd1000Pts
-	CommsRewardEntry $163, CommsAdd1000Pts
-	CommsRewardEntry $164, CommsAdd2500Pts
-	CommsRewardEntry $165, CommsAdd2500Pts
-	CommsRewardEntry $166, CommsAdd2500Pts
-	CommsRewardEntry $167, CommsAdd2500Pts
-	CommsRewardEntry $168, CommsAdd5000Pts
-	CommsRewardEntry $169, CommsAdd5000Pts
-	CommsRewardEntry $16a, CommsAdd5000Pts
-	CommsRewardEntry $16b, CommsAdd5000Pts
-	CommsRewardEntry $16c, CommsAdd7500Pts
-	CommsRewardEntry $16d, CommsAdd7500Pts
-	CommsRewardEntry $16e, CommsAdd7500Pts
-	CommsRewardEntry $16f, CommsAdd7500Pts
-	CommsRewardEntry $170, CommsAdd10kPts
-	CommsRewardEntry $171, CommsAdd10kPts
-	CommsRewardEntry $172, CommsAdd10kPts
-	CommsRewardEntry $173, CommsAdd10kPts
-	CommsRewardEntry $174, CommsAdd25kPts
-	CommsRewardEntry $175, CommsAdd25kPts
-	CommsRewardEntry $176, CommsAdd25kPts
-	CommsRewardEntry $177, CommsAdd25kPts
-	CommsRewardEntry $178, CommsAdd50kPts
-	CommsRewardEntry $179, CommsAdd50kPts
-	CommsRewardEntry $17a, CommsAdd50kPts
-	CommsRewardEntry $17b, CommsAdd50kPts
-	CommsRewardEntry $17c, CommsAdd65535Pts
-	CommsRewardEntry $17d, CommsAdd65535Pts
-	CommsRewardEntry $17e, CommsAdd65535Pts
-	CommsRewardEntry $17f, CommsAdd65535Pts
+	CommsRewardEntry FLAG1_1000PTS_1, CommsAdd1000Pts
+	CommsRewardEntry FLAG1_1000PTS_2, CommsAdd1000Pts
+	CommsRewardEntry FLAG1_1000PTS_3, CommsAdd1000Pts
+	CommsRewardEntry FLAG1_1000PTS_4, CommsAdd1000Pts
+	CommsRewardEntry FLAG1_2500PTS_1, CommsAdd2500Pts
+	CommsRewardEntry FLAG1_2500PTS_2, CommsAdd2500Pts
+	CommsRewardEntry FLAG1_2500PTS_3, CommsAdd2500Pts
+	CommsRewardEntry FLAG1_2500PTS_4, CommsAdd2500Pts
+	CommsRewardEntry FLAG1_5000PTS_1, CommsAdd5000Pts
+	CommsRewardEntry FLAG1_5000PTS_2, CommsAdd5000Pts
+	CommsRewardEntry FLAG1_5000PTS_3, CommsAdd5000Pts
+	CommsRewardEntry FLAG1_5000PTS_4, CommsAdd5000Pts
+	CommsRewardEntry FLAG1_7500PTS_1, CommsAdd7500Pts
+	CommsRewardEntry FLAG1_7500PTS_2, CommsAdd7500Pts
+	CommsRewardEntry FLAG1_7500PTS_3, CommsAdd7500Pts
+	CommsRewardEntry FLAG1_7500PTS_4, CommsAdd7500Pts
+	CommsRewardEntry FLAG1_10KPTS_1, CommsAdd10kPts
+	CommsRewardEntry FLAG1_10KPTS_2, CommsAdd10kPts
+	CommsRewardEntry FLAG1_10KPTS_3, CommsAdd10kPts
+	CommsRewardEntry FLAG1_10KPTS_4, CommsAdd10kPts
+	CommsRewardEntry FLAG1_25KPTS_1, CommsAdd25kPts
+	CommsRewardEntry FLAG1_25KPTS_2, CommsAdd25kPts
+	CommsRewardEntry FLAG1_25KPTS_3, CommsAdd25kPts
+	CommsRewardEntry FLAG1_25KPTS_4, CommsAdd25kPts
+	CommsRewardEntry FLAG1_50KPTS_1, CommsAdd50kPts
+	CommsRewardEntry FLAG1_50KPTS_2, CommsAdd50kPts
+	CommsRewardEntry FLAG1_50KPTS_3, CommsAdd50kPts
+	CommsRewardEntry FLAG1_50KPTS_4, CommsAdd50kPts
+	CommsRewardEntry FLAG1_65535PTS_1, CommsAdd65535Pts
+	CommsRewardEntry FLAG1_65535PTS_2, CommsAdd65535Pts
+	CommsRewardEntry FLAG1_65535PTS_3, CommsAdd65535Pts
+	CommsRewardEntry FLAG1_65535PTS_4, CommsAdd65535Pts
 
 
 ; A - non-0 if setting flag

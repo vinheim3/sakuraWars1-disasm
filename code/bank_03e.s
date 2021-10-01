@@ -2176,14 +2176,10 @@ GetSettingsLeftArrowX:
 	ret                                              ; $4dd9: $c9
 
 if def(VWF)
-	db $62, $62, $62
+	db $62, $62, $62, $6e, $6c
 else
-	ld   l, a                                        ; $4dda: $6f
-	ld   l, a                                        ; $4ddb: $6f
-	ld   l, a                                        ; $4ddc: $6f
+	db $6f, $6f, $6f, $6e, $69
 endc
-	ld   l, [hl]                                     ; $4ddd: $6e
-	ld   l, c                                        ; $4dde: $69
 
 
 GetSettingsRightArrowXminus8:
@@ -2194,14 +2190,10 @@ GetSettingsRightArrowXminus8:
 	ret                                              ; $4de7: $c9
 
 if def(VWF)
-	db $7e, $7e, $7e
+	db $7e, $7e, $7e, $7b, $7b
 else
-	ld   a, c                                        ; $4de8: $79
-	ld   a, c                                        ; $4de9: $79
-	ld   a, c                                        ; $4dea: $79
+	db $79, $79, $79, $7b, $7f
 endc
-	ld   a, e                                        ; $4deb: $7b
-	ld   a, a                                        ; $4dec: $7f
 
 
 SetSettingsArrowsCoords:

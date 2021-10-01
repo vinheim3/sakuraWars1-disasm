@@ -7419,3 +7419,95 @@ endr
 	db $e9, $02, $29
 	db $a0, $04, $29 ; $321
 endc
+
+
+if def(VWF)
+
+EnLoadNewTVCommsAttrsAndTileData::
+	ld   bc, .end-.gfx
+	ld   de, $8800
+	ld   hl, .gfx
+	call MemCopy
+
+	ldbc 20, 14
+	ld   hl, $99c0
+	call CommsLayoutSwapSource
+
+	ldbc 14, 4
+	ld   hl, $9b83
+	call CommsLayoutSwapSource
+
+; Replace tile attr ram copy code
+	ld   a, [wWramBank]                                             ; $55e4
+	push af                                                         ; $55e7
+
+	ld   a, BANK(wTVCommsTileMapBuffer)                             ; $55e8
+	ld   [wWramBank], a                                             ; $55ea
+	ldh  [rSVBK], a                                                 ; $55ed
+
+	ld   bc, $400
+	ld   de, wTVCommsTileAttrBuffer
+	ld   hl, $9800
+	call MemCopy
+
+	pop  af                                                         ; $5605
+	ld   [wWramBank], a                                             ; $5606
+	ldh  [rSVBK], a                                                 ; $5609
+
+	ret
+.gfx:
+	INCBIN "en_tvadapter.2bpp"
+.end:
+
+
+EnLoadNewGBCCommsAttrsAndTileData::
+; Original
+	ld   hl, $9800                                   ; $4ef4: $21 $00 $98
+	ld   de, $7d89                                   ; $4ef7: $11 $89 $7d
+	call RLEXorCopy                                       ; $4efa: $cd $d2 $09
+	ld   a, $1e                                      ; $4efd: $3e $1e
+	ld   hl, $9000                                   ; $4eff: $21 $00 $90
+	ld   de, $432e                                   ; $4f02: $11 $2e $43
+	call RLEXorCopy                                       ; $4f05: $cd $d2 $09
+
+; New
+	ld   bc, .end-.gfx
+	ld   de, $8800
+	ld   hl, .gfx
+	call MemCopy
+
+	ldbc 20, 4
+	ld   hl, $99c0
+	call CommsLayoutSwapSource
+
+	ldbc 16, 6
+	ld   hl, $9a42
+	call CommsLayoutSwapSource
+
+	ldbc 14, 4
+	ld   hl, $9b03
+	call CommsLayoutSwapSource
+
+; Replace tile attr ram copy code
+	ld   a, [wWramBank]                                             ; $55e4
+	push af                                                         ; $55e7
+
+	ld   a, $03                             ; $55e8
+	ld   [wWramBank], a                                             ; $55ea
+	ldh  [rSVBK], a                                                 ; $55ed
+
+	ld   bc, $400
+	ld   de, $d400
+	ld   hl, $9800
+	call MemCopy
+
+	pop  af                                                         ; $5605
+	ld   [wWramBank], a                                             ; $5606
+	ldh  [rSVBK], a                                                 ; $5609
+
+	ret
+.gfx:
+	INCBIN "en_gameboyComms.2bpp"
+.end:
+
+endc

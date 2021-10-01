@@ -2215,6 +2215,10 @@ GameState0f_GameBoyComms::
 	ld   a, $01                                      ; $4eee: $3e $01
 	ldh  [rVBK], a                                   ; $4ef0: $e0 $4f
 	ld   a, $1d                                      ; $4ef2: $3e $1d
+
+if def(VWF)
+	M_FarCall EnLoadNewGBCCommsAttrsAndTileData
+else
 	ld   hl, $9800                                   ; $4ef4: $21 $00 $98
 	ld   de, $7d89                                   ; $4ef7: $11 $89 $7d
 	call RLEXorCopy                                       ; $4efa: $cd $d2 $09
@@ -2222,9 +2226,15 @@ GameState0f_GameBoyComms::
 	ld   hl, $9000                                   ; $4eff: $21 $00 $90
 	ld   de, $432e                                   ; $4f02: $11 $2e $43
 	call RLEXorCopy                                       ; $4f05: $cd $d2 $09
+endc
+
+;
 	xor  a                                           ; $4f08: $af
 	ldh  [rVBK], a                                   ; $4f09: $e0 $4f
 	ld   a, $12                                      ; $4f0b: $3e $12
+if def(VWF)
+	M_FarCall EnLoadNewGBCCommsTileMap
+else
 	ld   hl, $9800                                   ; $4f0d: $21 $00 $98
 	ld   de, $7dee                                   ; $4f10: $11 $ee $7d
 	call RLEXorCopy                                       ; $4f13: $cd $d2 $09
@@ -2232,11 +2242,21 @@ GameState0f_GameBoyComms::
 	ld   hl, $9000                                   ; $4f18: $21 $00 $90
 	ld   de, $4000                                   ; $4f1b: $11 $00 $40
 	call RLEXorCopy                                       ; $4f1e: $cd $d2 $09
+endc
 	ld   a, [wWramBank]                                  ; $4f21: $fa $93 $c2
 	push af                                          ; $4f24: $f5
 	ld   a, $03                                      ; $4f25: $3e $03
 	ld   [wWramBank], a                                  ; $4f27: $ea $93 $c2
 	ldh  [rSVBK], a                                  ; $4f2a: $e0 $70
+
+if def(VWF)
+	ld   bc, $400
+	ld   de, $d000
+	ld   hl, $9800
+	call MemCopy
+
+	ds $4f42-@, 0
+else
 	ld   a, $12                                      ; $4f2c: $3e $12
 	ld   hl, $d000                                   ; $4f2e: $21 $00 $d0
 	ld   de, $7dee                                   ; $4f31: $11 $ee $7d
@@ -2245,6 +2265,7 @@ GameState0f_GameBoyComms::
 	ld   hl, $d400                                   ; $4f39: $21 $00 $d4
 	ld   de, $7d89                                   ; $4f3c: $11 $89 $7d
 	call RLEXorCopy                                       ; $4f3f: $cd $d2 $09
+endc
 	pop  af                                          ; $4f42: $f1
 	ld   [wWramBank], a                                  ; $4f43: $ea $93 $c2
 	ldh  [rSVBK], a                                  ; $4f46: $e0 $70
@@ -2621,6 +2642,9 @@ GameState10_PocketSakuraComms::
 	ld   a, $01                                      ; $51ef: $3e $01
 	ldh  [rVBK], a                                   ; $51f1: $e0 $4f
 	ld   a, $1d                                      ; $51f3: $3e $1d
+if def(VWF)
+	M_FarCall EnLoadNewPocketSakuraAttrsAndTileData
+else
 	ld   hl, $9800                                   ; $51f5: $21 $00 $98
 	ld   de, $7be3                                   ; $51f8: $11 $e3 $7b
 	call RLEXorCopy                                       ; $51fb: $cd $d2 $09
@@ -2628,9 +2652,13 @@ GameState10_PocketSakuraComms::
 	ld   hl, $9000                                   ; $5200: $21 $00 $90
 	ld   de, $4e0b                                   ; $5203: $11 $0b $4e
 	call RLEXorCopy                                       ; $5206: $cd $d2 $09
+endc
 	xor  a                                           ; $5209: $af
 	ldh  [rVBK], a                                   ; $520a: $e0 $4f
 	ld   a, $1d                                      ; $520c: $3e $1d
+if def(VWF)
+	M_FarCall EnLoadNewPocketSakuraTileMap
+else
 	ld   hl, $9800                                   ; $520e: $21 $00 $98
 	ld   de, $69ad                                   ; $5211: $11 $ad $69
 	call RLEXorCopy                                       ; $5214: $cd $d2 $09
@@ -2638,11 +2666,19 @@ GameState10_PocketSakuraComms::
 	ld   hl, $9000                                   ; $5219: $21 $00 $90
 	ld   de, $4f14                                   ; $521c: $11 $14 $4f
 	call RLEXorCopy                                       ; $521f: $cd $d2 $09
+endc
 	ld   a, [wWramBank]                                  ; $5222: $fa $93 $c2
 	push af                                          ; $5225: $f5
 	ld   a, $03                                      ; $5226: $3e $03
 	ld   [wWramBank], a                                  ; $5228: $ea $93 $c2
 	ldh  [rSVBK], a                                  ; $522b: $e0 $70
+if def(VWF)
+	ld   bc, $400
+	ld   de, $d000
+	ld   hl, $9800
+	call MemCopy
+	ds $5243-@, 0
+else
 	ld   a, $1d                                      ; $522d: $3e $1d
 	ld   hl, $d000                                   ; $522f: $21 $00 $d0
 	ld   de, $69ad                                   ; $5232: $11 $ad $69
@@ -2651,6 +2687,7 @@ GameState10_PocketSakuraComms::
 	ld   hl, $d400                                   ; $523a: $21 $00 $d4
 	ld   de, $7be3                                   ; $523d: $11 $e3 $7b
 	call RLEXorCopy                                       ; $5240: $cd $d2 $09
+endc
 	pop  af                                          ; $5243: $f1
 	ld   [wWramBank], a                                  ; $5244: $ea $93 $c2
 	ldh  [rSVBK], a                                  ; $5247: $e0 $70
@@ -3159,7 +3196,11 @@ TVCommsSubstate0_Init:
 	ld   a, BANK(RLEXorTileAttr_TVComms)                            ; $55c0
 	ld   hl, _SCRN0                                                 ; $55c2
 	ld   de, RLEXorTileAttr_TVComms                                 ; $55c5
+if def(VWF)
+	call TVCommsVramBank1Hook
+else
 	call RLEXorCopy                                                 ; $55c8
+endc
 
 	xor  a                                                          ; $55cb
 	ldh  [rVBK], a                                                  ; $55cc
@@ -3171,7 +3212,11 @@ TVCommsSubstate0_Init:
 	ld   a, BANK(RLEXorTileData_TVComms)                            ; $55d9
 	ld   hl, _VRAM+$800                                             ; $55db
 	ld   de, RLEXorTileData_TVComms                                 ; $55de
+if def(VWF)
+	call TVCommsVramBank0Hook
+else
 	call RLEXorCopy                                                 ; $55e1
+endc
 
 ; Preserve ram bank, and set it to the bank of our buffer space
 	ld   a, [wWramBank]                                             ; $55e4
@@ -3182,6 +3227,15 @@ TVCommsSubstate0_Init:
 	ldh  [rSVBK], a                                                 ; $55ed
 
 ; Decompress tile map and attr into ram as well
+if def(VWF)
+	ld   bc, $400
+	ld   de, wTVCommsTileMapBuffer
+	ld   hl, $9800
+	call MemCopy
+
+	ds $5605-@, 0
+else
+
 	ld   a, BANK(RleXorTileMap_TVComms)                             ; $55ef
 	ld   hl, wTVCommsTileMapBuffer                                  ; $55f1
 	ld   de, RleXorTileMap_TVComms                                  ; $55f4
@@ -3191,6 +3245,7 @@ TVCommsSubstate0_Init:
 	ld   hl, wTVCommsTileAttrBuffer                                 ; $55fc
 	ld   de, RLEXorTileAttr_TVComms                                 ; $55ff
 	call RLEXorCopy                                                 ; $5602
+endc
 
 ; Restore ram bank
 	pop  af                                                         ; $5605
@@ -9569,11 +9624,6 @@ SumireMiniGameTitleScreenBank0_8800hHook:
 SumireMiniGameTitleScreenBank1_9000hHook:
 	M_FarCall ReplaceSumireMiniGameTSPopup
 
-	ld   a, $17                                      ; $6fbd: $3e $17
-	ld   hl, $d000                                   ; $6fbf: $21 $00 $d0
-	ld   de, $5763                                   ; $6fc2: $11 $63 $57
-	call RLEXorCopy
-
 	M_FarCall LoadSumireMiniGameTitleScreenGfx1	
 	ret
 
@@ -9610,13 +9660,6 @@ IrisMiniGameHelpScreenTileDataHook:
 KannaMiniGameHelpScreenTileAttrHook:
 	call RLEXorCopy
 
-	ld   a, $07
-	ld   [$d000+$e6], a
-	ld   [$d000+$ed], a
-	ld   [$d000+$14a], a
-	ld   [$d000+$14b], a
-	ld   [$d000+$14c], a
-
 	M_FarCall AlterMiniGameHelpScreenAttrs
 	ret
 
@@ -9640,6 +9683,20 @@ KannaMiniGameHelpScreenTileDataHook:
 	ld   de, $d000
 	ld   hl, Gfx_KannaMiniGameHelpScreen
 	call FarMemCopy
+	ret
+
+
+TVCommsVramBank1Hook:
+	call RLEXorCopy
+
+	M_FarCall EnLoadNewTVCommsAttrsAndTileData
+	ret
+
+
+TVCommsVramBank0Hook:
+	call RLEXorCopy
+
+	M_FarCall EnLoadNewTVCommsTileMap
 	ret
 
 
