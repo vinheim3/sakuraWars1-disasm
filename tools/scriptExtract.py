@@ -196,7 +196,7 @@ class ScriptExtractor:
             "You see...\nBlah blah blah...\nSo here we are.": [[0x0b, 0x00]],
             "I get where you're coming from, Sakura, but you realize doing that in the middle of the night bothers everyone, don't you?":  [[0x0b, 0x04], [0x0b, 0x0a]],
             "I believe the correct answer is Kohran. It seems like she's been conducting a large-scale experiment lately.":  [[0x0b, 0x07], [0x0b, 0x0c]],
-            "The answer is probably Iris. She's likely floating through the air in her sleep, sheets and all.":  [[0x0b, 0x05], [0x0b, 0x22]],
+            "The answer is probably Iris. She's likely floating through the air in her sleep, sheets and all.":  [[0x0b, 0x05], [0x0b, 0x21]],
             "Hmm... Nails...\n... Props?\nThat's it!":  [[0x0b, 0x01]],
             "Sometimes when I get nice and buzzed, I just start singing. Still, though, \"eerie\"...?":  [[0x0b, 0x03], [0x0b, 0x5e]],
             "I like to take a midnight swim on occasion, and one time, I forgot to bring a towel.":  [[0x0b, 0x02], [0x0b, 0x37]],
@@ -583,9 +583,16 @@ class ScriptExtractor:
             if params == 't' and address+1 in self.englishMap:
                 english = self.englishMap[address+1]
                 if prompted is False:
-                    comps.append(f"\tdb $01, $0d, $00")
-                    totalBytes += 3
                     lineCounter += 1
+                    if lineCounter > 3:
+                        raise Exception(f"{self.scriptNum}:{address} - lc > 3")
+                    if lineCounter == 3:
+                        lineCounter = 0
+                        comps.append("\tScriptOpt_ContinuePrompt")
+                        totalBytes += 1
+                    else:
+                        comps.append(f"\tdb $01, $0d, $00")
+                        totalBytes += 3
                 else:
                     lineCounter = 0
                 textboxes, lineCounter = self.convertEnglish(
@@ -806,7 +813,7 @@ if __name__ == "__main__":
     doneEnglish = {}
 
     if translate:
-        with open('sakura wars GB - 25:09:21.csv') as f:
+        with open('sakura wars GB - 29:09:21.csv') as f:
             reader = csv.reader(f)
             for i, (scriptNum, offset, orig, blank, english, char, dupe1, dupe2) in enumerate(reader):
                 if not scriptNum:

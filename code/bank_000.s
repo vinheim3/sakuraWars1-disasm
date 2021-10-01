@@ -4695,6 +4695,7 @@ Stub_15e8:
 
 SECTION "Bank $00, $1700", ROM0[$1700]
 
+Data_1700:
 	nop                                              ; $1700: $00
 	nop                                              ; $1701: $00
 	ld   b, b                                        ; $1702: $40
@@ -6181,7 +6182,7 @@ Call_000_1ee7:
 	push de                                          ; $1ee8: $d5
 	push hl                                          ; $1ee9: $e5
 	ld   [$cdae], a                                  ; $1eea: $ea $ae $cd
-	ld   hl, $1700                                   ; $1eed: $21 $00 $17
+	ld   hl, Data_1700                                   ; $1eed: $21 $00 $17
 
 jr_000_1ef0:
 	cp   [hl]                                        ; $1ef0: $be

@@ -1816,31 +1816,31 @@ AddDictWordToConvoStructForCurrTextBox::
 .item20:
 	db "singing", 0
 .item21:
-	db "explosions", 0
-.item22:
 	db "sleep, sheets and all.", 0
+.item22:
+	db "here", 0
 .item23:
 	db "and", 0
 .item24:
-	db "here", 0
-.item25:
 	db "Kanna", 0
-.item26:
+.item25:
 	db "thinking", 0
-.item27:
+.item26:
 	db "impressed", 0
-.item28:
+.item27:
 	db "right", 0
-.item29:
+.item28:
 	db "water", 0
-.item2a:
+.item29:
 	db "next", 0
-.item2b:
+.item2a:
 	db "Sumire", 0
-.item2c:
+.item2b:
 	db "ridiculous", 0
-.item2d:
+.item2c:
 	db "Understood", 0
+.item2d:
+	db "explosions", 0
 .item2e:
 	db "You", 0
 .item2f:
@@ -1944,233 +1944,233 @@ AddDictWordToConvoStructForCurrTextBox::
 .item60:
 	db "Ohhhohohoho", 0
 .item61:
-	db "overloading", 0
+	db "experiments", 0
 .item62:
-	db "who", 0
+	db "overloading", 0
 .item63:
-	db "with", 0
+	db "who", 0
 .item64:
-	db "have", 0
+	db "with", 0
 .item65:
-	db "were", 0
+	db "have", 0
 .item66:
-	db "harder", 0
+	db "were", 0
 .item67:
-	db "forgetting", 0
+	db "harder", 0
 .item68:
-	db "conducting", 0
+	db "forgetting", 0
 .item69:
-	db "all", 0
+	db "conducting", 0
 .item6a:
-	db "But", 0
+	db "all", 0
 .item6b:
-	db "worry", 0
+	db "But", 0
 .item6c:
-	db "Ogami", 0
+	db "worry", 0
 .item6d:
-	db "Sorry", 0
+	db "Ogami", 0
 .item6e:
-	db "sweat", 0
+	db "Sorry", 0
 .item6f:
-	db "bring", 0
+	db "sweat", 0
 .item70:
-	db "sleep", 0
+	db "bring", 0
 .item71:
-	db "morning", 0
+	db "sleep", 0
 .item72:
-	db "already", 0
+	db "morning", 0
 .item73:
-	db "disturb", 0
+	db "already", 0
 .item74:
-	db "because", 0
+	db "disturb", 0
 .item75:
-	db "ballads", 0
+	db "because", 0
 .item76:
-	db "are", 0
+	db "ballads", 0
 .item77:
-	db "from", 0
+	db "are", 0
 .item78:
-	db "mysteries", 0
+	db "from", 0
 .item79:
-	db "Sometimes", 0
+	db "mysteries", 0
 .item7a:
-	db "Apologies", 0
+	db "Sometimes", 0
 .item7b:
-	db "screaming", 0
+	db "Apologies", 0
 .item7c:
-	db "The", 0
+	db "screaming", 0
 .item7d:
-	db "not", 0
+	db "The", 0
 .item7e:
-	db "one", 0
+	db "not", 0
 .item7f:
 	db "she", 0
 .item80:
-	db "your", 0
+	db "one", 0
 .item81:
-	db "help", 0
+	db "your", 0
 .item82:
-	db "then", 0
+	db "help", 0
 .item83:
-	db "some", 0
+	db "then", 0
 .item84:
-	db "onto", 0
+	db "some", 0
 .item85:
-	db "much", 0
+	db "onto", 0
 .item86:
-	db "today", 0
+	db "much", 0
 .item87:
-	db "sorry", 0
+	db "today", 0
 .item88:
-	db "later", 0
+	db "sorry", 0
 .item89:
-	db "these", 0
+	db "later", 0
 .item8a:
-	db "start", 0
+	db "these", 0
 .item8b:
-	db "sound", 0
+	db "start", 0
 .item8c:
-	db "hobby", 0
+	db "sound", 0
 .item8d:
-	db "being", 0
+	db "hobby", 0
 .item8e:
-	db "Think", 0
+	db "being", 0
 .item8f:
-	db "others", 0
+	db "Think", 0
 .item90:
-	db "before", 0
+	db "others", 0
 .item91:
-	db "repair", 0
+	db "before", 0
 .item92:
-	db "during", 0
+	db "repair", 0
 .item93:
-	db "ghosts", 0
+	db "during", 0
 .item94:
-	db "theory", 0
+	db "ghosts", 0
 .item95:
-	db "figure", 0
+	db "theory", 0
 .item96:
-	db "sheets", 0
+	db "figure", 0
 .item97:
-	db "voices", 0
+	db "sheets", 0
 .item98:
-	db "swimming", 0
+	db "voices", 0
 .item99:
-	db "anything", 0
+	db "swimming", 0
 .item9a:
-	db "midnight", 0
+	db "anything", 0
 .item9b:
-	db "occasion", 0
+	db "midnight", 0
 .item9c:
-	db "bringing", 0
+	db "occasion", 0
 .item9d:
-	db "Swimming", 0
+	db "bringing", 0
 .item9e:
-	db "markings", 0
+	db "Swimming", 0
 .item9f:
-	db "floating", 0
+	db "markings", 0
 .itema0:
-	db "get", 0
+	db "floating", 0
 .itema1:
-	db "but", 0
+	db "get", 0
 .itema2:
-	db "Hmm", 0
+	db "but", 0
 .itema3:
-	db "concentration", 0
+	db "Hmm", 0
 .itema4:
-	db "for", 0
+	db "concentration", 0
 .itema5:
-	db "now", 0
+	db "for", 0
 .itema6:
-	db "take", 0
-.itema7:
-	db "must", 0
-.itema8:
-	db "alright", 0
-.itema9:
-	db "repairs", 0
-.itemaa:
-	db "realize", 0
-.itemab:
-	db "bothers", 0
-.itemac:
-	db "daytime", 0
-.itemad:
-	db "revenge", 0
-.itemae:
-	db "imagine", 0
-.itemaf:
-	db "serious", 0
-.itemb0:
-	db "minutes", 0
-.itemb1:
-	db "without", 0
-.itemb2:
-	db "smashed", 0
-.itemb3:
-	db "fusebox", 0
-.itemb4:
-	db "believe", 0
-.itemb5:
-	db "correct", 0
-.itemb6:
-	db "Wailing", 0
-.itemb7:
-	db "frustrations", 0
-.itemb8:
-	db "why", 0
-.itemb9:
 	db "was", 0
-.itemba:
-	db "too", 0
-.itembb:
-	db "usual", 0
-.itembc:
-	db "halls", 0
-.itembd:
-	db "their", 0
-.itembe:
-	db "after", 0
-.itembf:
-	db "which", 0
-.itemc0:
-	db "floor", 0
-.itemc1:
-	db "walls", 0
-.itemc2:
-	db "eerie", 0
-.itemc3:
-	db "explanation", 0
-.itemc4:
-	db "foolishness", 0
-.itemc5:
-	db "unthinkable", 0
-.itemc6:
-	db "responsible", 0
-.itemc7:
-	db "daydreaming", 0
-.itemc8:
-	db "electricity", 0
-.itemc9:
-	db "experiments", 0
-.itemca:
-	db "Good", 0
-.itemcb:
-	db "them", 0
-.itemcc:
-	db "away", 0
-.itemcd:
-	db "prop", 0
-.itemce:
-	db "That", 0
-.itemcf:
-	db "Wait", 0
-.itemd0:
-	db "fine", 0
-.itemd1:
-	db "swim", 0
-.itemd2:
+.itema7:
+	db "now", 0
+.itema8:
+	db "take", 0
+.itema9:
+	db "must", 0
+.itemaa:
 	db "when", 0
+.itemab:
+	db "alright", 0
+.itemac:
+	db "repairs", 0
+.itemad:
+	db "realize", 0
+.itemae:
+	db "bothers", 0
+.itemaf:
+	db "daytime", 0
+.itemb0:
+	db "revenge", 0
+.itemb1:
+	db "imagine", 0
+.itemb2:
+	db "serious", 0
+.itemb3:
+	db "minutes", 0
+.itemb4:
+	db "without", 0
+.itemb5:
+	db "smashed", 0
+.itemb6:
+	db "fusebox", 0
+.itemb7:
+	db "believe", 0
+.itemb8:
+	db "correct", 0
+.itemb9:
+	db "Wailing", 0
+.itemba:
+	db "frustrations", 0
+.itembb:
+	db "why", 0
+.itembc:
+	db "too", 0
+.itembd:
+	db "usual", 0
+.itembe:
+	db "halls", 0
+.itembf:
+	db "their", 0
+.itemc0:
+	db "after", 0
+.itemc1:
+	db "which", 0
+.itemc2:
+	db "floor", 0
+.itemc3:
+	db "walls", 0
+.itemc4:
+	db "eerie", 0
+.itemc5:
+	db "explanation", 0
+.itemc6:
+	db "foolishness", 0
+.itemc7:
+	db "unthinkable", 0
+.itemc8:
+	db "responsible", 0
+.itemc9:
+	db "daydreaming", 0
+.itemca:
+	db "electricity", 0
+.itemcb:
+	db "Good", 0
+.itemcc:
+	db "them", 0
+.itemcd:
+	db "away", 0
+.itemce:
+	db "prop", 0
+.itemcf:
+	db "That", 0
+.itemd0:
+	db "Wait", 0
+.itemd1:
+	db "fine", 0
+.itemd2:
+	db "swim", 0
 .itemd3:
 	db "case", 0
 .itemd4:
