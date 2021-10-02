@@ -3957,7 +3957,7 @@ jr_075_5018:
 	inc  h                                           ; $519f: $24
 	or   $47                                         ; $51a0: $f6 $47
 	sub  $d3                                         ; $51a2: $d6 $d3
-	jp   nc, $c8ca                                   ; $51a4: $d2 $ca $c8
+	jp   nc, wPocketSakuraRewardsStruct                                   ; $51a4: $d2 $ca $c8
 
 	xor  b                                           ; $51a7: $a8
 	xor  e                                           ; $51a8: $ab

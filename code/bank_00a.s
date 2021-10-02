@@ -771,7 +771,7 @@ Call_00a_43b4:
 	call HLequAddrOfFileData                               ; $43b5: $cd $a6 $43
 	ld   bc, $0217                                   ; $43b8: $01 $17 $02
 	add  hl, bc                                      ; $43bb: $09
-	ld   de, $444a                                   ; $43bc: $11 $4a $44
+	ld   de, SaveFileChecksum                                   ; $43bc: $11 $4a $44
 	ld   bc, $0010                                   ; $43bf: $01 $10 $00
 	call CheckIf2ByteSequencesMatch                                       ; $43c2: $cd $72 $0b
 	or   a                                           ; $43c5: $b7
@@ -780,7 +780,6 @@ Call_00a_43b4:
 	pop  af                                          ; $43c8: $f1
 	ld   a, $01                                      ; $43c9: $3e $01
 	ret                                              ; $43cb: $c9
-
 
 jr_00a_43cc:
 	pop  af                                          ; $43cc: $f1
@@ -852,12 +851,12 @@ Call_00a_4428::
 	add  hl, bc                                      ; $442f: $09
 	ld   d, h                                        ; $4430: $54
 	ld   e, l                                        ; $4431: $5d
-	ld   hl, $444a                                   ; $4432: $21 $4a $44
+	ld   hl, SaveFileChecksum                                   ; $4432: $21 $4a $44
 	ld   bc, $0010                                   ; $4435: $01 $10 $00
 	call MemCopy                                       ; $4438: $cd $a9 $09
 	pop  af                                          ; $443b: $f1
 	push af                                          ; $443c: $f5
-	call $445a                                       ; $443d: $cd $5a $44
+	call Func_0a_445a                                       ; $443d: $cd $5a $44
 	pop  af                                          ; $4440: $f1
 	push af                                          ; $4441: $f5
 	call Call_00a_447d                               ; $4442: $cd $7d $44
@@ -866,24 +865,17 @@ Call_00a_4428::
 	ret                                              ; $4449: $c9
 
 
-	ld   d, e                                        ; $444a: $53
-	ld   h, c                                        ; $444b: $61
-	ld   l, e                                        ; $444c: $6b
-	ld   [hl], l                                     ; $444d: $75
-	ld   [hl], d                                     ; $444e: $72
-	ld   h, c                                        ; $444f: $61
-	ld   c, h                                        ; $4450: $4c
-	ld   l, a                                        ; $4451: $6f
-	halt                                             ; $4452: $76
-	ld   h, l                                        ; $4453: $65
-	ld   d, h                                        ; $4454: $54
-	ld   h, c                                        ; $4455: $61
-	ld   l, [hl]                                     ; $4456: $6e
-	ld   h, a                                        ; $4457: $67
-	ld   h, l                                        ; $4458: $65
-	ld   hl, $cdf5                                   ; $4459: $21 $f5 $cd
-	and  [hl]                                        ; $445c: $a6
-	ld   b, e                                        ; $445d: $43
+pushc
+setcharmap main
+
+SaveFileChecksum:
+	db "SakuraLoveTange!"
+
+popc
+
+Func_0a_445a:
+	push af ; $445a: $f5
+	call $43a6 ; $445b: $cd $a6 $43
 	push hl                                          ; $445e: $e5
 	xor  a                                           ; $445f: $af
 	ld   bc, $0206                                   ; $4460: $01 $06 $02
@@ -982,109 +974,62 @@ jr_00a_44c3:
 	jr   jr_00a_44c3                                 ; $44d2: $18 $ef
 
 jr_00a_44d4:
-	ld   hl, $0190                                   ; $44d4: $21 $90 $01
-
+; Copy global nameplate flag to local
+	ld   hl, FLAG1_NAMEPLATE                                        ; $44d4
 	M_FarCall CheckIfNextFlagSet1
 
-	ld   hl, $00d3                                   ; $44eb: $21 $d3 $00
-	push af                                          ; $44ee: $f5
-	ld   a, $37                                      ; $44ef: $3e $37
-	ld   [wFarCallAddr], a                                  ; $44f1: $ea $98 $c2
-	ld   a, $45                                      ; $44f4: $3e $45
-	ld   [wFarCallAddr+1], a                                  ; $44f6: $ea $99 $c2
-	ld   a, $09                                      ; $44f9: $3e $09
-	ld   [wFarCallBank], a                                  ; $44fb: $ea $9a $c2
-	pop  af                                          ; $44fe: $f1
-	call FarCall                                       ; $44ff: $cd $62 $09
-	ld   hl, $01dc                                   ; $4502: $21 $dc $01
+	ld   hl, FLAG2_NAMEPLATE                                        ; $44eb
+	M_FarCall SetOrUnsetFlag2
 
+; Copy global recovery drink flag to local
+	ld   hl, FLAG1_RECOVERY_DRINK                                   ; $4502
 	M_FarCall CheckIfNextFlagSet1
 
-	ld   hl, $00f0                                   ; $4519: $21 $f0 $00
-	push af                                          ; $451c: $f5
-	ld   a, $37                                      ; $451d: $3e $37
-	ld   [wFarCallAddr], a                                  ; $451f: $ea $98 $c2
-	ld   a, $45                                      ; $4522: $3e $45
-	ld   [wFarCallAddr+1], a                                  ; $4524: $ea $99 $c2
-	ld   a, $09                                      ; $4527: $3e $09
-	ld   [wFarCallBank], a                                  ; $4529: $ea $9a $c2
-	pop  af                                          ; $452c: $f1
-	call FarCall                                       ; $452d: $cd $62 $09
-	ld   hl, $01e8                                   ; $4530: $21 $e8 $01
+	ld   hl, FLAG2_RECOVERY_DRINK                                   ; $4519
+	M_FarCall SetOrUnsetFlag2
 
+; Copy global ring of revelation flag to local
+	ld   hl, FLAG1_RING_OF_REV                                      ; $4530
 	M_FarCall CheckIfNextFlagSet1
 
-	ld   hl, $00f1                                   ; $4547: $21 $f1 $00
-	push af                                          ; $454a: $f5
-	ld   a, $37                                      ; $454b: $3e $37
-	ld   [wFarCallAddr], a                                  ; $454d: $ea $98 $c2
-	ld   a, $45                                      ; $4550: $3e $45
-	ld   [wFarCallAddr+1], a                                  ; $4552: $ea $99 $c2
-	ld   a, $09                                      ; $4555: $3e $09
-	ld   [wFarCallBank], a                                  ; $4557: $ea $9a $c2
-	pop  af                                          ; $455a: $f1
-	call FarCall                                       ; $455b: $cd $62 $09
-	ld   hl, $01ec                                   ; $455e: $21 $ec $01
+	ld   hl, FLAG2_RING_OF_REVELATION                               ; $4547
+	M_FarCall SetOrUnsetFlag2
 
+; Copy global mystery charm flag to local
+	ld   hl, FLAG1_MYSTERY_CHARM                                    ; $455e
 	M_FarCall CheckIfNextFlagSet1
 
-	ld   hl, $00f2                                   ; $4575: $21 $f2 $00
-	push af                                          ; $4578: $f5
-	ld   a, $37                                      ; $4579: $3e $37
-	ld   [wFarCallAddr], a                                  ; $457b: $ea $98 $c2
-	ld   a, $45                                      ; $457e: $3e $45
-	ld   [wFarCallAddr+1], a                                  ; $4580: $ea $99 $c2
-	ld   a, $09                                      ; $4583: $3e $09
-	ld   [wFarCallBank], a                                  ; $4585: $ea $9a $c2
-	pop  af                                          ; $4588: $f1
-	call FarCall                                       ; $4589: $cd $62 $09
-	ld   hl, $01f0                                   ; $458c: $21 $f0 $01
+	ld   hl, FLAG2_MYSTERIOUS_CHARM                                 ; $4575
+	M_FarCall SetOrUnsetFlag2
 
+; Copy global guts headband flag to local
+	ld   hl, FLAG1_GUTS_HEADBAND                                    ; $458c
 	M_FarCall CheckIfNextFlagSet1
 
-	ld   hl, $00f3                                   ; $45a3: $21 $f3 $00
-	push af                                          ; $45a6: $f5
-	ld   a, $37                                      ; $45a7: $3e $37
-	ld   [wFarCallAddr], a                                  ; $45a9: $ea $98 $c2
-	ld   a, $45                                      ; $45ac: $3e $45
-	ld   [wFarCallAddr+1], a                                  ; $45ae: $ea $99 $c2
-	ld   a, $09                                      ; $45b1: $3e $09
-	ld   [wFarCallBank], a                                  ; $45b3: $ea $9a $c2
-	pop  af                                          ; $45b6: $f1
-	call FarCall                                       ; $45b7: $cd $62 $09
-	ld   hl, $01f4                                   ; $45ba: $21 $f4 $01
+	ld   hl, FLAG2_GUTS_HEADBAND                                    ; $45a3
+	M_FarCall SetOrUnsetFlag2
 
+; Copy global light shoes flag to local
+	ld   hl, FLAG1_LIGHT_SHOES                                      ; $45ba
 	M_FarCall CheckIfNextFlagSet1
 
-	ld   hl, $00f4                                   ; $45d1: $21 $f4 $00
-	push af                                          ; $45d4: $f5
-	ld   a, $37                                      ; $45d5: $3e $37
-	ld   [wFarCallAddr], a                                  ; $45d7: $ea $98 $c2
-	ld   a, $45                                      ; $45da: $3e $45
-	ld   [wFarCallAddr+1], a                                  ; $45dc: $ea $99 $c2
-	ld   a, $09                                      ; $45df: $3e $09
-	ld   [wFarCallBank], a                                  ; $45e1: $ea $9a $c2
-	pop  af                                          ; $45e4: $f1
-	call FarCall                                       ; $45e5: $cd $62 $09
-	ld   hl, $01f8                                   ; $45e8: $21 $f8 $01
+	ld   hl, FLAG2_LIGHT_SHOES                                      ; $45d1
+	M_FarCall SetOrUnsetFlag2
 
+; Copy global clear lens flag to local
+	ld   hl, FLAG1_CLEAR_LENS                                       ; $45e8
 	M_FarCall CheckIfNextFlagSet1
 
-	ld   hl, $00f5                                   ; $45ff: $21 $f5 $00
-	push af                                          ; $4602: $f5
-	ld   a, $37                                      ; $4603: $3e $37
-	ld   [wFarCallAddr], a                                  ; $4605: $ea $98 $c2
-	ld   a, $45                                      ; $4608: $3e $45
-	ld   [wFarCallAddr+1], a                                  ; $460a: $ea $99 $c2
-	ld   a, $09                                      ; $460d: $3e $09
-	ld   [wFarCallBank], a                                  ; $460f: $ea $9a $c2
-	pop  af                                          ; $4612: $f1
-	call FarCall                                       ; $4613: $cd $62 $09
+	ld   hl, FLAG2_CLEAR_LENS                                       ; $45ff
+	M_FarCall SetOrUnsetFlag2
+
+;
 	pop  af                                          ; $4616: $f1
 	call Call_00a_47f3                               ; $4617: $cd $f3 $47
 	ret                                              ; $461a: $c9
 
 
+;
 	db   $10                                         ; $461b: $10
 	rlca                                             ; $461c: $07
 	ld   de, $1264                                   ; $461d: $11 $64 $12
@@ -3184,6 +3129,9 @@ Call_00a_598f:
 	nop                                              ; $5a1f: $00
 	nop                                              ; $5a20: $00
 	nop                                              ; $5a21: $00
+
+
+;
 	push hl                                          ; $5a22: $e5
 	call ClearTextBoxDimensionsAndSetDefaultTextStyle                                       ; $5a23: $cd $09 $14
 	ld   bc, $0e03                                   ; $5a26: $01 $03 $0e
@@ -3192,7 +3140,7 @@ Call_00a_598f:
 	call SetCurrKanjiColAndRowToDrawOn                                       ; $5a2f: $cd $34 $14
 	pop  hl                                          ; $5a32: $e1
 
-	M_FarCall Func_0a_5b4b
+	M_FarCall HLequAddrOfMiscInstantText
 
 	call FarPopulateKanjiConvoStructForCurrTextBox                                       ; $5a47: $cd $0c $10
 	xor  a                                           ; $5a4a: $af
@@ -3356,7 +3304,14 @@ jr_00a_5b0c:
 	ret                                              ; $5b4a: $c9
 
 
-Func_0a_5b4b::
+; H - text group idx
+;   0 - gift shop
+;   1 - inv items + descriptions
+;   2 - koubo descriptions
+;   3 - romando shop/chest
+;   4 - dorm room opt descripts
+; L - text idx
+HLequAddrOfMiscInstantText::
 	push bc                                          ; $5b4b: $c5
 	push de                                          ; $5b4c: $d5
 
@@ -5605,7 +5560,7 @@ TitleMenuScreen_substate3:
 	dw TitleMenuScreenAnimationHandlerA
 	dw TitleMenuScreenAnimationHandlerB
 	dw TitleMenuScreenAnimationHandlerC
-	dw TitleMenuScreenAnimationHandlerD
+	dw TitleMenuScreenAnimationHandlerD_ToNextState
 
 
 TitleMenuScreenAnimationHandler2:
@@ -7077,7 +7032,7 @@ jr_00a_7339:
 	xor  b                                           ; $7390: $a8
 
 
-TitleMenuScreenAnimationHandlerD:
+TitleMenuScreenAnimationHandlerD_ToNextState:
 	ld   a, [wTitleScreenMiscCounterIdx]                                  ; $7391: $fa $03 $cc
 	or   a                                           ; $7394: $b7
 	jr   nz, .afterInit                             ; $7395: $20 $18
@@ -7126,20 +7081,21 @@ TitleMenuScreenAnimationHandlerD:
 	jp   hl                                          ; $73e4: $e9
 
 .optHandler:
-	dw .prologue
-	dw .newGame
-	dw .continue
-	dw .settings
-	dw .romandoShop
-	dw .treasureChest
-	dw .miniGames
-	dw .cinematron
-	dw .titleScreen
+	dw PrologueMenuOptHandler
+	dw NewGameMenuOptHandler
+	dw ContinueMenuOptHandler
+	dw SettingsMenuOptHandler
+	dw RomandoShopMenuOptHandler
+	dw TreasureChestMenuOptHandler
+	dw MinigamesMenuOptHandler
+	dw CinematronMenuOptHandler
+	dw TitleScreenMenuOptHandler
 
-.prologue:
+
+PrologueMenuOptHandler:
 	xor  a                                           ; $73f7: $af
 	call PlaySong                                       ; $73f8: $cd $92 $1a
-	ld   h, $37                                      ; $73fb: $26 $37
+	ld   h, GS_TITLE_MENU_SCREEN                                      ; $73fb: $26 $37
 	ld   l, $01                                      ; $73fd: $2e $01
 	ld   bc, $0006                                   ; $73ff: $01 $06 $00
 	xor  a                                           ; $7402: $af
@@ -7147,7 +7103,8 @@ TitleMenuScreenAnimationHandlerD:
 	M_FarCall SetPrologueScriptState
 	ret                                              ; $7417: $c9
 
-.newGame:
+
+NewGameMenuOptHandler:
 	xor  a                                           ; $7418: $af
 	call PlaySong                                       ; $7419: $cd $92 $1a
 	xor  a                                           ; $741c: $af
@@ -7162,7 +7119,8 @@ TitleMenuScreenAnimationHandlerD:
 	ld   [wGameSubstate], a                                  ; $743c: $ea $a1 $c2
 	ret                                              ; $743f: $c9
 
-.continue:
+
+ContinueMenuOptHandler:
 	xor  a                                           ; $7440: $af
 	call PlaySong                                       ; $7441: $cd $92 $1a
 	ld   a, $ff                                      ; $7444: $3e $ff
@@ -7171,99 +7129,102 @@ TitleMenuScreenAnimationHandlerD:
 	ld   [$cb1d], a                                  ; $744a: $ea $1d $cb
 	ld   h, $38                                      ; $744d: $26 $38
 	ld   l, $00                                      ; $744f: $2e $00
-	ld   d, $37                                      ; $7451: $16 $37
+	ld   d, GS_TITLE_MENU_SCREEN                                      ; $7451: $16 $37
 	ld   e, $01                                      ; $7453: $1e $01
 
 	M_FarCall SetSaveScreenState
 	ret                                              ; $7469: $c9
 
-.settings:
+
+SettingsMenuOptHandler:
 	xor  a                                           ; $746a: $af
 	call PlaySong                                       ; $746b: $cd $92 $1a
 	ld   a, $14                                      ; $746e: $3e $14
-	ld   h, $37                                      ; $7470: $26 $37
+	ld   h, GS_TITLE_MENU_SCREEN                                      ; $7470: $26 $37
 	ld   l, $01                                      ; $7472: $2e $01
 	ld   b, $ff                                      ; $7474: $06 $ff
 
 	M_FarCall SetSettingsState
 	ret                                              ; $748a: $c9
 
-.romandoShop:
-	ld   hl, FLAG1_0002                                   ; $748b: $21 $02 $00
 
+RomandoShopMenuOptHandler:
+; Jump if we can't access this state due to below conditions
+	ld   hl, FLAG1_GAME_BEATEN                                      ; $748b
 	M_FarCall CheckIfFlagSet1
+	or   a                                                          ; $74a2
+	jr   z, .gameNotBeaten                                          ; $74a3
 
-	or   a                                           ; $74a2: $b7
-	jr   z, .br_74f0                              ; $74a3: $28 $4b
+	M_FarCall CheckIfAllShopItemsBought
+	or   a                                                          ; $74b9
+	jr   nz, .allItemsBought                                        ; $74ba
 
-	M_FarCall Func_04_554b
+	M_FarCall CheckIfNoItemsBuyable
+	or   a                                                          ; $74d0
+	jr   nz, .noItemsBuyable                                        ; $74d1
 
-	or   a                                           ; $74b9: $b7
-	jr   nz, .br_74f6                             ; $74ba: $20 $3a
+; Mute music and go to romando shop
+	xor  a                                                          ; $74d3
+	call PlaySong                                                   ; $74d4
+	ld   h, GS_TITLE_MENU_SCREEN                                    ; $74d7
+	ld   l, $02                                                     ; $74d9
 
-	M_FarCall Func_04_553e
+	M_FarCall SetRomandoShopState
+	ret                                                             ; $74ef
 
-	or   a                                           ; $74d0: $b7
-	jr   nz, .br_74fd                             ; $74d1: $20 $2a
-
-	xor  a                                           ; $74d3: $af
-	call PlaySong                                       ; $74d4: $cd $92 $1a
-	ld   h, $37                                      ; $74d7: $26 $37
-	ld   l, $02                                      ; $74d9: $2e $02
-
-	M_FarCall Func_04_557d
-	ret                                              ; $74ef: $c9
-
-.br_74f0:
+.gameNotBeaten:
 	xor  a                                           ; $74f0: $af
 	ld   [$b0aa], a                                  ; $74f1: $ea $aa $b0
-	jr   .cont_7502                                 ; $74f4: $18 $0c
+	jr   Func_0a_7502                                 ; $74f4: $18 $0c
 
-.br_74f6:
+.allItemsBought:
 	ld   a, $02                                      ; $74f6: $3e $02
 	ld   [$b0aa], a                                  ; $74f8: $ea $aa $b0
-	jr   .cont_7502                                 ; $74fb: $18 $05
+	jr   Func_0a_7502                                 ; $74fb: $18 $05
 
-.br_74fd:
+.noItemsBuyable:
 	ld   a, $03                                      ; $74fd: $3e $03
 	ld   [$b0aa], a                                  ; $74ff: $ea $aa $b0
 
-.cont_7502:
+Func_0a_7502:
 	ld   bc, $0011                                   ; $7502: $01 $11 $00
-	ld   h, $37                                      ; $7505: $26 $37
+	ld   h, GS_TITLE_MENU_SCREEN                                      ; $7505: $26 $37
 	ld   l, $02                                      ; $7507: $2e $02
 	ld   a, [$c653]                                  ; $7509: $fa $53 $c6
 
 	M_FarCall SetIntroScriptState
 	ret                                              ; $7520: $c9
 
-.treasureChest:
-	M_FarCall Func_09_694e
 
-	or   a                                           ; $7535: $b7
-	jr   nz, .br_7555                             ; $7536: $20 $1d
+TreasureChestMenuOptHandler:
+; Jump if there are no chest items
+	M_FarCall CheckIfNoChestItemsUnlocked
+	or   a                                                          ; $7535
+	jr   nz, .toIntroScript                                         ; $7536
 
-	xor  a                                           ; $7538: $af
-	call PlaySong                                       ; $7539: $cd $92 $1a
-	ld   h, $37                                      ; $753c: $26 $37
-	ld   l, $02                                      ; $753e: $2e $02
+; Mute music and go to treasure chest
+	xor  a                                                          ; $7538
+	call PlaySong                                                   ; $7539
+	ld   h, GS_TITLE_MENU_SCREEN                                    ; $753c
+	ld   l, $02                                                     ; $753e
 
 	M_FarCall SetTreasureChestState
-	ret                                              ; $7554: $c9
+	ret                                                             ; $7554
 
-.br_7555:
+.toIntroScript:
 	ld   a, $0a                                      ; $7555: $3e $0a
 	ld   [$b0aa], a                                  ; $7557: $ea $aa $b0
-	jr   .cont_7502                                 ; $755a: $18 $a6
+	jr   Func_0a_7502                                 ; $755a: $18 $a6
 
-.miniGames:
-	ld   hl, FLAG1_0002                                   ; $755c: $21 $02 $00
 
+MinigamesMenuOptHandler:
+; Jump if game not beaten yet
+	ld   hl, FLAG1_GAME_BEATEN                                      ; $755c
 	M_FarCall CheckIfFlagSet1
+	or   a                                                          ; $7573
+	jr   z, .toIntroScript                                          ; $7574
 
-	or   a                                           ; $7573: $b7
-	jr   z, .br_7598                              ; $7574: $28 $22
-
+;
 	xor  a                                           ; $7576: $af
 	call PlaySong                                       ; $7577: $cd $92 $1a
 	ld   a, $01                                      ; $757a: $3e $01
@@ -7274,21 +7235,26 @@ TitleMenuScreenAnimationHandlerD:
 	M_FarCall SetMiniGamesState
 	ret                                              ; $7597: $c9
 
-.br_7598:
+.toIntroScript:
 	ld   a, $14                                      ; $7598: $3e $14
 	ld   [$b0aa], a                                  ; $759a: $ea $aa $b0
-	jp   .cont_7502                               ; $759d: $c3 $02 $75
+	jp   Func_0a_7502                               ; $759d: $c3 $02 $75
 
-.cinematron:
+
+CinematronMenuOptHandler:
+; Mute music, and go to cinematron state, returning here
 	xor  a                                           ; $75a0: $af
 	call PlaySong                                       ; $75a1: $cd $92 $1a
+
 	ld   h, GS_TITLE_MENU_SCREEN                                      ; $75a4: $26 $37
 	ld   l, $02                                      ; $75a6: $2e $02
 
 	M_FarCall SetCinematronState
 	ret                                              ; $75bc: $c9
 
-.titleScreen:
+
+TitleScreenMenuOptHandler:
+; Simply set state
 	ld   a, GS_TITLE_SCREEN                                      ; $75bd: $3e $36
 	ld   [wGameState], a                                  ; $75bf: $ea $a0 $c2
 	ld   a, $01                                      ; $75c2: $3e $01

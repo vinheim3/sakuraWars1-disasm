@@ -6270,10 +6270,10 @@ jr_008_6a6b:
 	call CopyEthenDintoHL_BCtimes                                       ; $6aab: $cd $9f $09
 	ldh  a, [hScriptOpcodeParams+3]                                    ; $6aae: $f0 $a3
 	inc  a                                           ; $6ab0: $3c
-	ld   h, $00                                      ; $6ab1: $26 $00
+	ld   h, MIT_GIFT_SHOP                                      ; $6ab1: $26 $00
 	ld   l, a                                        ; $6ab3: $6f
 
-	M_FarCall Func_0a_5b4b
+	M_FarCall HLequAddrOfMiscInstantText
 
 	ld   d, h                                        ; $6ac8: $54
 	ld   e, l                                        ; $6ac9: $5d
@@ -7053,7 +7053,7 @@ jr_008_6f6a:
 	jp   Jump_008_705c                               ; $6ff3: $c3 $5c $70
 
 .func_6ff6:
-	jp   todo_LoadsText_7079                               ; $6ff6: $c3 $79 $70
+	jp   LoadKouboDescriptionText                               ; $6ff6: $c3 $79 $70
 
 
 	call Call_008_70cd                               ; $6ff9: $cd $cd $70
@@ -7131,7 +7131,7 @@ Jump_008_705c:
 	ret                                              ; $7078: $c9
 
 
-todo_LoadsText_7079:
+LoadKouboDescriptionText:
 ; Clear offset to draw in text box
 	ld   bc, $0000                                   ; $7079: $01 $00 $00
 	call SetCurrKanjiColAndRowToDrawOn                                       ; $707c: $cd $34 $14
@@ -7152,10 +7152,10 @@ todo_LoadsText_7079:
 
 ;
 	ldh  a, [hScriptOpcodeParams+3]                                    ; $7096: $f0 $a3
-	ld   h, $02                                      ; $7098: $26 $02
+	ld   h, MIT_KOUBO_DESCRIPTIONS                                      ; $7098: $26 $02
 	ld   l, a                                        ; $709a: $6f
 
-	M_FarCall Func_0a_5b4b
+	M_FarCall HLequAddrOfMiscInstantText
 
 	ld   d, h                                        ; $70af: $54
 	ld   e, l                                        ; $70b0: $5d
@@ -7447,7 +7447,7 @@ code28_func_7278:
 	jp   Jump_008_6eae                               ; $729e: $c3 $ae $6e
 
 .func_72a1:
-	call todo_LoadsText_7079                               ; $72a1: $cd $79 $70
+	call LoadKouboDescriptionText                               ; $72a1: $cd $79 $70
 	jp   Jump_008_6eae                               ; $72a4: $c3 $ae $6e
 
 

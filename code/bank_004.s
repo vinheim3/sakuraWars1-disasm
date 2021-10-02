@@ -382,7 +382,7 @@ Call_004_4253:
 	xor  a                                           ; $4253: $af
 	ld   [$cc56], a                                  ; $4254: $ea $56 $cc
 	xor  a                                           ; $4257: $af
-	call todo_HLequAsEntryInTable502c                               ; $4258: $cd $1f $50
+	call HLequAddrOfRomandoItemMetadata                               ; $4258: $cd $1f $50
 	xor  a                                           ; $425b: $af
 	ld   de, $d880                                   ; $425c: $11 $80 $d8
 
@@ -400,7 +400,7 @@ jr_004_425f:
 	ld   a, [hl+]                                    ; $4269: $2a
 	ld   h, [hl]                                     ; $426a: $66
 	ld   l, a                                        ; $426b: $6f
-	call Call_004_42df                               ; $426c: $cd $df $42
+	call CheckIfRomandoItemBuyable                               ; $426c: $cd $df $42
 	or   a                                           ; $426f: $b7
 	jr   z, jr_004_427c                              ; $4270: $28 $0a
 
@@ -438,7 +438,7 @@ jr_004_4297:
 	push hl                                          ; $4298: $e5
 	push de                                          ; $4299: $d5
 	push bc                                          ; $429a: $c5
-	call todo_HLequAsEntryInTable502c                               ; $429b: $cd $1f $50
+	call HLequAddrOfRomandoItemMetadata                               ; $429b: $cd $1f $50
 	ld   bc, $000e                                   ; $429e: $01 $0e $00
 	add  hl, bc                                      ; $42a1: $09
 	ld   a, [hl]                                     ; $42a2: $7e
@@ -487,34 +487,40 @@ jr_004_42b8:
 	ret                                              ; $42de: $c9
 
 
-Call_004_42df:
-	bit  6, d                                        ; $42df: $cb $72
-	jr   z, jr_004_42ea                              ; $42e1: $28 $07
+; DE - adress of item prereq flag/func
+; Returns $ff if buyable, else 0
+CheckIfRomandoItemBuyable:
+; Jump if flag
+	bit  6, d                                                       ; $42df
+	jr   z, .isFlag                                                 ; $42e1
 
-	ld   bc, $431a                                   ; $42e3: $01 $1a $43
-	push bc                                          ; $42e6: $c5
-	ld   h, d                                        ; $42e7: $62
-	ld   l, e                                        ; $42e8: $6b
-	jp   hl                                          ; $42e9: $e9
+; Call flag handler to check if unlocked
+	ld   bc, .done                                                  ; $42e3
+	push bc                                                         ; $42e6
 
+	ld   h, d                                                       ; $42e7
+	ld   l, e                                                       ; $42e8
+	jp   hl                                                         ; $42e9
 
-jr_004_42ea:
-	push hl                                          ; $42ea: $e5
-	ld   h, d                                        ; $42eb: $62
-	ld   l, e                                        ; $42ec: $6b
-	
+.isFlag:
+	push hl                                                         ; $42ea
+
+; Return with 0 if item not unlocked
+	ld   h, d                                                       ; $42eb
+	ld   l, e                                                       ; $42ec
 	M_FarCall CheckIfFlagSet1
 
-	pop  hl                                          ; $4301: $e1
-	or   a                                           ; $4302: $b7
-	jr   z, jr_004_431a                              ; $4303: $28 $15
+	pop  hl                                                         ; $4301
+	or   a                                                          ; $4302
+	jr   z, .done                                                   ; $4303
 
+; Return with 0 if bought
 	M_FarCall CheckIfNextFlagSet1
 
-	cpl                                              ; $4319: $2f
+	cpl                                                             ; $4319
 
-jr_004_431a:
-	ret                                              ; $431a: $c9
+.done:
+	ret                                                             ; $431a
 
 
 Call_004_431b:
@@ -573,7 +579,7 @@ Call_004_4342:
 	pop  af                                          ; $4372: $f1
 	push af                                          ; $4373: $f5
 	call Call_004_431b                               ; $4374: $cd $1b $43
-	call todo_HLequAsEntryInTable502c                               ; $4377: $cd $1f $50
+	call HLequAddrOfRomandoItemMetadata                               ; $4377: $cd $1f $50
 	push hl                                          ; $437a: $e5
 	ld   a, [$cc64]                                  ; $437b: $fa $64 $cc
 	ld   c, a                                        ; $437e: $4f
@@ -594,9 +600,9 @@ jr_004_4395:
 	ld   bc, $0004                                   ; $4396: $01 $04 $00
 	add  hl, bc                                      ; $4399: $09
 	ld   l, [hl]                                     ; $439a: $6e
-	ld   h, $03                                      ; $439b: $26 $03
+	ld   h, MIT_ROMANDO_SHOP_CHEST                                      ; $439b: $26 $03
 
-	M_FarCall Func_0a_5b4b
+	M_FarCall HLequAddrOfMiscInstantText
 
 	ld   d, h                                        ; $43b1: $54
 	ld   e, l                                        ; $43b2: $5d
@@ -684,13 +690,13 @@ Call_004_442a:
 	jr   nc, jr_004_4476                             ; $444b: $30 $29
 
 	call Call_004_431b                               ; $444d: $cd $1b $43
-	call todo_HLequAsEntryInTable502c                               ; $4450: $cd $1f $50
+	call HLequAddrOfRomandoItemMetadata                               ; $4450: $cd $1f $50
 	ld   bc, $0005                                   ; $4453: $01 $05 $00
 	add  hl, bc                                      ; $4456: $09
 	ld   l, [hl]                                     ; $4457: $6e
-	ld   h, $03                                      ; $4458: $26 $03
+	ld   h, MIT_ROMANDO_SHOP_CHEST                                      ; $4458: $26 $03
 
-	M_FarCall Func_0a_5b4b
+	M_FarCall HLequAddrOfMiscInstantText
 
 	ld   d, h                                        ; $446e: $54
 	ld   e, l                                        ; $446f: $5d
@@ -710,7 +716,7 @@ jr_004_4476:
 Call_004_4486:
 	ld   a, [$cc58]                                  ; $4486: $fa $58 $cc
 	call Call_004_431b                               ; $4489: $cd $1b $43
-	call todo_HLequAsEntryInTable502c                               ; $448c: $cd $1f $50
+	call HLequAddrOfRomandoItemMetadata                               ; $448c: $cd $1f $50
 	ld   bc, $000e                                   ; $448f: $01 $0e $00
 	add  hl, bc                                      ; $4492: $09
 	ld   a, [hl]                                     ; $4493: $7e
@@ -751,9 +757,9 @@ RomandoShopSubstate1:
 	or   a                                           ; $44bb: $b7
 	jr   nz, jr_004_44cb                             ; $44bc: $20 $0d
 
-	ld   a, [$cc52]                                  ; $44be: $fa $52 $cc
+	ld   a, [wRomandoShopReturnState]                                  ; $44be: $fa $52 $cc
 	ld   [wGameState], a                                  ; $44c1: $ea $a0 $c2
-	ld   a, [$cc53]                                  ; $44c4: $fa $53 $cc
+	ld   a, [wRomandoShopReturnSubstate]                                  ; $44c4: $fa $53 $cc
 	ld   [wGameSubstate], a                                  ; $44c7: $ea $a1 $c2
 	ret                                              ; $44ca: $c9
 
@@ -1572,7 +1578,7 @@ Call_004_4a05:
 Call_004_4a27:
 	ld   a, [$cc58]                                  ; $4a27: $fa $58 $cc
 	call Call_004_431b                               ; $4a2a: $cd $1b $43
-	call todo_HLequAsEntryInTable502c                               ; $4a2d: $cd $1f $50
+	call HLequAddrOfRomandoItemMetadata                               ; $4a2d: $cd $1f $50
 	ld   bc, $000e                                   ; $4a30: $01 $0e $00
 	add  hl, bc                                      ; $4a33: $09
 	ld   a, [hl]                                     ; $4a34: $7e
@@ -1596,7 +1602,7 @@ jr_004_4a41:
 Call_004_4a44:
 	ld   a, [$cc58]                                  ; $4a44: $fa $58 $cc
 	call Call_004_431b                               ; $4a47: $cd $1b $43
-	call todo_HLequAsEntryInTable502c                               ; $4a4a: $cd $1f $50
+	call HLequAddrOfRomandoItemMetadata                               ; $4a4a: $cd $1f $50
 	ld   bc, $000e                                   ; $4a4d: $01 $0e $00
 	add  hl, bc                                      ; $4a50: $09
 	ld   a, [hl]                                     ; $4a51: $7e
@@ -2312,7 +2318,7 @@ jr_004_4e85:
 	call PlaySoundEffect                                       ; $4ea9: $cd $df $1a
 	ld   a, [$cc59]                                  ; $4eac: $fa $59 $cc
 	call Call_004_431b                               ; $4eaf: $cd $1b $43
-	call todo_HLequAsEntryInTable502c                               ; $4eb2: $cd $1f $50
+	call HLequAddrOfRomandoItemMetadata                               ; $4eb2: $cd $1f $50
 	ld   bc, $0002                                   ; $4eb5: $01 $02 $00
 	add  hl, bc                                      ; $4eb8: $09
 	ld   a, [hl+]                                    ; $4eb9: $2a
@@ -2526,185 +2532,170 @@ jr_004_4ffe:
 	call FarMemCopy                                       ; $5009: $cd $b2 $09
 	ld   bc, $003f                                   ; $500c: $01 $3f $00
 	call SetBGandOBJPaletteRangesToUpdate                                       ; $500f: $cd $aa $04
-	ld   a, [$cc52]                                  ; $5012: $fa $52 $cc
+	ld   a, [wRomandoShopReturnState]                                  ; $5012: $fa $52 $cc
 	ld   [wGameState], a                                  ; $5015: $ea $a0 $c2
-	ld   a, [$cc53]                                  ; $5018: $fa $53 $cc
+	ld   a, [wRomandoShopReturnSubstate]                                  ; $5018: $fa $53 $cc
 	ld   [wGameSubstate], a                                  ; $501b: $ea $a1 $c2
 	ret                                              ; $501e: $c9
 
 
-todo_HLequAsEntryInTable502c:
-	push bc                                          ; $501f: $c5
-	ld   h, a                                        ; $5020: $67
-	ld   l, $0f                                      ; $5021: $2e $0f
-	call AequHtimesL                                       ; $5023: $cd $ac $0b
-	ld   bc, Data_04_502c                                   ; $5026: $01 $2c $50
-	add  hl, bc                                      ; $5029: $09
-	pop  bc                                          ; $502a: $c1
-	ret                                              ; $502b: $c9
+; A - item index
+HLequAddrOfRomandoItemMetadata:
+; 15-byte entries
+	push bc                                                         ; $501f
+	ld   h, a                                                       ; $5020
+	ld   l, $0f                                                     ; $5021
+	call AequHtimesL                                                ; $5023
+	ld   bc, RomandoShopItemMetadata                                ; $5026
+	add  hl, bc                                                     ; $5029
+	pop  bc                                                         ; $502a
+	ret                                                             ; $502b
 
+macro RomandoItem
+	dw \1, \2 ; prereq flag, item flag
+	db \3, \4 ; name text idx, description text idx
+	; if any of the 1st 2 flags are set, the price is the 4th word, else its the 3rd
+	dw \5, \6, \7, \8
+	db \9 ; unk
+endm
 
-Data_04_502c:
-	; prereq flag?
-	;            item flag           if these flags set
-	;                                                              use this
-	;                                                              price
-	;                                                    else this
-	db $02, $00, $94, $01, $14, $15, $20, $00, $20, $00, $e8, $03, $64, $00, $11
-	db $02, $00, $98, $01, $16, $17, $21, $00, $21, $00, $e8, $03, $64, $00, $12
-	db $02, $00, $9c, $01, $18, $19, $22, $00, $22, $00, $e8, $03, $64, $00, $13
-	db $02, $00, $a0, $01, $1a, $1b, $23, $00, $23, $00, $e8, $03, $64, $00, $14
-	db $02, $00, $a4, $01, $1c, $1d, $24, $00, $24, $00, $e8, $03, $64, $00, $15
-	db $02, $00, $a8, $01, $1e, $1f, $25, $00, $25, $00, $e8, $03, $64, $00, $16
-	db $ac, $01, $ac, $01, $20, $21, $ac, $01, $ac, $01, $e8, $03, $e8, $03, $17
-	db $b0, $01, $b0, $01, $22, $23, $b0, $01, $ac, $01, $e8, $03, $e8, $03, $18
-	db $06, $00, $30, $01, $26, $27, $20, $00, $20, $00, $d0, $07, $c8, $00, $21
-	db $08, $00, $34, $01, $28, $29, $21, $00, $21, $00, $d0, $07, $c8, $00, $22
-	db $0a, $00, $38, $01, $2a, $2b, $22, $00, $22, $00, $d0, $07, $c8, $00, $23
-	db $0c, $00, $3c, $01, $2c, $2d, $23, $00, $23, $00, $d0, $07, $c8, $00, $24
-	db $0e, $00, $40, $01, $2e, $2f, $24, $00, $24, $00, $d0, $07, $c8, $00, $25
-	db $10, $00, $44, $01, $30, $31, $25, $00, $25, $00, $d0, $07, $c8, $00, $26
-	db $67, $53, $e0, $01, $32, $33, $02, $00, $02, $00, $e8, $03, $e8, $03, $27
-	db $48, $01, $48, $01, $36, $37, $20, $00, $20, $00, $b8, $0b, $2c, $01, $31
-	db $4c, $01, $4c, $01, $38, $39, $21, $00, $21, $00, $b8, $0b, $2c, $01, $32
-	db $50, $01, $50, $01, $3a, $3b, $22, $00, $22, $00, $b8, $0b, $2c, $01, $33
-	db $54, $01, $54, $01, $3c, $3d, $23, $00, $23, $00, $b8, $0b, $2c, $01, $34
-	db $58, $01, $58, $01, $3e, $3f, $24, $00, $24, $00, $b8, $0b, $2c, $01, $35
-	db $5c, $01, $5c, $01, $40, $41, $25, $00, $25, $00, $b8, $0b, $2c, $01, $36
-	db $16, $54, $e4, $01, $42, $43, $02, $00, $02, $00, $e8, $03, $e8, $03, $37
-	db $02, $00, $bc, $01, $02, $03, $02, $00, $02, $00, $d0, $07, $d0, $07, $50
-	db $02, $00, $c0, $01, $04, $05, $02, $00, $02, $00, $e8, $03, $e8, $03, $51
-	db $06, $00, $c4, $01, $08, $09, $20, $00, $20, $00, $e8, $03, $64, $00, $01
-	db $08, $00, $c8, $01, $0a, $0b, $21, $00, $21, $00, $e8, $03, $64, $00, $02
-	db $0a, $00, $cc, $01, $0c, $0d, $22, $00, $22, $00, $e8, $03, $64, $00, $03
-	db $0c, $00, $d0, $01, $0e, $0f, $23, $00, $23, $00, $e8, $03, $64, $00, $04
-	db $0e, $00, $d4, $01, $10, $11, $24, $00, $24, $00, $e8, $03, $64, $00, $05
-	db $10, $00, $d8, $01, $12, $13, $25, $00, $25, $00, $e8, $03, $64, $00, $06
-	db $04, $02, $04, $02, $74, $75, $02, $00, $02, $00, $e8, $03, $e8, $03, $89
-	db $12, $00, $dc, $01, $62, $63, $02, $00, $02, $00, $f4, $01, $f4, $01, $80
-	db $e8, $01, $e8, $01, $64, $65, $e8, $01, $e8, $01, $b8, $0b, $b8, $0b, $81
-	db $ec, $01, $ec, $01, $66, $67, $ec, $01, $ec, $01, $b8, $0b, $b8, $0b, $82
-	db $f0, $01, $f0, $01, $68, $69, $f0, $01, $f0, $01, $b8, $0b, $b8, $0b, $83
-	db $f4, $01, $f4, $01, $6a, $6b, $f4, $01, $f4, $01, $b8, $0b, $b8, $0b, $84
-	db $f8, $01, $f8, $01, $6c, $6d, $f8, $01, $f8, $01, $b8, $0b, $b8, $0b, $85
-	db $12, $00, $90, $01, $60, $61, $90, $01, $90, $01, $88, $13, $88, $13, $86
-	db $88, $01, $88, $01, $50, $51, $88, $01, $88, $01, $e8, $03, $e8, $03, $87
-	db $8c, $01, $8c, $01, $52, $53, $8c, $01, $8c, $01, $e8, $03, $e8, $03, $88
-	db $02, $00, $00, $01, $54, $55, $20, $00, $20, $00, $88, $13, $f4, $01, $71
-	db $02, $00, $04, $01, $56, $57, $21, $00, $21, $00, $88, $13, $f4, $01, $72
-	db $02, $00, $08, $01, $58, $59, $22, $00, $22, $00, $88, $13, $f4, $01, $73
-	db $02, $00, $0c, $01, $5a, $5b, $23, $00, $23, $00, $88, $13, $f4, $01, $74
-	db $02, $00, $10, $01, $5c, $5d, $24, $00, $24, $00, $88, $13, $f4, $01, $75
-	db $02, $00, $14, $01, $5e, $5f, $25, $00, $25, $00, $88, $13, $f4, $01, $76
-	db $12, $00, $08, $02, $72, $73, $02, $00, $02, $00, $e8, $03, $e8, $03, $4a
-	db $00, $02, $00, $02, $6e, $6f, $22, $00, $22, $00, $e8, $03, $64, $00, $48
-	db $fc, $01, $fc, $01, $70, $71, $23, $00, $23, $00, $e8, $03, $64, $00, $49
-	db $18, $01, $18, $01, $44, $45, $26, $00, $26, $00, $b8, $0b, $e8, $03, $41
-	db $1c, $01, $1c, $01, $46, $47, $27, $00, $27, $00, $b8, $0b, $e8, $03, $42
-	db $20, $01, $20, $01, $48, $49, $28, $00, $28, $00, $b8, $0b, $e8, $03, $43
-	db $24, $01, $24, $01, $4a, $4b, $29, $00, $29, $00, $b8, $0b, $e8, $03, $44
-	db $28, $01, $28, $01, $4c, $4d, $2a, $00, $2a, $00, $b8, $0b, $e8, $03, $45
-	db $2c, $01, $2c, $01, $4e, $4f, $2b, $00, $2b, $00, $b8, $0b, $e8, $03, $46
+RomandoShopItemMetadata:
+	RomandoItem FLAG1_GAME_BEATEN, FLAG1_SAKURA_PHOTO, $14, $15, FLAG1_SAKURA_CHEAP_GENERAL_PRICES, FLAG1_SAKURA_CHEAP_GENERAL_PRICES, 1000, 100, $11
+	RomandoItem FLAG1_GAME_BEATEN, FLAG1_SUMIRE_PHOTO, $16, $17, FLAG1_SUMIRE_CHEAP_GENERAL_PRICES, FLAG1_SUMIRE_CHEAP_GENERAL_PRICES, 1000, 100, $12
+	RomandoItem FLAG1_GAME_BEATEN, FLAG1_MARIA_PHOTO, $18, $19, FLAG1_MARIA_CHEAP_GENERAL_PRICES, FLAG1_MARIA_CHEAP_GENERAL_PRICES, 1000, 100, $13
+	RomandoItem FLAG1_GAME_BEATEN, FLAG1_IRIS_PHOTO, $1a, $1b, FLAG1_IRIS_CHEAP_GENERAL_PRICES, FLAG1_IRIS_CHEAP_GENERAL_PRICES, 1000, 100, $14
+	RomandoItem FLAG1_GAME_BEATEN, FLAG1_KOHRAN_PHOTO, $1c, $1d, FLAG1_KOHRAN_CHEAP_GENERAL_PRICES, FLAG1_KOHRAN_CHEAP_GENERAL_PRICES, 1000, 100, $15
+	RomandoItem FLAG1_GAME_BEATEN, FLAG1_KANNA_PHOTO, $1e, $1f, FLAG1_KANNA_CHEAP_GENERAL_PRICES, FLAG1_KANNA_CHEAP_GENERAL_PRICES, 1000, 100, $16
+	RomandoItem FLAG1_ORIHIME_PHOTO, FLAG1_ORIHIME_PHOTO, $20, $21, FLAG1_ORIHIME_PHOTO, FLAG1_ORIHIME_PHOTO, 1000, 1000, $17
+	RomandoItem FLAG1_RENI_PHOTO, FLAG1_RENI_PHOTO, $22, $23, FLAG1_RENI_PHOTO, FLAG1_ORIHIME_PHOTO, 1000, 1000, $18
+	RomandoItem FLAG1_SAKURA_ENDING, FLAG1_SAKURA_EVENT_GALLERY, $26, $27, FLAG1_SAKURA_CHEAP_GENERAL_PRICES, FLAG1_SAKURA_CHEAP_GENERAL_PRICES, 2000, 200, $21
+	RomandoItem FLAG1_SUMIRE_ENDING, FLAG1_SUMIRE_EVENT_GALLERY, $28, $29, FLAG1_SUMIRE_CHEAP_GENERAL_PRICES, FLAG1_SUMIRE_CHEAP_GENERAL_PRICES, 2000, 200, $22
+	RomandoItem FLAG1_MARIA_ENDING, FLAG1_MARIA_EVENT_GALLERY, $2a, $2b, FLAG1_MARIA_CHEAP_GENERAL_PRICES, FLAG1_MARIA_CHEAP_GENERAL_PRICES, 2000, 200, $23
+	RomandoItem FLAG1_IRIS_ENDING, FLAG1_IRIS_EVENT_GALLERY, $2c, $2d, FLAG1_IRIS_CHEAP_GENERAL_PRICES, FLAG1_IRIS_CHEAP_GENERAL_PRICES, 2000, 200, $24
+	RomandoItem FLAG1_KOHRAN_ENDING, FLAG1_KOHRAN_EVENT_GALLERY, $2e, $2f, FLAG1_KOHRAN_CHEAP_GENERAL_PRICES, FLAG1_KOHRAN_CHEAP_GENERAL_PRICES, 2000, 200, $25
+	RomandoItem FLAG1_KANNA_ENDING, FLAG1_KANNA_EVENT_GALLERY, $30, $31, FLAG1_KANNA_CHEAP_GENERAL_PRICES, FLAG1_KANNA_CHEAP_GENERAL_PRICES, 2000, 200, $26
+	RomandoItem CheckIfGotAllEventGalleries, FLAG1_MISC_EVENT_GALLERY, $32, $33, FLAG1_GAME_BEATEN, FLAG1_GAME_BEATEN, 1000, 1000, $27
+	RomandoItem FLAG1_SAKURA_PORTRAIT_GALLERY, FLAG1_SAKURA_PORTRAIT_GALLERY, $36, $37, FLAG1_SAKURA_CHEAP_GENERAL_PRICES, FLAG1_SAKURA_CHEAP_GENERAL_PRICES, 3000, 300, $31
+	RomandoItem FLAG1_SUMIRE_PORTRAIT_GALLERY, FLAG1_SUMIRE_PORTRAIT_GALLERY, $38, $39, FLAG1_SUMIRE_CHEAP_GENERAL_PRICES, FLAG1_SUMIRE_CHEAP_GENERAL_PRICES, 3000, 300, $32
+	RomandoItem FLAG1_MARIA_PORTRAIT_GALLERY, FLAG1_MARIA_PORTRAIT_GALLERY, $3a, $3b, FLAG1_MARIA_CHEAP_GENERAL_PRICES, FLAG1_MARIA_CHEAP_GENERAL_PRICES, 3000, 300, $33
+	RomandoItem FLAG1_IRIS_PORTRAIT_GALLERY, FLAG1_IRIS_PORTRAIT_GALLERY, $3c, $3d, FLAG1_IRIS_CHEAP_GENERAL_PRICES, FLAG1_IRIS_CHEAP_GENERAL_PRICES, 3000, 300, $34
+	RomandoItem FLAG1_KOHRAN_PORTRAIT_GALLERY, FLAG1_KOHRAN_PORTRAIT_GALLERY, $3e, $3f, FLAG1_KOHRAN_CHEAP_GENERAL_PRICES, FLAG1_KOHRAN_CHEAP_GENERAL_PRICES, 3000, 300, $35
+	RomandoItem FLAG1_KANNA_PORTRAIT_GALLERY, FLAG1_KANNA_PORTRAIT_GALLERY, $40, $41, FLAG1_KANNA_CHEAP_GENERAL_PRICES, FLAG1_KANNA_CHEAP_GENERAL_PRICES, 3000, 300, $36
+	RomandoItem CheckIfGotAllPortraitGalleries, FLAG1_MISC_PORTRAIT_GALLERY, $42, $43, FLAG1_GAME_BEATEN, FLAG1_GAME_BEATEN, 1000, 1000, $37
+	RomandoItem FLAG1_GAME_BEATEN, FLAG1_MUSIC_COLLECTION, $02, $03, FLAG1_GAME_BEATEN, FLAG1_GAME_BEATEN, 2000, 2000, $50
+	RomandoItem FLAG1_GAME_BEATEN, FLAG1_SOUND_EFFECT_COLLECTION, $04, $05, FLAG1_GAME_BEATEN, FLAG1_GAME_BEATEN, 1000, 1000, $51
+	RomandoItem FLAG1_SAKURA_ENDING, FLAG1_SAKURA_VOICES, $08, $09, FLAG1_SAKURA_CHEAP_GENERAL_PRICES, FLAG1_SAKURA_CHEAP_GENERAL_PRICES, 1000, 100, $01
+	RomandoItem FLAG1_SUMIRE_ENDING, FLAG1_SUMIRE_VOICES, $0a, $0b, FLAG1_SUMIRE_CHEAP_GENERAL_PRICES, FLAG1_SUMIRE_CHEAP_GENERAL_PRICES, 1000, 100, $02
+	RomandoItem FLAG1_MARIA_ENDING, FLAG1_MARIA_VOICES, $0c, $0d, FLAG1_MARIA_CHEAP_GENERAL_PRICES, FLAG1_MARIA_CHEAP_GENERAL_PRICES, 1000, 100, $03
+	RomandoItem FLAG1_IRIS_ENDING, FLAG1_IRIS_VOICES, $0e, $0f, FLAG1_IRIS_CHEAP_GENERAL_PRICES, FLAG1_IRIS_CHEAP_GENERAL_PRICES, 1000, 100, $04
+	RomandoItem FLAG1_KOHRAN_ENDING, FLAG1_KOHRAN_VOICES, $10, $11, FLAG1_KOHRAN_CHEAP_GENERAL_PRICES, FLAG1_KOHRAN_CHEAP_GENERAL_PRICES, 1000, 100, $05
+	RomandoItem FLAG1_KANNA_ENDING, FLAG1_KANNA_VOICES, $12, $13, FLAG1_KANNA_CHEAP_GENERAL_PRICES, FLAG1_KANNA_CHEAP_GENERAL_PRICES, 1000, 100, $06
+	RomandoItem FLAG1_ITEM_INDEX, FLAG1_ITEM_INDEX, $74, $75, FLAG1_GAME_BEATEN, FLAG1_GAME_BEATEN, 1000, 1000, $89
+	RomandoItem FLAG1_OGAMI_ENDING, FLAG1_RECOVERY_DRINK, $62, $63, FLAG1_GAME_BEATEN, FLAG1_GAME_BEATEN, 500, 500, $80
+	RomandoItem FLAG1_RING_OF_REV, FLAG1_RING_OF_REV, $64, $65, FLAG1_RING_OF_REV, FLAG1_RING_OF_REV, 3000, 3000, $81
+	RomandoItem FLAG1_MYSTERY_CHARM, FLAG1_MYSTERY_CHARM, $66, $67, FLAG1_MYSTERY_CHARM, FLAG1_MYSTERY_CHARM, 3000, 3000, $82
+	RomandoItem FLAG1_GUTS_HEADBAND, FLAG1_GUTS_HEADBAND, $68, $69, FLAG1_GUTS_HEADBAND, FLAG1_GUTS_HEADBAND, 3000, 3000, $83
+	RomandoItem FLAG1_LIGHT_SHOES, FLAG1_LIGHT_SHOES, $6a, $6b, FLAG1_LIGHT_SHOES, FLAG1_LIGHT_SHOES, 3000, 3000, $84
+	RomandoItem FLAG1_CLEAR_LENS, FLAG1_CLEAR_LENS, $6c, $6d, FLAG1_CLEAR_LENS, FLAG1_CLEAR_LENS, 3000, 3000, $85
+	RomandoItem FLAG1_OGAMI_ENDING, FLAG1_NAMEPLATE, $60, $61, FLAG1_NAMEPLATE, FLAG1_NAMEPLATE, 5000, 5000, $86
+	RomandoItem FLAG1_PETAL_CURSOR, FLAG1_PETAL_CURSOR, $50, $51, FLAG1_PETAL_CURSOR, FLAG1_PETAL_CURSOR, 1000, 1000, $87
+	RomandoItem FLAG1_CANDY_CURSOR, FLAG1_CANDY_CURSOR, $52, $53, FLAG1_CANDY_CURSOR, FLAG1_CANDY_CURSOR, 1000, 1000, $88
+	RomandoItem FLAG1_GAME_BEATEN, FLAG1_SAKURAS_SCHEDULE, $54, $55, FLAG1_SAKURA_CHEAP_GENERAL_PRICES, FLAG1_SAKURA_CHEAP_GENERAL_PRICES, 5000, 500, $71
+	RomandoItem FLAG1_GAME_BEATEN, FLAG1_SUMIRES_SCHEDULE, $56, $57, FLAG1_SUMIRE_CHEAP_GENERAL_PRICES, FLAG1_SUMIRE_CHEAP_GENERAL_PRICES, 5000, 500, $72
+	RomandoItem FLAG1_GAME_BEATEN, FLAG1_MARIAS_SCHEDULE, $58, $59, FLAG1_MARIA_CHEAP_GENERAL_PRICES, FLAG1_MARIA_CHEAP_GENERAL_PRICES, 5000, 500, $73
+	RomandoItem FLAG1_GAME_BEATEN, FLAG1_IRIS_SCHEDULE, $5a, $5b, FLAG1_IRIS_CHEAP_GENERAL_PRICES, FLAG1_IRIS_CHEAP_GENERAL_PRICES, 5000, 500, $74
+	RomandoItem FLAG1_GAME_BEATEN, FLAG1_KOHRANS_SCHEDULE, $5c, $5d, FLAG1_KOHRAN_CHEAP_GENERAL_PRICES, FLAG1_KOHRAN_CHEAP_GENERAL_PRICES, 5000, 500, $75
+	RomandoItem FLAG1_GAME_BEATEN, FLAG1_KANNAS_SCHEDULE, $5e, $5f, FLAG1_KANNA_CHEAP_GENERAL_PRICES, FLAG1_KANNA_CHEAP_GENERAL_PRICES, 5000, 500, $76
+	RomandoItem FLAG1_OGAMI_ENDING, FLAG1_MOCK_BATTLE, $72, $73, FLAG1_GAME_BEATEN, FLAG1_GAME_BEATEN, 1000, 1000, $4a
+	RomandoItem FLAG1_PUSH_UPS, FLAG1_PUSH_UPS, $6e, $6f, FLAG1_MARIA_CHEAP_GENERAL_PRICES, FLAG1_MARIA_CHEAP_GENERAL_PRICES, 1000, 100, $48
+	RomandoItem FLAG1_RED_LIGHT_GREEN_LIGHT, FLAG1_RED_LIGHT_GREEN_LIGHT, $70, $71, FLAG1_IRIS_CHEAP_GENERAL_PRICES, FLAG1_IRIS_CHEAP_GENERAL_PRICES, 1000, 100, $49
+	RomandoItem FLAG1_SAKURA_EX_MODE, FLAG1_SAKURA_EX_MODE, $44, $45, FLAG1_SAKURA_CHEAP_EX_MODE_PRICES, FLAG1_SAKURA_CHEAP_EX_MODE_PRICES, 3000, 1000, $41
+	RomandoItem FLAG1_SUMIRE_EX_MODE, FLAG1_SUMIRE_EX_MODE, $46, $47, FLAG1_SUMIRE_CHEAP_EX_MODE_PRICES, FLAG1_SUMIRE_CHEAP_EX_MODE_PRICES, 3000, 1000, $42
+	RomandoItem FLAG1_MARIA_EX_MODE, FLAG1_MARIA_EX_MODE, $48, $49, FLAG1_MARIA_CHEAP_EX_MODE_PRICES, FLAG1_MARIA_CHEAP_EX_MODE_PRICES, 3000, 1000, $43
+	RomandoItem FLAG1_IRIS_EX_MODE, FLAG1_IRIS_EX_MODE, $4a, $4b, FLAG1_IRIS_CHEAP_EX_MODE_PRICES, FLAG1_IRIS_CHEAP_EX_MODE_PRICES, 3000, 1000, $44
+	RomandoItem FLAG1_KOHRAN_EX_MODE, FLAG1_KOHRAN_EX_MODE, $4c, $4d, FLAG1_KOHRAN_CHEAP_EX_MODE_PRICES, FLAG1_KOHRAN_CHEAP_EX_MODE_PRICES, 3000, 1000, $45
+	RomandoItem FLAG1_KANNA_EX_MODE, FLAG1_KANNA_EX_MODE, $4e, $4f, FLAG1_KANNA_CHEAP_EX_MODE_PRICES, FLAG1_KANNA_CHEAP_EX_MODE_PRICES, 3000, 1000, $46
 	db $00, $00
 
 
-;
-	ld   hl, $01e0                                   ; $5367: $21 $e0 $01
-
+CheckIfGotAllEventGalleries:
+; Return if misc gallery already bought
+	ld   hl, FLAG1_MISC_EVENT_GALLERY                               ; $5367
 	M_FarCall CheckIfNextFlagSet1
+	cpl                                                             ; $537e
+	or   a                                                          ; $537f
+	ret  z                                                          ; $5380
 
-	cpl                                              ; $537e: $2f
-	or   a                                           ; $537f: $b7
-	ret  z                                           ; $5380: $c8
-
-	ld   hl, $0130                                   ; $5381: $21 $30 $01
-
+; Return if any individual gallery not bought yet
+	ld   hl, FLAG1_SAKURA_EVENT_GALLERY                             ; $5381
 	M_FarCall CheckIfNextFlagSet1
+	or   a                                                          ; $5398
+	ret  z                                                          ; $5399
 
-	or   a                                           ; $5398: $b7
-	ret  z                                           ; $5399: $c8
-
-	ld   hl, $0134                             ; $539a: $21 $34 $01
-
+	ld   hl, FLAG1_SUMIRE_EVENT_GALLERY                             ; $539a
 	M_FarCall CheckIfNextFlagSet1
+	or   a                                                          ; $53b1
+	ret  z                                                          ; $53b2
 
-	or   a                                           ; $53b1: $b7
-	ret  z                                           ; $53b2: $c8
-
-	ld   hl, $0138                                   ; $53b3: $21 $38 $01
-
+	ld   hl, FLAG1_MARIA_EVENT_GALLERY                              ; $53b3
 	M_FarCall CheckIfNextFlagSet1
+	or   a                                                          ; $53ca
+	ret  z                                                          ; $53cb
 
-	or   a                                           ; $53ca: $b7
-	ret  z                                           ; $53cb: $c8
-
-	ld   hl, $013c                                   ; $53cc: $21 $3c $01
-
+	ld   hl, FLAG1_IRIS_EVENT_GALLERY                               ; $53cc
 	M_FarCall CheckIfNextFlagSet1
+	or   a                                                          ; $53e3
+	ret  z                                                          ; $53e4
 
-	or   a                                           ; $53e3: $b7
-	ret  z                                           ; $53e4: $c8
-
-	ld   hl, $0140                                   ; $53e5: $21 $40 $01
-
+	ld   hl, FLAG1_KOHRAN_EVENT_GALLERY                             ; $53e5
 	M_FarCall CheckIfNextFlagSet1
+	or   a                                                          ; $53fc
+	ret  z                                                          ; $53fd
 
-	or   a                                           ; $53fc: $b7
-	ret  z                                           ; $53fd: $c8
-
-	ld   hl, $0144                   ; $53fe: $21 $44 $01
-
+; After last check, this returns $ff if all individual galleries bought
+	ld   hl, FLAG1_KANNA_EVENT_GALLERY                              ; $53fe
 	M_FarCall CheckIfNextFlagSet1
-	ret                                              ; $5415: $c9
+	ret                                                             ; $5415
 
 
-	ld   hl, $01e4                                   ; $5416: $21 $e4 $01
-
+CheckIfGotAllPortraitGalleries:
+; Return if misc gallery already bought
+	ld   hl, FLAG1_MISC_PORTRAIT_GALLERY                            ; $5416
 	M_FarCall CheckIfNextFlagSet1
+	cpl                                                             ; $542d
+	or   a                                                          ; $542e
+	ret  z                                                          ; $542f
 
-	cpl                                              ; $542d: $2f
-	or   a                                           ; $542e: $b7
-	ret  z                                           ; $542f: $c8
-
-	ld   hl, $0148                           ; $5430: $21 $48 $01
-
+; Return if any individual gallery not bought yet
+	ld   hl, FLAG1_SAKURA_PORTRAIT_GALLERY                          ; $5430
 	M_FarCall CheckIfNextFlagSet1
+	or   a                                                          ; $5447
+	ret  z                                                          ; $5448
 
-	or   a                                           ; $5447: $b7
-	ret  z                                           ; $5448: $c8
-
-	ld   hl, $014c                    ; $5449: $21 $4c $01
-
+	ld   hl, FLAG1_SUMIRE_PORTRAIT_GALLERY                          ; $5449
 	M_FarCall CheckIfNextFlagSet1
+	or   a                                                          ; $5460
+	ret  z                                                          ; $5461
 
-	or   a                                           ; $5460: $b7
-	ret  z                                           ; $5461: $c8
-
-	ld   hl, $0150                                   ; $5462: $21 $50 $01
-
+	ld   hl, FLAG1_MARIA_PORTRAIT_GALLERY                           ; $5462
 	M_FarCall CheckIfNextFlagSet1
+	or   a                                                          ; $5479
+	ret  z                                                          ; $547a
 
-	or   a                                           ; $5479: $b7
-	ret  z                                           ; $547a: $c8
-
-	ld   hl, $0154                                   ; $547b: $21 $54 $01
-
+	ld   hl, FLAG1_IRIS_PORTRAIT_GALLERY                            ; $547b
 	M_FarCall CheckIfNextFlagSet1
+	or   a                                                          ; $5492
+	ret  z                                                          ; $5493
 
-	or   a                                           ; $5492: $b7
-	ret  z                                           ; $5493: $c8
-
-	ld   hl, $0158                                   ; $5494: $21 $58 $01
-
+	ld   hl, FLAG1_KOHRAN_PORTRAIT_GALLERY                          ; $5494
 	M_FarCall CheckIfNextFlagSet1
+	or   a                                                          ; $54ab
+	ret  z                                                          ; $54ac
 
-	or   a                                           ; $54ab: $b7
-	ret  z                                           ; $54ac: $c8
-
-	ld   hl, $015c                                   ; $54ad: $21 $5c $01
-
+; After last check, this returns $ff if all individual galleries bought
+	ld   hl, FLAG1_KANNA_PORTRAIT_GALLERY                           ; $54ad
 	M_FarCall CheckIfNextFlagSet1
-	ret                                              ; $54c4: $c9
+	ret                                                             ; $54c4
 
 
 Call_004_54c5:
@@ -2714,7 +2705,7 @@ Call_004_54c5:
 	ld   h, a                                        ; $54ca: $67
 	ld   l, $0f                                      ; $54cb: $2e $0f
 	call AequHtimesL                                       ; $54cd: $cd $ac $0b
-	ld   bc, Data_04_502c+6                                   ; $54d0: $01 $32 $50
+	ld   bc, RomandoShopItemMetadata+6                                   ; $54d0: $01 $32 $50
 	add  hl, bc                                      ; $54d3: $09
 	ld   a, [hl+]                                    ; $54d4: $2a
 	ld   c, a                                        ; $54d5: $4f
@@ -2781,68 +2772,76 @@ jr_004_552e:
 	jp   LCDCInterruptHandler.return                                       ; $553b: $c3 $4a $04
 
 
-Func_04_553e::
+; Returns A = $ff if none buyable, else 0
+CheckIfNoItemsBuyable::
 	call Call_004_4253                               ; $553e: $cd $53 $42
 	ld   a, [$cc56]                                  ; $5541: $fa $56 $cc
 	or   a                                           ; $5544: $b7
-	jr   z, jr_004_5549                              ; $5545: $28 $02
+	jr   z, :+                              ; $5545: $28 $02
 
 	xor  a                                           ; $5547: $af
 	ret                                              ; $5548: $c9
 
-
-jr_004_5549:
-	dec  a                                           ; $5549: $3d
+:	dec  a                                           ; $5549: $3d
 	ret                                              ; $554a: $c9
 
 
-Func_04_554b::
-	xor  a                                           ; $554b: $af
-	call todo_HLequAsEntryInTable502c                               ; $554c: $cd $1f $50
+; Returns A = $ff if all bought, else 0
+CheckIfAllShopItemsBought::
+; Start from the 1st item in the table
+	xor  a                                                          ; $554b
+	call HLequAddrOfRomandoItemMetadata                             ; $554c
 
-jr_004_554f:
-	push hl                                          ; $554f: $e5
-	ld   a, [hl+]                                    ; $5550: $2a
-	or   [hl]                                        ; $5551: $b6
-	jr   z, jr_004_5579                              ; $5552: $28 $25
+.nextItem:
+; If last entry reached, return $ff
+	push hl                                                         ; $554f
+	ld   a, [hl+]                                                   ; $5550
+	or   [hl]                                                       ; $5551
+	jr   z, .returnAequFFh                                          ; $5552
 
-	inc  hl                                          ; $5554: $23
-	ld   a, [hl+]                                    ; $5555: $2a
-	ld   h, [hl]                                     ; $5556: $66
-	ld   l, a                                        ; $5557: $6f
-
+; Check if item already bought
+	inc  hl                                                         ; $5554
+	ld   a, [hl+]                                                   ; $5555
+	ld   h, [hl]                                                    ; $5556
+	ld   l, a                                                       ; $5557
 	M_FarCall CheckIfNextFlagSet1
 
-	or   a                                           ; $556c: $b7
-	jr   z, jr_004_5576                              ; $556d: $28 $07
+; If not, return 0
+	or   a                                                          ; $556c
+	jr   z, .returnAequ0                                            ; $556d
 
-	pop  hl                                          ; $556f: $e1
-	ld   bc, $000f                                   ; $5570: $01 $0f $00
-	add  hl, bc                                      ; $5573: $09
-	jr   jr_004_554f                                 ; $5574: $18 $d9
+; Go to next item
+	pop  hl                                                         ; $556f
+	ld   bc, $000f                                                  ; $5570
+	add  hl, bc                                                     ; $5573
+	jr   .nextItem                                                  ; $5574
 
-jr_004_5576:
-	pop  hl                                          ; $5576: $e1
-	xor  a                                           ; $5577: $af
-	ret                                              ; $5578: $c9
+.returnAequ0:
+	pop  hl                                                         ; $5576
+	xor  a                                                          ; $5577
+	ret                                                             ; $5578
+
+.returnAequFFh:
+	pop  hl                                                         ; $5579
+	ld   a, $ff                                                     ; $557a
+	ret                                                             ; $557c
 
 
-jr_004_5579:
-	pop  hl                                          ; $5579: $e1
-	ld   a, $ff                                      ; $557a: $3e $ff
-	ret                                              ; $557c: $c9
+; H - return state
+; L - return substate
+SetRomandoShopState::
+; Set return state
+	ld   a, h                                                       ; $557d
+	ld   [wRomandoShopReturnState], a                               ; $557e
+	ld   a, l                                                       ; $5581
+	ld   [wRomandoShopReturnSubstate], a                            ; $5582
 
-
-Func_04_557d::
-	ld   a, h                                        ; $557d: $7c
-	ld   [$cc52], a                                  ; $557e: $ea $52 $cc
-	ld   a, l                                        ; $5581: $7d
-	ld   [$cc53], a                                  ; $5582: $ea $53 $cc
-	ld   a, GS_ROMANDO_SHOP                                      ; $5585: $3e $42
-	ld   [wGameState], a                                  ; $5587: $ea $a0 $c2
-	xor  a                                           ; $558a: $af
-	ld   [wGameSubstate], a                                  ; $558b: $ea $a1 $c2
-	ret                                              ; $558e: $c9
+; Set new state
+	ld   a, GS_ROMANDO_SHOP                                         ; $5585
+	ld   [wGameState], a                                            ; $5587
+	xor  a                                                          ; $558a
+	ld   [wGameSubstate], a                                         ; $558b
+	ret                                                             ; $558e
 
 
 Call_004_558f:
@@ -3122,10 +3121,10 @@ Call_004_570c:
 	pop  af                                          ; $5748: $f1
 	call FarCall                                       ; $5749: $cd $62 $09
 	call Call_004_5aed                               ; $574c: $cd $ed $5a
-	ld   h, $04                                      ; $574f: $26 $04
+	ld   h, MIT_DORM_ROOM_OPT_DESCRIPTS                                      ; $574f: $26 $04
 	ld   l, a                                        ; $5751: $6f
 
-	M_FarCall Func_0a_5b4b
+	M_FarCall HLequAddrOfMiscInstantText
 
 	ld   d, h                                        ; $5766: $54
 	ld   e, l                                        ; $5767: $5d
@@ -4398,10 +4397,10 @@ jr_004_5f99:
 
 jr_004_5f9b:
 	add  $0b                                         ; $5f9b: $c6 $0b
-	ld   h, $04                                      ; $5f9d: $26 $04
+	ld   h, MIT_DORM_ROOM_OPT_DESCRIPTS                                      ; $5f9d: $26 $04
 	ld   l, a                                        ; $5f9f: $6f
 
-	M_FarCall Func_0a_5b4b
+	M_FarCall HLequAddrOfMiscInstantText
 
 	ld   d, h                                        ; $5fb4: $54
 	ld   e, l                                        ; $5fb5: $5d
@@ -5638,7 +5637,6 @@ CommsUnlockRomandoShopItem:
 
 ; We're done if the flag is already set
 	M_FarCall JpCheckIfFlagSet1
-
 	or   a                                                          ; $6829
 	jr   nz, .done                                                  ; $682a
 
@@ -5648,243 +5646,253 @@ CommsUnlockRomandoShopItem:
 ; Set the flag to unlock the item
 	M_FarCall JpSetOrUnsetFlag1
 
-;
-	ld   hl, $cc95                                   ; $6842: $21 $95 $cc
-	inc  [hl]                                        ; $6845: $34
-	ret                                              ; $6846: $c9
+; Add 1 to items gotten in this state
+	ld   hl, wCinematronItemsTally                                  ; $6842
+	inc  [hl]                                                       ; $6845
+	ret                                                             ; $6846
 
 .done:
-	pop  hl                                          ; $6847: $e1
-	pop  af                                          ; $6848: $f1
-	ret                                              ; $6849: $c9
+	pop  hl                                                         ; $6847
+	pop  af                                                         ; $6848
+	ret                                                             ; $6849
 
 
 ; A - non-0 if setting flag
 ; HL - flag to set
 CommsAdd1000Pts:
-	push af                                          ; $684a: $f5
-	push hl                                          ; $684b: $e5
+	push af                                                         ; $684a
+	push hl                                                         ; $684b
 
+; If flag for pts not set..
 	M_FarCall CheckIfFlagSet1
+	or   a                                                          ; $6860
+	jr   nz, .done                                                  ; $6861
 
-	or   a                                           ; $6860: $b7
-	jr   nz, .done                             ; $6861: $20 $1d
-
-	ld   hl, 1000                                   ; $6863: $21 $e8 $03
-	call todo_AddsSpecialPoints                               ; $6866: $cd $12 $6a
-	pop  hl                                          ; $6869: $e1
-	pop  af                                          ; $686a: $f1
+; Add 1k to curr and tally, then set flag
+	ld   hl, 1000                                                   ; $6863
+	call AddPtsToCurrAndTally                                       ; $6866
+	pop  hl                                                         ; $6869
+	pop  af                                                         ; $686a
 
 	M_FarCall SetOrUnsetFlag1
-	ret                                              ; $687f: $c9
+	ret                                                             ; $687f
 
 .done:
-	pop  hl                                          ; $6880: $e1
-	pop  af                                          ; $6881: $f1
-	ret                                              ; $6882: $c9
+	pop  hl                                                         ; $6880
+	pop  af                                                         ; $6881
+	ret                                                             ; $6882
 
 
 ; A - non-0 if setting flag
 ; HL - flag to set
 CommsAdd2500Pts:
-	push af                                          ; $6883: $f5
-	push hl                                          ; $6884: $e5
+	push af                                                         ; $6883
+	push hl                                                         ; $6884
 
+; If flag for pts not set..
 	M_FarCall CheckIfFlagSet1
+	or   a                                                          ; $6899
+	jr   nz, .done                                                  ; $689a
 
-	or   a                                           ; $6899: $b7
-	jr   nz, .done                             ; $689a: $20 $1d
-
-	ld   hl, 2500                                   ; $689c: $21 $c4 $09
-	call todo_AddsSpecialPoints                               ; $689f: $cd $12 $6a
-	pop  hl                                          ; $68a2: $e1
-	pop  af                                          ; $68a3: $f1
+; Add 2.5k to curr and tally, then set flag
+	ld   hl, 2500                                                   ; $689c
+	call AddPtsToCurrAndTally                                       ; $689f
+	pop  hl                                                         ; $68a2
+	pop  af                                                         ; $68a3
 
 	M_FarCall SetOrUnsetFlag1
-	ret                                              ; $68b8: $c9
+	ret                                                             ; $68b8
 
 .done:
-	pop  hl                                          ; $68b9: $e1
-	pop  af                                          ; $68ba: $f1
-	ret                                              ; $68bb: $c9
+	pop  hl                                                         ; $68b9
+	pop  af                                                         ; $68ba
+	ret                                                             ; $68bb
 
 
 ; A - non-0 if setting flag
 ; HL - flag to set
 CommsAdd5000Pts:
-	push af                                          ; $68bc: $f5
-	push hl                                          ; $68bd: $e5
+	push af                                                         ; $68bc
+	push hl                                                         ; $68bd
 
+; If flag for pts not set..
 	M_FarCall CheckIfFlagSet1
+	or   a                                                          ; $68d2
+	jr   nz, .done                                                  ; $68d3
 
-	or   a                                           ; $68d2: $b7
-	jr   nz, .done                             ; $68d3: $20 $1d
-
-	ld   hl, 5000                                  ; $68d5: $21 $88 $13
-	call todo_AddsSpecialPoints                               ; $68d8: $cd $12 $6a
-	pop  hl                                          ; $68db: $e1
-	pop  af                                          ; $68dc: $f1
+; Add 5k to curr and tally, then set flag
+	ld   hl, 5000                                                   ; $68d5
+	call AddPtsToCurrAndTally                                       ; $68d8
+	pop  hl                                                         ; $68db
+	pop  af                                                         ; $68dc
 
 	M_FarCall SetOrUnsetFlag1
-	ret                                              ; $68f1: $c9
+	ret                                                             ; $68f1
 
 .done:
-	pop  hl                                          ; $68f2: $e1
-	pop  af                                          ; $68f3: $f1
-	ret                                              ; $68f4: $c9
+	pop  hl                                                         ; $68f2
+	pop  af                                                         ; $68f3
+	ret                                                             ; $68f4
 
 
 ; A - non-0 if setting flag
 ; HL - flag to set
 CommsAdd7500Pts:
-	push af                                          ; $68f5: $f5
-	push hl                                          ; $68f6: $e5
+	push af                                                         ; $68f5
+	push hl                                                         ; $68f6
 
+; If flag for pts not set..
 	M_FarCall CheckIfFlagSet1
+	or   a                                                          ; $690b
+	jr   nz, .done                                                  ; $690c
 
-	or   a                                           ; $690b: $b7
-	jr   nz, .done                             ; $690c: $20 $1d
-
-	ld   hl, 7500                                   ; $690e: $21 $4c $1d
-	call todo_AddsSpecialPoints                               ; $6911: $cd $12 $6a
-	pop  hl                                          ; $6914: $e1
-	pop  af                                          ; $6915: $f1
+; Add 7.5k to curr and tally, then set flag
+	ld   hl, 7500                                                   ; $690e
+	call AddPtsToCurrAndTally                                       ; $6911
+	pop  hl                                                         ; $6914
+	pop  af                                                         ; $6915
 
 	M_FarCall SetOrUnsetFlag1
-	ret                                              ; $692a: $c9
+	ret                                                             ; $692a
 
 .done:
-	pop  hl                                          ; $692b: $e1
-	pop  af                                          ; $692c: $f1
-	ret                                              ; $692d: $c9
+	pop  hl                                                         ; $692b
+	pop  af                                                         ; $692c
+	ret                                                             ; $692d
 
 
 ; A - non-0 if setting flag
 ; HL - flag to set
 CommsAdd10kPts:
-	push af                                          ; $692e: $f5
-	push hl                                          ; $692f: $e5
+	push af                                                         ; $692e
+	push hl                                                         ; $692f
 
+; If flag for pts not set..
 	M_FarCall CheckIfFlagSet1
+	or   a                                                          ; $6944
+	jr   nz, .done                                                  ; $6945
 
-	or   a                                           ; $6944: $b7
-	jr   nz, .done                             ; $6945: $20 $1d
-
-	ld   hl, 10000                                   ; $6947: $21 $10 $27
-	call todo_AddsSpecialPoints                               ; $694a: $cd $12 $6a
-	pop  hl                                          ; $694d: $e1
-	pop  af                                          ; $694e: $f1
+; Add 10k to curr and tally, then set flag
+	ld   hl, 10000                                                  ; $6947
+	call AddPtsToCurrAndTally                                       ; $694a
+	pop  hl                                                         ; $694d
+	pop  af                                                         ; $694e
 
 	M_FarCall SetOrUnsetFlag1
-	ret                                              ; $6963: $c9
+	ret                                                             ; $6963
 
 .done:
-	pop  hl                                          ; $6964: $e1
-	pop  af                                          ; $6965: $f1
-	ret                                              ; $6966: $c9
+	pop  hl                                                         ; $6964
+	pop  af                                                         ; $6965
+	ret                                                             ; $6966
 
 
 ; A - non-0 if setting flag
 ; HL - flag to set
 CommsAdd25kPts:
-	push af                                          ; $6967: $f5
-	push hl                                          ; $6968: $e5
+	push af                                                         ; $6967
+	push hl                                                         ; $6968
 
+; If flag for pts not set..
 	M_FarCall CheckIfFlagSet1
+	or   a                                                          ; $697d
+	jr   nz, .done                                                  ; $697e
 
-	or   a                                           ; $697d: $b7
-	jr   nz, .done                             ; $697e: $20 $1d
-
-	ld   hl, 25000                                   ; $6980: $21 $a8 $61
-	call todo_AddsSpecialPoints                               ; $6983: $cd $12 $6a
-	pop  hl                                          ; $6986: $e1
-	pop  af                                          ; $6987: $f1
+; Add 25k to curr and tally, then set flag
+	ld   hl, 25000                                                  ; $6980
+	call AddPtsToCurrAndTally                                       ; $6983
+	pop  hl                                                         ; $6986
+	pop  af                                                         ; $6987
 
 	M_FarCall SetOrUnsetFlag1
-	ret                                              ; $699c: $c9
+	ret                                                             ; $699c
 
 .done:
-	pop  hl                                          ; $699d: $e1
-	pop  af                                          ; $699e: $f1
-	ret                                              ; $699f: $c9
+	pop  hl                                                         ; $699d
+	pop  af                                                         ; $699e
+	ret                                                             ; $699f
 
 
 ; A - non-0 if setting flag
 ; HL - flag to set
 CommsAdd50kPts:
-	push af                                          ; $69a0: $f5
-	push hl                                          ; $69a1: $e5
+	push af                                                         ; $69a0
+	push hl                                                         ; $69a1
 
+; If flag for pts not set..
 	M_FarCall CheckIfFlagSet1
+	or   a                                                          ; $69b6
+	jr   nz, .done                                                  ; $69b7
 
-	or   a                                           ; $69b6: $b7
-	jr   nz, .done                             ; $69b7: $20 $1d
-
-	ld   hl, 50000                                   ; $69b9: $21 $50 $c3
-	call todo_AddsSpecialPoints                               ; $69bc: $cd $12 $6a
-	pop  hl                                          ; $69bf: $e1
-	pop  af                                          ; $69c0: $f1
+; Add 50k to curr and tally, then set flag
+	ld   hl, 50000                                                  ; $69b9
+	call AddPtsToCurrAndTally                                       ; $69bc
+	pop  hl                                                         ; $69bf
+	pop  af                                                         ; $69c0
 
 	M_FarCall SetOrUnsetFlag1
-	ret                                              ; $69d5: $c9
+	ret                                                             ; $69d5
 
 .done:
-	pop  hl                                          ; $69d6: $e1
-	pop  af                                          ; $69d7: $f1
-	ret                                              ; $69d8: $c9
+	pop  hl                                                         ; $69d6
+	pop  af                                                         ; $69d7
+	ret                                                             ; $69d8
 
 
 ; A - non-0 if setting flag
 ; HL - flag to set
 CommsAdd65535Pts:
-	push af                                          ; $69d9: $f5
-	push hl                                          ; $69da: $e5
+	push af                                                         ; $69d9
+	push hl                                                         ; $69da
 
+; If flag for pts not set..
 	M_FarCall CheckIfFlagSet1
+	or   a                                                          ; $69ef
+	jr   nz, .done                                                  ; $69f0
 
-	or   a                                           ; $69ef: $b7
-	jr   nz, .done                             ; $69f0: $20 $1d
-
-	ld   hl, $ffff                                   ; $69f2: $21 $ff $ff
-	call todo_AddsSpecialPoints                               ; $69f5: $cd $12 $6a
-	pop  hl                                          ; $69f8: $e1
-	pop  af                                          ; $69f9: $f1
+; Add max to curr and tally, then set flag
+	ld   hl, $ffff                                                  ; $69f2
+	call AddPtsToCurrAndTally                                       ; $69f5
+	pop  hl                                                         ; $69f8
+	pop  af                                                         ; $69f9
 
 	M_FarCall SetOrUnsetFlag1
-	ret                                              ; $6a0e: $c9
+	ret                                                             ; $6a0e
 
 .done:
-	pop  hl                                          ; $6a0f: $e1
-	pop  af                                          ; $6a10: $f1
-	ret                                              ; $6a11: $c9
+	pop  hl                                                         ; $6a0f
+	pop  af                                                         ; $6a10
+	ret                                                             ; $6a11
 
 
 ; HL - number of points to add
-todo_AddsSpecialPoints:
-	push hl                                          ; $6a12: $e5
-	push hl                                          ; $6a13: $e5
+AddPtsToCurrAndTally:
+	push hl                                                         ; $6a12
+	push hl                                                         ; $6a13
 
+; Add points to current points
 	M_FarCall GetCurrPoints
 
-	pop  bc                                          ; $6a28: $c1
-	add  hl, bc                                      ; $6a29: $09
-	jr   nc, :+                             ; $6a2a: $30 $03
-	ld   hl, $ffff                                   ; $6a2c: $21 $ff $ff
+	pop  bc                                                         ; $6a28
+	add  hl, bc                                                     ; $6a29
+	jr   nc, :+                                                     ; $6a2a
+	ld   hl, $ffff                                                  ; $6a2c
 :	M_FarCall SetPoints
 
-	pop  hl                                          ; $6a43: $e1
-	ld   a, [$cc96]                                  ; $6a44: $fa $96 $cc
-	ld   c, a                                        ; $6a47: $4f
-	ld   a, [$cc97]                                  ; $6a48: $fa $97 $cc
-	ld   b, a                                        ; $6a4b: $47
-	add  hl, bc                                      ; $6a4c: $09
-	jr   nc, :+                             ; $6a4d: $30 $03
-	ld   hl, $ffff                                   ; $6a4f: $21 $ff $ff
-:	ld   a, l                                        ; $6a52: $7d
-	ld   [$cc96], a                                  ; $6a53: $ea $96 $cc
-	ld   a, h                                        ; $6a56: $7c
-	ld   [$cc97], a                                  ; $6a57: $ea $97 $cc
-	ret                                              ; $6a5a: $c9
+; Also add it to a generic tally
+	pop  hl                                                         ; $6a43
+	ld   a, [wCinematronPointsTally]                                ; $6a44
+	ld   c, a                                                       ; $6a47
+	ld   a, [wCinematronPointsTally+1]                              ; $6a48
+	ld   b, a                                                       ; $6a4b
+	add  hl, bc                                                     ; $6a4c
+	jr   nc, :+                                                     ; $6a4d
+	ld   hl, $ffff                                                  ; $6a4f
+:	ld   a, l                                                       ; $6a52
+	ld   [wCinematronPointsTally], a                                ; $6a53
+	ld   a, h                                                       ; $6a56
+	ld   [wCinematronPointsTally+1], a                              ; $6a57
+	ret                                                             ; $6a5a
 
 
 ; gameboy comms-related
@@ -6001,7 +6009,7 @@ Call_004_6abe:
 	push bc                                          ; $6abe: $c5
 	push de                                          ; $6abf: $d5
 	push hl                                          ; $6ac0: $e5
-	call Call_004_6aeb                               ; $6ac1: $cd $eb $6a
+	call todo_ReturnsACommsRewardEntryInHL                               ; $6ac1: $cd $eb $6a
 	add  hl, hl                                      ; $6ac4: $29
 	add  hl, hl                                      ; $6ac5: $29
 	ld   bc, $673b                                   ; $6ac6: $01 $3b $67
@@ -6023,7 +6031,7 @@ jr_004_6ae7:
 	ret                                              ; $6aea: $c9
 
 
-Call_004_6aeb:
+todo_ReturnsACommsRewardEntryInHL:
 	push bc                                          ; $6aeb: $c5
 	sla  a                                           ; $6aec: $cb $27
 	ld   b, $00                                      ; $6aee: $06 $00
@@ -6037,35 +6045,35 @@ Call_004_6aeb:
 	ret                                              ; $6af9: $c9
 
 .table:
-	dw $0014
-	dw $0015
-	dw $000e
-	dw $000f
-	dw $0010
-	dw $0011
-	dw $0012
-	dw $0013
-	dw $0008
-	dw $0009
-	dw $000a
-	dw $000b
-	dw $000c
-	dw $000d
-	dw $0002
-	dw $0003
-	dw $0004
-	dw $0005
-	dw $0006
-	dw $0001
-	dw $0007
+	dw CR_ORIHIME_PHOTO
+	dw CR_RENI_PHOTO
+	dw CR_SAKURA_EX_MODE
+	dw CR_SUMIRE_EX_MODE
+	dw CR_MARIA_EX_MODE
+	dw CR_IRIS_EX_MODE
+	dw CR_KOHRAN_EX_MODE
+	dw CR_KANNA_EX_MODE
+	dw CR_SAKURA_PORTRAIT_GALLERY
+	dw CR_SUMIRE_PORTRAIT_GALLERY
+	dw CR_MARIA_PORTRAIT_GALLERY
+	dw CR_IRIS_PORTRAIT_GALLERY
+	dw CR_KOHRAN_PORTRAIT_GALLERY
+	dw CR_KANNA_PORTRAIT_GALLERY
+	dw CR_RING_OF_REV
+	dw CR_MYSTERY_CHARM
+	dw CR_GUTS_HEADBAND
+	dw CR_LIGHT_SHOES
+	dw CR_CLEAR_LENS
+	dw CR_PETAL_CURSOR
+	dw CR_CANDY_CURSOR
 	dw $ffff
 
 
 ; gameboy comms-related
 	xor  a                                           ; $6b26: $af
-	ld   [$cc95], a                                  ; $6b27: $ea $95 $cc
-	ld   [$cc96], a                                  ; $6b2a: $ea $96 $cc
-	ld   [$cc97], a                                  ; $6b2d: $ea $97 $cc
+	ld   [wCinematronItemsTally], a                                  ; $6b27: $ea $95 $cc
+	ld   [wCinematronPointsTally], a                                  ; $6b2a: $ea $96 $cc
+	ld   [wCinematronPointsTally+1], a                                  ; $6b2d: $ea $97 $cc
 	ld   de, wCommsRewardsStruct                                   ; $6b30: $11 $01 $d1
 	ld   b, $00                                      ; $6b33: $06 $00
 	ld   c, [hl]                                     ; $6b35: $4e
@@ -6085,7 +6093,7 @@ jr_004_6b37:
 
 	push hl                                          ; $6b46: $e5
 	ld   a, b                                        ; $6b47: $78
-	call Call_004_6aeb                               ; $6b48: $cd $eb $6a
+	call todo_ReturnsACommsRewardEntryInHL                               ; $6b48: $cd $eb $6a
 	call AddToCommsRewardsStruct                               ; $6b4b: $cd $74 $6b
 	pop  hl                                          ; $6b4e: $e1
 
@@ -6107,7 +6115,7 @@ jr_004_6b5d:
 	ld   h, [hl]                                     ; $6b5e: $66
 	ld   l, a                                        ; $6b5f: $6f
 	push de                                          ; $6b60: $d5
-	call todo_AddsSpecialPoints                               ; $6b61: $cd $12 $6a
+	call AddPtsToCurrAndTally                               ; $6b61: $cd $12 $6a
 	pop  de                                          ; $6b64: $d1
 	ld   hl, $0000                                   ; $6b65: $21 $00 $00
 	call AddToCommsRewardsStruct                               ; $6b68: $cd $74 $6b
@@ -6145,11 +6153,11 @@ AddToCommsRewardsStruct:
 	ret                                                             ; $6b8f
 
 
-; pocket sakura comms-related
+GivePocketSakuraRewards::
 	xor  a                                           ; $6b90: $af
-	ld   [$cc95], a                                  ; $6b91: $ea $95 $cc
-	ld   [$cc96], a                                  ; $6b94: $ea $96 $cc
-	ld   [$cc97], a                                  ; $6b97: $ea $97 $cc
+	ld   [wCinematronItemsTally], a                                  ; $6b91: $ea $95 $cc
+	ld   [wCinematronPointsTally], a                                  ; $6b94: $ea $96 $cc
+	ld   [wCinematronPointsTally+1], a                                  ; $6b97: $ea $97 $cc
 	push hl                                          ; $6b9a: $e5
 	ld   d, h                                        ; $6b9b: $54
 	ld   e, l                                        ; $6b9c: $5d
@@ -6173,7 +6181,7 @@ AddToCommsRewardsStruct:
 	ld   b, $00                                      ; $6bb7: $06 $00
 	ld   c, a                                        ; $6bb9: $4f
 	add  hl, bc                                      ; $6bba: $09
-	call todo_AddsSpecialPoints                               ; $6bbb: $cd $12 $6a
+	call AddPtsToCurrAndTally                               ; $6bbb: $cd $12 $6a
 	pop  hl                                          ; $6bbe: $e1
 	ld   de, wCommsRewardsStruct                                   ; $6bbf: $11 $01 $d1
 	push hl                                          ; $6bc2: $e5
@@ -6202,25 +6210,25 @@ jr_004_6bec:
 	ld   l, [hl]                                     ; $6bf1: $6e
 	ld   h, a                                        ; $6bf2: $67
 	ld   bc, $2000                                   ; $6bf3: $01 $00 $20
-	call Func_04_7206                                       ; $6bf6: $cd $06 $72
+	call CP_HL_BC                                       ; $6bf6: $cd $06 $72
 	push hl                                          ; $6bf9: $e5
 	ld   hl, $0002                                   ; $6bfa: $21 $02 $00
 	call nc, AddToCommsRewardsStruct                           ; $6bfd: $d4 $74 $6b
 	pop  hl                                          ; $6c00: $e1
 	ld   bc, $4000                                   ; $6c01: $01 $00 $40
-	call Func_04_7206                                       ; $6c04: $cd $06 $72
+	call CP_HL_BC                                       ; $6c04: $cd $06 $72
 	push hl                                          ; $6c07: $e5
 	ld   hl, $0003                                   ; $6c08: $21 $03 $00
 	call nc, AddToCommsRewardsStruct                           ; $6c0b: $d4 $74 $6b
 	pop  hl                                          ; $6c0e: $e1
 	ld   bc, $6000                                   ; $6c0f: $01 $00 $60
-	call Func_04_7206                                       ; $6c12: $cd $06 $72
+	call CP_HL_BC                                       ; $6c12: $cd $06 $72
 	push hl                                          ; $6c15: $e5
 	ld   hl, $0004                                   ; $6c16: $21 $04 $00
 	call nc, AddToCommsRewardsStruct                           ; $6c19: $d4 $74 $6b
 	pop  hl                                          ; $6c1c: $e1
 	ld   bc, $8000                                   ; $6c1d: $01 $00 $80
-	call Func_04_7206                                       ; $6c20: $cd $06 $72
+	call CP_HL_BC                                       ; $6c20: $cd $06 $72
 	push hl                                          ; $6c23: $e5
 	ld   hl, $0005                                   ; $6c24: $21 $05 $00
 	call nc, AddToCommsRewardsStruct                           ; $6c27: $d4 $74 $6b
@@ -6234,15 +6242,15 @@ jr_004_6c2b:
 	jp   ProcessCommsRewards                               ; $6c37: $c3 $f8 $66
 
 
-; HL - start address of barcode-based reward data
+; HL - start address of IR struct reward data
 ; eg if byte 0 == 0/1, word after is the 1 reward to give
 ;    if byte 0 == 2/4, byte 1 = table entry
 GiveIRBasedRewards::
-;
-	xor  a                                           ; $6c3a: $af
-	ld   [$cc95], a                                  ; $6c3b: $ea $95 $cc
-	ld   [$cc96], a                                  ; $6c3e: $ea $96 $cc
-	ld   [$cc97], a                                  ; $6c41: $ea $97 $cc
+; Clear tallies first
+	xor  a                                                          ; $6c3a
+	ld   [wCinematronItemsTally], a                                 ; $6c3b
+	ld   [wCinematronPointsTally], a                                ; $6c3e
+	ld   [wCinematronPointsTally+1], a                              ; $6c41
 
 ; Return if idx is past number of table items
 	ld   a, [hl+]                                                   ; $6c44
@@ -6267,17 +6275,17 @@ GiveIRBasedRewards::
 	jp   hl                                                         ; $6c56
 
 .rewardTypes:
-	dw TVAdapterReward0_Give1Reward
-	dw TVAdapterReward1_Give1Reward
-	dw TVAdapterReward2_PortraitGalleryOrCheapExModes
-	dw TVAdapterReward3_None
-	dw TVAdapterReward4_CheapPortraitGalleriesCheapExModesAndPhotos
-	dw TVAdapterReward5_None
+	dw IRReward0_Give1Reward
+	dw IRReward1_Give1Reward
+	dw IRReward2_PortraitGalleryOrCheapExModes
+	dw IRReward3_None
+	dw IRReward4_CheapPortraitGalleriesCheapExModesAndPhotos
+	dw IRReward5_None
 
 	
 ; DE - 2 bytes in [de] gives the single comms reward
-TVAdapterReward0_Give1Reward:
-TVAdapterReward1_Give1Reward:
+IRReward0_Give1Reward:
+IRReward1_Give1Reward:
 ; HL = word in src
 	ld   a, [de]                                                    ; $6c63
 	inc  de                                                         ; $6c64
@@ -6296,7 +6304,7 @@ TVAdapterReward1_Give1Reward:
 
 
 ; DE - 1 byte in [de] gives one, or a set of comms rewards, from the table below
-TVAdapterReward2_PortraitGalleryOrCheapExModes:
+IRReward2_PortraitGalleryOrCheapExModes:
 ; Return if the reward 2 table idx > num table items
 	ld   a, [de]                                                    ; $6c77
 	cp   $10                                                        ; $6c78
@@ -6454,7 +6462,7 @@ TVAdapterReward2_PortraitGalleryOrCheapExModes:
 	ret                                                             ; $6db4
 
 
-TVAdapterReward3_None:
+IRReward3_None:
 ; Simply add terminator and process rewards
 	ld   de, wCommsRewardsStruct                                    ; $6db5
 	ld   hl, $ffff                                                  ; $6db8
@@ -6463,7 +6471,7 @@ TVAdapterReward3_None:
 
 
 ; DE - 1 byte in [de] gives one, or a set of comms rewards, from the table below
-TVAdapterReward4_CheapPortraitGalleriesCheapExModesAndPhotos:
+IRReward4_CheapPortraitGalleriesCheapExModesAndPhotos:
 ; Return if the reward 4 table idx > num table items
 	ld   a, [de]                                                    ; $6dc1
 	cp   $10                                                        ; $6dc2
@@ -6673,7 +6681,7 @@ TVAdapterReward4_CheapPortraitGalleriesCheapExModesAndPhotos:
 	ret                                                             ; $6fae
 
 
-TVAdapterReward5_None:
+IRReward5_None:
 ; Simply add terminator and process rewards
 	ld   de, wCommsRewardsStruct                                    ; $6faf
 	ld   hl, $ffff                                                  ; $6fb2
@@ -6681,214 +6689,216 @@ TVAdapterReward5_None:
 	jp   ProcessCommsRewards                                        ; $6fb8
 
 
+; A - ending idx (1-6, and 9)
 GivePostGameRewards::
-	push af                                          ; $6fbb: $f5
-	ld   hl, $0002                                   ; $6fbc: $21 $02 $00
+	push af                                                         ; $6fbb
 
+; If game beaten for the 1st time..
+	ld   hl, FLAG1_GAME_BEATEN                                      ; $6fbc
 	M_FarCall CheckIfFlagSet1
+	or   a                                                          ; $6fd3
+	jr   nz, .afterGameBeatenCheck                                  ; $6fd4
 
-	or   a                                           ; $6fd3: $b7
-	jr   nz, jr_004_6ff5                             ; $6fd4: $20 $1f
+; Give 2k points and set flag
+	ld   hl, 2000                                                   ; $6fd6
+	call AddPtsToCurrAndTally                                       ; $6fd9
 
-	ld   hl, $07d0                                   ; $6fd6: $21 $d0 $07
-	call todo_AddsSpecialPoints                               ; $6fd9: $cd $12 $6a
-	ld   hl, $0002                                   ; $6fdc: $21 $02 $00
-	ld   a, $ff                                      ; $6fdf: $3e $ff
+	ld   hl, FLAG1_GAME_BEATEN                                      ; $6fdc
+	ld   a, $ff                                                     ; $6fdf
+	M_FarCall SetOrUnsetFlag1
+
+.afterGameBeatenCheck:
+; Return if invalid ending idx
+	pop  af                                                         ; $6ff5
+	dec  a                                                          ; $6ff6
+	cp   $09                                                        ; $6ff7
+	ret  nc                                                         ; $6ff9
+
+; HL points to a relevant table entry based on char ending
+	sla  a                                                          ; $6ffa
+	ld   h, $00                                                     ; $6ffc
+	ld   l, a                                                       ; $6ffe
+	ld   bc, CharacterEndingFlags                                   ; $6fff
+	add  hl, bc                                                     ; $7002
+
+; HL = flag for character, set it
+	ld   a, [hl+]                                                   ; $7003
+	ld   h, [hl]                                                    ; $7004
+	ld   l, a                                                       ; $7005
+	ld   a, $ff                                                     ; $7006
 
 	M_FarCall SetOrUnsetFlag1
 
-jr_004_6ff5:
-	pop  af                                          ; $6ff5: $f1
-	dec  a                                           ; $6ff6: $3d
-	cp   $09                                         ; $6ff7: $fe $09
-	ret  nc                                          ; $6ff9: $d0
+; Jump if we've already rewarded all ex modes from this flag
+	ld   hl, FLAG1_ALL_ENDINGS                                      ; $701c
+	M_FarCall CheckIfFlagSet1
+	or   a                                                          ; $7033
+	jp   nz, .afterAllEndingsCheck2                                 ; $7034
 
-	sla  a                                           ; $6ffa: $cb $27
-	ld   h, $00                                      ; $6ffc: $26 $00
-	ld   l, a                                        ; $6ffe: $6f
-	ld   bc, $71da                                   ; $6fff: $01 $da $71
-	add  hl, bc                                      ; $7002: $09
-	ld   a, [hl+]                                    ; $7003: $2a
-	ld   h, [hl]                                     ; $7004: $66
-	ld   l, a                                        ; $7005: $6f
-	ld   a, $ff                                      ; $7006: $3e $ff
+; Loop through character ending flags
+	ld   hl, CharacterEndingFlags                                   ; $7037
 
+.nextEndingFlag:
+; BC = the global flag
+	ld   a, [hl+]                                                   ; $703a
+	ld   c, a                                                       ; $703b
+	ld   a, [hl+]                                                   ; $703c
+	ld   b, a                                                       ; $703d
+
+; Jump if we've reached the end ($ffff)
+	push hl                                                         ; $703e
+	bit  7, b                                                       ; $703f
+	jr   nz, .unlockAllExModes                                      ; $7041
+
+; Jump if the flag hasn't been set
+	ld   h, b                                                       ; $7043
+	ld   l, c                                                       ; $7044
+	M_FarCall CheckIfFlagSet1
+	or   a                                                          ; $7059
+	jp   z, .afterAllEndingsCheck1                                  ; $705a
+
+; Else keep going
+	pop  hl                                                         ; $705d
+	jr   .nextEndingFlag                                            ; $705e
+
+.unlockAllExModes:
+	ld   hl, 3000                                                   ; $7060
+	call AddPtsToCurrAndTally                                       ; $7063
+
+	ld   hl, FLAG1_SAKURA_EX_MODE                                   ; $7066
+	ld   a, $ff                                                     ; $7069
+	M_FarCall JpSetOrUnsetFlag1
+
+	ld   hl, FLAG1_SUMIRE_EX_MODE                                   ; $707f
+	ld   a, $ff                                                     ; $7082
+	M_FarCall JpSetOrUnsetFlag1
+
+	ld   hl, FLAG1_MARIA_EX_MODE                                    ; $7098
+	ld   a, $ff                                                     ; $709b
+	M_FarCall JpSetOrUnsetFlag1
+
+	ld   hl, FLAG1_IRIS_EX_MODE                                     ; $70b1
+	ld   a, $ff                                                     ; $70b4
+	M_FarCall JpSetOrUnsetFlag1
+
+	ld   hl, FLAG1_KOHRAN_EX_MODE                                   ; $70ca
+	ld   a, $ff                                                     ; $70cd
+	M_FarCall JpSetOrUnsetFlag1
+
+	ld   hl, FLAG1_KANNA_EX_MODE                                    ; $70e3
+	ld   a, $ff                                                     ; $70e6
+	M_FarCall JpSetOrUnsetFlag1
+
+	ld   hl, FLAG1_ALL_ENDINGS                                      ; $70fc
+	ld   a, $ff                                                     ; $70ff
 	M_FarCall SetOrUnsetFlag1
 
-	ld   hl, $0004                                   ; $701c: $21 $04 $00
+.afterAllEndingsCheck1:
+	pop  hl                                                         ; $7115
 
-	M_FarCall CheckIfFlagSet1
+.afterAllEndingsCheck2:
+; Loop through the 6 table entries
+	ld   hl, CharacterPhotoLocalAndGlobalFlags                      ; $7116
+	ld   a, $06                                                     ; $7119
 
-	or   a                                           ; $7033: $b7
-	jp   nz, Jump_004_7116                           ; $7034: $c2 $16 $71
+.nextPhotoEntry:
+	push af                                                         ; $711b
 
-	ld   hl, $71da                                   ; $7037: $21 $da $71
+; BC = local flag for photo
+	ld   a, [hl+]                                                   ; $711c
+	ld   c, a                                                       ; $711d
+	ld   a, [hl+]                                                   ; $711e
+	ld   b, a                                                       ; $711f
 
-jr_004_703a:
-	ld   a, [hl+]                                    ; $703a: $2a
-	ld   c, a                                        ; $703b: $4f
-	ld   a, [hl+]                                    ; $703c: $2a
-	ld   b, a                                        ; $703d: $47
-	push hl                                          ; $703e: $e5
-	bit  7, b                                        ; $703f: $cb $78
-	jr   nz, jr_004_7060                             ; $7041: $20 $1d
+; DE = global flag for the photo
+	ld   a, [hl+]                                                   ; $7120
+	ld   e, a                                                       ; $7121
+	ld   a, [hl+]                                                   ; $7122
+	ld   d, a                                                       ; $7123
 
-	ld   h, b                                        ; $7043: $60
-	ld   l, c                                        ; $7044: $69
-
-	M_FarCall CheckIfFlagSet1
-
-	or   a                                           ; $7059: $b7
-	jp   z, Jump_004_7115                            ; $705a: $ca $15 $71
-
-	pop  hl                                          ; $705d: $e1
-	jr   jr_004_703a                                 ; $705e: $18 $da
-
-jr_004_7060:
-	ld   hl, $0bb8                                   ; $7060: $21 $b8 $0b
-	call todo_AddsSpecialPoints                               ; $7063: $cd $12 $6a
-	ld   hl, $0118                                   ; $7066: $21 $18 $01
-	ld   a, $ff                                      ; $7069: $3e $ff
-
-	M_FarCall JpSetOrUnsetFlag1
-
-	ld   hl, $011c                                   ; $707f: $21 $1c $01
-	ld   a, $ff                                      ; $7082: $3e $ff
-
-	M_FarCall JpSetOrUnsetFlag1
-
-	ld   hl, $0120                                   ; $7098: $21 $20 $01
-	ld   a, $ff                                      ; $709b: $3e $ff
-
-	M_FarCall JpSetOrUnsetFlag1
-
-	ld   hl, $0124                                   ; $70b1: $21 $24 $01
-	ld   a, $ff                                      ; $70b4: $3e $ff
-
-	M_FarCall JpSetOrUnsetFlag1
-
-	ld   hl, $0128                                   ; $70ca: $21 $28 $01
-	ld   a, $ff                                      ; $70cd: $3e $ff
-
-	M_FarCall JpSetOrUnsetFlag1
-
-	ld   hl, $012c                                   ; $70e3: $21 $2c $01
-	ld   a, $ff                                      ; $70e6: $3e $ff
-
-	M_FarCall JpSetOrUnsetFlag1
-
-	ld   hl, $0004                                   ; $70fc: $21 $04 $00
-	ld   a, $ff                                      ; $70ff: $3e $ff
-
-	M_FarCall SetOrUnsetFlag1
-
-Jump_004_7115:
-	pop  hl                                          ; $7115: $e1
-
-Jump_004_7116:
-	ld   hl, Table_04_71ee                                   ; $7116: $21 $ee $71
-	ld   a, $06                                      ; $7119: $3e $06
-
-jr_004_711b:
-	push af                                          ; $711b: $f5
-	ld   a, [hl+]                                    ; $711c: $2a
-	ld   c, a                                        ; $711d: $4f
-	ld   a, [hl+]                                    ; $711e: $2a
-	ld   b, a                                        ; $711f: $47
-	ld   a, [hl+]                                    ; $7120: $2a
-	ld   e, a                                        ; $7121: $5f
-	ld   a, [hl+]                                    ; $7122: $2a
-	ld   d, a                                        ; $7123: $57
-	push hl                                          ; $7124: $e5
-	ld   h, b                                        ; $7125: $60
-	ld   l, c                                        ; $7126: $69
-
+; Jump if local flag not set
+	push hl                                                         ; $7124
+	ld   h, b                                                       ; $7125
+	ld   l, c                                                       ; $7126
 	M_FarCall CheckIfFlagSet2
+	or   a                                                          ; $713b
+	jr   z, .toNextPhotoEntry                                       ; $713c
 
-	or   a                                           ; $713b: $b7
-	jr   z, jr_004_716e                              ; $713c: $28 $30
-
-	ld   h, d                                        ; $713e: $62
-	ld   l, e                                        ; $713f: $6b
-	push hl                                          ; $7140: $e5
-	ld   a, $ff                                      ; $7141: $3e $ff
-
+; Else set the relevant global flag
+	ld   h, d                                                       ; $713e
+	ld   l, e                                                       ; $713f
+	push hl                                                         ; $7140
+	ld   a, $ff                                                     ; $7141
 	M_FarCall JpSetOrUnsetFlag1
 
-	pop  hl                                          ; $7157: $e1
-	ld   a, $ff                                      ; $7158: $3e $ff
-
+; And set that it's already been bought
+	pop  hl                                                         ; $7157
+	ld   a, $ff                                                     ; $7158
 	M_FarCall SetOrUnsetNextFlag1
 
-jr_004_716e:
-	pop  hl                                          ; $716e: $e1
-	pop  af                                          ; $716f: $f1
-	dec  a                                           ; $7170: $3d
-	jr   nz, jr_004_711b                             ; $7171: $20 $a8
+.toNextPhotoEntry:
+	pop  hl                                                         ; $716e
+	pop  af                                                         ; $716f
+	dec  a                                                          ; $7170
+	jr   nz, .nextPhotoEntry                                        ; $7171
 
-	ld   hl, FLAG2_00d7                                   ; $7173: $21 $d7 $00
-
+; If push ups done..
+	ld   hl, FLAG2_PUSH_UPS_TRAINING                                ; $7173
 	M_FarCall CheckIfFlagSet2
+	or   a                                                          ; $718a
+	jr   z, .afterPushups                                           ; $718b
 
-	or   a                                           ; $718a: $b7
-	jr   z, jr_004_71a6                              ; $718b: $28 $19
-
-	ld   hl, $0200                                   ; $718d: $21 $00 $02
-	ld   a, $ff                                      ; $7190: $3e $ff
-
+; Set its global flag to unlock in shop
+	ld   hl, FLAG1_PUSH_UPS                                         ; $718d
+	ld   a, $ff                                                     ; $7190
 	M_FarCall SetOrUnsetFlag1
 
-jr_004_71a6:
-	ld   hl, FLAG2_00d8                                   ; $71a6: $21 $d8 $00
-
+.afterPushups:
+; If red light green light done..
+	ld   hl, FLAG2_RED_LIGHT_GREEN_LIGHT_TRAINING                   ; $71a6
 	M_FarCall CheckIfFlagSet2
+	or   a                                                          ; $71bd
+	jr   z, .done                                                   ; $71be
 
-	or   a                                           ; $71bd: $b7
-	jr   z, jr_004_71d9                              ; $71be: $28 $19
-
-	ld   hl, $01fc                                   ; $71c0: $21 $fc $01
-	ld   a, $ff                                      ; $71c3: $3e $ff
-
+; Set its global flag to unlock in shop
+	ld   hl, FLAG1_RED_LIGHT_GREEN_LIGHT                            ; $71c0
+	ld   a, $ff                                                     ; $71c3
 	M_FarCall SetOrUnsetFlag1
 
-jr_004_71d9:
-	ret                                              ; $71d9: $c9
+.done:
+	ret                                                             ; $71d9
 
 
-	ld   b, $00                                      ; $71da: $06 $00
-	ld   [$0a00], sp                                 ; $71dc: $08 $00 $0a
-	nop                                              ; $71df: $00
-	inc  c                                           ; $71e0: $0c
-	nop                                              ; $71e1: $00
-	ld   c, $00                                      ; $71e2: $0e $00
-	stop                                             ; $71e4: $10 $00
-	ld   [bc], a                                     ; $71e6: $02
-	nop                                              ; $71e7: $00
-	ld   [bc], a                                     ; $71e8: $02
-	nop                                              ; $71e9: $00
-	ld   [de], a                                     ; $71ea: $12
-	nop                                              ; $71eb: $00
-	rst  $38                                         ; $71ec: $ff
-	rst  $38                                         ; $71ed: $ff
+CharacterEndingFlags:
+	dw FLAG1_SAKURA_ENDING
+	dw FLAG1_SUMIRE_ENDING
+	dw FLAG1_MARIA_ENDING
+	dw FLAG1_IRIS_ENDING
+	dw FLAG1_KOHRAN_ENDING
+	dw FLAG1_KANNA_ENDING
+	dw FLAG1_GAME_BEATEN
+	dw FLAG1_GAME_BEATEN
+	dw FLAG1_OGAMI_ENDING
+	dw $ffff
 
 
-Table_04_71ee:
-	dw FLAG2_0094, $0194
-	dw FLAG2_0095, $0198
-	dw FLAG2_0096, $019c
-	dw FLAG2_0097, $01a0
-	dw FLAG2_0098, $01a4
-	dw FLAG2_0099, $01a8
+CharacterPhotoLocalAndGlobalFlags:
+	dw FLAG2_SAKURA_PHOTO, FLAG1_SAKURA_PHOTO
+	dw FLAG2_SUMIRE_PHOTO, FLAG1_SUMIRE_PHOTO
+	dw FLAG2_MARIA_PHOTO, FLAG1_MARIA_PHOTO
+	dw FLAG2_IRIS_PHOTO, FLAG1_IRIS_PHOTO
+	dw FLAG2_KOHRAN_PHOTO, FLAG1_KOHRAN_PHOTO
+	dw FLAG2_KANNA_PHOTO, FLAG1_KANNA_PHOTO
 
 
-Func_04_7206:
-	ld   a, h                                   ; $7206: $7c
-	sub  b                                   ; $7207: $90
-	ret  nz                                          ; $7208: $c0
+CP_HL_BC:
+	ld   a, h                                                       ; $7206
+	sub  b                                                          ; $7207
+	ret  nz                                                         ; $7208
 
-	ld   a, l                                        ; $7209: $7d
-	sub  c                                           ; $720a: $91
-	ret                                              ; $720b: $c9
+	ld   a, l                                                       ; $7209
+	sub  c                                                          ; $720a
+	ret                                                             ; $720b
 
 
 GameState49_DayPassed::

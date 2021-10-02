@@ -5273,9 +5273,13 @@ Call_00c_640f:
 	xor  a                                           ; $640f: $af
 	ld   [$cc56], a                                  ; $6410: $ea $56 $cc
 	xor  a                                           ; $6413: $af
-	call Call_00c_712f                               ; $6414: $cd $2f $71
+	call HLequAddrOfInvItemMetadata                               ; $6414: $cd $2f $71
 	xor  a                                           ; $6417: $af
+if def(VWF)
+	ld   de, $de80
+else
 	ld   de, $d880                                   ; $6418: $11 $80 $d8
+endc
 
 .nextEntry:
 	push hl                                          ; $641b: $e5
@@ -5318,15 +5322,20 @@ Call_00c_640f:
 	ld   [$cc54], a                                  ; $6453: $ea $54 $cc
 	ld   b, $00                                      ; $6456: $06 $00
 	ld   c, $ff                                      ; $6458: $0e $ff
+if def(VWF)
+	ld   de, $df80
+	ld   hl, $de80
+else
 	ld   de, $d980                                   ; $645a: $11 $80 $d9
 	ld   hl, $d880                                   ; $645d: $21 $80 $d8
+endc
 
 .loop_6460:
 	ld   a, [hl+]                                    ; $6460: $2a
 	push hl                                          ; $6461: $e5
 	push de                                          ; $6462: $d5
 	push bc                                          ; $6463: $c5
-	call Call_00c_712f                               ; $6464: $cd $2f $71
+	call HLequAddrOfInvItemMetadata                               ; $6464: $cd $2f $71
 	ld   bc, $0004                                   ; $6467: $01 $04 $00
 	add  hl, bc                                      ; $646a: $09
 	ld   a, [hl]                                     ; $646b: $7e
@@ -5362,6 +5371,18 @@ Call_00c_640f:
 	sla  a                                           ; $648e: $cb $27
 	ld   h, $00                                      ; $6490: $26 $00
 	ld   l, a                                        ; $6492: $6f
+if def(VWF)
+	ld   bc, $df81                                   ; $6493: $01 $81 $d9
+	add  hl, bc                                      ; $6496: $09
+	ld   a, [$df81]                                  ; $6497: $fa $81 $d9
+	ld   [hl-], a                                    ; $649a: $32
+	ld   a, [$df80]                                  ; $649b: $fa $80 $d9
+	ld   [hl-], a                                    ; $649e: $32
+	ld   a, [hl-]                                    ; $649f: $3a
+	ld   [$d9df], a                                  ; $64a0: $ea $7f $d9
+	ld   a, [hl-]                                    ; $64a3: $3a
+	ld   [$d9de], a                                  ; $64a4: $ea $7e $d9
+else
 	ld   bc, $d981                                   ; $6493: $01 $81 $d9
 	add  hl, bc                                      ; $6496: $09
 	ld   a, [$d981]                                  ; $6497: $fa $81 $d9
@@ -5372,45 +5393,50 @@ Call_00c_640f:
 	ld   [$d97f], a                                  ; $64a0: $ea $7f $d9
 	ld   a, [hl-]                                    ; $64a3: $3a
 	ld   [$d97e], a                                  ; $64a4: $ea $7e $d9
+endc
 	ret                                              ; $64a7: $c9
 
 
 Call_00c_64a8:
 	ld   h, $00                                      ; $64a8: $26 $00
 	ld   l, a                                        ; $64aa: $6f
+if def(VWF)
+	ld   bc, $de80
+else
 	ld   bc, $d880                                   ; $64ab: $01 $80 $d8
+endc
 	add  hl, bc                                      ; $64ae: $09
 	ld   a, [hl]                                     ; $64af: $7e
 	ret                                              ; $64b0: $c9
 
 
 	push af                                          ; $64b1: $f5
-	call Call_00c_64d5                               ; $64b2: $cd $d5 $64
+	call LoadInventoryItemName                               ; $64b2: $cd $d5 $64
 	pop  af                                          ; $64b5: $f1
 	inc  a                                           ; $64b6: $3c
 	push af                                          ; $64b7: $f5
-	call Call_00c_64d5                               ; $64b8: $cd $d5 $64
+	call LoadInventoryItemName                               ; $64b8: $cd $d5 $64
 	pop  af                                          ; $64bb: $f1
 	inc  a                                           ; $64bc: $3c
 	push af                                          ; $64bd: $f5
-	call Call_00c_64d5                               ; $64be: $cd $d5 $64
+	call LoadInventoryItemName                               ; $64be: $cd $d5 $64
 	pop  af                                          ; $64c1: $f1
 	inc  a                                           ; $64c2: $3c
 	push af                                          ; $64c3: $f5
-	call Call_00c_64d5                               ; $64c4: $cd $d5 $64
+	call LoadInventoryItemName                               ; $64c4: $cd $d5 $64
 	pop  af                                          ; $64c7: $f1
 	inc  a                                           ; $64c8: $3c
 	push af                                          ; $64c9: $f5
-	call Call_00c_64d5                               ; $64ca: $cd $d5 $64
+	call LoadInventoryItemName                               ; $64ca: $cd $d5 $64
 	pop  af                                          ; $64cd: $f1
 	inc  a                                           ; $64ce: $3c
 	push af                                          ; $64cf: $f5
-	call Call_00c_64d5                               ; $64d0: $cd $d5 $64
+	call LoadInventoryItemName                               ; $64d0: $cd $d5 $64
 	pop  af                                          ; $64d3: $f1
 	ret                                              ; $64d4: $c9
 
 
-Call_00c_64d5:
+LoadInventoryItemName:
 	push af                                          ; $64d5: $f5
 	ld   hl, $d340                                   ; $64d6: $21 $40 $d3
 	ld   bc, $00a0                                   ; $64d9: $01 $a0 $00
@@ -5428,7 +5454,7 @@ Call_00c_64d5:
 
 	push af                                          ; $64f8: $f5
 	call Call_00c_64a8                               ; $64f9: $cd $a8 $64
-	call Call_00c_712f                               ; $64fc: $cd $2f $71
+	call HLequAddrOfInvItemMetadata                               ; $64fc: $cd $2f $71
 	push hl                                          ; $64ff: $e5
 	ld   bc, $0004                                   ; $6500: $01 $04 $00
 	add  hl, bc                                      ; $6503: $09
@@ -5443,7 +5469,7 @@ Call_00c_64d5:
 	dec  a                                           ; $650f: $3d
 	ld   h, $00                                      ; $6510: $26 $00
 	ld   l, a                                        ; $6512: $6f
-	ld   bc, FLAG2_00f6                                   ; $6513: $01 $f6 $00
+	ld   bc, FLAG2_ITEM_EQUIPPED_START                                   ; $6513: $01 $f6 $00
 	add  hl, bc                                      ; $6516: $09
 
 	M_FarCall CheckIfFlagSet2
@@ -5454,14 +5480,17 @@ Call_00c_64d5:
 	ld   a, $02                                      ; $652e: $3e $02
 	call SetDefaultAndCurrKanjiTileTextStyle                                       ; $6530: $cd $3f $15
 
+; HL points to inv item name text idx
 jr_00c_6533:
 	pop  hl                                          ; $6533: $e1
 	ld   bc, $0002                                   ; $6534: $01 $02 $00
 	add  hl, bc                                      ; $6537: $09
-	ld   l, [hl]                                     ; $6538: $6e
-	ld   h, $01                                      ; $6539: $26 $01
 
-	M_FarCall Func_0a_5b4b
+;
+	ld   l, [hl]                                     ; $6538: $6e
+	ld   h, MIT_INVENTORY                                      ; $6539: $26 $01
+
+	M_FarCall HLequAddrOfMiscInstantText
 
 	ld   d, h                                        ; $654f: $54
 	ld   e, l                                        ; $6550: $5d
@@ -5490,7 +5519,7 @@ jr_00c_6558:
 	ret                                              ; $6576: $c9
 
 
-Call_00c_6577:
+LoadInventoryItemDescription:
 	push af                                          ; $6577: $f5
 	ld   hl, $d340                                   ; $6578: $21 $40 $d3
 	ld   bc, $0240                                   ; $657b: $01 $40 $02
@@ -5507,14 +5536,18 @@ Call_00c_6577:
 	jr   nc, jr_00c_6619                             ; $6598: $30 $7f
 
 	call Call_00c_64a8                               ; $659a: $cd $a8 $64
-	call Call_00c_712f                               ; $659d: $cd $2f $71
+	call HLequAddrOfInvItemMetadata                               ; $659d: $cd $2f $71
+
+; HL points to inv item description text idx
 	push hl                                          ; $65a0: $e5
 	ld   bc, $0003                                   ; $65a1: $01 $03 $00
 	add  hl, bc                                      ; $65a4: $09
-	ld   l, [hl]                                     ; $65a5: $6e
-	ld   h, $01                                      ; $65a6: $26 $01
 
-	M_FarCall Func_0a_5b4b
+;
+	ld   l, [hl]                                     ; $65a5: $6e
+	ld   h, MIT_INVENTORY                                      ; $65a6: $26 $01
+
+	M_FarCall HLequAddrOfMiscInstantText
 
 	ld   d, h                                        ; $65bc: $54
 	ld   e, l                                        ; $65bd: $5d
@@ -5534,7 +5567,7 @@ Call_00c_6577:
 	dec  a                                           ; $65d4: $3d
 	ld   h, $00                                      ; $65d5: $26 $00
 	ld   l, a                                        ; $65d7: $6f
-	ld   bc, FLAG2_00f6                                   ; $65d8: $01 $f6 $00
+	ld   bc, FLAG2_ITEM_EQUIPPED_START                                   ; $65d8: $01 $f6 $00
 	add  hl, bc                                      ; $65db: $09
 
 	M_FarCall CheckIfFlagSet2
@@ -5544,10 +5577,10 @@ Call_00c_6577:
 
 	ld   bc, $0001                                   ; $65f3: $01 $01 $00
 	call SetCurrKanjiColAndRowToDrawOn                                       ; $65f6: $cd $34 $14
-	ld   l, $1a                                      ; $65f9: $2e $1a
-	ld   h, $01                                      ; $65fb: $26 $01
+	ld   l, MITINV_EQUIP_UNEQUIP                                      ; $65f9: $2e $1a
+	ld   h, MIT_INVENTORY                                      ; $65fb: $26 $01
 
-	M_FarCall Func_0a_5b4b
+	M_FarCall HLequAddrOfMiscInstantText
 
 	ld   d, h                                        ; $6611: $54
 	ld   e, l                                        ; $6612: $5d
@@ -5673,13 +5706,17 @@ jr_00c_6672:
 Func_0c_66e5:
 	ld   a, [$cc58] ; $66e5: $fa $58 $cc
 	call Call_00c_64a8                                    ; $66e7: $cd $a8 $64
-	call Call_00c_712f                               ; $66eb: $cd $2f $71
+	call HLequAddrOfInvItemMetadata                               ; $66eb: $cd $2f $71
 	ld   bc, $0004                                   ; $66ee: $01 $04 $00
 	add  hl, bc                                      ; $66f1: $09
 	ld   a, [hl]                                     ; $66f2: $7e
 	and  $f0                                         ; $66f3: $e6 $f0
 	ld   e, a                                        ; $66f5: $5f
+if def(VWF)
+	ld   hl, $df80
+else
 	ld   hl, $d980                                   ; $66f6: $21 $80 $d9
+endc
 	ld   a, [$cc54]                                  ; $66f9: $fa $54 $cc
 	ld   b, a                                        ; $66fc: $47
 	ld   c, $00                                      ; $66fd: $0e $00
@@ -5836,7 +5873,7 @@ endc
 	ld   b, $40                                      ; $67c8: $06 $40
 	call EnqueueHDMATransfer                                       ; $67ca: $cd $7c $02
 	ld   a, [$cc57]                                  ; $67cd: $fa $57 $cc
-	call Call_00c_64d5                               ; $67d0: $cd $d5 $64
+	call LoadInventoryItemName                               ; $67d0: $cd $d5 $64
 	ret                                              ; $67d3: $c9
 
 
@@ -5865,7 +5902,7 @@ jr_00c_67e2:
 	ldh  [rSVBK], a                                  ; $6806: $e0 $70
 	ld   a, [$cc57]                                  ; $6808: $fa $57 $cc
 	inc  a                                           ; $680b: $3c
-	call Call_00c_64d5                               ; $680c: $cd $d5 $64
+	call LoadInventoryItemName                               ; $680c: $cd $d5 $64
 	ret                                              ; $680f: $c9
 
 
@@ -5878,7 +5915,7 @@ jr_00c_67e2:
 	ld   a, [$cc57]                                  ; $681f: $fa $57 $cc
 	inc  a                                           ; $6822: $3c
 	inc  a                                           ; $6823: $3c
-	call Call_00c_64d5                               ; $6824: $cd $d5 $64
+	call LoadInventoryItemName                               ; $6824: $cd $d5 $64
 	ret                                              ; $6827: $c9
 
 
@@ -5891,7 +5928,7 @@ jr_00c_67e2:
 	call EnqueueHDMATransfer                                       ; $6837: $cd $7c $02
 	ld   a, [$cc57]                                  ; $683a: $fa $57 $cc
 	add  $03                                         ; $683d: $c6 $03
-	call Call_00c_64d5                               ; $683f: $cd $d5 $64
+	call LoadInventoryItemName                               ; $683f: $cd $d5 $64
 	ret                                              ; $6842: $c9
 
 
@@ -5904,14 +5941,14 @@ jr_00c_67e2:
 	call EnqueueHDMATransfer                                       ; $6852: $cd $7c $02
 	ld   a, [$cc57]                                  ; $6855: $fa $57 $cc
 	add  $04                                         ; $6858: $c6 $04
-	call Call_00c_64d5                               ; $685a: $cd $d5 $64
+	call LoadInventoryItemName                               ; $685a: $cd $d5 $64
 	ret                                              ; $685d: $c9
 
 
 	call Call_00c_6a77                               ; $685e: $cd $77 $6a
 	ld   a, [$cc57]                                  ; $6861: $fa $57 $cc
 	add  $05                                         ; $6864: $c6 $05
-	call Call_00c_64d5                               ; $6866: $cd $d5 $64
+	call LoadInventoryItemName                               ; $6866: $cd $d5 $64
 	ret                                              ; $6869: $c9
 
 
@@ -5937,7 +5974,7 @@ jr_00c_67e2:
 
 
 	ld   a, [$cc58]                                  ; $6897: $fa $58 $cc
-	call Call_00c_6577                               ; $689a: $cd $77 $65
+	call LoadInventoryItemDescription                               ; $689a: $cd $77 $65
 
 Jump_00c_689d:
 	ld   hl, $cc50                                   ; $689d: $21 $50 $cc
@@ -6283,12 +6320,16 @@ Call_00c_6ab3:
 Call_00c_6ad1:
 	ld   a, [$cc58]                                  ; $6ad1: $fa $58 $cc
 	call Call_00c_64a8                               ; $6ad4: $cd $a8 $64
-	call Call_00c_712f                               ; $6ad7: $cd $2f $71
+	call HLequAddrOfInvItemMetadata                               ; $6ad7: $cd $2f $71
 	ld   bc, $0004                                   ; $6ada: $01 $04 $00
 	add  hl, bc                                      ; $6add: $09
 	ld   a, [hl]                                     ; $6ade: $7e
 	and  $f0                                         ; $6adf: $e6 $f0
+if def(VWF)
+	ld   hl, $df80
+else
 	ld   hl, $d980                                   ; $6ae1: $21 $80 $d9
+endc
 
 jr_00c_6ae4:
 	cp   [hl]                                        ; $6ae4: $be
@@ -6307,12 +6348,16 @@ jr_00c_6aeb:
 Call_00c_6aee:
 	ld   a, [$cc58]                                  ; $6aee: $fa $58 $cc
 	call Call_00c_64a8                               ; $6af1: $cd $a8 $64
-	call Call_00c_712f                               ; $6af4: $cd $2f $71
+	call HLequAddrOfInvItemMetadata                               ; $6af4: $cd $2f $71
 	ld   bc, $0004                                   ; $6af7: $01 $04 $00
 	add  hl, bc                                      ; $6afa: $09
 	ld   a, [hl]                                     ; $6afb: $7e
 	and  $f0                                         ; $6afc: $e6 $f0
+if def(VWF)
+	ld   hl, $df80
+else
 	ld   hl, $d980                                   ; $6afe: $21 $80 $d9
+endc
 
 jr_00c_6b01:
 	cp   [hl]                                        ; $6b01: $be
@@ -6411,7 +6456,7 @@ jr_00c_6b49:
 	dec  a                                           ; $6b93: $3d
 	dec  a                                           ; $6b94: $3d
 	inc  [hl]                                        ; $6b95: $34
-	call Call_00c_64d5                               ; $6b96: $cd $d5 $64
+	call LoadInventoryItemName                               ; $6b96: $cd $d5 $64
 	ret                                              ; $6b99: $c9
 
 
@@ -6428,7 +6473,7 @@ jr_00c_6b49:
 
 
 	ld   a, [$cc58]                                  ; $6bb1: $fa $58 $cc
-	call Call_00c_6577                               ; $6bb4: $cd $77 $65
+	call LoadInventoryItemDescription                               ; $6bb4: $cd $77 $65
 	ld   a, $02                                      ; $6bb7: $3e $02
 	ld   [$cc50], a                                  ; $6bb9: $ea $50 $cc
 	xor  a                                           ; $6bbc: $af
@@ -6439,7 +6484,7 @@ jr_00c_6b49:
 	ld   a, $20                                      ; $6bc1: $3e $20
 	call PlaySoundEffect                                       ; $6bc3: $cd $df $1a
 	ld   a, [$cc58]                                  ; $6bc6: $fa $58 $cc
-	call Call_00c_6577                               ; $6bc9: $cd $77 $65
+	call LoadInventoryItemDescription                               ; $6bc9: $cd $77 $65
 	ld   a, $08                                      ; $6bcc: $3e $08
 	ld   [$cc50], a                                  ; $6bce: $ea $50 $cc
 	xor  a                                           ; $6bd1: $af
@@ -6450,7 +6495,7 @@ jr_00c_6b49:
 	ld   a, $20                                      ; $6bd6: $3e $20
 	call PlaySoundEffect                                       ; $6bd8: $cd $df $1a
 	ld   a, [$cc58]                                  ; $6bdb: $fa $58 $cc
-	call Call_00c_6577                               ; $6bde: $cd $77 $65
+	call LoadInventoryItemDescription                               ; $6bde: $cd $77 $65
 	ld   a, $08                                      ; $6be1: $3e $08
 	ld   [$cc50], a                                  ; $6be3: $ea $50 $cc
 	xor  a                                           ; $6be6: $af
@@ -6480,7 +6525,7 @@ jr_00c_6b49:
 	ld   a, $20                                      ; $6c03: $3e $20
 	call PlaySoundEffect                                       ; $6c05: $cd $df $1a
 	ld   a, [$cc58]                                  ; $6c08: $fa $58 $cc
-	call Call_00c_64d5                               ; $6c0b: $cd $d5 $64
+	call LoadInventoryItemName                               ; $6c0b: $cd $d5 $64
 	ld   hl, $cc51                                   ; $6c0e: $21 $51 $cc
 	ld   a, [$cc5b]                                  ; $6c11: $fa $5b $cc
 	cp   $04                                         ; $6c14: $fe $04
@@ -6520,7 +6565,7 @@ jr_00c_6c22:
 
 
 	ld   a, [$cc58]                                  ; $6c48: $fa $58 $cc
-	call Call_00c_6577                               ; $6c4b: $cd $77 $65
+	call LoadInventoryItemDescription                               ; $6c4b: $cd $77 $65
 	ld   a, [$cc5b]                                  ; $6c4e: $fa $5b $cc
 	cp   $04                                         ; $6c51: $fe $04
 	jr   c, jr_00c_6c5f                              ; $6c53: $38 $0a
@@ -6565,7 +6610,7 @@ jr_00c_6c67:
 	ld   a, $20                                      ; $6c89: $3e $20
 	call PlaySoundEffect                                       ; $6c8b: $cd $df $1a
 	ld   a, [$cc58]                                  ; $6c8e: $fa $58 $cc
-	call Call_00c_64d5                               ; $6c91: $cd $d5 $64
+	call LoadInventoryItemName                               ; $6c91: $cd $d5 $64
 	ld   hl, $cc51                                   ; $6c94: $21 $51 $cc
 	ld   a, [$cc5b]                                  ; $6c97: $fa $5b $cc
 	cp   $04                                         ; $6c9a: $fe $04
@@ -6605,7 +6650,7 @@ jr_00c_6ca8:
 
 
 	ld   a, [$cc58]                                  ; $6cce: $fa $58 $cc
-	call Call_00c_6577                               ; $6cd1: $cd $77 $65
+	call LoadInventoryItemDescription                               ; $6cd1: $cd $77 $65
 	ld   a, [$cc5b]                                  ; $6cd4: $fa $5b $cc
 	cp   $04                                         ; $6cd7: $fe $04
 	jr   c, jr_00c_6ce5                              ; $6cd9: $38 $0a
@@ -7056,7 +7101,7 @@ jr_00c_6f47:
 
 	ld   a, [$cc58]                                  ; $6f76: $fa $58 $cc
 	call Call_00c_64a8                               ; $6f79: $cd $a8 $64
-	call Call_00c_712f                               ; $6f7c: $cd $2f $71
+	call HLequAddrOfInvItemMetadata                               ; $6f7c: $cd $2f $71
 	ld   bc, $0004                                   ; $6f7f: $01 $04 $00
 	add  hl, bc                                      ; $6f82: $09
 	ld   a, [hl]                                     ; $6f83: $7e
@@ -7071,7 +7116,7 @@ jr_00c_6f47:
 	push af                                          ; $6f8f: $f5
 	ld   h, $00                                      ; $6f90: $26 $00
 	ld   l, a                                        ; $6f92: $6f
-	ld   bc, FLAG2_00f6                                   ; $6f93: $01 $f6 $00
+	ld   bc, FLAG2_ITEM_EQUIPPED_START                                   ; $6f93: $01 $f6 $00
 	add  hl, bc                                      ; $6f96: $09
 	push hl                                          ; $6f97: $e5
 
@@ -7244,7 +7289,7 @@ jr_00c_7087:
 	jr   nz, jr_00c_70ba                             ; $70a3: $20 $15
 
 	call Call_00c_64a8                               ; $70a5: $cd $a8 $64
-	call Call_00c_712f                               ; $70a8: $cd $2f $71
+	call HLequAddrOfInvItemMetadata                               ; $70a8: $cd $2f $71
 	ld   bc, $0004                                   ; $70ab: $01 $04 $00
 	add  hl, bc                                      ; $70ae: $09
 	ld   a, [hl]                                     ; $70af: $7e
@@ -7256,9 +7301,9 @@ jr_00c_7087:
 	jr   z, jr_00c_70c7                              ; $70b8: $28 $0d
 
 jr_00c_70ba:
-	ld   a, [$cc52]                                  ; $70ba: $fa $52 $cc
+	ld   a, [wRomandoShopReturnState]                                  ; $70ba: $fa $52 $cc
 	ld   [wGameState], a                                  ; $70bd: $ea $a0 $c2
-	ld   a, [$cc53]                                  ; $70c0: $fa $53 $cc
+	ld   a, [wRomandoShopReturnSubstate]                                  ; $70c0: $fa $53 $cc
 	ld   [wGameSubstate], a                                  ; $70c3: $ea $a1 $c2
 	ret                                              ; $70c6: $c9
 
@@ -7316,7 +7361,9 @@ jr_00c_710e:
 	ret                                              ; $712e: $c9
 
 
-Call_00c_712f:
+; A - item idx
+HLequAddrOfInvItemMetadata:
+; HL = 5 * idx into below table
 	push bc                                          ; $712f: $c5
 	ld   b, $00                                      ; $7130: $06 $00
 	ld   c, a                                        ; $7132: $4f
@@ -7329,25 +7376,26 @@ Call_00c_712f:
 	pop  bc                                          ; $713b: $c1
 	ret                                              ; $713c: $c9
 
-macro Entry_0c_713d
+; item got flag, name text idx, description text idx, ???
+macro InvItem
 	dw \1
 	db \2, \3, \4
 endm
 
 .data:
-	Entry_0c_713d FLAG2_0094, $00, $0d, $11
-	Entry_0c_713d FLAG2_0095, $01, $0e, $12
-	Entry_0c_713d FLAG2_0096, $02, $0f, $13
-	Entry_0c_713d FLAG2_0097, $03, $10, $14
-	Entry_0c_713d FLAG2_0098, $04, $11, $15
-	Entry_0c_713d FLAG2_0099, $05, $12, $16
-	Entry_0c_713d FLAG2_00f0, $07, $14, $80
-	Entry_0c_713d FLAG2_00f1, $08, $15, $81
-	Entry_0c_713d FLAG2_00f2, $09, $16, $82
-	Entry_0c_713d FLAG2_00f3, $0a, $17, $83
-	Entry_0c_713d FLAG2_00f4, $0b, $18, $84
-	Entry_0c_713d FLAG2_00f5, $0c, $19, $85
-	Entry_0c_713d FLAG2_00d3, $06, $13, $86
+	InvItem FLAG2_SAKURA_PHOTO, $00, $0d, $11
+	InvItem FLAG2_SUMIRE_PHOTO, $01, $0e, $12
+	InvItem FLAG2_MARIA_PHOTO, $02, $0f, $13
+	InvItem FLAG2_IRIS_PHOTO, $03, $10, $14
+	InvItem FLAG2_KOHRAN_PHOTO, $04, $11, $15
+	InvItem FLAG2_KANNA_PHOTO, $05, $12, $16
+	InvItem FLAG2_RECOVERY_DRINK, $07, $14, $80
+	InvItem FLAG2_RING_OF_REVELATION, $08, $15, $81
+	InvItem FLAG2_MYSTERIOUS_CHARM, $09, $16, $82
+	InvItem FLAG2_GUTS_HEADBAND, $0a, $17, $83
+	InvItem FLAG2_LIGHT_SHOES, $0b, $18, $84
+	InvItem FLAG2_CLEAR_LENS, $0c, $19, $85
+	InvItem FLAG2_NAMEPLATE, $06, $13, $86
 	db $00, $00
 
 
@@ -7390,9 +7438,9 @@ jr_00c_71ad:
 
 
 	ld   a, h                                        ; $71af: $7c
-	ld   [$cc52], a                                  ; $71b0: $ea $52 $cc
+	ld   [wRomandoShopReturnState], a                                  ; $71b0: $ea $52 $cc
 	ld   a, l                                        ; $71b3: $7d
-	ld   [$cc53], a                                  ; $71b4: $ea $53 $cc
+	ld   [wRomandoShopReturnSubstate], a                                  ; $71b4: $ea $53 $cc
 	ld   a, GS_INVENTORY                                      ; $71b7: $3e $40
 	ld   [wGameState], a                                  ; $71b9: $ea $a0 $c2
 	xor  a                                           ; $71bc: $af

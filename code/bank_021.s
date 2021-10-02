@@ -528,7 +528,7 @@ jr_021_4241:
 	ld   bc, $0000                                   ; $424d: $01 $00 $00
 
 jr_021_4250:
-	ld   hl, FLAG2_00f6                                   ; $4250: $21 $f6 $00
+	ld   hl, FLAG2_ITEM_EQUIPPED_START                                   ; $4250: $21 $f6 $00
 	add  hl, bc                                      ; $4253: $09
 	push bc                                          ; $4254: $c5
 
@@ -606,12 +606,12 @@ jr_021_427c:
 
 
 Table_21_42ba:
-	dw FLAG2_0094
-	dw FLAG2_0095
-	dw FLAG2_0096
-	dw FLAG2_0097
-	dw FLAG2_0098
-	dw FLAG2_0099
+	dw FLAG2_SAKURA_PHOTO
+	dw FLAG2_SUMIRE_PHOTO
+	dw FLAG2_MARIA_PHOTO
+	dw FLAG2_IRIS_PHOTO
+	dw FLAG2_KOHRAN_PHOTO
+	dw FLAG2_KANNA_PHOTO
 
 
 Call_021_42c6:
@@ -690,7 +690,7 @@ jr_021_4346:
 
 jr_021_4348:
 	push bc                                          ; $4348: $c5
-	ld   hl, FLAG2_0094                                   ; $4349: $21 $94 $00
+	ld   hl, FLAG2_SAKURA_PHOTO                                   ; $4349: $21 $94 $00
 
 	M_FarCall CheckIfFlagSet2
 
@@ -826,7 +826,7 @@ Jump_021_4403:
 	ld   bc, $0000                                   ; $440c: $01 $00 $00
 
 jr_021_440f:
-	ld   hl, FLAG2_00f6                                   ; $440f: $21 $f6 $00
+	ld   hl, FLAG2_ITEM_EQUIPPED_START                                   ; $440f: $21 $f6 $00
 	add  hl, bc                                      ; $4412: $09
 	push bc                                          ; $4413: $c5
 

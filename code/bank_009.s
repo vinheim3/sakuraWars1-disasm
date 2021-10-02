@@ -4153,7 +4153,7 @@ Call_009_58eb:
 	xor  a                                           ; $58eb: $af
 	ld   [$cc56], a                                  ; $58ec: $ea $56 $cc
 	xor  a                                           ; $58ef: $af
-	call Call_009_664f                               ; $58f0: $cd $4f $66
+	call HLequAddrOfChestItemMetadata                               ; $58f0: $cd $4f $66
 	xor  a                                           ; $58f3: $af
 	ld   de, $d880                                   ; $58f4: $11 $80 $d8
 
@@ -4205,7 +4205,7 @@ jr_009_592b:
 	push hl                                          ; $592c: $e5
 	push de                                          ; $592d: $d5
 	push bc                                          ; $592e: $c5
-	call Call_009_664f                               ; $592f: $cd $4f $66
+	call HLequAddrOfChestItemMetadata                               ; $592f: $cd $4f $66
 	ld   bc, $0004                                   ; $5932: $01 $04 $00
 	add  hl, bc                                      ; $5935: $09
 	ld   a, [hl]                                     ; $5936: $7e
@@ -4329,7 +4329,7 @@ Call_009_59c4:
 
 	push af                                          ; $59e7: $f5
 	call Call_009_5997                               ; $59e8: $cd $97 $59
-	call Call_009_664f                               ; $59eb: $cd $4f $66
+	call HLequAddrOfChestItemMetadata                               ; $59eb: $cd $4f $66
 	push hl                                          ; $59ee: $e5
 	ld   bc, $0005                                   ; $59ef: $01 $05 $00
 	add  hl, bc                                      ; $59f2: $09
@@ -4345,9 +4345,9 @@ jr_009_59fc:
 	ld   bc, $0002                                   ; $59fd: $01 $02 $00
 	add  hl, bc                                      ; $5a00: $09
 	ld   l, [hl]                                     ; $5a01: $6e
-	ld   h, $03                                      ; $5a02: $26 $03
+	ld   h, MIT_ROMANDO_SHOP_CHEST                                      ; $5a02: $26 $03
 
-	M_FarCall Func_0a_5b4b
+	M_FarCall HLequAddrOfMiscInstantText
 
 	ld   d, h                                        ; $5a18: $54
 	ld   e, l                                        ; $5a19: $5d
@@ -4393,13 +4393,13 @@ Call_009_5a40:
 	jr   nc, jr_009_5a8c                             ; $5a61: $30 $29
 
 	call Call_009_5997                               ; $5a63: $cd $97 $59
-	call Call_009_664f                               ; $5a66: $cd $4f $66
+	call HLequAddrOfChestItemMetadata                               ; $5a66: $cd $4f $66
 	ld   bc, $0003                                   ; $5a69: $01 $03 $00
 	add  hl, bc                                      ; $5a6c: $09
 	ld   l, [hl]                                     ; $5a6d: $6e
-	ld   h, $03                                      ; $5a6e: $26 $03
+	ld   h, MIT_ROMANDO_SHOP_CHEST                                      ; $5a6e: $26 $03
 
-	M_FarCall Func_0a_5b4b
+	M_FarCall HLequAddrOfMiscInstantText
 
 	ld   d, h                                        ; $5a84: $54
 	ld   e, l                                        ; $5a85: $5d
@@ -4496,7 +4496,7 @@ jr_009_5ae5:
 	ld   bc, $58fa                                   ; $5b1d: $01 $fa $58
 	call z, $97cd                                    ; $5b20: $cc $cd $97
 	ld   e, c                                        ; $5b23: $59
-	call Call_009_664f                               ; $5b24: $cd $4f $66
+	call HLequAddrOfChestItemMetadata                               ; $5b24: $cd $4f $66
 	ld   bc, $0004                                   ; $5b27: $01 $04 $00
 	add  hl, bc                                      ; $5b2a: $09
 	ld   a, [hl]                                     ; $5b2b: $7e
@@ -4861,7 +4861,7 @@ jr_009_5d75:
 
 	ld   a, [$cc58]                                  ; $5d7f: $fa $58 $cc
 	call Call_009_5997                               ; $5d82: $cd $97 $59
-	call Call_009_664f                               ; $5d85: $cd $4f $66
+	call HLequAddrOfChestItemMetadata                               ; $5d85: $cd $4f $66
 	ld   bc, $0005                                   ; $5d88: $01 $05 $00
 	add  hl, bc                                      ; $5d8b: $09
 	ld   a, [hl]                                     ; $5d8c: $7e
@@ -5149,7 +5149,7 @@ Call_009_5f30:
 Call_009_5f4e:
 	ld   a, [$cc58]                                  ; $5f4e: $fa $58 $cc
 	call Call_009_5997                               ; $5f51: $cd $97 $59
-	call Call_009_664f                               ; $5f54: $cd $4f $66
+	call HLequAddrOfChestItemMetadata                               ; $5f54: $cd $4f $66
 	ld   bc, $0004                                   ; $5f57: $01 $04 $00
 	add  hl, bc                                      ; $5f5a: $09
 	ld   a, [hl]                                     ; $5f5b: $7e
@@ -5173,7 +5173,7 @@ jr_009_5f68:
 Call_009_5f6b:
 	ld   a, [$cc58]                                  ; $5f6b: $fa $58 $cc
 	call Call_009_5997                               ; $5f6e: $cd $97 $59
-	call Call_009_664f                               ; $5f71: $cd $4f $66
+	call HLequAddrOfChestItemMetadata                               ; $5f71: $cd $4f $66
 	ld   bc, $0004                                   ; $5f74: $01 $04 $00
 	add  hl, bc                                      ; $5f77: $09
 	ld   a, [hl]                                     ; $5f78: $7e
@@ -5989,7 +5989,7 @@ jr_009_643b:
 	jp   nz, Jump_009_6593                           ; $645d: $c2 $93 $65
 
 	call Call_009_5997                               ; $6460: $cd $97 $59
-	call Call_009_664f                               ; $6463: $cd $4f $66
+	call HLequAddrOfChestItemMetadata                               ; $6463: $cd $4f $66
 	ld   bc, $0004                                   ; $6466: $01 $04 $00
 	add  hl, bc                                      ; $6469: $09
 	ld   a, [hl]                                     ; $646a: $7e
@@ -6137,9 +6137,9 @@ Jump_009_6545:
 
 
 Jump_009_6593:
-	ld   a, [$cc52]                                  ; $6593: $fa $52 $cc
+	ld   a, [wRomandoShopReturnState]                                  ; $6593: $fa $52 $cc
 	ld   [wGameState], a                                  ; $6596: $ea $a0 $c2
-	ld   a, [$cc53]                                  ; $6599: $fa $53 $cc
+	ld   a, [wRomandoShopReturnSubstate]                                  ; $6599: $fa $53 $cc
 	ld   [wGameSubstate], a                                  ; $659c: $ea $a1 $c2
 	ret                                              ; $659f: $c9
 
@@ -6246,320 +6246,163 @@ Jump_009_6593:
 	ret                                              ; $664e: $c9
 
 
-Call_009_664f:
+HLequAddrOfChestItemMetadata:
 	push bc                                          ; $664f: $c5
 	ld   h, a                                        ; $6650: $67
 	ld   l, $06                                      ; $6651: $2e $06
 	call AequHtimesL                                       ; $6653: $cd $ac $0b
-	ld   bc, $665c                                   ; $6656: $01 $5c $66
+	ld   bc, .table                                   ; $6656: $01 $5c $66
 	add  hl, bc                                      ; $6659: $09
 	pop  bc                                          ; $665a: $c1
 	ret                                              ; $665b: $c9
 
+macro ChestItem
+	dw \1 ; item flag
+	db \2, \3, \4, \5 ; name text idx, description text idx, ???, ???
+endm
 
-	sub  h                                           ; $665c: $94
-	ld   bc, $1514                                   ; $665d: $01 $14 $15
-	ld   de, $98ff                                   ; $6660: $11 $ff $98
-	ld   bc, $1716                                   ; $6663: $01 $16 $17
-	ld   [de], a                                     ; $6666: $12
-	rst  $38                                         ; $6667: $ff
-	sbc  h                                           ; $6668: $9c
-	ld   bc, $1918                                   ; $6669: $01 $18 $19
-	inc  de                                          ; $666c: $13
-	rst  $38                                         ; $666d: $ff
-	and  b                                           ; $666e: $a0
-	ld   bc, $1b1a                                   ; $666f: $01 $1a $1b
-	inc  d                                           ; $6672: $14
-	rst  $38                                         ; $6673: $ff
-	and  h                                           ; $6674: $a4
-	ld   bc, $1d1c                                   ; $6675: $01 $1c $1d
-	dec  d                                           ; $6678: $15
-	rst  $38                                         ; $6679: $ff
-	xor  b                                           ; $667a: $a8
-	ld   bc, $1f1e                                   ; $667b: $01 $1e $1f
-	ld   d, $ff                                      ; $667e: $16 $ff
-	xor  h                                           ; $6680: $ac
-	ld   bc, $2120                                   ; $6681: $01 $20 $21
-	rla                                              ; $6684: $17
-	rst  $38                                         ; $6685: $ff
-	or   b                                           ; $6686: $b0
-	ld   bc, $2322                                   ; $6687: $01 $22 $23
-	jr   @+$01                                       ; $668a: $18 $ff
+.table:
+	ChestItem FLAG1_SAKURA_PHOTO, $14, $15, $11, $ff
+	ChestItem FLAG1_SUMIRE_PHOTO, $16, $17, $12, $ff
+	ChestItem FLAG1_MARIA_PHOTO, $18, $19, $13, $ff
+	ChestItem FLAG1_IRIS_PHOTO, $1a, $1b, $14, $ff
+	ChestItem FLAG1_KOHRAN_PHOTO, $1c, $1d, $15, $ff
+	ChestItem FLAG1_KANNA_PHOTO, $1e, $1f, $16, $ff
+	ChestItem FLAG1_ORIHIME_PHOTO, $20, $21, $17, $ff
+	ChestItem FLAG1_RENI_PHOTO, $22, $23, $18, $ff
+	ChestItem CheckIfAnyEventGalleryBought, $24, $25, $20, $ff
+	ChestItem CheckIfAnyPortraitGalleryBought, $34, $35, $30, $ff
+	ChestItem CheckIfAnySoundModeBought, $00, $01, $50, $ff
+	ChestItem CheckIfAnyVoiceModeBought, $06, $07, $00, $ff
+	ChestItem FLAG1_ITEM_INDEX, $74, $75, $89, $ff
+	ChestItem FLAG1_RECOVERY_DRINK, $62, $63, $80, $00
+	ChestItem FLAG1_RING_OF_REV, $64, $65, $81, $00
+	ChestItem FLAG1_MYSTERY_CHARM, $66, $67, $82, $00
+	ChestItem FLAG1_GUTS_HEADBAND, $68, $69, $83, $00
+	ChestItem FLAG1_LIGHT_SHOES, $6a, $6b, $84, $00
+	ChestItem FLAG1_CLEAR_LENS, $6c, $6d, $85, $00
+	ChestItem FLAG1_NAMEPLATE, $60, $61, $86, $00
+	ChestItem FLAG1_PETAL_CURSOR, $50, $51, $87, $00
+	ChestItem FLAG1_CANDY_CURSOR, $52, $53, $88, $00
+	ChestItem FLAG1_SAKURAS_SCHEDULE, $54, $55, $70, $00
+	ChestItem FLAG1_SUMIRES_SCHEDULE, $56, $57, $71, $00
+	ChestItem FLAG1_MARIAS_SCHEDULE, $58, $59, $72, $00
+	ChestItem FLAG1_IRIS_SCHEDULE, $5a, $5b, $73, $00
+	ChestItem FLAG1_KOHRANS_SCHEDULE, $5c, $5d, $74, $00
+	ChestItem FLAG1_KANNAS_SCHEDULE, $5e, $5f, $75, $00
+	ChestItem FLAG1_MOCK_BATTLE, $72, $73, $4a, $ff
+	ChestItem FLAG1_PUSH_UPS, $6e, $6f, $48, $ff
+	ChestItem FLAG1_RED_LIGHT_GREEN_LIGHT, $70, $71, $49, $ff
+	ChestItem FLAG1_SAKURA_EX_MODE, $44, $45, $41, $00
+	ChestItem FLAG1_SUMIRE_EX_MODE, $46, $47, $42, $00
+	ChestItem FLAG1_MARIA_EX_MODE, $48, $49, $43, $00
+	ChestItem FLAG1_IRIS_EX_MODE, $4a, $4b, $44, $00
+	ChestItem FLAG1_KOHRAN_EX_MODE, $4c, $4d, $45, $00
+	ChestItem FLAG1_KANNA_EX_MODE, $4e, $4f, $46, $00
+	db $00, $00
 
-	inc  a                                           ; $668c: $3c
-	ld   h, a                                        ; $668d: $67
-	inc  h                                           ; $668e: $24
-	dec  h                                           ; $668f: $25
-	jr   nz, @+$01                                   ; $6690: $20 $ff
 
-	pop  de                                          ; $6692: $d1
-	ld   h, a                                        ; $6693: $67
-	inc  [hl]                                        ; $6694: $34
-	dec  [hl]                                        ; $6695: $35
-	jr   nc, @+$01                                   ; $6696: $30 $ff
-
-	ld   h, [hl]                                     ; $6698: $66
-	ld   l, b                                        ; $6699: $68
-	nop                                              ; $669a: $00
-	ld   bc, $ff50                                   ; $669b: $01 $50 $ff
-	sub  a                                           ; $669e: $97
-	ld   l, b                                        ; $669f: $68
-	ld   b, $07                                      ; $66a0: $06 $07
-	nop                                              ; $66a2: $00
-	rst  $38                                         ; $66a3: $ff
-	inc  b                                           ; $66a4: $04
-	ld   [bc], a                                     ; $66a5: $02
-	ld   [hl], h                                     ; $66a6: $74
-	ld   [hl], l                                     ; $66a7: $75
-	adc  c                                           ; $66a8: $89
-	rst  $38                                         ; $66a9: $ff
-	call c, Call_009_6201                            ; $66aa: $dc $01 $62
-	ld   h, e                                        ; $66ad: $63
-	add  b                                           ; $66ae: $80
-	nop                                              ; $66af: $00
-	add  sp, $01                                     ; $66b0: $e8 $01
-	ld   h, h                                        ; $66b2: $64
-	ld   h, l                                        ; $66b3: $65
-	add  c                                           ; $66b4: $81
-	nop                                              ; $66b5: $00
-	db   $ec                                         ; $66b6: $ec
-	ld   bc, $6766                                   ; $66b7: $01 $66 $67
-	add  d                                           ; $66ba: $82
-	nop                                              ; $66bb: $00
-	ldh  a, [rSB]                                    ; $66bc: $f0 $01
-	ld   l, b                                        ; $66be: $68
-	ld   l, c                                        ; $66bf: $69
-	add  e                                           ; $66c0: $83
-	nop                                              ; $66c1: $00
-	db   $f4                                         ; $66c2: $f4
-	ld   bc, $6b6a                                   ; $66c3: $01 $6a $6b
-	add  h                                           ; $66c6: $84
-	nop                                              ; $66c7: $00
-	ld   hl, sp+$01                                  ; $66c8: $f8 $01
-	ld   l, h                                        ; $66ca: $6c
-	ld   l, l                                        ; $66cb: $6d
-	add  l                                           ; $66cc: $85
-	nop                                              ; $66cd: $00
-	sub  b                                           ; $66ce: $90
-	ld   bc, $6160                                   ; $66cf: $01 $60 $61
-	add  [hl]                                        ; $66d2: $86
-	nop                                              ; $66d3: $00
-	adc  b                                           ; $66d4: $88
-	ld   bc, $5150                                   ; $66d5: $01 $50 $51
-	add  a                                           ; $66d8: $87
-	nop                                              ; $66d9: $00
-	adc  h                                           ; $66da: $8c
-	ld   bc, $5352                                   ; $66db: $01 $52 $53
-	adc  b                                           ; $66de: $88
-	nop                                              ; $66df: $00
-	nop                                              ; $66e0: $00
-	ld   bc, $5554                                   ; $66e1: $01 $54 $55
-	ld   [hl], b                                     ; $66e4: $70
-	nop                                              ; $66e5: $00
-	inc  b                                           ; $66e6: $04
-	ld   bc, $5756                                   ; $66e7: $01 $56 $57
-	ld   [hl], c                                     ; $66ea: $71
-	nop                                              ; $66eb: $00
-	ld   [$5801], sp                                 ; $66ec: $08 $01 $58
-	ld   e, c                                        ; $66ef: $59
-	ld   [hl], d                                     ; $66f0: $72
-	nop                                              ; $66f1: $00
-	inc  c                                           ; $66f2: $0c
-	ld   bc, $5b5a                                   ; $66f3: $01 $5a $5b
-	ld   [hl], e                                     ; $66f6: $73
-	nop                                              ; $66f7: $00
-	db   $10                                         ; $66f8: $10
-	ld   bc, $5d5c                                   ; $66f9: $01 $5c $5d
-	ld   [hl], h                                     ; $66fc: $74
-	nop                                              ; $66fd: $00
-	inc  d                                           ; $66fe: $14
-	ld   bc, $5f5e                                   ; $66ff: $01 $5e $5f
-	ld   [hl], l                                     ; $6702: $75
-	nop                                              ; $6703: $00
-	ld   [$7202], sp                                 ; $6704: $08 $02 $72
-	ld   [hl], e                                     ; $6707: $73
-	ld   c, d                                        ; $6708: $4a
-	rst  $38                                         ; $6709: $ff
-	nop                                              ; $670a: $00
-	ld   [bc], a                                     ; $670b: $02
-	ld   l, [hl]                                     ; $670c: $6e
-	ld   l, a                                        ; $670d: $6f
-	ld   c, b                                        ; $670e: $48
-	rst  $38                                         ; $670f: $ff
-	db   $fc                                         ; $6710: $fc
-	ld   bc, $7170                                   ; $6711: $01 $70 $71
-	ld   c, c                                        ; $6714: $49
-	rst  $38                                         ; $6715: $ff
-	jr   jr_009_6719                                 ; $6716: $18 $01
-
-	ld   b, h                                        ; $6718: $44
-
-jr_009_6719:
-	ld   b, l                                        ; $6719: $45
-	ld   b, c                                        ; $671a: $41
-	nop                                              ; $671b: $00
-	inc  e                                           ; $671c: $1c
-	ld   bc, $4746                                   ; $671d: $01 $46 $47
-	ld   b, d                                        ; $6720: $42
-	nop                                              ; $6721: $00
-	jr   nz, jr_009_6725                             ; $6722: $20 $01
-
-	ld   c, b                                        ; $6724: $48
-
-jr_009_6725:
-	ld   c, c                                        ; $6725: $49
-	ld   b, e                                        ; $6726: $43
-	nop                                              ; $6727: $00
-	inc  h                                           ; $6728: $24
-	ld   bc, $4b4a                                   ; $6729: $01 $4a $4b
-	ld   b, h                                        ; $672c: $44
-	nop                                              ; $672d: $00
-	jr   z, jr_009_6731                              ; $672e: $28 $01
-
-	ld   c, h                                        ; $6730: $4c
-
-jr_009_6731:
-	ld   c, l                                        ; $6731: $4d
-	ld   b, l                                        ; $6732: $45
-	nop                                              ; $6733: $00
-	inc  l                                           ; $6734: $2c
-	ld   bc, $4f4e                                   ; $6735: $01 $4e $4f
-	ld   b, [hl]                                     ; $6738: $46
-	nop                                              ; $6739: $00
-	nop                                              ; $673a: $00
-	nop                                              ; $673b: $00
+CheckIfAnyEventGalleryBought:
 	ld   hl, $0130                                   ; $673c: $21 $30 $01
-
 	M_FarCall CheckIfNextFlagSet1
-
 	or   a                                           ; $6753: $b7
 	ret  nz                                          ; $6754: $c0
 
 	ld   hl, $0134                             ; $6755: $21 $34 $01
-
 	M_FarCall CheckIfNextFlagSet1
-
 	or   a                                           ; $676c: $b7
 	ret  nz                                          ; $676d: $c0
 
 	ld   hl, $0138                                   ; $676e: $21 $38 $01
-
 	M_FarCall CheckIfNextFlagSet1
-
 	or   a                                           ; $6785: $b7
 	ret  nz                                          ; $6786: $c0
 
 	ld   hl, $013c                                   ; $6787: $21 $3c $01
-
 	M_FarCall CheckIfNextFlagSet1
-
 	or   a                                           ; $679e: $b7
 	ret  nz                                          ; $679f: $c0
 
 	ld   hl, $0140                                   ; $67a0: $21 $40 $01
-
 	M_FarCall CheckIfNextFlagSet1
-
 	or   a                                           ; $67b7: $b7
 	ret  nz                                          ; $67b8: $c0
 
 	ld   hl, $0144                   ; $67b9: $21 $44 $01
-
 	M_FarCall CheckIfNextFlagSet1
 	ret                                              ; $67d0: $c9
 
 
-	ld   hl, $0148                           ; $67d1: $21 $48 $01
-
+; Returns A != 0 if a portrait gallery was bought
+CheckIfAnyPortraitGalleryBought:
+	ld   hl, FLAG1_SAKURA_PORTRAIT_GALLERY                          ; $67d1
 	M_FarCall CheckIfNextFlagSet1
+	or   a                                                          ; $67e8
+	ret  nz                                                         ; $67e9
 
-	or   a                                           ; $67e8: $b7
-	ret  nz                                          ; $67e9: $c0
-
-	ld   hl, $014c                    ; $67ea: $21 $4c $01
-
+	ld   hl, FLAG1_SUMIRE_PORTRAIT_GALLERY                          ; $67ea
 	M_FarCall CheckIfNextFlagSet1
+	or   a                                                          ; $6801
+	ret  nz                                                         ; $6802
 
-	or   a                                           ; $6801: $b7
-	ret  nz                                          ; $6802: $c0
-
-	ld   hl, $0150                                   ; $6803: $21 $50 $01
-
+	ld   hl, FLAG1_MARIA_PORTRAIT_GALLERY                           ; $6803
 	M_FarCall CheckIfNextFlagSet1
+	or   a                                                          ; $681a
+	ret  nz                                                         ; $681b
 
-	or   a                                           ; $681a: $b7
-	ret  nz                                          ; $681b: $c0
-
-	ld   hl, $0154                                   ; $681c: $21 $54 $01
-
+	ld   hl, FLAG1_IRIS_PORTRAIT_GALLERY                            ; $681c
 	M_FarCall CheckIfNextFlagSet1
+	or   a                                                          ; $6833
+	ret  nz                                                         ; $6834
 
-	or   a                                           ; $6833: $b7
-	ret  nz                                          ; $6834: $c0
-
-	ld   hl, $0158                                   ; $6835: $21 $58 $01
-
+	ld   hl, FLAG1_KOHRAN_PORTRAIT_GALLERY                          ; $6835
 	M_FarCall CheckIfNextFlagSet1
+	or   a                                                          ; $684c
+	ret  nz                                                         ; $684d
 
-	or   a                                           ; $684c: $b7
-	ret  nz                                          ; $684d: $c0
-
-	ld   hl, $015c                                   ; $684e: $21 $5c $01
-
+	ld   hl, FLAG1_KANNA_PORTRAIT_GALLERY                           ; $684e
 	M_FarCall CheckIfNextFlagSet1
-	ret                                              ; $6865: $c9
+	ret                                                             ; $6865
 
 
+CheckIfAnySoundModeBought:
 	ld   hl, $01bc                                   ; $6866: $21 $bc $01
-
 	M_FarCall CheckIfNextFlagSet1
-
 	or   a                                           ; $687d: $b7
 	ret  nz                                          ; $687e: $c0
 
 	ld   hl, $01c0                                   ; $687f: $21 $c0 $01
-
 	M_FarCall CheckIfNextFlagSet1
 	ret                                              ; $6896: $c9
 
 
+CheckIfAnyVoiceModeBought:
 	ld   hl, $01c4                                   ; $6897: $21 $c4 $01
-
 	M_FarCall CheckIfNextFlagSet1
-
 	or   a                                           ; $68ae: $b7
 	ret  nz                                          ; $68af: $c0
 
 	ld   hl, $01c8                                   ; $68b0: $21 $c8 $01
-
 	M_FarCall CheckIfNextFlagSet1
-
 	or   a                                           ; $68c7: $b7
 	ret  nz                                          ; $68c8: $c0
 
 	ld   hl, $01cc                                   ; $68c9: $21 $cc $01
-
 	M_FarCall CheckIfNextFlagSet1
-
 	or   a                                           ; $68e0: $b7
 	ret  nz                                          ; $68e1: $c0
 
 	ld   hl, $01d0                                   ; $68e2: $21 $d0 $01
-
 	M_FarCall CheckIfNextFlagSet1
-
 	or   a                                           ; $68f9: $b7
 	ret  nz                                          ; $68fa: $c0
 
 	ld   hl, $01d4                                   ; $68fb: $21 $d4 $01
-
 	M_FarCall CheckIfNextFlagSet1
-
 	or   a                                           ; $6912: $b7
 	ret  nz                                          ; $6913: $c0
 
 	ld   hl, $01d8                                   ; $6914: $21 $d8 $01
-
 	M_FarCall CheckIfNextFlagSet1
 	ret                                              ; $692b: $c9
 
@@ -6592,7 +6435,8 @@ LCDCFunc0a::
 	jp   LCDCInterruptHandler.return                                       ; $694b: $c3 $4a $04
 
 
-Func_09_694e::
+; Returns A = $ff if no items available, else 0
+CheckIfNoChestItemsUnlocked::
 	call Call_009_58eb                               ; $694e: $cd $eb $58
 	ld   a, [$cc56]                                  ; $6951: $fa $56 $cc
 	or   a                                           ; $6954: $b7
@@ -6608,9 +6452,9 @@ jr_009_6959:
 
 SetTreasureChestState::
 	ld   a, h                                        ; $695b: $7c
-	ld   [$cc52], a                                  ; $695c: $ea $52 $cc
+	ld   [wRomandoShopReturnState], a                                  ; $695c: $ea $52 $cc
 	ld   a, l                                        ; $695f: $7d
-	ld   [$cc53], a                                  ; $6960: $ea $53 $cc
+	ld   [wRomandoShopReturnSubstate], a                                  ; $6960: $ea $53 $cc
 	ld   a, GS_TREASURE_CHEST                                      ; $6963: $3e $41
 	ld   [wGameState], a                                  ; $6965: $ea $a0 $c2
 	xor  a                                           ; $6968: $af

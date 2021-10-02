@@ -313,7 +313,13 @@ wSaveScreenReturnSubstate:: ; $c8be
     db
 
 wc8bf:
-    ds $916-$8bf
+    ds $ca-$bf
+
+wPocketSakuraRewardsStruct:: ; $c8ca
+    db ; unknown
+
+wc8cb:
+    ds $916-$8cb
 
 wResetDataBaseAnimSpriteSpecIdxUsed:: ; $c916
     db
@@ -678,7 +684,16 @@ wFileLoadDisplayShouldSkip:: ; $cc1e
     db
 
 wcc1f:
-    ds $74-$1f
+    ds $52-$1f
+
+wRomandoShopReturnState:: ; $cc52
+    db
+
+wRomandoShopReturnSubstate:: ; $cc53
+    db
+
+wcc54:
+    ds $74-$54
 
 wPostIntroScriptEngineGameState:: ; $cc74
     db
@@ -720,7 +735,13 @@ wDormRoomButtonsDisplayed:: ; $cc83
     ds 5
 
 wcc88:
-    ds $98-$88
+    ds $95-$88
+
+wCinematronItemsTally:: ; $cc95
+    db
+
+wCinematronPointsTally:: ; $cc96
+    dw
 
 wPrologueMainSubSubstate:: ; $cc98
     db

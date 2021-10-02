@@ -87,6 +87,8 @@
 ; DPT as a return state to dorm room
 
 ; TODO: sources of scripts
+; TODO: MITINV constants for InvItem and RomandoItem
+; TODO: document end-game rewards
 
 ; Minigames
 ; cb1d=0 for practice

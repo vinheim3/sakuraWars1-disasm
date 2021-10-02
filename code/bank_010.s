@@ -2754,23 +2754,15 @@ endc
 	jr   z, jr_010_52f3                              ; $52d8: $28 $19
 
 	ld   hl, $c8c2                                   ; $52da: $21 $c2 $c8
-	push af                                          ; $52dd: $f5
-	ld   a, $90                                      ; $52de: $3e $90
-	ld   [wFarCallAddr], a                                  ; $52e0: $ea $98 $c2
-	ld   a, $6b                                      ; $52e3: $3e $6b
-	ld   [wFarCallAddr+1], a                                  ; $52e5: $ea $99 $c2
-	ld   a, $04                                      ; $52e8: $3e $04
-	ld   [wFarCallBank], a                                  ; $52ea: $ea $9a $c2
-	pop  af                                          ; $52ed: $f1
-	call FarCall                                       ; $52ee: $cd $62 $09
+	M_FarCall GivePocketSakuraRewards
+
 	jr   jr_010_530f                                 ; $52f1: $18 $1c
 
 jr_010_52f3:
-	call Call_010_5550                               ; $52f3: $cd $50 $55
+	call todo_PocketSakuraRelatedChecksum                               ; $52f3: $cd $50 $55
 	jr   nz, jr_010_5319                             ; $52f6: $20 $21
 
-	ld   hl, $c8ca                                   ; $52f8: $21 $ca $c8
-
+	ld   hl, wPocketSakuraRewardsStruct                                   ; $52f8: $21 $ca $c8
 	M_FarCall GiveIRBasedRewards
 
 jr_010_530f:
@@ -3106,7 +3098,7 @@ Jump_010_5522:
 	jp   Jump_010_54fc                               ; $554d: $c3 $fc $54
 
 
-Call_010_5550:
+todo_PocketSakuraRelatedChecksum:
 	ld   hl, $c8c2                                   ; $5550: $21 $c2 $c8
 	ld   de, $5566                                   ; $5553: $11 $66 $55
 	ld   c, $05                                      ; $5556: $0e $05
@@ -3124,7 +3116,6 @@ jr_010_5558:
 	xor  a                                           ; $5561: $af
 	ret                                              ; $5562: $c9
 
-
 jr_010_5563:
 	or   $ff                                         ; $5563: $f6 $ff
 	ret                                              ; $5565: $c9
@@ -3135,6 +3126,7 @@ jr_010_5563:
 	ld   c, d                                        ; $5568: $4a
 	ld   b, h                                        ; $5569: $44
 	ld   c, l                                        ; $556a: $4d
+
 
 SetPocketSakuraCommsState:
 	ld   a, h                                        ; $556b: $7c
@@ -5140,7 +5132,7 @@ Call_010_60a9:
 	push hl                                          ; $60a9: $e5
 	push de                                          ; $60aa: $d5
 
-	ld   a, [$cc95]                                  ; $60ab: $fa $95 $cc
+	ld   a, [wCinematronItemsTally]                                  ; $60ab: $fa $95 $cc
 	call ConvertAintoBCD                                       ; $60ae: $cd $7d $0d
 
 ; C = 1s, B = 10s, trash 100s
@@ -5176,7 +5168,7 @@ Call_010_60a9:
 Call_010_60c9:
 	push hl                                          ; $60c9: $e5
 	push de                                          ; $60ca: $d5
-	ld   hl, $cc96                                   ; $60cb: $21 $96 $cc
+	ld   hl, wCinematronPointsTally                                   ; $60cb: $21 $96 $cc
 	ld   a, [hl+]                                    ; $60ce: $2a
 	ld   h, [hl]                                     ; $60cf: $66
 	ld   l, a                                        ; $60d0: $6f
@@ -5973,14 +5965,14 @@ Call_010_65e0:
 	or   a                                           ; $65e5: $b7
 	jr   z, jr_010_65f8                              ; $65e6: $28 $10
 
-	ld   a, [$cc95]                                  ; $65e8: $fa $95 $cc
+	ld   a, [wCinematronItemsTally]                                  ; $65e8: $fa $95 $cc
 	or   a                                           ; $65eb: $b7
 	jr   z, jr_010_65f0                              ; $65ec: $28 $02
 
 	ld   c, $02                                      ; $65ee: $0e $02
 
 jr_010_65f0:
-	ld   hl, $cc96                                   ; $65f0: $21 $96 $cc
+	ld   hl, wCinematronPointsTally                                   ; $65f0: $21 $96 $cc
 	ld   a, [hl+]                                    ; $65f3: $2a
 	or   [hl]                                        ; $65f4: $b6
 	jr   z, jr_010_65f8                              ; $65f5: $28 $01
