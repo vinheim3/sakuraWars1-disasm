@@ -4504,7 +4504,7 @@ jr_004_6033:
 	sla  a                                           ; $6045: $cb $27
 	ld   h, $00                                      ; $6047: $26 $00
 	ld   l, a                                        ; $6049: $6f
-	ld   bc, $6093                                   ; $604a: $01 $93 $60
+	ld   bc, Table_04_6093                                   ; $604a: $01 $93 $60
 	add  hl, bc                                      ; $604d: $09
 	ld   a, [hl+]                                    ; $604e: $2a
 	ld   h, [hl]                                     ; $604f: $66
@@ -4541,65 +4541,54 @@ Jump_004_6053:
 	jp   IncDormRoomAnimationStep                               ; $6090: $c3 $cc $58
 
 
-	cp   b                                           ; $6093: $b8
-	ld   h, b                                        ; $6094: $60
-	cp   [hl]                                        ; $6095: $be
-	ld   h, b                                        ; $6096: $60
-	cp   [hl]                                        ; $6097: $be
-	ld   h, b                                        ; $6098: $60
-	cp   [hl]                                        ; $6099: $be
-	ld   h, b                                        ; $609a: $60
-	cp   [hl]                                        ; $609b: $be
-	ld   h, b                                        ; $609c: $60
-	cp   [hl]                                        ; $609d: $be
-	ld   h, b                                        ; $609e: $60
-	cp   [hl]                                        ; $609f: $be
-	ld   h, b                                        ; $60a0: $60
-	or   e                                           ; $60a1: $b3
-	ld   h, b                                        ; $60a2: $60
-	rst  ToBoot                                         ; $60a3: $c7
-	ld   h, b                                        ; $60a4: $60
-	rst  ToBoot                                         ; $60a5: $c7
-	ld   h, b                                        ; $60a6: $60
-	rst  ToBoot                                         ; $60a7: $c7
-	ld   h, b                                        ; $60a8: $60
-	rst  ToBoot                                         ; $60a9: $c7
-	ld   h, b                                        ; $60aa: $60
-	rst  ToBoot                                         ; $60ab: $c7
-	ld   h, b                                        ; $60ac: $60
-	rst  ToBoot                                         ; $60ad: $c7
-	ld   h, b                                        ; $60ae: $60
-	jp   nc, $d860                                   ; $60af: $d2 $60 $d8
+Table_04_6093:
+	dw .func_60b8
+	dw .func_60be
+	dw .func_60be
+	dw .func_60be
+	dw .func_60be
+	dw .func_60be
+	dw .func_60be
+	dw .func_60b3
+	dw .func_60c7
+	dw .func_60c7
+	dw .func_60c7
+	dw .func_60c7
+	dw .func_60c7
+	dw .func_60c7
+	dw .func_60d2
+	dw .func_60d8
 
-	ld   h, b                                        ; $60b2: $60
+.func_60b3:
 	xor  a                                           ; $60b3: $af
 	ld   [$cc82], a                                  ; $60b4: $ea $82 $cc
 	ret                                              ; $60b7: $c9
 
-
+.func_60b8:
 	ld   a, $01                                      ; $60b8: $3e $01
 	ld   [$cc82], a                                  ; $60ba: $ea $82 $cc
 	ret                                              ; $60bd: $c9
 
-
+.func_60be:
+; todo: sets this from 1 to 6
 	ld   [$cb1e], a                                  ; $60be: $ea $1e $cb
 	ld   a, $05                                      ; $60c1: $3e $05
 	ld   [$cc82], a                                  ; $60c3: $ea $82 $cc
 	ret                                              ; $60c6: $c9
 
-
+.func_60c7:
 	sub  $08                                         ; $60c7: $d6 $08
 	ld   [$afe0], a                                  ; $60c9: $ea $e0 $af
 	ld   a, $08                                      ; $60cc: $3e $08
 	ld   [$cc82], a                                  ; $60ce: $ea $82 $cc
 	ret                                              ; $60d1: $c9
 
-
+.func_60d2:
 	ld   a, $09                                      ; $60d2: $3e $09
 	ld   [$cc82], a                                  ; $60d4: $ea $82 $cc
 	ret                                              ; $60d7: $c9
 
-
+.func_60d8:
 	ld   a, [wWramBank]                                  ; $60d8: $fa $93 $c2
 	push af                                          ; $60db: $f5
 	ld   a, $02                                      ; $60dc: $3e $02

@@ -4339,7 +4339,7 @@ jr_065_5296:
 	jr   jr_065_536b                                 ; $535a: $18 $0f
 
 	nop                                              ; $535c: $00
-	ld   bc, $ca01                                   ; $535d: $01 $01 $ca
+	ld   bc, wGameResultsReturnState                                   ; $535d: $01 $01 $ca
 	and  l                                           ; $5360: $a5
 	push bc                                          ; $5361: $c5
 	ld   a, h                                        ; $5362: $7c
@@ -9076,7 +9076,7 @@ jr_065_6876:
 	dec  c                                           ; $6891: $0d
 	nop                                              ; $6892: $00
 	ld   a, [bc]                                     ; $6893: $0a
-	ld   bc, $ca02                                   ; $6894: $01 $02 $ca
+	ld   bc, wGameResultsReturnSubstate                                   ; $6894: $01 $02 $ca
 	ld   a, h                                        ; $6897: $7c
 	ld   e, d                                        ; $6898: $5a
 	and  c                                           ; $6899: $a1

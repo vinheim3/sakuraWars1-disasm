@@ -4612,7 +4612,7 @@ jr_08c_52da:
 	ld   hl, $0000                                   ; $53ab: $21 $00 $00
 	rst  $38                                         ; $53ae: $ff
 	rst  $38                                         ; $53af: $ff
-	call nz, $afc4                                   ; $53b0: $c4 $c4 $af
+	call nz, sSramVals2+SRAM2_IRIS_AFFECTION                                   ; $53b0: $c4 $c4 $af
 	xor  a                                           ; $53b3: $af
 	and  h                                           ; $53b4: $a4
 	and  h                                           ; $53b5: $a4

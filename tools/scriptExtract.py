@@ -58,7 +58,7 @@ class ScriptExtractor:
             "params": "b",
         },
         0x0d: {
-            "name": "ScriptOpt_0d", 
+            "name": "ScriptOpt_SetCharOnScene", 
             "params": "bb",
         },
         0x0e: {
@@ -82,7 +82,7 @@ class ScriptExtractor:
             "params": "b",
         },
         0x13: {
-            "name": "ScriptOpt_13", 
+            "name": "ScriptOpt_PlaySong", 
             "params": "b",
         },
         0x14: {
@@ -106,7 +106,7 @@ class ScriptExtractor:
             "params": "b",
         },
         0x1c: {
-            "name": "ScriptOpt_1c",
+            "name": "ScriptOpt_SetCharAndPortrait",
             "params": "bbb",
         },
         0x1e: {
@@ -183,7 +183,7 @@ class ScriptExtractor:
         self.englishMap = {}
 
     @staticmethod
-    def convertEnglish(english, limit=112, dictionary=False, startingLine=None):
+    def convertEnglish(english, limit=112, dictionary=False, startingLine=None, rows=3):
         lines = english.split('\n')
         textboxes = []
         lineCounter = startingLine or 0
@@ -216,7 +216,7 @@ class ScriptExtractor:
                 if calc >= limit:
                     lineCounter += 1
                     colCounter = 0
-                    if lineCounter >= 3:
+                    if lineCounter >= rows:
                         textboxes.append(boxBytes)
                         boxBytes = []
                         lineCounter = 0
@@ -265,7 +265,7 @@ class ScriptExtractor:
             if j != len(lines)-1:
                 lineCounter += 1
                 colCounter = 0
-                if lineCounter >= 3:
+                if lineCounter >= rows:
                     textboxes.append(boxBytes)
                     boxBytes = []
                     lineCounter = 0
@@ -384,17 +384,17 @@ class ScriptExtractor:
             elif ctrl == 3:
                 param = self.get_script_byte()
                 totalBytes += 1
-                comps.append(f"Rpn03 ${param:02x}")
+                comps.append(f"RpnGetLocalByte ${param:02x}")
             elif ctrl == 4:
                 paramH = self.get_script_byte()
                 paramL = self.get_script_byte()
                 totalBytes += 2
-                comps.append(f"Rpn04 ${paramH:02x}, ${paramL:02x}")
+                comps.append(f"RpnCheckLocalByte ${paramH:02x}, ${paramL:02x}")
             elif ctrl == 6:
                 paramH = self.get_script_byte()
                 paramL = self.get_script_byte()
                 totalBytes += 2
-                comps.append(f"Rpn06 ${paramH:02x}, ${paramL:02x}")
+                comps.append(f"RpnCheckGlobalByte ${paramH:02x}, ${paramL:02x}")
             elif ctrl == 0:
                 comps.append("RpnEnd")
                 break

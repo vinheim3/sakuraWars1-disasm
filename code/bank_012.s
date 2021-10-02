@@ -5517,7 +5517,7 @@ jr_012_567a:
 
 	ld   [$ea2b], a                                  ; $5720: $ea $2b $ea
 	dec  hl                                          ; $5723: $2b
-	ld   [$ca2b], a                                  ; $5724: $ea $2b $ca
+	ld   [wGameResultsOfficeWeek4Kasumi], a                                  ; $5724: $ea $2b $ca
 	ld   c, e                                        ; $5727: $4b
 	adc  c                                           ; $5728: $89
 	adc  c                                           ; $5729: $89

@@ -4540,7 +4540,7 @@ GameState3f_GameOver::
 	ld   a, $ff                                      ; $5e51: $3e $ff
 	ld   [$b0aa], a                                  ; $5e53: $ea $aa $b0
 
-	M_FarCall Func_05_4540
+	M_FarCall ReturnMostAffectionateGirlInA
 
 	ld   [$b0ab], a                                  ; $5e6a: $ea $ab $b0
 

@@ -474,6 +474,7 @@ ScriptJumpRelativeToBase::
 
 
 Call_008_4301:
+; return if cbc4 not manually set
 	ld   a, [$cbc4]                                  ; $4301: $fa $c4 $cb
 	or   a                                           ; $4304: $b7
 	ret  z                                           ; $4305: $c8
@@ -654,7 +655,7 @@ ScriptEngineTable:
 	ScriptOpData ScriptOpcode11, $00
 	ScriptOpData ScriptOpcode12, $00
 	;
-	ScriptOpData ScriptOpcode13, $02
+	ScriptOpData ScriptOpcode13_PlaySong, $02
 	;
 	ScriptOpData ScriptOpcode14, $01
 	;
@@ -669,7 +670,7 @@ ScriptEngineTable:
 	ScriptOpData ScriptOpcode1a_MiniGame, $01
 	;
 	ScriptOpData ScriptOpcode1b, $03
-	ScriptOpData ScriptOpcode1c_SetPortraitAndCharacter, $00
+	ScriptOpData ScriptOpcode1c_SetCharAndPortrait, $00
 	;
 	ScriptOpData ScriptOpcode1d, $04
 	;
@@ -787,7 +788,7 @@ ScriptCalcCode2_pushSpecialRamByte:
 	dw .entry4_miniGameTrainingBattleRank
 	dw .entry5_randomNum
 	dw $453f
-	dw $4544
+	dw .entry7_kouboChosen
 
 .entry0_currDay:
 	ld   a, [sCurrDay]                                  ; $4521: $fa $b0 $af
@@ -816,7 +817,8 @@ ScriptCalcCode2_pushSpecialRamByte:
 	ld   a, [$cb1e]                                  ; $453f: $fa $1e $cb
 	jr   PushAOntoScriptCalcStack                                 ; $4542: $18 $05
 
-	ld   a, [$cbc2]                                  ; $4544: $fa $c2 $cb
+.entry7_kouboChosen:
+	ld   a, [wKouboChosen]                                  ; $4544: $fa $c2 $cb
 	jr   PushAOntoScriptCalcStack                                 ; $4547: $18 $00
 
 
@@ -4054,7 +4056,7 @@ jr_008_5ac7:
 	ret                                              ; $5ac9: $c9
 
 
-ScriptOpcode13_Init:
+ScriptOpcode13_PlaySong_Init:
 	call GetNextScriptOpcodeToProcess                               ; $5aca: $cd $70 $42
 	bit  7, a                                        ; $5acd: $cb $7f
 	jr   nz, jr_008_5adf                             ; $5acf: $20 $0e
@@ -4079,7 +4081,7 @@ jr_008_5adf:
 	xor  a                                           ; $5ae9: $af
 	ld   [hl+], a                                    ; $5aea: $22
 
-ScriptOpcode13_Main:
+ScriptOpcode13_PlaySong_Main:
 	xor  a                                           ; $5aeb: $af
 	ld   [wScriptEngineContsRunningThisMainLoop], a                                  ; $5aec: $ea $52 $cb
 	ld   a, [hl-]                                    ; $5aef: $3a
@@ -5735,7 +5737,7 @@ ScriptOpcode1a_MiniGame_Main:
 	ret                                              ; $66cf: $c9
 
 .redLightGreenLight:
-	ld   hl, $00d8                                   ; $66d0: $21 $d8 $00
+	ld   hl, FLAG2_RED_LIGHT_GREEN_LIGHT_TRAINING                                   ; $66d0: $21 $d8 $00
 	ld   a, $ff                                      ; $66d3: $3e $ff
 
 	M_FarCall SetOrUnsetFlag2
@@ -5748,7 +5750,7 @@ ScriptOpcode1a_MiniGame_Main:
 	ret                                              ; $6703: $c9
 
 .pushUps:
-	ld   hl, $00d7                                   ; $6704: $21 $d7 $00
+	ld   hl, FLAG2_PUSH_UPS_TRAINING                                   ; $6704: $21 $d7 $00
 	ld   a, $ff                                      ; $6707: $3e $ff
 
 	M_FarCall SetOrUnsetFlag2
@@ -5855,8 +5857,8 @@ ScriptOpcode34_PreSpecifiedDelay_Main:
 	jp   DequeueAScriptOpcode                               ; $67cc: $c3 $bc $40
 
 
-ScriptOpcode1c_SetPortraitAndCharacter_Init:
-ScriptOpcode1c_SetPortraitAndCharacter_Main:
+ScriptOpcode1c_SetCharAndPortrait_Init:
+ScriptOpcode1c_SetCharAndPortrait_Main:
 ; 3 script bytes after into B, C, D
 	call GetNextScriptOpcodeToProcess                               ; $67cf: $cd $70 $42
 	ld   b, a                                        ; $67d2: $47
@@ -5961,46 +5963,48 @@ ScriptOpcode1d_Main:
 	sla  a                                           ; $6884: $cb $27
 	ld   b, $00                                      ; $6886: $06 $00
 	ld   c, a                                        ; $6888: $4f
-	ld   hl, $6891                                   ; $6889: $21 $91 $68
+	ld   hl, .table                                   ; $6889: $21 $91 $68
 	add  hl, bc                                      ; $688c: $09
 	ld   a, [hl+]                                    ; $688d: $2a
 	ld   h, [hl]                                     ; $688e: $66
 	ld   l, a                                        ; $688f: $6f
 	jp   hl                                          ; $6890: $e9
 
+.table:
+	dw .entry0
+	dw .entry1
 
-	sub  l                                           ; $6891: $95
-	ld   l, b                                        ; $6892: $68
-	or   b                                           ; $6893: $b0
-	ld   l, b                                        ; $6894: $68
+.entry0:
 	ldh  a, [hScriptOpcodeParams]                                    ; $6895: $f0 $a0
 	bit  7, a                                        ; $6897: $cb $7f
-	jr   nz, jr_008_68a2                             ; $6899: $20 $07
+	jr   nz, .br_68a2                             ; $6899: $20 $07
 
 	ld   a, $02                                      ; $689b: $3e $02
 	call Call_008_4334                               ; $689d: $cd $34 $43
-	jr   jr_008_68a7                                 ; $68a0: $18 $05
+	jr   .cont_68a7                                 ; $68a0: $18 $05
 
-jr_008_68a2:
+.br_68a2:
 	ld   a, $03                                      ; $68a2: $3e $03
 	call Call_008_4334                               ; $68a4: $cd $34 $43
 
-jr_008_68a7:
+.cont_68a7:
 	ld   hl, hScriptOpcodeParams+2                                   ; $68a7: $21 $a2 $ff
 	inc  [hl]                                        ; $68aa: $34
 	xor  a                                           ; $68ab: $af
 	ldh  [hScriptOpcodeParams+3], a                                    ; $68ac: $e0 $a3
-	jr   jr_008_68bc                                 ; $68ae: $18 $0c
+	jr   Opcode1d_SaveParamsFromHram                                 ; $68ae: $18 $0c
 
+.entry1:
 	ld   hl, hScriptOpcodeParams+3                                   ; $68b0: $21 $a3 $ff
 	ld   a, [hl]                                     ; $68b3: $7e
 	inc  [hl]                                        ; $68b4: $34
 	cp   $1e                                         ; $68b5: $fe $1e
 	jp   nc, DequeueAScriptOpcode                           ; $68b7: $d2 $bc $40
 
-	jr   jr_008_68bc                                 ; $68ba: $18 $00
+	jr   Opcode1d_SaveParamsFromHram                                 ; $68ba: $18 $00
 
-jr_008_68bc:
+
+Opcode1d_SaveParamsFromHram:
 	ld   hl, wScriptOpcodeParamPointer                                   ; $68bc: $21 $74 $cb
 	ld   a, [hl+]                                    ; $68bf: $2a
 	ld   h, [hl]                                     ; $68c0: $66
@@ -6788,7 +6792,7 @@ ScriptOpcode27_Battle_Main:
 	ld   [wScriptEngineContsRunningThisMainLoop], a                                  ; $6e10: $ea $52 $cb
 
 ;
-	ld   a, [$cbc2]                                  ; $6e13: $fa $c2 $cb
+	ld   a, [wKouboChosen]                                  ; $6e13: $fa $c2 $cb
 	dec  a                                           ; $6e16: $3d
 	push hl                                          ; $6e17: $e5
 	ld   h, a                                        ; $6e18: $67
@@ -7288,7 +7292,7 @@ jr_008_7125:
 
 	ldh  a, [hScriptOpcodeParams+2]                                    ; $7198: $f0 $a2
 	inc  a                                           ; $719a: $3c
-	ld   [$cbc2], a                                  ; $719b: $ea $c2 $cb
+	ld   [wKouboChosen], a                                  ; $719b: $ea $c2 $cb
 	ld   a, [wWramBank]                                  ; $719e: $fa $93 $c2
 	push af                                          ; $71a1: $f5
 	ld   a, $07                                      ; $71a2: $3e $07
@@ -8081,7 +8085,7 @@ ScriptOpcode2f_Main:
 	sla  a                                           ; $76ea: $cb $27
 	ld   h, $00                                      ; $76ec: $26 $00
 	ld   l, a                                        ; $76ee: $6f
-	ld   bc, $7728                                   ; $76ef: $01 $28 $77
+	ld   bc, .table                                   ; $76ef: $01 $28 $77
 	add  hl, bc                                      ; $76f2: $09
 	ld   a, [hl+]                                    ; $76f3: $2a
 	ld   h, [hl]                                     ; $76f4: $66
@@ -8094,21 +8098,17 @@ ScriptOpcode2f_Main:
 	ld   h, GS_MAIN_CONVO                                      ; $770d: $26 $3b
 	ld   l, $02                                      ; $770f: $2e $02
 
-	M_FarCall Call_021_75c1
+	M_FarCall SetGirlSpecialAnimsState
 	
 	jp   DequeueAScriptOpcode                               ; $7725: $c3 $bc $40
 
-
-	call z, $cd00                                    ; $7728: $cc $00 $cd
-	nop                                              ; $772b: $00
-	adc  $00                                         ; $772c: $ce $00
-	rst  WaitUntilVBlankIntHandledIfLCDOn                                         ; $772e: $cf
-	nop                                              ; $772f: $00
-	ret  nc                                          ; $7730: $d0
-
-	nop                                              ; $7731: $00
-	pop  de                                          ; $7732: $d1
-	nop                                              ; $7733: $00
+.table:
+	dw FLAG2_SPECIAL_MOVE_SAKURA
+	dw FLAG2_SPECIAL_MOVE_SUMIRE
+	dw FLAG2_SPECIAL_MOVE_MARIA
+	dw FLAG2_SPECIAL_MOVE_IRIS
+	dw FLAG2_SPECIAL_MOVE_KOHRAN
+	dw FLAG2_SPECIAL_MOVE_KANNA
 
 
 ScriptOpcode30_Init:

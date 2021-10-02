@@ -5492,7 +5492,7 @@ jr_007_5771:
 	nop                                              ; $5780: $00
 	ld   [hl+], a                                    ; $5781: $22
 	ld   a, [hl+]                                    ; $5782: $2a
-	ld   a, [$ca2a]                                  ; $5783: $fa $2a $ca
+	ld   a, [wGameResultsOfficeWeek3Yuri]                                  ; $5783: $fa $2a $ca
 	sbc  d                                           ; $5786: $9a
 	ld   l, d                                        ; $5787: $6a
 	ld   c, d                                        ; $5788: $4a

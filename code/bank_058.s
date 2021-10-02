@@ -9834,7 +9834,7 @@ jr_058_6adc:
 	dec  c                                           ; $6b6b: $0d
 	nop                                              ; $6b6c: $00
 	ld   a, [bc]                                     ; $6b6d: $0a
-	ld   bc, $ca02                                   ; $6b6e: $01 $02 $ca
+	ld   bc, wGameResultsReturnSubstate                                   ; $6b6e: $01 $02 $ca
 	ld   e, d                                        ; $6b71: $5a
 	inc  b                                           ; $6b72: $04
 	ld   [$8f02], sp                                 ; $6b73: $08 $02 $8f

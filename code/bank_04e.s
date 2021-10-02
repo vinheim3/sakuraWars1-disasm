@@ -870,7 +870,7 @@ jr_04e_4373:
 	dec  c                                           ; $43b9: $0d
 	nop                                              ; $43ba: $00
 	ld   a, [bc]                                     ; $43bb: $0a
-	ld   bc, $ca02                                   ; $43bc: $01 $02 $ca
+	ld   bc, wGameResultsReturnSubstate                                   ; $43bc: $01 $02 $ca
 	sub  b                                           ; $43bf: $90
 	ld   l, e                                        ; $43c0: $6b
 	sbc  d                                           ; $43c1: $9a
@@ -1144,7 +1144,7 @@ jr_04e_449f:
 	dec  c                                           ; $44e5: $0d
 	nop                                              ; $44e6: $00
 	ld   a, [bc]                                     ; $44e7: $0a
-	ld   bc, $ca02                                   ; $44e8: $01 $02 $ca
+	ld   bc, wGameResultsReturnSubstate                                   ; $44e8: $01 $02 $ca
 	sub  b                                           ; $44eb: $90
 	ld   l, e                                        ; $44ec: $6b
 	sbc  d                                           ; $44ed: $9a
@@ -1409,7 +1409,7 @@ jr_04e_45c9:
 	dec  c                                           ; $460b: $0d
 	nop                                              ; $460c: $00
 	ld   a, [bc]                                     ; $460d: $0a
-	ld   bc, $ca02                                   ; $460e: $01 $02 $ca
+	ld   bc, wGameResultsReturnSubstate                                   ; $460e: $01 $02 $ca
 	sub  b                                           ; $4611: $90
 	ld   l, e                                        ; $4612: $6b
 	sbc  d                                           ; $4613: $9a
@@ -1680,7 +1680,7 @@ jr_04e_46ef:
 	dec  c                                           ; $4733: $0d
 	nop                                              ; $4734: $00
 	ld   a, [bc]                                     ; $4735: $0a
-	ld   bc, $ca02                                   ; $4736: $01 $02 $ca
+	ld   bc, wGameResultsReturnSubstate                                   ; $4736: $01 $02 $ca
 	sub  b                                           ; $4739: $90
 	ld   l, e                                        ; $473a: $6b
 	sbc  d                                           ; $473b: $9a
@@ -1949,7 +1949,7 @@ jr_04e_4819:
 	dec  c                                           ; $485d: $0d
 	nop                                              ; $485e: $00
 	ld   a, [bc]                                     ; $485f: $0a
-	ld   bc, $ca02                                   ; $4860: $01 $02 $ca
+	ld   bc, wGameResultsReturnSubstate                                   ; $4860: $01 $02 $ca
 	sub  b                                           ; $4863: $90
 	ld   l, e                                        ; $4864: $6b
 	sbc  d                                           ; $4865: $9a
@@ -2214,7 +2214,7 @@ jr_04e_4941:
 	dec  c                                           ; $4983: $0d
 	nop                                              ; $4984: $00
 	ld   a, [bc]                                     ; $4985: $0a
-	ld   bc, $ca02                                   ; $4986: $01 $02 $ca
+	ld   bc, wGameResultsReturnSubstate                                   ; $4986: $01 $02 $ca
 	sub  b                                           ; $4989: $90
 	ld   l, e                                        ; $498a: $6b
 	sbc  d                                           ; $498b: $9a
@@ -2492,7 +2492,7 @@ jr_04e_4941:
 	ld   c, $0f                                      ; $4aca: $0e $0f
 	add  hl, bc                                      ; $4acc: $09
 	nop                                              ; $4acd: $00
-	ld   bc, $ca02                                   ; $4ace: $01 $02 $ca
+	ld   bc, wGameResultsReturnSubstate                                   ; $4ace: $01 $02 $ca
 	ld   a, h                                        ; $4ad1: $7c
 	inc  b                                           ; $4ad2: $04
 	ld   a, d                                        ; $4ad3: $7a
@@ -11650,7 +11650,7 @@ Jump_04e_7465:
 	dec  c                                           ; $7475: $0d
 	nop                                              ; $7476: $00
 	ld   a, [bc]                                     ; $7477: $0a
-	ld   bc, $ca02                                   ; $7478: $01 $02 $ca
+	ld   bc, wGameResultsReturnSubstate                                   ; $7478: $01 $02 $ca
 	ld   e, d                                        ; $747b: $5a
 	inc  b                                           ; $747c: $04
 	ld   [$8f02], sp                                 ; $747d: $08 $02 $8f

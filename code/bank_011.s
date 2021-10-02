@@ -8143,9 +8143,9 @@ GameResultsSubstateD:
 	xor  a                                           ; $727a: $af
 	call PlaySong                                       ; $727b: $cd $92 $1a
 	call TurnOffLCD                                       ; $727e: $cd $e3 $08
-	ld   a, [$ca01]                                  ; $7281: $fa $01 $ca
+	ld   a, [wGameResultsReturnState]                                  ; $7281: $fa $01 $ca
 	ld   [wGameState], a                                  ; $7284: $ea $a0 $c2
-	ld   a, [$ca02]                                  ; $7287: $fa $02 $ca
+	ld   a, [wGameResultsReturnSubstate]                                  ; $7287: $fa $02 $ca
 	ld   [wGameSubstate], a                                  ; $728a: $ea $a1 $c2
 	ret                                              ; $728d: $c9
 
@@ -8344,60 +8344,117 @@ endc
 	ret                                              ; $73d6: $c9
 
 .table:
-	dw $73f5
-	dw $73f8
-	dw $73fb
-	dw $73fe
-	dw $7401
-	dw $7404
-	dw $7407
-	dw $740a
-	dw $740d
-	dw $7410
-	dw $7413
-	dw $7416
-	dw $7419
-	dw $741c
-	dw $741f
+	dw .entry0
+	dw .entry1
+	dw .entry2
+	dw .entry3
+	dw .entry4
+	dw .entry5
+	dw .entry6
+	dw .entry7
+	dw .entry8
+	dw .entry9
+	dw .entryA
+	dw .entryB
+	dw .entryC
+	dw .entryD
+	dw .entryE
 
+if def(VWF)
 
-	nop                                              ; $73f5: $00
-	ld   bc, $02ff                                   ; $73f6: $01 $ff $02
-	inc  bc                                          ; $73f9: $03
-	rst  $38                                         ; $73fa: $ff
-	ld   a, [bc]                                     ; $73fb: $0a
-	dec  bc                                          ; $73fc: $0b
-	rst  $38                                         ; $73fd: $ff
-	inc  b                                           ; $73fe: $04
-	dec  b                                           ; $73ff: $05
-	rst  $38                                         ; $7400: $ff
-	ld   [$ff09], sp                                 ; $7401: $08 $09 $ff
-	ld   b, $07                                      ; $7404: $06 $07
-	rst  $38                                         ; $7406: $ff
-	inc  c                                           ; $7407: $0c
-	dec  c                                           ; $7408: $0d
-	rst  $38                                         ; $7409: $ff
-	ld   c, $0f                                      ; $740a: $0e $0f
-	rst  $38                                         ; $740c: $ff
-	db   $10                                         ; $740d: $10
-	ld   de, $12ff                                   ; $740e: $11 $ff $12
-	inc  de                                          ; $7411: $13
-	rst  $38                                         ; $7412: $ff
-	inc  e                                           ; $7413: $1c
-	dec  e                                           ; $7414: $1d
-	rst  $38                                         ; $7415: $ff
-	inc  d                                           ; $7416: $14
-	dec  d                                           ; $7417: $15
-	rst  $38                                         ; $7418: $ff
-	ld   d, $17                                      ; $7419: $16 $17
-	rst  $38                                         ; $741b: $ff
-	jr   @+$1b                                       ; $741c: $18 $19
+.entry0:
+	db $00, $1e, $01, $ff
+	
+.entry1:
+	db $02, $1f, $03, $20, $ff
 
-	rst  $38                                         ; $741e: $ff
-	ld   a, [de]                                     ; $741f: $1a
-	dec  de                                          ; $7420: $1b
-	rst  $38                                         ; $7421: $ff
+.entry2:
+	db $0a, $27, $0b, $28, $ff
 
+.entry3:
+	db $04, $21, $05, $22, $ff
+
+.entry4:
+	db $08, $25, $09, $26, $ff
+
+.entry5:
+	db $06, $23, $07, $24, $ff
+
+.entry6:
+	db $0c, $29, $0d, $2a, $ff
+
+.entry7:
+	db $0e, $2b, $0f, $2c, $ff
+
+.entry8:
+	db $10, $2d, $11, $2e, $ff
+
+.entry9:
+	db $12, $13, $2f, $30, $ff
+
+.entryA:
+	db $1c, $36, $1d, $37, $ff
+
+.entryB:
+	db $14, $31, $15, $ff
+
+.entryC:
+	db $16, $32, $17, $ff
+
+.entryD:
+	db $18, $19, $33, $ff
+
+.entryE:
+	db $1a, $34, $1b, $35, $ff
+
+	ds $78cb-@, 0
+
+else
+
+.entry0:
+	db $00, $01, $ff
+	
+.entry1:
+	db $02, $03, $ff
+
+.entry2:
+	db $0a, $0b, $ff
+
+.entry3:
+	db $04, $05, $ff
+
+.entry4:
+	db $08, $09, $ff
+
+.entry5:
+	db $06, $07, $ff
+
+.entry6:
+	db $0c, $0d, $ff
+
+.entry7:
+	db $0e, $0f, $ff
+
+.entry8:
+	db $10, $11, $ff
+
+.entry9:
+	db $12, $13, $ff
+
+.entryA:
+	db $1c, $1d, $ff
+
+.entryB:
+	db $14, $15, $ff
+
+.entryC:
+	db $16, $17, $ff
+
+.entryD:
+	db $18, $19, $ff
+
+.entryE:
+	db $1a, $1b, $ff
 
 ;
 	inc  a                                           ; $7422: $3c
@@ -9511,6 +9568,8 @@ jr_011_7889:
 	sbc  a                                           ; $78c9: $9f
 	nop                                              ; $78ca: $00
 
+endc
+
 
 ;
 	ld   a, [$ca1a]                                  ; $78cb: $fa $1a $ca
@@ -9871,7 +9930,7 @@ jr_011_7acd:
 
 
 Call_011_7ad9:
-	call Call_011_7b23                               ; $7ad9: $cd $23 $7b
+	call ReturnEndGameRankInA                               ; $7ad9: $cd $23 $7b
 	ld   [$ca1d], a                                  ; $7adc: $ea $1d $ca
 	ld   hl, $ca1e                                   ; $7adf: $21 $1e $ca
 	ld   a, $e9                                      ; $7ae2: $3e $e9
@@ -9894,173 +9953,187 @@ Call_011_7ad9:
 	ld   b, $0d                                      ; $7af5: $06 $0d
 	ld   c, $ff                                      ; $7af7: $0e $ff
 
-Call_011_7af9:
-	push af                                          ; $7af9: $f5
-	ld   a, $d7                                      ; $7afa: $3e $d7
-	ld   [wFarCallAddr], a                                  ; $7afc: $ea $98 $c2
-	ld   a, $44                                      ; $7aff: $3e $44
-	ld   [wFarCallAddr+1], a                                  ; $7b01: $ea $99 $c2
-	ld   a, $09                                      ; $7b04: $3e $09
-	ld   [wFarCallBank], a                                  ; $7b06: $ea $9a $c2
-	pop  af                                          ; $7b09: $f1
-	call FarCall                                       ; $7b0a: $cd $62 $09
-	ret                                              ; $7b0d: $c9
+
+JpGetSramByte2:
+	M_FarCall GetSramByte2
+	ret                                                             ; $7b0d
 
 
 JpCheckIfFlagSet2:
 	M_FarCall CheckIfFlagSet2
-	ret                                              ; $7b22: $c9
+	ret                                                             ; $7b22
 
 
-Call_011_7b23:
-	call Call_011_7d86                               ; $7b23: $cd $86 $7d
-	call Call_011_7dad                               ; $7b26: $cd $ad $7d
-	ld   hl, $0055                                   ; $7b29: $21 $55 $00
-	call Call_011_7af9                               ; $7b2c: $cd $f9 $7a
-	ld   [$ca24], a                                  ; $7b2f: $ea $24 $ca
-	ld   hl, $0060                                   ; $7b32: $21 $60 $00
-	call Call_011_7af9                               ; $7b35: $cd $f9 $7a
-	ld   [$ca25], a                                  ; $7b38: $ea $25 $ca
+ReturnEndGameRankInA:
+;
+	call ProcessStatsTotal                               ; $7b23: $cd $86 $7d
+	call ProcessAffectionTotal                               ; $7b26: $cd $ad $7d
+
+	ld   hl, SRAM2_VICTORY_FLAG                                   ; $7b29: $21 $55 $00
+	call JpGetSramByte2                               ; $7b2c: $cd $f9 $7a
+	ld   [wGameResultsBattlesWon], a                                  ; $7b2f: $ea $24 $ca
+
+	ld   hl, SRAM2_TEST_POINT                                   ; $7b32: $21 $60 $00
+	call JpGetSramByte2                               ; $7b35: $cd $f9 $7a
+	ld   [wGameResultsBattleSimsWon], a                                  ; $7b38: $ea $25 $ca
+
+; script 768
 	ld   hl, FLAG2_FINAL_BATTLE                                   ; $7b3b: $21 $d2 $00
 	call JpCheckIfFlagSet2                               ; $7b3e: $cd $0e $7b
-	ld   [$ca26], a                                  ; $7b41: $ea $26 $ca
+	ld   [wGameResultsFinalBattleWon], a                                  ; $7b41: $ea $26 $ca
+
+; script 372, 470, 499, 501, 627, 663, 674, 681, 695, 748, 777
 	ld   hl, FLAG2_PEEPING                                   ; $7b44: $21 $06 $00
 	call JpCheckIfFlagSet2                               ; $7b47: $cd $0e $7b
-	ld   [$ca27], a                                  ; $7b4a: $ea $27 $ca
+	ld   [wGameResultsPeeping], a                                  ; $7b4a: $ea $27 $ca
+
+; script 334
 	ld   hl, FLAG2_OFFICE_WEEK_1_YURI                                   ; $7b4d: $21 $a5 $00
 	call JpCheckIfFlagSet2                               ; $7b50: $cd $0e $7b
-	ld   [$ca28], a                                  ; $7b53: $ea $28 $ca
+	ld   [wGameResultsOfficeWeek1Yuri], a                                  ; $7b53: $ea $28 $ca
+
+; script 475
 	ld   hl, FLAG2_OFFICE_WEEK_2_KASUMI                                   ; $7b56: $21 $a7 $00
 	call JpCheckIfFlagSet2                               ; $7b59: $cd $0e $7b
-	ld   [$ca29], a                                  ; $7b5c: $ea $29 $ca
+	ld   [wGameResultsOfficeWeek2Kasumi], a                                  ; $7b5c: $ea $29 $ca
+
+; script 633
 	ld   hl, FLAG2_OFFICE_WEEK_3_YURI                                   ; $7b5f: $21 $ac $00
 	call JpCheckIfFlagSet2                               ; $7b62: $cd $0e $7b
-	ld   [$ca2a], a                                  ; $7b65: $ea $2a $ca
+	ld   [wGameResultsOfficeWeek3Yuri], a                                  ; $7b65: $ea $2a $ca
+
+; script 639
 	ld   hl, FLAG2_OFFICE_WEEK_4_KASUMI                                   ; $7b68: $21 $b2 $00
 	call JpCheckIfFlagSet2                               ; $7b6b: $cd $0e $7b
-	ld   [$ca2b], a                                  ; $7b6e: $ea $2b $ca
+	ld   [wGameResultsOfficeWeek4Kasumi], a                                  ; $7b6e: $ea $2b $ca
+
+; script 8
 	ld   hl, FLAG2_TSUBAKI_CONVO_6                                   ; $7b71: $21 $a1 $00
 	call JpCheckIfFlagSet2                               ; $7b74: $cd $0e $7b
-	ld   [$ca2c], a                                  ; $7b77: $ea $2c $ca
-	call Call_011_7bb9                               ; $7b7a: $cd $b9 $7b
+	ld   [wGameResultsTsubakiFoodQuiz], a                                  ; $7b77: $ea $2c $ca
+
+;
+	call CheckIfRankFlowerDivisionCaptain                               ; $7b7a: $cd $b9 $7b
 	cp   $ff                                         ; $7b7d: $fe $ff
 	ret  nz                                          ; $7b7f: $c0
 
-	call Call_011_7be3                               ; $7b80: $cd $e3 $7b
+	call CheckIfRankNotAFarOffDream                               ; $7b80: $cd $e3 $7b
 	cp   $ff                                         ; $7b83: $fe $ff
 	ret  nz                                          ; $7b85: $c0
 
-	call Call_011_7c04                               ; $7b86: $cd $04 $7c
+	call CheckIfRankStatsFocused                               ; $7b86: $cd $04 $7c
 	cp   $ff                                         ; $7b89: $fe $ff
 	ret  nz                                          ; $7b8b: $c0
 
-	call Call_011_7ce9                               ; $7b8c: $cd $e9 $7c
+	call CheckIfRankPerfectForAccounting                               ; $7b8c: $cd $e9 $7c
 	cp   $ff                                         ; $7b8f: $fe $ff
 	ret  nz                                          ; $7b91: $c0
 
-	call Call_011_7d0e                               ; $7b92: $cd $0e $7d
+	call CheckIfRankPerfectSalesClerk                               ; $7b92: $cd $0e $7d
 	cp   $ff                                         ; $7b95: $fe $ff
 	ret  nz                                          ; $7b97: $c0
 
-	call Call_011_7d22                               ; $7b98: $cd $22 $7d
+	call CheckIfRankIdealUsher                               ; $7b98: $cd $22 $7d
 	cp   $ff                                         ; $7b9b: $fe $ff
 	ret  nz                                          ; $7b9d: $c0
 
-	call Call_011_7d30                               ; $7b9e: $cd $30 $7d
+	call CheckIfRankFromTheShadows                               ; $7b9e: $cd $30 $7d
 	cp   $ff                                         ; $7ba1: $fe $ff
 	ret  nz                                          ; $7ba3: $c0
 
-	call Call_011_7d49                               ; $7ba4: $cd $49 $7d
+	call CheckIfRankWellLiked                               ; $7ba4: $cd $49 $7d
 	cp   $ff                                         ; $7ba7: $fe $ff
 	ret  nz                                          ; $7ba9: $c0
 
-	call Call_011_7d79                               ; $7baa: $cd $79 $7d
+	call CheckIfRankCountlessWorlds                               ; $7baa: $cd $79 $7d
 	cp   $ff                                         ; $7bad: $fe $ff
 	ret  nz                                          ; $7baf: $c0
 
-	call Call_011_7d3d                               ; $7bb0: $cd $3d $7d
+	call CheckIfRankCleaningUpAfter                               ; $7bb0: $cd $3d $7d
 	cp   $ff                                         ; $7bb3: $fe $ff
 	ret  nz                                          ; $7bb5: $c0
 
-	ld   a, $0a                                      ; $7bb6: $3e $0a
+	ld   a, GRR_RESULTS_ARE_LACKING                                      ; $7bb6: $3e $0a
 	ret                                              ; $7bb8: $c9
 
 
-Call_011_7bb9:
+CheckIfRankFlowerDivisionCaptain:
 	ld   b, $ff                                      ; $7bb9: $06 $ff
-	ld   hl, $03cf                                   ; $7bbb: $21 $cf $03
-	call Call_011_7de3                               ; $7bbe: $cd $e3 $7d
-	jr   nz, jr_011_7be1                             ; $7bc1: $20 $1e
+	ld   hl, 975                                   ; $7bbb: $21 $cf $03
+	call CheckIfTotalStatsLtHL                               ; $7bbe: $cd $e3 $7d
+	jr   nz, .done                             ; $7bc1: $20 $1e
 
-	ld   a, [$ca25]                                  ; $7bc3: $fa $25 $ca
+	ld   a, [wGameResultsBattleSimsWon]                                  ; $7bc3: $fa $25 $ca
 	cp   $02                                         ; $7bc6: $fe $02
-	jr   c, jr_011_7be1                              ; $7bc8: $38 $17
+	jr   c, .done                              ; $7bc8: $38 $17
 
-	ld   hl, $02ee                                   ; $7bca: $21 $ee $02
-	call Call_011_7dd9                               ; $7bcd: $cd $d9 $7d
-	jr   nz, jr_011_7be1                             ; $7bd0: $20 $0f
+	ld   hl, 750                                   ; $7bca: $21 $ee $02
+	call CheckIfTotalAffectionLtHL                               ; $7bcd: $cd $d9 $7d
+	jr   nz, .done                             ; $7bd0: $20 $0f
 
-	ld   a, [$ca24]                                  ; $7bd2: $fa $24 $ca
+	ld   a, [wGameResultsBattlesWon]                                  ; $7bd2: $fa $24 $ca
 	cp   $03                                         ; $7bd5: $fe $03
-	jr   c, jr_011_7be1                              ; $7bd7: $38 $08
+	jr   c, .done                              ; $7bd7: $38 $08
 
-	ld   a, [$ca26]                                  ; $7bd9: $fa $26 $ca
+	ld   a, [wGameResultsFinalBattleWon]                                  ; $7bd9: $fa $26 $ca
 	or   a                                           ; $7bdc: $b7
-	jr   z, jr_011_7be1                              ; $7bdd: $28 $02
+	jr   z, .done                              ; $7bdd: $28 $02
 
-	ld   b, $00                                      ; $7bdf: $06 $00
+	ld   b, GRR_FLOWER_DIVISION_CAPTAIN                                      ; $7bdf: $06 $00
 
-jr_011_7be1:
+.done:
 	ld   a, b                                        ; $7be1: $78
 	ret                                              ; $7be2: $c9
 
 
-Call_011_7be3:
+CheckIfRankNotAFarOffDream:
 	ld   b, $ff                                      ; $7be3: $06 $ff
-	ld   a, [$ca27]                                  ; $7be5: $fa $27 $ca
+	ld   a, [wGameResultsPeeping]                                  ; $7be5: $fa $27 $ca
 	or   a                                           ; $7be8: $b7
-	jr   nz, jr_011_7c02                             ; $7be9: $20 $17
+	jr   nz, .done                             ; $7be9: $20 $17
 
-	ld   hl, $03a7                                   ; $7beb: $21 $a7 $03
-	call Call_011_7de3                               ; $7bee: $cd $e3 $7d
-	jr   nz, jr_011_7c02                             ; $7bf1: $20 $0f
+	ld   hl, 935                                   ; $7beb: $21 $a7 $03
+	call CheckIfTotalStatsLtHL                               ; $7bee: $cd $e3 $7d
+	jr   nz, .done                             ; $7bf1: $20 $0f
 
-	ld   a, [$ca25]                                  ; $7bf3: $fa $25 $ca
+	ld   a, [wGameResultsBattleSimsWon]                                  ; $7bf3: $fa $25 $ca
 	cp   $01                                         ; $7bf6: $fe $01
-	jr   c, jr_011_7c02                              ; $7bf8: $38 $08
+	jr   c, .done                              ; $7bf8: $38 $08
 
-	ld   a, [$ca26]                                  ; $7bfa: $fa $26 $ca
+	ld   a, [wGameResultsFinalBattleWon]                                  ; $7bfa: $fa $26 $ca
 	or   a                                           ; $7bfd: $b7
-	jr   z, jr_011_7c02                              ; $7bfe: $28 $02
+	jr   z, .done                              ; $7bfe: $28 $02
 
-	ld   b, $01                                      ; $7c00: $06 $01
+	ld   b, GRR_NOT_A_FAR_OFF_DREAM                                      ; $7c00: $06 $01
 
-jr_011_7c02:
+.done:
 	ld   a, b                                        ; $7c02: $78
 	ret                                              ; $7c03: $c9
 
 
-Call_011_7c04:
-	ld   hl, $033e                                   ; $7c04: $21 $3e $03
-	call Call_011_7de3                               ; $7c07: $cd $e3 $7d
+CheckIfRankStatsFocused:
+	ld   hl, 830                                   ; $7c04: $21 $3e $03
+	call CheckIfTotalStatsLtHL                               ; $7c07: $cd $e3 $7d
 	jr   z, jr_011_7c0f                              ; $7c0a: $28 $03
 
 	ld   a, $ff                                      ; $7c0c: $3e $ff
 	ret                                              ; $7c0e: $c9
 
-
 jr_011_7c0f:
+;
 	ld   hl, $ca33                                   ; $7c0f: $21 $33 $ca
-	ld   a, [$afc2]                                  ; $7c12: $fa $c2 $af
+	ld   a, [sSramVals2+SRAM2_SUMIRE_AFFECTION]                                  ; $7c12: $fa $c2 $af
 	ld   [hl+], a                                    ; $7c15: $22
-	ld   a, [$afc3]                                  ; $7c16: $fa $c3 $af
+	ld   a, [sSramVals2+SRAM2_MARIA_AFFECTION]                                  ; $7c16: $fa $c3 $af
 	ld   [hl+], a                                    ; $7c19: $22
-	ld   a, [$afc4]                                  ; $7c1a: $fa $c4 $af
+	ld   a, [sSramVals2+SRAM2_IRIS_AFFECTION]                                  ; $7c1a: $fa $c4 $af
 	ld   [hl+], a                                    ; $7c1d: $22
-	ld   a, [$afc6]                                  ; $7c1e: $fa $c6 $af
+	ld   a, [sSramVals2+SRAM2_KANNA_AFFECTION]                                  ; $7c1e: $fa $c6 $af
 	ld   [hl+], a                                    ; $7c21: $22
-	ld   a, [$afc5]                                  ; $7c22: $fa $c5 $af
+	ld   a, [sSramVals2+SRAM2_KOHRAN_AFFECTION]                                  ; $7c22: $fa $c5 $af
 	ld   [hl], a                                     ; $7c25: $77
+
+;
 	ld   hl, $ca2d                                   ; $7c26: $21 $2d $ca
 	ld   c, $05                                      ; $7c29: $0e $05
 	xor  a                                           ; $7c2b: $af
@@ -10071,6 +10144,7 @@ jr_011_7c2c:
 	dec  c                                           ; $7c2e: $0d
 	jr   nz, jr_011_7c2c                             ; $7c2f: $20 $fb
 
+;
 	ld   a, $ff                                      ; $7c31: $3e $ff
 	ld   [hl], a                                     ; $7c33: $77
 	call Call_011_7cc4                               ; $7c34: $cd $c4 $7c
@@ -10083,16 +10157,11 @@ jr_011_7c3a:
 
 	push hl                                          ; $7c3e: $e5
 	rst  JumpTable                                         ; $7c3f: $df
-	ld   d, b                                        ; $7c40: $50
-	ld   a, h                                        ; $7c41: $7c
-	ld   l, h                                        ; $7c42: $6c
-	ld   a, h                                        ; $7c43: $7c
-	add  d                                           ; $7c44: $82
-	ld   a, h                                        ; $7c45: $7c
-	sbc  b                                           ; $7c46: $98
-	ld   a, h                                        ; $7c47: $7c
-	xor  [hl]                                        ; $7c48: $ae
-	ld   a, h                                        ; $7c49: $7c
+	dw Func_11_7c50
+	dw Func_11_7c6c
+	dw Func_11_7c82
+	dw Func_11_7c98
+	dw Func_11_7cae
 
 jr_011_7c4a:
 	pop  hl                                          ; $7c4a: $e1
@@ -10102,19 +10171,20 @@ jr_011_7c4a:
 	ret                                              ; $7c4f: $c9
 
 
-	ld   a, [$ca24]                                  ; $7c50: $fa $24 $ca
+Func_11_7c50:
+	ld   a, [wGameResultsBattlesWon]                                  ; $7c50: $fa $24 $ca
 	cp   $03                                         ; $7c53: $fe $03
 	jr   c, jr_011_7c68                              ; $7c55: $38 $11
 
-	ld   a, [$ca27]                                  ; $7c57: $fa $27 $ca
+	ld   a, [wGameResultsPeeping]                                  ; $7c57: $fa $27 $ca
 	or   a                                           ; $7c5a: $b7
 	jr   nz, jr_011_7c68                             ; $7c5b: $20 $0b
 
-	ld   a, [$afd4]                                  ; $7c5d: $fa $d4 $af
-	cp   $f0                                         ; $7c60: $fe $f0
+	ld   a, [sSramVals2+SRAM2_SPEED]                                  ; $7c5d: $fa $d4 $af
+	cp   240                                         ; $7c60: $fe $f0
 	jr   c, jr_011_7c68                              ; $7c62: $38 $04
 
-	ld   a, $04                                      ; $7c64: $3e $04
+	ld   a, GRR_MOON_DIVISION                                      ; $7c64: $3e $04
 	jr   jr_011_7c6a                                 ; $7c66: $18 $02
 
 jr_011_7c68:
@@ -10123,15 +10193,17 @@ jr_011_7c68:
 jr_011_7c6a:
 	jr   jr_011_7c4a                                 ; $7c6a: $18 $de
 
-	ld   a, [$ca24]                                  ; $7c6c: $fa $24 $ca
+
+Func_11_7c6c:
+	ld   a, [wGameResultsBattlesWon]                                  ; $7c6c: $fa $24 $ca
 	cp   $03                                         ; $7c6f: $fe $03
 	jr   c, jr_011_7c7e                              ; $7c71: $38 $0b
 
-	ld   a, [$afd5]                                  ; $7c73: $fa $d5 $af
-	cp   $f0                                         ; $7c76: $fe $f0
+	ld   a, [sSramVals2+SRAM2_ACCURACY]                                  ; $7c73: $fa $d5 $af
+	cp   240                                         ; $7c76: $fe $f0
 	jr   c, jr_011_7c7e                              ; $7c78: $38 $04
 
-	ld   a, $05                                      ; $7c7a: $3e $05
+	ld   a, GRR_WIND_DIVISION                                      ; $7c7a: $3e $05
 	jr   jr_011_7c80                                 ; $7c7c: $18 $02
 
 jr_011_7c7e:
@@ -10140,15 +10212,17 @@ jr_011_7c7e:
 jr_011_7c80:
 	jr   jr_011_7c4a                                 ; $7c80: $18 $c8
 
-	ld   a, [$ca24]                                  ; $7c82: $fa $24 $ca
+
+Func_11_7c82:
+	ld   a, [wGameResultsBattlesWon]                                  ; $7c82: $fa $24 $ca
 	cp   $03                                         ; $7c85: $fe $03
 	jr   c, jr_011_7c94                              ; $7c87: $38 $0b
 
-	ld   a, [$afd2]                                  ; $7c89: $fa $d2 $af
-	cp   $f0                                         ; $7c8c: $fe $f0
+	ld   a, [sSramVals2+SRAM2_SPIRIT_POWER]                                  ; $7c89: $fa $d2 $af
+	cp   240                                         ; $7c8c: $fe $f0
 	jr   c, jr_011_7c94                              ; $7c8e: $38 $04
 
-	ld   a, $02                                      ; $7c90: $3e $02
+	ld   a, GRR_DREAM_DIVISION                                      ; $7c90: $3e $02
 	jr   jr_011_7c96                                 ; $7c92: $18 $02
 
 jr_011_7c94:
@@ -10157,15 +10231,17 @@ jr_011_7c94:
 jr_011_7c96:
 	jr   jr_011_7c4a                                 ; $7c96: $18 $b2
 
-	ld   a, [$ca24]                                  ; $7c98: $fa $24 $ca
+
+Func_11_7c98:
+	ld   a, [wGameResultsBattlesWon]                                  ; $7c98: $fa $24 $ca
 	cp   $03                                         ; $7c9b: $fe $03
 	jr   c, jr_011_7caa                              ; $7c9d: $38 $0b
 
-	ld   a, [$afd3]                                  ; $7c9f: $fa $d3 $af
-	cp   $f0                                         ; $7ca2: $fe $f0
+	ld   a, [sSramVals2+SRAM2_GUTS]                                  ; $7c9f: $fa $d3 $af
+	cp   240                                         ; $7ca2: $fe $f0
 	jr   c, jr_011_7caa                              ; $7ca4: $38 $04
 
-	ld   a, $03                                      ; $7ca6: $3e $03
+	ld   a, GRR_SNOW_DIVISION                                      ; $7ca6: $3e $03
 	jr   jr_011_7cac                                 ; $7ca8: $18 $02
 
 jr_011_7caa:
@@ -10174,15 +10250,17 @@ jr_011_7caa:
 jr_011_7cac:
 	jr   jr_011_7c4a                                 ; $7cac: $18 $9c
 
-	ld   a, [$ca24]                                  ; $7cae: $fa $24 $ca
+
+Func_11_7cae:
+	ld   a, [wGameResultsBattlesWon]                                  ; $7cae: $fa $24 $ca
 	cp   $02                                         ; $7cb1: $fe $02
 	jr   c, jr_011_7cc0                              ; $7cb3: $38 $0b
 
-	ld   a, [$afd1]                                  ; $7cb5: $fa $d1 $af
-	cp   $f0                                         ; $7cb8: $fe $f0
+	ld   a, [sSramVals2+SRAM2_INTELLECT]                                  ; $7cb5: $fa $d1 $af
+	cp   240                                        ; $7cb8: $fe $f0
 	jr   c, jr_011_7cc0                              ; $7cba: $38 $04
 
-	ld   a, $06                                      ; $7cbc: $3e $06
+	ld   a, GRR_IDEAL_SCIENTIST                                      ; $7cbc: $3e $06
 	jr   jr_011_7cc2                                 ; $7cbe: $18 $02
 
 jr_011_7cc0:
@@ -10190,6 +10268,7 @@ jr_011_7cc0:
 
 jr_011_7cc2:
 	jr   jr_011_7c4a                                 ; $7cc2: $18 $86
+
 
 Call_011_7cc4:
 	ld   b, $04                                      ; $7cc4: $06 $04
@@ -10232,222 +10311,219 @@ jr_011_7ce0:
 	ret                                              ; $7ce8: $c9
 
 
-Call_011_7ce9:
+CheckIfRankPerfectForAccounting:
 	ld   b, $ff                                      ; $7ce9: $06 $ff
-	ld   a, [$afd1]                                  ; $7ceb: $fa $d1 $af
-	cp   $c8                                         ; $7cee: $fe $c8
-	jr   c, jr_011_7d0c                              ; $7cf0: $38 $1a
+	ld   a, [sSramVals2+SRAM2_INTELLECT]                                  ; $7ceb: $fa $d1 $af
+	cp   200                                         ; $7cee: $fe $c8
+	jr   c, .done                              ; $7cf0: $38 $1a
 
-	ld   a, [$ca28]                                  ; $7cf2: $fa $28 $ca
+	ld   a, [wGameResultsOfficeWeek1Yuri]                                  ; $7cf2: $fa $28 $ca
 	or   a                                           ; $7cf5: $b7
-	jr   z, jr_011_7d0c                              ; $7cf6: $28 $14
+	jr   z, .done                              ; $7cf6: $28 $14
 
-	ld   a, [$ca29]                                  ; $7cf8: $fa $29 $ca
+	ld   a, [wGameResultsOfficeWeek2Kasumi]                                  ; $7cf8: $fa $29 $ca
 	or   a                                           ; $7cfb: $b7
-	jr   z, jr_011_7d0c                              ; $7cfc: $28 $0e
+	jr   z, .done                              ; $7cfc: $28 $0e
 
-	ld   a, [$ca2a]                                  ; $7cfe: $fa $2a $ca
+	ld   a, [wGameResultsOfficeWeek3Yuri]                                  ; $7cfe: $fa $2a $ca
 	or   a                                           ; $7d01: $b7
-	jr   z, jr_011_7d0c                              ; $7d02: $28 $08
+	jr   z, .done                              ; $7d02: $28 $08
 
-	ld   a, [$ca2b]                                  ; $7d04: $fa $2b $ca
+	ld   a, [wGameResultsOfficeWeek4Kasumi]                                  ; $7d04: $fa $2b $ca
 	or   a                                           ; $7d07: $b7
-	jr   z, jr_011_7d0c                              ; $7d08: $28 $02
+	jr   z, .done                              ; $7d08: $28 $02
 
-	ld   b, $07                                      ; $7d0a: $06 $07
+	ld   b, GRR_PERFECT_FOR_ACCOUNTING                                      ; $7d0a: $06 $07
 
-jr_011_7d0c:
+.done:
 	ld   a, b                                        ; $7d0c: $78
 	ret                                              ; $7d0d: $c9
 
 
-Call_011_7d0e:
+CheckIfRankPerfectSalesClerk:
 	ld   b, $ff                                      ; $7d0e: $06 $ff
-	ld   a, [$ca2c]                                  ; $7d10: $fa $2c $ca
+	ld   a, [wGameResultsTsubakiFoodQuiz]                                  ; $7d10: $fa $2c $ca
 	or   a                                           ; $7d13: $b7
-	jr   z, jr_011_7d20                              ; $7d14: $28 $0a
+	jr   z, .done                              ; $7d14: $28 $0a
 
-	ld   hl, $02bc                                   ; $7d16: $21 $bc $02
-	call Call_011_7dd9                               ; $7d19: $cd $d9 $7d
-	jr   nz, jr_011_7d20                             ; $7d1c: $20 $02
+	ld   hl, 700                                   ; $7d16: $21 $bc $02
+	call CheckIfTotalAffectionLtHL                               ; $7d19: $cd $d9 $7d
+	jr   nz, .done                             ; $7d1c: $20 $02
 
-	ld   b, $08                                      ; $7d1e: $06 $08
+	ld   b, GRR_PERFECT_SALES_CLERK                                      ; $7d1e: $06 $08
 
-jr_011_7d20:
+.done:
 	ld   a, b                                        ; $7d20: $78
 	ret                                              ; $7d21: $c9
 
 
-Call_011_7d22:
+CheckIfRankIdealUsher:
 	ld   b, $ff                                      ; $7d22: $06 $ff
-	ld   hl, $0320                                   ; $7d24: $21 $20 $03
-	call Call_011_7dd9                               ; $7d27: $cd $d9 $7d
-	jr   nz, jr_011_7d2e                             ; $7d2a: $20 $02
-
-	ld   b, $09                                      ; $7d2c: $06 $09
-
-jr_011_7d2e:
-	ld   a, b                                        ; $7d2e: $78
+	ld   hl, 800                                   ; $7d24: $21 $20 $03
+	call CheckIfTotalAffectionLtHL                               ; $7d27: $cd $d9 $7d
+	jr   nz, :+                             ; $7d2a: $20 $02
+	ld   b, GRR_IDEAL_USHER                                      ; $7d2c: $06 $09
+:	ld   a, b                                        ; $7d2e: $78
 	ret                                              ; $7d2f: $c9
 
 
-Call_011_7d30:
+CheckIfRankFromTheShadows:
 	ld   b, $ff                                      ; $7d30: $06 $ff
-	ld   a, [$afd4]                                  ; $7d32: $fa $d4 $af
-	cp   $c8                                         ; $7d35: $fe $c8
-	jr   c, jr_011_7d3b                              ; $7d37: $38 $02
-
-	ld   b, $0b                                      ; $7d39: $06 $0b
-
-jr_011_7d3b:
-	ld   a, b                                        ; $7d3b: $78
+	ld   a, [sSramVals2+SRAM2_SPEED]                                  ; $7d32: $fa $d4 $af
+	cp   200                                         ; $7d35: $fe $c8
+	jr   c, :+                              ; $7d37: $38 $02
+	ld   b, GRR_FROM_THE_SHADOWS                                      ; $7d39: $06 $0b
+:	ld   a, b                                        ; $7d3b: $78
 	ret                                              ; $7d3c: $c9
 
 
-Call_011_7d3d:
+CheckIfRankCleaningUpAfter:
 	ld   b, $ff                                      ; $7d3d: $06 $ff
-	ld   a, [$ca27]                                  ; $7d3f: $fa $27 $ca
+	ld   a, [wGameResultsPeeping]                                  ; $7d3f: $fa $27 $ca
 	or   a                                           ; $7d42: $b7
-	jr   nz, jr_011_7d47                             ; $7d43: $20 $02
-
-	ld   b, $0e                                      ; $7d45: $06 $0e
-
-jr_011_7d47:
-	ld   a, b                                        ; $7d47: $78
+	jr   nz, :+                             ; $7d43: $20 $02
+	ld   b, GRR_CLEANING_UP_AFTER                                      ; $7d45: $06 $0e
+:	ld   a, b                                        ; $7d47: $78
 	ret                                              ; $7d48: $c9
 
 
-Call_011_7d49:
+CheckIfRankWellLiked:
 	ld   b, $ff                                      ; $7d49: $06 $ff
-	ld   a, [$afc1]                                  ; $7d4b: $fa $c1 $af
-	cp   $79                                         ; $7d4e: $fe $79
+	ld   a, [sSramVals2+SRAM2_SAKURA_AFFECTION]                                  ; $7d4b: $fa $c1 $af
+	cp   121                                         ; $7d4e: $fe $79
 	jr   c, jr_011_7d77                              ; $7d50: $38 $25
 
-	ld   a, [$afc2]                                  ; $7d52: $fa $c2 $af
-	cp   $79                                         ; $7d55: $fe $79
+	ld   a, [sSramVals2+SRAM2_SUMIRE_AFFECTION]                                  ; $7d52: $fa $c2 $af
+	cp   121                                         ; $7d55: $fe $79
 	jr   c, jr_011_7d77                              ; $7d57: $38 $1e
 
-	ld   a, [$afc3]                                  ; $7d59: $fa $c3 $af
-	cp   $79                                         ; $7d5c: $fe $79
+	ld   a, [sSramVals2+SRAM2_MARIA_AFFECTION]                                  ; $7d59: $fa $c3 $af
+	cp   121                                         ; $7d5c: $fe $79
 	jr   c, jr_011_7d77                              ; $7d5e: $38 $17
 
-	ld   a, [$afc4]                                  ; $7d60: $fa $c4 $af
-	cp   $79                                         ; $7d63: $fe $79
+	ld   a, [sSramVals2+SRAM2_IRIS_AFFECTION]                                  ; $7d60: $fa $c4 $af
+	cp   121                                         ; $7d63: $fe $79
 	jr   c, jr_011_7d77                              ; $7d65: $38 $10
 
-	ld   a, [$afc5]                                  ; $7d67: $fa $c5 $af
-	cp   $79                                         ; $7d6a: $fe $79
+	ld   a, [sSramVals2+SRAM2_KOHRAN_AFFECTION]                                  ; $7d67: $fa $c5 $af
+	cp   121                                         ; $7d6a: $fe $79
 	jr   c, jr_011_7d77                              ; $7d6c: $38 $09
 
-	ld   a, [$afc6]                                  ; $7d6e: $fa $c6 $af
-	cp   $79                                         ; $7d71: $fe $79
+	ld   a, [sSramVals2+SRAM2_KANNA_AFFECTION]                                  ; $7d6e: $fa $c6 $af
+	cp   121                                         ; $7d71: $fe $79
 	jr   c, jr_011_7d77                              ; $7d73: $38 $02
 
-	ld   b, $0c                                      ; $7d75: $06 $0c
+	ld   b, GRR_WELL_LIKED                                      ; $7d75: $06 $0c
 
 jr_011_7d77:
 	ld   a, b                                        ; $7d77: $78
 	ret                                              ; $7d78: $c9
 
 
-Call_011_7d79:
+CheckIfRankCountlessWorlds:
 	ld   b, $ff                                      ; $7d79: $06 $ff
-	ld   a, [$afd3]                                  ; $7d7b: $fa $d3 $af
-	cp   $c8                                         ; $7d7e: $fe $c8
-	jr   c, jr_011_7d84                              ; $7d80: $38 $02
-
-	ld   b, $0d                                      ; $7d82: $06 $0d
-
-jr_011_7d84:
-	ld   a, b                                        ; $7d84: $78
+	ld   a, [sSramVals2+SRAM2_GUTS]                                  ; $7d7b: $fa $d3 $af
+	cp   200                                         ; $7d7e: $fe $c8
+	jr   c, :+                              ; $7d80: $38 $02
+	ld   b, GRR_COUNTLESS_WORLDS                                      ; $7d82: $06 $0d
+:	ld   a, b                                        ; $7d84: $78
 	ret                                              ; $7d85: $c9
 
 
-Call_011_7d86:
-	ld   b, $00                                      ; $7d86: $06 $00
-	ld   hl, $0000                                   ; $7d88: $21 $00 $00
-	ld   a, [$afd1]                                  ; $7d8b: $fa $d1 $af
-	ld   c, a                                        ; $7d8e: $4f
-	add  hl, bc                                      ; $7d8f: $09
-	ld   a, [$afd2]                                  ; $7d90: $fa $d2 $af
-	ld   c, a                                        ; $7d93: $4f
-	add  hl, bc                                      ; $7d94: $09
-	ld   a, [$afd3]                                  ; $7d95: $fa $d3 $af
-	ld   c, a                                        ; $7d98: $4f
-	add  hl, bc                                      ; $7d99: $09
-	ld   a, [$afd4]                                  ; $7d9a: $fa $d4 $af
-	ld   c, a                                        ; $7d9d: $4f
-	add  hl, bc                                      ; $7d9e: $09
-	ld   a, [$afd5]                                  ; $7d9f: $fa $d5 $af
-	ld   c, a                                        ; $7da2: $4f
-	add  hl, bc                                      ; $7da3: $09
-	ld   a, l                                        ; $7da4: $7d
-	ld   [$ca20], a                                  ; $7da5: $ea $20 $ca
-	ld   a, h                                        ; $7da8: $7c
-	ld   [$ca21], a                                  ; $7da9: $ea $21 $ca
-	ret                                              ; $7dac: $c9
+ProcessStatsTotal:
+; Total all stats
+	ld   b, $00                                                     ; $7d86
+	ld   hl, $0000                                                  ; $7d88
+	ld   a, [sSramVals2+SRAM2_INTELLECT]                            ; $7d8b
+	ld   c, a                                                       ; $7d8e
+	add  hl, bc                                                     ; $7d8f
+	ld   a, [sSramVals2+SRAM2_SPIRIT_POWER]                         ; $7d90
+	ld   c, a                                                       ; $7d93
+	add  hl, bc                                                     ; $7d94
+	ld   a, [sSramVals2+SRAM2_GUTS]                                 ; $7d95
+	ld   c, a                                                       ; $7d98
+	add  hl, bc                                                     ; $7d99
+	ld   a, [sSramVals2+SRAM2_SPEED]                                ; $7d9a
+	ld   c, a                                                       ; $7d9d
+	add  hl, bc                                                     ; $7d9e
+	ld   a, [sSramVals2+SRAM2_ACCURACY]                             ; $7d9f
+	ld   c, a                                                       ; $7da2
+	add  hl, bc                                                     ; $7da3
+
+; Store in wram
+	ld   a, l                                                       ; $7da4
+	ld   [wGameResultsStatsTotal], a                                ; $7da5
+	ld   a, h                                                       ; $7da8
+	ld   [wGameResultsStatsTotal+1], a                              ; $7da9
+	ret                                                             ; $7dac
 
 
-Call_011_7dad:
-	ld   b, $00                                      ; $7dad: $06 $00
-	ld   hl, $0000                                   ; $7daf: $21 $00 $00
-	ld   a, [$afc1]                                  ; $7db2: $fa $c1 $af
-	ld   c, a                                        ; $7db5: $4f
-	add  hl, bc                                      ; $7db6: $09
-	ld   a, [$afc2]                                  ; $7db7: $fa $c2 $af
-	ld   c, a                                        ; $7dba: $4f
-	add  hl, bc                                      ; $7dbb: $09
-	ld   a, [$afc3]                                  ; $7dbc: $fa $c3 $af
-	ld   c, a                                        ; $7dbf: $4f
-	add  hl, bc                                      ; $7dc0: $09
-	ld   a, [$afc4]                                  ; $7dc1: $fa $c4 $af
-	ld   c, a                                        ; $7dc4: $4f
-	add  hl, bc                                      ; $7dc5: $09
-	ld   a, [$afc5]                                  ; $7dc6: $fa $c5 $af
-	ld   c, a                                        ; $7dc9: $4f
-	add  hl, bc                                      ; $7dca: $09
-	ld   a, [$afc6]                                  ; $7dcb: $fa $c6 $af
-	ld   c, a                                        ; $7dce: $4f
-	add  hl, bc                                      ; $7dcf: $09
-	ld   a, l                                        ; $7dd0: $7d
-	ld   [$ca22], a                                  ; $7dd1: $ea $22 $ca
-	ld   a, h                                        ; $7dd4: $7c
-	ld   [$ca23], a                                  ; $7dd5: $ea $23 $ca
-	ret                                              ; $7dd8: $c9
+ProcessAffectionTotal:
+; Total all affection levels
+	ld   b, $00                                                     ; $7dad
+	ld   hl, $0000                                                  ; $7daf
+	ld   a, [sSramVals2+SRAM2_SAKURA_AFFECTION]                     ; $7db2
+	ld   c, a                                                       ; $7db5
+	add  hl, bc                                                     ; $7db6
+	ld   a, [sSramVals2+SRAM2_SUMIRE_AFFECTION]                     ; $7db7
+	ld   c, a                                                       ; $7dba
+	add  hl, bc                                                     ; $7dbb
+	ld   a, [sSramVals2+SRAM2_MARIA_AFFECTION]                      ; $7dbc
+	ld   c, a                                                       ; $7dbf
+	add  hl, bc                                                     ; $7dc0
+	ld   a, [sSramVals2+SRAM2_IRIS_AFFECTION]                       ; $7dc1
+	ld   c, a                                                       ; $7dc4
+	add  hl, bc                                                     ; $7dc5
+	ld   a, [sSramVals2+SRAM2_KOHRAN_AFFECTION]                     ; $7dc6
+	ld   c, a                                                       ; $7dc9
+	add  hl, bc                                                     ; $7dca
+	ld   a, [sSramVals2+SRAM2_KANNA_AFFECTION]                      ; $7dcb
+	ld   c, a                                                       ; $7dce
+	add  hl, bc                                                     ; $7dcf
+
+; Store in wram
+	ld   a, l                                                       ; $7dd0
+	ld   [wGameResultsAffectionTotal], a                            ; $7dd1
+	ld   a, h                                                       ; $7dd4
+	ld   [wGameResultsAffectionTotal+1], a                          ; $7dd5
+	ret                                                             ; $7dd8
 
 
-Call_011_7dd9:
-	ld   a, [$ca22]                                  ; $7dd9: $fa $22 $ca
-	ld   e, a                                        ; $7ddc: $5f
-	ld   a, [$ca23]                                  ; $7ddd: $fa $23 $ca
-	ld   d, a                                        ; $7de0: $57
-	jr   jr_011_7deb                                 ; $7de1: $18 $08
+; Returns $ff if affection < HL, else 0
+CheckIfTotalAffectionLtHL:
+	ld   a, [wGameResultsAffectionTotal]                            ; $7dd9
+	ld   e, a                                                       ; $7ddc
+	ld   a, [wGameResultsAffectionTotal+1]                          ; $7ddd
+	ld   d, a                                                       ; $7de0
+	jr   :+                                                         ; $7de1
 
-Call_011_7de3:
-	ld   a, [$ca20]                                  ; $7de3: $fa $20 $ca
-	ld   e, a                                        ; $7de6: $5f
-	ld   a, [$ca21]                                  ; $7de7: $fa $21 $ca
-	ld   d, a                                        ; $7dea: $57
 
-jr_011_7deb:
-	cp   h                                           ; $7deb: $bc
-	jr   c, jr_011_7df8                              ; $7dec: $38 $0a
+; Returns $ff if stats < HL, else 0
+CheckIfTotalStatsLtHL:
+	ld   a, [wGameResultsStatsTotal]                                ; $7de3
+	ld   e, a                                                       ; $7de6
+	ld   a, [wGameResultsStatsTotal+1]                              ; $7de7
+	ld   d, a                                                       ; $7dea
 
-	jr   nz, jr_011_7df4                             ; $7dee: $20 $04
+; If DE < HL, return $ff, else return 0
+:	cp   h                                                          ; $7deb
+	jr   c, .returnFFh                                              ; $7dec
 
-	ld   a, e                                        ; $7df0: $7b
-	cp   l                                           ; $7df1: $bd
-	jr   c, jr_011_7df8                              ; $7df2: $38 $04
+	jr   nz, .return0                                               ; $7dee
 
-jr_011_7df4:
-	and  $00                                         ; $7df4: $e6 $00
-	jr   jr_011_7dfa                                 ; $7df6: $18 $02
+	ld   a, e                                                       ; $7df0
+	cp   l                                                          ; $7df1
+	jr   c, .returnFFh                                              ; $7df2
 
-jr_011_7df8:
-	or   $ff                                         ; $7df8: $f6 $ff
+.return0:
+	and  $00                                                        ; $7df4
+	jr   .done                                                      ; $7df6
 
-jr_011_7dfa:
-	ret                                              ; $7dfa: $c9
+.returnFFh:
+	or   $ff                                                        ; $7df8
+
+.done:
+	ret                                                             ; $7dfa
 
 
 Call_011_7dfb:
@@ -10512,16 +10588,21 @@ jr_011_7e56:
 	ret                                              ; $7e56: $c9
 
 
-Func_11_7e57::
-	ld   a, h                                        ; $7e57: $7c
-	ld   [$ca01], a                                  ; $7e58: $ea $01 $ca
-	ld   a, l                                        ; $7e5b: $7d
-	ld   [$ca02], a                                  ; $7e5c: $ea $02 $ca
-	ld   a, GS_GAME_RESULTS                                     ; $7e5f: $3e $20
-	ld   [wGameState], a                                  ; $7e61: $ea $a0 $c2
-	ld   a, $00                                      ; $7e64: $3e $00
-	ld   [wGameSubstate], a                                  ; $7e66: $ea $a1 $c2
-	ret                                              ; $7e69: $c9
+; H - return state
+; L - return substate
+SetGameResultsState::
+; Set return state
+	ld   a, h                                                       ; $7e57
+	ld   [wGameResultsReturnState], a                               ; $7e58
+	ld   a, l                                                       ; $7e5b
+	ld   [wGameResultsReturnSubstate], a                            ; $7e5c
+
+; Set new state
+	ld   a, GS_GAME_RESULTS                                         ; $7e5f
+	ld   [wGameState], a                                            ; $7e61
+	ld   a, $00                                                     ; $7e64
+	ld   [wGameSubstate], a                                         ; $7e66
+	ret                                                             ; $7e69
 
 if def(VWF)
 
@@ -10529,7 +10610,6 @@ EnMariaMiniGameTitleScreenBank1_8800hHook:
 	call RLEXorCopy
 
 	M_FarCall LoadMariaMiniGameTitleScreenGfx1
-	M_FarCall ReplaceMariaMiniGameTSPopup
 	ret
 
 

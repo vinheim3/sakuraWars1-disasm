@@ -5410,7 +5410,7 @@ jr_013_5715:
 	ld   h, e                                        ; $571f: $63
 	ld   [$eb2b], a                                  ; $5720: $ea $2b $eb
 	dec  hl                                          ; $5723: $2b
-	ld   [$ca2b], a                                  ; $5724: $ea $2b $ca
+	ld   [wGameResultsOfficeWeek4Kasumi], a                                  ; $5724: $ea $2b $ca
 	ld   c, e                                        ; $5727: $4b
 	adc  d                                           ; $5728: $8a
 	adc  e                                           ; $5729: $8b

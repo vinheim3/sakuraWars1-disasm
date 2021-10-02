@@ -9617,7 +9617,7 @@ jr_02e_69d0:
 	add  [hl]                                        ; $6a20: $86
 	ld   [$0982], sp                                 ; $6a21: $08 $82 $09
 	add  b                                           ; $6a24: $80
-	ld   [$ca01], sp                                 ; $6a25: $08 $01 $ca
+	ld   [wGameResultsReturnState], sp                                 ; $6a25: $08 $01 $ca
 	ld   [hl-], a                                    ; $6a28: $32
 	add  b                                           ; $6a29: $80
 	ld   h, [hl]                                     ; $6a2a: $66

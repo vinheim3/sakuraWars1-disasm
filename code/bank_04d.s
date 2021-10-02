@@ -5807,7 +5807,7 @@ Jump_04d_59b9:
 	dec  c                                           ; $59c9: $0d
 	nop                                              ; $59ca: $00
 	ld   a, [bc]                                     ; $59cb: $0a
-	ld   bc, $ca02                                   ; $59cc: $01 $02 $ca
+	ld   bc, wGameResultsReturnSubstate                                   ; $59cc: $01 $02 $ca
 	ld   e, d                                        ; $59cf: $5a
 	inc  b                                           ; $59d0: $04
 	ld   [$8f02], sp                                 ; $59d1: $08 $02 $8f

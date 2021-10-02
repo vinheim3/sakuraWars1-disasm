@@ -11574,7 +11574,7 @@ jr_054_726d:
 	inc  b                                           ; $73b9: $04
 	rrca                                             ; $73ba: $0f
 	nop                                              ; $73bb: $00
-	ld   bc, $ca01                                   ; $73bc: $01 $01 $ca
+	ld   bc, wGameResultsReturnState                                   ; $73bc: $01 $01 $ca
 	xor  $ba                                         ; $73bf: $ee $ba
 	ld   a, l                                        ; $73c1: $7d
 	inc  b                                           ; $73c2: $04
@@ -11638,7 +11638,7 @@ jr_054_73f7:
 	inc  b                                           ; $7400: $04
 	rrca                                             ; $7401: $0f
 	nop                                              ; $7402: $00
-	ld   bc, $ca01                                   ; $7403: $01 $01 $ca
+	ld   bc, wGameResultsReturnState                                   ; $7403: $01 $01 $ca
 	xor  $ba                                         ; $7406: $ee $ba
 	ld   a, l                                        ; $7408: $7d
 	rst  $38                                         ; $7409: $ff
@@ -11683,7 +11683,7 @@ jr_054_73f7:
 	inc  b                                           ; $7433: $04
 	rrca                                             ; $7434: $0f
 	nop                                              ; $7435: $00
-	ld   bc, $ca01                                   ; $7436: $01 $01 $ca
+	ld   bc, wGameResultsReturnState                                   ; $7436: $01 $01 $ca
 	xor  $ba                                         ; $7439: $ee $ba
 	ld   a, l                                        ; $743b: $7d
 	rst  $38                                         ; $743c: $ff

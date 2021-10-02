@@ -77,7 +77,7 @@
 
 ; hook banks
 ; $ff ($13c), $fd ($276), $fb ($155), $a4 ($45), $8b ($19f), $85 ($4c3)
-; $6b ($7d6), $2b ($59e), $1f ($24e), $40 ($798), $3f ($42b), $35 ()
+; $6b ($862), $2b ($59e), $1f ($24e), $40 ($798), $3f ($42b), $35 ()
 ; -> $31, $2f, $2a
 
 ; To 'day passed'
@@ -113,69 +113,49 @@
 ; 5:5652, 5:7407 - flag setting state
 ; script opcode $04
 
+; Flower Division Captain
+; * 975+ total stats
+; * 2+ battle sims won
+; * 750+ total affection
+; * 3+ battles won
+; * Final battle won
 
-; tools/instantText.py battle Table_24_71b0
-;   battle text in bank $24 (DONE + text fits)
-;   _90_5087 (DONE + text fits)
-;   _90_4e80 (DONE)
-;   _90_5118 (DONE + text fits)
-;   _90_5234 (DONE)
-;   _90_5ac9 (DONE + text fits)
-;   _05_579f (DONE)
-;   _0c_5ad5 (DONE + text fits)
-;   _30_683a (DONE)
-;   _30_6e56 (DONE)
-;   _30_77d4 (DONE)
-;   _31_441e (DONE)
-;   _31_595e (DONE + text fits)
-;   _0d_618f (DONE + text fits)
-;   _3e_46d1 (DONE)
-;   _3e_59ea (DONE)
-;   _10_6070 (DONE)
-;   _11_7422 (DONE)
-;   _21_4081 (DONE + doesnt matter if text fits)
-; tools/scriptExtract.py
+; Not a far off dream
+; * Not peeping
+; * 935+ total stats
+; * 1+ battle sims won
+; * Final battle won
 
+; Stats-focused
+; * 830+ total stats
+; * 3+ battles won
+; * Not peeping
+; * 240+ in the relevant stat
 
-; ..
-; 1) Minigame selection - GameState03_MiniGames - Substate1
-; 2) Minigame results - GameState18_MiniGameResults - Substate0
-; 3) Sakura title screen
-;   GameState1e_SakuraMiniGameTitleScreen - Substate0
-;   Char sprites - LoadSakuraInMiniGameTitleScreenSprites
-; 4) Sakura help screen
-;   GameState0c_SakuraMiniGameMain - Substate0
-;   Popup boxes - Call_011_6b56
-; 5) Sakura main screen - GameState0c_SakuraMiniGameMain - Substate3
-; 6) Sumire title screen
-;   GameState1d_SumireMiniGameTitleScreen - Substate0
-;   Char sprites - Call_010_73d9
-; 7) Sumire help screen 
-;   GameState26_SumireMiniGameMain - Substate0
-;   Popup boxes - Call_010_74d5
-; 8) Sumire main screen ready text
-;   GameState26_SumireMiniGameMain - Substate3
-;   Sprites - Call_020_43ac (tiles 0:$8d40+)
-; 9) Sumire main screen finished text
-;   GameState26_SumireMiniGameMain - Substate3
-;   Winner prites - Call_020_55ab (tiles 1:$8000+)
-;   Loser prites - Call_020_55bf (tiles 1:$8200+)
-; 10) Maria title screen - GameState0d_MariaMiniGame - Substate0
-; 11) Maria help screen - GameState0d_MariaMiniGame - Substate6
-; 12) Maria main screen - GameState0d_MariaMiniGame - Substate9
-; 13) Iris title screen - GameState1c_IrisMiniGameTitleScreen - Substate0
-; 14) Iris help screen - GameState22_IrisMiniGameHelpScreen - Substate0
-; 15) Iris main screen - GameState04_IrisMiniGameMain - Substate0
-; 16) Kohran title screen - GameState1b_KohranMiniGameTitleScreen - Substate0
-; 17) Kohran help screen - GameState25_KohranMiniGameMain - Substate0
-; 18) Kohran main screen
-;   GameState25_KohranMiniGameMain - Substate3
-;   Top left box - Call_020_6f72
-;   Top right box - Call_020_7028
-; 19) Kanna title screen - GameState1f_KannaMiniGameTitleScreen - Substate0
-; 20) Kanna help screen - GameState21_KannaMiniGameHelpScreen - Substate0
-; 21) Kanna main screen - GameState0b_KannaMiniGameMain - Substate1
-; ..
+; Perfect for Accounting
+; * 200+ intellect
+; * All 4 office weeks
+
+; Perfect Sales Clerk
+; * Tsubaki food quiz
+; * 700+ total affection
+
+; Ideal Usher
+; * 800+ total affection
+
+; From the shadows
+; * 200+ speed
+
+; Well-liked
+; * 121+ affection with all 6 girls
+
+; Countless worlds
+; * 200+ guts
+
+; Cleaning up after
+; * Not peeping
+
+; Results are lacking
 
 0x0 0x3e17
 0x1 0x3b04

@@ -19,6 +19,11 @@ kanji_map = getKanjiMap()
 prefix = f"{tableName}entry"
 
 
+def get_limits(_scriptName):
+    if _scriptName == '_11_7422':
+        return (None, 16*8, 2)
+
+
 def get_limit(_scriptName, idx):
     limit = None
 
@@ -61,7 +66,7 @@ def is_oneline(_scriptName, idx):
 tableItems = []
 existing_map = {}
 with open('sakura wars GB - misc 25:09:21.csv') as f:
-# with open('sakura wars GB - misc 2 24:09:21.csv') as f:
+# with open('sakura wars GB - misc 2 02:10:21.csv') as f:
     reader = csv.reader(f)
     for row in reader:
         if row[2] not in existing_map and row[4]:
@@ -111,10 +116,22 @@ for i, jp in enumerate(tableItems):
 
     # Calculate if any lines breached limit (doesn't actually use conversion)
     limit = get_limit(scriptName, i)
+    limits = get_limits(scriptName)
     lines = tableItem.split('\n')
-    if limit:
+
+    if limits:
+        tbs, width, rows = limits
         for j, line in enumerate(lines):
-            textboxes = ScriptExtractor.convertEnglish(line, limit)
+            textboxes, _ = ScriptExtractor.convertEnglish(line, width, rows=rows)
+            if tbs:
+                assert len(textboxes) <= tbs
+            for textbox in textboxes:
+                textbox.append(0)
+                comps.append(stringB(textbox))
+
+    elif limit:
+        for j, line in enumerate(lines):
+            textboxes, _ = ScriptExtractor.convertEnglish(line, limit)
             if not textboxes:
                 continue
 

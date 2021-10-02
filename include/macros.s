@@ -149,7 +149,7 @@ macro ScriptOpt_0c
     db $0c, \1
 endm
 
-macro ScriptOpt_0d
+macro ScriptOpt_SetCharOnScene
     db $0d, \1, \2
 endm
 
@@ -173,7 +173,7 @@ macro ScriptOpt_12
     db $12, \1
 endm
 
-macro ScriptOpt_13
+macro ScriptOpt_PlaySong
     db $13, \1
 endm
 
@@ -205,7 +205,7 @@ macro ScriptOpt_1b
     db $1b, \1
 endm
 
-macro ScriptOpt_1c
+macro ScriptOpt_SetCharAndPortrait
     db $1c, \1, \2, \3
 endm
 
@@ -293,15 +293,15 @@ macro RpnPushSpecialRamByte
     db $02, \1
 endm
 
-macro Rpn03
+macro RpnGetLocalByte
     db $03, \1
 endm
 
-macro Rpn04
+macro RpnCheckLocalByte
     db $04, \1, \2
 endm
 
-macro Rpn06
+macro RpnCheckGlobalByte
     db $06, \1, \2
 endm
 

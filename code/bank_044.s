@@ -2119,7 +2119,7 @@ jr_044_4950:
 	nop                                              ; $4965: $00
 	rrca                                             ; $4966: $0f
 	nop                                              ; $4967: $00
-	ld   bc, $ca01                                   ; $4968: $01 $01 $ca
+	ld   bc, wGameResultsReturnState                                   ; $4968: $01 $01 $ca
 	xor  [hl]                                        ; $496b: $ae
 	jp   z, Jump_044_75ae                            ; $496c: $ca $ae $75
 
@@ -2794,7 +2794,7 @@ jr_044_4c46:
 	nop                                              ; $4c5b: $00
 	rrca                                             ; $4c5c: $0f
 	nop                                              ; $4c5d: $00
-	ld   bc, $ca01                                   ; $4c5e: $01 $01 $ca
+	ld   bc, wGameResultsReturnState                                   ; $4c5e: $01 $01 $ca
 	xor  [hl]                                        ; $4c61: $ae
 	jp   z, Jump_044_75ae                            ; $4c62: $ca $ae $75
 
@@ -6498,7 +6498,7 @@ jr_044_5ca6:
 	nop                                              ; $5cb5: $00
 	rrca                                             ; $5cb6: $0f
 	nop                                              ; $5cb7: $00
-	ld   bc, $ca01                                   ; $5cb8: $01 $01 $ca
+	ld   bc, wGameResultsReturnState                                   ; $5cb8: $01 $01 $ca
 	xor  [hl]                                        ; $5cbb: $ae
 	jp   z, Jump_044_75ae                            ; $5cbc: $ca $ae $75
 
@@ -7124,7 +7124,7 @@ jr_044_5f5a:
 	nop                                              ; $5f69: $00
 	rrca                                             ; $5f6a: $0f
 	nop                                              ; $5f6b: $00
-	ld   bc, $ca01                                   ; $5f6c: $01 $01 $ca
+	ld   bc, wGameResultsReturnState                                   ; $5f6c: $01 $01 $ca
 	xor  [hl]                                        ; $5f6f: $ae
 	jp   z, Jump_044_75ae                            ; $5f70: $ca $ae $75
 
@@ -12419,7 +12419,7 @@ Jump_044_75ae:
 	nop                                              ; $76a4: $00
 	rrca                                             ; $76a5: $0f
 	nop                                              ; $76a6: $00
-	ld   bc, $ca01                                   ; $76a7: $01 $01 $ca
+	ld   bc, wGameResultsReturnState                                   ; $76a7: $01 $01 $ca
 	xor  [hl]                                        ; $76aa: $ae
 	jp   z, Jump_044_75ae                            ; $76ab: $ca $ae $75
 

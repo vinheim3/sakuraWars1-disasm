@@ -9255,7 +9255,7 @@ jr_030_721d:
 	ld   h, GS_PRE_TITLE_SCREEN                                      ; $7238: $26 $46
 	ld   l, $00                                      ; $723a: $2e $00
 
-	M_FarCall Func_11_7e57
+	M_FarCall SetGameResultsState
 	ret                                              ; $7250: $c9
 
 

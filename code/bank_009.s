@@ -9,7 +9,7 @@ SECTION "ROM Bank $009", ROMX[$4000], BANK[$9]
 
 GameState38_DayPeriodTransition::
 ; todo:
-	M_FarCall Func_05_4540
+	M_FarCall ReturnMostAffectionateGirlInA
 
 ; HL = day period double idxed into table
 	ld   a, [sDayPeriodIdx]                                         ; $4014
@@ -204,7 +204,7 @@ DPTransition05:
 	ld   h, $36                                      ; $419d: $26 $36
 	ld   l, $00                                      ; $419f: $2e $00
 
-	M_FarCall Func_11_7e57
+	M_FarCall SetGameResultsState
 	ret                                              ; $41b5: $c9
 
 .notEndOfGame:

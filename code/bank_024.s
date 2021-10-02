@@ -4983,7 +4983,7 @@ Call_024_6055:
 	ld   a, [hl+]                                    ; $608a: $2a
 	ld   [$ca80], a                                  ; $608b: $ea $80 $ca
 	ld   b, $03                                      ; $608e: $06 $03
-	ld   a, [$afd4]                                  ; $6090: $fa $d4 $af
+	ld   a, [sSramVals2+SRAM2_SPEED]                                  ; $6090: $fa $d4 $af
 	cp   $64                                         ; $6093: $fe $64
 	jr   c, jr_024_60a9                              ; $6095: $38 $12
 
@@ -5038,7 +5038,7 @@ jr_024_60dd:
 
 
 jr_024_60e3:
-	ld   a, [$afd1]                                  ; $60e3: $fa $d1 $af
+	ld   a, [sSramVals2+SRAM2_INTELLECT]                                  ; $60e3: $fa $d1 $af
 	cp   $e7                                         ; $60e6: $fe $e7
 	jr   nc, jr_024_60fd                             ; $60e8: $30 $13
 
@@ -5214,7 +5214,7 @@ Call_024_61b6:
 	xor  a                                           ; $61bd: $af
 	ld   [$ca90], a                                  ; $61be: $ea $90 $ca
 	ld   d, $00                                      ; $61c1: $16 $00
-	ld   a, [$afd2]                                  ; $61c3: $fa $d2 $af
+	ld   a, [sSramVals2+SRAM2_SPIRIT_POWER]                                  ; $61c3: $fa $d2 $af
 	ld   e, a                                        ; $61c6: $5f
 	ld   hl, $ca90                                   ; $61c7: $21 $90 $ca
 	ld   a, [hl]                                     ; $61ca: $7e
@@ -5256,7 +5256,7 @@ jr_024_61f8:
 	ld   [$ca44], a                                  ; $61f9: $ea $44 $ca
 	ld   [$ca45], a                                  ; $61fc: $ea $45 $ca
 	ld   d, $00                                      ; $61ff: $16 $00
-	ld   a, [$afd3]                                  ; $6201: $fa $d3 $af
+	ld   a, [sSramVals2+SRAM2_GUTS]                                  ; $6201: $fa $d3 $af
 	ld   e, a                                        ; $6204: $5f
 	ld   hl, $ca44                                   ; $6205: $21 $44 $ca
 	ld   a, [hl]                                     ; $6208: $7e
@@ -5266,7 +5266,7 @@ jr_024_61f8:
 	adc  d                                           ; $620c: $8a
 	ld   [hl], a                                     ; $620d: $77
 	ld   d, $00                                      ; $620e: $16 $00
-	ld   a, [$afd4]                                  ; $6210: $fa $d4 $af
+	ld   a, [sSramVals2+SRAM2_SPEED]                                  ; $6210: $fa $d4 $af
 	ld   e, a                                        ; $6213: $5f
 	ld   hl, $ca44                                   ; $6214: $21 $44 $ca
 	ld   a, [hl]                                     ; $6217: $7e
@@ -5276,7 +5276,7 @@ jr_024_61f8:
 	adc  d                                           ; $621b: $8a
 	ld   [hl], a                                     ; $621c: $77
 	ld   d, $00                                      ; $621d: $16 $00
-	ld   a, [$afd5]                                  ; $621f: $fa $d5 $af
+	ld   a, [sSramVals2+SRAM2_ACCURACY]                                  ; $621f: $fa $d5 $af
 	ld   e, a                                        ; $6222: $5f
 	ld   hl, $ca44                                   ; $6223: $21 $44 $ca
 	ld   a, [hl]                                     ; $6226: $7e
@@ -5323,7 +5323,7 @@ Jump_024_625b:
 	ld   [$ca44], a                                  ; $625c: $ea $44 $ca
 	ld   [$ca45], a                                  ; $625f: $ea $45 $ca
 	ld   d, $00                                      ; $6262: $16 $00
-	ld   a, [$afd1]                                  ; $6264: $fa $d1 $af
+	ld   a, [sSramVals2+SRAM2_INTELLECT]                                  ; $6264: $fa $d1 $af
 	sub  $1f                                         ; $6267: $d6 $1f
 	ld   e, a                                        ; $6269: $5f
 	ld   hl, $ca44                                   ; $626a: $21 $44 $ca
@@ -5334,7 +5334,7 @@ Jump_024_625b:
 	adc  d                                           ; $6271: $8a
 	ld   [hl], a                                     ; $6272: $77
 	ld   d, $00                                      ; $6273: $16 $00
-	ld   a, [$afd3]                                  ; $6275: $fa $d3 $af
+	ld   a, [sSramVals2+SRAM2_GUTS]                                  ; $6275: $fa $d3 $af
 	sub  $1f                                         ; $6278: $d6 $1f
 	ld   e, a                                        ; $627a: $5f
 	ld   hl, $ca44                                   ; $627b: $21 $44 $ca
@@ -5345,7 +5345,7 @@ Jump_024_625b:
 	adc  d                                           ; $6282: $8a
 	ld   [hl], a                                     ; $6283: $77
 	ld   d, $00                                      ; $6284: $16 $00
-	ld   a, [$afd4]                                  ; $6286: $fa $d4 $af
+	ld   a, [sSramVals2+SRAM2_SPEED]                                  ; $6286: $fa $d4 $af
 	sub  $1f                                         ; $6289: $d6 $1f
 	ld   e, a                                        ; $628b: $5f
 	ld   hl, $ca44                                   ; $628c: $21 $44 $ca
@@ -5356,7 +5356,7 @@ Jump_024_625b:
 	adc  d                                           ; $6293: $8a
 	ld   [hl], a                                     ; $6294: $77
 	ld   d, $00                                      ; $6295: $16 $00
-	ld   a, [$afd5]                                  ; $6297: $fa $d5 $af
+	ld   a, [sSramVals2+SRAM2_ACCURACY]                                  ; $6297: $fa $d5 $af
 	sub  $1f                                         ; $629a: $d6 $1f
 	ld   e, a                                        ; $629c: $5f
 	ld   hl, $ca44                                   ; $629d: $21 $44 $ca
@@ -5406,17 +5406,17 @@ Jump_024_62bf:
 	call Func_0c50                                       ; $62e3: $cd $50 $0c
 	ld   a, l                                        ; $62e6: $7d
 	ld   [$ca7d], a                                  ; $62e7: $ea $7d $ca
-	ld   a, [$afd4]                                  ; $62ea: $fa $d4 $af
+	ld   a, [sSramVals2+SRAM2_SPEED]                                  ; $62ea: $fa $d4 $af
 	ld   [$ca81], a                                  ; $62ed: $ea $81 $ca
 	ld   a, [$ca7f]                                  ; $62f0: $fa $7f $ca
 	ld   [$ca7f], a                                  ; $62f3: $ea $7f $ca
-	ld   a, [$afd5]                                  ; $62f6: $fa $d5 $af
+	ld   a, [sSramVals2+SRAM2_ACCURACY]                                  ; $62f6: $fa $d5 $af
 	ld   [$ca82], a                                  ; $62f9: $ea $82 $ca
 	ld   a, [$ca80]                                  ; $62fc: $fa $80 $ca
 	ld   [$ca80], a                                  ; $62ff: $ea $80 $ca
 	xor  a                                           ; $6302: $af
 	ld   [$ca7e], a                                  ; $6303: $ea $7e $ca
-	ld   a, [$afd1]                                  ; $6306: $fa $d1 $af
+	ld   a, [sSramVals2+SRAM2_INTELLECT]                                  ; $6306: $fa $d1 $af
 	sub  $3f                                         ; $6309: $d6 $3f
 	ld   h, a                                        ; $630b: $67
 	ld   l, $40                                      ; $630c: $2e $40
@@ -5429,7 +5429,7 @@ Jump_024_62bf:
 
 jr_024_6318:
 	ld   [$ca83], a                                  ; $6318: $ea $83 $ca
-	ld   a, [$afd2]                                  ; $631b: $fa $d2 $af
+	ld   a, [sSramVals2+SRAM2_SPIRIT_POWER]                                  ; $631b: $fa $d2 $af
 	ld   [$ca84], a                                  ; $631e: $ea $84 $ca
 	ret                                              ; $6321: $c9
 
@@ -9493,7 +9493,7 @@ Jump_024_77f1:
 	ld   [$ca90], a                                  ; $77f2: $ea $90 $ca
 	ld   [$ca91], a                                  ; $77f5: $ea $91 $ca
 	ld   d, $00                                      ; $77f8: $16 $00
-	ld   a, [$afd3]                                  ; $77fa: $fa $d3 $af
+	ld   a, [sSramVals2+SRAM2_GUTS]                                  ; $77fa: $fa $d3 $af
 	ld   e, a                                        ; $77fd: $5f
 	ld   hl, $ca90                                   ; $77fe: $21 $90 $ca
 	ld   a, [hl]                                     ; $7801: $7e
@@ -9502,7 +9502,7 @@ Jump_024_77f1:
 	ld   a, [hl]                                     ; $7804: $7e
 	adc  d                                           ; $7805: $8a
 	ld   [hl], a                                     ; $7806: $77
-	ld   a, [$afd2]                                  ; $7807: $fa $d2 $af
+	ld   a, [sSramVals2+SRAM2_SPIRIT_POWER]                                  ; $7807: $fa $d2 $af
 	ld   e, a                                        ; $780a: $5f
 	ld   hl, $ca90                                   ; $780b: $21 $90 $ca
 	ld   a, [hl]                                     ; $780e: $7e
@@ -9511,7 +9511,7 @@ Jump_024_77f1:
 	ld   a, [hl]                                     ; $7811: $7e
 	adc  d                                           ; $7812: $8a
 	ld   [hl], a                                     ; $7813: $77
-	ld   a, [$afd5]                                  ; $7814: $fa $d5 $af
+	ld   a, [sSramVals2+SRAM2_ACCURACY]                                  ; $7814: $fa $d5 $af
 	ld   e, a                                        ; $7817: $5f
 	ld   hl, $ca90                                   ; $7818: $21 $90 $ca
 	ld   a, [hl]                                     ; $781b: $7e
@@ -9520,7 +9520,7 @@ Jump_024_77f1:
 	ld   a, [hl]                                     ; $781e: $7e
 	adc  d                                           ; $781f: $8a
 	ld   [hl], a                                     ; $7820: $77
-	ld   a, [$afd4]                                  ; $7821: $fa $d4 $af
+	ld   a, [sSramVals2+SRAM2_SPEED]                                  ; $7821: $fa $d4 $af
 	ld   e, a                                        ; $7824: $5f
 	ld   hl, $ca90                                   ; $7825: $21 $90 $ca
 	ld   a, [hl]                                     ; $7828: $7e
@@ -9548,7 +9548,7 @@ Jump_024_77f1:
 
 
 Jump_024_7846:
-	ld   a, [$afd4]                                  ; $7846: $fa $d4 $af
+	ld   a, [sSramVals2+SRAM2_SPEED]                                  ; $7846: $fa $d4 $af
 	cp   $c8                                         ; $7849: $fe $c8
 	jr   nc, jr_024_7887                             ; $784b: $30 $3a
 
@@ -9561,7 +9561,7 @@ Jump_024_7846:
 
 
 Jump_024_7853:
-	ld   a, [$afd5]                                  ; $7853: $fa $d5 $af
+	ld   a, [sSramVals2+SRAM2_ACCURACY]                                  ; $7853: $fa $d5 $af
 	cp   $c8                                         ; $7856: $fe $c8
 	jr   nc, jr_024_7887                             ; $7858: $30 $2d
 
@@ -9574,7 +9574,7 @@ Jump_024_7853:
 
 
 Jump_024_7860:
-	ld   a, [$afd2]                                  ; $7860: $fa $d2 $af
+	ld   a, [sSramVals2+SRAM2_SPIRIT_POWER]                                  ; $7860: $fa $d2 $af
 	cp   $c8                                         ; $7863: $fe $c8
 	jr   nc, jr_024_7887                             ; $7865: $30 $20
 
@@ -9587,7 +9587,7 @@ Jump_024_7860:
 
 
 Jump_024_786d:
-	ld   a, [$afd1]                                  ; $786d: $fa $d1 $af
+	ld   a, [sSramVals2+SRAM2_INTELLECT]                                  ; $786d: $fa $d1 $af
 	cp   $c8                                         ; $7870: $fe $c8
 	jr   nc, jr_024_7887                             ; $7872: $30 $13
 
@@ -9600,7 +9600,7 @@ Jump_024_786d:
 
 
 Jump_024_787a:
-	ld   a, [$afd3]                                  ; $787a: $fa $d3 $af
+	ld   a, [sSramVals2+SRAM2_GUTS]                                  ; $787a: $fa $d3 $af
 	cp   $c8                                         ; $787d: $fe $c8
 	jr   nc, jr_024_7887                             ; $787f: $30 $06
 

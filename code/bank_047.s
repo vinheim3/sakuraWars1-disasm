@@ -4836,7 +4836,7 @@ Jump_047_5461:
 	inc  bc                                          ; $566a: $03
 	rrca                                             ; $566b: $0f
 	nop                                              ; $566c: $00
-	ld   bc, $ca01                                   ; $566d: $01 $01 $ca
+	ld   bc, wGameResultsReturnState                                   ; $566d: $01 $01 $ca
 	db   $eb                                         ; $5670: $eb
 	ldh  [c], a                                      ; $5671: $e2
 	ld   [bc], a                                     ; $5672: $02

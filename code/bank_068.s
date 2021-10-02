@@ -5090,7 +5090,7 @@ jr_068_5660:
 	dec  c                                           ; $5708: $0d
 	nop                                              ; $5709: $00
 	ld   a, [bc]                                     ; $570a: $0a
-	ld   bc, $ca02                                   ; $570b: $01 $02 $ca
+	ld   bc, wGameResultsReturnSubstate                                   ; $570b: $01 $02 $ca
 	ld   e, d                                        ; $570e: $5a
 	inc  b                                           ; $570f: $04
 	ld   [$8f02], sp                                 ; $5710: $08 $02 $8f

@@ -268,7 +268,7 @@ jr_04a_40db:
 	dec  c                                           ; $411d: $0d
 	nop                                              ; $411e: $00
 	ld   a, [bc]                                     ; $411f: $0a
-	ld   bc, $ca02                                   ; $4120: $01 $02 $ca
+	ld   bc, wGameResultsReturnSubstate                                   ; $4120: $01 $02 $ca
 	sub  b                                           ; $4123: $90
 	ld   l, e                                        ; $4124: $6b
 	sbc  d                                           ; $4125: $9a

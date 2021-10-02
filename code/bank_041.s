@@ -3384,14 +3384,14 @@ else
 Script_005::
 endc
 	ScriptOpt_JumpIfCalcValIsNon0 .ref_b
-		Rpn06 $20, $00
+		RpnCheckGlobalByte $20, $00
 		RpnPush $00
 		RpnEq
 		RpnEnd
 	ScriptOpt_End
 .ref_b:
 	ScriptOpt_LoadScenery $13
-	ScriptOpt_1c $0e, $01, $01
+	ScriptOpt_SetCharAndPortrait $0e, $01, $01
 	ScriptOpt_02
 	ScriptOpt_DisplayText
 		TEXT $b6, $b0, $eb, $40e, $3a8, $21, $1c, $a0, $58, $48d, $52, $365, $60, $0d, $52, $6d, $6e, $5b, $9e, $8c, $61, $76, $79, $50, $98, $5a, $76, $54, $0d, $62, $64, $52, $8c, $fc, $67, $9f, $0d
@@ -3410,7 +3410,7 @@ else
 
 Script_006::
 endc
-	ScriptOpt_13 $04
+	ScriptOpt_PlaySong $04
 	ScriptOpt_LoadScenery $93
 	ScriptOpt_SetPortrait $00, $01
 	ScriptOpt_02
@@ -3420,7 +3420,7 @@ endc
 	ScriptOpt_DisplayText
 		TEXT $0d
 	ScriptOpt_ContinuePrompt
-	ScriptOpt_1c $0b, $00, $00
+	ScriptOpt_SetCharAndPortrait $0b, $00, $00
 	ScriptOpt_DisplayText
 		TEXT $6b, $61, $7c, $50, $78, $6d, $9e, $6f, $95, $71, $76, $0d, $52, $52, $59, $65, $97, $f9
 	ScriptOpt_SetDelay $3c
@@ -3434,14 +3434,14 @@ endc
 	ScriptOpt_DisplayText
 		TEXT $0d
 	ScriptOpt_ContinuePrompt
-	ScriptOpt_1c $0b, $01, $01
+	ScriptOpt_SetCharAndPortrait $0b, $01, $01
 	ScriptOpt_DisplayText
 		TEXT $6b, $54, $9e, $50, $78, $6d, $9e, $78, $59, $78, $59, $52, $52, $0d, $90, $7c, $a0, $3a0, $71, $74, $52, $99, $9d, $7b, $9f
 	ScriptOpt_SetDelay $3c
 	ScriptOpt_DisplayText
 		TEXT $0d
 	ScriptOpt_ContinuePrompt
-	ScriptOpt_1c $0b, $00, $00
+	ScriptOpt_SetCharAndPortrait $0b, $00, $00
 	ScriptOpt_DisplayText
 		TEXT $9d, $6d, $65, $7d, $9e, $408, $28f, $290, $291, $409, $f3, $69e, $31f, $501, $0d, $5f8, $686, $50, $92, $8f, $9f
 	ScriptOpt_SetDelay $3c
@@ -3466,7 +3466,7 @@ endc
 	ScriptOpt_DisplayText
 		TEXT $0d
 	ScriptOpt_ContinuePrompt
-	ScriptOpt_1c $0b, $01, $01
+	ScriptOpt_SetCharAndPortrait $0b, $01, $01
 	ScriptOpt_DisplayText
 		TEXT $76, $7d, $29d, $71, $74, $90, $9e, $8c, $6e, $34a, $2f5, $79, $0d, $283, $8c, $71, $6d, $9d, $5f, $75, $7d, $78, $52, $7c, $96, $9f
 	ScriptOpt_SetDelay $3c
@@ -3485,7 +3485,7 @@ endc
 	ScriptOpt_DisplayText
 		TEXT $0d
 	ScriptOpt_ContinuePrompt
-	ScriptOpt_0d $00, $00
+	ScriptOpt_SetCharOnScene $00, $00
 	ScriptOpt_SetPortrait $00, $01
 	ScriptOpt_2c $10
 	ScriptOpt_LoadScenery $b9

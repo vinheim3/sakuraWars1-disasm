@@ -907,13 +907,13 @@ GetNumCharsInWord:
 	jr   .loop                                                      ; $453e
 
 
-Func_05_4540::
+ReturnMostAffectionateGirlInA::
 	push bc                                          ; $4540: $c5
 	push de                                          ; $4541: $d5
 	push hl                                          ; $4542: $e5
 
-; hl = afc2, de = afc1
-	ld   hl, $afc1                                   ; $4543: $21 $c1 $af
+; hl = SRAM2_SUMIRE_AFFECTION, de = SRAM2_SAKURA_AFFECTION
+	ld   hl, sSramVals2+SRAM2_SAKURA_AFFECTION                                   ; $4543: $21 $c1 $af
 	ld   d, h                                        ; $4546: $54
 	ld   e, l                                        ; $4547: $5d
 	inc  hl                                          ; $4548: $23
@@ -944,7 +944,7 @@ Func_05_4540::
 	cp   $07                                         ; $4557: $fe $07
 	jr   c, .loop                              ; $4559: $38 $f2
 
-; todo: return the lowest val in A
+; todo: return the highest val in A
 	ld   a, c                                        ; $455b: $79
 
 	pop  hl                                          ; $455c: $e1

@@ -10218,7 +10218,7 @@ jr_05a_6e16:
 	dec  c                                           ; $6e5c: $0d
 	nop                                              ; $6e5d: $00
 	ld   a, [bc]                                     ; $6e5e: $0a
-	ld   bc, $ca02                                   ; $6e5f: $01 $02 $ca
+	ld   bc, wGameResultsReturnSubstate                                   ; $6e5f: $01 $02 $ca
 	sub  b                                           ; $6e62: $90
 	ld   l, e                                        ; $6e63: $6b
 	sbc  d                                           ; $6e64: $9a
@@ -10493,7 +10493,7 @@ jr_05a_6f42:
 	dec  c                                           ; $6f88: $0d
 	nop                                              ; $6f89: $00
 	ld   a, [bc]                                     ; $6f8a: $0a
-	ld   bc, $ca02                                   ; $6f8b: $01 $02 $ca
+	ld   bc, wGameResultsReturnSubstate                                   ; $6f8b: $01 $02 $ca
 	sub  b                                           ; $6f8e: $90
 	ld   l, e                                        ; $6f8f: $6b
 	sbc  d                                           ; $6f90: $9a
@@ -10758,7 +10758,7 @@ jr_05a_706c:
 	dec  c                                           ; $70ae: $0d
 	nop                                              ; $70af: $00
 	ld   a, [bc]                                     ; $70b0: $0a
-	ld   bc, $ca02                                   ; $70b1: $01 $02 $ca
+	ld   bc, wGameResultsReturnSubstate                                   ; $70b1: $01 $02 $ca
 	sub  b                                           ; $70b4: $90
 	ld   l, e                                        ; $70b5: $6b
 	sbc  d                                           ; $70b6: $9a
@@ -11028,7 +11028,7 @@ jr_05a_7192:
 	dec  c                                           ; $71d6: $0d
 	nop                                              ; $71d7: $00
 	ld   a, [bc]                                     ; $71d8: $0a
-	ld   bc, $ca02                                   ; $71d9: $01 $02 $ca
+	ld   bc, wGameResultsReturnSubstate                                   ; $71d9: $01 $02 $ca
 	sub  b                                           ; $71dc: $90
 	ld   l, e                                        ; $71dd: $6b
 	sbc  d                                           ; $71de: $9a
@@ -11297,7 +11297,7 @@ jr_05a_72bc:
 	dec  c                                           ; $7300: $0d
 	nop                                              ; $7301: $00
 	ld   a, [bc]                                     ; $7302: $0a
-	ld   bc, $ca02                                   ; $7303: $01 $02 $ca
+	ld   bc, wGameResultsReturnSubstate                                   ; $7303: $01 $02 $ca
 	sub  b                                           ; $7306: $90
 	ld   l, e                                        ; $7307: $6b
 	sbc  d                                           ; $7308: $9a
@@ -11560,7 +11560,7 @@ jr_05a_73e4:
 	dec  c                                           ; $7426: $0d
 	nop                                              ; $7427: $00
 	ld   a, [bc]                                     ; $7428: $0a
-	ld   bc, $ca02                                   ; $7429: $01 $02 $ca
+	ld   bc, wGameResultsReturnSubstate                                   ; $7429: $01 $02 $ca
 	sub  b                                           ; $742c: $90
 	ld   l, e                                        ; $742d: $6b
 	sbc  d                                           ; $742e: $9a
@@ -11838,7 +11838,7 @@ jr_05a_73e4:
 	ld   c, $0f                                      ; $756d: $0e $0f
 	add  hl, bc                                      ; $756f: $09
 	nop                                              ; $7570: $00
-	ld   bc, $ca02                                   ; $7571: $01 $02 $ca
+	ld   bc, wGameResultsReturnSubstate                                   ; $7571: $01 $02 $ca
 	ld   a, h                                        ; $7574: $7c
 	inc  b                                           ; $7575: $04
 	ld   a, d                                        ; $7576: $7a

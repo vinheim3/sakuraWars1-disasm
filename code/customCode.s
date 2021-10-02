@@ -473,6 +473,8 @@ LoadMariaMiniGameTitleScreenGfx1::
 	ld   hl, .row5
 	call MemCopy
 
+	M_FarCall ReplaceMariaMiniGameTSPopup
+
 	ret
 
 .row1:

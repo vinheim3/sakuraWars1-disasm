@@ -12081,7 +12081,7 @@ jr_01c_792c:
 	add  b                                           ; $796b: $80
 	add  c                                           ; $796c: $81
 	inc  bc                                          ; $796d: $03
-	jp   $afc1                                       ; $796e: $c3 $c1 $af
+	jp   sSramVals2+SRAM2_SAKURA_AFFECTION                                       ; $796e: $c3 $c1 $af
 
 
 	inc  d                                           ; $7971: $14

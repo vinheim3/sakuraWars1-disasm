@@ -428,7 +428,52 @@ wPushUpsCurrPushupToDo:: ; $c9ac
     db
 
 wc9ad:
-    ds $a4c-$9ad
+    ds $a01-$9ad
+
+wGameResultsReturnState:: ; $ca01
+    db
+
+wGameResultsReturnSubstate:: ; $ca02
+    db
+
+wca03:
+    ds $20-3
+
+wGameResultsStatsTotal:: ; $ca20
+    dw
+
+wGameResultsAffectionTotal:: ; $ca22
+    dw
+
+wGameResultsBattlesWon:: ; $ca24
+    db
+
+wGameResultsBattleSimsWon:: ; $ca25
+    db
+
+wGameResultsFinalBattleWon:: ; $ca26
+    db
+
+wGameResultsPeeping:: ; $ca27
+    db
+
+wGameResultsOfficeWeek1Yuri:: ; $ca28
+    db
+
+wGameResultsOfficeWeek2Kasumi:: ; $ca29
+    db
+
+wGameResultsOfficeWeek3Yuri:: ; $ca2a
+    db
+
+wGameResultsOfficeWeek4Kasumi:: ; $ca2b
+    db
+
+wGameResultsTsubakiFoodQuiz:: ; $ca2c
+    db
+
+wca2d:
+    ds $4c-$2d
 
 wNapOrTrainReturnState:: ; $ca4c
     db
@@ -600,7 +645,13 @@ wScriptCalcStack:: ; $cb96
     db ; unknown size
 
 wcb97:
-    ds $c8-$97
+    ds $c2-$97
+
+wKouboChosen:: ; $cbc2
+    db
+
+wcbc3:
+    ds 8-3
 
 wScriptSongToPlay:: ; $cbc8
     db

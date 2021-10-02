@@ -964,15 +964,15 @@ jr_021_44c1:
 Call_021_44d4:
 	ld   a, [$afd0]                                  ; $44d4: $fa $d0 $af
 	ld   [$caa7], a                                  ; $44d7: $ea $a7 $ca
-	ld   a, [$afd1]                                  ; $44da: $fa $d1 $af
+	ld   a, [sSramVals2+SRAM2_INTELLECT]                                  ; $44da: $fa $d1 $af
 	ld   [$caa8], a                                  ; $44dd: $ea $a8 $ca
-	ld   a, [$afd2]                                  ; $44e0: $fa $d2 $af
+	ld   a, [sSramVals2+SRAM2_SPIRIT_POWER]                                  ; $44e0: $fa $d2 $af
 	ld   [$caa9], a                                  ; $44e3: $ea $a9 $ca
-	ld   a, [$afd3]                                  ; $44e6: $fa $d3 $af
+	ld   a, [sSramVals2+SRAM2_GUTS]                                  ; $44e6: $fa $d3 $af
 	ld   [$caaa], a                                  ; $44e9: $ea $aa $ca
-	ld   a, [$afd4]                                  ; $44ec: $fa $d4 $af
+	ld   a, [sSramVals2+SRAM2_SPEED]                                  ; $44ec: $fa $d4 $af
 	ld   [$caab], a                                  ; $44ef: $ea $ab $ca
-	ld   a, [$afd5]                                  ; $44f2: $fa $d5 $af
+	ld   a, [sSramVals2+SRAM2_ACCURACY]                                  ; $44f2: $fa $d5 $af
 	ld   [$caac], a                                  ; $44f5: $ea $ac $ca
 
 Jump_021_44f8:
@@ -1639,15 +1639,15 @@ jr_021_498f:
 	ld   a, [$ca97]                                  ; $498f: $fa $97 $ca
 	ld   [$afd0], a                                  ; $4992: $ea $d0 $af
 	ld   a, [$ca98]                                  ; $4995: $fa $98 $ca
-	ld   [$afd1], a                                  ; $4998: $ea $d1 $af
+	ld   [sSramVals2+SRAM2_INTELLECT], a                                  ; $4998: $ea $d1 $af
 	ld   a, [$ca99]                                  ; $499b: $fa $99 $ca
-	ld   [$afd2], a                                  ; $499e: $ea $d2 $af
+	ld   [sSramVals2+SRAM2_SPIRIT_POWER], a                                  ; $499e: $ea $d2 $af
 	ld   a, [$ca9a]                                  ; $49a1: $fa $9a $ca
-	ld   [$afd3], a                                  ; $49a4: $ea $d3 $af
+	ld   [sSramVals2+SRAM2_GUTS], a                                  ; $49a4: $ea $d3 $af
 	ld   a, [$ca9b]                                  ; $49a7: $fa $9b $ca
-	ld   [$afd4], a                                  ; $49aa: $ea $d4 $af
+	ld   [sSramVals2+SRAM2_SPEED], a                                  ; $49aa: $ea $d4 $af
 	ld   a, [$ca9c]                                  ; $49ad: $fa $9c $ca
-	ld   [$afd5], a                                  ; $49b0: $ea $d5 $af
+	ld   [sSramVals2+SRAM2_ACCURACY], a                                  ; $49b0: $ea $d5 $af
 	ld   hl, wGameSubstate                                   ; $49b3: $21 $a1 $c2
 	inc  [hl]                                        ; $49b6: $34
 	ret                                              ; $49b7: $c9
@@ -2272,15 +2272,15 @@ jr_021_4e14:
 	ld   a, [$ca97]                                  ; $4e14: $fa $97 $ca
 	ld   [$afd0], a                                  ; $4e17: $ea $d0 $af
 	ld   a, [$ca98]                                  ; $4e1a: $fa $98 $ca
-	ld   [$afd1], a                                  ; $4e1d: $ea $d1 $af
+	ld   [sSramVals2+SRAM2_INTELLECT], a                                  ; $4e1d: $ea $d1 $af
 	ld   a, [$ca99]                                  ; $4e20: $fa $99 $ca
-	ld   [$afd2], a                                  ; $4e23: $ea $d2 $af
+	ld   [sSramVals2+SRAM2_SPIRIT_POWER], a                                  ; $4e23: $ea $d2 $af
 	ld   a, [$ca9a]                                  ; $4e26: $fa $9a $ca
-	ld   [$afd3], a                                  ; $4e29: $ea $d3 $af
+	ld   [sSramVals2+SRAM2_GUTS], a                                  ; $4e29: $ea $d3 $af
 	ld   a, [$ca9b]                                  ; $4e2c: $fa $9b $ca
-	ld   [$afd4], a                                  ; $4e2f: $ea $d4 $af
+	ld   [sSramVals2+SRAM2_SPEED], a                                  ; $4e2f: $ea $d4 $af
 	ld   a, [$ca9c]                                  ; $4e32: $fa $9c $ca
-	ld   [$afd5], a                                  ; $4e35: $ea $d5 $af
+	ld   [sSramVals2+SRAM2_ACCURACY], a                                  ; $4e35: $ea $d5 $af
 	ld   hl, wGameSubstate                                   ; $4e38: $21 $a1 $c2
 	inc  [hl]                                        ; $4e3b: $34
 	ret                                              ; $4e3c: $c9
@@ -3104,15 +3104,15 @@ jr_021_53bb:
 	ld   a, [$ca97]                                  ; $53bb: $fa $97 $ca
 	ld   [$afd0], a                                  ; $53be: $ea $d0 $af
 	ld   a, [$ca98]                                  ; $53c1: $fa $98 $ca
-	ld   [$afd1], a                                  ; $53c4: $ea $d1 $af
+	ld   [sSramVals2+SRAM2_INTELLECT], a                                  ; $53c4: $ea $d1 $af
 	ld   a, [$ca99]                                  ; $53c7: $fa $99 $ca
-	ld   [$afd2], a                                  ; $53ca: $ea $d2 $af
+	ld   [sSramVals2+SRAM2_SPIRIT_POWER], a                                  ; $53ca: $ea $d2 $af
 	ld   a, [$ca9a]                                  ; $53cd: $fa $9a $ca
-	ld   [$afd3], a                                  ; $53d0: $ea $d3 $af
+	ld   [sSramVals2+SRAM2_GUTS], a                                  ; $53d0: $ea $d3 $af
 	ld   a, [$ca9b]                                  ; $53d3: $fa $9b $ca
-	ld   [$afd4], a                                  ; $53d6: $ea $d4 $af
+	ld   [sSramVals2+SRAM2_SPEED], a                                  ; $53d6: $ea $d4 $af
 	ld   a, [$ca9c]                                  ; $53d9: $fa $9c $ca
-	ld   [$afd5], a                                  ; $53dc: $ea $d5 $af
+	ld   [sSramVals2+SRAM2_ACCURACY], a                                  ; $53dc: $ea $d5 $af
 	ld   hl, wGameSubstate                                   ; $53df: $21 $a1 $c2
 	inc  [hl]                                        ; $53e2: $34
 	ret                                              ; $53e3: $c9
@@ -3922,15 +3922,15 @@ jr_021_5957:
 	ld   a, [$ca97]                                  ; $5957: $fa $97 $ca
 	ld   [$afd0], a                                  ; $595a: $ea $d0 $af
 	ld   a, [$ca98]                                  ; $595d: $fa $98 $ca
-	ld   [$afd1], a                                  ; $5960: $ea $d1 $af
+	ld   [sSramVals2+SRAM2_INTELLECT], a                                  ; $5960: $ea $d1 $af
 	ld   a, [$ca99]                                  ; $5963: $fa $99 $ca
-	ld   [$afd2], a                                  ; $5966: $ea $d2 $af
+	ld   [sSramVals2+SRAM2_SPIRIT_POWER], a                                  ; $5966: $ea $d2 $af
 	ld   a, [$ca9a]                                  ; $5969: $fa $9a $ca
-	ld   [$afd3], a                                  ; $596c: $ea $d3 $af
+	ld   [sSramVals2+SRAM2_GUTS], a                                  ; $596c: $ea $d3 $af
 	ld   a, [$ca9b]                                  ; $596f: $fa $9b $ca
-	ld   [$afd4], a                                  ; $5972: $ea $d4 $af
+	ld   [sSramVals2+SRAM2_SPEED], a                                  ; $5972: $ea $d4 $af
 	ld   a, [$ca9c]                                  ; $5975: $fa $9c $ca
-	ld   [$afd5], a                                  ; $5978: $ea $d5 $af
+	ld   [sSramVals2+SRAM2_ACCURACY], a                                  ; $5978: $ea $d5 $af
 	ld   hl, wGameSubstate                                   ; $597b: $21 $a1 $c2
 	inc  [hl]                                        ; $597e: $34
 	ret                                              ; $597f: $c9
@@ -4643,15 +4643,15 @@ jr_021_5e64:
 	ld   a, [$ca97]                                  ; $5e64: $fa $97 $ca
 	ld   [$afd0], a                                  ; $5e67: $ea $d0 $af
 	ld   a, [$ca98]                                  ; $5e6a: $fa $98 $ca
-	ld   [$afd1], a                                  ; $5e6d: $ea $d1 $af
+	ld   [sSramVals2+SRAM2_INTELLECT], a                                  ; $5e6d: $ea $d1 $af
 	ld   a, [$ca99]                                  ; $5e70: $fa $99 $ca
-	ld   [$afd2], a                                  ; $5e73: $ea $d2 $af
+	ld   [sSramVals2+SRAM2_SPIRIT_POWER], a                                  ; $5e73: $ea $d2 $af
 	ld   a, [$ca9a]                                  ; $5e76: $fa $9a $ca
-	ld   [$afd3], a                                  ; $5e79: $ea $d3 $af
+	ld   [sSramVals2+SRAM2_GUTS], a                                  ; $5e79: $ea $d3 $af
 	ld   a, [$ca9b]                                  ; $5e7c: $fa $9b $ca
-	ld   [$afd4], a                                  ; $5e7f: $ea $d4 $af
+	ld   [sSramVals2+SRAM2_SPEED], a                                  ; $5e7f: $ea $d4 $af
 	ld   a, [$ca9c]                                  ; $5e82: $fa $9c $ca
-	ld   [$afd5], a                                  ; $5e85: $ea $d5 $af
+	ld   [sSramVals2+SRAM2_ACCURACY], a                                  ; $5e85: $ea $d5 $af
 	ld   hl, wGameSubstate                                   ; $5e88: $21 $a1 $c2
 	inc  [hl]                                        ; $5e8b: $34
 	ret                                              ; $5e8c: $c9
@@ -5403,15 +5403,15 @@ jr_021_63ad:
 	ld   a, [$ca97]                                  ; $63ad: $fa $97 $ca
 	ld   [$afd0], a                                  ; $63b0: $ea $d0 $af
 	ld   a, [$ca98]                                  ; $63b3: $fa $98 $ca
-	ld   [$afd1], a                                  ; $63b6: $ea $d1 $af
+	ld   [sSramVals2+SRAM2_INTELLECT], a                                  ; $63b6: $ea $d1 $af
 	ld   a, [$ca99]                                  ; $63b9: $fa $99 $ca
-	ld   [$afd2], a                                  ; $63bc: $ea $d2 $af
+	ld   [sSramVals2+SRAM2_SPIRIT_POWER], a                                  ; $63bc: $ea $d2 $af
 	ld   a, [$ca9a]                                  ; $63bf: $fa $9a $ca
-	ld   [$afd3], a                                  ; $63c2: $ea $d3 $af
+	ld   [sSramVals2+SRAM2_GUTS], a                                  ; $63c2: $ea $d3 $af
 	ld   a, [$ca9b]                                  ; $63c5: $fa $9b $ca
-	ld   [$afd4], a                                  ; $63c8: $ea $d4 $af
+	ld   [sSramVals2+SRAM2_SPEED], a                                  ; $63c8: $ea $d4 $af
 	ld   a, [$ca9c]                                  ; $63cb: $fa $9c $ca
-	ld   [$afd5], a                                  ; $63ce: $ea $d5 $af
+	ld   [sSramVals2+SRAM2_ACCURACY], a                                  ; $63ce: $ea $d5 $af
 	ld   hl, wGameSubstate                                   ; $63d1: $21 $a1 $c2
 	inc  [hl]                                        ; $63d4: $34
 	ret                                              ; $63d5: $c9
@@ -5851,15 +5851,15 @@ jr_021_672f:
 	ld   a, [$ca97]                                  ; $672f: $fa $97 $ca
 	ld   [$afd0], a                                  ; $6732: $ea $d0 $af
 	ld   a, [$ca98]                                  ; $6735: $fa $98 $ca
-	ld   [$afd1], a                                  ; $6738: $ea $d1 $af
+	ld   [sSramVals2+SRAM2_INTELLECT], a                                  ; $6738: $ea $d1 $af
 	ld   a, [$ca99]                                  ; $673b: $fa $99 $ca
-	ld   [$afd2], a                                  ; $673e: $ea $d2 $af
+	ld   [sSramVals2+SRAM2_SPIRIT_POWER], a                                  ; $673e: $ea $d2 $af
 	ld   a, [$ca9a]                                  ; $6741: $fa $9a $ca
-	ld   [$afd3], a                                  ; $6744: $ea $d3 $af
+	ld   [sSramVals2+SRAM2_GUTS], a                                  ; $6744: $ea $d3 $af
 	ld   a, [$ca9b]                                  ; $6747: $fa $9b $ca
-	ld   [$afd4], a                                  ; $674a: $ea $d4 $af
+	ld   [sSramVals2+SRAM2_SPEED], a                                  ; $674a: $ea $d4 $af
 	ld   a, [$ca9c]                                  ; $674d: $fa $9c $ca
-	ld   [$afd5], a                                  ; $6750: $ea $d5 $af
+	ld   [sSramVals2+SRAM2_ACCURACY], a                                  ; $6750: $ea $d5 $af
 	ld   hl, wGameSubstate                                   ; $6753: $21 $a1 $c2
 	inc  [hl]                                        ; $6756: $34
 	ret                                              ; $6757: $c9
@@ -6660,7 +6660,7 @@ jr_021_6c4c:
 	ld   a, [$ca6c]                                  ; $6c55: $fa $6c $ca
 	ld   b, a                                        ; $6c58: $47
 	ld   a, $02                                      ; $6c59: $3e $02
-	call Call_021_75c1                               ; $6c5b: $cd $c1 $75
+	call SetGirlSpecialAnimsState                               ; $6c5b: $cd $c1 $75
 	ret                                              ; $6c5e: $c9
 
 
@@ -6696,7 +6696,7 @@ Jump_021_6c85:
 	ld   a, [$ca6c]                                  ; $6c8e: $fa $6c $ca
 	ld   b, a                                        ; $6c91: $47
 	ld   a, $06                                      ; $6c92: $3e $06
-	call Call_021_75c1                               ; $6c94: $cd $c1 $75
+	call SetGirlSpecialAnimsState                               ; $6c94: $cd $c1 $75
 	ret                                              ; $6c97: $c9
 
 
@@ -6708,7 +6708,7 @@ Jump_021_6c98:
 	ld   a, [$ca6c]                                  ; $6ca1: $fa $6c $ca
 	ld   b, a                                        ; $6ca4: $47
 	ld   a, $05                                      ; $6ca5: $3e $05
-	call Call_021_75c1                               ; $6ca7: $cd $c1 $75
+	call SetGirlSpecialAnimsState                               ; $6ca7: $cd $c1 $75
 	ret                                              ; $6caa: $c9
 
 
@@ -8354,7 +8354,8 @@ GameState34_GirlSpecialAnims::
 	inc  de                                          ; $75bf: $13
 	ld   a, h                                        ; $75c0: $7c
 
-Call_021_75c1::
+
+SetGirlSpecialAnimsState::
 	dec  a                                           ; $75c1: $3d
 	ld   [wNapOrTrainIdx], a                                  ; $75c2: $ea $6d $ca
 	ld   a, b                                        ; $75c5: $78

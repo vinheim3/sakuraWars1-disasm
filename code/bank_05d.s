@@ -9912,7 +9912,7 @@ jr_05d_6bc2:
 	dec  c                                           ; $6c08: $0d
 	nop                                              ; $6c09: $00
 	ld   a, [bc]                                     ; $6c0a: $0a
-	ld   bc, $ca02                                   ; $6c0b: $01 $02 $ca
+	ld   bc, wGameResultsReturnSubstate                                   ; $6c0b: $01 $02 $ca
 	sub  b                                           ; $6c0e: $90
 	ld   l, e                                        ; $6c0f: $6b
 	sbc  d                                           ; $6c10: $9a
@@ -10187,7 +10187,7 @@ jr_05d_6cee:
 	dec  c                                           ; $6d34: $0d
 	nop                                              ; $6d35: $00
 	ld   a, [bc]                                     ; $6d36: $0a
-	ld   bc, $ca02                                   ; $6d37: $01 $02 $ca
+	ld   bc, wGameResultsReturnSubstate                                   ; $6d37: $01 $02 $ca
 	sub  b                                           ; $6d3a: $90
 	ld   l, e                                        ; $6d3b: $6b
 	sbc  d                                           ; $6d3c: $9a
@@ -10456,7 +10456,7 @@ jr_05d_6e18:
 	dec  c                                           ; $6e5a: $0d
 	nop                                              ; $6e5b: $00
 	ld   a, [bc]                                     ; $6e5c: $0a
-	ld   bc, $ca02                                   ; $6e5d: $01 $02 $ca
+	ld   bc, wGameResultsReturnSubstate                                   ; $6e5d: $01 $02 $ca
 	sub  b                                           ; $6e60: $90
 	ld   l, e                                        ; $6e61: $6b
 	sbc  d                                           ; $6e62: $9a
@@ -10726,7 +10726,7 @@ jr_05d_6f3e:
 	dec  c                                           ; $6f82: $0d
 	nop                                              ; $6f83: $00
 	ld   a, [bc]                                     ; $6f84: $0a
-	ld   bc, $ca02                                   ; $6f85: $01 $02 $ca
+	ld   bc, wGameResultsReturnSubstate                                   ; $6f85: $01 $02 $ca
 	sub  b                                           ; $6f88: $90
 	ld   l, e                                        ; $6f89: $6b
 	sbc  d                                           ; $6f8a: $9a
@@ -10995,7 +10995,7 @@ jr_05d_7068:
 	dec  c                                           ; $70ac: $0d
 	nop                                              ; $70ad: $00
 	ld   a, [bc]                                     ; $70ae: $0a
-	ld   bc, $ca02                                   ; $70af: $01 $02 $ca
+	ld   bc, wGameResultsReturnSubstate                                   ; $70af: $01 $02 $ca
 	sub  b                                           ; $70b2: $90
 	ld   l, e                                        ; $70b3: $6b
 	sbc  d                                           ; $70b4: $9a
@@ -11262,7 +11262,7 @@ jr_05d_7190:
 	dec  c                                           ; $71d2: $0d
 	nop                                              ; $71d3: $00
 	ld   a, [bc]                                     ; $71d4: $0a
-	ld   bc, $ca02                                   ; $71d5: $01 $02 $ca
+	ld   bc, wGameResultsReturnSubstate                                   ; $71d5: $01 $02 $ca
 	sub  b                                           ; $71d8: $90
 	ld   l, e                                        ; $71d9: $6b
 	sbc  d                                           ; $71da: $9a
@@ -11540,7 +11540,7 @@ jr_05d_7190:
 	ld   c, $0f                                      ; $7319: $0e $0f
 	add  hl, bc                                      ; $731b: $09
 	nop                                              ; $731c: $00
-	ld   bc, $ca02                                   ; $731d: $01 $02 $ca
+	ld   bc, wGameResultsReturnSubstate                                   ; $731d: $01 $02 $ca
 	ld   a, h                                        ; $7320: $7c
 	inc  b                                           ; $7321: $04
 	ld   a, d                                        ; $7322: $7a

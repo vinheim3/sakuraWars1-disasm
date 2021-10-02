@@ -6643,7 +6643,7 @@ jr_05b_5e52:
 	dec  c                                           ; $5e6c: $0d
 	nop                                              ; $5e6d: $00
 	ld   a, [bc]                                     ; $5e6e: $0a
-	ld   bc, $ca02                                   ; $5e6f: $01 $02 $ca
+	ld   bc, wGameResultsReturnSubstate                                   ; $5e6f: $01 $02 $ca
 	ld   e, d                                        ; $5e72: $5a
 	inc  b                                           ; $5e73: $04
 	ld   [$8f02], sp                                 ; $5e74: $08 $02 $8f
