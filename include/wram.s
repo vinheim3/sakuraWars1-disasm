@@ -298,7 +298,16 @@ wTVAdapterRewardsCheckByte:: ; $c6f5
     db
 
 wc6f6:
-    ds $8af-$6f6
+    ds $718-$6f6
+
+wCreditsControlCodePtr:: ; $c718
+    dw
+
+wCredits1NumNames:: ; $c71a
+    db
+
+wc71b:
+    ds $8af-$71b
 
 wSaveScreenPopUpBottomRowSpriteSpecIdxUsed:: ; $c8af
     db

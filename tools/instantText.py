@@ -26,6 +26,9 @@ def get_limits(_scriptName):
     if _scriptName == '_30_77d4':
         return (1, 12*8, 2)
 
+    if _scriptName == '_30_6e56':
+        return (1, 16*8, 2)
+
 
 def get_limit(_scriptName, idx):
     limit = None
@@ -37,7 +40,7 @@ def get_limit(_scriptName, idx):
             return 12 * 8
 
     if _scriptName == '_30_683a':
-        return 9 * 8
+        return 11 * 8
 
     if _scriptName == '_90_5ac9':
         return 18 * 8
@@ -68,7 +71,7 @@ def is_oneline(_scriptName, idx):
 
 tableItems = []
 existing_map = {}
-with open('sakura wars GB - misc 25:09:21.csv') as f:
+with open('sakura wars GB - misc 03:10:21.csv') as f:
 # with open('sakura wars GB - misc 2 02:10:21.csv') as f:
     reader = csv.reader(f)
     for row in reader:
@@ -106,8 +109,7 @@ for i, jp in enumerate(tableItems):
             continue
         elif scriptName == '_30_683a':
             comps.append(f"{prefix}{i:02x}::")
-            tableItem = [0x10]*24
-            tableItem.append(0)
+            tableItem = [0]
             comps.append(stringB(tableItem))
             continue
         else:
@@ -148,6 +150,9 @@ for i, jp in enumerate(tableItems):
             if is_oneline(scriptName, i) and textboxes and 0x0d in textbox:
                 # print(i, line, 'breached')
                 print(line, limit)
+
+            if scriptName == '_30_683a':
+                textbox = [0x10, *textbox]
 
             if j != len(lines)-1:
                 textbox.append(0x0d)

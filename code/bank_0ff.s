@@ -1159,34 +1159,6 @@ IrisMiniGameMainLayout4::
 	db $4c, $f0, $f0, $4f, $4c
 
 
-EnLoadIrisMiniGameTileAttrs::
-	ld   a, $88
-	ld   [$9a46], a
-	ld   [$9a66], a
-	ld   [$9a86], a
-	ld   [$9a4d], a
-	ld   [$9a6d], a
-	ld   [$9a8d], a
-	ld   [$9b10], a
-	ld   [$9b30], a
-	ld   [$9b50], a
-	ld   [$9b0e], a
-	ld   [$9b0f], a
-	ld   [$9b2e], a
-	ld   [$9b2f], a
-	ld   [$9b4e], a
-	ld   [$9b4f], a
-
-	ld   a, $03
-	ld   [$99ee], a
-	ld   [$9a0e], a
-
-	ld   a, $0b
-	ld   [$99f0], a
-	ld   [$9a10], a
-	ret
-
-
 Gfx_IrisMiniGameMain::
 	INCBIN "en_kohranMiniGameMain.2bpp"
 .end::
@@ -1265,6 +1237,72 @@ _SoundModeLoadTextHook::
 	ld   a, b
 	or   c
 	jr   nz, :-
+	ret
+
+
+IrisMiniGameLayoutHook::
+; Tile attr
+	ld   de, $5982                                   ; $56e5: $11 $82 $59
+	ld   bc, $141b                                   ; $56e8: $01 $1b $14
+	call FarCopyLayout                                       ; $56eb: $cd $2c $0b
+
+; Attrs hook
+	ld   a, $88
+	ld   [$9a46], a
+	ld   [$9a66], a
+	ld   [$9a86], a
+	ld   [$9a4d], a
+	ld   [$9a6d], a
+	ld   [$9a8d], a
+	ld   [$9b10], a
+	ld   [$9b30], a
+	ld   [$9b50], a
+	ld   [$9b0e], a
+	ld   [$9b0f], a
+	ld   [$9b2e], a
+	ld   [$9b2f], a
+	ld   [$9b4e], a
+	ld   [$9b4f], a
+
+	ld   a, $03
+	ld   [$99ee], a
+	ld   [$9a0e], a
+
+	ld   a, $0b
+	ld   [$99f0], a
+	ld   [$9a10], a
+
+; Tile map
+	xor  a                                           ; $56ee: $af
+	ldh  [rVBK], a                                   ; $56ef: $e0 $4f
+	ld   hl, $9800                                   ; $56f1: $21 $00 $98
+	ld   a, $34                                      ; $56f4: $3e $34
+	call FarCopyLayout                                       ; $56f6: $cd $2c $0b
+
+; Map hook
+	ld   a, BANK(IrisMiniGameMainLayout1)
+	ldbc $08, $03
+	ld   de, IrisMiniGameMainLayout1
+	ld   hl, $9a46
+	call FarCopyLayout
+
+	ld   a, BANK(IrisMiniGameMainLayout2)
+	ldbc $08, $03
+	ld   de, IrisMiniGameMainLayout2
+	ld   hl, $9aa6
+	call FarCopyLayout
+
+	ld   a, BANK(IrisMiniGameMainLayout3)
+	ldbc $0b, $03
+	ld   de, IrisMiniGameMainLayout3
+	ld   hl, $9b06
+	call FarCopyLayout
+
+	ld   a, BANK(IrisMiniGameMainLayout4)
+	ldbc $05, $02
+	ld   de, IrisMiniGameMainLayout4
+	ld   hl, $99ed
+	call FarCopyLayout
 	ret
 
 endc

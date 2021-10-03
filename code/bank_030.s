@@ -4095,22 +4095,18 @@ endc
 
 	ld   hl, $9800                                   ; $56e0: $21 $00 $98
 	ld   a, $34                                      ; $56e3: $3e $34
+if def(VWF)
+	M_FarCall IrisMiniGameLayoutHook
+else
 	ld   de, $5982                                   ; $56e5: $11 $82 $59
 	ld   bc, $141b                                   ; $56e8: $01 $1b $14
-if def(VWF)
-	call IrisMiniGameMainTileAttrHook
-else
 	call FarCopyLayout                                       ; $56eb: $cd $2c $0b
-endc
 
 ;
 	xor  a                                           ; $56ee: $af
 	ldh  [rVBK], a                                   ; $56ef: $e0 $4f
 	ld   hl, $9800                                   ; $56f1: $21 $00 $98
 	ld   a, $34                                      ; $56f4: $3e $34
-if def(VWF)
-	call IrisMiniGameMainTileMapHook
-else
 	call FarCopyLayout                                       ; $56f6: $cd $2c $0b
 endc
 
@@ -6371,13 +6367,13 @@ GameState05_Credits::
 	dw CreditsSubstate0
 	dw CreditsSubstate1
 	dw CreditsSubstate2
-	dw CreditsSubstate3
+	dw CreditsSubstate3_ProcessControlCode
 	dw CreditsSubstate4
 	dw CreditsSubstate5
-	dw CreditsSubstate6
-	dw CreditsSubstate7
-	dw CreditsSubstate8
-	dw CreditsSubstate9
+	dw CreditsSubstate6_Credits2Init
+	dw CreditsSubstate7_Credits2Main
+	dw CreditsSubstate8_WaitToFadeOut
+	dw CreditsSubstate9_FadeOut
 
 
 CreditsSubstate0:
@@ -6595,14 +6591,20 @@ jr_030_64e8:
 
 
 CreditsSubstate2:
+;
 	ld   a, [wWramBank]                                  ; $64e9: $fa $93 $c2
 	push af                                          ; $64ec: $f5
+
 	ld   a, $05                                      ; $64ed: $3e $05
 	ld   [wWramBank], a                                  ; $64ef: $ea $93 $c2
 	ldh  [rSVBK], a                                  ; $64f2: $e0 $70
+
+;
 	ld   hl, $d000                                   ; $64f4: $21 $00 $d0
 	ld   bc, $0800                                   ; $64f7: $01 $00 $08
 	call MemClear                                       ; $64fa: $cd $95 $09
+
+;
 	ld   c, $80                                      ; $64fd: $0e $80
 	ld   de, $8800                                   ; $64ff: $11 $00 $88
 	ld   a, $05                                      ; $6502: $3e $05
@@ -6610,6 +6612,8 @@ CreditsSubstate2:
 	ld   b, $40                                      ; $6507: $06 $40
 	call EnqueueHDMATransfer                                       ; $6509: $cd $7c $02
 	rst  WaitUntilVBlankIntHandledIfLCDOn                                         ; $650c: $cf
+
+;
 	ld   c, $80                                      ; $650d: $0e $80
 	ld   de, $8c00                                   ; $650f: $11 $00 $8c
 	ld   a, $05                                      ; $6512: $3e $05
@@ -6617,164 +6621,99 @@ CreditsSubstate2:
 	ld   b, $40                                      ; $6517: $06 $40
 	call EnqueueHDMATransfer                                       ; $6519: $cd $7c $02
 	rst  WaitUntilVBlankIntHandledIfLCDOn                                         ; $651c: $cf
+
+;
 	ld   hl, $d000                                   ; $651d: $21 $00 $d0
 	ld   bc, $0480                                   ; $6520: $01 $80 $04
 	call MemClear                                       ; $6523: $cd $95 $09
+
+;
 	ld   hl, $d000                                   ; $6526: $21 $00 $d0
 	ld   a, $34                                      ; $6529: $3e $34
 	ld   de, $6aaa                                   ; $652b: $11 $aa $6a
 	ld   bc, $1412                                   ; $652e: $01 $12 $14
 	call FarCopyLayout                                       ; $6531: $cd $2c $0b
 	call FarCopyLayout                                       ; $6534: $cd $2c $0b
+
+;
 	ld   c, $81                                      ; $6537: $0e $81
 	ld   de, $9800                                   ; $6539: $11 $00 $98
 	ld   a, $05                                      ; $653c: $3e $05
 	ld   hl, $d000                                   ; $653e: $21 $00 $d0
 	ld   b, $24                                      ; $6541: $06 $24
 	call EnqueueHDMATransfer                                       ; $6543: $cd $7c $02
+
+;
 	ld   c, $80                                      ; $6546: $0e $80
 	ld   de, $9800                                   ; $6548: $11 $00 $98
 	ld   a, $05                                      ; $654b: $3e $05
 	ld   hl, $d240                                   ; $654d: $21 $40 $d2
 	ld   b, $24                                      ; $6550: $06 $24
 	call EnqueueHDMATransfer                                       ; $6552: $cd $7c $02
+
+;
 	pop  af                                          ; $6555: $f1
 	ld   [wWramBank], a                                  ; $6556: $ea $93 $c2
 	ldh  [rSVBK], a                                  ; $6559: $e0 $70
+
+;
 	ld   hl, wLCDC                                   ; $655b: $21 $03 $c2
 	res  5, [hl]                                     ; $655e: $cb $ae
+
 	xor  a                                           ; $6560: $af
 	ld   [wSCX], a                                  ; $6561: $ea $07 $c2
 	ld   [wSCY], a                                  ; $6564: $ea $08 $c2
+
+;
 	ld   a, $18                                      ; $6567: $3e $18
 	ld   [$c20b], a                                  ; $6569: $ea $0b $c2
+
 	ld   a, $03                                      ; $656c: $3e $03
 	ld   [wLCDCIntFuncIdx], a                                  ; $656e: $ea $8d $c2
+
+;
 	call ClearOam                                       ; $6571: $cd $d7 $0d
+
 	ld   a, $01                                      ; $6574: $3e $01
 	ld   hl, $7080                                   ; $6576: $21 $80 $70
 	ld   de, wBGPalettes                                   ; $6579: $11 $de $c2
 	ld   bc, $0010                                   ; $657c: $01 $10 $00
 	call FarMemCopy                                       ; $657f: $cd $b2 $09
+
+;
 	ld   a, $34                                      ; $6582: $3e $34
 	ld   hl, $7f69                                   ; $6584: $21 $69 $7f
-	ld   de, $c2ee                                   ; $6587: $11 $ee $c2
+	ld   de, wBGPalettes+$10                                   ; $6587: $11 $ee $c2
 	ld   bc, $0008                                   ; $658a: $01 $08 $00
 	call FarMemCopy                                       ; $658d: $cd $b2 $09
+
 	ld   bc, $000b                                   ; $6590: $01 $0b $00
 	call SetBGandOBJPaletteRangesToUpdate                                       ; $6593: $cd $aa $04
-	ld   hl, $c718                                   ; $6596: $21 $18 $c7
-	ld   a, $a3                                      ; $6599: $3e $a3
+
+;
+	ld   hl, wCreditsControlCodePtr                                   ; $6596: $21 $18 $c7
+	ld   a, LOW(.data)                                      ; $6599: $3e $a3
 	ld   [hl+], a                                    ; $659b: $22
-	ld   [hl], $65                                   ; $659c: $36 $65
+	ld   [hl], HIGH(.data)                                   ; $659c: $36 $65
 	ld   hl, wGameSubstate                                   ; $659e: $21 $a1 $c2
 	inc  [hl]                                        ; $65a1: $34
 	ret                                              ; $65a2: $c9
 
-
-	ld   [bc], a                                     ; $65a3: $02
-	nop                                              ; $65a4: $00
-	inc  bc                                          ; $65a5: $03
-	dec  b                                           ; $65a6: $05
-	rst  $38                                         ; $65a7: $ff
-	ld   bc, $0204                                   ; $65a8: $01 $04 $02
-	ld   bc, $0103                                   ; $65ab: $01 $03 $01
-	rst  $38                                         ; $65ae: $ff
-	ld   bc, $0204                                   ; $65af: $01 $04 $02
-	ld   [bc], a                                     ; $65b2: $02
-	inc  bc                                          ; $65b3: $03
-	ld   [bc], a                                     ; $65b4: $02
-	rst  $38                                         ; $65b5: $ff
-	ld   bc, $0204                                   ; $65b6: $01 $04 $02
-	inc  bc                                          ; $65b9: $03
-	inc  bc                                          ; $65ba: $03
-	inc  bc                                          ; $65bb: $03
-	rst  $38                                         ; $65bc: $ff
-	ld   bc, $0204                                   ; $65bd: $01 $04 $02
-	inc  b                                           ; $65c0: $04
-	inc  bc                                          ; $65c1: $03
-	inc  b                                           ; $65c2: $04
-	rst  $38                                         ; $65c3: $ff
-	ld   bc, $0204                                   ; $65c4: $01 $04 $02
-	dec  b                                           ; $65c7: $05
-	inc  bc                                          ; $65c8: $03
-	ld   b, $07                                      ; $65c9: $06 $07
-	rst  $38                                         ; $65cb: $ff
-	ld   bc, $0204                                   ; $65cc: $01 $04 $02
-	ld   b, $03                                      ; $65cf: $06 $03
-	ld   [$0a09], sp                                 ; $65d1: $08 $09 $0a
-	dec  bc                                          ; $65d4: $0b
-	rst  $38                                         ; $65d5: $ff
-	ld   bc, $0204                                   ; $65d6: $01 $04 $02
-	rlca                                             ; $65d9: $07
-	inc  bc                                          ; $65da: $03
-	inc  c                                           ; $65db: $0c
-	dec  c                                           ; $65dc: $0d
-	ld   c, $0f                                      ; $65dd: $0e $0f
-	db   $10                                         ; $65df: $10
-	rst  $38                                         ; $65e0: $ff
-	ld   bc, $0204                                   ; $65e1: $01 $04 $02
-	ld   [$1103], sp                                 ; $65e4: $08 $03 $11
-	ld   [de], a                                     ; $65e7: $12
-	rst  $38                                         ; $65e8: $ff
-	ld   bc, $0204                                   ; $65e9: $01 $04 $02
-	add  hl, bc                                      ; $65ec: $09
-	inc  bc                                          ; $65ed: $03
-	inc  de                                          ; $65ee: $13
-	rst  $38                                         ; $65ef: $ff
-	ld   bc, $0204                                   ; $65f0: $01 $04 $02
-	ld   a, [bc]                                     ; $65f3: $0a
-	inc  bc                                          ; $65f4: $03
-	inc  d                                           ; $65f5: $14
-	dec  d                                           ; $65f6: $15
-	rst  $38                                         ; $65f7: $ff
-	ld   bc, $0204                                   ; $65f8: $01 $04 $02
-	dec  bc                                          ; $65fb: $0b
-	inc  bc                                          ; $65fc: $03
-	ld   d, $ff                                      ; $65fd: $16 $ff
-	ld   bc, $0204                                   ; $65ff: $01 $04 $02
-	inc  c                                           ; $6602: $0c
-	inc  bc                                          ; $6603: $03
-	jr   @+$19                                       ; $6604: $18 $17
-
-	add  hl, de                                      ; $6606: $19
-	rst  $38                                         ; $6607: $ff
-	ld   bc, $0204                                   ; $6608: $01 $04 $02
-	dec  c                                           ; $660b: $0d
-	inc  bc                                          ; $660c: $03
-	ld   a, [de]                                     ; $660d: $1a
-	dec  de                                          ; $660e: $1b
-	inc  e                                           ; $660f: $1c
-	dec  e                                           ; $6610: $1d
-	rst  $38                                         ; $6611: $ff
-	ld   bc, $1e03                                   ; $6612: $01 $03 $1e
-	rra                                              ; $6615: $1f
-	db $20, $21
-
-	rst  $38                                         ; $6618: $ff
-	ld   bc, $0204                                   ; $6619: $01 $04 $02
-	ld   c, $03                                      ; $661c: $0e $03
-	ld   [hl+], a                                    ; $661e: $22
-	inc  hl                                          ; $661f: $23
-	inc  h                                           ; $6620: $24
-	dec  h                                           ; $6621: $25
-	rst  $38                                         ; $6622: $ff
-	ld   bc, $0204                                   ; $6623: $01 $04 $02
-	rrca                                             ; $6626: $0f
-	inc  bc                                          ; $6627: $03
-	ld   h, $27                                      ; $6628: $26 $27
-	jr   z, @+$01                                    ; $662a: $28 $ff
-
-	ld   bc, $2903                                   ; $662c: $01 $03 $29
-	ld   a, [hl+]                                    ; $662f: $2a
-	dec  hl                                          ; $6630: $2b
-	inc  l                                           ; $6631: $2c
-	rst  $38                                         ; $6632: $ff
-	ld   bc, $0004                                   ; $6633: $01 $04 $00
+.data:
+	db $02, $00, $03, $05, $ff, $01, $04, $02, $01, $03, $01, $ff, $01, $04, $02, $02
+	db $03, $02, $ff, $01, $04, $02, $03, $03, $03, $ff, $01, $04, $02, $04, $03, $04
+	db $ff, $01, $04, $02, $05, $03, $06, $07, $ff, $01, $04, $02, $06, $03, $08, $09
+	db $0a, $0b, $ff, $01, $04, $02, $07, $03, $0c, $0d, $0e, $0f, $10, $ff, $01, $04
+	db $02, $08, $03, $11, $12, $ff, $01, $04, $02, $09, $03, $13, $ff, $01, $04, $02
+	db $0a, $03, $14, $15, $ff, $01, $04, $02, $0b, $03, $16, $ff, $01, $04, $02, $0c
+	db $03, $18, $17, $19, $ff, $01, $04, $02, $0d, $03, $1a, $1b, $1c, $1d, $ff, $01
+	db $03, $1e, $1f, $20, $21, $ff, $01, $04, $02, $0e, $03, $22, $23, $24, $25, $ff
+	db $01, $04, $02, $0f, $03, $26, $27, $28, $ff, $01, $03, $29, $2a, $2b, $2c, $ff
+	db $01, $04, $00
 
 
-CreditsSubstate3:
-	ld   hl, $c718                                   ; $6636: $21 $18 $c7
+CreditsSubstate3_ProcessControlCode:
+	ld   hl, wCreditsControlCodePtr                                   ; $6636: $21 $18 $c7
 	ld   a, [hl+]                                    ; $6639: $2a
 	ld   h, [hl]                                     ; $663a: $66
 	ld   l, a                                        ; $663b: $6f
@@ -6794,20 +6733,21 @@ CreditsSubstate3:
 	jp   hl                                          ; $664e: $e9
 
 .return:
-	ld   hl, $c718                                   ; $664f: $21 $18 $c7
+	ld   hl, wCreditsControlCodePtr                                   ; $664f: $21 $18 $c7
 	ld   a, e                                        ; $6652: $7b
 	ld   [hl+], a                                    ; $6653: $22
 	ld   [hl], d                                     ; $6654: $72
 	ret                                              ; $6655: $c9
 
 .table:
-	dw .entry0
-	dw .entry1
-	dw .entry2
-	dw $6779
-	dw $670a
+	dw Credits1ControlCode0
+	dw Credits1ControlCode1
+	dw Credits1ControlCode2_LoadTitle
+	dw Credits1ControlCode3_DisplayNames
+	dw Credits1ControlCode4_ClearTitle
 
-.entry0:
+
+Credits1ControlCode0:
 	xor  a                                           ; $6660: $af
 	ld   [wSCX], a                                  ; $6661: $ea $07 $c2
 	ld   hl, wIE                                   ; $6664: $21 $0d $c2
@@ -6816,7 +6756,8 @@ CreditsSubstate3:
 	ld   [wGameSubstate], a                                  ; $666b: $ea $a1 $c2
 	ret                                              ; $666e: $c9
 
-.entry1:
+
+Credits1ControlCode1:
 	push de                                          ; $666f: $d5
 	xor  a                                           ; $6670: $af
 	ld   b, $08                                      ; $6671: $06 $08
@@ -6834,7 +6775,8 @@ CreditsSubstate3:
 	pop  de                                          ; $6688: $d1
 	ret                                              ; $6689: $c9
 
-.entry2:
+
+Credits1ControlCode2_LoadTitle:
 ;
 	ld   a, [wWramBank]                                  ; $668a: $fa $93 $c2
 	push af                                          ; $668d: $f5
@@ -6923,6 +6865,7 @@ jr_030_6705:
 	ret                                              ; $6709: $c9
 
 
+Credits1ControlCode4_ClearTitle:
 	push de                                          ; $670a: $d5
 	ld   a, [wWramBank]                                  ; $670b: $fa $93 $c2
 	push af                                          ; $670e: $f5
@@ -6991,13 +6934,18 @@ jr_030_675e:
 	ret                                              ; $6778: $c9
 
 
+Credits1ControlCode3_DisplayNames:
 	push de                                          ; $6779: $d5
 	call InitWideTextBoxDimensions                                       ; $677a: $cd $ec $0f
 	call ClearTextBoxDimensionsAndSetDefaultTextStyle                                       ; $677d: $cd $09 $14
+if def(VWF)
+	ldbc 11, 1
+else
 	ld   bc, $0a02                                   ; $6780: $01 $02 $0a
+endc
 	call SetKanjiTextBoxDimensions                                       ; $6783: $cd $24 $14
 	xor  a                                           ; $6786: $af
-	ld   [$c71a], a                                  ; $6787: $ea $1a $c7
+	ld   [wCredits1NumNames], a                                  ; $6787: $ea $1a $c7
 	pop  de                                          ; $678a: $d1
 
 jr_030_678b:
@@ -7025,10 +6973,11 @@ jr_030_678b:
 	add  hl, bc                                      ; $67af: $09
 	ld   e, l                                        ; $67b0: $5d
 	ld   d, h                                        ; $67b1: $54
-	ld   hl, $d000                                   ; $67b2: $21 $00 $d0
 if def(VWF)
+	call Credits1ClearTextBoxHook
 	ld   a, BANK(Data_30_683aentry00)
 else
+	ld   hl, $d000                                   ; $67b2: $21 $00 $d0
 	ld   a, $30                                      ; $67b5: $3e $30
 endc
 	call LoadInstantText                                       ; $67b7: $cd $06 $13
@@ -7037,13 +6986,13 @@ endc
 	ld   [wWramBank], a                                  ; $67bc: $ea $93 $c2
 	ldh  [rSVBK], a                                  ; $67bf: $e0 $70
 	push hl                                          ; $67c1: $e5
-	ld   hl, $c71a                                   ; $67c2: $21 $1a $c7
+	ld   hl, wCredits1NumNames                                   ; $67c2: $21 $1a $c7
 	ld   a, [hl]                                     ; $67c5: $7e
 	inc  [hl]                                        ; $67c6: $34
 	ld   l, a                                        ; $67c7: $6f
 	ld   h, $00                                      ; $67c8: $26 $00
 	add  hl, hl                                      ; $67ca: $29
-	ld   de, $6aff                                   ; $67cb: $11 $ff $6a
+	ld   de, Credits1NameTileDataDests                                   ; $67cb: $11 $ff $6a
 	add  hl, de                                      ; $67ce: $19
 	ld   a, [hl+]                                    ; $67cf: $2a
 	ld   e, a                                        ; $67d0: $5f
@@ -7051,7 +7000,11 @@ endc
 	ld   c, $80                                      ; $67d2: $0e $80
 	ld   a, $05                                      ; $67d4: $3e $05
 	ld   hl, $d000                                   ; $67d6: $21 $00 $d0
+if def(VWF)
+	ld   b, $16
+else
 	ld   b, $12                                      ; $67d9: $06 $12
+endc
 	call EnqueueHDMATransfer                                       ; $67db: $cd $7c $02
 	rst  WaitUntilVBlankIntHandledIfLCDOn                                         ; $67de: $cf
 	pop  de                                          ; $67df: $d1
@@ -7066,7 +7019,7 @@ endc
 	ld   a, $05                                      ; $67eb: $3e $05
 	ld   [wWramBank], a                                  ; $67ed: $ea $93 $c2
 	ldh  [rSVBK], a                                  ; $67f0: $e0 $70
-	ld   a, [$c71a]                                  ; $67f2: $fa $1a $c7
+	ld   a, [wCredits1NumNames]                                  ; $67f2: $fa $1a $c7
 	dec  a                                           ; $67f5: $3d
 	ld   e, a                                        ; $67f6: $5f
 	ld   d, $00                                      ; $67f7: $16 $00
@@ -7074,7 +7027,7 @@ endc
 	ld   h, $00                                      ; $67fa: $26 $00
 	add  hl, hl                                      ; $67fc: $29
 	add  hl, de                                      ; $67fd: $19
-	ld   de, $6b09                                   ; $67fe: $11 $09 $6b
+	ld   de, Credits1Layouts                                  ; $67fe: $11 $09 $6b
 	add  hl, de                                      ; $6801: $19
 	ld   a, [hl+]                                    ; $6802: $2a
 	ld   e, a                                        ; $6803: $5f
@@ -7770,31 +7723,29 @@ jr_030_6af1:
 	inc  b                                           ; $6afc: $04
 	and  c                                           ; $6afd: $a1
 	nop                                              ; $6afe: $00
-	nop                                              ; $6aff: $00
-	adc  b                                           ; $6b00: $88
-	jr   nz, jr_030_6a8c                             ; $6b01: $20 $89
 
-	ld   b, b                                        ; $6b03: $40
-	adc  d                                           ; $6b04: $8a
-	ld   h, b                                        ; $6b05: $60
-	adc  e                                           ; $6b06: $8b
-	add  b                                           ; $6b07: $80
-	adc  h                                           ; $6b08: $8c
-	and  c                                           ; $6b09: $a1
-	ld   a, l                                        ; $6b0a: $7d
-	inc  [hl]                                        ; $6b0b: $34
-	nop                                              ; $6b0c: $00
-	ld   b, b                                        ; $6b0d: $40
-	dec  [hl]                                        ; $6b0e: $35
-	cp   b                                           ; $6b0f: $b8
-	ld   b, c                                        ; $6b10: $41
-	dec  [hl]                                        ; $6b11: $35
-	ld   [hl], b                                     ; $6b12: $70
-	ld   b, e                                        ; $6b13: $43
-	dec  [hl]                                        ; $6b14: $35
-	jr   z, @+$47                                    ; $6b15: $28 $45
 
-	dec  [hl]                                        ; $6b17: $35
+Credits1NameTileDataDests:
+	dw $8800
+if def(VWF)
+	dw $8960
+	dw $8ac0
+	dw $8c20
+	dw $9000
+else
+	dw $8920
+	dw $8a40
+	dw $8b60
+	dw $8c80
+endc
+
+
+Credits1Layouts:
+	AddrBank Layout_Credits1_1Name
+	AddrBank Layout_Credits1_2Names
+	AddrBank Layout_Credits1_3Names
+	AddrBank Layout_Credits1_4Names
+	AddrBank Layout_Credits1_5Names
 
 
 CreditsSubstate4:
@@ -7836,7 +7787,7 @@ jr_030_6b4c:
 	ret                                              ; $6b53: $c9
 
 
-CreditsSubstate6:
+CreditsSubstate6_Credits2Init:
 	ld   b, $00                                      ; $6b54: $06 $00
 	ld   hl, wBGPalettes                                   ; $6b56: $21 $de $c2
 	ld   c, $01                                      ; $6b59: $0e $01
@@ -7867,163 +7818,48 @@ CreditsSubstate6:
 	ld   bc, $000b                                   ; $6b98: $01 $0b $00
 	call SetBGandOBJPaletteRangesToUpdate                                       ; $6b9b: $cd $aa $04
 	call ClearOam                                       ; $6b9e: $cd $d7 $0d
-	ld   hl, $c718                                   ; $6ba1: $21 $18 $c7
-	ld   a, $b2                                      ; $6ba4: $3e $b2
+	ld   hl, wCreditsControlCodePtr                                   ; $6ba1: $21 $18 $c7
+	ld   a, LOW(.data)                                      ; $6ba4: $3e $b2
 	ld   [hl+], a                                    ; $6ba6: $22
-	ld   [hl], $6b                                   ; $6ba7: $36 $6b
+	ld   [hl], HIGH(.data)                                   ; $6ba7: $36 $6b
 	xor  a                                           ; $6ba9: $af
 	ld   [$c71b], a                                  ; $6baa: $ea $1b $c7
 	ld   hl, wGameSubstate                                   ; $6bad: $21 $a1 $c2
 	inc  [hl]                                        ; $6bb0: $34
 	ret                                              ; $6bb1: $c9
 
+.data
+if def(VWF)
+	db $01, $00, $03, $02, $00, $02, $2c, $03, $02, $01, $02, $2d, $03, $02, $02, $02
+	db $2e, $03, $02, $03, $02, $2f, $03, $02, $04, $02, $30, $03, $02, $05, $02, $31
+	db $03, $02, $06, $02, $32, $03, $03, $01, $01, $03, $02, $07, $03, $02
+	db $08, $03, $03, $01, $02, $03, $02, $09, $03, $02, $0a, $03, $03, $01, $03, $03
+	db $02, $0b, $03, $02, $0c, $03, $03, $01, $04, $03, $02, $0d, $03, $02, $0e, $02
+	db $0f, $03, $02, $10, $02, $11, $02, $12, $02, $13, $02, $14, $02, $15, $02, $16
+	db $02, $17, $02, $18, $02, $19, $02, $1a, $02, $1b, $02, $1c, $03, $03, $01, $05
+	db $03, $02, $1d, $03, $02, $1e, $03, $02, $1f, $02, $20, $03, $03, $01, $06, $03
+	db $02, $21, $03, $02, $22, $03, $02, $23, $03, $02, $24, $03, $02, $25, $03, $03
+	db $01, $07, $03, $02, $26, $03, $02, $27, $03, $03, $01, $08, $03, $02, $28, $03
+	db $02, $29, $03, $03, $01, $09, $03, $02, $28, $03, $02, $2a, $03, $03, $03, $03
+	db $03, $03, $01, $0a, $03, $02, $2b, $03, $03, $03, $03, $00
+	db $00
 
-	ld   bc, $0300                                   ; $6bb2: $01 $00 $03
-	ld   [bc], a                                     ; $6bb5: $02
-	nop                                              ; $6bb6: $00
-	inc  bc                                          ; $6bb7: $03
-	ld   [bc], a                                     ; $6bb8: $02
-	ld   bc, $0203                                   ; $6bb9: $01 $03 $02
-	ld   [bc], a                                     ; $6bbc: $02
-	inc  bc                                          ; $6bbd: $03
-	ld   [bc], a                                     ; $6bbe: $02
-	inc  bc                                          ; $6bbf: $03
-	inc  bc                                          ; $6bc0: $03
-	ld   [bc], a                                     ; $6bc1: $02
-	inc  b                                           ; $6bc2: $04
-	inc  bc                                          ; $6bc3: $03
-	ld   [bc], a                                     ; $6bc4: $02
-	dec  b                                           ; $6bc5: $05
-	inc  bc                                          ; $6bc6: $03
-	ld   [bc], a                                     ; $6bc7: $02
-	ld   b, $03                                      ; $6bc8: $06 $03
-	inc  bc                                          ; $6bca: $03
-	ld   bc, $0301                                   ; $6bcb: $01 $01 $03
-	ld   [bc], a                                     ; $6bce: $02
-	rlca                                             ; $6bcf: $07
-	inc  bc                                          ; $6bd0: $03
-	ld   [bc], a                                     ; $6bd1: $02
-	ld   [$0303], sp                                 ; $6bd2: $08 $03 $03
-	ld   bc, $0302                                   ; $6bd5: $01 $02 $03
-	ld   [bc], a                                     ; $6bd8: $02
-	add  hl, bc                                      ; $6bd9: $09
-	inc  bc                                          ; $6bda: $03
-	ld   [bc], a                                     ; $6bdb: $02
-	ld   a, [bc]                                     ; $6bdc: $0a
-	inc  bc                                          ; $6bdd: $03
-	inc  bc                                          ; $6bde: $03
-	ld   bc, $0303                                   ; $6bdf: $01 $03 $03
-	ld   [bc], a                                     ; $6be2: $02
-	dec  bc                                          ; $6be3: $0b
-	inc  bc                                          ; $6be4: $03
-	ld   [bc], a                                     ; $6be5: $02
-	inc  c                                           ; $6be6: $0c
-	inc  bc                                          ; $6be7: $03
-	inc  bc                                          ; $6be8: $03
-	ld   bc, $0304                                   ; $6be9: $01 $04 $03
-	ld   [bc], a                                     ; $6bec: $02
-	dec  c                                           ; $6bed: $0d
-	inc  bc                                          ; $6bee: $03
-	ld   [bc], a                                     ; $6bef: $02
-	ld   c, $02                                      ; $6bf0: $0e $02
-	rrca                                             ; $6bf2: $0f
-	inc  bc                                          ; $6bf3: $03
-	ld   [bc], a                                     ; $6bf4: $02
-	db   $10                                         ; $6bf5: $10
-	ld   [bc], a                                     ; $6bf6: $02
-	ld   de, $1202                                   ; $6bf7: $11 $02 $12
-	ld   [bc], a                                     ; $6bfa: $02
-	inc  de                                          ; $6bfb: $13
-	ld   [bc], a                                     ; $6bfc: $02
-	inc  d                                           ; $6bfd: $14
-	ld   [bc], a                                     ; $6bfe: $02
-	dec  d                                           ; $6bff: $15
-	ld   [bc], a                                     ; $6c00: $02
-	ld   d, $02                                      ; $6c01: $16 $02
-	rla                                              ; $6c03: $17
-	ld   [bc], a                                     ; $6c04: $02
-	jr   jr_030_6c09                                 ; $6c05: $18 $02
-
-	add  hl, de                                      ; $6c07: $19
-	ld   [bc], a                                     ; $6c08: $02
-
-jr_030_6c09:
-	ld   a, [de]                                     ; $6c09: $1a
-	ld   [bc], a                                     ; $6c0a: $02
-	dec  de                                          ; $6c0b: $1b
-	ld   [bc], a                                     ; $6c0c: $02
-	inc  e                                           ; $6c0d: $1c
-	inc  bc                                          ; $6c0e: $03
-	inc  bc                                          ; $6c0f: $03
-	ld   bc, $0305                                   ; $6c10: $01 $05 $03
-	ld   [bc], a                                     ; $6c13: $02
-	dec  e                                           ; $6c14: $1d
-	inc  bc                                          ; $6c15: $03
-	ld   [bc], a                                     ; $6c16: $02
-	ld   e, $03                                      ; $6c17: $1e $03
-	ld   [bc], a                                     ; $6c19: $02
-	rra                                              ; $6c1a: $1f
-	ld   [bc], a                                     ; $6c1b: $02
-	jr   nz, @+$05                                   ; $6c1c: $20 $03
-
-	inc  bc                                          ; $6c1e: $03
-	ld   bc, $0306                                   ; $6c1f: $01 $06 $03
-	ld   [bc], a                                     ; $6c22: $02
-	ld   hl, $0203                                   ; $6c23: $21 $03 $02
-	ld   [hl+], a                                    ; $6c26: $22
-	inc  bc                                          ; $6c27: $03
-	ld   [bc], a                                     ; $6c28: $02
-	inc  hl                                          ; $6c29: $23
-	inc  bc                                          ; $6c2a: $03
-	ld   [bc], a                                     ; $6c2b: $02
-	inc  h                                           ; $6c2c: $24
-	inc  bc                                          ; $6c2d: $03
-	ld   [bc], a                                     ; $6c2e: $02
-	dec  h                                           ; $6c2f: $25
-	inc  bc                                          ; $6c30: $03
-	inc  bc                                          ; $6c31: $03
-	ld   bc, $0307                                   ; $6c32: $01 $07 $03
-	ld   [bc], a                                     ; $6c35: $02
-	ld   h, $03                                      ; $6c36: $26 $03
-	ld   [bc], a                                     ; $6c38: $02
-	daa                                              ; $6c39: $27
-	inc  bc                                          ; $6c3a: $03
-	inc  bc                                          ; $6c3b: $03
-	ld   bc, $0308                                   ; $6c3c: $01 $08 $03
-	ld   [bc], a                                     ; $6c3f: $02
-	jr   z, jr_030_6c45                              ; $6c40: $28 $03
-
-	ld   [bc], a                                     ; $6c42: $02
-	add  hl, hl                                      ; $6c43: $29
-	inc  bc                                          ; $6c44: $03
-
-jr_030_6c45:
-	inc  bc                                          ; $6c45: $03
-	ld   bc, $0309                                   ; $6c46: $01 $09 $03
-	ld   [bc], a                                     ; $6c49: $02
-	jr   z, jr_030_6c4f                              ; $6c4a: $28 $03
-
-	ld   [bc], a                                     ; $6c4c: $02
-	ld   a, [hl+]                                    ; $6c4d: $2a
-	inc  bc                                          ; $6c4e: $03
-
-jr_030_6c4f:
-	inc  bc                                          ; $6c4f: $03
-	inc  bc                                          ; $6c50: $03
-	inc  bc                                          ; $6c51: $03
-	inc  bc                                          ; $6c52: $03
-	inc  bc                                          ; $6c53: $03
-	ld   bc, $030a                                   ; $6c54: $01 $0a $03
-	ld   [bc], a                                     ; $6c57: $02
-	dec  hl                                          ; $6c58: $2b
-	inc  bc                                          ; $6c59: $03
-	inc  bc                                          ; $6c5a: $03
-	inc  bc                                          ; $6c5b: $03
-	inc  bc                                          ; $6c5c: $03
-	nop                                              ; $6c5d: $00
+_Credits2MainRet:
+else
+	db $01, $00, $03, $02, $00, $03, $02, $01, $03, $02, $02, $03, $02, $03, $03, $02
+	db $04, $03, $02, $05, $03, $02, $06, $03, $03, $01, $01, $03, $02, $07, $03, $02
+	db $08, $03, $03, $01, $02, $03, $02, $09, $03, $02, $0a, $03, $03, $01, $03, $03
+	db $02, $0b, $03, $02, $0c, $03, $03, $01, $04, $03, $02, $0d, $03, $02, $0e, $02
+	db $0f, $03, $02, $10, $02, $11, $02, $12, $02, $13, $02, $14, $02, $15, $02, $16
+	db $02, $17, $02, $18, $02, $19, $02, $1a, $02, $1b, $02, $1c, $03, $03, $01, $05
+	db $03, $02, $1d, $03, $02, $1e, $03, $02, $1f, $02, $20, $03, $03, $01, $06, $03
+	db $02, $21, $03, $02, $22, $03, $02, $23, $03, $02, $24, $03, $02, $25, $03, $03
+	db $01, $07, $03, $02, $26, $03, $02, $27, $03, $03, $01, $08, $03, $02, $28, $03
+	db $02, $29, $03, $03, $01, $09, $03, $02, $28, $03, $02, $2a, $03, $03, $03, $03
+	db $03, $03, $01, $0a, $03, $02, $2b, $03, $03, $03, $03, $00
 
 
-CreditsSubstate7:
+CreditsSubstate7_Credits2Main:
 	ld   a, [wInGameButtonsHeld]                                  ; $6c5e: $fa $0f $c2
 	and  $03                                         ; $6c61: $e6 $03
 	jr   z, jr_030_6c73                              ; $6c63: $28 $0e
@@ -8032,6 +7868,8 @@ CreditsSubstate7:
 	ld   a, [hl]                                     ; $6c68: $7e
 	add  $04                                         ; $6c69: $c6 $04
 	and  $fc                                         ; $6c6b: $e6 $fc
+endc
+
 	ld   [hl], a                                     ; $6c6d: $77
 	and  $0f                                         ; $6c6e: $e6 $0f
 	ret  nz                                          ; $6c70: $c0
@@ -8050,7 +7888,7 @@ jr_030_6c73:
 	ret  nz                                          ; $6c80: $c0
 
 jr_030_6c81:
-	ld   hl, $c718                                   ; $6c81: $21 $18 $c7
+	ld   hl, wCreditsControlCodePtr                                   ; $6c81: $21 $18 $c7
 	ld   a, [hl+]                                    ; $6c84: $2a
 	ld   h, [hl]                                     ; $6c85: $66
 	ld   l, a                                        ; $6c86: $6f
@@ -8060,36 +7898,36 @@ jr_030_6c81:
 	add  a                                           ; $6c8a: $87
 	ld   c, a                                        ; $6c8b: $4f
 	ld   b, $00                                      ; $6c8c: $06 $00
-	ld   hl, $6ca1                                   ; $6c8e: $21 $a1 $6c
+	ld   hl, .table                                   ; $6c8e: $21 $a1 $6c
 	add  hl, bc                                      ; $6c91: $09
 	ld   a, [hl+]                                    ; $6c92: $2a
 	ld   h, [hl]                                     ; $6c93: $66
 	ld   l, a                                        ; $6c94: $6f
-	ld   bc, $6c9a                                   ; $6c95: $01 $9a $6c
+	ld   bc, .return                                   ; $6c95: $01 $9a $6c
 	push bc                                          ; $6c98: $c5
 	jp   hl                                          ; $6c99: $e9
 
-
-	ld   hl, $c718                                   ; $6c9a: $21 $18 $c7
+.return:
+	ld   hl, wCreditsControlCodePtr                                   ; $6c9a: $21 $18 $c7
 	ld   a, e                                        ; $6c9d: $7b
 	ld   [hl+], a                                    ; $6c9e: $22
 	ld   [hl], d                                     ; $6c9f: $72
 	ret                                              ; $6ca0: $c9
 
+.table:
+	dw Credits2ControlCode0_Done
+	dw Credits2ControlCode1_LoadTitle
+	dw Credits2ControlCode2_DisplayName
+	dw Credits2ControlCode3_BlankLine
+	
 
-	xor  c                                           ; $6ca1: $a9
-	ld   l, h                                        ; $6ca2: $6c
-	xor  a                                           ; $6ca3: $af
-	ld   l, h                                        ; $6ca4: $6c
-	ld   [hl], h                                     ; $6ca5: $74
-	ld   l, l                                        ; $6ca6: $6d
-	add  [hl]                                        ; $6ca7: $86
-	ld   [hl], c                                     ; $6ca8: $71
+Credits2ControlCode0_Done:
 	ld   a, $08                                      ; $6ca9: $3e $08
 	ld   [wGameSubstate], a                                  ; $6cab: $ea $a1 $c2
 	ret                                              ; $6cae: $c9
 
 
+Credits2ControlCode1_LoadTitle:
 	ld   a, [wWramBank]                                  ; $6caf: $fa $93 $c2
 	push af                                          ; $6cb2: $f5
 	ld   a, $05                                      ; $6cb3: $3e $05
@@ -8206,6 +8044,10 @@ jr_030_6d28:
 	jr   nz, @+$42                                   ; $6d71: $20 $40
 
 	ld   h, b                                        ; $6d73: $60
+
+
+Credits2ControlCode2_DisplayName:
+; Init textbox details
 	push de                                          ; $6d74: $d5
 	call InitWideTextBoxDimensions                                       ; $6d75: $cd $ec $0f
 	call ClearTextBoxDimensionsAndSetDefaultTextStyle                                       ; $6d78: $cd $09 $14
@@ -8214,19 +8056,28 @@ jr_030_6d28:
 	ld   bc, $0000                                   ; $6d81: $01 $00 $00
 	call SetCurrKanjiColAndRowToDrawOn                                       ; $6d84: $cd $34 $14
 	pop  de                                          ; $6d87: $d1
+
+; Preserve ram bank, and set it to tile data ram buffer
 	ld   a, [wWramBank]                                  ; $6d88: $fa $93 $c2
 	push af                                          ; $6d8b: $f5
+
 	ld   a, $05                                      ; $6d8c: $3e $05
 	ld   [wWramBank], a                                  ; $6d8e: $ea $93 $c2
 	ldh  [rSVBK], a                                  ; $6d91: $e0 $70
+
+; Get param byte and push control code addr
 	ld   a, [de]                                     ; $6d93: $1a
 	inc  de                                          ; $6d94: $13
 	push de                                          ; $6d95: $d5
+
+; Clear tile data area
 	push af                                          ; $6d96: $f5
 	ld   hl, $d000                                   ; $6d97: $21 $00 $d0
 	ld   bc, $0200                                   ; $6d9a: $01 $00 $02
 	call MemClear                                       ; $6d9d: $cd $95 $09
 	pop  af                                          ; $6da0: $f1
+
+; DE = addr of text idx to load, from param
 	add  a                                           ; $6da1: $87
 	ld   c, a                                        ; $6da2: $4f
 	ld   b, $00                                      ; $6da3: $06 $00
@@ -8239,6 +8090,8 @@ jr_030_6d28:
 	add  hl, bc                                      ; $6daf: $09
 	ld   e, l                                        ; $6db0: $5d
 	ld   d, h                                        ; $6db1: $54
+
+; Load credits 2 text into ram buffer
 	ld   hl, $d000                                   ; $6db2: $21 $00 $d0
 if def(VWF)
 	ld   a, BANK(Data_30_6e56entry00)
@@ -8246,6 +8099,8 @@ else
 	ld   a, $30                                      ; $6db5: $3e $30
 endc
 	call LoadInstantText                                       ; $6db7: $cd $06 $13
+
+;
 	ld   a, [$c71b]                                  ; $6dba: $fa $1b $c7
 	and  $07                                         ; $6dbd: $e6 $07
 	ld   h, a                                        ; $6dbf: $67
@@ -8265,9 +8120,13 @@ endc
 	ld   hl, $d000                                   ; $6dd7: $21 $00 $d0
 	ld   b, $20                                      ; $6dda: $06 $20
 	call EnqueueHDMATransfer                                       ; $6ddc: $cd $7c $02
+
+;
 	ld   hl, $d200                                   ; $6ddf: $21 $00 $d2
 	ld   bc, $0080                                   ; $6de2: $01 $80 $00
 	call MemClear                                       ; $6de5: $cd $95 $09
+
+;
 	ld   a, [$c71b]                                  ; $6de8: $fa $1b $c7
 	and  $08                                         ; $6deb: $e6 $08
 	set  0, a                                        ; $6ded: $cb $c7
@@ -8282,12 +8141,15 @@ jr_030_6df7:
 	dec  b                                           ; $6dfa: $05
 	jr   nz, jr_030_6df7                             ; $6dfb: $20 $fa
 
+;
 	ld   a, [$c71b]                                  ; $6dfd: $fa $1b $c7
 	and  $07                                         ; $6e00: $e6 $07
 	ld   e, a                                        ; $6e02: $5f
 	ld   d, $00                                      ; $6e03: $16 $00
 	ld   hl, $717e                                   ; $6e05: $21 $7e $71
 	add  hl, de                                      ; $6e08: $19
+
+;
 	ld   a, [hl]                                     ; $6e09: $7e
 	ld   hl, $d242                                   ; $6e0a: $21 $42 $d2
 	ld   de, $d262                                   ; $6e0d: $11 $62 $d2
@@ -8302,6 +8164,7 @@ jr_030_6e12:
 	dec  b                                           ; $6e17: $05
 	jr   nz, jr_030_6e12                             ; $6e18: $20 $f8
 
+;
 	ld   a, [wSCY]                                  ; $6e1a: $fa $08 $c2
 	add  $a0                                         ; $6e1d: $c6 $a0
 	and  $f8                                         ; $6e1f: $e6 $f8
@@ -8383,6 +8246,16 @@ if def(VWF)
 	dw Data_30_6e56entry29-Data_30_6e56
 	dw Data_30_6e56entry2a-Data_30_6e56
 	dw Data_30_6e56entry2b-Data_30_6e56
+
+	dw Credits2Entry2c-Data_30_6e56
+	dw Credits2Entry2d-Data_30_6e56
+	dw Credits2Entry2e-Data_30_6e56
+	dw Credits2Entry2f-Data_30_6e56
+	dw Credits2Entry30-Data_30_6e56
+	dw Credits2Entry31-Data_30_6e56
+	dw Credits2Entry32-Data_30_6e56
+
+	ds $717e-@, 0
 else
 	ld   e, b                                        ; $6e56: $58
 	nop                                              ; $6e57: $00
@@ -8448,7 +8321,6 @@ else
 	ld   [bc], a                                     ; $6eab: $02
 	inc  d                                           ; $6eac: $14
 	inc  bc                                          ; $6ead: $03
-endc
 	db   $10                                         ; $6eae: $10
 	db   $10                                         ; $6eaf: $10
 	db   $10                                         ; $6eb0: $10
@@ -9097,6 +8969,9 @@ jr_030_7015:
 	db   $ec                                         ; $717b: $ec
 	ei                                               ; $717c: $fb
 	nop                                              ; $717d: $00
+endc
+
+
 	add  b                                           ; $717e: $80
 	and  b                                           ; $717f: $a0
 	ret  nz                                          ; $7180: $c0
@@ -9105,6 +8980,9 @@ jr_030_7015:
 	jr   nz, jr_030_71c5                             ; $7183: $20 $40
 
 	ld   h, b                                        ; $7185: $60
+
+
+Credits2ControlCode3_BlankLine:
 	ld   a, [wWramBank]                                  ; $7186: $fa $93 $c2
 	push af                                          ; $7189: $f5
 	ld   a, $05                                      ; $718a: $3e $05
@@ -9137,7 +9015,7 @@ jr_030_7015:
 	ret                                              ; $71c0: $c9
 
 
-CreditsSubstate8:
+CreditsSubstate8_WaitToFadeOut:
 	ld   a, $3c                                      ; $71c1: $3e $3c
 
 jr_030_71c3:
@@ -9163,7 +9041,7 @@ jr_030_71cf:
 	ret                                              ; $71d7: $c9
 
 
-CreditsSubstate9:
+CreditsSubstate9_FadeOut:
 	ld   b, $00                                      ; $71d8: $06 $00
 	ld   hl, wBGPalettes                                   ; $71da: $21 $de $c2
 	ld   c, BANK(Palettes_AllWhite)                                      ; $71dd: $0e $01
@@ -9444,12 +9322,12 @@ jr_030_737f:
 	call Call_030_72f1                               ; $7381: $cd $f1 $72
 	pop  hl                                          ; $7384: $e1
 	pop  bc                                          ; $7385: $c1
-	jr   nc, jr_030_738b                             ; $7386: $30 $03
+	jr   nc, .done                             ; $7386: $30 $03
 
 	dec  b                                           ; $7388: $05
 	jr   nz, jr_030_737f                             ; $7389: $20 $f4
 
-jr_030_738b:
+.done:
 	ret                                              ; $738b: $c9
 
 
@@ -11440,42 +11318,6 @@ IrisMiniGameMainBank1_8000hHook:
 	ret
 
 
-IrisMiniGameMainTileMapHook:
-	call FarCopyLayout
-
-	ld   a, BANK(IrisMiniGameMainLayout1)
-	ldbc $08, $03
-	ld   de, IrisMiniGameMainLayout1
-	ld   hl, $9a46
-	call FarCopyLayout
-
-	ld   a, BANK(IrisMiniGameMainLayout2)
-	ldbc $08, $03
-	ld   de, IrisMiniGameMainLayout2
-	ld   hl, $9aa6
-	call FarCopyLayout
-
-	ld   a, BANK(IrisMiniGameMainLayout3)
-	ldbc $0b, $03
-	ld   de, IrisMiniGameMainLayout3
-	ld   hl, $9b06
-	call FarCopyLayout
-
-	ld   a, BANK(IrisMiniGameMainLayout4)
-	ldbc $05, $02
-	ld   de, IrisMiniGameMainLayout4
-	ld   hl, $99ed
-	call FarCopyLayout
-	ret
-
-
-IrisMiniGameMainTileAttrHook:
-	call FarCopyLayout
-
-	M_FarCall EnLoadIrisMiniGameTileAttrs
-	ret
-
-
 MiniGameSelectionBank0_8000hHook:
 	call RLEXorCopy
 
@@ -11505,10 +11347,9 @@ VoiceModeTileMapHook:
 
 
 SoundModeTextBoxHook:
-	xor  a
 	ld   bc, $300
 	ld   hl, $d0a0
-	call MemSet
+	call MemClear
 
 	ld   a, [wSoundModeDisplayedSong]
 	ret
@@ -11537,6 +11378,16 @@ SoundModeLCDOnHook:
 	jr   nz, .nextRow
 
 	jp   TurnOnLCD
+
+
+Credits1ClearTextBoxHook:
+	push de
+	ld   bc, $160
+	ld   hl, $d000
+	call MemClear
+	ld   hl, $d000
+	pop  de
+	ret
 
 
 SpriteGroupBIdx44_SoundModeSongName:
@@ -11571,5 +11422,17 @@ SpriteGroupBIdx44_SoundModeSongName:
 	db $19, $20, $ad, $08
 	db $11, $28, $ae, $08
 	db $19, $28, $af, $18
+
+
+CreditsSubstate7_Credits2Main:
+	ld   a, [wInGameButtonsHeld]                                  ; $6c5e: $fa $0f $c2
+	and  $03                                         ; $6c61: $e6 $03
+	jp   z, jr_030_6c73                              ; $6c63: $28 $0e
+
+	ld   hl, wSCY                                   ; $6c65: $21 $08 $c2
+	ld   a, [hl]                                     ; $6c68: $7e
+	add  $04                                         ; $6c69: $c6 $04
+	and  $fc                                         ; $6c6b: $e6 $fc
+	jp   _Credits2MainRet
 
 endc

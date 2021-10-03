@@ -4820,7 +4820,7 @@ DormRoomAnimationHandler10:
 
 	ld   a, $a4                                      ; $6284: $3e $a4
 	ld   hl, $5bb5                                   ; $6286: $21 $b5 $5b
-	ld   de, $c2ee                                   ; $6289: $11 $ee $c2
+	ld   de, wBGPalettes+$10                                   ; $6289: $11 $ee $c2
 	ld   bc, $0018                                   ; $628c: $01 $18 $00
 	call FarMemCopy                                       ; $628f: $cd $b2 $09
 	ld   bc, $0813                                   ; $6292: $01 $13 $08
