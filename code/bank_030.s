@@ -76,7 +76,7 @@ SpriteGroupBPointers::
 	dw $4946
 	dw $499e
 	dw $49f6
-	dw $4a4e
+	dw SpriteGroupBIdx44_SoundModeSongName
 	dw $4a96
 	dw $4aa6
 	dw $4ab6
@@ -2140,65 +2140,38 @@ jr_030_4a31:
 	ld   de, $06ab                                   ; $4a3f: $11 $ab $06
 	db   $10                                         ; $4a42: $10
 	ld   de, $06aa                                   ; $4a43: $11 $aa $06
-	jr   jr_030_4a51                                 ; $4a46: $18 $09
+	db $18, $09
 
 	xor  c                                           ; $4a48: $a9
 	ld   b, $10                                      ; $4a49: $06 $10
 	add  hl, bc                                      ; $4a4b: $09
 	xor  b                                           ; $4a4c: $a8
-	ld   d, $10                                      ; $4a4d: $16 $10
-	jr   z, @-$67                                    ; $4a4f: $28 $97
+	db $16 
+	
+	
+if def(VWF)
+else
+SpriteGroupBIdx44_SoundModeSongName:
+endc
+	db $10, $28, $97, $00
+	db $08, $28, $96, $00
+	db $10, $20, $95, $00
+	db $08, $20, $94, $00
+	db $10, $18, $93, $00
+	db $08, $18, $92, $00
+	db $10, $10, $91, $00
+	db $08, $10, $90, $00
+	db $10, $08, $8f, $00
+	db $08, $08, $8e, $00
+	db $10, $00, $8d, $00
+	db $08, $00, $8c, $00
+	db $10, $f8, $8b, $00
+	db $08, $f8, $8a, $00
+	db $10, $f0, $89, $00
+	db $08, $f0, $88, $00
+	db $10, $e8, $87, $00
+	db $08, $e8, $86, $10
 
-jr_030_4a51:
-	nop                                              ; $4a51: $00
-	ld   [$9628], sp                                 ; $4a52: $08 $28 $96
-	nop                                              ; $4a55: $00
-	db   $10                                         ; $4a56: $10
-	jr   nz, jr_030_49ee                             ; $4a57: $20 $95
-
-	nop                                              ; $4a59: $00
-
-jr_030_4a5a:
-	ld   [$9420], sp                                 ; $4a5a: $08 $20 $94
-
-jr_030_4a5d:
-	nop                                              ; $4a5d: $00
-	db   $10                                         ; $4a5e: $10
-	jr   jr_030_49f4                                 ; $4a5f: $18 $93
-
-	nop                                              ; $4a61: $00
-	ld   [$9218], sp                                 ; $4a62: $08 $18 $92
-	nop                                              ; $4a65: $00
-	db   $10                                         ; $4a66: $10
-	db   $10                                         ; $4a67: $10
-	sub  c                                           ; $4a68: $91
-	nop                                              ; $4a69: $00
-	ld   [$9010], sp                                 ; $4a6a: $08 $10 $90
-	nop                                              ; $4a6d: $00
-	db   $10                                         ; $4a6e: $10
-	ld   [$008f], sp                                 ; $4a6f: $08 $8f $00
-	ld   [$8e08], sp                                 ; $4a72: $08 $08 $8e
-	nop                                              ; $4a75: $00
-	stop                                             ; $4a76: $10 $00
-	adc  l                                           ; $4a78: $8d
-	nop                                              ; $4a79: $00
-	ld   [$8c00], sp                                 ; $4a7a: $08 $00 $8c
-	nop                                              ; $4a7d: $00
-	db   $10                                         ; $4a7e: $10
-	ld   hl, sp-$75                                  ; $4a7f: $f8 $8b
-	nop                                              ; $4a81: $00
-	ld   [$8af8], sp                                 ; $4a82: $08 $f8 $8a
-	nop                                              ; $4a85: $00
-	db   $10                                         ; $4a86: $10
-	ldh  a, [$89]                                    ; $4a87: $f0 $89
-	nop                                              ; $4a89: $00
-	ld   [$88f0], sp                                 ; $4a8a: $08 $f0 $88
-	nop                                              ; $4a8d: $00
-	db   $10                                         ; $4a8e: $10
-	add  sp, -$79                                    ; $4a8f: $e8 $87
-	nop                                              ; $4a91: $00
-	ld   [$86e8], sp                                 ; $4a92: $08 $e8 $86
-	db   $10                                         ; $4a95: $10
 	db   $10                                         ; $4a96: $10
 	ld   d, $a1                                      ; $4a97: $16 $a1
 	jr   nz, @+$0a                                   ; $4a99: $20 $08
@@ -2227,11 +2200,11 @@ jr_030_4aaf:
 	ld   [$a0f1], sp                                 ; $4ab2: $08 $f1 $a0
 	db   $10                                         ; $4ab5: $10
 	db   $10                                         ; $4ab6: $10
-	jr   jr_030_4a5a                                 ; $4ab7: $18 $a1
+	db $18, $a1
 
 	jr   nz, @+$0a                                   ; $4ab9: $20 $08
 
-	jr   jr_030_4a5d                                 ; $4abb: $18 $a0
+	db $18, $a0
 
 	jr   nz, jr_030_4acf                             ; $4abd: $20 $10
 
@@ -9515,12 +9488,12 @@ jr_030_73a5:
 GameState06_SoundMode::
 	ld   a, [wGameSubstate]                                  ; $73b1: $fa $a1 $c2
 	rst  JumpTable                                         ; $73b4: $df
-	cp   e                                           ; $73b5: $bb
-	ld   [hl], e                                     ; $73b6: $73
-	ld   d, e                                        ; $73b7: $53
-	ld   [hl], l                                     ; $73b8: $75
-	ld   h, a                                        ; $73b9: $67
-	ld   [hl], l                                     ; $73ba: $75
+	dw SoundModeSubstate0_Init
+	dw SoundModeSubstate1_Main
+	dw SoundModeSubstate2_Return
+
+
+SoundModeSubstate0_Init:
 	call TurnOffLCD                                       ; $73bb: $cd $e3 $08
 	call ClearDisplayRegsAllowVBlankInt                                       ; $73be: $cd $59 $0b
 	ld   a, LCDCF_OFF|LCDCF_OBJON|LCDCF_BGON                                      ; $73c1: $3e $03
@@ -9531,34 +9504,14 @@ GameState06_SoundMode::
 	ld   [wBaseInitialStickyCounter], a                                  ; $73cd: $ea $13 $c2
 	ld   a, $04                                      ; $73d0: $3e $04
 	ld   [wBaseRepeatedStickyCounter], a                                  ; $73d2: $ea $14 $c2
-	push af                                          ; $73d5: $f5
-	ld   a, $1a                                      ; $73d6: $3e $1a
-	ld   [wFarCallAddr], a                                  ; $73d8: $ea $98 $c2
-	ld   a, $48                                      ; $73db: $3e $48
-	ld   [wFarCallAddr+1], a                                  ; $73dd: $ea $99 $c2
-	ld   a, $0a                                      ; $73e0: $3e $0a
-	ld   [wFarCallBank], a                                  ; $73e2: $ea $9a $c2
-	pop  af                                          ; $73e5: $f1
-	call FarCall                                       ; $73e6: $cd $62 $09
-	push af                                          ; $73e9: $f5
-	ld   a, $34                                      ; $73ea: $3e $34
-	ld   [wFarCallAddr], a                                  ; $73ec: $ea $98 $c2
-	ld   a, $49                                      ; $73ef: $3e $49
-	ld   [wFarCallAddr+1], a                                  ; $73f1: $ea $99 $c2
-	ld   a, $0a                                      ; $73f4: $3e $0a
-	ld   [wFarCallBank], a                                  ; $73f6: $ea $9a $c2
-	pop  af                                          ; $73f9: $f1
-	call FarCall                                       ; $73fa: $cd $62 $09
+
+	M_FarCall todo_ClearsAndLoadsGfxForConvoScreens
+	M_FarCall Func_0a_4934
+
 	ld   bc, $0001                                   ; $73fd: $01 $01 $00
-	push af                                          ; $7400: $f5
-	ld   a, $ba                                      ; $7401: $3e $ba
-	ld   [wFarCallAddr], a                                  ; $7403: $ea $98 $c2
-	ld   a, $54                                      ; $7406: $3e $54
-	ld   [wFarCallAddr+1], a                                  ; $7408: $ea $99 $c2
-	ld   a, $0a                                      ; $740b: $3e $0a
-	ld   [wFarCallBank], a                                  ; $740d: $ea $9a $c2
-	pop  af                                          ; $7410: $f1
-	call FarCall                                       ; $7411: $cd $62 $09
+
+	M_FarCall todo_DisplayCharacterPortrait
+
 	xor  a                                           ; $7414: $af
 	ldh  [rVBK], a                                   ; $7415: $e0 $4f
 	ld   a, $34                                      ; $7417: $3e $34
@@ -9572,8 +9525,8 @@ GameState06_SoundMode::
 	ld   a, $01                                      ; $742d: $3e $01
 	ldh  [rVBK], a                                   ; $742f: $e0 $4f
 	ld   hl, $9800                                   ; $7431: $21 $00 $98
-	ld   a, $34                                      ; $7434: $3e $34
-	ld   de, $75db                                   ; $7436: $11 $db $75
+	ld   a, BANK(TileAttr_SoundMode)                                      ; $7434: $3e $34
+	ld   de, TileAttr_SoundMode                                   ; $7436: $11 $db $75
 	ld   bc, $140a                                   ; $7439: $01 $0a $14
 	call FarCopyLayout                                       ; $743c: $cd $2c $0b
 	ld   a, [$c68e]                                  ; $743f: $fa $8e $c6
@@ -9601,8 +9554,8 @@ jr_030_7469:
 	xor  a                                           ; $7469: $af
 	ldh  [rVBK], a                                   ; $746a: $e0 $4f
 	ld   hl, $9800                                   ; $746c: $21 $00 $98
-	ld   a, $34                                      ; $746f: $3e $34
-	ld   de, $76f3                                   ; $7471: $11 $f3 $76
+	ld   a, BANK(TileMap_SoundMode)                                      ; $746f: $3e $34
+	ld   de, TileMap_SoundMode                                   ; $7471: $11 $f3 $76
 	ld   bc, $140a                                   ; $7474: $01 $0a $14
 	call FarCopyLayout                                       ; $7477: $cd $2c $0b
 	ld   a, [$c68e]                                  ; $747a: $fa $8e $c6
@@ -9652,17 +9605,17 @@ jr_030_74a4:
 	call PlaySong                                       ; $74d9: $cd $92 $1a
 	call ClearOam                                       ; $74dc: $cd $d7 $0d
 	xor  a                                           ; $74df: $af
-	ld   [$c697], a                                  ; $74e0: $ea $97 $c6
+	ld   [wSoundModeDisplayedSong], a                                  ; $74e0: $ea $97 $c6
 	ld   [$c698], a                                  ; $74e3: $ea $98 $c6
 	ld   a, [$c68e]                                  ; $74e6: $fa $8e $c6
 	bit  0, a                                        ; $74e9: $cb $47
-	call nz, Call_030_76d3                           ; $74eb: $c4 $d3 $76
+	call nz, SetInputHandlerForSoundEffects                           ; $74eb: $c4 $d3 $76
 	ld   a, [$c68e]                                  ; $74ee: $fa $8e $c6
 	bit  1, a                                        ; $74f1: $cb $4f
-	call nz, Call_030_7665                           ; $74f3: $c4 $65 $76
+	call nz, SetInputHandlerForSongs                           ; $74f3: $c4 $65 $76
 	call Call_030_760b                               ; $74f6: $cd $0b $76
-	call Call_030_7653                               ; $74f9: $cd $53 $76
-	call Call_030_7785                               ; $74fc: $cd $85 $77
+	call LoadSoundModeArrowSprite                               ; $74f9: $cd $53 $76
+	call UpdateSoundModeSongNameTileData                               ; $74fc: $cd $85 $77
 	call Call_030_7599                               ; $74ff: $cd $99 $75
 	ld   a, [wWramBank]                                  ; $7502: $fa $93 $c2
 	push af                                          ; $7505: $f5
@@ -9681,7 +9634,11 @@ jr_030_74a4:
 	pop  af                                          ; $7527: $f1
 	ld   [wWramBank], a                                  ; $7528: $ea $93 $c2
 	ldh  [rSVBK], a                                  ; $752b: $e0 $70
+if def(VWF)
+	call SoundModeLCDOnHook
+else
 	call TurnOnLCD                                       ; $752d: $cd $09 $09
+endc
 	ld   a, [wWramBank]                                  ; $7530: $fa $93 $c2
 	push af                                          ; $7533: $f5
 	ld   a, $05                                      ; $7534: $3e $05
@@ -9700,32 +9657,48 @@ jr_030_74a4:
 	ret                                              ; $7552: $c9
 
 
+SoundModeSubstate1_Main:
+;
 	call ClearOam                                       ; $7553: $cd $d7 $0d
-	ld   bc, $700f                                   ; $7556: $01 $0f $70
+
+; Load sprite for current song
+	ldbc $70, $0f                                   ; $7556: $01 $0f $70
 	ld   a, $0b                                      ; $7559: $3e $0b
 	ld   [wSpriteGroup], a                                  ; $755b: $ea $1a $c2
 	ld   a, $44                                      ; $755e: $3e $44
 	call LoadSpriteFromMainTable                                       ; $7560: $cd $16 $0e
+
 	call Call_030_75f9                               ; $7563: $cd $f9 $75
 	ret                                              ; $7566: $c9
 
 
+SoundModeSubstate2_Return:
+; Preserve and set ram bank of curr palettes
 	ld   a, [wWramBank]                                  ; $7567: $fa $93 $c2
 	push af                                          ; $756a: $f5
+
 	ld   a, $05                                      ; $756b: $3e $05
 	ld   [wWramBank], a                                  ; $756d: $ea $93 $c2
 	ldh  [rSVBK], a                                  ; $7570: $e0 $70
+
+;
 	ld   b, $00                                      ; $7572: $06 $00
 	ld   hl, $d220                                   ; $7574: $21 $20 $d2
 	ld   c, BANK(Palettes_AllWhite)                                      ; $7577: $0e $01
 	ld   de, Palettes_AllWhite                                   ; $7579: $11 $00 $70
 	call Call_030_795c                               ; $757c: $cd $5c $79
+
+; Restore ram bank
 	pop  af                                          ; $757f: $f1
 	ld   [wWramBank], a                                  ; $7580: $ea $93 $c2
 	ldh  [rSVBK], a                                  ; $7583: $e0 $70
+
+; Mute sound effects and turn off LCD
 	xor  a                                           ; $7585: $af
 	call PlaySoundEffect                                       ; $7586: $cd $df $1a
 	call TurnOffLCD                                       ; $7589: $cd $e3 $08
+
+; Go to return state/substate
 	ld   a, [$c68c]                                  ; $758c: $fa $8c $c6
 	ld   [wGameState], a                                  ; $758f: $ea $a0 $c2
 	ld   a, [$c68d]                                  ; $7592: $fa $8d $c6
@@ -9739,7 +9712,7 @@ Call_030_7599:
 	ld   a, $05                                      ; $759d: $3e $05
 	ld   [wWramBank], a                                  ; $759f: $ea $93 $c2
 	ldh  [rSVBK], a                                  ; $75a2: $e0 $70
-	ld   a, [$c697]                                  ; $75a4: $fa $97 $c6
+	ld   a, [wSoundModeDisplayedSong]                                  ; $75a4: $fa $97 $c6
 	ld   hl, $d00e                                   ; $75a7: $21 $0e $d0
 	call Call_030_75cc                               ; $75aa: $cd $cc $75
 	ld   a, [$c698]                                  ; $75ad: $fa $98 $c6
@@ -9794,8 +9767,9 @@ jr_030_75f3:
 	inc  c                                           ; $75f6: $0c
 	jr   jr_030_75f3                                 ; $75f7: $18 $fa
 
+
 Call_030_75f9:
-	ld   hl, $7604                                   ; $75f9: $21 $04 $76
+	ld   hl, .return                                   ; $75f9: $21 $04 $76
 	push hl                                          ; $75fc: $e5
 	ld   hl, $c68f                                   ; $75fd: $21 $8f $c6
 	ld   a, [hl+]                                    ; $7600: $2a
@@ -9803,9 +9777,9 @@ Call_030_75f9:
 	ld   l, a                                        ; $7602: $6f
 	jp   hl                                          ; $7603: $e9
 
-
+.return:
 	call Call_030_7630                               ; $7604: $cd $30 $76
-	call Call_030_7653                               ; $7607: $cd $53 $76
+	call LoadSoundModeArrowSprite                               ; $7607: $cd $53 $76
 	ret                                              ; $760a: $c9
 
 
@@ -9861,7 +9835,7 @@ Call_030_7630:
 	ret                                              ; $7652: $c9
 
 
-Call_030_7653:
+LoadSoundModeArrowSprite:
 	ld   a, $0b                                      ; $7653: $3e $0b
 	ld   [wSpriteGroup], a                                  ; $7655: $ea $1a $c2
 	ld   b, $78                                      ; $7658: $06 $78
@@ -9872,115 +9846,107 @@ Call_030_7653:
 	ret                                              ; $7664: $c9
 
 
-Call_030_7665:
-Jump_030_7665:
-	ld   a, $75                                      ; $7665: $3e $75
+SetInputHandlerForSongs:
+	ld   a, LOW(HandleSoundModeSongInput)                                      ; $7665: $3e $75
 	ld   [$c68f], a                                  ; $7667: $ea $8f $c6
-	ld   a, $76                                      ; $766a: $3e $76
+	ld   a, HIGH(HandleSoundModeSongInput)                                      ; $766a: $3e $76
 	ld   [$c690], a                                  ; $766c: $ea $90 $c6
 	ld   a, $27                                      ; $766f: $3e $27
 	ld   [$c696], a                                  ; $7671: $ea $96 $c6
 	ret                                              ; $7674: $c9
 
 
+HandleSoundModeSongInput:
 	ld   a, [wInGameStickyButtonsPressed]                                  ; $7675: $fa $11 $c2
-	bit  6, a                                        ; $7678: $cb $77
-	jr   z, jr_030_7684                              ; $767a: $28 $08
+	bit  PADB_UP, a                                        ; $7678: $cb $77
+	jr   z, .notUp                              ; $767a: $28 $08
 
 	ld   a, [$c68e]                                  ; $767c: $fa $8e $c6
 	bit  0, a                                        ; $767f: $cb $47
-	jr   nz, jr_030_76d3                             ; $7681: $20 $50
+	jr   nz, SetInputHandlerForSoundEffects                             ; $7681: $20 $50
 
 	ret                                              ; $7683: $c9
 
-
-jr_030_7684:
-	bit  7, a                                        ; $7684: $cb $7f
-	jr   z, jr_030_7690                              ; $7686: $28 $08
+.notUp:
+	bit  PADB_DOWN, a                                        ; $7684: $cb $7f
+	jr   z, .notVert                              ; $7686: $28 $08
 
 	ld   a, [$c68e]                                  ; $7688: $fa $8e $c6
 	bit  0, a                                        ; $768b: $cb $47
-	jr   nz, jr_030_76d3                             ; $768d: $20 $44
+	jr   nz, SetInputHandlerForSoundEffects                             ; $768d: $20 $44
 
 	ret                                              ; $768f: $c9
 
+.notVert:
+	bit  PADB_LEFT, a                                        ; $7690: $cb $6f
+	jr   z, .notVertOrLeft                              ; $7692: $28 $12
 
-jr_030_7690:
-	bit  5, a                                        ; $7690: $cb $6f
-	jr   z, jr_030_76a6                              ; $7692: $28 $12
-
-	ld   hl, $c697                                   ; $7694: $21 $97 $c6
+	ld   hl, wSoundModeDisplayedSong                                   ; $7694: $21 $97 $c6
 	ld   a, [hl]                                     ; $7697: $7e
 	sub  $01                                         ; $7698: $d6 $01
-	jr   nc, jr_030_769e                             ; $769a: $30 $02
-
+	jr   nc, :+                             ; $769a: $30 $02
 	ld   a, $14                                      ; $769c: $3e $14
-
-jr_030_769e:
-	ld   [hl], a                                     ; $769e: $77
-	call Call_030_7785                               ; $769f: $cd $85 $77
+:	ld   [hl], a                                     ; $769e: $77
+	call UpdateSoundModeSongNameTileData                               ; $769f: $cd $85 $77
 	call Call_030_7599                               ; $76a2: $cd $99 $75
 	ret                                              ; $76a5: $c9
 
+.notVertOrLeft:
+	bit  PADB_RIGHT, a                                        ; $76a6: $cb $67
+	jr   z, .notOrthogonal                              ; $76a8: $28 $12
 
-jr_030_76a6:
-	bit  4, a                                        ; $76a6: $cb $67
-	jr   z, jr_030_76bc                              ; $76a8: $28 $12
-
-	ld   hl, $c697                                   ; $76aa: $21 $97 $c6
+;
+	ld   hl, wSoundModeDisplayedSong                                   ; $76aa: $21 $97 $c6
 	ld   a, [hl]                                     ; $76ad: $7e
 	inc  a                                           ; $76ae: $3c
 	cp   $15                                         ; $76af: $fe $15
-	jr   c, jr_030_76b4                              ; $76b1: $38 $01
-
+	jr   c, :+                              ; $76b1: $38 $01
 	xor  a                                           ; $76b3: $af
-
-jr_030_76b4:
-	ld   [hl], a                                     ; $76b4: $77
-	call Call_030_7785                               ; $76b5: $cd $85 $77
+:	ld   [hl], a                                     ; $76b4: $77
+	call UpdateSoundModeSongNameTileData                               ; $76b5: $cd $85 $77
 	call Call_030_7599                               ; $76b8: $cd $99 $75
 	ret                                              ; $76bb: $c9
 
-
-jr_030_76bc:
+.notOrthogonal:
+; If A pressed, play the displayed song
 	ld   a, [wInGameButtonsPressed]                                  ; $76bc: $fa $10 $c2
-	bit  0, a                                        ; $76bf: $cb $47
-	jr   z, jr_030_76ca                              ; $76c1: $28 $07
+	bit  PADB_A, a                                        ; $76bf: $cb $47
+	jr   z, .checkB                              ; $76c1: $28 $07
 
-	ld   a, [$c697]                                  ; $76c3: $fa $97 $c6
+	ld   a, [wSoundModeDisplayedSong]                                  ; $76c3: $fa $97 $c6
 	call PlaySong                                       ; $76c6: $cd $92 $1a
 	ret                                              ; $76c9: $c9
 
-
-jr_030_76ca:
-	bit  1, a                                        ; $76ca: $cb $4f
-	jr   z, jr_030_76d2                              ; $76cc: $28 $04
+.checkB:
+; If B pressed, go to return substate
+	bit  PADB_B, a                                        ; $76ca: $cb $4f
+	jr   z, .done                              ; $76cc: $28 $04
 
 	ld   hl, wGameSubstate                                   ; $76ce: $21 $a1 $c2
 	inc  [hl]                                        ; $76d1: $34
 
-jr_030_76d2:
+.done:
 	ret                                              ; $76d2: $c9
 
 
-Call_030_76d3:
-jr_030_76d3:
-	ld   a, $e3                                      ; $76d3: $3e $e3
+SetInputHandlerForSoundEffects:
+	ld   a, LOW(HandleSoundModeSoundEffectInput)                                      ; $76d3: $3e $e3
 	ld   [$c68f], a                                  ; $76d5: $ea $8f $c6
-	ld   a, $76                                      ; $76d8: $3e $76
+	ld   a, HIGH(HandleSoundModeSoundEffectInput)                                      ; $76d8: $3e $76
 	ld   [$c690], a                                  ; $76da: $ea $90 $c6
 	ld   a, $3f                                      ; $76dd: $3e $3f
 	ld   [$c696], a                                  ; $76df: $ea $96 $c6
 	ret                                              ; $76e2: $c9
 
 
+HandleSoundModeSoundEffectInput:
 	ld   a, [wInGameStickyButtonsPressed]                                  ; $76e3: $fa $11 $c2
 	bit  6, a                                        ; $76e6: $cb $77
 	jr   z, jr_030_76f3                              ; $76e8: $28 $09
 
 	ld   a, [$c68e]                                  ; $76ea: $fa $8e $c6
 	bit  1, a                                        ; $76ed: $cb $4f
-	jp   nz, Jump_030_7665                           ; $76ef: $c2 $65 $76
+	jp   nz, SetInputHandlerForSongs                           ; $76ef: $c2 $65 $76
 
 	ret                                              ; $76f2: $c9
 
@@ -9991,7 +9957,7 @@ jr_030_76f3:
 
 	ld   a, [$c68e]                                  ; $76f7: $fa $8e $c6
 	bit  1, a                                        ; $76fa: $cb $4f
-	jp   nz, Jump_030_7665                           ; $76fc: $c2 $65 $76
+	jp   nz, SetInputHandlerForSongs                           ; $76fc: $c2 $65 $76
 
 	ret                                              ; $76ff: $c9
 
@@ -10116,7 +10082,8 @@ jr_030_7774:
 jr_030_7784:
 	ld   c, l                                        ; $7784: $4d
 
-Call_030_7785:
+
+UpdateSoundModeSongNameTileData:
 	call InitWideTextBoxDimensions                                       ; $7785: $cd $ec $0f
 	call ClearTextBoxDimensionsAndSetDefaultTextStyle                                       ; $7788: $cd $09 $14
 	ld   bc, $0c02                                   ; $778b: $01 $02 $0c
@@ -10128,7 +10095,11 @@ Call_030_7785:
 	ld   a, $05                                      ; $779b: $3e $05
 	ld   [wWramBank], a                                  ; $779d: $ea $93 $c2
 	ldh  [rSVBK], a                                  ; $77a0: $e0 $70
-	ld   a, [$c697]                                  ; $77a2: $fa $97 $c6
+if def(VWF)
+	call SoundModeTextBoxHook
+else
+	ld   a, [wSoundModeDisplayedSong]                                  ; $77a2: $fa $97 $c6
+endc
 	add  a                                           ; $77a5: $87
 	ld   c, a                                        ; $77a6: $4f
 	ld   b, $00                                      ; $77a7: $06 $00
@@ -10144,18 +10115,27 @@ Call_030_7785:
 	ld   hl, $d0a0                                   ; $77b6: $21 $a0 $d0
 if def(VWF)
 	ld   a, BANK(Data_30_77d4entry00)
+	call SoundModeLoadTextHook
 else
 	ld   a, $30                                      ; $77b9: $3e $30
-endc
 	call LoadInstantText                                       ; $77bb: $cd $06 $13
+endc
 	pop  af                                          ; $77be: $f1
 	ld   [wWramBank], a                                  ; $77bf: $ea $93 $c2
 	ldh  [rSVBK], a                                  ; $77c2: $e0 $70
 	ld   de, $8800                                   ; $77c4: $11 $00 $88
+if def(VWF)
+	ld   c, $81
+else
 	ld   c, $80                                      ; $77c7: $0e $80
+endc
 	ld   a, $05                                      ; $77c9: $3e $05
 	ld   hl, $d0a0                                   ; $77cb: $21 $a0 $d0
+if def(VWF)
+	ld   b, $30
+else
 	ld   b, $18                                      ; $77ce: $06 $18
+endc
 	call EnqueueHDMATransfer                                       ; $77d0: $cd $7c $02
 	ret                                              ; $77d3: $c9
 
@@ -11522,5 +11502,74 @@ VoiceModeTileMapHook:
 
 	M_FarCall EnLoadVoiceModeTileMap
 	ret
+
+
+SoundModeTextBoxHook:
+	xor  a
+	ld   bc, $300
+	ld   hl, $d0a0
+	call MemSet
+
+	ld   a, [wSoundModeDisplayedSong]
+	ret
+
+
+SoundModeLoadTextHook:
+	M_FarCall _SoundModeLoadTextHook
+	ret
+
+
+SoundModeLCDOnHook:
+	ldbc 14, 6
+	ld   a, $ff
+	ld   hl, $9965
+	ld   de, $20
+.nextRow:
+	push bc
+	push hl
+:	ld   [hl+], a
+	dec  b
+	jr   nz, :-
+	pop  hl
+	add  hl, de
+	pop  bc
+	dec  c
+	jr   nz, .nextRow
+
+	jp   TurnOnLCD
+
+
+SpriteGroupBIdx44_SoundModeSongName:
+	db $01, $d0, $80, $08
+	db $09, $d0, $81, $08
+	db $01, $d8, $82, $08
+	db $09, $d8, $83, $08
+	db $01, $e0, $84, $08
+	db $09, $e0, $85, $08
+	db $01, $e8, $86, $08
+	db $09, $e8, $87, $08
+	db $01, $f0, $88, $08
+	db $09, $f0, $89, $08
+	db $01, $f8, $8a, $08
+	db $09, $f8, $8b, $08
+	db $01, $00, $8c, $08
+	db $09, $00, $8d, $08
+	db $01, $08, $8e, $08
+	db $09, $08, $8f, $08
+	db $01, $10, $90, $08
+	db $09, $10, $91, $08
+	db $01, $18, $92, $08
+	db $09, $18, $93, $08
+
+	db $11, $08, $a6, $08
+	db $19, $08, $a7, $08
+	db $11, $10, $a8, $08
+	db $19, $10, $a9, $08
+	db $11, $18, $aa, $08
+	db $19, $18, $ab, $08
+	db $11, $20, $ac, $08
+	db $19, $20, $ad, $08
+	db $11, $28, $ae, $08
+	db $19, $28, $af, $18
 
 endc

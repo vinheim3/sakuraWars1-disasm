@@ -1168,6 +1168,19 @@
                             ],
                             isGBC: true,
                         },
+                        {
+                            name: "Sound mode (gs $06)",
+                            sources: [
+                                ['rleXorCopy', 0x34, 0x780b, 0x8800, 'memory'],
+                                ['rleXorCopy', 0x34, 0x508c, 0x9000, 'memory'],
+                                ['screenCopy', 0x34, 0x75db, 0x1800, 'rom', 'vram1', 0x14, 0x0a],
+                                //['screenCopy', 0x34, 0x76a3, 0x1880, 'rom', 'vram1', 0x14, 0x02],
+                                ['screenCopy', 0x34, 0x76f3, 0x9800, 'rom', 'memory', 0x14, 0x0a],
+                                //['screenCopy', 0x34, 0x77bb, 0x9880, 'rom', 'memory', 0x14, 0x02],
+                                ['simpleCopy', 0x35, 0x4908, 0x0018, 0x28, 'rom', 'bgPalettes'],
+                            ],
+                            isGBC: true,
+                        },
                     ],
                 },
                 methods: {

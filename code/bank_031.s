@@ -142,7 +142,7 @@ jr_031_40f8:
 	call PlaySong                                       ; $4119: $cd $92 $1a
 	call ClearOam                                       ; $411c: $cd $d7 $0d
 	xor  a                                           ; $411f: $af
-	ld   [$c697], a                                  ; $4120: $ea $97 $c6
+	ld   [wSoundModeDisplayedSong], a                                  ; $4120: $ea $97 $c6
 	ld   [$c698], a                                  ; $4123: $ea $98 $c6
 	ld   a, [$c68e]                                  ; $4126: $fa $8e $c6
 	bit  0, a                                        ; $4129: $cb $47
@@ -236,7 +236,7 @@ Call_031_41ed:
 	ld   a, $05                                      ; $41f1: $3e $05
 	ld   [wWramBank], a                                  ; $41f3: $ea $93 $c2
 	ldh  [rSVBK], a                                  ; $41f6: $e0 $70
-	ld   a, [$c697]                                  ; $41f8: $fa $97 $c6
+	ld   a, [wSoundModeDisplayedSong]                                  ; $41f8: $fa $97 $c6
 	ld   hl, $d00e                                   ; $41fb: $21 $0e $d0
 	call Call_031_4220                               ; $41fe: $cd $20 $42
 	ld   a, [$c698]                                  ; $4201: $fa $98 $c6
@@ -406,7 +406,7 @@ jr_031_42e4:
 	bit  5, a                                        ; $42e4: $cb $6f
 	jr   z, jr_031_42fa                              ; $42e6: $28 $12
 
-	ld   hl, $c697                                   ; $42e8: $21 $97 $c6
+	ld   hl, wSoundModeDisplayedSong                                   ; $42e8: $21 $97 $c6
 	ld   a, [hl]                                     ; $42eb: $7e
 	sub  $01                                         ; $42ec: $d6 $01
 	jr   nc, jr_031_42f2                             ; $42ee: $30 $02
@@ -424,7 +424,7 @@ jr_031_42fa:
 	bit  4, a                                        ; $42fa: $cb $67
 	jr   z, jr_031_4310                              ; $42fc: $28 $12
 
-	ld   hl, $c697                                   ; $42fe: $21 $97 $c6
+	ld   hl, wSoundModeDisplayedSong                                   ; $42fe: $21 $97 $c6
 	ld   a, [hl]                                     ; $4301: $7e
 	inc  a                                           ; $4302: $3c
 	cp   $15                                         ; $4303: $fe $15
@@ -444,7 +444,7 @@ jr_031_4310:
 	bit  0, a                                        ; $4313: $cb $47
 	jr   z, jr_031_431e                              ; $4315: $28 $07
 
-	ld   a, [$c697]                                  ; $4317: $fa $97 $c6
+	ld   a, [wSoundModeDisplayedSong]                                  ; $4317: $fa $97 $c6
 	call PlaySong                                       ; $431a: $cd $92 $1a
 	ret                                              ; $431d: $c9
 
@@ -577,7 +577,7 @@ Call_031_43cf:
 	ld   a, $05                                      ; $43e5: $3e $05
 	ld   [wWramBank], a                                  ; $43e7: $ea $93 $c2
 	ldh  [rSVBK], a                                  ; $43ea: $e0 $70
-	ld   a, [$c697]                                  ; $43ec: $fa $97 $c6
+	ld   a, [wSoundModeDisplayedSong]                                  ; $43ec: $fa $97 $c6
 	add  a                                           ; $43ef: $87
 	ld   c, a                                        ; $43f0: $4f
 	ld   b, $00                                      ; $43f1: $06 $00

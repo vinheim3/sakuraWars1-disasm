@@ -77,7 +77,7 @@
 
 ; hook banks
 ; $ff ($13c), $fd ($276), $fb ($155), $a4 ($45), $8b ($19f), $85 ($4c3)
-; $6b ($862), $2b ($59e), $1f ($24e), $40 ($798), $3f ($42b), $35 ()
+; $6b ($862), $2b ($59e), $1f ($24e), $40 ($798), $3f ($42b), $35 ($2d88)
 ; -> $31, $2f, $2a
 
 ; To 'day passed'
@@ -89,6 +89,7 @@
 ; TODO: sources of scripts
 ; TODO: MITINV constants for InvItem and RomandoItem
 ; TODO: document end-game rewards
+; TODO: constants for voice mode sampled sounds
 
 ; Minigames
 ; cb1d=0 for practice

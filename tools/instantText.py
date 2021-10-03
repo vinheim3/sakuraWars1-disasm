@@ -23,6 +23,9 @@ def get_limits(_scriptName):
     if _scriptName == '_11_7422':
         return (None, 16*8, 2)
 
+    if _scriptName == '_30_77d4':
+        return (1, 12*8, 2)
+
 
 def get_limit(_scriptName, idx):
     limit = None

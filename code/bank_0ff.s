@@ -1251,4 +1251,20 @@ EnLoadKannaMiniGameGfx0::
 .row9_1:
 	INCBIN "en_kannaMiniGameMain.2bpp", 80*$10, 5*$10
 
+
+_SoundModeLoadTextHook::
+	call LoadInstantText
+
+	ld   hl, $d0a0+$13f
+	ld   de, $d0a0+$139
+	ld   bc, $138
+:	ld   a, [de]
+	dec  de
+	ld   [hl-], a
+	dec  bc
+	ld   a, b
+	or   c
+	jr   nz, :-
+	ret
+
 endc

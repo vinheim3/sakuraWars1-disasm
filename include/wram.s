@@ -270,7 +270,13 @@ wSoundModeGirlSelected:: ; $c666
     db
 
 wc667:
-    ds $99-$67
+    ds $97-$67
+
+wSoundModeDisplayedSong:: ; $c697
+    db
+
+wc698:
+    ds 9-8
 
 wMiniGamesReturnState:: ; $c699
     db
