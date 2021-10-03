@@ -2604,28 +2604,39 @@ HLequHdivModL::
 	ret                                                             ; $0c4f
 
 
-; A -
-Func_0c50::
+; A - divisor
+; HL - dividend
+; Returns quotient in L, and remainder in A
+LAequHLdivmodA::
 	push bc                                          ; $0c50: $c5
 	push de                                          ; $0c51: $d5
 
 ;
 	ld   c, a                                        ; $0c52: $4f
 	xor  a                                           ; $0c53: $af
+
+; Loop all bits of HL
 	ld   b, $10                                      ; $0c54: $06 $10
 
 .loopB:
+; HL *= 2
 	sla  l                                           ; $0c56: $cb $25
 	rl   h                                           ; $0c58: $cb $14
+
+; Rotate into word EA
 	rl   a                                           ; $0c5a: $cb $17
 	rl   e                                           ; $0c5c: $cb $13
+
+; Jump if E now has a bit set
 	bit  0, e                                        ; $0c5e: $cb $43
 	jr   nz, .br_0c65                             ; $0c60: $20 $03
 
+; Jump if our number is not yet >= divisor
 	cp   c                                           ; $0c62: $b9
 	jr   c, .toLoopB                              ; $0c63: $38 $05
 
 .br_0c65:
+; Rotate back into L, and sub C from A
 	set  0, l                                        ; $0c65: $cb $c5
 	res  0, e                                        ; $0c67: $cb $83
 	sub  c                                           ; $0c69: $91
@@ -4185,7 +4196,11 @@ endc
 	dw .specialCodeExcept0a
 	dw .specialCodeExcept0a
 	dw .specialCodeExcept0a
+if def(VWF)
+	dw VWFInstantCode0fh
+else
 	dw .specialCodeExcept0a
+endc
 
 
 ; B - quarter bank offset
@@ -10204,7 +10219,7 @@ ClearVwfTileBuffers:
 	ret
 
 
-	; B - cols
+; B - cols
 ; C - rows
 ; HL - start address
 CommsLayoutSwapSource::
@@ -10224,6 +10239,13 @@ CommsLayoutSwapSource::
 	dec  c
 	jr   nz, .nextRow
 	ret
+
+
+VWFInstantCode0fh:
+	ld   a, [wKanjiPixelInTileIdx]
+	inc  a
+	ld   [wKanjiPixelInTileIdx], a
+	jp   LoadInstantText.toNextKanji
 
 endc
 

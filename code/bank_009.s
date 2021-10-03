@@ -3885,7 +3885,7 @@ Jump_009_56e7:
 	ld   a, [$cc57]                                  ; $5757: $fa $57 $cc
 	call Call_009_59a0                               ; $575a: $cd $a0 $59
 	ld   a, [$cc58]                                  ; $575d: $fa $58 $cc
-	call Call_009_5a40                               ; $5760: $cd $40 $5a
+	call todo_UpdateChestItemDescripTileData                               ; $5760: $cd $40 $5a
 	xor  a                                           ; $5763: $af
 	ld   [$cc5c], a                                  ; $5764: $ea $5c $cc
 
@@ -3968,8 +3968,13 @@ Call_009_57fd:
 	xor  a                                           ; $5801: $af
 	ld   [hl+], a                                    ; $5802: $22
 	ld   [hl+], a                                    ; $5803: $22
+if def(VWF)
+	set  3, a
+	ld   [hl+], a
+else
 	ld   [hl+], a                                    ; $5804: $22
 	set  3, a                                        ; $5805: $cb $df
+endc
 	ld   [hl+], a                                    ; $5807: $22
 	ld   [hl+], a                                    ; $5808: $22
 	ld   [hl+], a                                    ; $5809: $22
@@ -3980,9 +3985,15 @@ Call_009_57fd:
 	ld   [hl+], a                                    ; $580e: $22
 	ld   [hl+], a                                    ; $580f: $22
 	ld   [hl+], a                                    ; $5810: $22
+if def(VWF)
+	ld   [hl+], a
+	ld   [hl+], a
+	res  3, a
+else
 	res  3, a                                        ; $5811: $cb $9f
 	ld   [hl+], a                                    ; $5813: $22
 	ld   [hl+], a                                    ; $5814: $22
+endc
 	ld   a, $01                                      ; $5815: $3e $01
 	ld   [hl+], a                                    ; $5817: $22
 	ld   [hl+], a                                    ; $5818: $22
@@ -4049,9 +4060,15 @@ Call_009_5859:
 	ld   h, a                                        ; $586c: $67
 	ld   l, $14                                      ; $586d: $2e $14
 	call AequHtimesL                                       ; $586f: $cd $ac $0b
+if def(VWF)
+	add $c0
+	ld   hl, $d404
+	ld   de, $14
+else
 	add  $e0                                         ; $5872: $c6 $e0
 	ld   hl, $d405                                   ; $5874: $21 $05 $d4
 	ld   de, $0016                                   ; $5877: $11 $16 $00
+endc
 	ld   b, $06                                      ; $587a: $06 $06
 	ld   c, $02                                      ; $587c: $0e $02
 
@@ -4060,7 +4077,11 @@ jr_009_587e:
 	cp   $80                                         ; $5881: $fe $80
 	jr   nz, jr_009_5887                             ; $5883: $20 $02
 
+if def(VWF)
+	ld   a, $c0
+else
 	ld   a, $e0                                      ; $5885: $3e $e0
+endc
 
 jr_009_5887:
 	add  hl, de                                      ; $5887: $19
@@ -4080,21 +4101,31 @@ Call_009_5892:
 	ld   [wWramBank], a                                  ; $5898: $ea $93 $c2
 	ldh  [rSVBK], a                                  ; $589b: $e0 $70
 	call Call_009_581b                               ; $589d: $cd $1b $58
+if def(VWF)
+	ld   hl, $d404
+	ld   de, $14
+else
 	ld   hl, $d405                                   ; $58a0: $21 $05 $d4
 	ld   de, $0016                                   ; $58a3: $11 $16 $00
+endc
 	ld   b, $10                                      ; $58a6: $06 $10
 	ld   c, $02                                      ; $58a8: $0e $02
+if def(VWF)
+	ld   a, $c0
+else
 	ld   a, $e0                                      ; $58aa: $3e $e0
+endc
 
 jr_009_58ac:
 	call Call_009_58c0                               ; $58ac: $cd $c0 $58
 	cp   $80                                         ; $58af: $fe $80
-	jr   nz, jr_009_58b5                             ; $58b1: $20 $02
-
+	jr   nz, :+                             ; $58b1: $20 $02
+if def(VWF)
+	ld   a, $c0
+else
 	ld   a, $e0                                      ; $58b3: $3e $e0
-
-jr_009_58b5:
-	add  hl, de                                      ; $58b5: $19
+endc
+:	add  hl, de                                      ; $58b5: $19
 	dec  b                                           ; $58b6: $05
 	jr   nz, jr_009_58ac                             ; $58b7: $20 $f3
 
@@ -4123,9 +4154,14 @@ Call_009_58c0:
 	add  c                                           ; $58cf: $81
 	ld   [hl+], a                                    ; $58d0: $22
 	add  c                                           ; $58d1: $81
+if def(VWF)
+	call TreasureChestRowMapHook
+	nop
+else
 	ld   [hl+], a                                    ; $58d2: $22
 	add  hl, de                                      ; $58d3: $19
 	sub  $11                                         ; $58d4: $d6 $11
+endc
 	ld   [hl+], a                                    ; $58d6: $22
 	add  c                                           ; $58d7: $81
 	ld   [hl+], a                                    ; $58d8: $22
@@ -4286,35 +4322,39 @@ Call_009_5997:
 
 Call_009_59a0:
 	push af                                          ; $59a0: $f5
-	call Call_009_59c4                               ; $59a1: $cd $c4 $59
+	call todo_LoadsTreasureChestItemNameTileData                               ; $59a1: $cd $c4 $59
 	pop  af                                          ; $59a4: $f1
 	inc  a                                           ; $59a5: $3c
 	push af                                          ; $59a6: $f5
-	call Call_009_59c4                               ; $59a7: $cd $c4 $59
+	call todo_LoadsTreasureChestItemNameTileData                               ; $59a7: $cd $c4 $59
 	pop  af                                          ; $59aa: $f1
 	inc  a                                           ; $59ab: $3c
 	push af                                          ; $59ac: $f5
-	call Call_009_59c4                               ; $59ad: $cd $c4 $59
+	call todo_LoadsTreasureChestItemNameTileData                               ; $59ad: $cd $c4 $59
 	pop  af                                          ; $59b0: $f1
 	inc  a                                           ; $59b1: $3c
 	push af                                          ; $59b2: $f5
-	call Call_009_59c4                               ; $59b3: $cd $c4 $59
+	call todo_LoadsTreasureChestItemNameTileData                               ; $59b3: $cd $c4 $59
 	pop  af                                          ; $59b6: $f1
 	inc  a                                           ; $59b7: $3c
 	push af                                          ; $59b8: $f5
-	call Call_009_59c4                               ; $59b9: $cd $c4 $59
+	call todo_LoadsTreasureChestItemNameTileData                               ; $59b9: $cd $c4 $59
 	pop  af                                          ; $59bc: $f1
 	inc  a                                           ; $59bd: $3c
 	push af                                          ; $59be: $f5
-	call Call_009_59c4                               ; $59bf: $cd $c4 $59
+	call todo_LoadsTreasureChestItemNameTileData                               ; $59bf: $cd $c4 $59
 	pop  af                                          ; $59c2: $f1
 	ret                                              ; $59c3: $c9
 
 
-Call_009_59c4:
+todo_LoadsTreasureChestItemNameTileData:
 	push af                                          ; $59c4: $f5
 	ld   hl, $d340                                   ; $59c5: $21 $40 $d3
+if def(VWF)
+	ld   bc, $c0
+else
 	ld   bc, $00a0                                   ; $59c8: $01 $a0 $00
+endc
 	ld   de, $0000                                   ; $59cb: $11 $00 $00
 	call CopyEthenDintoHL_BCtimes                                       ; $59ce: $cd $9f $09
 	call InitWideTextBoxDimensions                                       ; $59d1: $cd $ec $0f
@@ -4347,7 +4387,7 @@ jr_009_59fc:
 	ld   l, [hl]                                     ; $5a01: $6e
 	ld   h, MIT_ROMANDO_SHOP_CHEST                                      ; $5a02: $26 $03
 
-	M_FarCall HLequAddrOfMiscInstantText
+	M_FarCall GetAddrBankOfMiscInstantText
 
 	ld   d, h                                        ; $5a18: $54
 	ld   e, l                                        ; $5a19: $5d
@@ -4357,33 +4397,49 @@ jr_009_59fc:
 
 jr_009_5a21:
 	and  $07                                         ; $5a21: $e6 $07
+if def(VWF)
+	ld   h, $18
+else
 	ld   h, $14                                      ; $5a23: $26 $14
+endc
 	ld   l, a                                        ; $5a25: $6f
 	call AequHtimesL                                       ; $5a26: $cd $ac $0b
 	add  hl, hl                                      ; $5a29: $29
 	add  hl, hl                                      ; $5a2a: $29
 	add  hl, hl                                      ; $5a2b: $29
 	add  hl, hl                                      ; $5a2c: $29
+if def(VWF)
+	ld   bc, $8c00
+else
 	ld   bc, $8e00                                   ; $5a2d: $01 $00 $8e
+endc
 	add  hl, bc                                      ; $5a30: $09
 	ld   c, $81                                      ; $5a31: $0e $81
 	ld   d, h                                        ; $5a33: $54
 	ld   e, l                                        ; $5a34: $5d
 	ld   a, $02                                      ; $5a35: $3e $02
 	ld   hl, $d340                                   ; $5a37: $21 $40 $d3
+if def(VWF)
+	ld   b, $18
+else
 	ld   b, $14                                      ; $5a3a: $06 $14
+endc
 	call EnqueueHDMATransfer                                       ; $5a3c: $cd $7c $02
 	ret                                              ; $5a3f: $c9
 
 
-Call_009_5a40:
+todo_UpdateChestItemDescripTileData:
 	push af                                          ; $5a40: $f5
 	ld   hl, $d340                                   ; $5a41: $21 $40 $d3
 	ld   bc, $0240                                   ; $5a44: $01 $40 $02
 	ld   de, $0000                                   ; $5a47: $11 $00 $00
 	call CopyEthenDintoHL_BCtimes                                       ; $5a4a: $cd $9f $09
 	call InitWideTextBoxDimensions                                       ; $5a4d: $cd $ec $0f
+if def(VWF)
+	ldbc 20, 2
+else
 	ld   bc, $1202                                   ; $5a50: $01 $02 $12
+endc
 	call SetKanjiTextBoxDimensions                                       ; $5a53: $cd $24 $14
 	ld   bc, $0000                                   ; $5a56: $01 $00 $00
 	call SetCurrKanjiColAndRowToDrawOn                                       ; $5a59: $cd $34 $14
@@ -4399,19 +4455,32 @@ Call_009_5a40:
 	ld   l, [hl]                                     ; $5a6d: $6e
 	ld   h, MIT_ROMANDO_SHOP_CHEST                                      ; $5a6e: $26 $03
 
-	M_FarCall HLequAddrOfMiscInstantText
+	M_FarCall GetAddrBankOfMiscInstantText
 
 	ld   d, h                                        ; $5a84: $54
 	ld   e, l                                        ; $5a85: $5d
 	ld   hl, $d340                                   ; $5a86: $21 $40 $d3
+if def(VWF)
+	call TreasureChestLoadDescripTextHook
+else
 	call LoadInstantText                                       ; $5a89: $cd $06 $13
+endc
 
 jr_009_5a8c:
+if def(VWF)
+	ld   c, $80
+	ld   de, $9000
+else
 	ld   c, $81                                      ; $5a8c: $0e $81
 	ld   de, $8900                                   ; $5a8e: $11 $00 $89
+endc
 	ld   a, $02                                      ; $5a91: $3e $02
 	ld   hl, $d340                                   ; $5a93: $21 $40 $d3
+if def(VWF)
+	ld   b, $50
+else
 	ld   b, $48                                      ; $5a96: $06 $48
+endc
 	call EnqueueHDMATransfer                                       ; $5a98: $cd $7c $02
 	ret                                              ; $5a9b: $c9
 
@@ -4461,7 +4530,7 @@ jr_009_5ace:
 	call LoadSpriteFromMainTable                                       ; $5ae2: $cd $16 $0e
 
 jr_009_5ae5:
-	call $5b1e                                       ; $5ae5: $cd $1e $5b
+	call Func_09_5b1e                                       ; $5ae5: $cd $1e $5b
 	bit  7, a                                        ; $5ae8: $cb $7f
 	ret  nz                                          ; $5aea: $c0
 
@@ -4493,9 +4562,12 @@ jr_009_5ae5:
 	nop                                              ; $5b18: $00
 	ld   bc, $0302                                   ; $5b19: $01 $02 $03
 	ld   [bc], a                                     ; $5b1c: $02
-	ld   bc, $58fa                                   ; $5b1d: $01 $fa $58
-	call z, $97cd                                    ; $5b20: $cc $cd $97
-	ld   e, c                                        ; $5b23: $59
+	db $01 
+	
+	
+Func_09_5b1e:
+	ld   a, [$cc58] ; $5b1e: $fa $58 $cc
+	call Call_009_5997                                    ; $5b21: $cd $97 $59
 	call HLequAddrOfChestItemMetadata                               ; $5b24: $cd $4f $66
 	ld   bc, $0004                                   ; $5b27: $01 $04 $00
 	add  hl, bc                                      ; $5b2a: $09
@@ -4679,7 +4751,7 @@ endc
 	ld   b, $40                                      ; $5c1b: $06 $40
 	call EnqueueHDMATransfer                                       ; $5c1d: $cd $7c $02
 	ld   a, [$cc57]                                  ; $5c20: $fa $57 $cc
-	call Call_009_59c4                               ; $5c23: $cd $c4 $59
+	call todo_LoadsTreasureChestItemNameTileData                               ; $5c23: $cd $c4 $59
 	ret                                              ; $5c26: $c9
 
 
@@ -4694,7 +4766,11 @@ endc
 	ld   bc, $1420                                   ; $5c3a: $01 $20 $14
 	call FarCopyLayout                                       ; $5c3d: $cd $2c $0b
 	ld   hl, $d400                                   ; $5c40: $21 $00 $d4
+if def(VWF)
+	call TreasureChestLayout0Hook
+else
 	call FarCopyLayout                                       ; $5c43: $cd $2c $0b
+endc
 	ld   c, $81                                      ; $5c46: $0e $81
 	ld   de, $9800                                   ; $5c48: $11 $00 $98
 	ld   a, $07                                      ; $5c4b: $3e $07
@@ -4706,7 +4782,7 @@ endc
 	ldh  [rSVBK], a                                  ; $5c59: $e0 $70
 	ld   a, [$cc57]                                  ; $5c5b: $fa $57 $cc
 	inc  a                                           ; $5c5e: $3c
-	call Call_009_59c4                               ; $5c5f: $cd $c4 $59
+	call todo_LoadsTreasureChestItemNameTileData                               ; $5c5f: $cd $c4 $59
 	ret                                              ; $5c62: $c9
 
 
@@ -4719,7 +4795,7 @@ endc
 	ld   a, [$cc57]                                  ; $5c72: $fa $57 $cc
 	inc  a                                           ; $5c75: $3c
 	inc  a                                           ; $5c76: $3c
-	call Call_009_59c4                               ; $5c77: $cd $c4 $59
+	call todo_LoadsTreasureChestItemNameTileData                               ; $5c77: $cd $c4 $59
 	ret                                              ; $5c7a: $c9
 
 
@@ -4732,7 +4808,7 @@ endc
 	call EnqueueHDMATransfer                                       ; $5c8a: $cd $7c $02
 	ld   a, [$cc57]                                  ; $5c8d: $fa $57 $cc
 	add  $03                                         ; $5c90: $c6 $03
-	call Call_009_59c4                               ; $5c92: $cd $c4 $59
+	call todo_LoadsTreasureChestItemNameTileData                               ; $5c92: $cd $c4 $59
 	ret                                              ; $5c95: $c9
 
 
@@ -4745,14 +4821,14 @@ endc
 	call EnqueueHDMATransfer                                       ; $5ca5: $cd $7c $02
 	ld   a, [$cc57]                                  ; $5ca8: $fa $57 $cc
 	add  $04                                         ; $5cab: $c6 $04
-	call Call_009_59c4                               ; $5cad: $cd $c4 $59
+	call todo_LoadsTreasureChestItemNameTileData                               ; $5cad: $cd $c4 $59
 	ret                                              ; $5cb0: $c9
 
 
 	call Call_009_5ef4                               ; $5cb1: $cd $f4 $5e
 	ld   a, [$cc57]                                  ; $5cb4: $fa $57 $cc
 	add  $05                                         ; $5cb7: $c6 $05
-	call Call_009_59c4                               ; $5cb9: $cd $c4 $59
+	call todo_LoadsTreasureChestItemNameTileData                               ; $5cb9: $cd $c4 $59
 	ret                                              ; $5cbc: $c9
 
 
@@ -4778,7 +4854,7 @@ endc
 
 
 	ld   a, [$cc58]                                  ; $5cea: $fa $58 $cc
-	call Call_009_5a40                               ; $5ced: $cd $40 $5a
+	call todo_UpdateChestItemDescripTileData                               ; $5ced: $cd $40 $5a
 	ld   hl, $cc50                                   ; $5cf0: $21 $50 $cc
 	inc  [hl]                                        ; $5cf3: $34
 	xor  a                                           ; $5cf4: $af
@@ -4982,7 +5058,7 @@ jr_009_5e30:
 
 jr_009_5e50:
 	ld   a, [$cc58]                                  ; $5e50: $fa $58 $cc
-	call Call_009_5a40                               ; $5e53: $cd $40 $5a
+	call todo_UpdateChestItemDescripTileData                               ; $5e53: $cd $40 $5a
 	jr   jr_009_5e84                                 ; $5e56: $18 $2c
 
 jr_009_5e58:
@@ -5125,8 +5201,13 @@ Call_009_5f30:
 	res  0, a                                        ; $5f33: $cb $87
 	ld   [hl+], a                                    ; $5f35: $22
 	ld   [hl+], a                                    ; $5f36: $22
+if def(VWF)
+	set  3, a
+	ld   [hl+], a
+else
 	ld   [hl+], a                                    ; $5f37: $22
 	set  3, a                                        ; $5f38: $cb $df
+endc
 	ld   [hl+], a                                    ; $5f3a: $22
 	ld   [hl+], a                                    ; $5f3b: $22
 	ld   [hl+], a                                    ; $5f3c: $22
@@ -5137,9 +5218,15 @@ Call_009_5f30:
 	ld   [hl+], a                                    ; $5f41: $22
 	ld   [hl+], a                                    ; $5f42: $22
 	ld   [hl+], a                                    ; $5f43: $22
+if def(VWF)
+	ld   [hl+], a
+	ld   [hl+], a
+	res  3, a
+else
 	res  3, a                                        ; $5f44: $cb $9f
 	ld   [hl+], a                                    ; $5f46: $22
 	ld   [hl+], a                                    ; $5f47: $22
+endc
 	set  0, a                                        ; $5f48: $cb $c7
 	ld   [hl+], a                                    ; $5f4a: $22
 	res  0, a                                        ; $5f4b: $cb $87
@@ -5258,14 +5345,27 @@ jr_009_5fc6:
 
 
 	ld   hl, $d340                                   ; $5fe9: $21 $40 $d3
+if def(VWF)
+	ld   bc, $280
+else
 	ld   bc, $0240                                   ; $5fec: $01 $40 $02
+endc
 	ld   de, $0000                                   ; $5fef: $11 $00 $00
 	call CopyEthenDintoHL_BCtimes                                       ; $5ff2: $cd $9f $09
+if def(VWF)
+	ld   c, $80
+	ld   de, $9000
+else
 	ld   c, $81                                      ; $5ff5: $0e $81
 	ld   de, $8900                                   ; $5ff7: $11 $00 $89
+endc
 	ld   a, $02                                      ; $5ffa: $3e $02
 	ld   hl, $d340                                   ; $5ffc: $21 $40 $d3
+if def(VWF)
+	ld   b, $50
+else
 	ld   b, $48                                      ; $5fff: $06 $48
+endc
 	call EnqueueHDMATransfer                                       ; $6001: $cd $7c $02
 	ld   hl, $cc51                                   ; $6004: $21 $51 $cc
 	inc  [hl]                                        ; $6007: $34
@@ -5278,7 +5378,7 @@ jr_009_5fc6:
 	dec  a                                           ; $6010: $3d
 	dec  a                                           ; $6011: $3d
 	inc  [hl]                                        ; $6012: $34
-	call Call_009_59c4                               ; $6013: $cd $c4 $59
+	call todo_LoadsTreasureChestItemNameTileData                               ; $6013: $cd $c4 $59
 	ret                                              ; $6016: $c9
 
 
@@ -5295,7 +5395,7 @@ jr_009_5fc6:
 
 
 	ld   a, [$cc58]                                  ; $602e: $fa $58 $cc
-	call Call_009_5a40                               ; $6031: $cd $40 $5a
+	call todo_UpdateChestItemDescripTileData                               ; $6031: $cd $40 $5a
 	ld   a, $02                                      ; $6034: $3e $02
 	ld   [$cc50], a                                  ; $6036: $ea $50 $cc
 	xor  a                                           ; $6039: $af
@@ -5306,7 +5406,7 @@ jr_009_5fc6:
 	ld   a, $20                                      ; $603e: $3e $20
 	call PlaySoundEffect                                       ; $6040: $cd $df $1a
 	ld   a, [$cc58]                                  ; $6043: $fa $58 $cc
-	call Call_009_5a40                               ; $6046: $cd $40 $5a
+	call todo_UpdateChestItemDescripTileData                               ; $6046: $cd $40 $5a
 	ld   a, $08                                      ; $6049: $3e $08
 	ld   [$cc50], a                                  ; $604b: $ea $50 $cc
 	xor  a                                           ; $604e: $af
@@ -5317,7 +5417,7 @@ jr_009_5fc6:
 	ld   a, $20                                      ; $6053: $3e $20
 	call PlaySoundEffect                                       ; $6055: $cd $df $1a
 	ld   a, [$cc58]                                  ; $6058: $fa $58 $cc
-	call Call_009_5a40                               ; $605b: $cd $40 $5a
+	call todo_UpdateChestItemDescripTileData                               ; $605b: $cd $40 $5a
 	ld   a, $08                                      ; $605e: $3e $08
 	ld   [$cc50], a                                  ; $6060: $ea $50 $cc
 	xor  a                                           ; $6063: $af
@@ -5348,7 +5448,7 @@ jr_009_5fc6:
 	ld   a, $20                                      ; $6080: $3e $20
 	call PlaySoundEffect                                       ; $6082: $cd $df $1a
 	ld   a, [$cc58]                                  ; $6085: $fa $58 $cc
-	call Call_009_59c4                               ; $6088: $cd $c4 $59
+	call todo_LoadsTreasureChestItemNameTileData                               ; $6088: $cd $c4 $59
 	ld   hl, $cc51                                   ; $608b: $21 $51 $cc
 	ld   a, [$cc5b]                                  ; $608e: $fa $5b $cc
 	cp   $04                                         ; $6091: $fe $04
@@ -5388,7 +5488,7 @@ jr_009_609f:
 
 
 	ld   a, [$cc58]                                  ; $60c5: $fa $58 $cc
-	call Call_009_5a40                               ; $60c8: $cd $40 $5a
+	call todo_UpdateChestItemDescripTileData                               ; $60c8: $cd $40 $5a
 	ld   a, [$cc5b]                                  ; $60cb: $fa $5b $cc
 	cp   $04                                         ; $60ce: $fe $04
 	jr   c, jr_009_60dc                              ; $60d0: $38 $0a
@@ -5431,7 +5531,7 @@ jr_009_60e4:
 	ld   a, $20                                      ; $6106: $3e $20
 	call PlaySoundEffect                                       ; $6108: $cd $df $1a
 	ld   a, [$cc58]                                  ; $610b: $fa $58 $cc
-	call Call_009_59c4                               ; $610e: $cd $c4 $59
+	call todo_LoadsTreasureChestItemNameTileData                               ; $610e: $cd $c4 $59
 	ld   hl, $cc51                                   ; $6111: $21 $51 $cc
 	ld   a, [$cc5b]                                  ; $6114: $fa $5b $cc
 	cp   $04                                         ; $6117: $fe $04
@@ -5471,7 +5571,7 @@ jr_009_6125:
 
 
 	ld   a, [$cc58]                                  ; $614b: $fa $58 $cc
-	call Call_009_5a40                               ; $614e: $cd $40 $5a
+	call todo_UpdateChestItemDescripTileData                               ; $614e: $cd $40 $5a
 	ld   a, [$cc5b]                                  ; $6151: $fa $5b $cc
 	cp   $04                                         ; $6154: $fe $04
 	jr   c, jr_009_6162                              ; $6156: $38 $0a
@@ -5581,7 +5681,7 @@ Jump_009_61cf:
 	ld   a, $02                                      ; $61e4: $3e $02
 	ld   [wWramBank], a                                  ; $61e6: $ea $93 $c2
 	ldh  [rSVBK], a                                  ; $61e9: $e0 $70
-	call $5b1e                                       ; $61eb: $cd $1e $5b
+	call Func_09_5b1e                                       ; $61eb: $cd $1e $5b
 	ld   h, $00                                      ; $61ee: $26 $00
 	swap a                                           ; $61f0: $cb $37
 	ld   l, a                                        ; $61f2: $6f
@@ -6135,11 +6235,10 @@ Jump_009_6545:
 	call FarCall                                       ; $658f: $cd $62 $09
 	ret                                              ; $6592: $c9
 
-
 Jump_009_6593:
-	ld   a, [wRomandoShopReturnState]                                  ; $6593: $fa $52 $cc
+	ld   a, [wShopChestReturnState]                                  ; $6593: $fa $52 $cc
 	ld   [wGameState], a                                  ; $6596: $ea $a0 $c2
-	ld   a, [wRomandoShopReturnSubstate]                                  ; $6599: $fa $53 $cc
+	ld   a, [wShopChestReturnSubstate]                                  ; $6599: $fa $53 $cc
 	ld   [wGameSubstate], a                                  ; $659c: $ea $a1 $c2
 	ret                                              ; $659f: $c9
 
@@ -6302,35 +6401,36 @@ endm
 	db $00, $00
 
 
+; Returns A != 0 if an event gallery was bought
 CheckIfAnyEventGalleryBought:
-	ld   hl, $0130                                   ; $673c: $21 $30 $01
+	ld   hl, FLAG1_SAKURA_EVENT_GALLERY                             ; $673c
 	M_FarCall CheckIfNextFlagSet1
-	or   a                                           ; $6753: $b7
-	ret  nz                                          ; $6754: $c0
+	or   a                                                          ; $6753
+	ret  nz                                                         ; $6754
 
-	ld   hl, $0134                             ; $6755: $21 $34 $01
+	ld   hl, FLAG1_SUMIRE_EVENT_GALLERY                             ; $6755
 	M_FarCall CheckIfNextFlagSet1
-	or   a                                           ; $676c: $b7
-	ret  nz                                          ; $676d: $c0
+	or   a                                                          ; $676c
+	ret  nz                                                         ; $676d
 
-	ld   hl, $0138                                   ; $676e: $21 $38 $01
+	ld   hl, FLAG1_MARIA_EVENT_GALLERY                              ; $676e
 	M_FarCall CheckIfNextFlagSet1
-	or   a                                           ; $6785: $b7
-	ret  nz                                          ; $6786: $c0
+	or   a                                                          ; $6785
+	ret  nz                                                         ; $6786
 
-	ld   hl, $013c                                   ; $6787: $21 $3c $01
+	ld   hl, FLAG1_IRIS_EVENT_GALLERY                               ; $6787
 	M_FarCall CheckIfNextFlagSet1
-	or   a                                           ; $679e: $b7
-	ret  nz                                          ; $679f: $c0
+	or   a                                                          ; $679e
+	ret  nz                                                         ; $679f
 
-	ld   hl, $0140                                   ; $67a0: $21 $40 $01
+	ld   hl, FLAG1_KOHRAN_EVENT_GALLERY                             ; $67a0
 	M_FarCall CheckIfNextFlagSet1
-	or   a                                           ; $67b7: $b7
-	ret  nz                                          ; $67b8: $c0
+	or   a                                                          ; $67b7
+	ret  nz                                                         ; $67b8
 
-	ld   hl, $0144                   ; $67b9: $21 $44 $01
+	ld   hl, FLAG1_KANNA_EVENT_GALLERY                              ; $67b9
 	M_FarCall CheckIfNextFlagSet1
-	ret                                              ; $67d0: $c9
+	ret                                                             ; $67d0
 
 
 ; Returns A != 0 if a portrait gallery was bought
@@ -6365,46 +6465,48 @@ CheckIfAnyPortraitGalleryBought:
 	ret                                                             ; $6865
 
 
+; Returns A != 0 if a sound mode opt was bought
 CheckIfAnySoundModeBought:
-	ld   hl, $01bc                                   ; $6866: $21 $bc $01
+	ld   hl, FLAG1_MUSIC_COLLECTION                                 ; $6866
 	M_FarCall CheckIfNextFlagSet1
-	or   a                                           ; $687d: $b7
-	ret  nz                                          ; $687e: $c0
+	or   a                                                          ; $687d
+	ret  nz                                                         ; $687e
 
-	ld   hl, $01c0                                   ; $687f: $21 $c0 $01
+	ld   hl, FLAG1_SOUND_EFFECT_COLLECTION                          ; $687f
 	M_FarCall CheckIfNextFlagSet1
-	ret                                              ; $6896: $c9
+	ret                                                             ; $6896
 
 
+; Returns A != 0 if a voice sample item was bought
 CheckIfAnyVoiceModeBought:
-	ld   hl, $01c4                                   ; $6897: $21 $c4 $01
+	ld   hl, FLAG1_SAKURA_VOICES                                    ; $6897
 	M_FarCall CheckIfNextFlagSet1
-	or   a                                           ; $68ae: $b7
-	ret  nz                                          ; $68af: $c0
+	or   a                                                          ; $68ae
+	ret  nz                                                         ; $68af
 
-	ld   hl, $01c8                                   ; $68b0: $21 $c8 $01
+	ld   hl, FLAG1_SUMIRE_VOICES                                    ; $68b0
 	M_FarCall CheckIfNextFlagSet1
-	or   a                                           ; $68c7: $b7
-	ret  nz                                          ; $68c8: $c0
+	or   a                                                          ; $68c7
+	ret  nz                                                         ; $68c8
 
-	ld   hl, $01cc                                   ; $68c9: $21 $cc $01
+	ld   hl, FLAG1_MARIA_VOICES                                     ; $68c9
 	M_FarCall CheckIfNextFlagSet1
-	or   a                                           ; $68e0: $b7
-	ret  nz                                          ; $68e1: $c0
+	or   a                                                          ; $68e0
+	ret  nz                                                         ; $68e1
 
-	ld   hl, $01d0                                   ; $68e2: $21 $d0 $01
+	ld   hl, FLAG1_IRIS_VOICES                                      ; $68e2
 	M_FarCall CheckIfNextFlagSet1
-	or   a                                           ; $68f9: $b7
-	ret  nz                                          ; $68fa: $c0
+	or   a                                                          ; $68f9
+	ret  nz                                                         ; $68fa
 
-	ld   hl, $01d4                                   ; $68fb: $21 $d4 $01
+	ld   hl, FLAG1_KOHRAN_VOICES                                    ; $68fb
 	M_FarCall CheckIfNextFlagSet1
-	or   a                                           ; $6912: $b7
-	ret  nz                                          ; $6913: $c0
+	or   a                                                          ; $6912
+	ret  nz                                                         ; $6913
 
-	ld   hl, $01d8                                   ; $6914: $21 $d8 $01
+	ld   hl, FLAG1_KANNA_VOICES                                     ; $6914
 	M_FarCall CheckIfNextFlagSet1
-	ret                                              ; $692b: $c9
+	ret                                                             ; $692b
 
 
 LCDCFunc0a::
@@ -6450,16 +6552,21 @@ jr_009_6959:
 	ret                                              ; $695a: $c9
 
 
+; H - return state
+; L - return substate
 SetTreasureChestState::
-	ld   a, h                                        ; $695b: $7c
-	ld   [wRomandoShopReturnState], a                                  ; $695c: $ea $52 $cc
-	ld   a, l                                        ; $695f: $7d
-	ld   [wRomandoShopReturnSubstate], a                                  ; $6960: $ea $53 $cc
-	ld   a, GS_TREASURE_CHEST                                      ; $6963: $3e $41
-	ld   [wGameState], a                                  ; $6965: $ea $a0 $c2
-	xor  a                                           ; $6968: $af
-	ld   [wGameSubstate], a                                  ; $6969: $ea $a1 $c2
-	ret                                              ; $696c: $c9
+; Set return state
+	ld   a, h                                                       ; $695b
+	ld   [wShopChestReturnState], a                                 ; $695c
+	ld   a, l                                                       ; $695f
+	ld   [wShopChestReturnSubstate], a                              ; $6960
+
+; Set new state
+	ld   a, GS_TREASURE_CHEST                                       ; $6963
+	ld   [wGameState], a                                            ; $6965
+	xor  a                                                          ; $6968
+	ld   [wGameSubstate], a                                         ; $6969
+	ret                                                             ; $696c
 
 
 if def(VWF)
@@ -6468,6 +6575,53 @@ TreasureChestBank0_8000hHook:
 	call RLEXorCopy
 
 	M_FarCall LoadRomandoTreasureInvPopup
+	ret
+
+
+TreasureChestLoadDescripTextHook:
+	push af
+	push de
+	ld   bc, $500
+	call MemClear
+	pop  de
+	pop  af
+	ld   hl, $d340
+	jp   LoadInstantText
+
+
+TreasureChestLayout0Hook:
+	call FarCopyLayout
+
+	ld   bc, $80
+	ld   hl, $d000+$20
+	call MemClear
+
+	ld   a, BANK(.textLayout)
+	ldbc 20, 4
+	ld   de, .textLayout
+	ld   hl, $d400+$20
+	call FarCopyLayout
+	ret
+
+.textLayout:
+	db $00, $02, $04, $06, $08, $0a, $0c, $0e, $10, $12, $14, $16, $18, $1a, $1c, $1e, $20, $22, $24, $26
+	db $01, $03, $05, $07, $09, $0b, $0d, $0f, $11, $13, $15, $17, $19, $1b, $1d, $1f, $21, $23, $25, $27
+	db $28, $2a, $2c, $2e, $30, $32, $34, $36, $38, $3a, $3c, $3e, $40, $42, $44, $46, $48, $4a, $4c, $4e
+	db $29, $2b, $2d, $2f, $31, $33, $35, $37, $39, $3b, $3d, $3f, $41, $43, $45, $47, $49, $4b, $4d, $4f
+
+
+TreasureChestRowMapHook:
+	ld   [hl+], a
+	add  c
+	ld   [hl+], a
+	add  c
+	ld   [hl+], a
+	add  hl, de
+	sub  $15
+	ld   [hl+], a
+	add  c
+	ld   [hl+], a
+	add  c
 	ret
 
 endc

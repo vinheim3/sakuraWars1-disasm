@@ -752,10 +752,10 @@ wFileLoadDisplayShouldSkip:: ; $cc1e
 wcc1f:
     ds $52-$1f
 
-wRomandoShopReturnState:: ; $cc52
+wShopChestReturnState:: ; $cc52
     db
 
-wRomandoShopReturnSubstate:: ; $cc53
+wShopChestReturnSubstate:: ; $cc53
     db
 
 wcc54:

@@ -4385,7 +4385,7 @@ BattleSubstate49:
 	ld   l, $64                                      ; $5d5a: $2e $64
 	call AequHtimesL                                       ; $5d5c: $cd $ac $0b
 	ld   a, [$ca7a]                                  ; $5d5f: $fa $7a $ca
-	call Func_0c50                                       ; $5d62: $cd $50 $0c
+	call LAequHLdivmodA                                       ; $5d62: $cd $50 $0c
 	ld   a, l                                        ; $5d65: $7d
 	cp   $3c                                         ; $5d66: $fe $3c
 	jr   c, jr_024_5d8d                              ; $5d68: $38 $23
@@ -5290,7 +5290,7 @@ jr_024_61f8:
 	ld   a, [$ca45]                                  ; $6230: $fa $45 $ca
 	ld   h, a                                        ; $6233: $67
 	ld   a, $03                                      ; $6234: $3e $03
-	call Func_0c50                                       ; $6236: $cd $50 $0c
+	call LAequHLdivmodA                                       ; $6236: $cd $50 $0c
 	ld   d, $00                                      ; $6239: $16 $00
 	ld   e, l                                        ; $623b: $5d
 	ld   hl, $ca90                                   ; $623c: $21 $90 $ca
@@ -5371,7 +5371,7 @@ Jump_024_625b:
 	ld   a, [$ca45]                                  ; $62aa: $fa $45 $ca
 	ld   h, a                                        ; $62ad: $67
 	ld   a, $05                                      ; $62ae: $3e $05
-	call Func_0c50                                       ; $62b0: $cd $50 $0c
+	call LAequHLdivmodA                                       ; $62b0: $cd $50 $0c
 	ld   d, $00                                      ; $62b3: $16 $00
 	ld   e, l                                        ; $62b5: $5d
 	ld   hl, $ca90                                   ; $62b6: $21 $90 $ca
@@ -5401,9 +5401,9 @@ Jump_024_62bf:
 	ld   a, [$ca91]                                  ; $62d8: $fa $91 $ca
 	ld   h, a                                        ; $62db: $67
 	ld   a, $02                                      ; $62dc: $3e $02
-	call Func_0c50                                       ; $62de: $cd $50 $0c
+	call LAequHLdivmodA                                       ; $62de: $cd $50 $0c
 	ld   a, $08                                      ; $62e1: $3e $08
-	call Func_0c50                                       ; $62e3: $cd $50 $0c
+	call LAequHLdivmodA                                       ; $62e3: $cd $50 $0c
 	ld   a, l                                        ; $62e6: $7d
 	ld   [$ca7d], a                                  ; $62e7: $ea $7d $ca
 	ld   a, [sSramVals2+SRAM2_SPEED]                                  ; $62ea: $fa $d4 $af
@@ -9393,7 +9393,7 @@ Call_024_7731:
 	ld   l, $64                                      ; $773c: $2e $64
 	call AequHtimesL                                       ; $773e: $cd $ac $0b
 	ld   a, [$ca7a]                                  ; $7741: $fa $7a $ca
-	call Func_0c50                                       ; $7744: $cd $50 $0c
+	call LAequHLdivmodA                                       ; $7744: $cd $50 $0c
 	ld   a, l                                        ; $7747: $7d
 	cp   $3c                                         ; $7748: $fe $3c
 	jr   c, jr_024_776c                              ; $774a: $38 $20
@@ -9534,7 +9534,7 @@ Jump_024_77f1:
 	ld   a, [$ca91]                                  ; $7832: $fa $91 $ca
 	ld   h, a                                        ; $7835: $67
 	ld   a, $04                                      ; $7836: $3e $04
-	call Func_0c50                                       ; $7838: $cd $50 $0c
+	call LAequHLdivmodA                                       ; $7838: $cd $50 $0c
 	ld   a, l                                        ; $783b: $7d
 	cp   $9b                                         ; $783c: $fe $9b
 	jr   nc, jr_024_7887                             ; $783e: $30 $47

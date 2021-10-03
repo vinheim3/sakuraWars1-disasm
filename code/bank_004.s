@@ -179,10 +179,17 @@ Call_004_4148:
 	ld   [hl+], a                                    ; $4155: $22
 	ld   [hl+], a                                    ; $4156: $22
 	ld   [hl+], a                                    ; $4157: $22
+if def(VWF)
+	ld   [hl+], a                                    ; $415d: $22
+	res  3, a                                        ; $4158: $cb $9f
+	ld   [hl+], a                                    ; $415a: $22
+	set  3, a                                        ; $415b: $cb $df
+else
 	res  3, a                                        ; $4158: $cb $9f
 	ld   [hl+], a                                    ; $415a: $22
 	set  3, a                                        ; $415b: $cb $df
 	ld   [hl+], a                                    ; $415d: $22
+endc
 	ld   [hl+], a                                    ; $415e: $22
 	ld   [hl+], a                                    ; $415f: $22
 	ld   [hl+], a                                    ; $4160: $22
@@ -219,10 +226,17 @@ jr_004_417a:
 	ld   [hl+], a                                    ; $4189: $22
 	ld   [hl+], a                                    ; $418a: $22
 	ld   [hl+], a                                    ; $418b: $22
+if def(VWF)
+	ld   [hl+], a
+	inc  a
+	ld   [hl+], a
+	dec  a
+else
 	inc  a                                           ; $418c: $3c
 	ld   [hl+], a                                    ; $418d: $22
 	dec  a                                           ; $418e: $3d
 	ld   [hl+], a                                    ; $418f: $22
+endc
 	ld   [hl+], a                                    ; $4190: $22
 	ld   [hl+], a                                    ; $4191: $22
 	ld   [hl+], a                                    ; $4192: $22
@@ -330,12 +344,23 @@ Call_004_420e:
 	add  c                                           ; $421f: $81
 	ld   [hl+], a                                    ; $4220: $22
 	add  c                                           ; $4221: $81
+if def(VWF)
+	ld   [hl+], a                                    ; $4227: $22
+	add  c                                           ; $4228: $81
+
 	push af                                          ; $4222: $f5
 	ld   a, $80                                      ; $4223: $3e $80
 	ld   [hl+], a                                    ; $4225: $22
 	pop  af                                          ; $4226: $f1
+else
+	push af                                          ; $4222: $f5
+	ld   a, $80                                      ; $4223: $3e $80
+	ld   [hl+], a                                    ; $4225: $22
+	pop  af                                          ; $4226: $f1
+
 	ld   [hl+], a                                    ; $4227: $22
 	add  c                                           ; $4228: $81
+endc
 	ld   [hl+], a                                    ; $4229: $22
 	add  c                                           ; $422a: $81
 	ld   [hl+], a                                    ; $422b: $22
@@ -363,12 +388,23 @@ Call_004_420e:
 	add  c                                           ; $4242: $81
 	ld   [hl+], a                                    ; $4243: $22
 	add  c                                           ; $4244: $81
+if def(VWF)
+	ld   [hl+], a                                    ; $424a: $22
+	add  c                                           ; $424b: $81
+
 	push af                                          ; $4245: $f5
 	ld   a, $80                                      ; $4246: $3e $80
 	ld   [hl+], a                                    ; $4248: $22
 	pop  af                                          ; $4249: $f1
+else
+	push af                                          ; $4245: $f5
+	ld   a, $80                                      ; $4246: $3e $80
+	ld   [hl+], a                                    ; $4248: $22
+	pop  af                                          ; $4249: $f1
+
 	ld   [hl+], a                                    ; $424a: $22
 	add  c                                           ; $424b: $81
+endc
 	ld   [hl+], a                                    ; $424c: $22
 	add  c                                           ; $424d: $81
 	ld   [hl+], a                                    ; $424e: $22
@@ -602,32 +638,36 @@ jr_004_4395:
 	ld   l, [hl]                                     ; $439a: $6e
 	ld   h, MIT_ROMANDO_SHOP_CHEST                                      ; $439b: $26 $03
 
-	M_FarCall HLequAddrOfMiscInstantText
+	M_FarCall GetAddrBankOfMiscInstantText
 
 	ld   d, h                                        ; $43b1: $54
 	ld   e, l                                        ; $43b2: $5d
 	ld   hl, $d340                                   ; $43b3: $21 $40 $d3
 	call LoadInstantText                                       ; $43b6: $cd $06 $13
+if def(VWF)
+	ldbc 11, 0
+else
 	ld   bc, $0a00                                   ; $43b9: $01 $00 $0a
+endc
 	call SetCurrKanjiColAndRowToDrawOn                                       ; $43bc: $cd $34 $14
 	ld   a, [$cc64]                                  ; $43bf: $fa $64 $cc
 	ld   l, a                                        ; $43c2: $6f
 	ld   a, [$cc65]                                  ; $43c3: $fa $65 $cc
 	ld   h, a                                        ; $43c6: $67
 	ld   a, $0a                                      ; $43c7: $3e $0a
-	call Func_0c50                                       ; $43c9: $cd $50 $0c
+	call LAequHLdivmodA                                       ; $43c9: $cd $50 $0c
 	add  $11                                         ; $43cc: $c6 $11
 	ld   [$da83], a                                  ; $43ce: $ea $83 $da
 	ld   a, $0a                                      ; $43d1: $3e $0a
-	call Func_0c50                                       ; $43d3: $cd $50 $0c
+	call LAequHLdivmodA                                       ; $43d3: $cd $50 $0c
 	add  $11                                         ; $43d6: $c6 $11
 	ld   [$da82], a                                  ; $43d8: $ea $82 $da
 	ld   a, $0a                                      ; $43db: $3e $0a
-	call Func_0c50                                       ; $43dd: $cd $50 $0c
+	call LAequHLdivmodA                                       ; $43dd: $cd $50 $0c
 	add  $11                                         ; $43e0: $c6 $11
 	ld   [$da81], a                                  ; $43e2: $ea $81 $da
 	ld   a, $0a                                      ; $43e5: $3e $0a
-	call Func_0c50                                       ; $43e7: $cd $50 $0c
+	call LAequHLdivmodA                                       ; $43e7: $cd $50 $0c
 	add  $11                                         ; $43ea: $c6 $11
 	ld   [$da80], a                                  ; $43ec: $ea $80 $da
 	xor  a                                           ; $43ef: $af
@@ -680,7 +720,11 @@ Call_004_442a:
 	ld   de, $0000                                   ; $4431: $11 $00 $00
 	call CopyEthenDintoHL_BCtimes                                       ; $4434: $cd $9f $09
 	call InitWideTextBoxDimensions                                       ; $4437: $cd $ec $0f
+if def(VWF)
+	ldbc $14, 2
+else
 	ld   bc, $1202                                   ; $443a: $01 $02 $12
+endc
 	call SetKanjiTextBoxDimensions                                       ; $443d: $cd $24 $14
 	ld   bc, $0000                                   ; $4440: $01 $00 $00
 	call SetCurrKanjiColAndRowToDrawOn                                       ; $4443: $cd $34 $14
@@ -696,19 +740,27 @@ Call_004_442a:
 	ld   l, [hl]                                     ; $4457: $6e
 	ld   h, MIT_ROMANDO_SHOP_CHEST                                      ; $4458: $26 $03
 
-	M_FarCall HLequAddrOfMiscInstantText
+	M_FarCall GetAddrBankOfMiscInstantText
 
 	ld   d, h                                        ; $446e: $54
 	ld   e, l                                        ; $446f: $5d
 	ld   hl, $d340                                   ; $4470: $21 $40 $d3
+if def(VWF)
+	call RomandoShopLoadDescripTextHook
+else
 	call LoadInstantText                                       ; $4473: $cd $06 $13
+endc
 
 jr_004_4476:
 	ld   c, $80                                      ; $4476: $0e $80
 	ld   de, $9000                                   ; $4478: $11 $00 $90
 	ld   a, $02                                      ; $447b: $3e $02
 	ld   hl, $d340                                   ; $447d: $21 $40 $d3
+if def(VWF)
+	ld   b, $50
+else
 	ld   b, $48                                      ; $4480: $06 $48
+endc
 	call EnqueueHDMATransfer                                       ; $4482: $cd $7c $02
 	ret                                              ; $4485: $c9
 
@@ -757,9 +809,9 @@ RomandoShopSubstate1:
 	or   a                                           ; $44bb: $b7
 	jr   nz, jr_004_44cb                             ; $44bc: $20 $0d
 
-	ld   a, [wRomandoShopReturnState]                                  ; $44be: $fa $52 $cc
+	ld   a, [wShopChestReturnState]                                  ; $44be: $fa $52 $cc
 	ld   [wGameState], a                                  ; $44c1: $ea $a0 $c2
-	ld   a, [wRomandoShopReturnSubstate]                                  ; $44c4: $fa $53 $cc
+	ld   a, [wShopChestReturnSubstate]                                  ; $44c4: $fa $53 $cc
 	ld   [wGameSubstate], a                                  ; $44c7: $ea $a1 $c2
 	ret                                              ; $44ca: $c9
 
@@ -1091,16 +1143,16 @@ jr_004_46da:
 	ld   a, [$cc60]                                  ; $46de: $fa $60 $cc
 	ld   l, a                                        ; $46e1: $6f
 	ld   a, $0a                                      ; $46e2: $3e $0a
-	call Func_0c50                                       ; $46e4: $cd $50 $0c
+	call LAequHLdivmodA                                       ; $46e4: $cd $50 $0c
 	ld   [wPlayerName+3], a                                  ; $46e7: $ea $11 $cb
 	ld   a, $0a                                      ; $46ea: $3e $0a
-	call Func_0c50                                       ; $46ec: $cd $50 $0c
+	call LAequHLdivmodA                                       ; $46ec: $cd $50 $0c
 	ld   [wPlayerName+2], a                                  ; $46ef: $ea $10 $cb
 	ld   a, $0a                                      ; $46f2: $3e $0a
-	call Func_0c50                                       ; $46f4: $cd $50 $0c
+	call LAequHLdivmodA                                       ; $46f4: $cd $50 $0c
 	ld   [wPlayerName+1], a                                  ; $46f7: $ea $0f $cb
 	ld   a, $0a                                      ; $46fa: $3e $0a
-	call Func_0c50                                       ; $46fc: $cd $50 $0c
+	call LAequHLdivmodA                                       ; $46fc: $cd $50 $0c
 	ld   [wPlayerName], a                                  ; $46ff: $ea $0e $cb
 	ld   a, l                                        ; $4702: $7d
 	ld   [$cb0d], a                                  ; $4703: $ea $0d $cb
@@ -1561,10 +1613,17 @@ Call_004_4a05:
 	ld   [hl+], a                                    ; $4a13: $22
 	ld   [hl+], a                                    ; $4a14: $22
 	ld   [hl+], a                                    ; $4a15: $22
+if def(VWF)
+	ld   [hl+], a                                    ; $4a1b: $22
+	res  3, a                                        ; $4a16: $cb $9f
+	ld   [hl+], a                                    ; $4a18: $22
+	set  3, a                                        ; $4a19: $cb $df
+else
 	res  3, a                                        ; $4a16: $cb $9f
 	ld   [hl+], a                                    ; $4a18: $22
 	set  3, a                                        ; $4a19: $cb $df
 	ld   [hl+], a                                    ; $4a1b: $22
+endc
 	ld   [hl+], a                                    ; $4a1c: $22
 	ld   [hl+], a                                    ; $4a1d: $22
 	ld   [hl+], a                                    ; $4a1e: $22
@@ -1683,14 +1742,27 @@ jr_004_4a9a:
 
 
 	ld   hl, $d340                                   ; $4abd: $21 $40 $d3
+if def(VWF)
+	ld   bc, $280
+else
 	ld   bc, $0240                                   ; $4ac0: $01 $40 $02
+endc
 	ld   de, $0000                                   ; $4ac3: $11 $00 $00
 	call CopyEthenDintoHL_BCtimes                                       ; $4ac6: $cd $9f $09
+if def(VWF)
+	ld   c, $80
+	ld   de, $9000
+else
 	ld   c, $81                                      ; $4ac9: $0e $81
 	ld   de, $8900                                   ; $4acb: $11 $00 $89
+endc
 	ld   a, $02                                      ; $4ace: $3e $02
 	ld   hl, $d340                                   ; $4ad0: $21 $40 $d3
+if def(VWF)
+	ld   b, $50
+else
 	ld   b, $48                                      ; $4ad3: $06 $48
+endc
 	call EnqueueHDMATransfer                                       ; $4ad5: $cd $7c $02
 	ld   hl, $cc51                                   ; $4ad8: $21 $51 $cc
 	inc  [hl]                                        ; $4adb: $34
@@ -2354,7 +2426,7 @@ jr_004_4e85:
 	call FarCall                                       ; $4f03: $cd $62 $09
 	pop  hl                                          ; $4f06: $e1
 	ld   a, $0a                                      ; $4f07: $3e $0a
-	call Func_0c50                                       ; $4f09: $cd $50 $0c
+	call LAequHLdivmodA                                       ; $4f09: $cd $50 $0c
 	ld   a, l                                        ; $4f0c: $7d
 	ld   [$cc62], a                                  ; $4f0d: $ea $62 $cc
 	ld   a, h                                        ; $4f10: $7c
@@ -2532,9 +2604,9 @@ jr_004_4ffe:
 	call FarMemCopy                                       ; $5009: $cd $b2 $09
 	ld   bc, $003f                                   ; $500c: $01 $3f $00
 	call SetBGandOBJPaletteRangesToUpdate                                       ; $500f: $cd $aa $04
-	ld   a, [wRomandoShopReturnState]                                  ; $5012: $fa $52 $cc
+	ld   a, [wShopChestReturnState]                                  ; $5012: $fa $52 $cc
 	ld   [wGameState], a                                  ; $5015: $ea $a0 $c2
-	ld   a, [wRomandoShopReturnSubstate]                                  ; $5018: $fa $53 $cc
+	ld   a, [wShopChestReturnSubstate]                                  ; $5018: $fa $53 $cc
 	ld   [wGameSubstate], a                                  ; $501b: $ea $a1 $c2
 	ret                                              ; $501e: $c9
 
@@ -2832,9 +2904,9 @@ CheckIfAllShopItemsBought::
 SetRomandoShopState::
 ; Set return state
 	ld   a, h                                                       ; $557d
-	ld   [wRomandoShopReturnState], a                               ; $557e
+	ld   [wShopChestReturnState], a                                 ; $557e
 	ld   a, l                                                       ; $5581
-	ld   [wRomandoShopReturnSubstate], a                            ; $5582
+	ld   [wShopChestReturnSubstate], a                              ; $5582
 
 ; Set new state
 	ld   a, GS_ROMANDO_SHOP                                         ; $5585
@@ -3124,7 +3196,7 @@ Call_004_570c:
 	ld   h, MIT_DORM_ROOM_OPT_DESCRIPTS                                      ; $574f: $26 $04
 	ld   l, a                                        ; $5751: $6f
 
-	M_FarCall HLequAddrOfMiscInstantText
+	M_FarCall GetAddrBankOfMiscInstantText
 
 	ld   d, h                                        ; $5766: $54
 	ld   e, l                                        ; $5767: $5d
@@ -3584,7 +3656,7 @@ endc
 	call TurnOnLCD                                       ; $5a60: $cd $09 $09
 	ld   hl, $afd0                                   ; $5a63: $21 $d0 $af
 
-	M_FarCall Func_0c_5bcb
+	M_FarCall LoadStatBars
 	jp   IncDormRoomAnimationStep                               ; $5a7a: $c3 $cc $58
 
 
@@ -4400,7 +4472,7 @@ jr_004_5f9b:
 	ld   h, MIT_DORM_ROOM_OPT_DESCRIPTS                                      ; $5f9d: $26 $04
 	ld   l, a                                        ; $5f9f: $6f
 
-	M_FarCall HLequAddrOfMiscInstantText
+	M_FarCall GetAddrBankOfMiscInstantText
 
 	ld   d, h                                        ; $5fb4: $54
 	ld   e, l                                        ; $5fb5: $5d
@@ -7906,6 +7978,29 @@ RomandoShopTileMapHook:
 	ld   [$d400+$e2], a
 	inc  a
 	ld   [$d400+$ea], a
+
+	ld   a, BANK(.textLayout)
+	ldbc 20, 4
+	ld   de, .textLayout
+	ld   hl, $d400+$100
+	call FarCopyLayout
 	ret
+
+.textLayout:
+	db $00, $02, $04, $06, $08, $0a, $0c, $0e, $10, $12, $14, $16, $18, $1a, $1c, $1e, $20, $22, $24, $26
+	db $01, $03, $05, $07, $09, $0b, $0d, $0f, $11, $13, $15, $17, $19, $1b, $1d, $1f, $21, $23, $25, $27
+	db $28, $2a, $2c, $2e, $30, $32, $34, $36, $38, $3a, $3c, $3e, $40, $42, $44, $46, $48, $4a, $4c, $4e
+	db $29, $2b, $2d, $2f, $31, $33, $35, $37, $39, $3b, $3d, $3f, $41, $43, $45, $47, $49, $4b, $4d, $4f
+
+
+RomandoShopLoadDescripTextHook:
+	push af
+	push de
+	ld   bc, $500
+	call MemClear
+	pop  de
+	pop  af
+	ld   hl, $d340
+	jp   LoadInstantText
 
 endc

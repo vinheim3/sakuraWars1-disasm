@@ -3140,7 +3140,7 @@ Call_00a_598f:
 	call SetCurrKanjiColAndRowToDrawOn                                       ; $5a2f: $cd $34 $14
 	pop  hl                                          ; $5a32: $e1
 
-	M_FarCall HLequAddrOfMiscInstantText
+	M_FarCall GetAddrBankOfMiscInstantText
 
 	call FarPopulateKanjiConvoStructForCurrTextBox                                       ; $5a47: $cd $0c $10
 	xor  a                                           ; $5a4a: $af
@@ -3311,7 +3311,8 @@ jr_00a_5b0c:
 ;   3 - romando shop/chest
 ;   4 - dorm room opt descripts
 ; L - text idx
-HLequAddrOfMiscInstantText::
+; Returns addr in HL, and bank in A
+GetAddrBankOfMiscInstantText::
 	push bc                                          ; $5b4b: $c5
 	push de                                          ; $5b4c: $d5
 

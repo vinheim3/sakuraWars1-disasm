@@ -132,6 +132,11 @@
 ; * 3+ battles won
 ; * Not peeping
 ; * 240+ in the relevant stat
+;   * Moon - Speed
+;   * Wind - Accuracy
+;   * Dream - Spirit Power
+;   * Snow - Guts
+;   * Ideal scientist - Intellect
 
 ; Perfect for Accounting
 ; * 200+ intellect
@@ -157,6 +162,7 @@
 ; * Not peeping
 
 ; Results are lacking
+; * No conditions
 
 0x0 0x3e17
 0x1 0x3b04

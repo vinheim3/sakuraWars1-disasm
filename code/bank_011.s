@@ -9686,15 +9686,8 @@ jr_011_795b:
 
 Call_011_796e:
 	ld   hl, $ca03                                   ; $796e: $21 $03 $ca
-	push af                                          ; $7971: $f5
-	ld   a, $cb                                      ; $7972: $3e $cb
-	ld   [wFarCallAddr], a                                  ; $7974: $ea $98 $c2
-	ld   a, $5b                                      ; $7977: $3e $5b
-	ld   [wFarCallAddr+1], a                                  ; $7979: $ea $99 $c2
-	ld   a, $0c                                      ; $797c: $3e $0c
-	ld   [wFarCallBank], a                                  ; $797e: $ea $9a $c2
-	pop  af                                          ; $7981: $f1
-	call FarCall                                       ; $7982: $cd $62 $09
+
+	M_FarCall LoadStatBars
 	ret                                              ; $7985: $c9
 
 

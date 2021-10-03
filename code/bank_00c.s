@@ -3266,15 +3266,9 @@ ScheduleSubstate1:
 	ldh  [rSVBK], a                                  ; $55b5: $e0 $70
 	call ClearOam                                       ; $55b7: $cd $d7 $0d
 	ld   hl, $afd0                                   ; $55ba: $21 $d0 $af
-	push af                                          ; $55bd: $f5
-	ld   a, $cb                                      ; $55be: $3e $cb
-	ld   [wFarCallAddr], a                                  ; $55c0: $ea $98 $c2
-	ld   a, $5b                                      ; $55c3: $3e $5b
-	ld   [wFarCallAddr+1], a                                  ; $55c5: $ea $99 $c2
-	ld   a, $0c                                      ; $55c8: $3e $0c
-	ld   [wFarCallBank], a                                  ; $55ca: $ea $9a $c2
-	pop  af                                          ; $55cd: $f1
-	call FarCall                                       ; $55ce: $cd $62 $09
+
+	M_FarCall LoadStatBars
+
 	ld   bc, $55e4                                   ; $55d1: $01 $e4 $55
 	push bc                                          ; $55d4: $c5
 	ld   a, [$cc28]                                  ; $55d5: $fa $28 $cc
@@ -4221,7 +4215,7 @@ jr_00c_5bb2:
 	ret                                              ; $5bca: $c9
 
 
-Func_0c_5bcb::
+LoadStatBars::
 	ld   a, [wWramBank]                                  ; $5bcb: $fa $93 $c2
 	push af                                          ; $5bce: $f5
 	ld   a, $02                                      ; $5bcf: $3e $02
@@ -4341,15 +4335,8 @@ jr_00c_5c2f:
 	add  c                                           ; $5c7c: $81
 	ld   c, a                                        ; $5c7d: $4f
 	pop  hl                                          ; $5c7e: $e1
-	push af                                          ; $5c7f: $f5
-	ld   a, $3c                                      ; $5c80: $3e $3c
-	ld   [wFarCallAddr], a                                  ; $5c82: $ea $98 $c2
-	ld   a, $40                                      ; $5c85: $3e $40
-	ld   [wFarCallAddr+1], a                                  ; $5c87: $ea $99 $c2
-	ld   a, $01                                      ; $5c8a: $3e $01
-	ld   [wFarCallBank], a                                  ; $5c8c: $ea $9a $c2
-	pop  af                                          ; $5c8f: $f1
-	call FarCall                                       ; $5c90: $cd $62 $09
+
+	M_FarCall LoadType0NewAnimatedSpriteSpecDetails
 	ret                                              ; $5c93: $c9
 
 
@@ -5275,11 +5262,7 @@ Call_00c_640f:
 	xor  a                                           ; $6413: $af
 	call HLequAddrOfInvItemMetadata                               ; $6414: $cd $2f $71
 	xor  a                                           ; $6417: $af
-if def(VWF)
-	ld   de, $de80
-else
 	ld   de, $d880                                   ; $6418: $11 $80 $d8
-endc
 
 .nextEntry:
 	push hl                                          ; $641b: $e5
@@ -5322,13 +5305,8 @@ endc
 	ld   [$cc54], a                                  ; $6453: $ea $54 $cc
 	ld   b, $00                                      ; $6456: $06 $00
 	ld   c, $ff                                      ; $6458: $0e $ff
-if def(VWF)
-	ld   de, $df80
-	ld   hl, $de80
-else
 	ld   de, $d980                                   ; $645a: $11 $80 $d9
 	ld   hl, $d880                                   ; $645d: $21 $80 $d8
-endc
 
 .loop_6460:
 	ld   a, [hl+]                                    ; $6460: $2a
@@ -5371,18 +5349,6 @@ endc
 	sla  a                                           ; $648e: $cb $27
 	ld   h, $00                                      ; $6490: $26 $00
 	ld   l, a                                        ; $6492: $6f
-if def(VWF)
-	ld   bc, $df81                                   ; $6493: $01 $81 $d9
-	add  hl, bc                                      ; $6496: $09
-	ld   a, [$df81]                                  ; $6497: $fa $81 $d9
-	ld   [hl-], a                                    ; $649a: $32
-	ld   a, [$df80]                                  ; $649b: $fa $80 $d9
-	ld   [hl-], a                                    ; $649e: $32
-	ld   a, [hl-]                                    ; $649f: $3a
-	ld   [$d9df], a                                  ; $64a0: $ea $7f $d9
-	ld   a, [hl-]                                    ; $64a3: $3a
-	ld   [$d9de], a                                  ; $64a4: $ea $7e $d9
-else
 	ld   bc, $d981                                   ; $6493: $01 $81 $d9
 	add  hl, bc                                      ; $6496: $09
 	ld   a, [$d981]                                  ; $6497: $fa $81 $d9
@@ -5393,18 +5359,13 @@ else
 	ld   [$d97f], a                                  ; $64a0: $ea $7f $d9
 	ld   a, [hl-]                                    ; $64a3: $3a
 	ld   [$d97e], a                                  ; $64a4: $ea $7e $d9
-endc
 	ret                                              ; $64a7: $c9
 
 
 Call_00c_64a8:
 	ld   h, $00                                      ; $64a8: $26 $00
 	ld   l, a                                        ; $64aa: $6f
-if def(VWF)
-	ld   bc, $de80
-else
 	ld   bc, $d880                                   ; $64ab: $01 $80 $d8
-endc
 	add  hl, bc                                      ; $64ae: $09
 	ld   a, [hl]                                     ; $64af: $7e
 	ret                                              ; $64b0: $c9
@@ -5490,7 +5451,7 @@ jr_00c_6533:
 	ld   l, [hl]                                     ; $6538: $6e
 	ld   h, MIT_INVENTORY                                      ; $6539: $26 $01
 
-	M_FarCall HLequAddrOfMiscInstantText
+	M_FarCall GetAddrBankOfMiscInstantText
 
 	ld   d, h                                        ; $654f: $54
 	ld   e, l                                        ; $6550: $5d
@@ -5522,11 +5483,19 @@ jr_00c_6558:
 LoadInventoryItemDescription:
 	push af                                          ; $6577: $f5
 	ld   hl, $d340                                   ; $6578: $21 $40 $d3
+if def(VWF)
+	ld   bc, $0280
+else
 	ld   bc, $0240                                   ; $657b: $01 $40 $02
+endc
 	ld   de, $0000                                   ; $657e: $11 $00 $00
 	call CopyEthenDintoHL_BCtimes                                       ; $6581: $cd $9f $09
 	call InitWideTextBoxDimensions                                       ; $6584: $cd $ec $0f
+if def(VWF)
+	ldbc 20, 2
+else
 	ld   bc, $1202                                   ; $6587: $01 $02 $12
+endc
 	call SetKanjiTextBoxDimensions                                       ; $658a: $cd $24 $14
 	ld   bc, $0000                                   ; $658d: $01 $00 $00
 	call SetCurrKanjiColAndRowToDrawOn                                       ; $6590: $cd $34 $14
@@ -5547,7 +5516,7 @@ LoadInventoryItemDescription:
 	ld   l, [hl]                                     ; $65a5: $6e
 	ld   h, MIT_INVENTORY                                      ; $65a6: $26 $01
 
-	M_FarCall HLequAddrOfMiscInstantText
+	M_FarCall GetAddrBankOfMiscInstantText
 
 	ld   d, h                                        ; $65bc: $54
 	ld   e, l                                        ; $65bd: $5d
@@ -5580,7 +5549,7 @@ LoadInventoryItemDescription:
 	ld   l, MITINV_EQUIP_UNEQUIP                                      ; $65f9: $2e $1a
 	ld   h, MIT_INVENTORY                                      ; $65fb: $26 $01
 
-	M_FarCall HLequAddrOfMiscInstantText
+	M_FarCall GetAddrBankOfMiscInstantText
 
 	ld   d, h                                        ; $6611: $54
 	ld   e, l                                        ; $6612: $5d
@@ -5589,10 +5558,18 @@ LoadInventoryItemDescription:
 
 jr_00c_6619:
 	ld   c, $81                                      ; $6619: $0e $81
+if def(VWF)
+	ld   de, $8820
+else
 	ld   de, $8900                                   ; $661b: $11 $00 $89
+endc
 	ld   a, $02                                      ; $661e: $3e $02
 	ld   hl, $d340                                   ; $6620: $21 $40 $d3
+if def(VWF)
+	ld   b, $50
+else
 	ld   b, $48                                      ; $6623: $06 $48
+endc
 	call EnqueueHDMATransfer                                       ; $6625: $cd $7c $02
 	ret                                              ; $6628: $c9
 
@@ -5712,11 +5689,7 @@ Func_0c_66e5:
 	ld   a, [hl]                                     ; $66f2: $7e
 	and  $f0                                         ; $66f3: $e6 $f0
 	ld   e, a                                        ; $66f5: $5f
-if def(VWF)
-	ld   hl, $df80
-else
 	ld   hl, $d980                                   ; $66f6: $21 $80 $d9
-endc
 	ld   a, [$cc54]                                  ; $66f9: $fa $54 $cc
 	ld   b, a                                        ; $66fc: $47
 	ld   c, $00                                      ; $66fd: $0e $00
@@ -5890,7 +5863,11 @@ jr_00c_67e2:
 	ld   bc, $1420                                   ; $67e7: $01 $20 $14
 	call FarCopyLayout                                       ; $67ea: $cd $2c $0b
 	ld   hl, $d400                                   ; $67ed: $21 $00 $d4
+if def(VWF)
+	call InventoryLayout0Hook
+else
 	call FarCopyLayout                                       ; $67f0: $cd $2c $0b
+endc
 	ld   c, $81                                      ; $67f3: $0e $81
 	ld   de, $9800                                   ; $67f5: $11 $00 $98
 	ld   a, $07                                      ; $67f8: $3e $07
@@ -6325,11 +6302,7 @@ Call_00c_6ad1:
 	add  hl, bc                                      ; $6add: $09
 	ld   a, [hl]                                     ; $6ade: $7e
 	and  $f0                                         ; $6adf: $e6 $f0
-if def(VWF)
-	ld   hl, $df80
-else
 	ld   hl, $d980                                   ; $6ae1: $21 $80 $d9
-endc
 
 jr_00c_6ae4:
 	cp   [hl]                                        ; $6ae4: $be
@@ -6353,11 +6326,7 @@ Call_00c_6aee:
 	add  hl, bc                                      ; $6afa: $09
 	ld   a, [hl]                                     ; $6afb: $7e
 	and  $f0                                         ; $6afc: $e6 $f0
-if def(VWF)
-	ld   hl, $df80
-else
 	ld   hl, $d980                                   ; $6afe: $21 $80 $d9
-endc
 
 jr_00c_6b01:
 	cp   [hl]                                        ; $6b01: $be
@@ -6436,14 +6405,26 @@ jr_00c_6b49:
 
 
 	ld   hl, $d340                                   ; $6b6c: $21 $40 $d3
+if def(VWF)
+	ld   bc, $280
+else
 	ld   bc, $0240                                   ; $6b6f: $01 $40 $02
+endc
 	ld   de, $0000                                   ; $6b72: $11 $00 $00
 	call CopyEthenDintoHL_BCtimes                                       ; $6b75: $cd $9f $09
 	ld   c, $81                                      ; $6b78: $0e $81
+if def(VWF)
+	ld   de, $8820
+else
 	ld   de, $8900                                   ; $6b7a: $11 $00 $89
+endc
 	ld   a, $02                                      ; $6b7d: $3e $02
 	ld   hl, $d340                                   ; $6b7f: $21 $40 $d3
+if def(VWF)
+	ld   b, $50
+else
 	ld   b, $48                                      ; $6b82: $06 $48
+endc
 	call EnqueueHDMATransfer                                       ; $6b84: $cd $7c $02
 	ld   hl, $cc51                                   ; $6b87: $21 $51 $cc
 	inc  [hl]                                        ; $6b8a: $34
@@ -7301,9 +7282,9 @@ jr_00c_7087:
 	jr   z, jr_00c_70c7                              ; $70b8: $28 $0d
 
 jr_00c_70ba:
-	ld   a, [wRomandoShopReturnState]                                  ; $70ba: $fa $52 $cc
+	ld   a, [wShopChestReturnState]                                  ; $70ba: $fa $52 $cc
 	ld   [wGameState], a                                  ; $70bd: $ea $a0 $c2
-	ld   a, [wRomandoShopReturnSubstate]                                  ; $70c0: $fa $53 $cc
+	ld   a, [wShopChestReturnSubstate]                                  ; $70c0: $fa $53 $cc
 	ld   [wGameSubstate], a                                  ; $70c3: $ea $a1 $c2
 	ret                                              ; $70c6: $c9
 
@@ -7438,9 +7419,9 @@ jr_00c_71ad:
 
 
 	ld   a, h                                        ; $71af: $7c
-	ld   [wRomandoShopReturnState], a                                  ; $71b0: $ea $52 $cc
+	ld   [wShopChestReturnState], a                                  ; $71b0: $ea $52 $cc
 	ld   a, l                                        ; $71b3: $7d
-	ld   [wRomandoShopReturnSubstate], a                                  ; $71b4: $ea $53 $cc
+	ld   [wShopChestReturnSubstate], a                                  ; $71b4: $ea $53 $cc
 	ld   a, GS_INVENTORY                                      ; $71b7: $3e $40
 	ld   [wGameState], a                                  ; $71b9: $ea $a0 $c2
 	xor  a                                           ; $71bc: $af
@@ -8523,5 +8504,32 @@ GameOverBank0_8000hHook:
 	ld   a, $97
 	ld   hl, $d000
 	ret
+
+
+InventoryLayout0Hook:
+	call FarCopyLayout
+
+	ld   a, $08
+	ld   [$d000+$20], a
+	ld   [$d000+$33], a
+	ld   [$d000+$40], a
+	ld   [$d000+$53], a
+	ld   [$d000+$60], a
+	ld   [$d000+$73], a
+	ld   [$d000+$80], a
+	ld   [$d000+$93], a
+
+	ld   a, BANK(.textLayout)
+	ldbc 20, 4
+	ld   de, .textLayout
+	ld   hl, $d400+$20
+	call FarCopyLayout
+	ret
+
+.textLayout:
+	db $82, $84, $86, $88, $8a, $8c, $8e, $90, $92, $94, $96, $98, $9a, $9c, $9e, $a0, $a2, $a4, $a6, $a8
+	db $83, $85, $87, $89, $8b, $8d, $8f, $91, $93, $95, $97, $99, $9b, $9d, $9f, $a1, $a3, $a5, $a7, $a9
+	db $aa, $ac, $ae, $b0, $b2, $b4, $b6, $b8, $ba, $bc, $be, $c0, $c2, $c4, $c6, $c8, $ca, $cc, $ce, $d0
+	db $ab, $ad, $af, $b1, $b3, $b5, $b7, $b9, $bb, $bd, $bf, $c1, $c3, $c5, $c7, $c9, $cb, $cd, $cf, $d1
 
 endc

@@ -19,7 +19,7 @@ kanji_map = getKanjiMap()
 prefix = f"{tableName}entry"
 
 
-def get_limits(_scriptName):
+def get_limits(_scriptName, idx):
     if _scriptName == '_11_7422':
         return (None, 16*8, 2)
 
@@ -28,6 +28,18 @@ def get_limits(_scriptName):
 
     if _scriptName == '_30_6e56':
         return (1, 16*8, 2)
+
+    if _scriptName == '_90_5234':
+        if idx % 2 == 0:
+            return (1, 12*8, 1)
+        else:
+            return (1, 20*8, 2)
+
+    if _scriptName == '_90_4e80':
+        if idx < 13:
+            return (1, 12*8, 1)
+        else:
+            return (1, 20*8, 2)
 
 
 def get_limit(_scriptName, idx):
@@ -70,6 +82,7 @@ def is_oneline(_scriptName, idx):
     return False
 
 tableItems = []
+enItems = []
 existing_map = {}
 with open('sakura wars GB - misc 03:10:21.csv') as f:
 # with open('sakura wars GB - misc 2 02:10:21.csv') as f:
@@ -81,7 +94,14 @@ with open('sakura wars GB - misc 03:10:21.csv') as f:
         if row[0] != scriptName:
             continue
 
+        # If not english, but it's a dupe
+        if not row[4] and row[6]:
+            en = existing_map[row[2]]
+        else:
+            en = row[4]
+
         tableItems.append(row[2])
+        enItems.append(en)
 
 if scriptName == '_0d_618f':
     comps = ["Data_0d_5c1f::"]
@@ -115,13 +135,13 @@ for i, jp in enumerate(tableItems):
         else:
             raise Exception("blank entry")
 
-    tableItem = existing_map[jp]
+    tableItem = enItems[i]
 
     comps.append(f"{prefix}{i:02x}::")
 
     # Calculate if any lines breached limit (doesn't actually use conversion)
     limit = get_limit(scriptName, i)
-    limits = get_limits(scriptName)
+    limits = get_limits(scriptName, i)
     lines = tableItem.split('\n')
 
     if limits:
@@ -129,9 +149,31 @@ for i, jp in enumerate(tableItems):
         for j, line in enumerate(lines):
             textboxes, _ = ScriptExtractor.convertEnglish(line, width, rows=rows)
             if tbs:
-                assert len(textboxes) <= tbs
+                try:
+                    assert len(textboxes) <= tbs
+                except AssertionError:
+                    print(line)
             for textbox in textboxes:
-                textbox.append(0)
+                if scriptName == '_90_5234':
+                    if i % 2 == 1:
+                        textbox = [0x0f, *textbox]
+                        if j != len(lines)-1:
+                            textbox.append(0x0d)
+                        else:
+                            textbox.append(0)
+                    else:
+                        textbox.append(0)
+                elif scriptName == '_90_4e80':
+                    if i >= 13:
+                        textbox = [0x0f, *textbox]
+                        if j != len(lines)-1:
+                            textbox.append(0x0d)
+                        else:
+                            textbox.append(0)
+                    else:
+                        textbox.append(0)
+                else:
+                    textbox.append(0)
                 comps.append(stringB(textbox))
 
     elif limit:

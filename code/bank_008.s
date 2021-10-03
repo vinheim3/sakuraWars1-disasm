@@ -6277,7 +6277,7 @@ jr_008_6a6b:
 	ld   h, MIT_GIFT_SHOP                                      ; $6ab1: $26 $00
 	ld   l, a                                        ; $6ab3: $6f
 
-	M_FarCall HLequAddrOfMiscInstantText
+	M_FarCall GetAddrBankOfMiscInstantText
 
 	ld   d, h                                        ; $6ac8: $54
 	ld   e, l                                        ; $6ac9: $5d
@@ -7159,7 +7159,7 @@ LoadKouboDescriptionText:
 	ld   h, MIT_KOUBO_DESCRIPTIONS                                      ; $7098: $26 $02
 	ld   l, a                                        ; $709a: $6f
 
-	M_FarCall HLequAddrOfMiscInstantText
+	M_FarCall GetAddrBankOfMiscInstantText
 
 	ld   d, h                                        ; $70af: $54
 	ld   e, l                                        ; $70b0: $5d

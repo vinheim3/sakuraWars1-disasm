@@ -6031,7 +6031,7 @@ Call_03e_66c7:
 	ld   l, $68                                      ; $66c8: $2e $68
 	call AequHtimesL                                       ; $66ca: $cd $ac $0b
 	ld   a, [$c9c0]                                  ; $66cd: $fa $c0 $c9
-	call Func_0c50                                       ; $66d0: $cd $50 $0c
+	call LAequHLdivmodA                                       ; $66d0: $cd $50 $0c
 	ld   h, a                                        ; $66d3: $67
 	ld   a, l                                        ; $66d4: $7d
 	or   a                                           ; $66d5: $b7
@@ -6053,7 +6053,7 @@ Call_03e_66e2:
 	ld   l, $30                                      ; $66e3: $2e $30
 	call AequHtimesL                                       ; $66e5: $cd $ac $0b
 	ld   a, [$c9c3]                                  ; $66e8: $fa $c3 $c9
-	call Func_0c50                                       ; $66eb: $cd $50 $0c
+	call LAequHLdivmodA                                       ; $66eb: $cd $50 $0c
 	ld   h, a                                        ; $66ee: $67
 	ld   a, l                                        ; $66ef: $7d
 	or   a                                           ; $66f0: $b7
@@ -6075,7 +6075,7 @@ Call_03e_66fd:
 	ld   l, $68                                      ; $66fe: $2e $68
 	call AequHtimesL                                       ; $6700: $cd $ac $0b
 	ld   a, [$c9c6]                                  ; $6703: $fa $c6 $c9
-	call Func_0c50                                       ; $6706: $cd $50 $0c
+	call LAequHLdivmodA                                       ; $6706: $cd $50 $0c
 	ld   h, a                                        ; $6709: $67
 	ld   a, l                                        ; $670a: $7d
 	or   a                                           ; $670b: $b7
@@ -6143,13 +6143,13 @@ jr_03e_6745:
 	ld   l, $68                                      ; $674e: $2e $68
 	call AequHtimesL                                       ; $6750: $cd $ac $0b
 	ld   a, [$c9c0]                                  ; $6753: $fa $c0 $c9
-	call Func_0c50                                       ; $6756: $cd $50 $0c
+	call LAequHLdivmodA                                       ; $6756: $cd $50 $0c
 	ld   a, l                                        ; $6759: $7d
 	ld   [$c9c1], a                                  ; $675a: $ea $c1 $c9
 	ld   h, a                                        ; $675d: $67
 	ld   l, $00                                      ; $675e: $2e $00
 	ld   a, $4b                                      ; $6760: $3e $4b
-	call Func_0c50                                       ; $6762: $cd $50 $0c
+	call LAequHLdivmodA                                       ; $6762: $cd $50 $0c
 	ld   a, l                                        ; $6765: $7d
 	ld   [$c834], a                                  ; $6766: $ea $34 $c8
 	ld   a, h                                        ; $6769: $7c

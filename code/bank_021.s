@@ -1253,15 +1253,9 @@ endc
 	call FarCall                                       ; $4733: $cd $62 $09
 	call TurnOnLCD                                       ; $4736: $cd $09 $09
 	ld   hl, $afd0                                   ; $4739: $21 $d0 $af
-	push af                                          ; $473c: $f5
-	ld   a, $cb                                      ; $473d: $3e $cb
-	ld   [wFarCallAddr], a                                  ; $473f: $ea $98 $c2
-	ld   a, $5b                                      ; $4742: $3e $5b
-	ld   [wFarCallAddr+1], a                                  ; $4744: $ea $99 $c2
-	ld   a, $0c                                      ; $4747: $3e $0c
-	ld   [wFarCallBank], a                                  ; $4749: $ea $9a $c2
-	pop  af                                          ; $474c: $f1
-	call FarCall                                       ; $474d: $cd $62 $09
+	
+	M_FarCall LoadStatBars
+
 	call Call_021_480a                               ; $4750: $cd $0a $48
 	call Call_021_488b                               ; $4753: $cd $8b $48
 	call AnimateAllAnimatedSpriteSpecs                                       ; $4756: $cd $d3 $2e
@@ -1317,15 +1311,9 @@ jr_021_47ba:
 
 
 	ld   hl, $afd0                                   ; $47bb: $21 $d0 $af
-	push af                                          ; $47be: $f5
-	ld   a, $cb                                      ; $47bf: $3e $cb
-	ld   [wFarCallAddr], a                                  ; $47c1: $ea $98 $c2
-	ld   a, $5b                                      ; $47c4: $3e $5b
-	ld   [wFarCallAddr+1], a                                  ; $47c6: $ea $99 $c2
-	ld   a, $0c                                      ; $47c9: $3e $0c
-	ld   [wFarCallBank], a                                  ; $47cb: $ea $9a $c2
-	pop  af                                          ; $47ce: $f1
-	call FarCall                                       ; $47cf: $cd $62 $09
+
+	M_FarCall LoadStatBars
+
 	ld   a, [$ca87]                                  ; $47d2: $fa $87 $ca
 	cp   $01                                         ; $47d5: $fe $01
 	jr   z, jr_021_47fd                              ; $47d7: $28 $24
@@ -1584,15 +1572,9 @@ jr_021_492c:
 	jr   nz, jr_021_4963                             ; $4937: $20 $2a
 
 	ld   hl, $afd0                                   ; $4939: $21 $d0 $af
-	push af                                          ; $493c: $f5
-	ld   a, $cb                                      ; $493d: $3e $cb
-	ld   [wFarCallAddr], a                                  ; $493f: $ea $98 $c2
-	ld   a, $5b                                      ; $4942: $3e $5b
-	ld   [wFarCallAddr+1], a                                  ; $4944: $ea $99 $c2
-	ld   a, $0c                                      ; $4947: $3e $0c
-	ld   [wFarCallBank], a                                  ; $4949: $ea $9a $c2
-	pop  af                                          ; $494c: $f1
-	call FarCall                                       ; $494d: $cd $62 $09
+
+	M_FarCall LoadStatBars
+
 	ld   hl, $caa5                                   ; $4950: $21 $a5 $ca
 	inc  [hl]                                        ; $4953: $34
 	ld   a, [hl]                                     ; $4954: $7e
@@ -1610,15 +1592,9 @@ jr_021_4962:
 
 jr_021_4963:
 	ld   hl, $ca97                                   ; $4963: $21 $97 $ca
-	push af                                          ; $4966: $f5
-	ld   a, $cb                                      ; $4967: $3e $cb
-	ld   [wFarCallAddr], a                                  ; $4969: $ea $98 $c2
-	ld   a, $5b                                      ; $496c: $3e $5b
-	ld   [wFarCallAddr+1], a                                  ; $496e: $ea $99 $c2
-	ld   a, $0c                                      ; $4971: $3e $0c
-	ld   [wFarCallBank], a                                  ; $4973: $ea $9a $c2
-	pop  af                                          ; $4976: $f1
-	call FarCall                                       ; $4977: $cd $62 $09
+
+	M_FarCall LoadStatBars
+
 	ld   hl, $caa5                                   ; $497a: $21 $a5 $ca
 	inc  [hl]                                        ; $497d: $34
 	ld   a, [hl]                                     ; $497e: $7e
@@ -1871,15 +1847,9 @@ endc
 	call FarCall                                       ; $4b88: $cd $62 $09
 	call TurnOnLCD                                       ; $4b8b: $cd $09 $09
 	ld   hl, $afd0                                   ; $4b8e: $21 $d0 $af
-	push af                                          ; $4b91: $f5
-	ld   a, $cb                                      ; $4b92: $3e $cb
-	ld   [wFarCallAddr], a                                  ; $4b94: $ea $98 $c2
-	ld   a, $5b                                      ; $4b97: $3e $5b
-	ld   [wFarCallAddr+1], a                                  ; $4b99: $ea $99 $c2
-	ld   a, $0c                                      ; $4b9c: $3e $0c
-	ld   [wFarCallBank], a                                  ; $4b9e: $ea $9a $c2
-	pop  af                                          ; $4ba1: $f1
-	call FarCall                                       ; $4ba2: $cd $62 $09
+
+	M_FarCall LoadStatBars
+
 	call Call_021_4c5f                               ; $4ba5: $cd $5f $4c
 	call Call_021_4cf6                               ; $4ba8: $cd $f6 $4c
 	call AnimateAllAnimatedSpriteSpecs                                       ; $4bab: $cd $d3 $2e
@@ -1935,15 +1905,9 @@ jr_021_4c0f:
 
 
 	ld   hl, $afd0                                   ; $4c10: $21 $d0 $af
-	push af                                          ; $4c13: $f5
-	ld   a, $cb                                      ; $4c14: $3e $cb
-	ld   [wFarCallAddr], a                                  ; $4c16: $ea $98 $c2
-	ld   a, $5b                                      ; $4c19: $3e $5b
-	ld   [wFarCallAddr+1], a                                  ; $4c1b: $ea $99 $c2
-	ld   a, $0c                                      ; $4c1e: $3e $0c
-	ld   [wFarCallBank], a                                  ; $4c20: $ea $9a $c2
-	pop  af                                          ; $4c23: $f1
-	call FarCall                                       ; $4c24: $cd $62 $09
+
+	M_FarCall LoadStatBars
+
 	ld   a, [$ca87]                                  ; $4c27: $fa $87 $ca
 	cp   $01                                         ; $4c2a: $fe $01
 	jr   z, jr_021_4c52                              ; $4c2c: $28 $24
@@ -2217,15 +2181,9 @@ jr_021_4db1:
 	jr   nz, jr_021_4de8                             ; $4dbc: $20 $2a
 
 	ld   hl, $afd0                                   ; $4dbe: $21 $d0 $af
-	push af                                          ; $4dc1: $f5
-	ld   a, $cb                                      ; $4dc2: $3e $cb
-	ld   [wFarCallAddr], a                                  ; $4dc4: $ea $98 $c2
-	ld   a, $5b                                      ; $4dc7: $3e $5b
-	ld   [wFarCallAddr+1], a                                  ; $4dc9: $ea $99 $c2
-	ld   a, $0c                                      ; $4dcc: $3e $0c
-	ld   [wFarCallBank], a                                  ; $4dce: $ea $9a $c2
-	pop  af                                          ; $4dd1: $f1
-	call FarCall                                       ; $4dd2: $cd $62 $09
+
+	M_FarCall LoadStatBars
+
 	ld   hl, $caa5                                   ; $4dd5: $21 $a5 $ca
 	inc  [hl]                                        ; $4dd8: $34
 	ld   a, [hl]                                     ; $4dd9: $7e
@@ -2243,15 +2201,9 @@ jr_021_4de7:
 
 jr_021_4de8:
 	ld   hl, $ca97                                   ; $4de8: $21 $97 $ca
-	push af                                          ; $4deb: $f5
-	ld   a, $cb                                      ; $4dec: $3e $cb
-	ld   [wFarCallAddr], a                                  ; $4dee: $ea $98 $c2
-	ld   a, $5b                                      ; $4df1: $3e $5b
-	ld   [wFarCallAddr+1], a                                  ; $4df3: $ea $99 $c2
-	ld   a, $0c                                      ; $4df6: $3e $0c
-	ld   [wFarCallBank], a                                  ; $4df8: $ea $9a $c2
-	pop  af                                          ; $4dfb: $f1
-	call FarCall                                       ; $4dfc: $cd $62 $09
+
+	M_FarCall LoadStatBars
+
 	ld   hl, $caa5                                   ; $4dff: $21 $a5 $ca
 	inc  [hl]                                        ; $4e02: $34
 	ld   a, [hl]                                     ; $4e03: $7e
@@ -2507,15 +2459,9 @@ endc
 	call FarCall                                       ; $5013: $cd $62 $09
 	call TurnOnLCD                                       ; $5016: $cd $09 $09
 	ld   hl, $afd0                                   ; $5019: $21 $d0 $af
-	push af                                          ; $501c: $f5
-	ld   a, $cb                                      ; $501d: $3e $cb
-	ld   [wFarCallAddr], a                                  ; $501f: $ea $98 $c2
-	ld   a, $5b                                      ; $5022: $3e $5b
-	ld   [wFarCallAddr+1], a                                  ; $5024: $ea $99 $c2
-	ld   a, $0c                                      ; $5027: $3e $0c
-	ld   [wFarCallBank], a                                  ; $5029: $ea $9a $c2
-	pop  af                                          ; $502c: $f1
-	call FarCall                                       ; $502d: $cd $62 $09
+
+	M_FarCall LoadStatBars
+
 	call Call_021_5120                               ; $5030: $cd $20 $51
 	call Call_021_51b4                               ; $5033: $cd $b4 $51
 	call Call_021_526a                               ; $5036: $cd $6a $52
@@ -2587,15 +2533,9 @@ jr_021_50c7:
 
 
 	ld   hl, $afd0                                   ; $50c8: $21 $d0 $af
-	push af                                          ; $50cb: $f5
-	ld   a, $cb                                      ; $50cc: $3e $cb
-	ld   [wFarCallAddr], a                                  ; $50ce: $ea $98 $c2
-	ld   a, $5b                                      ; $50d1: $3e $5b
-	ld   [wFarCallAddr+1], a                                  ; $50d3: $ea $99 $c2
-	ld   a, $0c                                      ; $50d6: $3e $0c
-	ld   [wFarCallBank], a                                  ; $50d8: $ea $9a $c2
-	pop  af                                          ; $50db: $f1
-	call FarCall                                       ; $50dc: $cd $62 $09
+
+	M_FarCall LoadStatBars
+
 	ld   a, [$ca87]                                  ; $50df: $fa $87 $ca
 	cp   $01                                         ; $50e2: $fe $01
 	jr   z, jr_021_5113                              ; $50e4: $28 $2d
@@ -3049,15 +2989,9 @@ jr_021_5358:
 	jr   nz, jr_021_538f                             ; $5363: $20 $2a
 
 	ld   hl, $afd0                                   ; $5365: $21 $d0 $af
-	push af                                          ; $5368: $f5
-	ld   a, $cb                                      ; $5369: $3e $cb
-	ld   [wFarCallAddr], a                                  ; $536b: $ea $98 $c2
-	ld   a, $5b                                      ; $536e: $3e $5b
-	ld   [wFarCallAddr+1], a                                  ; $5370: $ea $99 $c2
-	ld   a, $0c                                      ; $5373: $3e $0c
-	ld   [wFarCallBank], a                                  ; $5375: $ea $9a $c2
-	pop  af                                          ; $5378: $f1
-	call FarCall                                       ; $5379: $cd $62 $09
+
+	M_FarCall LoadStatBars
+
 	ld   hl, $caa5                                   ; $537c: $21 $a5 $ca
 	inc  [hl]                                        ; $537f: $34
 	ld   a, [hl]                                     ; $5380: $7e
@@ -3075,15 +3009,9 @@ jr_021_538e:
 
 jr_021_538f:
 	ld   hl, $ca97                                   ; $538f: $21 $97 $ca
-	push af                                          ; $5392: $f5
-	ld   a, $cb                                      ; $5393: $3e $cb
-	ld   [wFarCallAddr], a                                  ; $5395: $ea $98 $c2
-	ld   a, $5b                                      ; $5398: $3e $5b
-	ld   [wFarCallAddr+1], a                                  ; $539a: $ea $99 $c2
-	ld   a, $0c                                      ; $539d: $3e $0c
-	ld   [wFarCallBank], a                                  ; $539f: $ea $9a $c2
-	pop  af                                          ; $53a2: $f1
-	call FarCall                                       ; $53a3: $cd $62 $09
+
+	M_FarCall LoadStatBars
+
 	ld   hl, $caa5                                   ; $53a6: $21 $a5 $ca
 	inc  [hl]                                        ; $53a9: $34
 	ld   a, [hl]                                     ; $53aa: $7e
@@ -3337,15 +3265,9 @@ endc
 	call FarCall                                       ; $55b7: $cd $62 $09
 	call TurnOnLCD                                       ; $55ba: $cd $09 $09
 	ld   hl, $afd0                                   ; $55bd: $21 $d0 $af
-	push af                                          ; $55c0: $f5
-	ld   a, $cb                                      ; $55c1: $3e $cb
-	ld   [wFarCallAddr], a                                  ; $55c3: $ea $98 $c2
-	ld   a, $5b                                      ; $55c6: $3e $5b
-	ld   [wFarCallAddr+1], a                                  ; $55c8: $ea $99 $c2
-	ld   a, $0c                                      ; $55cb: $3e $0c
-	ld   [wFarCallBank], a                                  ; $55cd: $ea $9a $c2
-	pop  af                                          ; $55d0: $f1
-	call FarCall                                       ; $55d1: $cd $62 $09
+
+	M_FarCall LoadStatBars
+
 	call Call_021_56d3                               ; $55d4: $cd $d3 $56
 	call Call_021_5780                               ; $55d7: $cd $80 $57
 	call Call_021_582c                               ; $55da: $cd $2c $58
@@ -3423,15 +3345,9 @@ jr_021_567a:
 
 
 	ld   hl, $afd0                                   ; $567b: $21 $d0 $af
-	push af                                          ; $567e: $f5
-	ld   a, $cb                                      ; $567f: $3e $cb
-	ld   [wFarCallAddr], a                                  ; $5681: $ea $98 $c2
-	ld   a, $5b                                      ; $5684: $3e $5b
-	ld   [wFarCallAddr+1], a                                  ; $5686: $ea $99 $c2
-	ld   a, $0c                                      ; $5689: $3e $0c
-	ld   [wFarCallBank], a                                  ; $568b: $ea $9a $c2
-	pop  af                                          ; $568e: $f1
-	call FarCall                                       ; $568f: $cd $62 $09
+
+	M_FarCall LoadStatBars
+
 	ld   a, [$ca87]                                  ; $5692: $fa $87 $ca
 	cp   $01                                         ; $5695: $fe $01
 	jr   z, jr_021_56c6                              ; $5697: $28 $2d
@@ -3867,15 +3783,9 @@ jr_021_58f4:
 	jr   nz, jr_021_592b                             ; $58ff: $20 $2a
 
 	ld   hl, $afd0                                   ; $5901: $21 $d0 $af
-	push af                                          ; $5904: $f5
-	ld   a, $cb                                      ; $5905: $3e $cb
-	ld   [wFarCallAddr], a                                  ; $5907: $ea $98 $c2
-	ld   a, $5b                                      ; $590a: $3e $5b
-	ld   [wFarCallAddr+1], a                                  ; $590c: $ea $99 $c2
-	ld   a, $0c                                      ; $590f: $3e $0c
-	ld   [wFarCallBank], a                                  ; $5911: $ea $9a $c2
-	pop  af                                          ; $5914: $f1
-	call FarCall                                       ; $5915: $cd $62 $09
+
+	M_FarCall LoadStatBars
+
 	ld   hl, $caa5                                   ; $5918: $21 $a5 $ca
 	inc  [hl]                                        ; $591b: $34
 	ld   a, [hl]                                     ; $591c: $7e
@@ -3893,15 +3803,9 @@ jr_021_592a:
 
 jr_021_592b:
 	ld   hl, $ca97                                   ; $592b: $21 $97 $ca
-	push af                                          ; $592e: $f5
-	ld   a, $cb                                      ; $592f: $3e $cb
-	ld   [wFarCallAddr], a                                  ; $5931: $ea $98 $c2
-	ld   a, $5b                                      ; $5934: $3e $5b
-	ld   [wFarCallAddr+1], a                                  ; $5936: $ea $99 $c2
-	ld   a, $0c                                      ; $5939: $3e $0c
-	ld   [wFarCallBank], a                                  ; $593b: $ea $9a $c2
-	pop  af                                          ; $593e: $f1
-	call FarCall                                       ; $593f: $cd $62 $09
+
+	M_FarCall LoadStatBars
+
 	ld   hl, $caa5                                   ; $5942: $21 $a5 $ca
 	inc  [hl]                                        ; $5945: $34
 	ld   a, [hl]                                     ; $5946: $7e
@@ -4170,15 +4074,9 @@ endc
 	call FarCall                                       ; $5b79: $cd $62 $09
 	call TurnOnLCD                                       ; $5b7c: $cd $09 $09
 	ld   hl, $afd0                                   ; $5b7f: $21 $d0 $af
-	push af                                          ; $5b82: $f5
-	ld   a, $cb                                      ; $5b83: $3e $cb
-	ld   [wFarCallAddr], a                                  ; $5b85: $ea $98 $c2
-	ld   a, $5b                                      ; $5b88: $3e $5b
-	ld   [wFarCallAddr+1], a                                  ; $5b8a: $ea $99 $c2
-	ld   a, $0c                                      ; $5b8d: $3e $0c
-	ld   [wFarCallBank], a                                  ; $5b8f: $ea $9a $c2
-	pop  af                                          ; $5b92: $f1
-	call FarCall                                       ; $5b93: $cd $62 $09
+
+	M_FarCall LoadStatBars
+
 	call Call_021_5c08                               ; $5b96: $cd $08 $5c
 	call Call_021_5c95                               ; $5b99: $cd $95 $5c
 	call Call_021_5d61                               ; $5b9c: $cd $61 $5d
@@ -4192,15 +4090,9 @@ endc
 
 
 	ld   hl, $afd0                                   ; $5baf: $21 $d0 $af
-	push af                                          ; $5bb2: $f5
-	ld   a, $cb                                      ; $5bb3: $3e $cb
-	ld   [wFarCallAddr], a                                  ; $5bb5: $ea $98 $c2
-	ld   a, $5b                                      ; $5bb8: $3e $5b
-	ld   [wFarCallAddr+1], a                                  ; $5bba: $ea $99 $c2
-	ld   a, $0c                                      ; $5bbd: $3e $0c
-	ld   [wFarCallBank], a                                  ; $5bbf: $ea $9a $c2
-	pop  af                                          ; $5bc2: $f1
-	call FarCall                                       ; $5bc3: $cd $62 $09
+
+	M_FarCall LoadStatBars
+
 	ld   a, [$ca87]                                  ; $5bc6: $fa $87 $ca
 	cp   $01                                         ; $5bc9: $fe $01
 	jp   z, Jump_021_5bfb                            ; $5bcb: $ca $fb $5b
@@ -4588,15 +4480,9 @@ jr_021_5e01:
 	jr   nz, jr_021_5e38                             ; $5e0c: $20 $2a
 
 	ld   hl, $afd0                                   ; $5e0e: $21 $d0 $af
-	push af                                          ; $5e11: $f5
-	ld   a, $cb                                      ; $5e12: $3e $cb
-	ld   [wFarCallAddr], a                                  ; $5e14: $ea $98 $c2
-	ld   a, $5b                                      ; $5e17: $3e $5b
-	ld   [wFarCallAddr+1], a                                  ; $5e19: $ea $99 $c2
-	ld   a, $0c                                      ; $5e1c: $3e $0c
-	ld   [wFarCallBank], a                                  ; $5e1e: $ea $9a $c2
-	pop  af                                          ; $5e21: $f1
-	call FarCall                                       ; $5e22: $cd $62 $09
+
+	M_FarCall LoadStatBars
+
 	ld   hl, $caa5                                   ; $5e25: $21 $a5 $ca
 	inc  [hl]                                        ; $5e28: $34
 	ld   a, [hl]                                     ; $5e29: $7e
@@ -4614,15 +4500,9 @@ jr_021_5e37:
 
 jr_021_5e38:
 	ld   hl, $ca97                                   ; $5e38: $21 $97 $ca
-	push af                                          ; $5e3b: $f5
-	ld   a, $cb                                      ; $5e3c: $3e $cb
-	ld   [wFarCallAddr], a                                  ; $5e3e: $ea $98 $c2
-	ld   a, $5b                                      ; $5e41: $3e $5b
-	ld   [wFarCallAddr+1], a                                  ; $5e43: $ea $99 $c2
-	ld   a, $0c                                      ; $5e46: $3e $0c
-	ld   [wFarCallBank], a                                  ; $5e48: $ea $9a $c2
-	pop  af                                          ; $5e4b: $f1
-	call FarCall                                       ; $5e4c: $cd $62 $09
+
+	M_FarCall LoadStatBars
+
 	ld   hl, $caa5                                   ; $5e4f: $21 $a5 $ca
 	inc  [hl]                                        ; $5e52: $34
 	ld   a, [hl]                                     ; $5e53: $7e
@@ -4878,15 +4758,9 @@ endc
 	call FarCall                                       ; $6060: $cd $62 $09
 	call TurnOnLCD                                       ; $6063: $cd $09 $09
 	ld   hl, $afd0                                   ; $6066: $21 $d0 $af
-	push af                                          ; $6069: $f5
-	ld   a, $cb                                      ; $606a: $3e $cb
-	ld   [wFarCallAddr], a                                  ; $606c: $ea $98 $c2
-	ld   a, $5b                                      ; $606f: $3e $5b
-	ld   [wFarCallAddr+1], a                                  ; $6071: $ea $99 $c2
-	ld   a, $0c                                      ; $6074: $3e $0c
-	ld   [wFarCallBank], a                                  ; $6076: $ea $9a $c2
-	pop  af                                          ; $6079: $f1
-	call FarCall                                       ; $607a: $cd $62 $09
+
+	M_FarCall LoadStatBars
+
 	ld   a, [$ca86]                                  ; $607d: $fa $86 $ca
 	cp   $02                                         ; $6080: $fe $02
 	jr   z, jr_021_6095                              ; $6082: $28 $11
@@ -4953,15 +4827,9 @@ jr_021_60ea:
 
 
 	ld   hl, $afd0                                   ; $60eb: $21 $d0 $af
-	push af                                          ; $60ee: $f5
-	ld   a, $cb                                      ; $60ef: $3e $cb
-	ld   [wFarCallAddr], a                                  ; $60f1: $ea $98 $c2
-	ld   a, $5b                                      ; $60f4: $3e $5b
-	ld   [wFarCallAddr+1], a                                  ; $60f6: $ea $99 $c2
-	ld   a, $0c                                      ; $60f9: $3e $0c
-	ld   [wFarCallBank], a                                  ; $60fb: $ea $9a $c2
-	pop  af                                          ; $60fe: $f1
-	call FarCall                                       ; $60ff: $cd $62 $09
+
+	M_FarCall LoadStatBars
+
 	ld   a, [$ca87]                                  ; $6102: $fa $87 $ca
 	cp   $01                                         ; $6105: $fe $01
 	jp   z, Jump_021_614a                            ; $6107: $ca $4a $61
@@ -5348,15 +5216,9 @@ jr_021_634a:
 	jr   nz, jr_021_6381                             ; $6355: $20 $2a
 
 	ld   hl, $afd0                                   ; $6357: $21 $d0 $af
-	push af                                          ; $635a: $f5
-	ld   a, $cb                                      ; $635b: $3e $cb
-	ld   [wFarCallAddr], a                                  ; $635d: $ea $98 $c2
-	ld   a, $5b                                      ; $6360: $3e $5b
-	ld   [wFarCallAddr+1], a                                  ; $6362: $ea $99 $c2
-	ld   a, $0c                                      ; $6365: $3e $0c
-	ld   [wFarCallBank], a                                  ; $6367: $ea $9a $c2
-	pop  af                                          ; $636a: $f1
-	call FarCall                                       ; $636b: $cd $62 $09
+
+	M_FarCall LoadStatBars
+
 	ld   hl, $caa5                                   ; $636e: $21 $a5 $ca
 	inc  [hl]                                        ; $6371: $34
 	ld   a, [hl]                                     ; $6372: $7e
@@ -5374,15 +5236,9 @@ jr_021_6380:
 
 jr_021_6381:
 	ld   hl, $ca97                                   ; $6381: $21 $97 $ca
-	push af                                          ; $6384: $f5
-	ld   a, $cb                                      ; $6385: $3e $cb
-	ld   [wFarCallAddr], a                                  ; $6387: $ea $98 $c2
-	ld   a, $5b                                      ; $638a: $3e $5b
-	ld   [wFarCallAddr+1], a                                  ; $638c: $ea $99 $c2
-	ld   a, $0c                                      ; $638f: $3e $0c
-	ld   [wFarCallBank], a                                  ; $6391: $ea $9a $c2
-	pop  af                                          ; $6394: $f1
-	call FarCall                                       ; $6395: $cd $62 $09
+
+	M_FarCall LoadStatBars
+
 	ld   hl, $caa5                                   ; $6398: $21 $a5 $ca
 	inc  [hl]                                        ; $639b: $34
 	ld   a, [hl]                                     ; $639c: $7e
@@ -5651,15 +5507,9 @@ endc
 	call TurnOnLCD                                       ; $65cb: $cd $09 $09
 	call Call_021_666e                               ; $65ce: $cd $6e $66
 	ld   hl, $afd0                                   ; $65d1: $21 $d0 $af
-	push af                                          ; $65d4: $f5
-	ld   a, $cb                                      ; $65d5: $3e $cb
-	ld   [wFarCallAddr], a                                  ; $65d7: $ea $98 $c2
-	ld   a, $5b                                      ; $65da: $3e $5b
-	ld   [wFarCallAddr+1], a                                  ; $65dc: $ea $99 $c2
-	ld   a, $0c                                      ; $65df: $3e $0c
-	ld   [wFarCallBank], a                                  ; $65e1: $ea $9a $c2
-	pop  af                                          ; $65e4: $f1
-	call FarCall                                       ; $65e5: $cd $62 $09
+
+	M_FarCall LoadStatBars
+
 	call AnimateAllAnimatedSpriteSpecs                                       ; $65e8: $cd $d3 $2e
 	ld   c, $2f                                      ; $65eb: $0e $2f
 	ld   de, $6963                                   ; $65ed: $11 $63 $69
@@ -5677,15 +5527,9 @@ Call_021_65f8:
 
 
 	ld   hl, $afd0                                   ; $6602: $21 $d0 $af
-	push af                                          ; $6605: $f5
-	ld   a, $cb                                      ; $6606: $3e $cb
-	ld   [wFarCallAddr], a                                  ; $6608: $ea $98 $c2
-	ld   a, $5b                                      ; $660b: $3e $5b
-	ld   [wFarCallAddr+1], a                                  ; $660d: $ea $99 $c2
-	ld   a, $0c                                      ; $6610: $3e $0c
-	ld   [wFarCallBank], a                                  ; $6612: $ea $9a $c2
-	pop  af                                          ; $6615: $f1
-	call FarCall                                       ; $6616: $cd $62 $09
+
+	M_FarCall LoadStatBars
+
 	ld   a, [$ca87]                                  ; $6619: $fa $87 $ca
 	cp   $02                                         ; $661c: $fe $02
 	jr   z, jr_021_663e                              ; $661e: $28 $1e
@@ -5796,15 +5640,9 @@ jr_021_66cc:
 	jr   nz, jr_021_6703                             ; $66d7: $20 $2a
 
 	ld   hl, $afd0                                   ; $66d9: $21 $d0 $af
-	push af                                          ; $66dc: $f5
-	ld   a, $cb                                      ; $66dd: $3e $cb
-	ld   [wFarCallAddr], a                                  ; $66df: $ea $98 $c2
-	ld   a, $5b                                      ; $66e2: $3e $5b
-	ld   [wFarCallAddr+1], a                                  ; $66e4: $ea $99 $c2
-	ld   a, $0c                                      ; $66e7: $3e $0c
-	ld   [wFarCallBank], a                                  ; $66e9: $ea $9a $c2
-	pop  af                                          ; $66ec: $f1
-	call FarCall                                       ; $66ed: $cd $62 $09
+
+	M_FarCall LoadStatBars
+
 	ld   hl, $caa5                                   ; $66f0: $21 $a5 $ca
 	inc  [hl]                                        ; $66f3: $34
 	ld   a, [hl]                                     ; $66f4: $7e
@@ -5822,15 +5660,9 @@ jr_021_6702:
 
 jr_021_6703:
 	ld   hl, $ca97                                   ; $6703: $21 $97 $ca
-	push af                                          ; $6706: $f5
-	ld   a, $cb                                      ; $6707: $3e $cb
-	ld   [wFarCallAddr], a                                  ; $6709: $ea $98 $c2
-	ld   a, $5b                                      ; $670c: $3e $5b
-	ld   [wFarCallAddr+1], a                                  ; $670e: $ea $99 $c2
-	ld   a, $0c                                      ; $6711: $3e $0c
-	ld   [wFarCallBank], a                                  ; $6713: $ea $9a $c2
-	pop  af                                          ; $6716: $f1
-	call FarCall                                       ; $6717: $cd $62 $09
+
+	M_FarCall LoadStatBars
+
 	ld   hl, $caa5                                   ; $671a: $21 $a5 $ca
 	inc  [hl]                                        ; $671d: $34
 	ld   a, [hl]                                     ; $671e: $7e

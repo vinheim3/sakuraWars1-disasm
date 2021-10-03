@@ -1265,7 +1265,8 @@
                     loadGameResultTitles: function() {
                         let addresses = [];
                         for (let i = 0; i < 15; i++) {
-                            let offset = bankConv(0x11, 0x79fa+i*3);
+                            let titleIdx = [0, 1, 5, 2, 4, 3, 6, 7, 8, 9, 14, 10, 11, 12, 13][i];
+                            let offset = bankConv(0x11, 0x79fa+titleIdx*3);
                             let addr = this.wordIn(offset);
                             let bank = this.uint8view[offset+2];
                             addresses.push(bankConv(bank, addr));
@@ -1326,7 +1327,7 @@
 
                                 //this.loadPortraits();
                                 //this.loadScenery();
-                                //this.loadGameResultTitles();
+                                this.loadGameResultTitles();
                                 //this.loadYuriPortraits();
 
                                 setTimeout(this.loadScreens, 5);
