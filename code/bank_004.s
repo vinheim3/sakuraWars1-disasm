@@ -6776,8 +6776,13 @@ GivePostGameRewards::
 	ret  nc                                                         ; $6ff9
 
 ; HL points to a relevant table entry based on char ending
+if def(VWF)
+	call SpecificCharEndingHook
+	nop
+else
 	sla  a                                                          ; $6ffa
 	ld   h, $00                                                     ; $6ffc
+endc
 	ld   l, a                                                       ; $6ffe
 	ld   bc, CharacterEndingFlags                                   ; $6fff
 	add  hl, bc                                                     ; $7002
@@ -6824,7 +6829,11 @@ GivePostGameRewards::
 
 .unlockAllExModes:
 	ld   hl, 3000                                                   ; $7060
+if def(VWF)
+	call AllEndingsHook
+else
 	call AddPtsToCurrAndTally                                       ; $7063
+endc
 
 	ld   hl, FLAG1_SAKURA_EX_MODE                                   ; $7066
 	ld   a, $ff                                                     ; $7069
@@ -8002,5 +8011,38 @@ RomandoShopLoadDescripTextHook:
 	pop  af
 	ld   hl, $d340
 	jp   LoadInstantText
+
+
+AllEndingsHook:
+	call AddPtsToCurrAndTally
+
+	M_FarCall _AllEndingsHook
+	ret
+
+
+; A - ending character, idxed 0-5, and 8 (Ogami)
+SpecificCharEndingHook:
+	push af
+
+	cp   $00
+	jr   nz, :+
+
+	ld   hl, FLAG1_ORIHIME_PHOTO
+	ld   a, $ff
+	M_FarCall SetOrUnsetNextFlag1
+	jr   .done
+
+:	cp   $03
+	jr   nz, .done
+
+	ld   hl, FLAG1_RENI_PHOTO
+	ld   a, $ff
+	M_FarCall SetOrUnsetNextFlag1
+
+.done:
+	pop  af
+	sla  a
+	ld   h, $00
+	ret
 
 endc

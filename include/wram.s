@@ -463,10 +463,10 @@ wGameResultsAffectionTotal:: ; $ca22
 wGameResultsBattlesWon:: ; $ca24
     db
 
-wGameResultsBattleSimsWon:: ; $ca25
+wGameResultsFinalExamPts:: ; $ca25
     db
 
-wGameResultsFinalBattleWon:: ; $ca26
+wGameResultsExperimentalKouboBeat:: ; $ca26
     db
 
 wGameResultsPeeping:: ; $ca27

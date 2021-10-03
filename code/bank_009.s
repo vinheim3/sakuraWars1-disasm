@@ -4058,10 +4058,14 @@ Call_009_5859:
 	ld   a, [$cc57]                                  ; $5867: $fa $57 $cc
 	and  $07                                         ; $586a: $e6 $07
 	ld   h, a                                        ; $586c: $67
+if def(VWF)
+	ld   l, $18
+else
 	ld   l, $14                                      ; $586d: $2e $14
+endc
 	call AequHtimesL                                       ; $586f: $cd $ac $0b
 if def(VWF)
-	add $c0
+	add  $c0
 	ld   hl, $d404
 	ld   de, $14
 else

@@ -4674,9 +4674,8 @@ endr
 	ret                                                             ; $15cc
 
 .isGBC:
-;DEF TV_HACK = $01
-if def(TV_HACK)
-	call HackHook
+if def(VWF)
+	call EnInitFlags
 else
 ; Skip intro state if we're soft-resetting
 	ld   a, [wVisitedTitleScreen]                                   ; $15cd
@@ -10247,11 +10246,12 @@ VWFInstantCode0fh:
 	ld   [wKanjiPixelInTileIdx], a
 	jp   LoadInstantText.toNextKanji
 
-endc
 
-if def(TV_HACK)
-HackHook:
-	M_FarCall _HackHook
+EnInitFlags:
+	ld   hl, FLAG1_CANDY_CURSOR
+	M_FarCall SetOrUnsetFlag1
+
+	ld   a, [wVisitedTitleScreen]
 	ret
 
 endc

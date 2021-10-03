@@ -1305,4 +1305,31 @@ IrisMiniGameLayoutHook::
 	call FarCopyLayout
 	ret
 
+
+_AllEndingsHook::
+	ld   hl, FLAG1_SAKURA_PORTRAIT_GALLERY
+	ld   a, $ff
+	M_FarCall SetOrUnsetNextFlag1
+
+	ld   hl, FLAG1_SUMIRE_PORTRAIT_GALLERY
+	ld   a, $ff
+	M_FarCall SetOrUnsetNextFlag1
+
+	ld   hl, FLAG1_MARIA_PORTRAIT_GALLERY
+	ld   a, $ff
+	M_FarCall SetOrUnsetNextFlag1
+
+	ld   hl, FLAG1_IRIS_PORTRAIT_GALLERY
+	ld   a, $ff
+	M_FarCall SetOrUnsetNextFlag1
+
+	ld   hl, FLAG1_KOHRAN_PORTRAIT_GALLERY
+	ld   a, $ff
+	M_FarCall SetOrUnsetNextFlag1
+
+	ld   hl, FLAG1_KANNA_PORTRAIT_GALLERY
+	ld   a, $ff
+	M_FarCall SetOrUnsetNextFlag1
+	ret
+
 endc

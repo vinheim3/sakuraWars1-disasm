@@ -10,6 +10,8 @@ from common_words import get_chosen
 from openpyxl import load_workbook
 
 ENDING_SAMPLES = False
+SRAM_BYTES_TO_CHECK = (0x55, 0x60,)
+SRAM_FLAGS_TO_CHECK = (0xd2,)
 
 
 class ScriptExtractor:
@@ -436,8 +438,12 @@ class ScriptExtractor:
                 }
 
             elif op == 5:
-                self.get_script_byte()
-                self.get_script_byte()
+                hb = self.get_script_byte()
+                lb = self.get_script_byte()
+                if hb & 0x40 and lb in SRAM_BYTES_TO_CHECK:
+                    print(f"opt 5 - {hex(hb)}, {hex(lb)} - {self.scriptNum}")
+                if hb & 0x80 and lb in SRAM_FLAGS_TO_CHECK:
+                    print(f"opt 5 - {hex(hb)}, {hex(lb)} - {self.scriptNum}")
                 rpn_comps, totalBytes = self.handleRPN()
                 self.instructions[currOpAddress] = {
                     "name": "ScriptOpt_05", 
@@ -514,7 +520,12 @@ class ScriptExtractor:
                 self.instructions[currOpAddress] = self.simpleCodes[op]
 
             elif op == 0x1d:
-                self.offset += 2
+                hb = self.get_script_byte()
+                lb = self.get_script_byte()
+                if hb & 0x40 and lb in SRAM_BYTES_TO_CHECK:
+                    print(f"opt 1d - {hex(hb)}, {hex(lb)} - {self.scriptNum}")
+
+                # self.offset += 2
                 rpn_comps, totalBytes = self.handleRPN()
                 self.instructions[currOpAddress] = {
                     "name": "ScriptOpt_1d", 
@@ -544,7 +555,12 @@ class ScriptExtractor:
                 self.offset = min(jumps)
 
             elif op == 0x31:
-                self.offset += 2
+                hb = self.get_script_byte()
+                lb = self.get_script_byte()
+                if hb & 0x40 and lb in SRAM_BYTES_TO_CHECK:
+                    print(f"opt 31 - {hex(hb)}, {hex(lb)} - {self.scriptNum}")
+
+                # self.offset += 2
                 rpn_comps, totalBytes = self.handleRPN()
                 self.instructions[currOpAddress] = {
                     "name": "ScriptOpt_31", 

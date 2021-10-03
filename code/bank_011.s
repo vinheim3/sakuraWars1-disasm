@@ -9958,161 +9958,178 @@ JpCheckIfFlagSet2:
 
 
 ReturnEndGameRankInA:
-;
-	call ProcessStatsTotal                               ; $7b23: $cd $86 $7d
-	call ProcessAffectionTotal                               ; $7b26: $cd $ad $7d
+; Total the 5 non-stamina stats, and all girl's affection
+	call ProcessStatsTotal                                          ; $7b23
+	call ProcessAffectionTotal                                      ; $7b26
 
-	ld   hl, SRAM2_VICTORY_FLAG                                   ; $7b29: $21 $55 $00
-	call JpGetSramByte2                               ; $7b2c: $cd $f9 $7a
-	ld   [wGameResultsBattlesWon], a                                  ; $7b2f: $ea $24 $ca
+; Check battles won from scripts 261, 359, 494, 658, 735, 769
+	ld   hl, SRAM2_VICTORY_FLAG                                     ; $7b29
+	call JpGetSramByte2                                             ; $7b2c
+	ld   [wGameResultsBattlesWon], a                                ; $7b2f
 
-	ld   hl, SRAM2_TEST_POINT                                   ; $7b32: $21 $60 $00
-	call JpGetSramByte2                               ; $7b35: $cd $f9 $7a
-	ld   [wGameResultsBattleSimsWon], a                                  ; $7b38: $ea $25 $ca
+; Check final exam performance from script 735
+	ld   hl, SRAM2_TEST_POINT                                       ; $7b32
+	call JpGetSramByte2                                             ; $7b35
+	ld   [wGameResultsFinalExamPts], a                              ; $7b38
 
-; script 768
-	ld   hl, FLAG2_FINAL_BATTLE                                   ; $7b3b: $21 $d2 $00
-	call JpCheckIfFlagSet2                               ; $7b3e: $cd $0e $7b
-	ld   [wGameResultsFinalBattleWon], a                                  ; $7b41: $ea $26 $ca
+; Check if experimental koubo beat from script 768
+	ld   hl, FLAG2_FINAL_BATTLE                                     ; $7b3b
+	call JpCheckIfFlagSet2                                          ; $7b3e
+	ld   [wGameResultsExperimentalKouboBeat], a                     ; $7b41
 
-; script 372, 470, 499, 501, 627, 663, 674, 681, 695, 748, 777
-	ld   hl, FLAG2_PEEPING                                   ; $7b44: $21 $06 $00
-	call JpCheckIfFlagSet2                               ; $7b47: $cd $0e $7b
-	ld   [wGameResultsPeeping], a                                  ; $7b4a: $ea $27 $ca
+; Check if peeping from scripts 372, 470, 499, 501, 627, 663, 674, 681, 695, 748, 777
+	ld   hl, FLAG2_PEEPING                                          ; $7b44
+	call JpCheckIfFlagSet2                                          ; $7b47
+	ld   [wGameResultsPeeping], a                                   ; $7b4a
 
-; script 334
-	ld   hl, FLAG2_OFFICE_WEEK_1_YURI                                   ; $7b4d: $21 $a5 $00
-	call JpCheckIfFlagSet2                               ; $7b50: $cd $0e $7b
-	ld   [wGameResultsOfficeWeek1Yuri], a                                  ; $7b53: $ea $28 $ca
+; Check if finished office work week 1 from script 334
+	ld   hl, FLAG2_OFFICE_WEEK_1_YURI                               ; $7b4d
+	call JpCheckIfFlagSet2                                          ; $7b50
+	ld   [wGameResultsOfficeWeek1Yuri], a                           ; $7b53
 
-; script 475
-	ld   hl, FLAG2_OFFICE_WEEK_2_KASUMI                                   ; $7b56: $21 $a7 $00
-	call JpCheckIfFlagSet2                               ; $7b59: $cd $0e $7b
-	ld   [wGameResultsOfficeWeek2Kasumi], a                                  ; $7b5c: $ea $29 $ca
+; Check if finished office work week 2 from script 475
+	ld   hl, FLAG2_OFFICE_WEEK_2_KASUMI                             ; $7b56
+	call JpCheckIfFlagSet2                                          ; $7b59
+	ld   [wGameResultsOfficeWeek2Kasumi], a                         ; $7b5c
 
-; script 633
-	ld   hl, FLAG2_OFFICE_WEEK_3_YURI                                   ; $7b5f: $21 $ac $00
-	call JpCheckIfFlagSet2                               ; $7b62: $cd $0e $7b
-	ld   [wGameResultsOfficeWeek3Yuri], a                                  ; $7b65: $ea $2a $ca
+; Check if finished office work week 3 from script 633
+	ld   hl, FLAG2_OFFICE_WEEK_3_YURI                               ; $7b5f
+	call JpCheckIfFlagSet2                                          ; $7b62
+	ld   [wGameResultsOfficeWeek3Yuri], a                           ; $7b65
 
-; script 639
-	ld   hl, FLAG2_OFFICE_WEEK_4_KASUMI                                   ; $7b68: $21 $b2 $00
-	call JpCheckIfFlagSet2                               ; $7b6b: $cd $0e $7b
-	ld   [wGameResultsOfficeWeek4Kasumi], a                                  ; $7b6e: $ea $2b $ca
+; Check if finished office work week 4 from script 639
+	ld   hl, FLAG2_OFFICE_WEEK_4_KASUMI                             ; $7b68
+	call JpCheckIfFlagSet2                                          ; $7b6b
+	ld   [wGameResultsOfficeWeek4Kasumi], a                         ; $7b6e
 
-; script 8
-	ld   hl, FLAG2_TSUBAKI_CONVO_6                                   ; $7b71: $21 $a1 $00
-	call JpCheckIfFlagSet2                               ; $7b74: $cd $0e $7b
-	ld   [wGameResultsTsubakiFoodQuiz], a                                  ; $7b77: $ea $2c $ca
+; Check if done Tsubaki's food quiz from script 8
+	ld   hl, FLAG2_TSUBAKI_CONVO_6                                  ; $7b71
+	call JpCheckIfFlagSet2                                          ; $7b74
+	ld   [wGameResultsTsubakiFoodQuiz], a                           ; $7b77
 
-;
-	call CheckIfRankFlowerDivisionCaptain                               ; $7b7a: $cd $b9 $7b
-	cp   $ff                                         ; $7b7d: $fe $ff
-	ret  nz                                          ; $7b7f: $c0
+; Based on above, check which rank player fits in
+	call CheckIfRankFlowerDivisionCaptain                           ; $7b7a
+	cp   $ff                                                        ; $7b7d
+	ret  nz                                                         ; $7b7f
 
-	call CheckIfRankNotAFarOffDream                               ; $7b80: $cd $e3 $7b
-	cp   $ff                                         ; $7b83: $fe $ff
-	ret  nz                                          ; $7b85: $c0
+	call CheckIfRankNotAFarOffDream                                 ; $7b80
+	cp   $ff                                                        ; $7b83
+	ret  nz                                                         ; $7b85
 
-	call CheckIfRankStatsFocused                               ; $7b86: $cd $04 $7c
-	cp   $ff                                         ; $7b89: $fe $ff
-	ret  nz                                          ; $7b8b: $c0
+	call CheckIfRankStatsFocused                                    ; $7b86
+	cp   $ff                                                        ; $7b89
+	ret  nz                                                         ; $7b8b
 
-	call CheckIfRankPerfectForAccounting                               ; $7b8c: $cd $e9 $7c
-	cp   $ff                                         ; $7b8f: $fe $ff
-	ret  nz                                          ; $7b91: $c0
+	call CheckIfRankPerfectForAccounting                            ; $7b8c
+	cp   $ff                                                        ; $7b8f
+	ret  nz                                                         ; $7b91
 
-	call CheckIfRankPerfectSalesClerk                               ; $7b92: $cd $0e $7d
-	cp   $ff                                         ; $7b95: $fe $ff
-	ret  nz                                          ; $7b97: $c0
+	call CheckIfRankPerfectSalesClerk                               ; $7b92
+	cp   $ff                                                        ; $7b95
+	ret  nz                                                         ; $7b97
 
-	call CheckIfRankIdealUsher                               ; $7b98: $cd $22 $7d
-	cp   $ff                                         ; $7b9b: $fe $ff
-	ret  nz                                          ; $7b9d: $c0
+	call CheckIfRankIdealUsher                                      ; $7b98
+	cp   $ff                                                        ; $7b9b
+	ret  nz                                                         ; $7b9d
 
-	call CheckIfRankFromTheShadows                               ; $7b9e: $cd $30 $7d
-	cp   $ff                                         ; $7ba1: $fe $ff
-	ret  nz                                          ; $7ba3: $c0
+	call CheckIfRankFromTheShadows                                  ; $7b9e
+	cp   $ff                                                        ; $7ba1
+	ret  nz                                                         ; $7ba3
 
-	call CheckIfRankWellLiked                               ; $7ba4: $cd $49 $7d
-	cp   $ff                                         ; $7ba7: $fe $ff
-	ret  nz                                          ; $7ba9: $c0
+	call CheckIfRankWellLiked                                       ; $7ba4
+	cp   $ff                                                        ; $7ba7
+	ret  nz                                                         ; $7ba9
 
-	call CheckIfRankCountlessWorlds                               ; $7baa: $cd $79 $7d
-	cp   $ff                                         ; $7bad: $fe $ff
-	ret  nz                                          ; $7baf: $c0
+	call CheckIfRankCountlessWorlds                                 ; $7baa
+	cp   $ff                                                        ; $7bad
+	ret  nz                                                         ; $7baf
 
-	call CheckIfRankCleaningUpAfter                               ; $7bb0: $cd $3d $7d
-	cp   $ff                                         ; $7bb3: $fe $ff
-	ret  nz                                          ; $7bb5: $c0
+	call CheckIfRankCleaningUpAfter                                 ; $7bb0
+	cp   $ff                                                        ; $7bb3
+	ret  nz                                                         ; $7bb5
 
-	ld   a, GRR_RESULTS_ARE_LACKING                                      ; $7bb6: $3e $0a
-	ret                                              ; $7bb8: $c9
+; Default rank
+	ld   a, GRR_RESULTS_ARE_LACKING                                 ; $7bb6
+	ret                                                             ; $7bb8
 
 
+; Returns $ff in A if requirements unfulfilled, else the rank value
 CheckIfRankFlowerDivisionCaptain:
-	ld   b, $ff                                      ; $7bb9: $06 $ff
-	ld   hl, 975                                   ; $7bbb: $21 $cf $03
-	call CheckIfTotalStatsLtHL                               ; $7bbe: $cd $e3 $7d
-	jr   nz, .done                             ; $7bc1: $20 $1e
+	ld   b, $ff                                                     ; $7bb9
 
-	ld   a, [wGameResultsBattleSimsWon]                                  ; $7bc3: $fa $25 $ca
-	cp   $02                                         ; $7bc6: $fe $02
-	jr   c, .done                              ; $7bc8: $38 $17
+; Requires 975+ stats
+	ld   hl, 975                                                    ; $7bbb
+	call CheckIfTotalStatsLtHL                                      ; $7bbe
+	jr   nz, .done                                                  ; $7bc1
 
-	ld   hl, 750                                   ; $7bca: $21 $ee $02
-	call CheckIfTotalAffectionLtHL                               ; $7bcd: $cd $d9 $7d
-	jr   nz, .done                             ; $7bd0: $20 $0f
+; Requires minigame + final battle beat
+	ld   a, [wGameResultsFinalExamPts]                              ; $7bc3
+	cp   $02                                                        ; $7bc6
+	jr   c, .done                                                   ; $7bc8
 
-	ld   a, [wGameResultsBattlesWon]                                  ; $7bd2: $fa $24 $ca
-	cp   $03                                         ; $7bd5: $fe $03
-	jr   c, .done                              ; $7bd7: $38 $08
+; Requires 750+ affection
+	ld   hl, 750                                                    ; $7bca
+	call CheckIfTotalAffectionLtHL                                  ; $7bcd
+	jr   nz, .done                                                  ; $7bd0
 
-	ld   a, [wGameResultsFinalBattleWon]                                  ; $7bd9: $fa $26 $ca
-	or   a                                           ; $7bdc: $b7
-	jr   z, .done                              ; $7bdd: $28 $02
+; Requires 3+ battles won (includes final battle)
+	ld   a, [wGameResultsBattlesWon]                                ; $7bd2
+	cp   $03                                                        ; $7bd5
+	jr   c, .done                                                   ; $7bd7
 
-	ld   b, GRR_FLOWER_DIVISION_CAPTAIN                                      ; $7bdf: $06 $00
+; Requires beating experimental Koubo
+	ld   a, [wGameResultsExperimentalKouboBeat]                     ; $7bd9
+	or   a                                                          ; $7bdc
+	jr   z, .done                                                   ; $7bdd
+
+	ld   b, GRR_FLOWER_DIVISION_CAPTAIN                             ; $7bdf
 
 .done:
-	ld   a, b                                        ; $7be1: $78
-	ret                                              ; $7be2: $c9
+	ld   a, b                                                       ; $7be1
+	ret                                                             ; $7be2
 
 
+; Returns $ff in A if requirements unfulfilled, else the rank value
 CheckIfRankNotAFarOffDream:
-	ld   b, $ff                                      ; $7be3: $06 $ff
-	ld   a, [wGameResultsPeeping]                                  ; $7be5: $fa $27 $ca
-	or   a                                           ; $7be8: $b7
-	jr   nz, .done                             ; $7be9: $20 $17
+	ld   b, $ff                                                     ; $7be3
 
-	ld   hl, 935                                   ; $7beb: $21 $a7 $03
-	call CheckIfTotalStatsLtHL                               ; $7bee: $cd $e3 $7d
-	jr   nz, .done                             ; $7bf1: $20 $0f
+; Requires not peeping
+	ld   a, [wGameResultsPeeping]                                   ; $7be5
+	or   a                                                          ; $7be8
+	jr   nz, .done                                                  ; $7be9
 
-	ld   a, [wGameResultsBattleSimsWon]                                  ; $7bf3: $fa $25 $ca
-	cp   $01                                         ; $7bf6: $fe $01
-	jr   c, .done                              ; $7bf8: $38 $08
+; Requires 935+ stats
+	ld   hl, 935                                                    ; $7beb
+	call CheckIfTotalStatsLtHL                                      ; $7bee
+	jr   nz, .done                                                  ; $7bf1
 
-	ld   a, [wGameResultsFinalBattleWon]                                  ; $7bfa: $fa $26 $ca
-	or   a                                           ; $7bfd: $b7
-	jr   z, .done                              ; $7bfe: $28 $02
+; Requires beating minigame and/or final battle
+	ld   a, [wGameResultsFinalExamPts]                              ; $7bf3
+	cp   $01                                                        ; $7bf6
+	jr   c, .done                                                   ; $7bf8
 
-	ld   b, GRR_NOT_A_FAR_OFF_DREAM                                      ; $7c00: $06 $01
+; Requires beating experimental Koubo
+	ld   a, [wGameResultsExperimentalKouboBeat]                     ; $7bfa
+	or   a                                                          ; $7bfd
+	jr   z, .done                                                   ; $7bfe
+
+	ld   b, GRR_NOT_A_FAR_OFF_DREAM                                 ; $7c00
 
 .done:
-	ld   a, b                                        ; $7c02: $78
-	ret                                              ; $7c03: $c9
+	ld   a, b                                                       ; $7c02
+	ret                                                             ; $7c03
 
 
+; Returns $ff in A if requirements unfulfilled, else the rank value
 CheckIfRankStatsFocused:
 	ld   hl, 830                                   ; $7c04: $21 $3e $03
 	call CheckIfTotalStatsLtHL                               ; $7c07: $cd $e3 $7d
-	jr   z, jr_011_7c0f                              ; $7c0a: $28 $03
+	jr   z, .passedTotalStats                              ; $7c0a: $28 $03
 
 	ld   a, $ff                                      ; $7c0c: $3e $ff
 	ret                                              ; $7c0e: $c9
 
-jr_011_7c0f:
+.passedTotalStats:
 ;
 	ld   hl, $ca33                                   ; $7c0f: $21 $33 $ca
 	ld   a, [sSramVals2+SRAM2_SUMIRE_AFFECTION]                                  ; $7c12: $fa $c2 $af
@@ -10304,123 +10321,146 @@ jr_011_7ce0:
 	ret                                              ; $7ce8: $c9
 
 
+; Returns $ff in A if requirements unfulfilled, else the rank value
 CheckIfRankPerfectForAccounting:
-	ld   b, $ff                                      ; $7ce9: $06 $ff
-	ld   a, [sSramVals2+SRAM2_INTELLECT]                                  ; $7ceb: $fa $d1 $af
-	cp   200                                         ; $7cee: $fe $c8
-	jr   c, .done                              ; $7cf0: $38 $1a
+	ld   b, $ff                                                     ; $7ce9
 
-	ld   a, [wGameResultsOfficeWeek1Yuri]                                  ; $7cf2: $fa $28 $ca
-	or   a                                           ; $7cf5: $b7
-	jr   z, .done                              ; $7cf6: $28 $14
+; Requires 200+ intellect
+	ld   a, [sSramVals2+SRAM2_INTELLECT]                            ; $7ceb
+	cp   200                                                        ; $7cee
+	jr   c, .done                                                   ; $7cf0
 
-	ld   a, [wGameResultsOfficeWeek2Kasumi]                                  ; $7cf8: $fa $29 $ca
-	or   a                                           ; $7cfb: $b7
-	jr   z, .done                              ; $7cfc: $28 $0e
+; Requires having finished office work on all 4 weeks
+	ld   a, [wGameResultsOfficeWeek1Yuri]                           ; $7cf2
+	or   a                                                          ; $7cf5
+	jr   z, .done                                                   ; $7cf6
 
-	ld   a, [wGameResultsOfficeWeek3Yuri]                                  ; $7cfe: $fa $2a $ca
-	or   a                                           ; $7d01: $b7
-	jr   z, .done                              ; $7d02: $28 $08
+	ld   a, [wGameResultsOfficeWeek2Kasumi]                         ; $7cf8
+	or   a                                                          ; $7cfb
+	jr   z, .done                                                   ; $7cfc
 
-	ld   a, [wGameResultsOfficeWeek4Kasumi]                                  ; $7d04: $fa $2b $ca
-	or   a                                           ; $7d07: $b7
-	jr   z, .done                              ; $7d08: $28 $02
+	ld   a, [wGameResultsOfficeWeek3Yuri]                           ; $7cfe
+	or   a                                                          ; $7d01
+	jr   z, .done                                                   ; $7d02
 
-	ld   b, GRR_PERFECT_FOR_ACCOUNTING                                      ; $7d0a: $06 $07
+	ld   a, [wGameResultsOfficeWeek4Kasumi]                         ; $7d04
+	or   a                                                          ; $7d07
+	jr   z, .done                                                   ; $7d08
+
+	ld   b, GRR_PERFECT_FOR_ACCOUNTING                              ; $7d0a
 
 .done:
-	ld   a, b                                        ; $7d0c: $78
-	ret                                              ; $7d0d: $c9
+	ld   a, b                                                       ; $7d0c
+	ret                                                             ; $7d0d
 
 
+; Returns $ff in A if requirements unfulfilled, else the rank value
 CheckIfRankPerfectSalesClerk:
-	ld   b, $ff                                      ; $7d0e: $06 $ff
-	ld   a, [wGameResultsTsubakiFoodQuiz]                                  ; $7d10: $fa $2c $ca
-	or   a                                           ; $7d13: $b7
-	jr   z, .done                              ; $7d14: $28 $0a
+	ld   b, $ff                                                     ; $7d0e
 
-	ld   hl, 700                                   ; $7d16: $21 $bc $02
-	call CheckIfTotalAffectionLtHL                               ; $7d19: $cd $d9 $7d
-	jr   nz, .done                             ; $7d1c: $20 $02
+; Requires finishing Tsubaki's food quiz
+	ld   a, [wGameResultsTsubakiFoodQuiz]                           ; $7d10
+	or   a                                                          ; $7d13
+	jr   z, .done                                                   ; $7d14
 
-	ld   b, GRR_PERFECT_SALES_CLERK                                      ; $7d1e: $06 $08
+; Requires 700+ affection
+	ld   hl, 700                                                    ; $7d16
+	call CheckIfTotalAffectionLtHL                                  ; $7d19
+	jr   nz, .done                                                  ; $7d1c
+
+	ld   b, GRR_PERFECT_SALES_CLERK                                 ; $7d1e
 
 .done:
-	ld   a, b                                        ; $7d20: $78
-	ret                                              ; $7d21: $c9
+	ld   a, b                                                       ; $7d20
+	ret                                                             ; $7d21
 
 
+; Returns $ff in A if requirements unfulfilled, else the rank value
 CheckIfRankIdealUsher:
-	ld   b, $ff                                      ; $7d22: $06 $ff
-	ld   hl, 800                                   ; $7d24: $21 $20 $03
-	call CheckIfTotalAffectionLtHL                               ; $7d27: $cd $d9 $7d
-	jr   nz, :+                             ; $7d2a: $20 $02
-	ld   b, GRR_IDEAL_USHER                                      ; $7d2c: $06 $09
-:	ld   a, b                                        ; $7d2e: $78
-	ret                                              ; $7d2f: $c9
+	ld   b, $ff                                                     ; $7d22
+
+; Requires 800+ affection
+	ld   hl, 800                                                    ; $7d24
+	call CheckIfTotalAffectionLtHL                                  ; $7d27
+	jr   nz, :+                                                     ; $7d2a
+	ld   b, GRR_IDEAL_USHER                                         ; $7d2c
+:	ld   a, b                                                       ; $7d2e
+	ret                                                             ; $7d2f
 
 
+; Returns $ff in A if requirements unfulfilled, else the rank value
 CheckIfRankFromTheShadows:
-	ld   b, $ff                                      ; $7d30: $06 $ff
-	ld   a, [sSramVals2+SRAM2_SPEED]                                  ; $7d32: $fa $d4 $af
-	cp   200                                         ; $7d35: $fe $c8
-	jr   c, :+                              ; $7d37: $38 $02
-	ld   b, GRR_FROM_THE_SHADOWS                                      ; $7d39: $06 $0b
-:	ld   a, b                                        ; $7d3b: $78
-	ret                                              ; $7d3c: $c9
+	ld   b, $ff                                                     ; $7d30
+
+; Requires 200+ speed
+	ld   a, [sSramVals2+SRAM2_SPEED]                                ; $7d32
+	cp   200                                                        ; $7d35
+	jr   c, :+                                                      ; $7d37
+	ld   b, GRR_FROM_THE_SHADOWS                                    ; $7d39
+:	ld   a, b                                                       ; $7d3b
+	ret                                                             ; $7d3c
 
 
+; Returns $ff in A if requirements unfulfilled, else the rank value
 CheckIfRankCleaningUpAfter:
-	ld   b, $ff                                      ; $7d3d: $06 $ff
-	ld   a, [wGameResultsPeeping]                                  ; $7d3f: $fa $27 $ca
-	or   a                                           ; $7d42: $b7
-	jr   nz, :+                             ; $7d43: $20 $02
-	ld   b, GRR_CLEANING_UP_AFTER                                      ; $7d45: $06 $0e
-:	ld   a, b                                        ; $7d47: $78
-	ret                                              ; $7d48: $c9
+	ld   b, $ff                                                     ; $7d3d
+
+; Requires not peeping
+	ld   a, [wGameResultsPeeping]                                   ; $7d3f
+	or   a                                                          ; $7d42
+	jr   nz, :+                                                     ; $7d43
+	ld   b, GRR_CLEANING_UP_AFTER                                   ; $7d45
+:	ld   a, b                                                       ; $7d47
+	ret                                                             ; $7d48
 
 
+; Returns $ff in A if requirements unfulfilled, else the rank value
 CheckIfRankWellLiked:
-	ld   b, $ff                                      ; $7d49: $06 $ff
-	ld   a, [sSramVals2+SRAM2_SAKURA_AFFECTION]                                  ; $7d4b: $fa $c1 $af
-	cp   121                                         ; $7d4e: $fe $79
-	jr   c, jr_011_7d77                              ; $7d50: $38 $25
+	ld   b, $ff                                                     ; $7d49
 
-	ld   a, [sSramVals2+SRAM2_SUMIRE_AFFECTION]                                  ; $7d52: $fa $c2 $af
-	cp   121                                         ; $7d55: $fe $79
-	jr   c, jr_011_7d77                              ; $7d57: $38 $1e
+; Requires all affection values to be 121+
+	ld   a, [sSramVals2+SRAM2_SAKURA_AFFECTION]                     ; $7d4b
+	cp   121                                                        ; $7d4e
+	jr   c, .done                                                   ; $7d50
 
-	ld   a, [sSramVals2+SRAM2_MARIA_AFFECTION]                                  ; $7d59: $fa $c3 $af
-	cp   121                                         ; $7d5c: $fe $79
-	jr   c, jr_011_7d77                              ; $7d5e: $38 $17
+	ld   a, [sSramVals2+SRAM2_SUMIRE_AFFECTION]                     ; $7d52
+	cp   121                                                        ; $7d55
+	jr   c, .done                                                   ; $7d57
 
-	ld   a, [sSramVals2+SRAM2_IRIS_AFFECTION]                                  ; $7d60: $fa $c4 $af
-	cp   121                                         ; $7d63: $fe $79
-	jr   c, jr_011_7d77                              ; $7d65: $38 $10
+	ld   a, [sSramVals2+SRAM2_MARIA_AFFECTION]                      ; $7d59
+	cp   121                                                        ; $7d5c
+	jr   c, .done                                                   ; $7d5e
 
-	ld   a, [sSramVals2+SRAM2_KOHRAN_AFFECTION]                                  ; $7d67: $fa $c5 $af
-	cp   121                                         ; $7d6a: $fe $79
-	jr   c, jr_011_7d77                              ; $7d6c: $38 $09
+	ld   a, [sSramVals2+SRAM2_IRIS_AFFECTION]                       ; $7d60
+	cp   121                                                        ; $7d63
+	jr   c, .done                                                   ; $7d65
 
-	ld   a, [sSramVals2+SRAM2_KANNA_AFFECTION]                                  ; $7d6e: $fa $c6 $af
-	cp   121                                         ; $7d71: $fe $79
-	jr   c, jr_011_7d77                              ; $7d73: $38 $02
+	ld   a, [sSramVals2+SRAM2_KOHRAN_AFFECTION]                     ; $7d67
+	cp   121                                                        ; $7d6a
+	jr   c, .done                                                   ; $7d6c
 
-	ld   b, GRR_WELL_LIKED                                      ; $7d75: $06 $0c
+	ld   a, [sSramVals2+SRAM2_KANNA_AFFECTION]                      ; $7d6e
+	cp   121                                                        ; $7d71
+	jr   c, .done                                                   ; $7d73
 
-jr_011_7d77:
-	ld   a, b                                        ; $7d77: $78
-	ret                                              ; $7d78: $c9
+	ld   b, GRR_WELL_LIKED                                          ; $7d75
+
+.done:
+	ld   a, b                                                       ; $7d77
+	ret                                                             ; $7d78
 
 
+; Returns $ff in A if requirements unfulfilled, else the rank value
 CheckIfRankCountlessWorlds:
-	ld   b, $ff                                      ; $7d79: $06 $ff
-	ld   a, [sSramVals2+SRAM2_GUTS]                                  ; $7d7b: $fa $d3 $af
-	cp   200                                         ; $7d7e: $fe $c8
-	jr   c, :+                              ; $7d80: $38 $02
-	ld   b, GRR_COUNTLESS_WORLDS                                      ; $7d82: $06 $0d
-:	ld   a, b                                        ; $7d84: $78
-	ret                                              ; $7d85: $c9
+	ld   b, $ff                                                     ; $7d79
+
+; Requires 200+ guts
+	ld   a, [sSramVals2+SRAM2_GUTS]                                 ; $7d7b
+	cp   200                                                        ; $7d7e
+	jr   c, :+                                                      ; $7d80
+	ld   b, GRR_COUNTLESS_WORLDS                                    ; $7d82
+:	ld   a, b                                                       ; $7d84
+	ret                                                             ; $7d85
 
 
 ProcessStatsTotal:
