@@ -84,7 +84,7 @@ def is_oneline(_scriptName, idx):
 tableItems = []
 enItems = []
 existing_map = {}
-with open('sakura wars GB - misc 03:10:21.csv') as f:
+with open('sakura wars GB - misc 04:10:21.csv') as f:
 # with open('sakura wars GB - misc 2 02:10:21.csv') as f:
     reader = csv.reader(f)
     for row in reader:

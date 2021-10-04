@@ -516,7 +516,7 @@ Call_020_433c:
 	ld   [$ca8a], a                                  ; $4379: $ea $8a $ca
 	ld   [$ca90], a                                  ; $437c: $ea $90 $ca
 	ld   [$ca91], a                                  ; $437f: $ea $91 $ca
-	ld   [$ca85], a                                  ; $4382: $ea $85 $ca
+	ld   [wBattleWon], a                                  ; $4382: $ea $85 $ca
 	ld   [$ca86], a                                  ; $4385: $ea $86 $ca
 	ld   [$ca93], a                                  ; $4388: $ea $93 $ca
 	ld   c, $36                                      ; $438b: $0e $36
@@ -543,7 +543,7 @@ jr_020_4392:
 Call_020_43ac:
 	ld   hl, $ca72                                   ; $43ac: $21 $72 $ca
 	ld   a, [$cacc]                                  ; $43af: $fa $cc $ca
-	ld   [$ca42], a                                  ; $43b2: $ea $42 $ca
+	ld   [wBattleInstantTextTableIdx], a                                  ; $43b2: $ea $42 $ca
 	call Call_020_46a9                               ; $43b5: $cd $a9 $46
 	ld   a, $0c                                      ; $43b8: $3e $0c
 	ld   [$ca9b], a                                  ; $43ba: $ea $9b $ca
@@ -554,7 +554,7 @@ Call_020_43ac:
 	ld   a, $0c                                      ; $43c9: $3e $0c
 	ld   [$ca9b], a                                  ; $43cb: $ea $9b $ca
 	call Call_020_47f1                               ; $43ce: $cd $f1 $47
-	ld   a, [$ca42]                                  ; $43d1: $fa $42 $ca
+	ld   a, [wBattleInstantTextTableIdx]                                  ; $43d1: $fa $42 $ca
 	ld   [$cacc], a                                  ; $43d4: $ea $cc $ca
 	call Call_020_50bf                               ; $43d7: $cd $bf $50
 	call Call_020_47db                               ; $43da: $cd $db $47
@@ -566,12 +566,12 @@ Call_020_43ac:
 
 	xor  a                                           ; $43e8: $af
 	ld   [$ca86], a                                  ; $43e9: $ea $86 $ca
-	ld   a, [$ca85]                                  ; $43ec: $fa $85 $ca
+	ld   a, [wBattleWon]                                  ; $43ec: $fa $85 $ca
 	inc  a                                           ; $43ef: $3c
 	cp   $04                                         ; $43f0: $fe $04
 	jr   c, :+                              ; $43f2: $38 $01
 	xor  a                                           ; $43f4: $af
-:	ld   [$ca85], a                                  ; $43f5: $ea $85 $ca
+:	ld   [wBattleWon], a                                  ; $43f5: $ea $85 $ca
 
 .cont_43f8:
 	ld   a, $03                                      ; $43f8: $3e $03
@@ -582,7 +582,7 @@ Call_020_43ac:
 	ld   a, [$caa3]                                  ; $4403: $fa $a3 $ca
 	sub  $10                                         ; $4406: $d6 $10
 	ld   c, a                                        ; $4408: $4f
-	ld   a, [$ca85]                                  ; $4409: $fa $85 $ca
+	ld   a, [wBattleWon]                                  ; $4409: $fa $85 $ca
 	ld   d, a                                        ; $440c: $57
 	ld   a, $7b                                      ; $440d: $3e $7b
 	add  d                                           ; $440f: $82
@@ -1048,7 +1048,7 @@ jr_020_46e4:
 
 Call_020_46e5:
 	xor  a                                           ; $46e5: $af
-	ld   [$ca6f], a                                  ; $46e6: $ea $6f $ca
+	ld   [wKouboChosen0idxed], a                                  ; $46e6: $ea $6f $ca
 	call Call_020_470b                               ; $46e9: $cd $0b $47
 	call Call_020_48c9                               ; $46ec: $cd $c9 $48
 	call Call_020_48f9                               ; $46ef: $cd $f9 $48
@@ -1405,7 +1405,7 @@ Call_020_48f9:
 
 jr_020_4909:
 	ld   d, a                                        ; $4909: $57
-	ld   [$ca42], a                                  ; $490a: $ea $42 $ca
+	ld   [wBattleInstantTextTableIdx], a                                  ; $490a: $ea $42 $ca
 	ld   a, [$ca97]                                  ; $490d: $fa $97 $ca
 	cp   d                                           ; $4910: $ba
 	jr   c, jr_020_4914                              ; $4911: $38 $01
@@ -1447,7 +1447,7 @@ jr_020_4930:
 jr_020_4935:
 	add  [hl]                                        ; $4935: $86
 	ld   [hl], a                                     ; $4936: $77
-	ld   a, [$ca42]                                  ; $4937: $fa $42 $ca
+	ld   a, [wBattleInstantTextTableIdx]                                  ; $4937: $fa $42 $ca
 	add  d                                           ; $493a: $82
 	srl  a                                           ; $493b: $cb $3f
 	ret                                              ; $493d: $c9
@@ -2629,7 +2629,7 @@ jr_020_4f82:
 
 Call_020_4f83:
 	xor  a                                           ; $4f83: $af
-	ld   [$ca6f], a                                  ; $4f84: $ea $6f $ca
+	ld   [wKouboChosen0idxed], a                                  ; $4f84: $ea $6f $ca
 	ld   a, [$caa1]                                  ; $4f87: $fa $a1 $ca
 	cp   $2b                                         ; $4f8a: $fe $2b
 	jr   nc, jr_020_4fa0                             ; $4f8c: $30 $12
@@ -2639,9 +2639,9 @@ Call_020_4f83:
 	jr   z, jr_020_4fa0                              ; $4f93: $28 $0b
 
 	call Call_020_4ff3                               ; $4f95: $cd $f3 $4f
-	ld   a, [$ca6f]                                  ; $4f98: $fa $6f $ca
+	ld   a, [wKouboChosen0idxed]                                  ; $4f98: $fa $6f $ca
 	or   $01                                         ; $4f9b: $f6 $01
-	ld   [$ca6f], a                                  ; $4f9d: $ea $6f $ca
+	ld   [wKouboChosen0idxed], a                                  ; $4f9d: $ea $6f $ca
 
 jr_020_4fa0:
 	ld   a, [$caa3]                                  ; $4fa0: $fa $a3 $ca
@@ -2653,9 +2653,9 @@ jr_020_4fa0:
 	jr   z, jr_020_4fb9                              ; $4fac: $28 $0b
 
 	call Call_020_5026                               ; $4fae: $cd $26 $50
-	ld   a, [$ca6f]                                  ; $4fb1: $fa $6f $ca
+	ld   a, [wKouboChosen0idxed]                                  ; $4fb1: $fa $6f $ca
 	or   $02                                         ; $4fb4: $f6 $02
-	ld   [$ca6f], a                                  ; $4fb6: $ea $6f $ca
+	ld   [wKouboChosen0idxed], a                                  ; $4fb6: $ea $6f $ca
 
 jr_020_4fb9:
 	ld   a, [$caa1]                                  ; $4fb9: $fa $a1 $ca
@@ -2667,9 +2667,9 @@ jr_020_4fb9:
 	jr   z, jr_020_4fd2                              ; $4fc5: $28 $0b
 
 	call Call_020_5059                               ; $4fc7: $cd $59 $50
-	ld   a, [$ca6f]                                  ; $4fca: $fa $6f $ca
+	ld   a, [wKouboChosen0idxed]                                  ; $4fca: $fa $6f $ca
 	or   $04                                         ; $4fcd: $f6 $04
-	ld   [$ca6f], a                                  ; $4fcf: $ea $6f $ca
+	ld   [wKouboChosen0idxed], a                                  ; $4fcf: $ea $6f $ca
 
 jr_020_4fd2:
 	ld   a, [$caa3]                                  ; $4fd2: $fa $a3 $ca
@@ -2681,12 +2681,12 @@ jr_020_4fd2:
 	jr   z, jr_020_4feb                              ; $4fde: $28 $0b
 
 	call Call_020_508c                               ; $4fe0: $cd $8c $50
-	ld   a, [$ca6f]                                  ; $4fe3: $fa $6f $ca
+	ld   a, [wKouboChosen0idxed]                                  ; $4fe3: $fa $6f $ca
 	or   $08                                         ; $4fe6: $f6 $08
-	ld   [$ca6f], a                                  ; $4fe8: $ea $6f $ca
+	ld   [wKouboChosen0idxed], a                                  ; $4fe8: $ea $6f $ca
 
 jr_020_4feb:
-	ld   a, [$ca6f]                                  ; $4feb: $fa $6f $ca
+	ld   a, [wKouboChosen0idxed]                                  ; $4feb: $fa $6f $ca
 	cp   $00                                         ; $4fee: $fe $00
 	ret  z                                           ; $4ff0: $c8
 
@@ -2715,9 +2715,9 @@ Call_020_4ff3:
 	inc  [hl]                                        ; $5018: $34
 	ld   hl, $cafc                                   ; $5019: $21 $fc $ca
 	inc  [hl]                                        ; $501c: $34
-	ld   a, [$ca6f]                                  ; $501d: $fa $6f $ca
+	ld   a, [wKouboChosen0idxed]                                  ; $501d: $fa $6f $ca
 	or   $01                                         ; $5020: $f6 $01
-	ld   [$ca6f], a                                  ; $5022: $ea $6f $ca
+	ld   [wKouboChosen0idxed], a                                  ; $5022: $ea $6f $ca
 	ret                                              ; $5025: $c9
 
 
@@ -2742,9 +2742,9 @@ Call_020_5026:
 	inc  [hl]                                        ; $504b: $34
 	ld   hl, $cafd                                   ; $504c: $21 $fd $ca
 	inc  [hl]                                        ; $504f: $34
-	ld   a, [$ca6f]                                  ; $5050: $fa $6f $ca
+	ld   a, [wKouboChosen0idxed]                                  ; $5050: $fa $6f $ca
 	or   $02                                         ; $5053: $f6 $02
-	ld   [$ca6f], a                                  ; $5055: $ea $6f $ca
+	ld   [wKouboChosen0idxed], a                                  ; $5055: $ea $6f $ca
 	ret                                              ; $5058: $c9
 
 
@@ -2769,9 +2769,9 @@ Call_020_5059:
 	dec  [hl]                                        ; $507e: $35
 	ld   hl, $cafc                                   ; $507f: $21 $fc $ca
 	dec  [hl]                                        ; $5082: $35
-	ld   a, [$ca6f]                                  ; $5083: $fa $6f $ca
+	ld   a, [wKouboChosen0idxed]                                  ; $5083: $fa $6f $ca
 	or   $04                                         ; $5086: $f6 $04
-	ld   [$ca6f], a                                  ; $5088: $ea $6f $ca
+	ld   [wKouboChosen0idxed], a                                  ; $5088: $ea $6f $ca
 	ret                                              ; $508b: $c9
 
 
@@ -2796,9 +2796,9 @@ Call_020_508c:
 	dec  [hl]                                        ; $50b1: $35
 	ld   hl, $cafd                                   ; $50b2: $21 $fd $ca
 	dec  [hl]                                        ; $50b5: $35
-	ld   a, [$ca6f]                                  ; $50b6: $fa $6f $ca
+	ld   a, [wKouboChosen0idxed]                                  ; $50b6: $fa $6f $ca
 	or   $08                                         ; $50b9: $f6 $08
-	ld   [$ca6f], a                                  ; $50bb: $ea $6f $ca
+	ld   [wKouboChosen0idxed], a                                  ; $50bb: $ea $6f $ca
 	ret                                              ; $50be: $c9
 
 
@@ -3083,7 +3083,7 @@ Call_020_5200:
 	cp   $06                                         ; $5200: $fe $06
 	ret  c                                           ; $5202: $d8
 
-	ld   [$ca42], a                                  ; $5203: $ea $42 $ca
+	ld   [wBattleInstantTextTableIdx], a                                  ; $5203: $ea $42 $ca
 	ld   hl, $cac9                                   ; $5206: $21 $c9 $ca
 	dec  [hl]                                        ; $5209: $35
 	ret  nz                                          ; $520a: $c0
@@ -6752,7 +6752,7 @@ jr_020_6513:
 	ld   a, $97                                      ; $651c: $3e $97
 	ld   [$cad0], a                                  ; $651e: $ea $d0 $ca
 	ld   a, $06                                      ; $6521: $3e $06
-	ld   [$ca6f], a                                  ; $6523: $ea $6f $ca
+	ld   [wKouboChosen0idxed], a                                  ; $6523: $ea $6f $ca
 	ld   a, $ff                                      ; $6526: $3e $ff
 	ld   [$ca9f], a                                  ; $6528: $ea $9f $ca
 	ld   [$caa0], a                                  ; $652b: $ea $a0 $ca
@@ -7104,12 +7104,12 @@ jr_020_6726:
 
 	xor  a                                           ; $6749: $af
 	ld   [$cacc], a                                  ; $674a: $ea $cc $ca
-	ld   a, [$ca6f]                                  ; $674d: $fa $6f $ca
+	ld   a, [wKouboChosen0idxed]                                  ; $674d: $fa $6f $ca
 	cp   $00                                         ; $6750: $fe $00
 	jr   z, jr_020_675c                              ; $6752: $28 $08
 
 	dec  a                                           ; $6754: $3d
-	ld   [$ca6f], a                                  ; $6755: $ea $6f $ca
+	ld   [wKouboChosen0idxed], a                                  ; $6755: $ea $6f $ca
 	xor  a                                           ; $6758: $af
 	ld   [$ca72], a                                  ; $6759: $ea $72 $ca
 
@@ -7483,7 +7483,7 @@ Jump_020_6954:
 	call PlaySoundEffect                                       ; $6971: $cd $df $1a
 
 Jump_020_6974:
-	ld   a, [$ca6f]                                  ; $6974: $fa $6f $ca
+	ld   a, [wKouboChosen0idxed]                                  ; $6974: $fa $6f $ca
 	cp   $01                                         ; $6977: $fe $01
 	jr   nz, jr_020_6987                             ; $6979: $20 $0c
 
@@ -7500,12 +7500,12 @@ jr_020_6987:
 	cp   $04                                         ; $698e: $fe $04
 	jp   c, Jump_020_6ab8                            ; $6990: $da $b8 $6a
 
-	ld   a, [$ca6f]                                  ; $6993: $fa $6f $ca
+	ld   a, [wKouboChosen0idxed]                                  ; $6993: $fa $6f $ca
 	cp   $06                                         ; $6996: $fe $06
 	jr   z, jr_020_69a5                              ; $6998: $28 $0b
 
 	inc  a                                           ; $699a: $3c
-	ld   [$ca6f], a                                  ; $699b: $ea $6f $ca
+	ld   [wKouboChosen0idxed], a                                  ; $699b: $ea $6f $ca
 	xor  a                                           ; $699e: $af
 	ld   [$ca72], a                                  ; $699f: $ea $72 $ca
 	jp   Jump_020_6ab8                               ; $69a2: $c3 $b8 $6a
@@ -7556,7 +7556,7 @@ jr_020_69ca:
 	ld   [$ca82], a                                  ; $69f8: $ea $82 $ca
 	ld   [$ca83], a                                  ; $69fb: $ea $83 $ca
 	ld   [$ca84], a                                  ; $69fe: $ea $84 $ca
-	ld   [$ca85], a                                  ; $6a01: $ea $85 $ca
+	ld   [wBattleWon], a                                  ; $6a01: $ea $85 $ca
 	ld   [$ca86], a                                  ; $6a04: $ea $86 $ca
 	ld   [$ca87], a                                  ; $6a07: $ea $87 $ca
 	ld   [$ca43], a                                  ; $6a0a: $ea $43 $ca
@@ -7579,12 +7579,12 @@ jr_020_6a2e:
 	ld   a, $04                                      ; $6a2e: $3e $04
 	ld   [$ca71], a                                  ; $6a30: $ea $71 $ca
 	xor  a                                           ; $6a33: $af
-	ld   [$ca42], a                                  ; $6a34: $ea $42 $ca
+	ld   [wBattleInstantTextTableIdx], a                                  ; $6a34: $ea $42 $ca
 	ld   a, $18                                      ; $6a37: $3e $18
 	call PlaySoundEffect                                       ; $6a39: $cd $df $1a
 
 Jump_020_6a3c:
-	ld   a, [$ca42]                                  ; $6a3c: $fa $42 $ca
+	ld   a, [wBattleInstantTextTableIdx]                                  ; $6a3c: $fa $42 $ca
 	ld   c, a                                        ; $6a3f: $4f
 	ld   b, $00                                      ; $6a40: $06 $00
 	ld   hl, $6b6b                                   ; $6a42: $21 $6b $6b
@@ -7596,7 +7596,7 @@ Jump_020_6a3c:
 	ld   a, [wSCX]                                  ; $6a4b: $fa $07 $c2
 	add  [hl]                                        ; $6a4e: $86
 	ld   [wSCX], a                                  ; $6a4f: $ea $07 $c2
-	ld   a, [$ca42]                                  ; $6a52: $fa $42 $ca
+	ld   a, [wBattleInstantTextTableIdx]                                  ; $6a52: $fa $42 $ca
 	ld   c, a                                        ; $6a55: $4f
 	ld   b, $00                                      ; $6a56: $06 $00
 	ld   hl, $6b7d                                   ; $6a58: $21 $7d $6b
@@ -7631,7 +7631,7 @@ jr_020_6a76:
 	cp   $00                                         ; $6a7c: $fe $00
 	jr   nz, jr_020_6a76                             ; $6a7e: $20 $f6
 
-	ld   hl, $ca42                                   ; $6a80: $21 $42 $ca
+	ld   hl, wBattleInstantTextTableIdx                                   ; $6a80: $21 $42 $ca
 	inc  [hl]                                        ; $6a83: $34
 	jr   jr_020_6ab8                                 ; $6a84: $18 $32
 
@@ -7649,12 +7649,12 @@ Jump_020_6a92:
 	cp   $03                                         ; $6a99: $fe $03
 	jr   nz, jr_020_6ab8                             ; $6a9b: $20 $1b
 
-	ld   a, [$ca6f]                                  ; $6a9d: $fa $6f $ca
+	ld   a, [wKouboChosen0idxed]                                  ; $6a9d: $fa $6f $ca
 	cp   $00                                         ; $6aa0: $fe $00
 	jr   z, jr_020_6aae                              ; $6aa2: $28 $0a
 
 	dec  a                                           ; $6aa4: $3d
-	ld   [$ca6f], a                                  ; $6aa5: $ea $6f $ca
+	ld   [wKouboChosen0idxed], a                                  ; $6aa5: $ea $6f $ca
 	xor  a                                           ; $6aa8: $af
 	ld   [$ca72], a                                  ; $6aa9: $ea $72 $ca
 	jr   jr_020_6ab8                                 ; $6aac: $18 $0a
@@ -8434,7 +8434,7 @@ Call_020_6f72:
 	ld   d, h                                        ; $6f80: $54
 	ld   e, l                                        ; $6f81: $5d
 	ld   hl, $6fbf                                   ; $6f82: $21 $bf $6f
-	ld   a, [$ca6f]                                  ; $6f85: $fa $6f $ca
+	ld   a, [wKouboChosen0idxed]                                  ; $6f85: $fa $6f $ca
 	sla  a                                           ; $6f88: $cb $27
 	ld   c, a                                        ; $6f8a: $4f
 	ld   b, $00                                      ; $6f8b: $06 $00
@@ -8499,7 +8499,7 @@ Call_020_6fcd:
 	ld   d, h                                        ; $6fdb: $54
 	ld   e, l                                        ; $6fdc: $5d
 	ld   hl, $701a                                   ; $6fdd: $21 $1a $70
-	ld   a, [$ca6f]                                  ; $6fe0: $fa $6f $ca
+	ld   a, [wKouboChosen0idxed]                                  ; $6fe0: $fa $6f $ca
 	sla  a                                           ; $6fe3: $cb $27
 	ld   c, a                                        ; $6fe5: $4f
 	ld   b, $00                                      ; $6fe6: $06 $00
@@ -8564,7 +8564,7 @@ Call_020_7028:
 	ld   d, h                                        ; $7036: $54
 	ld   e, l                                        ; $7037: $5d
 	ld   hl, $7075                                   ; $7038: $21 $75 $70
-	ld   a, [$ca6f]                                  ; $703b: $fa $6f $ca
+	ld   a, [wKouboChosen0idxed]                                  ; $703b: $fa $6f $ca
 	sla  a                                           ; $703e: $cb $27
 	ld   c, a                                        ; $7040: $4f
 	ld   b, $00                                      ; $7041: $06 $00
@@ -8624,7 +8624,7 @@ jr_020_704f:
 	ld   d, h                                        ; $7091: $54
 	ld   e, l                                        ; $7092: $5d
 	ld   hl, $70d0                                   ; $7093: $21 $d0 $70
-	ld   a, [$ca6f]                                  ; $7096: $fa $6f $ca
+	ld   a, [wKouboChosen0idxed]                                  ; $7096: $fa $6f $ca
 	sla  a                                           ; $7099: $cb $27
 	ld   c, a                                        ; $709b: $4f
 	ld   b, $00                                      ; $709c: $06 $00
@@ -9113,7 +9113,7 @@ jr_020_7307:
 
 Call_020_731c:
 	ld   a, c                                        ; $731c: $79
-	ld   [$ca42], a                                  ; $731d: $ea $42 $ca
+	ld   [wBattleInstantTextTableIdx], a                                  ; $731d: $ea $42 $ca
 	ld   hl, $ca74                                   ; $7320: $21 $74 $ca
 	add  hl, de                                      ; $7323: $19
 	ld   a, [hl]                                     ; $7324: $7e
@@ -9136,7 +9136,7 @@ Call_020_731c:
 	ld   l, c                                        ; $733b: $69
 	add  hl, de                                      ; $733c: $19
 	ld   de, $d927                                   ; $733d: $11 $27 $d9
-	ld   a, [$ca42]                                  ; $7340: $fa $42 $ca
+	ld   a, [wBattleInstantTextTableIdx]                                  ; $7340: $fa $42 $ca
 	sla  a                                           ; $7343: $cb $27
 	sla  a                                           ; $7345: $cb $27
 	ld   b, $00                                      ; $7347: $06 $00
@@ -9214,7 +9214,7 @@ jr_020_7395:
 
 Call_020_73aa:
 	ld   a, c                                        ; $73aa: $79
-	ld   [$ca42], a                                  ; $73ab: $ea $42 $ca
+	ld   [wBattleInstantTextTableIdx], a                                  ; $73ab: $ea $42 $ca
 	ld   hl, $ca74                                   ; $73ae: $21 $74 $ca
 	add  hl, de                                      ; $73b1: $19
 	ld   a, [hl]                                     ; $73b2: $7e
@@ -9237,7 +9237,7 @@ Call_020_73aa:
 	ld   l, c                                        ; $73c9: $69
 	add  hl, de                                      ; $73ca: $19
 	ld   de, $d867                                   ; $73cb: $11 $67 $d8
-	ld   a, [$ca42]                                  ; $73ce: $fa $42 $ca
+	ld   a, [wBattleInstantTextTableIdx]                                  ; $73ce: $fa $42 $ca
 	sla  a                                           ; $73d1: $cb $27
 	sla  a                                           ; $73d3: $cb $27
 	ld   b, $00                                      ; $73d5: $06 $00

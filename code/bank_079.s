@@ -8072,7 +8072,7 @@ jr_079_637b:
 	jp   nz, wIsDoubleSpeed                                   ; $6395: $c2 $02 $c2
 
 	ld   b, d                                        ; $6398: $42
-	jp   nz, $ca42                                   ; $6399: $c2 $42 $ca
+	jp   nz, wBattleInstantTextTableIdx                                   ; $6399: $c2 $42 $ca
 
 	ld   a, [bc]                                     ; $639c: $0a
 	ldh  a, [c]                                      ; $639d: $f2

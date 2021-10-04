@@ -14,7 +14,7 @@ GameState2f_Battle::
 	dw BattleSubstate01
 	dw BattleSubstate02
 	dw BattleSubstate03
-	dw BattleSubstate04
+	dw BattleSubstate04_InitialDistanceText
 	dw BattleSubstate05
 	dw BattleSubstate06
 	dw BattleSubstate07
@@ -105,12 +105,12 @@ GameState2f_Battle::
 	nop                                              ; $40af: $00
 
 
-; A -
-; B -
+; A - koubo chosen
+; B - enemy chosen
 ; H - return state
 ; L - return substate
 SetBattleState::
-	ld   [$ca6f], a                                  ; $40b0: $ea $6f $ca
+	ld   [wKouboChosen0idxed], a                                  ; $40b0: $ea $6f $ca
 	ld   a, b                                        ; $40b3: $78
 	ld   [$ca70], a                                  ; $40b4: $ea $70 $ca
 
@@ -206,11 +206,11 @@ BattleSubstate00:
 	and  a                                           ; $4198: $a7
 	jr   nz, jr_024_41c0                             ; $4199: $20 $25
 
-	ld   a, [$ca6f]                                  ; $419b: $fa $6f $ca
+	ld   a, [wKouboChosen0idxed]                                  ; $419b: $fa $6f $ca
 	sla  a                                           ; $419e: $cb $27
 	ld   b, $00                                      ; $41a0: $06 $00
 	ld   c, a                                        ; $41a2: $4f
-	ld   hl, Table_24_4294                                   ; $41a3: $21 $94 $42
+	ld   hl, SpecialMoveFlags                                   ; $41a3: $21 $94 $42
 	add  hl, bc                                      ; $41a6: $09
 	ld   a, [hl+]                                    ; $41a7: $2a
 	ld   h, [hl]                                     ; $41a8: $66
@@ -309,7 +309,7 @@ jr_024_427e:
 	ret                                              ; $4293: $c9
 
 
-Table_24_4294:
+SpecialMoveFlags:
 	dw FLAG2_SPECIAL_MOVE_SAKURA
 	dw FLAG2_SPECIAL_MOVE_SUMIRE
 	dw FLAG2_SPECIAL_MOVE_MARIA
@@ -359,31 +359,35 @@ BattleSubstate01:
 	jr   z, jr_024_42f4                              ; $42d1: $28 $21
 
 jr_024_42d3:
+; This is all so sudden... Can I even fight well?
 	ld   d, $3d                                      ; $42d3: $16 $3d
 	ld   a, d                                        ; $42d5: $7a
 	ld   [$ca87], a                                  ; $42d6: $ea $87 $ca
-	call Call_024_6bdf                               ; $42d9: $cd $df $6b
+	call todo_DisplayBattleText                               ; $42d9: $cd $df $6b
 	jr   jr_024_42fd                                 ; $42dc: $18 $1f
 
 jr_024_42de:
+; Okay, here I go!
 	ld   d, $3f                                      ; $42de: $16 $3f
 	ld   a, d                                        ; $42e0: $7a
 	ld   [$ca87], a                                  ; $42e1: $ea $87 $ca
-	call Call_024_6bdf                               ; $42e4: $cd $df $6b
+	call todo_DisplayBattleText                               ; $42e4: $cd $df $6b
 	jr   jr_024_42fd                                 ; $42e7: $18 $14
 
 jr_024_42e9:
+; Let's see how my training's paid off!
 	ld   d, $40                                      ; $42e9: $16 $40
 	ld   a, d                                        ; $42eb: $7a
 	ld   [$ca87], a                                  ; $42ec: $ea $87 $ca
-	call Call_024_6bdf                               ; $42ef: $cd $df $6b
+	call todo_DisplayBattleText                               ; $42ef: $cd $df $6b
 	jr   jr_024_42fd                                 ; $42f2: $18 $09
 
 jr_024_42f4:
+; This is it. I'm gonna give it everything I've got!
 	ld   d, $41                                      ; $42f4: $16 $41
 	ld   a, d                                        ; $42f6: $7a
 	ld   [$ca87], a                                  ; $42f7: $ea $87 $ca
-	call Call_024_6bdf                               ; $42fa: $cd $df $6b
+	call todo_DisplayBattleText                               ; $42fa: $cd $df $6b
 
 jr_024_42fd:
 	ld   hl, wGameSubstate                                   ; $42fd: $21 $a1 $c2
@@ -449,11 +453,14 @@ jr_024_4365:
 	ld   a, $01                                      ; $436e: $3e $01
 	call PlaySoundEffect                                       ; $4370: $cd $df $1a
 	ld   a, [$ca87]                                  ; $4373: $fa $87 $ca
+
+; This is all so sudden... Can I even fight well?
 	cp   $3d                                         ; $4376: $fe $3d
 	jr   nz, jr_024_4384                             ; $4378: $20 $0a
 
+; But... I have no choice!
 	ld   d, $3e                                      ; $437a: $16 $3e
-	call Call_024_6bdf                               ; $437c: $cd $df $6b
+	call todo_DisplayBattleText                               ; $437c: $cd $df $6b
 	ld   hl, wGameSubstate                                   ; $437f: $21 $a1 $c2
 	inc  [hl]                                        ; $4382: $34
 	ret                                              ; $4383: $c9
@@ -527,39 +534,42 @@ jr_024_43ed:
 	ret                                              ; $43ff: $c9
 
 
-BattleSubstate04:
-	ld   a, [$ca6f]                                  ; $4400: $fa $6f $ca
+BattleSubstate04_InitialDistanceText:
+	ld   a, [wKouboChosen0idxed]                                  ; $4400: $fa $6f $ca
 	cp   $00                                         ; $4403: $fe $00
-	jr   z, jr_024_441b                              ; $4405: $28 $14
+	jr   z, .nearType                              ; $4405: $28 $14
 
 	cp   $05                                         ; $4407: $fe $05
-	jr   z, jr_024_441b                              ; $4409: $28 $10
+	jr   z, .nearType                              ; $4409: $28 $10
 
 	cp   $01                                         ; $440b: $fe $01
-	jr   z, jr_024_441f                              ; $440d: $28 $10
+	jr   z, .midType                              ; $440d: $28 $10
 
 	cp   $03                                         ; $440f: $fe $03
-	jr   z, jr_024_441f                              ; $4411: $28 $0c
+	jr   z, .midType                              ; $4411: $28 $0c
 
 	cp   $02                                         ; $4413: $fe $02
-	jr   z, jr_024_4423                              ; $4415: $28 $0c
+	jr   z, .farType                              ; $4415: $28 $0c
 
 	cp   $04                                         ; $4417: $fe $04
-	jr   z, jr_024_4423                              ; $4419: $28 $08
+	jr   z, .farType                              ; $4419: $28 $08
 
-jr_024_441b:
+.nearType:
+; First, I need to close in on the enemy.
 	ld   d, $3b                                      ; $441b: $16 $3b
-	jr   jr_024_4425                                 ; $441d: $18 $06
+	jr   .displayText                                 ; $441d: $18 $06
 
-jr_024_441f:
+.midType:
+; Here I come!
 	ld   d, $3c                                      ; $441f: $16 $3c
-	jr   jr_024_4425                                 ; $4421: $18 $02
+	jr   .displayText                                 ; $4421: $18 $02
 
-jr_024_4423:
+.farType:
+; First, I need to make some distance.
 	ld   d, $42                                      ; $4423: $16 $42
 
-jr_024_4425:
-	call Call_024_6bdf                               ; $4425: $cd $df $6b
+.displayText:
+	call todo_DisplayBattleText                               ; $4425: $cd $df $6b
 	ld   hl, wGameSubstate                                   ; $4428: $21 $a1 $c2
 	inc  [hl]                                        ; $442b: $34
 	ret                                              ; $442c: $c9
@@ -643,26 +653,26 @@ BattleSubstate07:
 	call Call_024_7731                               ; $44b9: $cd $31 $77
 	ld   a, $00                                      ; $44bc: $3e $00
 	ld   [$ca8a], a                                  ; $44be: $ea $8a $ca
-	ld   a, [$ca6f]                                  ; $44c1: $fa $6f $ca
+	ld   a, [wKouboChosen0idxed]                                  ; $44c1: $fa $6f $ca
 	cp   $00                                         ; $44c4: $fe $00
-	jr   z, jr_024_44fa                              ; $44c6: $28 $32
+	jr   z, .nearType                              ; $44c6: $28 $32
 
 	cp   $05                                         ; $44c8: $fe $05
-	jr   z, jr_024_44fa                              ; $44ca: $28 $2e
+	jr   z, .nearType                              ; $44ca: $28 $2e
 
 	cp   $01                                         ; $44cc: $fe $01
-	jr   z, jr_024_44eb                              ; $44ce: $28 $1b
+	jr   z, .midType                              ; $44ce: $28 $1b
 
 	cp   $03                                         ; $44d0: $fe $03
-	jr   z, jr_024_44eb                              ; $44d2: $28 $17
+	jr   z, .midType                              ; $44d2: $28 $17
 
 	cp   $02                                         ; $44d4: $fe $02
-	jr   z, jr_024_44dc                              ; $44d6: $28 $04
+	jr   z, .farType                              ; $44d6: $28 $04
 
 	cp   $04                                         ; $44d8: $fe $04
-	jr   z, jr_024_44dc                              ; $44da: $28 $00
+	jr   z, .farType                              ; $44da: $28 $00
 
-jr_024_44dc:
+.farType:
 	ld   a, [$ca71]                                  ; $44dc: $fa $71 $ca
 	cp   $00                                         ; $44df: $fe $00
 	jr   z, jr_024_450a                              ; $44e1: $28 $27
@@ -672,8 +682,7 @@ jr_024_44dc:
 
 	jp   Jump_024_4598                               ; $44e8: $c3 $98 $45
 
-
-jr_024_44eb:
+.midType:
 	ld   a, [$ca71]                                  ; $44eb: $fa $71 $ca
 	cp   $00                                         ; $44ee: $fe $00
 	jr   z, jr_024_452e                              ; $44f0: $28 $3c
@@ -683,8 +692,7 @@ jr_024_44eb:
 
 	jp   Jump_024_4598                               ; $44f7: $c3 $98 $45
 
-
-jr_024_44fa:
+.nearType:
 	ld   a, [$ca71]                                  ; $44fa: $fa $71 $ca
 	cp   $02                                         ; $44fd: $fe $02
 	jp   z, Jump_024_4552                            ; $44ff: $ca $52 $45
@@ -710,10 +718,12 @@ jr_024_450a:
 	cp   $00                                         ; $4522: $fe $00
 	jr   z, jr_024_452a                              ; $4524: $28 $04
 
+; I need to create more distance between us.
 	ld   d, $39                                      ; $4526: $16 $39
 	jr   jr_024_452c                                 ; $4528: $18 $02
 
 jr_024_452a:
+; It's too close!
 	ld   d, $45                                      ; $452a: $16 $45
 
 jr_024_452c:
@@ -735,10 +745,12 @@ jr_024_452e:
 	cp   $00                                         ; $4546: $fe $00
 	jr   z, jr_024_454e                              ; $4548: $28 $04
 
+; I have to keep my distance.
 	ld   d, $3a                                      ; $454a: $16 $3a
 	jr   jr_024_4550                                 ; $454c: $18 $02
 
 jr_024_454e:
+; I need to back off...
 	ld   d, $46                                      ; $454e: $16 $46
 
 jr_024_4550:
@@ -759,10 +771,12 @@ Jump_024_4552:
 	cp   $00                                         ; $4569: $fe $00
 	jr   z, jr_024_4571                              ; $456b: $28 $04
 
+; I need to get closer to it.
 	ld   d, $37                                      ; $456d: $16 $37
 	jr   jr_024_4573                                 ; $456f: $18 $02
 
 jr_024_4571:
+; It's still too far away...
 	ld   d, $43                                      ; $4571: $16 $43
 
 jr_024_4573:
@@ -783,16 +797,19 @@ Jump_024_4575:
 	cp   $00                                         ; $458c: $fe $00
 	jr   z, jr_024_4594                              ; $458e: $28 $04
 
+; I need to get closer.
 	ld   d, $38                                      ; $4590: $16 $38
 	jr   jr_024_4596                                 ; $4592: $18 $02
 
 jr_024_4594:
+; My attacks won't reach it...
 	ld   d, $44                                      ; $4594: $16 $44
 
 jr_024_4596:
 	jr   jr_024_45a4                                 ; $4596: $18 $0c
 
 Jump_024_4598:
+; Alright! I'm at the perfect distance!
 	ld   d, $00                                      ; $4598: $16 $00
 	ld   a, [$ca99]                                  ; $459a: $fa $99 $ca
 	cp   d                                           ; $459d: $ba
@@ -802,7 +819,7 @@ Jump_024_4598:
 	ld   [$ca99], a                                  ; $45a1: $ea $99 $ca
 
 jr_024_45a4:
-	call Call_024_6bdf                               ; $45a4: $cd $df $6b
+	call todo_DisplayBattleText                               ; $45a4: $cd $df $6b
 	ld   hl, wGameSubstate                                   ; $45a7: $21 $a1 $c2
 	inc  [hl]                                        ; $45aa: $34
 	ret                                              ; $45ab: $c9
@@ -1292,7 +1309,7 @@ jr_024_48a5:
 	cp   $03                                         ; $48ad: $fe $03
 	jr   nz, jr_024_48d4                             ; $48af: $20 $23
 
-	ld   a, [$ca6f]                                  ; $48b1: $fa $6f $ca
+	ld   a, [wKouboChosen0idxed]                                  ; $48b1: $fa $6f $ca
 	cp   $01                                         ; $48b4: $fe $01
 	jr   z, jr_024_48be                              ; $48b6: $28 $06
 
@@ -1394,21 +1411,24 @@ BattleSubstate10:
 	cp   $01                                         ; $4939: $fe $01
 	jr   z, jr_024_4947                              ; $493b: $28 $0a
 
+; Take that!
 	ld   a, $1f                                      ; $493d: $3e $1f
 	ld   d, a                                        ; $493f: $57
 	jr   jr_024_494a                                 ; $4940: $18 $08
 
 jr_024_4942:
+; How do you like this?!
 	ld   a, $0f                                      ; $4942: $3e $0f
 	ld   d, a                                        ; $4944: $57
 	jr   jr_024_494a                                 ; $4945: $18 $03
 
 jr_024_4947:
+; Take that!
 	ld   a, $13                                      ; $4947: $3e $13
 	ld   d, a                                        ; $4949: $57
 
 jr_024_494a:
-	call Call_024_6bdf                               ; $494a: $cd $df $6b
+	call todo_DisplayBattleText                               ; $494a: $cd $df $6b
 	ld   hl, wGameSubstate                                   ; $494d: $21 $a1 $c2
 	inc  [hl]                                        ; $4950: $34
 	ret                                              ; $4951: $c9
@@ -1495,6 +1515,7 @@ BattleSubstate12:
 	cp   $04                                         ; $49e4: $fe $04
 	jr   z, jr_024_4a20                              ; $49e6: $28 $38
 
+; The enemy's on defense.
 	ld   d, $20                                      ; $49e8: $16 $20
 	ld   a, [$cbec]                                  ; $49ea: $fa $ec $cb
 	cp   $ff                                         ; $49ed: $fe $ff
@@ -1508,6 +1529,7 @@ BattleSubstate12:
 	cp   $00                                         ; $49f9: $fe $00
 	jr   nz, jr_024_49ff                             ; $49fb: $20 $02
 
+; Ugh! It blocked my attack!
 	ld   d, $12                                      ; $49fd: $16 $12
 
 jr_024_49ff:
@@ -1516,17 +1538,20 @@ jr_024_49ff:
 	jr   jr_024_4a31                                 ; $4a03: $18 $2c
 
 jr_024_4a05:
+; It's closing in on me!
 	ld   a, $10                                      ; $4a05: $3e $10
 	ld   d, a                                        ; $4a07: $57
 	ld   [$ca89], a                                  ; $4a08: $ea $89 $ca
 	jr   jr_024_4a31                                 ; $4a0b: $18 $24
 
 jr_024_4a0d:
+; The enemy's backing off.
 	ld   a, $11                                      ; $4a0d: $3e $11
 	ld   d, a                                        ; $4a0f: $57
 	ld   [$ca89], a                                  ; $4a10: $ea $89 $ca
 	jr   jr_024_4a31                                 ; $4a13: $18 $1c
 
+; Huh? The enemy's off-balance! Now's my chance!
 	ld   a, $01                                      ; $4a15: $3e $01
 	ld   d, a                                        ; $4a17: $57
 	ld   [$ca89], a                                  ; $4a18: $ea $89 $ca
@@ -1534,6 +1559,7 @@ jr_024_4a0d:
 	jr   jr_024_4a31                                 ; $4a1e: $18 $11
 
 jr_024_4a20:
+; Not good!
 	ld   a, $14                                      ; $4a20: $3e $14
 	ld   d, a                                        ; $4a22: $57
 	ld   [$ca89], a                                  ; $4a23: $ea $89 $ca
@@ -1541,6 +1567,7 @@ jr_024_4a20:
 	jr   jr_024_4a31                                 ; $4a29: $18 $06
 
 jr_024_4a2b:
+; The enemy's assessing the situation.
 	ld   a, $19                                      ; $4a2b: $3e $19
 	ld   d, a                                        ; $4a2d: $57
 	ld   [$ca89], a                                  ; $4a2e: $ea $89 $ca
@@ -1549,16 +1576,19 @@ jr_024_4a31:
 	call Call_024_644e                               ; $4a31: $cd $4e $64
 	ld   a, [$ca87]                                  ; $4a34: $fa $87 $ca
 	ld   d, a                                        ; $4a37: $57
+
+; ; Nailed it!
 	cp   $0e                                         ; $4a38: $fe $0e
 	jr   z, jr_024_4a4c                              ; $4a3a: $28 $10
 
 	cp   $ff                                         ; $4a3c: $fe $ff
 	jr   z, jr_024_4a4c                              ; $4a3e: $28 $0c
 
+; Oh no! It dodged!
 	cp   $1b                                         ; $4a40: $fe $1b
 	jr   z, jr_024_4a4c                              ; $4a42: $28 $08
 
-	call Call_024_6bdf                               ; $4a44: $cd $df $6b
+	call todo_DisplayBattleText                               ; $4a44: $cd $df $6b
 	ld   hl, wGameSubstate                                   ; $4a47: $21 $a1 $c2
 	inc  [hl]                                        ; $4a4a: $34
 	ret                                              ; $4a4b: $c9
@@ -1686,6 +1716,8 @@ jr_024_4afe:
 BattleSubstate15:
 	ld   a, $01                                      ; $4b2c: $3e $01
 	ld   [$ca8a], a                                  ; $4b2e: $ea $8a $ca
+
+; Yaahhh!
 	ld   a, [$ca87]                                  ; $4b31: $fa $87 $ca
 	cp   $22                                         ; $4b34: $fe $22
 	jr   nz, jr_024_4b5c                             ; $4b36: $20 $24
@@ -1890,7 +1922,7 @@ jr_024_4c90:
 
 jr_024_4c91:
 	ld   a, $01                                      ; $4c91: $3e $01
-	ld   [$ca85], a                                  ; $4c93: $ea $85 $ca
+	ld   [wBattleWon], a                                  ; $4c93: $ea $85 $ca
 	ld   a, [$c9b2]                                  ; $4c96: $fa $b2 $c9
 	cp   $01                                         ; $4c99: $fe $01
 	jr   z, jr_024_4cb9                              ; $4c9b: $28 $1c
@@ -1926,14 +1958,17 @@ BattleSubstate1b:
 	call AnimateAllAnimatedSpriteSpecs                                       ; $4cc8: $cd $d3 $2e
 	ld   a, [$ca8c]                                  ; $4ccb: $fa $8c $ca
 	ld   a, [$ca87]                                  ; $4cce: $fa $87 $ca
+
+; Nailed it!
 	cp   $0e                                         ; $4cd1: $fe $0e
 	jr   z, jr_024_4ce8                              ; $4cd3: $28 $13
 
+; Oh no! It dodged!
 	cp   $1b                                         ; $4cd5: $fe $1b
 	jr   nz, jr_024_4ce2                             ; $4cd7: $20 $09
 
 	ld   d, a                                        ; $4cd9: $57
-	call Call_024_6bdf                               ; $4cda: $cd $df $6b
+	call todo_DisplayBattleText                               ; $4cda: $cd $df $6b
 	ld   hl, wGameSubstate                                   ; $4cdd: $21 $a1 $c2
 	inc  [hl]                                        ; $4ce0: $34
 	ret                                              ; $4ce1: $c9
@@ -1958,16 +1993,18 @@ jr_024_4ce8:
 	cp   $00                                         ; $4cfc: $fe $00
 	jr   nz, jr_024_4d0a                             ; $4cfe: $20 $0a
 
+; Yes!
 	ld   d, $07                                      ; $4d00: $16 $07
-	call Call_024_6bdf                               ; $4d02: $cd $df $6b
+	call todo_DisplayBattleText                               ; $4d02: $cd $df $6b
 	ld   hl, wGameSubstate                                   ; $4d05: $21 $a1 $c2
 	inc  [hl]                                        ; $4d08: $34
 	ret                                              ; $4d09: $c9
 
 
 jr_024_4d0a:
+; Nailed it!
 	ld   d, $0e                                      ; $4d0a: $16 $0e
-	call Call_024_6bdf                               ; $4d0c: $cd $df $6b
+	call todo_DisplayBattleText                               ; $4d0c: $cd $df $6b
 	ld   hl, wGameSubstate                                   ; $4d0f: $21 $a1 $c2
 	inc  [hl]                                        ; $4d12: $34
 	ret                                              ; $4d13: $c9
@@ -1980,9 +2017,11 @@ BattleSubstate1c:
 	cp   $ff                                         ; $4d1d: $fe $ff
 	jr   z, jr_024_4d86                              ; $4d1f: $28 $65
 
+; Oh, no! It's getting away!
 	cp   $02                                         ; $4d21: $fe $02
 	jr   z, jr_024_4d86                              ; $4d23: $28 $61
 
+; It's too close!
 	cp   $03                                         ; $4d25: $fe $03
 	jr   z, jr_024_4d86                              ; $4d27: $28 $5d
 
@@ -2101,18 +2140,21 @@ jr_024_4dd8:
 	cp   d                                           ; $4ddc: $ba
 	jr   c, jr_024_4de3                              ; $4ddd: $38 $04
 
+; I can win this!
 	ld   d, $1d                                      ; $4ddf: $16 $1d
 	jr   jr_024_4de9                                 ; $4de1: $18 $06
 
 jr_024_4de3:
+; So far, we're evenly matched...
 	ld   d, $1c                                      ; $4de3: $16 $1c
 	jr   jr_024_4de9                                 ; $4de5: $18 $02
 
 jr_024_4de7:
+; Damn! I won't lose!
 	ld   d, $06                                      ; $4de7: $16 $06
 
 jr_024_4de9:
-	call Call_024_6bdf                               ; $4de9: $cd $df $6b
+	call todo_DisplayBattleText                               ; $4de9: $cd $df $6b
 	ld   hl, wGameSubstate                                   ; $4dec: $21 $a1 $c2
 	inc  [hl]                                        ; $4def: $34
 	ret                                              ; $4df0: $c9
@@ -2319,20 +2361,26 @@ jr_024_4f19:
 
 	ld   hl, $ca71                                   ; $4f35: $21 $71 $ca
 	dec  [hl]                                        ; $4f38: $35
+
+; It's closing in on me!
 	ld   a, $10                                      ; $4f39: $3e $10
 	jr   jr_024_4f43                                 ; $4f3b: $18 $06
 
 jr_024_4f3d:
 	ld   hl, $ca71                                   ; $4f3d: $21 $71 $ca
 	inc  [hl]                                        ; $4f40: $34
+
+; The enemy's backing off.
 	ld   a, $11                                      ; $4f41: $3e $11
 
 jr_024_4f43:
 	ld   d, a                                        ; $4f43: $57
-	call Call_024_6bdf                               ; $4f44: $cd $df $6b
+	call todo_DisplayBattleText                               ; $4f44: $cd $df $6b
 	call Call_024_7731                               ; $4f47: $cd $31 $77
 	ld   a, [$ca76]                                  ; $4f4a: $fa $76 $ca
 	ld   [$ca77], a                                  ; $4f4d: $ea $77 $ca
+
+; The enemy's backing off.
 	ld   a, $11                                      ; $4f50: $3e $11
 	ld   [$ca89], a                                  ; $4f52: $ea $89 $ca
 	xor  a                                           ; $4f55: $af
@@ -2389,10 +2437,14 @@ jr_024_4f9b:
 	ld   [wFarCallBank], a                                  ; $4fab: $ea $9a $c2
 	pop  af                                          ; $4fae: $f1
 	call FarCall                                       ; $4faf: $cd $62 $09
+
+; Here it comes!
 	ld   d, $16                                      ; $4fb2: $16 $16
-	call Call_024_6bdf                               ; $4fb4: $cd $df $6b
+	call todo_DisplayBattleText                               ; $4fb4: $cd $df $6b
 	ld   hl, wGameSubstate                                   ; $4fb7: $21 $a1 $c2
 	inc  [hl]                                        ; $4fba: $34
+
+; Alright! I'm at the perfect distance!
 	ld   a, $00                                      ; $4fbb: $3e $00
 	ld   [$ca89], a                                  ; $4fbd: $ea $89 $ca
 	ret                                              ; $4fc0: $c9
@@ -2412,8 +2464,10 @@ Jump_024_4fc1:
 	ld   [wFarCallBank], a                                  ; $4fd9: $ea $9a $c2
 	pop  af                                          ; $4fdc: $f1
 	call FarCall                                       ; $4fdd: $cd $62 $09
+
+; It's reeling! Now's my chance!
 	ld   d, $17                                      ; $4fe0: $16 $17
-	call Call_024_6bdf                               ; $4fe2: $cd $df $6b
+	call todo_DisplayBattleText                               ; $4fe2: $cd $df $6b
 	ld   a, $4d                                      ; $4fe5: $3e $4d
 	ld   [wGameSubstate], a                                  ; $4fe7: $ea $a1 $c2
 	ret                                              ; $4fea: $c9
@@ -2668,6 +2722,8 @@ BattleSubstate25:
 BattleSubstate23:
 	call ClearOam                                       ; $51af: $cd $d7 $0d
 	call AnimateAllAnimatedSpriteSpecs                                       ; $51b2: $cd $d3 $2e
+
+; Alright! I'm at the perfect distance!
 	ld   a, [$ca89]                                  ; $51b5: $fa $89 $ca
 	cp   $00                                         ; $51b8: $fe $00
 	jr   z, jr_024_51c6                              ; $51ba: $28 $0a
@@ -3201,6 +3257,8 @@ BattleSubstate2d:
 	call ClearOam                                       ; $54f3: $cd $d7 $0d
 	call AnimateAllAnimatedSpriteSpecs                                       ; $54f6: $cd $d3 $2e
 	call Call_024_6723                               ; $54f9: $cd $23 $67
+
+; Alright! I'm at the perfect distance!
 	ld   a, [$ca89]                                  ; $54fc: $fa $89 $ca
 	cp   $00                                         ; $54ff: $fe $00
 	jr   nz, jr_024_5520                             ; $5501: $20 $1d
@@ -3223,7 +3281,7 @@ BattleSubstate2d:
 jr_024_5520:
 	ld   a, [$ca87]                                  ; $5520: $fa $87 $ca
 	ld   d, a                                        ; $5523: $57
-	call Call_024_6bdf                               ; $5524: $cd $df $6b
+	call todo_DisplayBattleText                               ; $5524: $cd $df $6b
 	ld   hl, wGameSubstate                                   ; $5527: $21 $a1 $c2
 	inc  [hl]                                        ; $552a: $34
 	ret                                              ; $552b: $c9
@@ -3319,17 +3377,19 @@ BattleSubstate30:
 
 	ld   a, [$ca87]                                  ; $55d1: $fa $87 $ca
 	ld   d, a                                        ; $55d4: $57
-	call Call_024_6bdf                               ; $55d5: $cd $df $6b
+	call todo_DisplayBattleText                               ; $55d5: $cd $df $6b
 	ld   hl, wGameSubstate                                   ; $55d8: $21 $a1 $c2
 	inc  [hl]                                        ; $55db: $34
 	jr   jr_024_55ef                                 ; $55dc: $18 $11
 
 jr_024_55de:
 	call Call_024_788d                               ; $55de: $cd $8d $78
+
+; Ahhhhh!!
 	ld   a, $2e                                      ; $55e1: $3e $2e
 	ld   [$ca87], a                                  ; $55e3: $ea $87 $ca
 	ld   d, a                                        ; $55e6: $57
-	call Call_024_6bdf                               ; $55e7: $cd $df $6b
+	call todo_DisplayBattleText                               ; $55e7: $cd $df $6b
 	ld   a, $32                                      ; $55ea: $3e $32
 	ld   [wGameSubstate], a                                  ; $55ec: $ea $a1 $c2
 
@@ -3476,6 +3536,8 @@ jr_024_56df:
 	jr   nz, jr_024_5703                             ; $56f3: $20 $0e
 
 	call Call_024_7731                               ; $56f5: $cd $31 $77
+
+; Alright! I'm at the perfect distance!
 	ld   a, [$ca89]                                  ; $56f8: $fa $89 $ca
 	cp   $00                                         ; $56fb: $fe $00
 	jr   nz, jr_024_5704                             ; $56fd: $20 $05
@@ -3531,7 +3593,7 @@ jr_024_5740:
 
 jr_024_5741:
 	ld   a, $00                                      ; $5741: $3e $00
-	ld   [$ca85], a                                  ; $5743: $ea $85 $ca
+	ld   [wBattleWon], a                                  ; $5743: $ea $85 $ca
 	call Call_024_788d                               ; $5746: $cd $8d $78
 	ld   a, $3b                                      ; $5749: $3e $3b
 	ld   [$ca86], a                                  ; $574b: $ea $86 $ca
@@ -3542,7 +3604,7 @@ jr_024_5741:
 
 jr_024_5754:
 	ld   a, $01                                      ; $5754: $3e $01
-	ld   [$ca85], a                                  ; $5756: $ea $85 $ca
+	ld   [wBattleWon], a                                  ; $5756: $ea $85 $ca
 	ld   a, [$c9b2]                                  ; $5759: $fa $b2 $c9
 	cp   $01                                         ; $575c: $fe $01
 	jr   z, jr_024_577c                              ; $575e: $28 $1c
@@ -3642,11 +3704,14 @@ jr_024_57e4:
 BattleSubstate38:
 	call ClearOam                                       ; $57ff: $cd $d7 $0d
 	call AnimateAllAnimatedSpriteSpecs                                       ; $5802: $cd $d3 $2e
-	ld   a, [$ca85]                                  ; $5805: $fa $85 $ca
+
+; Ahhhhh!!
+; I did it! I beat it!
+	ld   a, [wBattleWon]                                  ; $5805: $fa $85 $ca
 	add  $2e                                         ; $5808: $c6 $2e
 	ld   d, a                                        ; $580a: $57
-	call Call_024_6bdf                               ; $580b: $cd $df $6b
-	ld   a, [$ca85]                                  ; $580e: $fa $85 $ca
+	call todo_DisplayBattleText                               ; $580b: $cd $df $6b
+	ld   a, [wBattleWon]                                  ; $580e: $fa $85 $ca
 	and  a                                           ; $5811: $a7
 	jr   z, jr_024_5819                              ; $5812: $28 $05
 
@@ -3824,7 +3889,7 @@ Jump_024_5947:
 	ld   [wGameState], a                                  ; $5958: $ea $a0 $c2
 	ld   a, [wBattleReturnSubstate]                                  ; $595b: $fa $51 $ca
 	ld   [wGameSubstate], a                                  ; $595e: $ea $a1 $c2
-	ld   a, [$ca85]                                  ; $5961: $fa $85 $ca
+	ld   a, [wBattleWon]                                  ; $5961: $fa $85 $ca
 	ld   [wMiniGameTrainingBattleRank], a                                  ; $5964: $ea $21 $cb
 	ld   a, [wBattleReturnState]                                  ; $5967: $fa $50 $ca
 	ld   [wGameState], a                                  ; $596a: $ea $a0 $c2
@@ -3840,7 +3905,7 @@ jr_024_5974:
 	ld   d, a                                        ; $597b: $57
 	ld   a, [wBattleReturnSubstate]                                  ; $597c: $fa $51 $ca
 	ld   e, a                                        ; $597f: $5f
-	ld   a, [$ca85]                                  ; $5980: $fa $85 $ca
+	ld   a, [wBattleWon]                                  ; $5980: $fa $85 $ca
 	ld   [wMiniGameTrainingBattleRank], a                                  ; $5983: $ea $21 $cb
 	ld   a, [wBattleReturnState]                                  ; $5986: $fa $50 $ca
 	ld   [wGameState], a                                  ; $5989: $ea $a0 $c2
@@ -3852,8 +3917,10 @@ jr_024_5974:
 BattleSubstate3d:
 	call ClearOam                                       ; $5993: $cd $d7 $0d
 	call AnimateAllAnimatedSpriteSpecs                                       ; $5996: $cd $d3 $2e
+
+; Damn, this thing's tough... I've got no choice! It's all or nothing!
 	ld   d, $30                                      ; $5999: $16 $30
-	call Call_024_6bdf                               ; $599b: $cd $df $6b
+	call todo_DisplayBattleText                               ; $599b: $cd $df $6b
 	ld   hl, wGameSubstate                                   ; $599e: $21 $a1 $c2
 	inc  [hl]                                        ; $59a1: $34
 	call Func_24_7657                                      ; $59a2: $cd $57 $76
@@ -3979,10 +4046,17 @@ jr_024_5a53:
 BattleSubstate40:
 	call ClearOam                                       ; $5a66: $cd $d7 $0d
 	call AnimateAllAnimatedSpriteSpecs                                       ; $5a69: $cd $d3 $2e
-	ld   a, [$ca6f]                                  ; $5a6c: $fa $6f $ca
+
+; Watch this, Sakura! Here I go!
+; Watch this, Sumire! Here I go!
+; Watch this, Maria! Here I go!
+; Watch this, Iris! Here I go!
+; Watch this, Kohran! Here I go!
+; Watch this, Kanna! Here I go!
+	ld   a, [wKouboChosen0idxed]                                  ; $5a6c: $fa $6f $ca
 	add  $31                                         ; $5a6f: $c6 $31
 	ld   d, a                                        ; $5a71: $57
-	call Call_024_6bdf                               ; $5a72: $cd $df $6b
+	call todo_DisplayBattleText                               ; $5a72: $cd $df $6b
 	ld   hl, wGameSubstate                                   ; $5a75: $21 $a1 $c2
 	inc  [hl]                                        ; $5a78: $34
 	ret                                              ; $5a79: $c9
@@ -4055,10 +4129,17 @@ BattleSubstate42:
 	call AnimateAllAnimatedSpriteSpecs                                       ; $5af3: $cd $d3 $2e
 	ld   a, $01                                      ; $5af6: $3e $01
 	ld   [$ca95], a                                  ; $5af8: $ea $95 $ca
-	ld   a, [$ca6f]                                  ; $5afb: $fa $6f $ca
+
+; Floral Divinity!
+; Butterfly Waltz!
+; Snegurochka!
+; Iris Marionette!
+; Mini-Bot Attack!
+; Bamboo Rain!
+	ld   a, [wKouboChosen0idxed]                                  ; $5afb: $fa $6f $ca
 	add  $28                                         ; $5afe: $c6 $28
 	ld   d, a                                        ; $5b00: $57
-	call Call_024_6bdf                               ; $5b01: $cd $df $6b
+	call todo_DisplayBattleText                               ; $5b01: $cd $df $6b
 	ld   hl, wGameSubstate                                   ; $5b04: $21 $a1 $c2
 	inc  [hl]                                        ; $5b07: $34
 	ret                                              ; $5b08: $c9
@@ -4067,7 +4148,7 @@ BattleSubstate42:
 BattleSubstate43:
 	call ClearOam                                       ; $5b09: $cd $d7 $0d
 	call AnimateAllAnimatedSpriteSpecs                                       ; $5b0c: $cd $d3 $2e
-	ld   a, [$ca6f]                                  ; $5b0f: $fa $6f $ca
+	ld   a, [wKouboChosen0idxed]                                  ; $5b0f: $fa $6f $ca
 	push af                                          ; $5b12: $f5
 	ld   a, $9f                                      ; $5b13: $3e $9f
 	ld   [wFarCallAddr], a                                  ; $5b15: $ea $98 $c2
@@ -4166,7 +4247,7 @@ jr_024_5bae:
 BattleSubstate46:
 	call ClearOam                                       ; $5bc1: $cd $d7 $0d
 	call AnimateAllAnimatedSpriteSpecs                                       ; $5bc4: $cd $d3 $2e
-	ld   a, [$ca6f]                                  ; $5bc7: $fa $6f $ca
+	ld   a, [wKouboChosen0idxed]                                  ; $5bc7: $fa $6f $ca
 	cp   $03                                         ; $5bca: $fe $03
 	jr   z, jr_024_5be7                              ; $5bcc: $28 $19
 
@@ -4222,7 +4303,7 @@ jr_024_5be7:
 
 
 BattleSubstate47:
-	ld   a, [$ca6f]                                  ; $5c30: $fa $6f $ca
+	ld   a, [wKouboChosen0idxed]                                  ; $5c30: $fa $6f $ca
 	cp   $03                                         ; $5c33: $fe $03
 	jr   z, jr_024_5c4d                              ; $5c35: $28 $16
 
@@ -4268,7 +4349,7 @@ jr_024_5c75:
 
 	xor  a                                           ; $5c82: $af
 	ld   [$ca86], a                                  ; $5c83: $ea $86 $ca
-	ld   a, [$ca6f]                                  ; $5c86: $fa $6f $ca
+	ld   a, [wKouboChosen0idxed]                                  ; $5c86: $fa $6f $ca
 	cp   $03                                         ; $5c89: $fe $03
 	jr   z, jr_024_5cd3                              ; $5c8b: $28 $46
 
@@ -4316,7 +4397,7 @@ jr_024_5cd8:
 
 
 BattleSubstate48:
-	ld   a, [$ca6f]                                  ; $5cdf: $fa $6f $ca
+	ld   a, [wKouboChosen0idxed]                                  ; $5cdf: $fa $6f $ca
 	cp   $03                                         ; $5ce2: $fe $03
 	jr   z, jr_024_5d35                              ; $5ce4: $28 $4f
 
@@ -4350,7 +4431,7 @@ BattleSubstate48:
 	jr   nz, jr_024_5d2e                             ; $5d22: $20 $0a
 
 	ld   a, $01                                      ; $5d24: $3e $01
-	ld   [$ca85], a                                  ; $5d26: $ea $85 $ca
+	ld   [wBattleWon], a                                  ; $5d26: $ea $85 $ca
 	ld   a, $51                                      ; $5d29: $3e $51
 	ld   [wGameSubstate], a                                  ; $5d2b: $ea $a1 $c2
 
@@ -4457,8 +4538,10 @@ jr_024_5d8d:
 jr_024_5df4:
 	ld   a, $00                                      ; $5df4: $3e $00
 	ld   [$ca8a], a                                  ; $5df6: $ea $8a $ca
+
+; Alright, I recovered some health!
 	ld   d, $18                                      ; $5df9: $16 $18
-	call Call_024_6bdf                               ; $5dfb: $cd $df $6b
+	call todo_DisplayBattleText                               ; $5dfb: $cd $df $6b
 	ld   a, $fa                                      ; $5dfe: $3e $fa
 	ld   [$ca7b], a                                  ; $5e00: $ea $7b $ca
 	ld   hl, wGameSubstate                                   ; $5e03: $21 $a1 $c2
@@ -4577,7 +4660,7 @@ BattleSubstate51:
 
 Call_024_5ec9:
 	ld   hl, $5ef9                                   ; $5ec9: $21 $f9 $5e
-	ld   a, [$ca6f]                                  ; $5ecc: $fa $6f $ca
+	ld   a, [wKouboChosen0idxed]                                  ; $5ecc: $fa $6f $ca
 	sla  a                                           ; $5ecf: $cb $27
 	ld   b, $00                                      ; $5ed1: $06 $00
 	ld   c, a                                        ; $5ed3: $4f
@@ -4624,6 +4707,8 @@ Call_024_5ec9:
 	ld   e, a                                        ; $5f02: $5f
 	ld   c, e                                        ; $5f03: $4b
 	ld   e, a                                        ; $5f04: $5f
+
+
 	ld   e, c                                        ; $5f05: $59
 	ld   e, a                                        ; $5f06: $5f
 	ld   e, a                                        ; $5f07: $5f
@@ -5006,7 +5091,7 @@ jr_024_60a9:
 	xor  a                                           ; $60b0: $af
 	ld   [$ca95], a                                  ; $60b1: $ea $95 $ca
 	call Call_024_61b6                               ; $60b4: $cd $b6 $61
-	ld   a, [$ca6f]                                  ; $60b7: $fa $6f $ca
+	ld   a, [wKouboChosen0idxed]                                  ; $60b7: $fa $6f $ca
 	cp   $00                                         ; $60ba: $fe $00
 	jp   z, Jump_024_614b                            ; $60bc: $ca $4b $61
 
@@ -5224,7 +5309,7 @@ Call_024_61b6:
 	adc  d                                           ; $61ce: $8a
 	ld   [hl], a                                     ; $61cf: $77
 	ld   hl, $6322                                   ; $61d0: $21 $22 $63
-	ld   a, [$ca6f]                                  ; $61d3: $fa $6f $ca
+	ld   a, [wKouboChosen0idxed]                                  ; $61d3: $fa $6f $ca
 	cp   $00                                         ; $61d6: $fe $00
 	jr   z, jr_024_61f8                              ; $61d8: $28 $1e
 
@@ -5446,7 +5531,7 @@ jr_024_6318:
 
 Call_024_632e:
 	push af                                          ; $632e: $f5
-	ld   a, [$ca6f]                                  ; $632f: $fa $6f $ca
+	ld   a, [wKouboChosen0idxed]                                  ; $632f: $fa $6f $ca
 	cp   $00                                         ; $6332: $fe $00
 	jp   z, Jump_024_6378                            ; $6334: $ca $78 $63
 
@@ -5557,7 +5642,7 @@ jr_024_63be:
 
 Call_024_63c3:
 	push af                                          ; $63c3: $f5
-	ld   a, [$ca6f]                                  ; $63c4: $fa $6f $ca
+	ld   a, [wKouboChosen0idxed]                                  ; $63c4: $fa $6f $ca
 	cp   $00                                         ; $63c7: $fe $00
 	jp   z, Jump_024_63e4                            ; $63c9: $ca $e4 $63
 
@@ -5689,7 +5774,7 @@ Call_024_644e:
 	cp   $01                                         ; $6477: $fe $01
 	jp   z, Jump_024_65e5                            ; $6479: $ca $e5 $65
 
-	ld   a, [$ca6f]                                  ; $647c: $fa $6f $ca
+	ld   a, [wKouboChosen0idxed]                                  ; $647c: $fa $6f $ca
 	sla  a                                           ; $647f: $cb $27
 	ld   b, $00                                      ; $6481: $06 $00
 	ld   c, a                                        ; $6483: $4f
@@ -5708,8 +5793,12 @@ Call_024_644e:
 	ld   [$ca77], a                                  ; $6499: $ea $77 $ca
 	ld   a, $01                                      ; $649c: $3e $01
 	ld   [$ca76], a                                  ; $649e: $ea $76 $ca
+
+; Nailed it!
 	ld   a, $0e                                      ; $64a1: $3e $0e
 	ld   [$ca87], a                                  ; $64a3: $ea $87 $ca
+
+; Not good!
 	ld   a, [$ca89]                                  ; $64a6: $fa $89 $ca
 	cp   $14                                         ; $64a9: $fe $14
 	jp   nz, Jump_024_6558                           ; $64ab: $c2 $58 $65
@@ -5783,9 +5872,10 @@ jr_024_6505:
 	cp   $04                                         ; $650c: $fe $04
 	jr   z, jr_024_64e1                              ; $650e: $28 $d1
 
+; Oh no! It dodged!
 	ld   a, $1b                                      ; $6510: $3e $1b
 	ld   [$ca87], a                                  ; $6512: $ea $87 $ca
-	ld   a, [$ca6f]                                  ; $6515: $fa $6f $ca
+	ld   a, [wKouboChosen0idxed]                                  ; $6515: $fa $6f $ca
 	cp   $00                                         ; $6518: $fe $00
 	jp   z, Jump_024_6539                            ; $651a: $ca $39 $65
 
@@ -5834,6 +5924,7 @@ jr_024_6547:
 
 Jump_024_6558:
 jr_024_6558:
+; Ugh! It blocked my attack!
 	ld   a, [$ca89]                                  ; $6558: $fa $89 $ca
 	cp   $12                                         ; $655b: $fe $12
 	jr   z, jr_024_6566                              ; $655d: $28 $07
@@ -5865,6 +5956,7 @@ jr_024_657c:
 
 
 Jump_024_6583:
+; Yaahhh!
 	ld   a, $22                                      ; $6583: $3e $22
 	ld   [$ca87], a                                  ; $6585: $ea $87 $ca
 	ld   a, $04                                      ; $6588: $3e $04
@@ -5972,11 +6064,13 @@ jr_024_6612:
 	cp   $00                                         ; $6625: $fe $00
 	jr   z, jr_024_6630                              ; $6627: $28 $07
 
+; I won't lose!!
 	ld   a, $08                                      ; $6629: $3e $08
 	ld   [$ca87], a                                  ; $662b: $ea $87 $ca
 	jr   jr_024_6635                                 ; $662e: $18 $05
 
 jr_024_6630:
+; I'm fired up!!
 	ld   a, $09                                      ; $6630: $3e $09
 	ld   [$ca87], a                                  ; $6632: $ea $87 $ca
 
@@ -5989,6 +6083,8 @@ jr_024_6635:
 Jump_024_663b:
 	ld   a, $ff                                      ; $663b: $3e $ff
 	ld   [$ca75], a                                  ; $663d: $ea $75 $ca
+
+; Crap!
 	ld   a, $0b                                      ; $6640: $3e $0b
 	ld   [$ca87], a                                  ; $6642: $ea $87 $ca
 	ret                                              ; $6645: $c9
@@ -6070,6 +6166,7 @@ jr_024_6690:
 	cp   $02                                         ; $66aa: $fe $02
 	jr   z, jr_024_66c8                              ; $66ac: $28 $1a
 
+; Oh, no! It's getting away!
 	ld   a, $02                                      ; $66ae: $3e $02
 	ld   [$ca87], a                                  ; $66b0: $ea $87 $ca
 	inc  [hl]                                        ; $66b3: $34
@@ -6081,6 +6178,7 @@ jr_024_66b6:
 	cp   $00                                         ; $66ba: $fe $00
 	jr   z, jr_024_66c8                              ; $66bc: $28 $0a
 
+; It's too close!
 	ld   a, $03                                      ; $66be: $3e $03
 	ld   [$ca87], a                                  ; $66c0: $ea $87 $ca
 	dec  [hl]                                        ; $66c3: $35
@@ -6205,6 +6303,7 @@ Call_024_6723:
 	jp   z, Jump_024_67c6                            ; $6761: $ca $c6 $67
 
 jr_024_6764:
+; Yaahhh!
 	ld   a, $22                                      ; $6764: $3e $22
 	ld   [$ca87], a                                  ; $6766: $ea $87 $ca
 	ld   a, $04                                      ; $6769: $3e $04
@@ -6299,6 +6398,8 @@ jr_024_67eb:
 
 jr_024_67ed:
 	ld   [$ca7e], a                                  ; $67ed: $ea $7e $ca
+
+; I'm fired up!!
 	ld   a, $09                                      ; $67f0: $3e $09
 	ld   [$ca87], a                                  ; $67f2: $ea $87 $ca
 	ld   a, $ff                                      ; $67f5: $3e $ff
@@ -6311,6 +6412,7 @@ Jump_024_67fd:
 	cp   $01                                         ; $6800: $fe $01
 	jp   nz, Jump_024_68a6                           ; $6802: $c2 $a6 $68
 
+; Ugh!
 	ld   a, $0a                                      ; $6805: $3e $0a
 	ld   [$ca87], a                                  ; $6807: $ea $87 $ca
 	jp   Jump_024_68c3                               ; $680a: $c3 $c3 $68
@@ -6386,6 +6488,8 @@ jr_024_685e:
 	ld   [$ca9b], a                                  ; $685f: $ea $9b $ca
 	ld   a, [$ca76]                                  ; $6862: $fa $76 $ca
 	ld   [$ca77], a                                  ; $6865: $ea $77 $ca
+
+; Alright! I dodged it!
 	ld   a, $0c                                      ; $6868: $3e $0c
 	ld   [$ca87], a                                  ; $686a: $ea $87 $ca
 	ld   a, [$ca71]                                  ; $686d: $fa $71 $ca
@@ -6423,6 +6527,7 @@ jr_024_6894:
 	cp   $03                                         ; $689b: $fe $03
 	jr   z, jr_024_685e                              ; $689d: $28 $bf
 
+; Whoa!! That hit me?!
 	ld   a, $0d                                      ; $689f: $3e $0d
 	ld   [$ca87], a                                  ; $68a1: $ea $87 $ca
 	jr   jr_024_68c3                                 ; $68a4: $18 $1d
@@ -6434,12 +6539,15 @@ Jump_024_68a6:
 	ld   [$ca76], a                                  ; $68ae: $ea $76 $ca
 	ld   a, $ff                                      ; $68b1: $3e $ff
 	ld   [$ca75], a                                  ; $68b3: $ea $75 $ca
+
+; It didn't do anything.
 	ld   a, $1a                                      ; $68b6: $3e $1a
 	ld   [$ca87], a                                  ; $68b8: $ea $87 $ca
 	ret                                              ; $68bb: $c9
 
 
 Jump_024_68bc:
+; Crap!
 	ld   a, $0b                                      ; $68bc: $3e $0b
 	ld   [$ca87], a                                  ; $68be: $ea $87 $ca
 	jr   jr_024_68c3                                 ; $68c1: $18 $00
@@ -6462,10 +6570,12 @@ jr_024_68d4:
 	ld   [$ca8c], a                                  ; $68d5: $ea $8c $ca
 
 jr_024_68d8:
+; Alright! I'm at the perfect distance!
 	ld   a, [$ca89]                                  ; $68d8: $fa $89 $ca
 	and  a                                           ; $68db: $a7
 	jp   nz, Jump_024_69ca                           ; $68dc: $c2 $ca $69
 
+; Ugh!
 	ld   a, [$ca87]                                  ; $68df: $fa $87 $ca
 	cp   $0a                                         ; $68e2: $fe $0a
 	jr   z, jr_024_68ed                              ; $68e4: $28 $07
@@ -6518,6 +6628,8 @@ jr_024_6917:
 	ld   [$ca75], a                                  ; $692a: $ea $75 $ca
 	ld   a, [hl]                                     ; $692d: $7e
 	ld   [$ca76], a                                  ; $692e: $ea $76 $ca
+
+; Yaahhh!
 	ld   a, [$ca87]                                  ; $6931: $fa $87 $ca
 	cp   $22                                         ; $6934: $fe $22
 	jr   nz, jr_024_693c                             ; $6936: $20 $04
@@ -6585,6 +6697,7 @@ jr_024_697d:
 	cp   d                                           ; $6988: $ba
 	jr   nc, jr_024_6997                             ; $6989: $30 $0c
 
+; Damn!
 	ld   a, $15                                      ; $698b: $3e $15
 	ld   [$ca87], a                                  ; $698d: $ea $87 $ca
 	ld   a, $00                                      ; $6990: $3e $00
@@ -6604,6 +6717,8 @@ jr_024_6997:
 	jr   z, jr_024_69c9                              ; $69a8: $28 $1f
 
 	dec  [hl]                                        ; $69aa: $35
+
+; Ugh!
 	ld   a, $21                                      ; $69ab: $3e $21
 	ld   [$ca87], a                                  ; $69ad: $ea $87 $ca
 	jr   jr_024_69c9                                 ; $69b0: $18 $17
@@ -6619,6 +6734,8 @@ jr_024_69b2:
 	jr   z, jr_024_69c9                              ; $69bf: $28 $08
 
 	inc  [hl]                                        ; $69c1: $34
+
+; Ugh!
 	ld   a, $21                                      ; $69c2: $3e $21
 	ld   [$ca87], a                                  ; $69c4: $ea $87 $ca
 	jr   jr_024_69c9                                 ; $69c7: $18 $00
@@ -6710,6 +6827,7 @@ Jump_024_6a36:
 	cp   $01                                         ; $6a39: $fe $01
 	jr   nz, jr_024_6a44                             ; $6a3b: $20 $07
 
+; Damn! I can't catch up!
 	ld   a, $05                                      ; $6a3d: $3e $05
 	ld   [$ca87], a                                  ; $6a3f: $ea $87 $ca
 	jr   jr_024_6a5e                                 ; $6a42: $18 $1a
@@ -6727,6 +6845,7 @@ jr_024_6a44:
 	cp   d                                           ; $6a56: $ba
 	jr   nc, jr_024_6a15                             ; $6a57: $30 $bc
 
+; I can't shake it!
 	ld   a, $04                                      ; $6a59: $3e $04
 	ld   [$ca87], a                                  ; $6a5b: $ea $87 $ca
 
@@ -6886,7 +7005,7 @@ jr_024_6b19:
 	jr   nz, jr_024_6b6f                             ; $6b2e: $20 $3f
 
 jr_024_6b30:
-	ld   a, [$ca6f]                                  ; $6b30: $fa $6f $ca
+	ld   a, [wKouboChosen0idxed]                                  ; $6b30: $fa $6f $ca
 	cp   $00                                         ; $6b33: $fe $00
 	jr   z, jr_024_6b55                              ; $6b35: $28 $1e
 
@@ -6960,7 +7079,7 @@ jr_024_6b9c:
 
 
 jr_024_6ba2:
-	ld   a, [$ca6f]                                  ; $6ba2: $fa $6f $ca
+	ld   a, [wKouboChosen0idxed]                                  ; $6ba2: $fa $6f $ca
 	cp   $00                                         ; $6ba5: $fe $00
 	jr   z, jr_024_6bc6                              ; $6ba7: $28 $1d
 
@@ -7000,9 +7119,10 @@ jr_024_6bc6:
 	ret                                              ; $6bde: $c9
 
 
-Call_024_6bdf:
+; D - table text idx to display
+todo_DisplayBattleText:
 	ld   a, d                                        ; $6bdf: $7a
-	ld   [$ca42], a                                  ; $6be0: $ea $42 $ca
+	ld   [wBattleInstantTextTableIdx], a                                  ; $6be0: $ea $42 $ca
 	ld   c, $81                                      ; $6be3: $0e $81
 	ld   de, $8800                                   ; $6be5: $11 $00 $88
 	ld   a, $07                                      ; $6be8: $3e $07
@@ -7021,7 +7141,7 @@ Call_024_6bdf:
 	call SetCurrKanjiColAndRowToDrawOn                                       ; $6c01: $cd $34 $14
 
 ;
-	ld   a, [$ca42]                                  ; $6c04: $fa $42 $ca
+	ld   a, [wBattleInstantTextTableIdx]                                  ; $6c04: $fa $42 $ca
 	ld   b, $00                                      ; $6c07: $06 $00
 	ld   c, a                                        ; $6c09: $4f
 	ld   hl, .table                                   ; $6c0a: $21 $26 $6c
@@ -7030,12 +7150,12 @@ Call_024_6bdf:
 	add  a                                           ; $6c0f: $87
 	ld   h, $00                                      ; $6c10: $26 $00
 	ld   l, a                                        ; $6c12: $6f
-	ld   bc, Table_24_71b0                                   ; $6c13: $01 $b0 $71
+	ld   bc, BattleInstantTexts                                   ; $6c13: $01 $b0 $71
 	add  hl, bc                                      ; $6c16: $09
 	ld   a, [hl+]                                    ; $6c17: $2a
 	ld   h, [hl]                                     ; $6c18: $66
 	ld   l, a                                        ; $6c19: $6f
-	ld   bc, Table_24_71b0                                   ; $6c1a: $01 $b0 $71
+	ld   bc, BattleInstantTexts                                   ; $6c1a: $01 $b0 $71
 	add  hl, bc                                      ; $6c1d: $09
 	call PopulateKanjiConvoStructForCurrTextBox                                       ; $6c1e: $cd $27 $10
 	
@@ -7044,66 +7164,80 @@ Call_024_6bdf:
 	ret                                              ; $6c25: $c9
 
 .table:
-	nop                                              ; $6c26: $00
-	ld   bc, $0302                                   ; $6c27: $01 $02 $03
-	inc  b                                           ; $6c2a: $04
-	dec  b                                           ; $6c2b: $05
-	ld   b, $09                                      ; $6c2c: $06 $09
-	ld   a, [bc]                                     ; $6c2e: $0a
-	dec  bc                                          ; $6c2f: $0b
-	inc  c                                           ; $6c30: $0c
-	dec  c                                           ; $6c31: $0d
-	ld   c, $0f                                      ; $6c32: $0e $0f
-	db   $10                                         ; $6c34: $10
-	ld   de, $1312                                   ; $6c35: $11 $12 $13
-	inc  d                                           ; $6c38: $14
-	dec  d                                           ; $6c39: $15
-	ld   d, $17                                      ; $6c3a: $16 $17
-	jr   @+$1b                                       ; $6c3c: $18 $19
+	db $00 ; Alright! I'm at the perfect distance!
+	db $01 ; Huh? The enemy's off-balance! Now's my chance!
+	db $02 ; Oh, no! It's getting away!
+	db $03 ; It's too close!
+	db $04 ; I can't shake it!
+	db $05 ; Damn! I can't catch up!
+	db $06 ; Damn! I won't lose!
+	db $09 ; Yes!
+	db $0a ; I won't lose!!
+	db $0b ; I'm fired up!!
+	db $0c ; Ugh!
+	db $0d ; Crap!
+	db $0e ; Alright! I dodged it!
+	db $0f ; Whoa!! That hit me?!
+	db $10 ; Nailed it!
+	db $11 ; How do you like this?!
+	db $12 ; It's closing in on me!
+	db $13 ; The enemy's backing off.
+	db $14 ; Ugh! It blocked my attack!
+	db $15 ; Take that!
+	db $16 ; Not good!
+	db $17 ; Damn!
+	db $18 ; Here it comes!
+	db $19 ; It's reeling! Now's my chance!
+	db $1a ; Alright, I recovered some health!
+	db $1b ; The enemy's assessing the situation.
+	db $1c ; It didn't do anything.
+	db $1d ; Oh no! It dodged!
+	db $07 ; So far, we're evenly matched...
+	db $08 ; I can win this!
+; unused $1e?
+	db $1e ; Alright! I cut off the enemy's movement!
+	db $1f ; Take that!
+	db $20 ; The enemy's on defense.
+	db $21 ; Ugh!
+	db $22 ; Yaahhh!
+; unused $23?
+	db $23 ; Alright! I'm right up in its face!
+	db $00
+	db $00
+	db $00
+	db $00
+	db $24 ; Floral Divinity!
+	db $25 ; Butterfly Waltz!
+	db $26 ; Snegurochka!
+	db $27 ; Iris Marionette!
+	db $28 ; Mini-Bot Attack!
+	db $29 ; Bamboo Rain!
+	db $32 ; Ahhhhh!!
+	db $31 ; I did it! I beat it!
+	db $2a ; Damn, this thing's tough... I've got no choice! It's all or nothing!
+	db $2b ; Watch this, Sakura! Here I go!
+	db $2c ; Watch this, Sumire! Here I go!
+	db $2d ; Watch this, Maria! Here I go!
+	db $2e ; Watch this, Iris! Here I go!
+	db $2f ; Watch this, Kohran! Here I go!
+	db $30 ; Watch this, Kanna! Here I go!
+	db $3e ; I need to get closer to it.
+	db $3f ; I need to get closer.
+	db $40 ; I need to create more distance between us.
+	db $41 ; I have to keep my distance.
+	db $46 ; First, I need to close in on the enemy.
+	db $47 ; Here I come!
+	db $49 ; This is all so sudden... Can I even fight well?
+	db $4a ; But... I have no choice!
+	db $4b ; Okay, here I go!
+	db $4c ; Let's see how my training's paid off!
+	db $4d ; This is it. I'm gonna give it everything I've got!
+	db $48 ; First, I need to make some distance.
+	db $42 ; It's still too far away...
+	db $43 ; My attacks won't reach it...
+	db $44 ; It's too close!
+	db $45 ; I need to back off...
 
-	ld   a, [de]                                     ; $6c3e: $1a
-	dec  de                                          ; $6c3f: $1b
-	inc  e                                           ; $6c40: $1c
-	dec  e                                           ; $6c41: $1d
-	rlca                                             ; $6c42: $07
-	ld   [$1f1e], sp                                 ; $6c43: $08 $1e $1f
-	jr   nz, jr_024_6c69                             ; $6c46: $20 $21
-
-	ld   [hl+], a                                    ; $6c48: $22
-	inc  hl                                          ; $6c49: $23
-	nop                                              ; $6c4a: $00
-	nop                                              ; $6c4b: $00
-	nop                                              ; $6c4c: $00
-	nop                                              ; $6c4d: $00
-	inc  h                                           ; $6c4e: $24
-	dec  h                                           ; $6c4f: $25
-	ld   h, $27                                      ; $6c50: $26 $27
-	jr   z, @+$2b                                    ; $6c52: $28 $29
-
-	ld   [hl-], a                                    ; $6c54: $32
-	ld   sp, $2b2a                                   ; $6c55: $31 $2a $2b
-	inc  l                                           ; $6c58: $2c
-	dec  l                                           ; $6c59: $2d
-	ld   l, $2f                                      ; $6c5a: $2e $2f
-	jr   nc, @+$40                                   ; $6c5c: $30 $3e
-
-	ccf                                              ; $6c5e: $3f
-	ld   b, b                                        ; $6c5f: $40
-	ld   b, c                                        ; $6c60: $41
-	ld   b, [hl]                                     ; $6c61: $46
-	ld   b, a                                        ; $6c62: $47
-	ld   c, c                                        ; $6c63: $49
-	ld   c, d                                        ; $6c64: $4a
-	ld   c, e                                        ; $6c65: $4b
-	ld   c, h                                        ; $6c66: $4c
-	ld   c, l                                        ; $6c67: $4d
-	ld   c, b                                        ; $6c68: $48
-
-jr_024_6c69:
-	ld   b, d                                        ; $6c69: $42
-	ld   b, e                                        ; $6c6a: $43
-	ld   b, h                                        ; $6c6b: $44
-	ld   b, l                                        ; $6c6c: $45
 
 Call_024_6c6d:
 	call CheckIfReachedLastKanjiIdxInCurrTextBox                                       ; $6c6d: $cd $71 $14
@@ -7142,7 +7276,7 @@ Call_024_6c8d:
 	ld   hl, $d000                                   ; $6c98: $21 $00 $d0
 	ld   bc, $06c0                                   ; $6c9b: $01 $c0 $06
 	call MemClear                                       ; $6c9e: $cd $95 $09
-	ld   a, [$ca6f]                                  ; $6ca1: $fa $6f $ca
+	ld   a, [wKouboChosen0idxed]                                  ; $6ca1: $fa $6f $ca
 	sla  a                                           ; $6ca4: $cb $27
 	ld   d, $00                                      ; $6ca6: $16 $00
 	ld   e, a                                        ; $6ca8: $5f
@@ -7247,7 +7381,7 @@ jr_024_6d13:
 
 ;
 	ld   a, d                                        ; $6d25: $7a
-	ld   [$ca42], a                                  ; $6d26: $ea $42 $ca
+	ld   [wBattleInstantTextTableIdx], a                                  ; $6d26: $ea $42 $ca
 	ld   a, e                                        ; $6d29: $7b
 	ld   [$ca43], a                                  ; $6d2a: $ea $43 $ca
 
@@ -7293,7 +7427,7 @@ jr_024_6d13:
 
 .br_6d64:
 	push hl                                          ; $6d64: $e5
-	ld   a, [$ca42]                                  ; $6d65: $fa $42 $ca
+	ld   a, [wBattleInstantTextTableIdx]                                  ; $6d65: $fa $42 $ca
 	ld   d, a                                        ; $6d68: $57
 	ld   a, [$ca43]                                  ; $6d69: $fa $43 $ca
 	ld   e, a                                        ; $6d6c: $5f
@@ -7336,7 +7470,7 @@ jr_024_6d13:
 	cp   $03                                         ; $6da2: $fe $03
 	jr   nz, .lastPartOfLoop                             ; $6da4: $20 $1f
 
-	ld   a, [$ca6f]                                  ; $6da6: $fa $6f $ca
+	ld   a, [wKouboChosen0idxed]                                  ; $6da6: $fa $6f $ca
 	cp   $01                                         ; $6da9: $fe $01
 	jr   z, .br_6db3                              ; $6dab: $28 $06
 
@@ -7362,14 +7496,14 @@ jr_024_6d13:
 
 .lastPartOfLoop:
 ;
-	ld   hl, Data_24_6e86                                   ; $6dc5: $21 $86 $6e
+	ld   hl, PlayerLimitedBattleTexts                                   ; $6dc5: $21 $86 $6e
 	add  hl, de                                      ; $6dc8: $19
 	ld   d, $00                                      ; $6dc9: $16 $00
 	ld   a, [hl]                                     ; $6dcb: $7e
 	ld   e, a                                        ; $6dcc: $5f
 
 ;
-	ld   hl, Table_24_71b0                                   ; $6dcd: $21 $b0 $71
+	ld   hl, BattleInstantTexts                                   ; $6dcd: $21 $b0 $71
 	add  hl, de                                      ; $6dd0: $19
 	add  hl, de                                      ; $6dd1: $19
 
@@ -7377,7 +7511,7 @@ jr_024_6d13:
 	ld   a, [hl+]                                    ; $6dd2: $2a
 	ld   h, [hl]                                     ; $6dd3: $66
 	ld   l, a                                        ; $6dd4: $6f
-	ld   de, Table_24_71b0                                   ; $6dd5: $11 $b0 $71
+	ld   de, BattleInstantTexts                                   ; $6dd5: $11 $b0 $71
 	add  hl, de                                      ; $6dd8: $19
 
 ;
@@ -7536,10 +7670,18 @@ jr_024_6e82:
 	db $01, $03 
 	
 	
-Data_24_6e86:
-	db $33, $34, $35, $36
-	db $37, $38, $39, $00
-	db $00, $00, $3d
+PlayerLimitedBattleTexts:
+	db $33 ; Attack
+	db $34 ; Approach
+	db $35 ; Back away
+	db $36 ; Charge energy
+	db $37 ; Defend
+	db $38 ; Dodge
+	db $39 ; Special attack
+	db $00
+	db $00
+	db $00
+	db $3d ; Body blow
 
 
 Data_24_6e91:
@@ -7588,7 +7730,7 @@ jr_024_6ec6:
 	ld   hl, $d000                                   ; $6ec6: $21 $00 $d0
 	ld   bc, $06c0                                   ; $6ec9: $01 $c0 $06
 	call MemClear                                       ; $6ecc: $cd $95 $09
-	ld   a, [$ca6f]                                  ; $6ecf: $fa $6f $ca
+	ld   a, [wKouboChosen0idxed]                                  ; $6ecf: $fa $6f $ca
 	sla  a                                           ; $6ed2: $cb $27
 	ld   d, $00                                      ; $6ed4: $16 $00
 	ld   e, a                                        ; $6ed6: $5f
@@ -7659,7 +7801,7 @@ jr_024_6f26:
 	add  b                                           ; $6f31: $80
 	ld   h, $00                                      ; $6f32: $26 $00
 	ld   l, a                                        ; $6f34: $6f
-	ld   de, $7189                                   ; $6f35: $11 $89 $71
+	ld   de, Data_24_7189                                   ; $6f35: $11 $89 $71
 	add  hl, de                                      ; $6f38: $19
 	jr   jr_024_6f58                                 ; $6f39: $18 $1d
 
@@ -7672,14 +7814,14 @@ jr_024_6f3b:
 	and  $03                                         ; $6f45: $e6 $03
 	ld   h, $00                                      ; $6f47: $26 $00
 	ld   l, a                                        ; $6f49: $6f
-	ld   de, $7186                                   ; $6f4a: $11 $86 $71
+	ld   de, Data_24_7186                                   ; $6f4a: $11 $86 $71
 	add  hl, de                                      ; $6f4d: $19
 	jr   jr_024_6f58                                 ; $6f4e: $18 $08
 
 jr_024_6f50:
 	ld   h, $00                                      ; $6f50: $26 $00
 	ld   l, $01                                      ; $6f52: $2e $01
-	ld   de, $7186                                   ; $6f54: $11 $86 $71
+	ld   de, Data_24_7186                                   ; $6f54: $11 $86 $71
 	add  hl, de                                      ; $6f57: $19
 
 jr_024_6f58:
@@ -7699,7 +7841,7 @@ Jump_024_6f5e:
 	call SetCurrKanjiColAndRowToDrawOn                                       ; $6f66: $cd $34 $14
 	pop  de                                          ; $6f69: $d1
 	ld   a, d                                        ; $6f6a: $7a
-	ld   [$ca42], a                                  ; $6f6b: $ea $42 $ca
+	ld   [wBattleInstantTextTableIdx], a                                  ; $6f6b: $ea $42 $ca
 	ld   a, e                                        ; $6f6e: $7b
 	ld   [$ca43], a                                  ; $6f6f: $ea $43 $ca
 	push hl                                          ; $6f72: $e5
@@ -7725,7 +7867,7 @@ Jump_024_6f5e:
 	sla  a                                           ; $6f8d: $cb $27
 	ld   b, $00                                      ; $6f8f: $06 $00
 	ld   c, a                                        ; $6f91: $4f
-	ld   hl, $719b                                   ; $6f92: $21 $9b $71
+	ld   hl, Data_24_719b                                  ; $6f92: $21 $9b $71
 	add  hl, bc                                      ; $6f95: $09
 	ld   a, [hl+]                                    ; $6f96: $2a
 	ld   h, [hl]                                     ; $6f97: $66
@@ -7743,7 +7885,7 @@ Jump_024_6f5e:
 
 jr_024_6fa9:
 	push hl                                          ; $6fa9: $e5
-	ld   a, [$ca42]                                  ; $6faa: $fa $42 $ca
+	ld   a, [wBattleInstantTextTableIdx]                                  ; $6faa: $fa $42 $ca
 	ld   d, a                                        ; $6fad: $57
 	ld   a, [$ca43]                                  ; $6fae: $fa $43 $ca
 	ld   e, a                                        ; $6fb1: $5f
@@ -7758,7 +7900,7 @@ jr_024_6fa9:
 	ld   de, $0001                                   ; $6fbe: $11 $01 $00
 
 jr_024_6fc1:
-	ld   a, [$ca6f]                                  ; $6fc1: $fa $6f $ca
+	ld   a, [wKouboChosen0idxed]                                  ; $6fc1: $fa $6f $ca
 	cp   $03                                         ; $6fc4: $fe $03
 	jr   nz, jr_024_6fd6                             ; $6fc6: $20 $0e
 
@@ -7795,24 +7937,33 @@ jr_024_6fe6:
 	ld   e, $09                                      ; $6ff2: $1e $09
 
 jr_024_6ff4:
-	ld   hl, $717b                                   ; $6ff4: $21 $7b $71
+;
+	ld   hl, PlayerBattleTexts                                   ; $6ff4: $21 $7b $71
 	add  hl, de                                      ; $6ff7: $19
+
+;
 	ld   d, $00                                      ; $6ff8: $16 $00
 	ld   a, [hl]                                     ; $6ffa: $7e
 	ld   e, a                                        ; $6ffb: $5f
-	ld   hl, Table_24_71b0                                   ; $6ffc: $21 $b0 $71
+
+;
+	ld   hl, BattleInstantTexts                                   ; $6ffc: $21 $b0 $71
 	add  hl, de                                      ; $6fff: $19
 	add  hl, de                                      ; $7000: $19
 	ld   a, [hl+]                                    ; $7001: $2a
 	ld   h, [hl]                                     ; $7002: $66
 	ld   l, a                                        ; $7003: $6f
-	ld   de, Table_24_71b0                                   ; $7004: $11 $b0 $71
+	ld   de, BattleInstantTexts                                   ; $7004: $11 $b0 $71
 	add  hl, de                                      ; $7007: $19
+
+;
 	ld   d, h                                        ; $7008: $54
 	ld   e, l                                        ; $7009: $5d
 	ld   hl, $d000                                   ; $700a: $21 $00 $d0
 	ld   a, $24                                      ; $700d: $3e $24
 	call LoadInstantText                                       ; $700f: $cd $06 $13
+
+;
 	pop  hl                                          ; $7012: $e1
 	pop  de                                          ; $7013: $d1
 	pop  af                                          ; $7014: $f1
@@ -8120,156 +8271,160 @@ jr_024_6ff4:
 	rst  $38                                         ; $7176: $ff
 	ld   [bc], a                                     ; $7177: $02
 	ld   bc, $ff03                                   ; $7178: $01 $03 $ff
-	inc  sp                                          ; $717b: $33
-	inc  [hl]                                        ; $717c: $34
-	dec  [hl]                                        ; $717d: $35
-	ld   [hl], $37                                   ; $717e: $36 $37
-	db $38, $39
-
-	ld   a, [hl-]                                    ; $7182: $3a
-	dec  sp                                          ; $7183: $3b
-	inc  a                                           ; $7184: $3c
-	dec  a                                           ; $7185: $3d
-	ld   bc, $0200                                   ; $7186: $01 $00 $02
-	nop                                              ; $7189: $00
-	ld   bc, $0002                                   ; $718a: $01 $02 $00
-	ld   [bc], a                                     ; $718d: $02
-	ld   bc, $0201                                   ; $718e: $01 $01 $02
-	nop                                              ; $7191: $00
-	ld   bc, $0200                                   ; $7192: $01 $00 $02
-	ld   [bc], a                                     ; $7195: $02
-	nop                                              ; $7196: $00
-	ld   bc, $0102                                   ; $7197: $01 $02 $01
-	nop                                              ; $719a: $00
 
 
+PlayerBattleTexts:
+	db $33 ; Attack
+	db $34 ; Approach
+	db $35 ; Back away
+	db $36 ; Charge energy
+	db $37 ; Defend
+	db $38 ; Dodge
+	db $39 ; Special attack
+	db $3a ; Teleport
+	db $3b ; Maintain distance
+	db $3c ; Pursue
+	db $3d ; Body blow
 
-	xor  c                                           ; $719b: $a9
-	ld   [hl], c                                     ; $719c: $71
-	xor  d                                           ; $719d: $aa
-	ld   [hl], c                                     ; $719e: $71
-	xor  e                                           ; $719f: $ab
-	ld   [hl], c                                     ; $71a0: $71
-	xor  h                                           ; $71a1: $ac
-	ld   [hl], c                                     ; $71a2: $71
-	xor  l                                           ; $71a3: $ad
-	ld   [hl], c                                     ; $71a4: $71
-	xor  [hl]                                        ; $71a5: $ae
-	ld   [hl], c                                     ; $71a6: $71
-	xor  a                                           ; $71a7: $af
-	ld   [hl], c                                     ; $71a8: $71
 
-	
-	inc  hl                                          ; $71a9: $23
-	inc  a                                           ; $71aa: $3c
-	ld   d, b                                        ; $71ab: $50
-	ld   h, h                                        ; $71ac: $64
-	ld   a, l                                        ; $71ad: $7d
-	ld   l, [hl]                                     ; $71ae: $6e
-	ld   l, [hl]                                     ; $71af: $6e
+Data_24_7186:
+	db $01, $00, $02
+
+
+Data_24_7189:
+	db $00, $01, $02
+	db $00, $02, $01
+	db $01, $02, $00
+	db $01, $00, $02
+	db $02, $00, $01
+	db $02, $01, $00
+
+
+Data_24_719b:
+	dw .entry0
+	dw .entry1
+	dw .entry2
+	dw .entry3
+	dw .entry4
+	dw .entry5
+	dw .entry6
+.entry0:
+	db $23
+.entry1:
+	db $3c
+.entry2:
+	db $50
+.entry3:
+	db $64
+.entry4:
+	db $7d
+.entry5:
+	db $6e
+.entry6:
+	db $6e
 
 
 if def(VWF)
-Table_24_71b0entry00::
+BattleInstantTextsentry00::
 	db $1b, $40, $46, $3d, $3b, $3c, $48, $fa, $0d
 	db $23, $01, $01, $41, $10, $35, $48, $10, $48, $3c, $39, $10, $44, $39, $46, $3a, $39, $37, $48, $0d
 	db $38, $3d, $47, $48, $35, $42, $37, $39, $fa, $00
-Table_24_71b0entry01::
+BattleInstantTextsentry01::
 	db $22, $49, $3c, $f9, $0d
 	db $2e, $3c, $39, $10, $39, $42, $39, $41, $4d, $01, $01, $47, $10, $43, $3a, $3a, $01, $0a, $36, $35, $40, $35, $42, $37, $39, $fa, $0d
 	db $28, $43, $4b, $01, $01, $47, $10, $41, $4d, $10, $37, $3c, $35, $42, $37, $39, $fa, $00
-Table_24_71b0entry02::
+BattleInstantTextsentry02::
 	db $29, $3c, $e1, $10, $42, $43, $fa, $0d
 	db $23, $48, $01, $01, $47, $10, $3b, $39, $48, $48, $3d, $42, $3b, $10, $35, $4b, $35, $4d, $fa, $00
-Table_24_71b0entry03::
+BattleInstantTextsentry03::
 	db $23, $48, $01, $01, $47, $10, $48, $43, $43, $10, $37, $40, $43, $47, $39, $fa, $00
-Table_24_71b0entry04::
+BattleInstantTextsentry04::
 	db $23, $10, $37, $35, $42, $01, $01, $48, $10, $47, $3c, $35, $3f, $39, $10, $3d, $48, $fa, $00
-Table_24_71b0entry05::
+BattleInstantTextsentry05::
 	db $1e, $35, $41, $42, $fa, $0d
 	db $23, $10, $37, $35, $42, $01, $01, $48, $10, $37, $35, $48, $37, $3c, $10, $49, $44, $fa, $00
-Table_24_71b0entry06::
+BattleInstantTextsentry06::
 	db $1e, $35, $41, $42, $fa, $0d
 	db $23, $10, $4b, $43, $42, $01, $01, $48, $10, $40, $43, $47, $39, $fa, $00
-Table_24_71b0entry07::
+BattleInstantTextsentry07::
 	db $2d, $43, $10, $3a, $35, $46, $e1, $10, $4b, $39, $01, $01, $46, $39, $10, $39, $4a, $39, $42, $40, $4d, $0d
 	db $41, $35, $48, $37, $3c, $39, $38, $f2, $f2, $f2, $00
-Table_24_71b0entry08::
+BattleInstantTextsentry08::
 	db $23, $10, $37, $35, $42, $10, $4b, $3d, $42, $10, $48, $3c, $3d, $47, $fa, $00
-Table_24_71b0entry09::
+BattleInstantTextsentry09::
 	db $33, $39, $47, $fa, $00
-Table_24_71b0entry0a::
+BattleInstantTextsentry0a::
 	db $23, $10, $4b, $43, $42, $01, $01, $48, $10, $40, $43, $47, $39, $fa, $fa, $00
-Table_24_71b0entry0b::
+BattleInstantTextsentry0b::
 	db $23, $01, $01, $41, $10, $3a, $3d, $46, $39, $38, $10, $49, $44, $fa, $fa, $00
-Table_24_71b0entry0c::
+BattleInstantTextsentry0c::
 	db $2f, $3b, $3c, $fa, $00
-Table_24_71b0entry0d::
+BattleInstantTextsentry0d::
 	db $1d, $46, $35, $44, $fa, $00
-Table_24_71b0entry0e::
+BattleInstantTextsentry0e::
 	db $1b, $40, $46, $3d, $3b, $3c, $48, $fa, $0d
 	db $23, $10, $38, $43, $38, $3b, $39, $38, $10, $3d, $48, $fa, $00
-Table_24_71b0entry0f::
+BattleInstantTextsentry0f::
 	db $31, $3c, $43, $35, $fa, $fa, $0d
 	db $2e, $3c, $35, $48, $10, $3c, $3d, $48, $10, $41, $39, $f9, $fa, $00
-Table_24_71b0entry10::
+BattleInstantTextsentry10::
 	db $28, $35, $3d, $40, $39, $38, $10, $3d, $48, $fa, $00
-Table_24_71b0entry11::
+BattleInstantTextsentry11::
 	db $22, $43, $4b, $10, $38, $43, $10, $4d, $43, $49, $10, $40, $3d, $3f, $39, $10, $48, $3c, $3d, $47, $f9, $fa, $00
-Table_24_71b0entry12::
+BattleInstantTextsentry12::
 	db $23, $48, $01, $01, $47, $10, $37, $40, $43, $47, $3d, $42, $3b, $10, $3d, $42, $10, $43, $42, $10, $41, $39, $fa, $00
-Table_24_71b0entry13::
+BattleInstantTextsentry13::
 	db $2e, $3c, $39, $10, $39, $42, $39, $41, $4d, $01, $01, $47, $10, $36, $35, $37, $3f, $3d, $42, $3b, $10, $43, $3a, $3a, $f2, $00
-Table_24_71b0entry14::
+BattleInstantTextsentry14::
 	db $2f, $3b, $3c, $fa, $0d
 	db $23, $48, $10, $36, $40, $43, $37, $3f, $39, $38, $10, $41, $4d, $10, $35, $48, $48, $35, $37, $3f, $fa, $00
-Table_24_71b0entry15::
+BattleInstantTextsentry15::
 	db $2e, $35, $3f, $39, $10, $48, $3c, $35, $48, $fa, $00
-Table_24_71b0entry16::
+BattleInstantTextsentry16::
 	db $28, $43, $48, $10, $3b, $43, $43, $38, $fa, $00
-Table_24_71b0entry17::
+BattleInstantTextsentry17::
 	db $1e, $35, $41, $42, $fa, $00
-Table_24_71b0entry18::
+BattleInstantTextsentry18::
 	db $22, $39, $46, $39, $10, $3d, $48, $10, $37, $43, $41, $39, $47, $fa, $00
-Table_24_71b0entry19::
+BattleInstantTextsentry19::
 	db $23, $48, $01, $01, $47, $10, $46, $39, $39, $40, $3d, $42, $3b, $fa, $0d
 	db $28, $43, $4b, $01, $01, $47, $10, $41, $4d, $10, $37, $3c, $35, $42, $37, $39, $fa, $00
-Table_24_71b0entry1a::
+BattleInstantTextsentry1a::
 	db $1b, $40, $46, $3d, $3b, $3c, $48, $e1, $10, $23, $10, $46, $39, $37, $43, $4a, $39, $46, $39, $38, $10, $47, $43, $41, $39, $0d
 	db $3c, $39, $35, $40, $48, $3c, $fa, $00
-Table_24_71b0entry1b::
+BattleInstantTextsentry1b::
 	db $2e, $3c, $39, $10, $39, $42, $39, $41, $4d, $01, $01, $47, $10, $35, $47, $47, $39, $47, $47, $3d, $42, $3b, $0d
 	db $48, $3c, $39, $10, $47, $3d, $48, $49, $35, $48, $3d, $43, $42, $f2, $00
-Table_24_71b0entry1c::
+BattleInstantTextsentry1c::
 	db $23, $48, $10, $38, $3d, $38, $42, $01, $01, $48, $10, $38, $43, $10, $35, $42, $4d, $48, $3c, $3d, $42, $3b, $f2, $00
-Table_24_71b0entry1d::
+BattleInstantTextsentry1d::
 	db $29, $3c, $10, $42, $43, $fa, $0d
 	db $23, $48, $10, $38, $43, $38, $3b, $39, $38, $fa, $00
-Table_24_71b0entry1e::
+BattleInstantTextsentry1e::
 	db $1b, $40, $46, $3d, $3b, $3c, $48, $fa, $0d
 	db $23, $10, $37, $49, $48, $10, $43, $3a, $3a, $10, $48, $3c, $39, $10, $39, $42, $39, $41, $4d, $01, $01, $47, $0d
 	db $41, $43, $4a, $39, $41, $39, $42, $48, $fa, $00
-Table_24_71b0entry1f::
+BattleInstantTextsentry1f::
 	db $2e, $35, $3f, $39, $10, $48, $3c, $35, $48, $fa, $00
-Table_24_71b0entry20::
+BattleInstantTextsentry20::
 	db $2e, $3c, $39, $10, $39, $42, $39, $41, $4d, $01, $01, $47, $10, $43, $42, $10, $38, $39, $3a, $39, $42, $47, $39, $f2, $00
-Table_24_71b0entry21::
+BattleInstantTextsentry21::
 	db $2f, $3b, $3c, $fa, $00
-Table_24_71b0entry22::
+BattleInstantTextsentry22::
 	db $33, $35, $35, $3c, $3c, $3c, $fa, $00
-Table_24_71b0entry23::
+BattleInstantTextsentry23::
 	db $1b, $40, $46, $3d, $3b, $3c, $48, $fa, $0d
 	db $23, $01, $01, $41, $10, $46, $3d, $3b, $3c, $48, $10, $49, $44, $10, $3d, $42, $10, $3d, $48, $47, $10, $3a, $35, $37, $39, $fa, $00
-Table_24_71b0entry24::
+BattleInstantTextsentry24::
 	db $20, $40, $43, $46, $35, $40, $10, $1e, $3d, $4a, $3d, $42, $3d, $48, $4d, $fa, $00
-Table_24_71b0entry25::
+BattleInstantTextsentry25::
 	db $1c, $49, $48, $48, $39, $46, $3a, $40, $4d, $10, $31, $35, $40, $48, $4e, $fa, $00
-Table_24_71b0entry26::
+BattleInstantTextsentry26::
 	db $2d, $42, $39, $3b, $49, $46, $43, $37, $3c, $3f, $35, $fa, $00
 
 	ds $7657-@, $00
 else
-Table_24_71b0:
+BattleInstantTexts:
 	dw $009c
 	dw $00ae
 	dw $00c5
@@ -9469,7 +9624,7 @@ Call_024_77cc:
 	push bc                                          ; $77cd: $c5
 	push hl                                          ; $77ce: $e5
 	push af                                          ; $77cf: $f5
-	ld   a, [$ca6f]                                  ; $77d0: $fa $6f $ca
+	ld   a, [wKouboChosen0idxed]                                  ; $77d0: $fa $6f $ca
 	cp   $00                                         ; $77d3: $fe $00
 	jp   z, Jump_024_77f1                            ; $77d5: $ca $f1 $77
 
@@ -9651,180 +9806,180 @@ jr_024_78bd:
 
 
 if def(VWF)
-Table_24_71b0::
-	dw Table_24_71b0entry00-Table_24_71b0
-	dw Table_24_71b0entry01-Table_24_71b0
-	dw Table_24_71b0entry02-Table_24_71b0
-	dw Table_24_71b0entry03-Table_24_71b0
-	dw Table_24_71b0entry04-Table_24_71b0
-	dw Table_24_71b0entry05-Table_24_71b0
-	dw Table_24_71b0entry06-Table_24_71b0
-	dw Table_24_71b0entry07-Table_24_71b0
-	dw Table_24_71b0entry08-Table_24_71b0
-	dw Table_24_71b0entry09-Table_24_71b0
-	dw Table_24_71b0entry0a-Table_24_71b0
-	dw Table_24_71b0entry0b-Table_24_71b0
-	dw Table_24_71b0entry0c-Table_24_71b0
-	dw Table_24_71b0entry0d-Table_24_71b0
-	dw Table_24_71b0entry0e-Table_24_71b0
-	dw Table_24_71b0entry0f-Table_24_71b0
-	dw Table_24_71b0entry10-Table_24_71b0
-	dw Table_24_71b0entry11-Table_24_71b0
-	dw Table_24_71b0entry12-Table_24_71b0
-	dw Table_24_71b0entry13-Table_24_71b0
-	dw Table_24_71b0entry14-Table_24_71b0
-	dw Table_24_71b0entry15-Table_24_71b0
-	dw Table_24_71b0entry16-Table_24_71b0
-	dw Table_24_71b0entry17-Table_24_71b0
-	dw Table_24_71b0entry18-Table_24_71b0
-	dw Table_24_71b0entry19-Table_24_71b0
-	dw Table_24_71b0entry1a-Table_24_71b0
-	dw Table_24_71b0entry1b-Table_24_71b0
-	dw Table_24_71b0entry1c-Table_24_71b0
-	dw Table_24_71b0entry1d-Table_24_71b0
-	dw Table_24_71b0entry1e-Table_24_71b0
-	dw Table_24_71b0entry1f-Table_24_71b0
-	dw Table_24_71b0entry20-Table_24_71b0
-	dw Table_24_71b0entry21-Table_24_71b0
-	dw Table_24_71b0entry22-Table_24_71b0
-	dw Table_24_71b0entry23-Table_24_71b0
-	dw Table_24_71b0entry24-Table_24_71b0
-	dw Table_24_71b0entry25-Table_24_71b0
-	dw Table_24_71b0entry26-Table_24_71b0
-	dw Table_24_71b0entry27-Table_24_71b0
-	dw Table_24_71b0entry28-Table_24_71b0
-	dw Table_24_71b0entry29-Table_24_71b0
-	dw Table_24_71b0entry2a-Table_24_71b0
-	dw Table_24_71b0entry2b-Table_24_71b0
-	dw Table_24_71b0entry2c-Table_24_71b0
-	dw Table_24_71b0entry2d-Table_24_71b0
-	dw Table_24_71b0entry2e-Table_24_71b0
-	dw Table_24_71b0entry2f-Table_24_71b0
-	dw Table_24_71b0entry30-Table_24_71b0
-	dw Table_24_71b0entry31-Table_24_71b0
-	dw Table_24_71b0entry32-Table_24_71b0
-	dw Table_24_71b0entry33-Table_24_71b0
-	dw Table_24_71b0entry34-Table_24_71b0
-	dw Table_24_71b0entry35-Table_24_71b0
-	dw Table_24_71b0entry36-Table_24_71b0
-	dw Table_24_71b0entry37-Table_24_71b0
-	dw Table_24_71b0entry38-Table_24_71b0
-	dw Table_24_71b0entry39-Table_24_71b0
-	dw Table_24_71b0entry3a-Table_24_71b0
-	dw Table_24_71b0entry3b-Table_24_71b0
-	dw Table_24_71b0entry3c-Table_24_71b0
-	dw Table_24_71b0entry3d-Table_24_71b0
-	dw Table_24_71b0entry3e-Table_24_71b0
-	dw Table_24_71b0entry3f-Table_24_71b0
-	dw Table_24_71b0entry40-Table_24_71b0
-	dw Table_24_71b0entry41-Table_24_71b0
-	dw Table_24_71b0entry42-Table_24_71b0
-	dw Table_24_71b0entry43-Table_24_71b0
-	dw Table_24_71b0entry44-Table_24_71b0
-	dw Table_24_71b0entry45-Table_24_71b0
-	dw Table_24_71b0entry46-Table_24_71b0
-	dw Table_24_71b0entry47-Table_24_71b0
-	dw Table_24_71b0entry48-Table_24_71b0
-	dw Table_24_71b0entry49-Table_24_71b0
-	dw Table_24_71b0entry4a-Table_24_71b0
-	dw Table_24_71b0entry4b-Table_24_71b0
-	dw Table_24_71b0entry4c-Table_24_71b0
-	dw Table_24_71b0entry4d-Table_24_71b0
+BattleInstantTexts::
+	dw BattleInstantTextsentry00-BattleInstantTexts
+	dw BattleInstantTextsentry01-BattleInstantTexts
+	dw BattleInstantTextsentry02-BattleInstantTexts
+	dw BattleInstantTextsentry03-BattleInstantTexts
+	dw BattleInstantTextsentry04-BattleInstantTexts
+	dw BattleInstantTextsentry05-BattleInstantTexts
+	dw BattleInstantTextsentry06-BattleInstantTexts
+	dw BattleInstantTextsentry07-BattleInstantTexts
+	dw BattleInstantTextsentry08-BattleInstantTexts
+	dw BattleInstantTextsentry09-BattleInstantTexts
+	dw BattleInstantTextsentry0a-BattleInstantTexts
+	dw BattleInstantTextsentry0b-BattleInstantTexts
+	dw BattleInstantTextsentry0c-BattleInstantTexts
+	dw BattleInstantTextsentry0d-BattleInstantTexts
+	dw BattleInstantTextsentry0e-BattleInstantTexts
+	dw BattleInstantTextsentry0f-BattleInstantTexts
+	dw BattleInstantTextsentry10-BattleInstantTexts
+	dw BattleInstantTextsentry11-BattleInstantTexts
+	dw BattleInstantTextsentry12-BattleInstantTexts
+	dw BattleInstantTextsentry13-BattleInstantTexts
+	dw BattleInstantTextsentry14-BattleInstantTexts
+	dw BattleInstantTextsentry15-BattleInstantTexts
+	dw BattleInstantTextsentry16-BattleInstantTexts
+	dw BattleInstantTextsentry17-BattleInstantTexts
+	dw BattleInstantTextsentry18-BattleInstantTexts
+	dw BattleInstantTextsentry19-BattleInstantTexts
+	dw BattleInstantTextsentry1a-BattleInstantTexts
+	dw BattleInstantTextsentry1b-BattleInstantTexts
+	dw BattleInstantTextsentry1c-BattleInstantTexts
+	dw BattleInstantTextsentry1d-BattleInstantTexts
+	dw BattleInstantTextsentry1e-BattleInstantTexts
+	dw BattleInstantTextsentry1f-BattleInstantTexts
+	dw BattleInstantTextsentry20-BattleInstantTexts
+	dw BattleInstantTextsentry21-BattleInstantTexts
+	dw BattleInstantTextsentry22-BattleInstantTexts
+	dw BattleInstantTextsentry23-BattleInstantTexts
+	dw BattleInstantTextsentry24-BattleInstantTexts
+	dw BattleInstantTextsentry25-BattleInstantTexts
+	dw BattleInstantTextsentry26-BattleInstantTexts
+	dw BattleInstantTextsentry27-BattleInstantTexts
+	dw BattleInstantTextsentry28-BattleInstantTexts
+	dw BattleInstantTextsentry29-BattleInstantTexts
+	dw BattleInstantTextsentry2a-BattleInstantTexts
+	dw BattleInstantTextsentry2b-BattleInstantTexts
+	dw BattleInstantTextsentry2c-BattleInstantTexts
+	dw BattleInstantTextsentry2d-BattleInstantTexts
+	dw BattleInstantTextsentry2e-BattleInstantTexts
+	dw BattleInstantTextsentry2f-BattleInstantTexts
+	dw BattleInstantTextsentry30-BattleInstantTexts
+	dw BattleInstantTextsentry31-BattleInstantTexts
+	dw BattleInstantTextsentry32-BattleInstantTexts
+	dw BattleInstantTextsentry33-BattleInstantTexts
+	dw BattleInstantTextsentry34-BattleInstantTexts
+	dw BattleInstantTextsentry35-BattleInstantTexts
+	dw BattleInstantTextsentry36-BattleInstantTexts
+	dw BattleInstantTextsentry37-BattleInstantTexts
+	dw BattleInstantTextsentry38-BattleInstantTexts
+	dw BattleInstantTextsentry39-BattleInstantTexts
+	dw BattleInstantTextsentry3a-BattleInstantTexts
+	dw BattleInstantTextsentry3b-BattleInstantTexts
+	dw BattleInstantTextsentry3c-BattleInstantTexts
+	dw BattleInstantTextsentry3d-BattleInstantTexts
+	dw BattleInstantTextsentry3e-BattleInstantTexts
+	dw BattleInstantTextsentry3f-BattleInstantTexts
+	dw BattleInstantTextsentry40-BattleInstantTexts
+	dw BattleInstantTextsentry41-BattleInstantTexts
+	dw BattleInstantTextsentry42-BattleInstantTexts
+	dw BattleInstantTextsentry43-BattleInstantTexts
+	dw BattleInstantTextsentry44-BattleInstantTexts
+	dw BattleInstantTextsentry45-BattleInstantTexts
+	dw BattleInstantTextsentry46-BattleInstantTexts
+	dw BattleInstantTextsentry47-BattleInstantTexts
+	dw BattleInstantTextsentry48-BattleInstantTexts
+	dw BattleInstantTextsentry49-BattleInstantTexts
+	dw BattleInstantTextsentry4a-BattleInstantTexts
+	dw BattleInstantTextsentry4b-BattleInstantTexts
+	dw BattleInstantTextsentry4c-BattleInstantTexts
+	dw BattleInstantTextsentry4d-BattleInstantTexts
 
-Table_24_71b0entry27::
+BattleInstantTextsentry27::
 	db $23, $46, $3d, $47, $10, $27, $35, $46, $3d, $43, $42, $39, $48, $48, $39, $fa, $00
-Table_24_71b0entry28::
+BattleInstantTextsentry28::
 	db $27, $3d, $42, $3d, $01, $0a, $1c, $43, $48, $10, $1b, $48, $48, $35, $37, $3f, $fa, $00
-Table_24_71b0entry29::
+BattleInstantTextsentry29::
 	db $1c, $35, $41, $36, $43, $43, $10, $2c, $35, $3d, $42, $fa, $00
-Table_24_71b0entry2a::
+BattleInstantTextsentry2a::
 	db $1e, $35, $41, $42, $e1, $10, $48, $3c, $3d, $47, $10, $48, $3c, $3d, $42, $3b, $01, $01, $47, $10, $48, $43, $49, $3b, $3c, $f2, $f2, $f2, $0d
 	db $23, $01, $01, $4a, $39, $10, $3b, $43, $48, $10, $42, $43, $10, $37, $3c, $43, $3d, $37, $39, $fa, $0d
 	db $23, $48, $01, $01, $47, $10, $35, $40, $40, $10, $43, $46, $10, $42, $43, $48, $3c, $3d, $42, $3b, $fa, $00
-Table_24_71b0entry2b::
-	db $31, $35, $48, $37, $3c, $10, $48, $3c, $3d, $47, $e1, $10, $2d, $35, $3f, $49, $46, $35, $fa, $10, $22, $39, $46, $39, $10, $23, $0d
-	db $3b, $43, $fa, $00
-Table_24_71b0entry2c::
-	db $31, $35, $48, $37, $3c, $10, $48, $3c, $3d, $47, $e1, $10, $2d, $49, $41, $3d, $46, $39, $fa, $10, $22, $39, $46, $39, $10, $23, $0d
-	db $3b, $43, $fa, $00
-Table_24_71b0entry2d::
-	db $31, $35, $48, $37, $3c, $10, $48, $3c, $3d, $47, $e1, $10, $27, $35, $46, $3d, $35, $fa, $10, $22, $39, $46, $39, $10, $23, $0d
-	db $3b, $43, $fa, $00
-Table_24_71b0entry2e::
-	db $31, $35, $48, $37, $3c, $10, $48, $3c, $3d, $47, $e1, $10, $23, $46, $3d, $47, $fa, $10, $22, $39, $46, $39, $10, $23, $0d
-	db $3b, $43, $fa, $00
-Table_24_71b0entry2f::
-	db $31, $35, $48, $37, $3c, $10, $48, $3c, $3d, $47, $e1, $10, $25, $43, $3c, $46, $35, $42, $fa, $10, $22, $39, $46, $39, $10, $23, $0d
-	db $3b, $43, $fa, $00
-Table_24_71b0entry30::
-	db $31, $35, $48, $37, $3c, $10, $48, $3c, $3d, $47, $e1, $10, $25, $35, $42, $42, $35, $fa, $10, $22, $39, $46, $39, $10, $23, $0d
-	db $3b, $43, $fa, $00
-Table_24_71b0entry31::
+BattleInstantTextsentry2b::
+	db $31, $35, $48, $37, $3c, $10, $48, $3c, $3d, $47, $e1, $10, $2d, $35, $3f, $49, $46, $35, $fa, $0d
+	db $22, $39, $46, $39, $10, $23, $10, $3b, $43, $fa, $00
+BattleInstantTextsentry2c::
+	db $31, $35, $48, $37, $3c, $10, $48, $3c, $3d, $47, $e1, $10, $2d, $49, $41, $3d, $46, $39, $fa, $0d
+	db $22, $39, $46, $39, $10, $23, $10, $3b, $43, $fa, $00
+BattleInstantTextsentry2d::
+	db $31, $35, $48, $37, $3c, $10, $48, $3c, $3d, $47, $e1, $10, $27, $35, $46, $3d, $35, $fa, $0d
+	db $22, $39, $46, $39, $10, $23, $10, $3b, $43, $fa, $00
+BattleInstantTextsentry2e::
+	db $31, $35, $48, $37, $3c, $10, $48, $3c, $3d, $47, $e1, $10, $23, $46, $3d, $47, $fa, $0d
+	db $22, $39, $46, $39, $10, $23, $10, $3b, $43, $fa, $00
+BattleInstantTextsentry2f::
+	db $31, $35, $48, $37, $3c, $10, $48, $3c, $3d, $47, $e1, $10, $25, $43, $3c, $46, $35, $42, $fa, $0d
+	db $22, $39, $46, $39, $10, $23, $10, $3b, $43, $fa, $00
+BattleInstantTextsentry30::
+	db $31, $35, $48, $37, $3c, $10, $48, $3c, $3d, $47, $e1, $10, $25, $35, $42, $42, $35, $fa, $0d
+	db $22, $39, $46, $39, $10, $23, $10, $3b, $43, $fa, $00
+BattleInstantTextsentry31::
 	db $23, $10, $38, $3d, $38, $10, $3d, $48, $fa, $0d
 	db $23, $10, $36, $39, $35, $48, $10, $3d, $48, $fa, $00
-Table_24_71b0entry32::
+BattleInstantTextsentry32::
 	db $1b, $3c, $3c, $3c, $3c, $3c, $fa, $fa, $00
-Table_24_71b0entry33::
+BattleInstantTextsentry33::
 	db $1b, $48, $48, $35, $37, $3f, $00
-Table_24_71b0entry34::
+BattleInstantTextsentry34::
 	db $1b, $44, $44, $46, $43, $35, $37, $3c, $00
-Table_24_71b0entry35::
+BattleInstantTextsentry35::
 	db $1c, $35, $37, $3f, $10, $35, $4b, $35, $4d, $00
-Table_24_71b0entry36::
+BattleInstantTextsentry36::
 	db $1d, $3c, $35, $46, $3b, $39, $10, $39, $42, $39, $46, $3b, $4d, $00
-Table_24_71b0entry37::
+BattleInstantTextsentry37::
 	db $1e, $39, $3a, $39, $42, $38, $00
-Table_24_71b0entry38::
+BattleInstantTextsentry38::
 	db $1e, $43, $38, $3b, $39, $00
-Table_24_71b0entry39::
+BattleInstantTextsentry39::
 	db $2d, $44, $39, $37, $3d, $35, $40, $10, $35, $48, $48, $35, $37, $3f, $00
-Table_24_71b0entry3a::
+BattleInstantTextsentry3a::
 	db $2e, $39, $40, $39, $44, $43, $46, $48, $00
-Table_24_71b0entry3b::
+BattleInstantTextsentry3b::
 	db $27, $35, $3d, $42, $48, $35, $3d, $42, $10, $38, $3d, $47, $48, $35, $42, $37, $39, $00
-Table_24_71b0entry3c::
+BattleInstantTextsentry3c::
 	db $2a, $49, $46, $47, $49, $39, $00
-Table_24_71b0entry3d::
+BattleInstantTextsentry3d::
 	db $1c, $43, $38, $4d, $10, $1c, $40, $43, $4b, $00
-Table_24_71b0entry3e::
+BattleInstantTextsentry3e::
 	db $23, $10, $42, $39, $39, $38, $10, $48, $43, $10, $3b, $39, $48, $10, $37, $40, $43, $47, $39, $46, $10, $48, $43, $10, $3d, $48, $f2, $00
-Table_24_71b0entry3f::
-	db $23, $10, $42, $39, $39, $38, $10, $48, $43, $10, $3b, $39, $48, $10, $37, $40, $43, $47, $39, $10, $48, $43, $10, $3d, $48, $f2, $00
-Table_24_71b0entry40::
+BattleInstantTextsentry3f::
+	db $23, $10, $42, $39, $39, $38, $10, $48, $43, $10, $3b, $39, $48, $10, $37, $40, $43, $47, $39, $46, $f2, $00
+BattleInstantTextsentry40::
 	db $23, $10, $42, $39, $39, $38, $10, $48, $43, $10, $37, $46, $39, $35, $48, $39, $10, $41, $43, $46, $39, $0d
 	db $38, $3d, $47, $48, $35, $42, $37, $39, $10, $36, $39, $48, $4b, $39, $39, $42, $10, $49, $47, $f2, $00
-Table_24_71b0entry41::
+BattleInstantTextsentry41::
 	db $23, $10, $3c, $35, $4a, $39, $10, $48, $43, $10, $3f, $39, $39, $44, $10, $41, $4d, $0d
 	db $38, $3d, $47, $48, $35, $42, $37, $39, $f2, $00
-Table_24_71b0entry42::
+BattleInstantTextsentry42::
 	db $23, $48, $01, $01, $47, $10, $47, $48, $3d, $40, $40, $10, $48, $43, $43, $10, $3a, $35, $46, $10, $35, $4b, $35, $4d, $f2, $f2, $f2, $00
-Table_24_71b0entry43::
-	db $27, $4d, $10, $35, $48, $48, $35, $37, $3f, $47, $10, $4b, $43, $42, $01, $01, $48, $10, $46, $39, $35, $37, $3c, $0d
-	db $3d, $48, $f2, $f2, $f2, $00
-Table_24_71b0entry44::
+BattleInstantTextsentry43::
+	db $27, $4d, $10, $35, $48, $48, $35, $37, $3f, $47, $10, $4b, $43, $42, $01, $01, $48, $0d
+	db $46, $39, $35, $37, $3c, $10, $3d, $48, $f2, $f2, $f2, $00
+BattleInstantTextsentry44::
 	db $23, $48, $01, $01, $47, $10, $48, $43, $43, $10, $37, $40, $43, $47, $39, $fa, $00
-Table_24_71b0entry45::
+BattleInstantTextsentry45::
 	db $23, $10, $42, $39, $39, $38, $10, $48, $43, $10, $36, $35, $37, $3f, $10, $43, $3a, $3a, $f2, $f2, $f2, $00
-Table_24_71b0entry46::
+BattleInstantTextsentry46::
 	db $20, $3d, $46, $47, $48, $e1, $10, $23, $10, $42, $39, $39, $38, $10, $48, $43, $10, $37, $40, $43, $47, $39, $10, $3d, $42, $0d
 	db $43, $42, $10, $48, $3c, $39, $10, $39, $42, $39, $41, $4d, $f2, $00
-Table_24_71b0entry47::
+BattleInstantTextsentry47::
 	db $22, $39, $46, $39, $10, $23, $10, $37, $43, $41, $39, $fa, $00
-Table_24_71b0entry48::
+BattleInstantTextsentry48::
 	db $20, $3d, $46, $47, $48, $e1, $10, $23, $10, $42, $39, $39, $38, $10, $48, $43, $10, $41, $35, $3f, $39, $0d
 	db $47, $43, $41, $39, $10, $38, $3d, $47, $48, $35, $42, $37, $39, $f2, $0d
-Table_24_71b0entry49::
+BattleInstantTextsentry49::
 	db $2e, $3c, $3d, $47, $10, $3d, $47, $10, $35, $40, $40, $10, $47, $43, $10, $47, $49, $38, $38, $39, $42, $f2, $f2, $f2, $0d
 	db $1d, $35, $42, $10, $23, $10, $39, $4a, $39, $42, $10, $3a, $3d, $3b, $3c, $48, $10, $4b, $39, $40, $40, $f9, $00
-Table_24_71b0entry4a::
+BattleInstantTextsentry4a::
 	db $1c, $49, $48, $f2, $f2, $f2, $0d
 	db $23, $10, $3c, $35, $4a, $39, $10, $42, $43, $10, $37, $3c, $43, $3d, $37, $39, $fa, $00
-Table_24_71b0entry4b::
+BattleInstantTextsentry4b::
 	db $29, $3f, $35, $4d, $e1, $10, $3c, $39, $46, $39, $10, $23, $10, $3b, $43, $fa, $00
-Table_24_71b0entry4c::
+BattleInstantTextsentry4c::
 	db $26, $39, $48, $01, $01, $47, $10, $47, $39, $39, $10, $3c, $43, $4b, $10, $41, $4d, $0d
 	db $48, $46, $35, $3d, $42, $3d, $42, $3b, $01, $01, $47, $10, $44, $35, $3d, $38, $10, $43, $3a, $3a, $fa, $00
-Table_24_71b0entry4d::
+BattleInstantTextsentry4d::
 	db $2e, $3c, $3d, $47, $10, $3d, $47, $10, $3d, $48, $f2, $0d
 	db $23, $01, $01, $41, $10, $3b, $43, $42, $42, $35, $10, $3b, $3d, $4a, $39, $10, $3d, $48, $0d
 	db $39, $4a, $39, $46, $4d, $48, $3c, $3d, $42, $3b, $10, $23, $01, $01, $4a, $39, $10, $3b, $43, $48, $fa, $00

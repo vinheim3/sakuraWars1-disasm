@@ -488,7 +488,13 @@ wGameResultsTsubakiFoodQuiz:: ; $ca2c
     db
 
 wca2d:
-    ds $4c-$2d
+    ds $42-$2d
+
+wBattleInstantTextTableIdx:: ; $ca42
+    db
+
+wca43:
+    ds $c-3
 
 wNapOrTrainReturnState:: ; $ca4c
     db
@@ -512,7 +518,19 @@ wNapOrTrainIdx:: ; $ca6d
     db
 
 wca6e:
-    ds $b0e-$a6e
+    ds $f-$e
+
+wKouboChosen0idxed:: ; $ca6f
+    db
+
+wca70:
+    ds $85-$70
+
+wBattleWon:: ; $ca85
+    db
+
+wca86:
+    ds $b0e-$a86
 
 wPlayerName:: ; $cb0e
     ds 6
@@ -662,7 +680,7 @@ wScriptCalcStack:: ; $cb96
 wcb97:
     ds $c2-$97
 
-wKouboChosen:: ; $cbc2
+wKouboChosen1idxed:: ; $cbc2
     db
 
 wcbc3:

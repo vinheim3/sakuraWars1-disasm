@@ -1278,7 +1278,7 @@ Call_021_4766:
 	ld   a, $2e                                      ; $4771: $3e $2e
 	ld   [$ca8e], a                                  ; $4773: $ea $8e $ca
 	ld   hl, $486e                                   ; $4776: $21 $6e $48
-	ld   de, $ca6f                                   ; $4779: $11 $6f $ca
+	ld   de, wKouboChosen0idxed                                   ; $4779: $11 $6f $ca
 	call Call_021_411c                               ; $477c: $cd $1c $41
 	ld   hl, $48d8                                   ; $477f: $21 $d8 $48
 	ld   de, $ca77                                   ; $4782: $11 $77 $ca
@@ -1289,7 +1289,7 @@ jr_021_478a:
 	ld   a, $2e                                      ; $478a: $3e $2e
 	ld   [$ca8e], a                                  ; $478c: $ea $8e $ca
 	ld   hl, $4873                                   ; $478f: $21 $73 $48
-	ld   de, $ca6f                                   ; $4792: $11 $6f $ca
+	ld   de, wKouboChosen0idxed                                   ; $4792: $11 $6f $ca
 	call Call_021_411c                               ; $4795: $cd $1c $41
 	ld   hl, $48ef                                   ; $4798: $21 $ef $48
 	ld   de, $ca77                                   ; $479b: $11 $77 $ca
@@ -1300,7 +1300,7 @@ jr_021_47a3:
 	ld   a, $2e                                      ; $47a3: $3e $2e
 	ld   [$ca8e], a                                  ; $47a5: $ea $8e $ca
 	ld   hl, $487e                                   ; $47a8: $21 $7e $48
-	ld   de, $ca6f                                   ; $47ab: $11 $6f $ca
+	ld   de, wKouboChosen0idxed                                   ; $47ab: $11 $6f $ca
 	call Call_021_411c                               ; $47ae: $cd $1c $41
 	ld   hl, $48fe                                   ; $47b1: $21 $fe $48
 	ld   de, $ca77                                   ; $47b4: $11 $77 $ca
@@ -1377,7 +1377,7 @@ Call_021_480a:
 	call Call_021_4481                               ; $4837: $cd $81 $44
 
 jr_021_483a:
-	ld   de, $ca6f                                   ; $483a: $11 $6f $ca
+	ld   de, wKouboChosen0idxed                                   ; $483a: $11 $6f $ca
 	push hl                                          ; $483d: $e5
 	ld   a, $2e                                      ; $483e: $3e $2e
 	ld   [$ca8e], a                                  ; $4840: $ea $8e $ca
@@ -1385,7 +1385,7 @@ jr_021_483a:
 	pop  hl                                          ; $4846: $e1
 	jr   nc, jr_021_4854                             ; $4847: $30 $0b
 
-	ld   a, [$ca6f]                                  ; $4849: $fa $6f $ca
+	ld   a, [wKouboChosen0idxed]                                  ; $4849: $fa $6f $ca
 	and  a                                           ; $484c: $a7
 	jr   nz, jr_021_4854                             ; $484d: $20 $05
 
@@ -1872,7 +1872,7 @@ Call_021_4bbb:
 	ld   a, $c8                                      ; $4bc6: $3e $c8
 	ld   [$ca8e], a                                  ; $4bc8: $ea $8e $ca
 	ld   hl, $4cc3                                   ; $4bcb: $21 $c3 $4c
-	ld   de, $ca6f                                   ; $4bce: $11 $6f $ca
+	ld   de, wKouboChosen0idxed                                   ; $4bce: $11 $6f $ca
 	call Call_021_411c                               ; $4bd1: $cd $1c $41
 	ld   hl, $4d43                                   ; $4bd4: $21 $43 $4d
 	ld   de, $ca77                                   ; $4bd7: $11 $77 $ca
@@ -1883,7 +1883,7 @@ jr_021_4bdf:
 	ld   a, $c8                                      ; $4bdf: $3e $c8
 	ld   [$ca8e], a                                  ; $4be1: $ea $8e $ca
 	ld   hl, $4cd4                                   ; $4be4: $21 $d4 $4c
-	ld   de, $ca6f                                   ; $4be7: $11 $6f $ca
+	ld   de, wKouboChosen0idxed                                   ; $4be7: $11 $6f $ca
 	call Call_021_411c                               ; $4bea: $cd $1c $41
 	ld   hl, $4d5c                                   ; $4bed: $21 $5c $4d
 	ld   de, $ca77                                   ; $4bf0: $11 $77 $ca
@@ -1894,7 +1894,7 @@ jr_021_4bf8:
 	ld   a, $c8                                      ; $4bf8: $3e $c8
 	ld   [$ca8e], a                                  ; $4bfa: $ea $8e $ca
 	ld   hl, $4ce1                                   ; $4bfd: $21 $e1 $4c
-	ld   de, $ca6f                                   ; $4c00: $11 $6f $ca
+	ld   de, wKouboChosen0idxed                                   ; $4c00: $11 $6f $ca
 	call Call_021_411c                               ; $4c03: $cd $1c $41
 	ld   hl, $4d77                                   ; $4c06: $21 $77 $4d
 	ld   de, $ca77                                   ; $4c09: $11 $77 $ca
@@ -1971,7 +1971,7 @@ Call_021_4c5f:
 	call Call_021_4481                               ; $4c8c: $cd $81 $44
 
 jr_021_4c8f:
-	ld   de, $ca6f                                   ; $4c8f: $11 $6f $ca
+	ld   de, wKouboChosen0idxed                                   ; $4c8f: $11 $6f $ca
 	push hl                                          ; $4c92: $e5
 	ld   a, $c8                                      ; $4c93: $3e $c8
 	ld   [$ca8e], a                                  ; $4c95: $ea $8e $ca
@@ -1979,7 +1979,7 @@ jr_021_4c8f:
 	pop  hl                                          ; $4c9b: $e1
 	jr   nc, jr_021_4ca9                             ; $4c9c: $30 $0b
 
-	ld   a, [$ca6f]                                  ; $4c9e: $fa $6f $ca
+	ld   a, [wKouboChosen0idxed]                                  ; $4c9e: $fa $6f $ca
 	and  a                                           ; $4ca1: $a7
 	jr   nz, jr_021_4ca9                             ; $4ca2: $20 $05
 
@@ -2485,7 +2485,7 @@ Call_021_5049:
 	ld   a, $03                                      ; $5054: $3e $03
 	ld   [$ca8e], a                                  ; $5056: $ea $8e $ca
 	ld   hl, $5183                                   ; $5059: $21 $83 $51
-	ld   de, $ca6f                                   ; $505c: $11 $6f $ca
+	ld   de, wKouboChosen0idxed                                   ; $505c: $11 $6f $ca
 	call Call_021_411c                               ; $505f: $cd $1c $41
 	ld   hl, $5201                                   ; $5062: $21 $01 $52
 	ld   de, $ca77                                   ; $5065: $11 $77 $ca
@@ -2501,7 +2501,7 @@ jr_021_507b:
 	ld   a, $03                                      ; $507b: $3e $03
 	ld   [$ca8e], a                                  ; $507d: $ea $8e $ca
 	ld   hl, $519a                                   ; $5080: $21 $9a $51
-	ld   de, $ca6f                                   ; $5083: $11 $6f $ca
+	ld   de, wKouboChosen0idxed                                   ; $5083: $11 $6f $ca
 	call Call_021_411c                               ; $5086: $cd $1c $41
 	ld   hl, $5230                                   ; $5089: $21 $30 $52
 	ld   de, $ca77                                   ; $508c: $11 $77 $ca
@@ -2517,7 +2517,7 @@ jr_021_50a2:
 	ld   a, $03                                      ; $50a2: $3e $03
 	ld   [$ca8e], a                                  ; $50a4: $ea $8e $ca
 	ld   hl, $51a3                                   ; $50a7: $21 $a3 $51
-	ld   de, $ca6f                                   ; $50aa: $11 $6f $ca
+	ld   de, wKouboChosen0idxed                                   ; $50aa: $11 $6f $ca
 	call Call_021_411c                               ; $50ad: $cd $1c $41
 	ld   hl, $524b                                   ; $50b0: $21 $4b $52
 	ld   de, $ca77                                   ; $50b3: $11 $77 $ca
@@ -2604,7 +2604,7 @@ Call_021_5120:
 	call Call_021_4483                               ; $514c: $cd $83 $44
 
 jr_021_514f:
-	ld   de, $ca6f                                   ; $514f: $11 $6f $ca
+	ld   de, wKouboChosen0idxed                                   ; $514f: $11 $6f $ca
 	push hl                                          ; $5152: $e5
 	ld   a, $03                                      ; $5153: $3e $03
 	ld   [$ca8e], a                                  ; $5155: $ea $8e $ca
@@ -2612,7 +2612,7 @@ jr_021_514f:
 	pop  hl                                          ; $515b: $e1
 	jr   nc, jr_021_5169                             ; $515c: $30 $0b
 
-	ld   a, [$ca6f]                                  ; $515e: $fa $6f $ca
+	ld   a, [wKouboChosen0idxed]                                  ; $515e: $fa $6f $ca
 	and  a                                           ; $5161: $a7
 	jr   nz, jr_021_5169                             ; $5162: $20 $05
 
@@ -3291,7 +3291,7 @@ Call_021_55ed:
 	ld   a, $3c                                      ; $55f8: $3e $3c
 	ld   [$ca8e], a                                  ; $55fa: $ea $8e $ca
 	ld   hl, $5737                                   ; $55fd: $21 $37 $57
-	ld   de, $ca6f                                   ; $5600: $11 $6f $ca
+	ld   de, wKouboChosen0idxed                                   ; $5600: $11 $6f $ca
 	call Call_021_411c                               ; $5603: $cd $1c $41
 	ld   a, $3c                                      ; $5606: $3e $3c
 	ld   [$ca8e], a                                  ; $5608: $ea $8e $ca
@@ -3309,7 +3309,7 @@ jr_021_5624:
 	ld   a, $3c                                      ; $5624: $3e $3c
 	ld   [$ca8e], a                                  ; $5626: $ea $8e $ca
 	ld   hl, $574c                                   ; $5629: $21 $4c $57
-	ld   de, $ca6f                                   ; $562c: $11 $6f $ca
+	ld   de, wKouboChosen0idxed                                   ; $562c: $11 $6f $ca
 	call Call_021_411c                               ; $562f: $cd $1c $41
 	ld   a, $3c                                      ; $5632: $3e $3c
 	ld   [$ca8e], a                                  ; $5634: $ea $8e $ca
@@ -3327,7 +3327,7 @@ jr_021_5650:
 	ld   a, $3c                                      ; $5650: $3e $3c
 	ld   [$ca8e], a                                  ; $5652: $ea $8e $ca
 	ld   hl, $5761                                   ; $5655: $21 $61 $57
-	ld   de, $ca6f                                   ; $5658: $11 $6f $ca
+	ld   de, wKouboChosen0idxed                                   ; $5658: $11 $6f $ca
 	call Call_021_411c                               ; $565b: $cd $1c $41
 	ld   a, $3c                                      ; $565e: $3e $3c
 	ld   [$ca8e], a                                  ; $5660: $ea $8e $ca
@@ -3416,7 +3416,7 @@ Call_021_56d3:
 	call Call_021_4481                               ; $5700: $cd $81 $44
 
 jr_021_5703:
-	ld   de, $ca6f                                   ; $5703: $11 $6f $ca
+	ld   de, wKouboChosen0idxed                                   ; $5703: $11 $6f $ca
 	push hl                                          ; $5706: $e5
 	ld   a, $3c                                      ; $5707: $3e $3c
 	ld   [$ca8e], a                                  ; $5709: $ea $8e $ca
@@ -3424,7 +3424,7 @@ jr_021_5703:
 	pop  hl                                          ; $570f: $e1
 	jr   nc, jr_021_571d                             ; $5710: $30 $0b
 
-	ld   a, [$ca6f]                                  ; $5712: $fa $6f $ca
+	ld   a, [wKouboChosen0idxed]                                  ; $5712: $fa $6f $ca
 	and  a                                           ; $5715: $a7
 	jr   nz, jr_021_571d                             ; $5716: $20 $05
 
@@ -4047,7 +4047,7 @@ endc
 	ld   a, $6f                                      ; $5b34: $3e $6f
 	ld   [$ca8e], a                                  ; $5b36: $ea $8e $ca
 	ld   hl, $5c6c                                   ; $5b39: $21 $6c $5c
-	ld   de, $ca6f                                   ; $5b3c: $11 $6f $ca
+	ld   de, wKouboChosen0idxed                                   ; $5b3c: $11 $6f $ca
 	call Call_021_411c                               ; $5b3f: $cd $1c $41
 	ld   hl, $5ce2                                   ; $5b42: $21 $e2 $5c
 	ld   de, $ca77                                   ; $5b45: $11 $77 $ca
@@ -4161,7 +4161,7 @@ Call_021_5c08:
 	call Call_021_4481                               ; $5c35: $cd $81 $44
 
 jr_021_5c38:
-	ld   de, $ca6f                                   ; $5c38: $11 $6f $ca
+	ld   de, wKouboChosen0idxed                                   ; $5c38: $11 $6f $ca
 	push hl                                          ; $5c3b: $e5
 	ld   a, $6f                                      ; $5c3c: $3e $6f
 	ld   [$ca8e], a                                  ; $5c3e: $ea $8e $ca
@@ -4169,7 +4169,7 @@ jr_021_5c38:
 	pop  hl                                          ; $5c44: $e1
 	jr   nc, jr_021_5c52                             ; $5c45: $30 $0b
 
-	ld   a, [$ca6f]                                  ; $5c47: $fa $6f $ca
+	ld   a, [wKouboChosen0idxed]                                  ; $5c47: $fa $6f $ca
 	and  a                                           ; $5c4a: $a7
 	jr   nz, jr_021_5c52                             ; $5c4b: $20 $05
 
@@ -4800,7 +4800,7 @@ Call_021_60a8:
 	ld   a, $9e                                      ; $60b3: $3e $9e
 	ld   [$ca8e], a                                  ; $60b5: $ea $8e $ca
 	ld   hl, $61a9                                   ; $60b8: $21 $a9 $61
-	ld   de, $ca6f                                   ; $60bb: $11 $6f $ca
+	ld   de, wKouboChosen0idxed                                   ; $60bb: $11 $6f $ca
 	call Call_021_411c                               ; $60be: $cd $1c $41
 	ld   hl, $6201                                   ; $60c1: $21 $01 $62
 	ld   de, $ca77                                   ; $60c4: $11 $77 $ca
@@ -4811,7 +4811,7 @@ jr_021_60cc:
 	ld   a, $9e                                      ; $60cc: $3e $9e
 	ld   [$ca8e], a                                  ; $60ce: $ea $8e $ca
 	ld   hl, $626e                                   ; $60d1: $21 $6e $62
-	ld   de, $ca6f                                   ; $60d4: $11 $6f $ca
+	ld   de, wKouboChosen0idxed                                   ; $60d4: $11 $6f $ca
 	call Call_021_411c                               ; $60d7: $cd $1c $41
 	jr   jr_021_60ea                                 ; $60da: $18 $0e
 
@@ -4819,7 +4819,7 @@ jr_021_60dc:
 	ld   a, $b6                                      ; $60dc: $3e $b6
 	ld   [$ca8e], a                                  ; $60de: $ea $8e $ca
 	ld   hl, $62ef                                   ; $60e1: $21 $ef $62
-	ld   de, $ca6f                                   ; $60e4: $11 $6f $ca
+	ld   de, wKouboChosen0idxed                                   ; $60e4: $11 $6f $ca
 	call Call_021_411c                               ; $60e7: $cd $1c $41
 
 jr_021_60ea:
@@ -4907,7 +4907,7 @@ Call_021_6157:
 	call Call_021_4481                               ; $6178: $cd $81 $44
 
 jr_021_617b:
-	ld   de, $ca6f                                   ; $617b: $11 $6f $ca
+	ld   de, wKouboChosen0idxed                                   ; $617b: $11 $6f $ca
 	push hl                                          ; $617e: $e5
 	ld   a, $9e                                      ; $617f: $3e $9e
 	ld   [$ca8e], a                                  ; $6181: $ea $8e $ca
@@ -4915,7 +4915,7 @@ jr_021_617b:
 	pop  hl                                          ; $6187: $e1
 	jr   nc, jr_021_6195                             ; $6188: $30 $0b
 
-	ld   a, [$ca6f]                                  ; $618a: $fa $6f $ca
+	ld   a, [wKouboChosen0idxed]                                  ; $618a: $fa $6f $ca
 	and  a                                           ; $618d: $a7
 	jr   nz, jr_021_6195                             ; $618e: $20 $05
 
@@ -5030,7 +5030,7 @@ Call_021_621c:
 	call Call_021_4481                               ; $623d: $cd $81 $44
 
 jr_021_6240:
-	ld   de, $ca6f                                   ; $6240: $11 $6f $ca
+	ld   de, wKouboChosen0idxed                                   ; $6240: $11 $6f $ca
 	push hl                                          ; $6243: $e5
 	ld   a, $9e                                      ; $6244: $3e $9e
 	ld   [$ca8e], a                                  ; $6246: $ea $8e $ca
@@ -5038,7 +5038,7 @@ jr_021_6240:
 	pop  hl                                          ; $624c: $e1
 	jr   nc, jr_021_625a                             ; $624d: $30 $0b
 
-	ld   a, [$ca6f]                                  ; $624f: $fa $6f $ca
+	ld   a, [wKouboChosen0idxed]                                  ; $624f: $fa $6f $ca
 	and  a                                           ; $6252: $a7
 	jr   nz, jr_021_625a                             ; $6253: $20 $05
 
@@ -5119,7 +5119,7 @@ Call_021_629d:
 	call Call_021_4481                               ; $62be: $cd $81 $44
 
 jr_021_62c1:
-	ld   de, $ca6f                                   ; $62c1: $11 $6f $ca
+	ld   de, wKouboChosen0idxed                                   ; $62c1: $11 $6f $ca
 	push hl                                          ; $62c4: $e5
 	ld   a, $b6                                      ; $62c5: $3e $b6
 	ld   [$ca8e], a                                  ; $62c7: $ea $8e $ca
@@ -5127,7 +5127,7 @@ jr_021_62c1:
 	pop  hl                                          ; $62cd: $e1
 	jr   nc, jr_021_62db                             ; $62ce: $30 $0b
 
-	ld   a, [$ca6f]                                  ; $62d0: $fa $6f $ca
+	ld   a, [wKouboChosen0idxed]                                  ; $62d0: $fa $6f $ca
 	and  a                                           ; $62d3: $a7
 	jr   nz, jr_021_62db                             ; $62d4: $20 $05
 
@@ -5521,7 +5521,7 @@ endc
 
 Call_021_65f8:
 	ld   hl, $66a9                                   ; $65f8: $21 $a9 $66
-	ld   de, $ca6f                                   ; $65fb: $11 $6f $ca
+	ld   de, wKouboChosen0idxed                                   ; $65fb: $11 $6f $ca
 	call Call_021_411c                               ; $65fe: $cd $1c $41
 	ret                                              ; $6601: $c9
 
@@ -5581,7 +5581,7 @@ Call_021_666e:
 	ld   a, $5d                                      ; $6673: $3e $5d
 	ld   [$ca73], a                                  ; $6675: $ea $73 $ca
 	ld   hl, $66a9                                   ; $6678: $21 $a9 $66
-	ld   de, $ca6f                                   ; $667b: $11 $6f $ca
+	ld   de, wKouboChosen0idxed                                   ; $667b: $11 $6f $ca
 	push hl                                          ; $667e: $e5
 	ld   a, $d9                                      ; $667f: $3e $d9
 	ld   [$ca8e], a                                  ; $6681: $ea $8e $ca
@@ -5589,7 +5589,7 @@ Call_021_666e:
 	pop  hl                                          ; $6687: $e1
 	jr   nc, jr_021_6695                             ; $6688: $30 $0b
 
-	ld   a, [$ca6f]                                  ; $668a: $fa $6f $ca
+	ld   a, [wKouboChosen0idxed]                                  ; $668a: $fa $6f $ca
 	and  a                                           ; $668d: $a7
 	jr   nz, jr_021_6695                             ; $668e: $20 $05
 
@@ -6613,7 +6613,7 @@ GameState32_BattleDebugMenu::
 	ld   de, $789a                                   ; $6d1e: $11 $9a $78
 	call RLEXorCopy                                       ; $6d21: $cd $d2 $09
 	xor  a                                           ; $6d24: $af
-	ld   [$ca42], a                                  ; $6d25: $ea $42 $ca
+	ld   [wBattleInstantTextTableIdx], a                                  ; $6d25: $ea $42 $ca
 	ld   [$ca43], a                                  ; $6d28: $ea $43 $ca
 	ld   a, $03                                      ; $6d2b: $3e $03
 	call PlaySong                                       ; $6d2d: $cd $92 $1a
@@ -6744,12 +6744,12 @@ Jump_021_6de8:
 
 
 Jump_021_6dfa:
-	ld   a, [$ca42]                                  ; $6dfa: $fa $42 $ca
+	ld   a, [wBattleInstantTextTableIdx]                                  ; $6dfa: $fa $42 $ca
 	cp   $00                                         ; $6dfd: $fe $00
 	jr   nz, jr_021_6e0e                             ; $6dff: $20 $0d
 
 	inc  a                                           ; $6e01: $3c
-	ld   [$ca42], a                                  ; $6e02: $ea $42 $ca
+	ld   [wBattleInstantTextTableIdx], a                                  ; $6e02: $ea $42 $ca
 	ld   a, $00                                      ; $6e05: $3e $00
 	ld   bc, $0000                                   ; $6e07: $01 $00 $00
 	call Call_021_6d61                               ; $6e0a: $cd $61 $6d
@@ -6761,7 +6761,7 @@ jr_021_6e0e:
 	ld   bc, $0000                                   ; $6e10: $01 $00 $00
 	call Call_021_6d61                               ; $6e13: $cd $61 $6d
 	xor  a                                           ; $6e16: $af
-	ld   [$ca42], a                                  ; $6e17: $ea $42 $ca
+	ld   [wBattleInstantTextTableIdx], a                                  ; $6e17: $ea $42 $ca
 	ret                                              ; $6e1a: $c9
 
 
@@ -6875,7 +6875,7 @@ Jump_021_6eac:
 	call TurnOffLCD                                       ; $6eb4: $cd $e3 $08
 	ld   a, $00                                      ; $6eb7: $3e $00
 	call SafeSetAudVolForMultipleChannels                                       ; $6eb9: $cd $e0 $1c
-	ld   a, [$ca42]                                  ; $6ebc: $fa $42 $ca
+	ld   a, [wBattleInstantTextTableIdx]                                  ; $6ebc: $fa $42 $ca
 	and  a                                           ; $6ebf: $a7
 	jr   nz, jr_021_6ef1                             ; $6ec0: $20 $2f
 
@@ -6923,15 +6923,8 @@ jr_021_6ef1:
 	ld   a, [$ca6b]                                  ; $6efa: $fa $6b $ca
 	ld   b, a                                        ; $6efd: $47
 	ld   a, [$ca6a]                                  ; $6efe: $fa $6a $ca
-	push af                                          ; $6f01: $f5
-	ld   a, $b0                                      ; $6f02: $3e $b0
-	ld   [wFarCallAddr], a                                  ; $6f04: $ea $98 $c2
-	ld   a, $40                                      ; $6f07: $3e $40
-	ld   [wFarCallAddr+1], a                                  ; $6f09: $ea $99 $c2
-	ld   a, $24                                      ; $6f0c: $3e $24
-	ld   [wFarCallBank], a                                  ; $6f0e: $ea $9a $c2
-	pop  af                                          ; $6f11: $f1
-	call FarCall                                       ; $6f12: $cd $62 $09
+
+	M_FarCall SetBattleState
 	ret                                              ; $6f15: $c9
 
 
@@ -7633,7 +7626,7 @@ Call_021_72e5:
 	ld   a, [hl+]                                    ; $731d: $2a
 	ld   h, [hl]                                     ; $731e: $66
 	ld   l, a                                        ; $731f: $6f
-	ld   de, $ca6f                                   ; $7320: $11 $6f $ca
+	ld   de, wKouboChosen0idxed                                   ; $7320: $11 $6f $ca
 	call Call_021_7564                               ; $7323: $cd $64 $75
 	ret                                              ; $7326: $c9
 
@@ -7748,7 +7741,7 @@ jr_021_739d:
 	ld   a, [hl+]                                    ; $73a3: $2a
 	ld   h, [hl]                                     ; $73a4: $66
 	ld   l, a                                        ; $73a5: $6f
-	ld   de, $ca6f                                   ; $73a6: $11 $6f $ca
+	ld   de, wKouboChosen0idxed                                   ; $73a6: $11 $6f $ca
 	push hl                                          ; $73a9: $e5
 	ld   a, [$cab1]                                  ; $73aa: $fa $b1 $ca
 	ld   [$ca8e], a                                  ; $73ad: $ea $8e $ca
@@ -7756,7 +7749,7 @@ jr_021_739d:
 	pop  hl                                          ; $73b3: $e1
 	jr   nc, jr_021_73c1                             ; $73b4: $30 $0b
 
-	ld   a, [$ca6f]                                  ; $73b6: $fa $6f $ca
+	ld   a, [wKouboChosen0idxed]                                  ; $73b6: $fa $6f $ca
 	and  a                                           ; $73b9: $a7
 	jr   nz, jr_021_73c1                             ; $73ba: $20 $05
 
@@ -8775,7 +8768,7 @@ Call_021_79c5:
 	ld   a, [hl+]                                    ; $79fd: $2a
 	ld   h, [hl]                                     ; $79fe: $66
 	ld   l, a                                        ; $79ff: $6f
-	ld   de, $ca6f                                   ; $7a00: $11 $6f $ca
+	ld   de, wKouboChosen0idxed                                   ; $7a00: $11 $6f $ca
 	call Call_021_411c                               ; $7a03: $cd $1c $41
 	ret                                              ; $7a06: $c9
 
@@ -8904,7 +8897,7 @@ Call_021_7aa1:
 	ld   a, [hl+]                                    ; $7ab9: $2a
 	ld   h, [hl]                                     ; $7aba: $66
 	ld   l, a                                        ; $7abb: $6f
-	ld   de, $ca6f                                   ; $7abc: $11 $6f $ca
+	ld   de, wKouboChosen0idxed                                   ; $7abc: $11 $6f $ca
 	push hl                                          ; $7abf: $e5
 	ld   a, [$cab1]                                  ; $7ac0: $fa $b1 $ca
 	ld   [$ca8e], a                                  ; $7ac3: $ea $8e $ca
@@ -8912,7 +8905,7 @@ Call_021_7aa1:
 	pop  hl                                          ; $7ac9: $e1
 	jr   nc, jr_021_7ad7                             ; $7aca: $30 $0b
 
-	ld   a, [$ca6f]                                  ; $7acc: $fa $6f $ca
+	ld   a, [wKouboChosen0idxed]                                  ; $7acc: $fa $6f $ca
 	and  a                                           ; $7acf: $a7
 	jr   nz, jr_021_7ad7                             ; $7ad0: $20 $05
 

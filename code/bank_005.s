@@ -944,7 +944,7 @@ ReturnMostAffectionateGirlInA::
 	cp   $07                                         ; $4557: $fe $07
 	jr   c, .loop                              ; $4559: $38 $f2
 
-; todo: return the highest val in A
+; Return the character with the most affection in A
 	ld   a, c                                        ; $455b: $79
 
 	pop  hl                                          ; $455c: $e1

@@ -8,7 +8,7 @@ INCLUDE "includes.s"
 SECTION "ROM Bank $009", ROMX[$4000], BANK[$9]
 
 GameState38_DayPeriodTransition::
-; todo:
+; Unused call to get most affectionate girl in A
 	M_FarCall ReturnMostAffectionateGirlInA
 
 ; HL = day period double idxed into table

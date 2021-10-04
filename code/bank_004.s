@@ -3127,8 +3127,8 @@ PopulateDormRoomButtonsDisplayed:
 .focusBtn:
 	push hl                                          ; $56c8: $e5
 
-; todo: display if $b090|$b091|$b092|$b093|$b094|$b095 != 0
-	ld   hl, $b090                                   ; $56c9: $21 $90 $b0
+; Display if any character growth levels > 0
+	ld   hl, sSramVals2+SRAM2_GROWTH_SAKURA                                   ; $56c9: $21 $90 $b0
 	ld   a, [hl+]                                    ; $56cc: $2a
 	or   [hl]                                        ; $56cd: $b6
 	inc  hl                                          ; $56ce: $23

@@ -17,9 +17,9 @@ sa102:
 sPlayerName:: ; $afaa
     ds 6
 
-; 1-indexed
 sSramVals2:: ; $afb0
     ; can access up to $b7af
+; 1-indexed
 sCurrDay:: ; $afb0
     db
 

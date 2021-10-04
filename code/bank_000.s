@@ -35,7 +35,7 @@ WaitUntilVBlankIntHandledIfLCDOn::
 
 
 ; A - table idx
-; HL - table addr
+; Popped HL - table addr
 JumpTable::
 	add  a                                                          ; $0018
 	pop  hl                                                         ; $0019

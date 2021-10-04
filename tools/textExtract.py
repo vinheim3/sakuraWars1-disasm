@@ -10,7 +10,7 @@ from util import getRom, conv, bankAddr, wordIn, getKanjiMap
 kanji_map = getKanjiMap()
 
 existingTranslations = {}
-with open('sakura wars GB - 29:09:21.csv') as f:
+with open('sakura wars GB - 04:10:21.csv') as f:
     reader = csv.reader(f)
     for row in reader:
         if row[0]:

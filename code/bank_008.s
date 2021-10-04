@@ -818,7 +818,7 @@ ScriptCalcCode2_pushSpecialRamByte:
 	jr   PushAOntoScriptCalcStack                                 ; $4542: $18 $05
 
 .entry7_kouboChosen:
-	ld   a, [wKouboChosen]                                  ; $4544: $fa $c2 $cb
+	ld   a, [wKouboChosen1idxed]                                  ; $4544: $fa $c2 $cb
 	jr   PushAOntoScriptCalcStack                                 ; $4547: $18 $00
 
 
@@ -6792,7 +6792,7 @@ ScriptOpcode27_Battle_Main:
 	ld   [wScriptEngineContsRunningThisMainLoop], a                                  ; $6e10: $ea $52 $cb
 
 ;
-	ld   a, [wKouboChosen]                                  ; $6e13: $fa $c2 $cb
+	ld   a, [wKouboChosen1idxed]                                  ; $6e13: $fa $c2 $cb
 	dec  a                                           ; $6e16: $3d
 	push hl                                          ; $6e17: $e5
 	ld   h, a                                        ; $6e18: $67
@@ -7292,7 +7292,7 @@ jr_008_7125:
 
 	ldh  a, [hScriptOpcodeParams+2]                                    ; $7198: $f0 $a2
 	inc  a                                           ; $719a: $3c
-	ld   [wKouboChosen], a                                  ; $719b: $ea $c2 $cb
+	ld   [wKouboChosen1idxed], a                                  ; $719b: $ea $c2 $cb
 	ld   a, [wWramBank]                                  ; $719e: $fa $93 $c2
 	push af                                          ; $71a1: $f5
 	ld   a, $07                                      ; $71a2: $3e $07
