@@ -7754,7 +7754,7 @@ GameResultsSubstate4:
 	ld   a, [$ca0f]                                  ; $6fb2: $fa $0f $ca
 	ld   c, a                                        ; $6fb5: $4f
 	ld   b, $00                                      ; $6fb6: $06 $00
-	ld   hl, $afd0                                   ; $6fb8: $21 $d0 $af
+	ld   hl, sSramVals2+SRAM2_STAMINA                                   ; $6fb8: $21 $d0 $af
 	add  hl, bc                                      ; $6fbb: $09
 	ld   d, h                                        ; $6fbc: $54
 	ld   e, l                                        ; $6fbd: $5d

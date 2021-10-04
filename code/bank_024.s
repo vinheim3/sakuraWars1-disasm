@@ -10,8 +10,8 @@ SECTION "ROM Bank $024", ROMX[$4000], BANK[$24]
 GameState2f_Battle::
 	ld   a, [wGameSubstate]                                  ; $4000: $fa $a1 $c2
 	rst  JumpTable                                         ; $4003: $df
-	dw BattleSubstate00
-	dw BattleSubstate01
+	dw BattleSubstate00_Init
+	dw BattleSubstate01_InitialEnemyBasedText
 	dw BattleSubstate02
 	dw BattleSubstate03
 	dw BattleSubstate04_InitialDistanceText
@@ -110,9 +110,10 @@ GameState2f_Battle::
 ; H - return state
 ; L - return substate
 SetBattleState::
-	ld   [wKouboChosen0idxed], a                                  ; $40b0: $ea $6f $ca
-	ld   a, b                                        ; $40b3: $78
-	ld   [$ca70], a                                  ; $40b4: $ea $70 $ca
+; Set battle players
+	ld   [wKouboChosen0idxed], a                                    ; $40b0
+	ld   a, b                                                       ; $40b3
+	ld   [wEnemyKouboChosen], a                                     ; $40b4
 
 ; Set return state/substate
 	ld   a, h                                                       ; $40b7
@@ -120,24 +121,24 @@ SetBattleState::
 	ld   a, l                                                       ; $40bb
 	ld   [wBattleReturnSubstate], a                                 ; $40bc
 
-;
-	xor  a                                           ; $40bf: $af
-	ld   [$ca9f], a                                  ; $40c0: $ea $9f $ca
+; Clear mock battle status
+	xor  a                                                          ; $40bf
+	ld   [wIsMockBattle], a                                         ; $40c0
 
-;
-	ld   a, [$ca70]                                  ; $40c3: $fa $70 $ca
-	cp   $07                                         ; $40c6: $fe $07
-	jr   c, .setState                              ; $40c8: $38 $10
+; Enemy ID >= 7 during mock battles, 7 for experiment, 8 for Wakiji
+	ld   a, [wEnemyKouboChosen]                                     ; $40c3
+	cp   $07                                                        ; $40c6
+	jr   c, .setState                                               ; $40c8
 
-;
-	ld   a, [$ca70]                                  ; $40ca: $fa $70 $ca
-	sub  $03                                         ; $40cd: $d6 $03
-	ld   [$ca70], a                                  ; $40cf: $ea $70 $ca
+; Normalize to 4/5
+	ld   a, [wEnemyKouboChosen]                                     ; $40ca
+	sub  $03                                                        ; $40cd
+	ld   [wEnemyKouboChosen], a                                     ; $40cf
 
-;
-	ld   a, $01                                      ; $40d2: $3e $01
-	ld   [$ca9f], a                                  ; $40d4: $ea $9f $ca
-	call Call_024_5ec9                               ; $40d7: $cd $c9 $5e
+; Set that this is a mock battle, and set player stats
+	ld   a, $01                                                     ; $40d2
+	ld   [wIsMockBattle], a                                         ; $40d4
+	call SetStatsForMockBattle                                      ; $40d7
 
 .setState:
 ; To battle state
@@ -149,23 +150,34 @@ SetBattleState::
 	ret                                                             ; $40e4
 
 
-BattleSubstate00:
+BattleSubstate00_Init:
+;
 	call TurnOffLCD                                       ; $40e5: $cd $e3 $08
+
 	ld   a, $ff                                      ; $40e8: $3e $ff
 	ld   [wInGameInputsEnabled], a                                  ; $40ea: $ea $0e $c2
+
 	xor  a                                           ; $40ed: $af
 	call PlaySong                                       ; $40ee: $cd $92 $1a
+
+;
 	ld   a, $0c                                      ; $40f1: $3e $0c
 	ld   [wBaseInitialStickyCounter], a                                  ; $40f3: $ea $13 $c2
 	ld   a, $04                                      ; $40f6: $3e $04
 	ld   [wBaseRepeatedStickyCounter], a                                  ; $40f8: $ea $14 $c2
+
+;
 	call ClearOam                                       ; $40fb: $cd $d7 $0d
 	call ClearDisplayRegsAllowVBlankInt                                       ; $40fe: $cd $59 $0b
+
 	ld   a, $07                                      ; $4101: $3e $07
 	ld   [wLCDC], a                                  ; $4103: $ea $03 $c2
+
 	call ClearBaseAnimSpriteSpecDetails                                       ; $4106: $cd $c9 $2e
+
+;
 	ld   a, $00                                      ; $4109: $3e $00
-	ld   [$ca89], a                                  ; $410b: $ea $89 $ca
+	ld   [wLastEnemyRelatedBattleText], a                                  ; $410b: $ea $89 $ca
 	ld   [$ca8a], a                                  ; $410e: $ea $8a $ca
 	ld   [$ca86], a                                  ; $4111: $ea $86 $ca
 	ld   [$ca78], a                                  ; $4114: $ea $78 $ca
@@ -191,7 +203,7 @@ BattleSubstate00:
 	ld   [wWramBank], a                                  ; $4149: $ea $93 $c2
 	ldh  [rSVBK], a                                  ; $414c: $e0 $70
 	ld   a, $01                                      ; $414e: $3e $01
-	ld   [$ca71], a                                  ; $4150: $ea $71 $ca
+	ld   [wBattleDistanceToEnemy], a                                  ; $4150: $ea $71 $ca
 
 	M_FarCall todo_ClearsAndLoadsGfxForConvoScreens
 
@@ -200,34 +212,42 @@ BattleSubstate00:
 	M_FarCall Func_0a_4930
 	M_FarCall Func_0a_4934
 
-	xor  a                                           ; $4191: $af
-	ld   [$ca96], a                                  ; $4192: $ea $96 $ca
-	ld   a, [$ca9f]                                  ; $4195: $fa $9f $ca
-	and  a                                           ; $4198: $a7
-	jr   nz, jr_024_41c0                             ; $4199: $20 $25
+; Set default status for ability to use specials
+	xor  a                                                          ; $4191
+	ld   [wCanUseSpecialBattleMove], a                              ; $4192
 
-	ld   a, [wKouboChosen0idxed]                                  ; $419b: $fa $6f $ca
-	sla  a                                           ; $419e: $cb $27
-	ld   b, $00                                      ; $41a0: $06 $00
-	ld   c, a                                        ; $41a2: $4f
-	ld   hl, SpecialMoveFlags                                   ; $41a3: $21 $94 $42
-	add  hl, bc                                      ; $41a6: $09
-	ld   a, [hl+]                                    ; $41a7: $2a
-	ld   h, [hl]                                     ; $41a8: $66
-	ld   l, a                                        ; $41a9: $6f
+; If mock battle, can use specials
+	ld   a, [wIsMockBattle]                                         ; $4195
+	and  a                                                          ; $4198
+	jr   nz, .canUseSpecials                                        ; $4199
 
+; Else HL = double koubo idxed into table
+	ld   a, [wKouboChosen0idxed]                                    ; $419b
+	sla  a                                                          ; $419e
+	ld   b, $00                                                     ; $41a0
+	ld   c, a                                                       ; $41a2
+	ld   hl, SpecialMoveFlags                                       ; $41a3
+	add  hl, bc                                                     ; $41a6
+
+; HL = the flag associated with the chosen koubo's special
+	ld   a, [hl+]                                                   ; $41a7
+	ld   h, [hl]                                                    ; $41a8
+	ld   l, a                                                       ; $41a9
+
+; Set if we can use specials based on the flag
 	M_FarCall CheckIfFlagSet2
 
-	jr   jr_024_41c2                                 ; $41be: $18 $02
+	jr   :+                                                         ; $41be
 
-jr_024_41c0:
-	ld   a, $ff                                      ; $41c0: $3e $ff
+.canUseSpecials:
+	ld   a, $ff                                                     ; $41c0
 
-jr_024_41c2:
-	ld   [$ca96], a                                  ; $41c2: $ea $96 $ca
+:	ld   [wCanUseSpecialBattleMove], a                              ; $41c2
+
+;
 	ld   a, [$ca79]                                  ; $41c5: $fa $79 $ca
 	ld   c, a                                        ; $41c8: $4f
-	ld   a, [$ca70]                                  ; $41c9: $fa $70 $ca
+	ld   a, [wEnemyKouboChosen]                                  ; $41c9: $fa $70 $ca
 	cp   $04                                         ; $41cc: $fe $04
 	jr   z, jr_024_41d3                              ; $41ce: $28 $03
 
@@ -276,7 +296,7 @@ jr_024_41d5:
 	ld   hl, $42a0                                   ; $4244: $21 $a0 $42
 	ld   bc, $0008                                   ; $4247: $01 $08 $00
 	call FarMemCopy                                       ; $424a: $cd $b2 $09
-	ld   a, [$ca70]                                  ; $424d: $fa $70 $ca
+	ld   a, [wEnemyKouboChosen]                                  ; $424d: $fa $70 $ca
 	cp   $04                                         ; $4250: $fe $04
 	jr   nz, jr_024_427e                             ; $4252: $20 $2a
 
@@ -329,67 +349,67 @@ SpecialMoveFlags:
 	nop                                              ; $42a7: $00
 
 
-BattleSubstate01:
+BattleSubstate01_InitialEnemyBasedText:
 	call ClearOam                                       ; $42a8: $cd $d7 $0d
 	call AnimateAllAnimatedSpriteSpecs                                       ; $42ab: $cd $d3 $2e
-	ld   a, [$ca9f]                                  ; $42ae: $fa $9f $ca
+	ld   a, [wIsMockBattle]                                  ; $42ae: $fa $9f $ca
 	and  a                                           ; $42b1: $a7
-	jr   nz, jr_024_42de                             ; $42b2: $20 $2a
+	jr   nz, .kouboCommon                             ; $42b2: $20 $2a
 
-	ld   a, [$ca70]                                  ; $42b4: $fa $70 $ca
+	ld   a, [wEnemyKouboChosen]                                  ; $42b4: $fa $70 $ca
 	cp   $00                                         ; $42b7: $fe $00
-	jr   z, jr_024_42d3                              ; $42b9: $28 $18
+	jr   z, .koubo0                              ; $42b9: $28 $18
 
 	cp   $01                                         ; $42bb: $fe $01
-	jr   z, jr_024_42de                              ; $42bd: $28 $1f
+	jr   z, .kouboCommon                              ; $42bd: $28 $1f
 
 	cp   $02                                         ; $42bf: $fe $02
-	jr   z, jr_024_42de                              ; $42c1: $28 $1b
+	jr   z, .kouboCommon                              ; $42c1: $28 $1b
 
 	cp   $03                                         ; $42c3: $fe $03
-	jr   z, jr_024_42de                              ; $42c5: $28 $17
+	jr   z, .kouboCommon                              ; $42c5: $28 $17
 
 	cp   $05                                         ; $42c7: $fe $05
-	jr   z, jr_024_42de                              ; $42c9: $28 $13
+	jr   z, .kouboCommon                              ; $42c9: $28 $13
 
 	cp   $04                                         ; $42cb: $fe $04
-	jr   z, jr_024_42e9                              ; $42cd: $28 $1a
+	jr   z, .koubo4                              ; $42cd: $28 $1a
 
 	cp   $06                                         ; $42cf: $fe $06
-	jr   z, jr_024_42f4                              ; $42d1: $28 $21
+	jr   z, .koubo6                              ; $42d1: $28 $21
 
-jr_024_42d3:
+.koubo0:
 ; This is all so sudden... Can I even fight well?
 	ld   d, $3d                                      ; $42d3: $16 $3d
 	ld   a, d                                        ; $42d5: $7a
-	ld   [$ca87], a                                  ; $42d6: $ea $87 $ca
+	ld   [wLastPlayerRelatedBattleText], a                                  ; $42d6: $ea $87 $ca
 	call todo_DisplayBattleText                               ; $42d9: $cd $df $6b
-	jr   jr_024_42fd                                 ; $42dc: $18 $1f
+	jr   .done                                 ; $42dc: $18 $1f
 
-jr_024_42de:
+.kouboCommon:
 ; Okay, here I go!
 	ld   d, $3f                                      ; $42de: $16 $3f
 	ld   a, d                                        ; $42e0: $7a
-	ld   [$ca87], a                                  ; $42e1: $ea $87 $ca
+	ld   [wLastPlayerRelatedBattleText], a                                  ; $42e1: $ea $87 $ca
 	call todo_DisplayBattleText                               ; $42e4: $cd $df $6b
-	jr   jr_024_42fd                                 ; $42e7: $18 $14
+	jr   .done                                 ; $42e7: $18 $14
 
-jr_024_42e9:
+.koubo4:
 ; Let's see how my training's paid off!
 	ld   d, $40                                      ; $42e9: $16 $40
 	ld   a, d                                        ; $42eb: $7a
-	ld   [$ca87], a                                  ; $42ec: $ea $87 $ca
+	ld   [wLastPlayerRelatedBattleText], a                                  ; $42ec: $ea $87 $ca
 	call todo_DisplayBattleText                               ; $42ef: $cd $df $6b
-	jr   jr_024_42fd                                 ; $42f2: $18 $09
+	jr   .done                                 ; $42f2: $18 $09
 
-jr_024_42f4:
+.koubo6:
 ; This is it. I'm gonna give it everything I've got!
 	ld   d, $41                                      ; $42f4: $16 $41
 	ld   a, d                                        ; $42f6: $7a
-	ld   [$ca87], a                                  ; $42f7: $ea $87 $ca
+	ld   [wLastPlayerRelatedBattleText], a                                  ; $42f7: $ea $87 $ca
 	call todo_DisplayBattleText                               ; $42fa: $cd $df $6b
 
-jr_024_42fd:
+.done:
 	ld   hl, wGameSubstate                                   ; $42fd: $21 $a1 $c2
 	inc  [hl]                                        ; $4300: $34
 	ret                                              ; $4301: $c9
@@ -398,7 +418,7 @@ jr_024_42fd:
 BattleSubstate02:
 	call ClearOam                                       ; $4302: $cd $d7 $0d
 	call AnimateAllAnimatedSpriteSpecs                                       ; $4305: $cd $d3 $2e
-	call Call_024_6c6d                               ; $4308: $cd $6d $6c
+	call CheckIfBattleTextBoxDone                               ; $4308: $cd $6d $6c
 	ret  nc                                          ; $430b: $d0
 
 	ld   c, $01                                      ; $430c: $0e $01
@@ -452,7 +472,7 @@ jr_024_4365:
 	rst  WaitUntilVBlankIntHandledIfLCDOn                                         ; $436d: $cf
 	ld   a, $01                                      ; $436e: $3e $01
 	call PlaySoundEffect                                       ; $4370: $cd $df $1a
-	ld   a, [$ca87]                                  ; $4373: $fa $87 $ca
+	ld   a, [wLastPlayerRelatedBattleText]                                  ; $4373: $fa $87 $ca
 
 ; This is all so sudden... Can I even fight well?
 	cp   $3d                                         ; $4376: $fe $3d
@@ -475,7 +495,7 @@ jr_024_4384:
 BattleSubstate03:
 	call ClearOam                                       ; $438a: $cd $d7 $0d
 	call AnimateAllAnimatedSpriteSpecs                                       ; $438d: $cd $d3 $2e
-	call Call_024_6c6d                               ; $4390: $cd $6d $6c
+	call CheckIfBattleTextBoxDone                               ; $4390: $cd $6d $6c
 	ret  nc                                          ; $4393: $d0
 
 	ld   c, $01                                      ; $4394: $0e $01
@@ -578,7 +598,7 @@ BattleSubstate04_InitialDistanceText:
 BattleSubstate05:
 	call ClearOam                                       ; $442d: $cd $d7 $0d
 	call AnimateAllAnimatedSpriteSpecs                                       ; $4430: $cd $d3 $2e
-	call Call_024_6c6d                               ; $4433: $cd $6d $6c
+	call CheckIfBattleTextBoxDone                               ; $4433: $cd $6d $6c
 	ret  nc                                          ; $4436: $d0
 
 	ld   c, $01                                      ; $4437: $0e $01
@@ -622,7 +642,6 @@ BattleSubstate05:
 	inc  a                                           ; $448b: $3c
 	ld   [$ca86], a                                  ; $448c: $ea $86 $ca
 	ret                                              ; $448f: $c9
-
 
 jr_024_4490:
 	xor  a                                           ; $4490: $af
@@ -673,7 +692,7 @@ BattleSubstate07:
 	jr   z, .farType                              ; $44da: $28 $00
 
 .farType:
-	ld   a, [$ca71]                                  ; $44dc: $fa $71 $ca
+	ld   a, [wBattleDistanceToEnemy]                                  ; $44dc: $fa $71 $ca
 	cp   $00                                         ; $44df: $fe $00
 	jr   z, jr_024_450a                              ; $44e1: $28 $27
 
@@ -683,7 +702,7 @@ BattleSubstate07:
 	jp   Jump_024_4598                               ; $44e8: $c3 $98 $45
 
 .midType:
-	ld   a, [$ca71]                                  ; $44eb: $fa $71 $ca
+	ld   a, [wBattleDistanceToEnemy]                                  ; $44eb: $fa $71 $ca
 	cp   $00                                         ; $44ee: $fe $00
 	jr   z, jr_024_452e                              ; $44f0: $28 $3c
 
@@ -693,7 +712,7 @@ BattleSubstate07:
 	jp   Jump_024_4598                               ; $44f7: $c3 $98 $45
 
 .nearType:
-	ld   a, [$ca71]                                  ; $44fa: $fa $71 $ca
+	ld   a, [wBattleDistanceToEnemy]                                  ; $44fa: $fa $71 $ca
 	cp   $02                                         ; $44fd: $fe $02
 	jp   z, Jump_024_4552                            ; $44ff: $ca $52 $45
 
@@ -839,15 +858,9 @@ BattleSubstate08:
 	call AnimateAllAnimatedSpriteSpecs                                       ; $45b9: $cd $d3 $2e
 	ld   b, $00                                      ; $45bc: $06 $00
 	ld   c, $01                                      ; $45be: $0e $01
-	push af                                          ; $45c0: $f5
-	ld   a, $ba                                      ; $45c1: $3e $ba
-	ld   [wFarCallAddr], a                                  ; $45c3: $ea $98 $c2
-	ld   a, $54                                      ; $45c6: $3e $54
-	ld   [wFarCallAddr+1], a                                  ; $45c8: $ea $99 $c2
-	ld   a, $0a                                      ; $45cb: $3e $0a
-	ld   [wFarCallBank], a                                  ; $45cd: $ea $9a $c2
-	pop  af                                          ; $45d0: $f1
-	call FarCall                                       ; $45d1: $cd $62 $09
+
+	M_FarCall todo_DisplayCharacterPortrait
+
 	ld   hl, wGameSubstate                                   ; $45d4: $21 $a1 $c2
 	inc  [hl]                                        ; $45d7: $34
 	ret                                              ; $45d8: $c9
@@ -862,15 +875,8 @@ BattleSubstate09:
 	cp   b                                           ; $45e6: $b8
 	jr   z, jr_024_45ff                              ; $45e7: $28 $16
 
-	push af                                          ; $45e9: $f5
-	ld   a, $a5                                      ; $45ea: $3e $a5
-	ld   [wFarCallAddr], a                                  ; $45ec: $ea $98 $c2
-	ld   a, $66                                      ; $45ef: $3e $66
-	ld   [wFarCallAddr+1], a                                  ; $45f1: $ea $99 $c2
-	ld   a, $3e                                      ; $45f4: $3e $3e
-	ld   [wFarCallBank], a                                  ; $45f6: $ea $9a $c2
-	pop  af                                          ; $45f9: $f1
-	call FarCall                                       ; $45fa: $cd $62 $09
+	M_FarCall Func_3e_66a5
+
 	jr   nz, jr_024_4603                             ; $45fd: $20 $04
 
 jr_024_45ff:
@@ -884,7 +890,7 @@ jr_024_4603:
 BattleSubstate0a:
 	call ClearOam                                       ; $4604: $cd $d7 $0d
 	call AnimateAllAnimatedSpriteSpecs                                       ; $4607: $cd $d3 $2e
-	call Call_024_6c6d                               ; $460a: $cd $6d $6c
+	call CheckIfBattleTextBoxDone                               ; $460a: $cd $6d $6c
 	ret  nc                                          ; $460d: $d0
 
 	ld   c, $01                                      ; $460e: $0e $01
@@ -1026,15 +1032,9 @@ jr_024_46d3:
 BattleSubstate0c:
 	call ClearOam                                       ; $46ec: $cd $d7 $0d
 	call AnimateAllAnimatedSpriteSpecs                                       ; $46ef: $cd $d3 $2e
-	push af                                          ; $46f2: $f5
-	ld   a, $cb                                      ; $46f3: $3e $cb
-	ld   [wFarCallAddr], a                                  ; $46f5: $ea $98 $c2
-	ld   a, $4f                                      ; $46f8: $3e $4f
-	ld   [wFarCallAddr+1], a                                  ; $46fa: $ea $99 $c2
-	ld   a, $09                                      ; $46fd: $3e $09
-	ld   [wFarCallBank], a                                  ; $46ff: $ea $9a $c2
-	pop  af                                          ; $4702: $f1
-	call FarCall                                       ; $4703: $cd $62 $09
+
+	M_FarCall Func_09_4fcb
+
 	call ClearTextBoxDimensionsAndSetDefaultTextStyle                                       ; $4706: $cd $09 $14
 	ld   bc, $0000                                   ; $4709: $01 $00 $00
 	call SetCurrKanjiColAndRowToDrawOn                                       ; $470c: $cd $34 $14
@@ -1047,7 +1047,7 @@ BattleSubstate0c:
 	ld   a, $02                                      ; $471f: $3e $02
 	ld   [wWramBank], a                                  ; $4721: $ea $93 $c2
 	ldh  [rSVBK], a                                  ; $4724: $e0 $70
-	ld   a, [wNapOrTrainIdx]                                  ; $4726: $fa $6d $ca
+	ld   a, [$ca6d]                                  ; $4726: $fa $6d $ca
 	sla  a                                           ; $4729: $cb $27
 	ld   b, $00                                      ; $472b: $06 $00
 	ld   c, a                                        ; $472d: $4f
@@ -1184,15 +1184,9 @@ BattleSubstate0d:
 
 jr_024_47d3:
 	call AnimateAllAnimatedSpriteSpecs                                       ; $47d3: $cd $d3 $2e
-	push af                                          ; $47d6: $f5
-	ld   a, $dd                                      ; $47d7: $3e $dd
-	ld   [wFarCallAddr], a                                  ; $47d9: $ea $98 $c2
-	ld   a, $4f                                      ; $47dc: $3e $4f
-	ld   [wFarCallAddr+1], a                                  ; $47de: $ea $99 $c2
-	ld   a, $09                                      ; $47e1: $3e $09
-	ld   [wFarCallBank], a                                  ; $47e3: $ea $9a $c2
-	pop  af                                          ; $47e6: $f1
-	call FarCall                                       ; $47e7: $cd $62 $09
+
+	M_FarCall Func_09_4fdd
+
 	ld   a, [$cbe4]                                  ; $47ea: $fa $e4 $cb
 	bit  7, a                                        ; $47ed: $cb $7f
 	jr   z, jr_024_4820                              ; $47ef: $28 $2f
@@ -1208,15 +1202,8 @@ jr_024_47d3:
 	ld   a, [hl]                                     ; $47ff: $7e
 
 jr_024_4800:
-	push af                                          ; $4800: $f5
-	ld   a, $34                                      ; $4801: $3e $34
-	ld   [wFarCallAddr], a                                  ; $4803: $ea $98 $c2
-	ld   a, $49                                      ; $4806: $3e $49
-	ld   [wFarCallAddr+1], a                                  ; $4808: $ea $99 $c2
-	ld   a, $0a                                      ; $480b: $3e $0a
-	ld   [wFarCallBank], a                                  ; $480d: $ea $9a $c2
-	pop  af                                          ; $4810: $f1
-	call FarCall                                       ; $4811: $cd $62 $09
+	M_FarCall Func_0a_4934
+
 	xor  a                                           ; $4814: $af
 	ld   [$cbe5], a                                  ; $4815: $ea $e5 $cb
 	xor  a                                           ; $4818: $af
@@ -1281,27 +1268,27 @@ jr_024_4865:
 	ld   b, $00                                      ; $4881: $06 $00
 	ld   hl, $ca72                                   ; $4883: $21 $72 $ca
 	add  hl, bc                                      ; $4886: $09
-	call Call_024_77cc                               ; $4887: $cd $cc $77
+	call CheckIfStatsAllowSpecialAttacks                               ; $4887: $cd $cc $77
 	jr   c, jr_024_48d4                              ; $488a: $38 $48
 
-	ld   a, [$ca96]                                  ; $488c: $fa $96 $ca
+	ld   a, [wCanUseSpecialBattleMove]                                  ; $488c: $fa $96 $ca
 	and  a                                           ; $488f: $a7
 	jr   z, jr_024_48d4                              ; $4890: $28 $42
 
-	ld   a, [$ca95]                                  ; $4892: $fa $95 $ca
+	ld   a, [wUsedSpecialBattleMove]                                  ; $4892: $fa $95 $ca
 	and  a                                           ; $4895: $a7
 	jr   nz, jr_024_48d4                             ; $4896: $20 $3c
 
-	ld   a, [$ca9f]                                  ; $4898: $fa $9f $ca
+	ld   a, [wIsMockBattle]                                  ; $4898: $fa $9f $ca
 	and  a                                           ; $489b: $a7
 	jr   nz, jr_024_48a5                             ; $489c: $20 $07
 
-	ld   a, [$ca70]                                  ; $489e: $fa $70 $ca
+	ld   a, [wEnemyKouboChosen]                                  ; $489e: $fa $70 $ca
 	cp   $04                                         ; $48a1: $fe $04
 	jr   nz, jr_024_48d4                             ; $48a3: $20 $2f
 
 jr_024_48a5:
-	ld   a, [$ca7e]                                  ; $48a5: $fa $7e $ca
+	ld   a, [wBattleSPCharged]                                  ; $48a5: $fa $7e $ca
 	cp   $64                                         ; $48a8: $fe $64
 	jr   nz, jr_024_48d4                             ; $48aa: $20 $28
 
@@ -1319,14 +1306,14 @@ jr_024_48a5:
 	jr   jr_024_48ce                                 ; $48bc: $18 $10
 
 jr_024_48be:
-	ld   a, [$ca71]                                  ; $48be: $fa $71 $ca
+	ld   a, [wBattleDistanceToEnemy]                                  ; $48be: $fa $71 $ca
 	cp   $02                                         ; $48c1: $fe $02
 	jr   z, jr_024_48d4                              ; $48c3: $28 $0f
 
 	jr   jr_024_48ce                                 ; $48c5: $18 $07
 
 jr_024_48c7:
-	ld   a, [$ca71]                                  ; $48c7: $fa $71 $ca
+	ld   a, [wBattleDistanceToEnemy]                                  ; $48c7: $fa $71 $ca
 	cp   $01                                         ; $48ca: $fe $01
 	jr   nc, jr_024_48d4                             ; $48cc: $30 $06
 
@@ -1366,15 +1353,9 @@ BattleSubstate0f:
 	call ClearOam                                       ; $48e9: $cd $d7 $0d
 	call AnimateAllAnimatedSpriteSpecs                                       ; $48ec: $cd $d3 $2e
 	ld   bc, $0001                                   ; $48ef: $01 $01 $00
-	push af                                          ; $48f2: $f5
-	ld   a, $ba                                      ; $48f3: $3e $ba
-	ld   [wFarCallAddr], a                                  ; $48f5: $ea $98 $c2
-	ld   a, $54                                      ; $48f8: $3e $54
-	ld   [wFarCallAddr+1], a                                  ; $48fa: $ea $99 $c2
-	ld   a, $0a                                      ; $48fd: $3e $0a
-	ld   [wFarCallBank], a                                  ; $48ff: $ea $9a $c2
-	pop  af                                          ; $4902: $f1
-	call FarCall                                       ; $4903: $cd $62 $09
+
+	M_FarCall todo_DisplayCharacterPortrait
+
 	ld   a, [$cbec]                                  ; $4906: $fa $ec $cb
 	cp   $ff                                         ; $4909: $fe $ff
 	jr   z, jr_024_491e                              ; $490b: $28 $11
@@ -1437,7 +1418,7 @@ jr_024_494a:
 BattleSubstate11:
 	call ClearOam                                       ; $4952: $cd $d7 $0d
 	call AnimateAllAnimatedSpriteSpecs                                       ; $4955: $cd $d3 $2e
-	call Call_024_6c6d                               ; $4958: $cd $6d $6c
+	call CheckIfBattleTextBoxDone                               ; $4958: $cd $6d $6c
 	ret  nc                                          ; $495b: $d0
 
 	ld   c, $01                                      ; $495c: $0e $01
@@ -1534,47 +1515,47 @@ BattleSubstate12:
 
 jr_024_49ff:
 	ld   a, d                                        ; $49ff: $7a
-	ld   [$ca89], a                                  ; $4a00: $ea $89 $ca
+	ld   [wLastEnemyRelatedBattleText], a                                  ; $4a00: $ea $89 $ca
 	jr   jr_024_4a31                                 ; $4a03: $18 $2c
 
 jr_024_4a05:
 ; It's closing in on me!
 	ld   a, $10                                      ; $4a05: $3e $10
 	ld   d, a                                        ; $4a07: $57
-	ld   [$ca89], a                                  ; $4a08: $ea $89 $ca
+	ld   [wLastEnemyRelatedBattleText], a                                  ; $4a08: $ea $89 $ca
 	jr   jr_024_4a31                                 ; $4a0b: $18 $24
 
 jr_024_4a0d:
 ; The enemy's backing off.
 	ld   a, $11                                      ; $4a0d: $3e $11
 	ld   d, a                                        ; $4a0f: $57
-	ld   [$ca89], a                                  ; $4a10: $ea $89 $ca
+	ld   [wLastEnemyRelatedBattleText], a                                  ; $4a10: $ea $89 $ca
 	jr   jr_024_4a31                                 ; $4a13: $18 $1c
 
 ; Huh? The enemy's off-balance! Now's my chance!
 	ld   a, $01                                      ; $4a15: $3e $01
 	ld   d, a                                        ; $4a17: $57
-	ld   [$ca89], a                                  ; $4a18: $ea $89 $ca
-	ld   [$ca87], a                                  ; $4a1b: $ea $87 $ca
+	ld   [wLastEnemyRelatedBattleText], a                                  ; $4a18: $ea $89 $ca
+	ld   [wLastPlayerRelatedBattleText], a                                  ; $4a1b: $ea $87 $ca
 	jr   jr_024_4a31                                 ; $4a1e: $18 $11
 
 jr_024_4a20:
 ; Not good!
 	ld   a, $14                                      ; $4a20: $3e $14
 	ld   d, a                                        ; $4a22: $57
-	ld   [$ca89], a                                  ; $4a23: $ea $89 $ca
-	ld   [$ca87], a                                  ; $4a26: $ea $87 $ca
+	ld   [wLastEnemyRelatedBattleText], a                                  ; $4a23: $ea $89 $ca
+	ld   [wLastPlayerRelatedBattleText], a                                  ; $4a26: $ea $87 $ca
 	jr   jr_024_4a31                                 ; $4a29: $18 $06
 
 jr_024_4a2b:
 ; The enemy's assessing the situation.
 	ld   a, $19                                      ; $4a2b: $3e $19
 	ld   d, a                                        ; $4a2d: $57
-	ld   [$ca89], a                                  ; $4a2e: $ea $89 $ca
+	ld   [wLastEnemyRelatedBattleText], a                                  ; $4a2e: $ea $89 $ca
 
 jr_024_4a31:
 	call Call_024_644e                               ; $4a31: $cd $4e $64
-	ld   a, [$ca87]                                  ; $4a34: $fa $87 $ca
+	ld   a, [wLastPlayerRelatedBattleText]                                  ; $4a34: $fa $87 $ca
 	ld   d, a                                        ; $4a37: $57
 
 ; ; Nailed it!
@@ -1603,7 +1584,7 @@ jr_024_4a4c:
 BattleSubstate13:
 	call ClearOam                                       ; $4a52: $cd $d7 $0d
 	call AnimateAllAnimatedSpriteSpecs                                       ; $4a55: $cd $d3 $2e
-	call Call_024_6c6d                               ; $4a58: $cd $6d $6c
+	call CheckIfBattleTextBoxDone                               ; $4a58: $cd $6d $6c
 	ret  nc                                          ; $4a5b: $d0
 
 	ld   c, $01                                      ; $4a5c: $0e $01
@@ -1670,15 +1651,9 @@ BattleSubstate14:
 	jr   z, jr_024_4afe                              ; $4ad3: $28 $29
 
 	ld   a, [$ca76]                                  ; $4ad5: $fa $76 $ca
-	push af                                          ; $4ad8: $f5
-	ld   a, $cc                                      ; $4ad9: $3e $cc
-	ld   [wFarCallAddr], a                                  ; $4adb: $ea $98 $c2
-	ld   a, $65                                      ; $4ade: $3e $65
-	ld   [wFarCallAddr+1], a                                  ; $4ae0: $ea $99 $c2
-	ld   a, $3e                                      ; $4ae3: $3e $3e
-	ld   [wFarCallBank], a                                  ; $4ae5: $ea $9a $c2
-	pop  af                                          ; $4ae8: $f1
-	call FarCall                                       ; $4ae9: $cd $62 $09
+
+	M_FarCall Call_03e_65cc
+
 	ld   hl, wGameSubstate                                   ; $4aec: $21 $a1 $c2
 	inc  [hl]                                        ; $4aef: $34
 	ld   a, $01                                      ; $4af0: $3e $01
@@ -1692,24 +1667,9 @@ BattleSubstate14:
 jr_024_4afe:
 	ld   a, $1b                                      ; $4afe: $3e $1b
 	ld   [wGameSubstate], a                                  ; $4b00: $ea $a1 $c2
-	push af                                          ; $4b03: $f5
-	ld   a, $3c                                      ; $4b04: $3e $3c
-	ld   [wFarCallAddr], a                                  ; $4b06: $ea $98 $c2
-	ld   a, $61                                      ; $4b09: $3e $61
-	ld   [wFarCallAddr+1], a                                  ; $4b0b: $ea $99 $c2
-	ld   a, $3e                                      ; $4b0e: $3e $3e
-	ld   [wFarCallBank], a                                  ; $4b10: $ea $9a $c2
-	pop  af                                          ; $4b13: $f1
-	call FarCall                                       ; $4b14: $cd $62 $09
-	push af                                          ; $4b17: $f5
-	ld   a, $e9                                      ; $4b18: $3e $e9
-	ld   [wFarCallAddr], a                                  ; $4b1a: $ea $98 $c2
-	ld   a, $61                                      ; $4b1d: $3e $61
-	ld   [wFarCallAddr+1], a                                  ; $4b1f: $ea $99 $c2
-	ld   a, $3e                                      ; $4b22: $3e $3e
-	ld   [wFarCallBank], a                                  ; $4b24: $ea $9a $c2
-	pop  af                                          ; $4b27: $f1
-	call FarCall                                       ; $4b28: $cd $62 $09
+
+	M_FarCall Call_03e_613c
+	M_FarCall Call_03e_61e9
 	ret                                              ; $4b2b: $c9
 
 
@@ -1718,20 +1678,14 @@ BattleSubstate15:
 	ld   [$ca8a], a                                  ; $4b2e: $ea $8a $ca
 
 ; Yaahhh!
-	ld   a, [$ca87]                                  ; $4b31: $fa $87 $ca
+	ld   a, [wLastPlayerRelatedBattleText]                                  ; $4b31: $fa $87 $ca
 	cp   $22                                         ; $4b34: $fe $22
 	jr   nz, jr_024_4b5c                             ; $4b36: $20 $24
 
 	ld   de, $5fc6                                   ; $4b38: $11 $c6 $5f
-	push af                                          ; $4b3b: $f5
-	ld   a, $97                                      ; $4b3c: $3e $97
-	ld   [wFarCallAddr], a                                  ; $4b3e: $ea $98 $c2
-	ld   a, $5f                                      ; $4b41: $3e $5f
-	ld   [wFarCallAddr+1], a                                  ; $4b43: $ea $99 $c2
-	ld   a, $3e                                      ; $4b46: $3e $3e
-	ld   [wFarCallBank], a                                  ; $4b48: $ea $9a $c2
-	pop  af                                          ; $4b4b: $f1
-	call FarCall                                       ; $4b4c: $cd $62 $09
+
+	M_FarCall Call_03e_5f97
+
 	ld   a, [$ca86]                                  ; $4b4f: $fa $86 $ca
 	cp   $04                                         ; $4b52: $fe $04
 	jr   z, jr_024_4b5c                              ; $4b54: $28 $06
@@ -1747,15 +1701,8 @@ jr_024_4b5c:
 	cp   b                                           ; $4b63: $b8
 	jr   z, jr_024_4b7c                              ; $4b64: $28 $16
 
-	push af                                          ; $4b66: $f5
-	ld   a, $a5                                      ; $4b67: $3e $a5
-	ld   [wFarCallAddr], a                                  ; $4b69: $ea $98 $c2
-	ld   a, $66                                      ; $4b6c: $3e $66
-	ld   [wFarCallAddr+1], a                                  ; $4b6e: $ea $99 $c2
-	ld   a, $3e                                      ; $4b71: $3e $3e
-	ld   [wFarCallBank], a                                  ; $4b73: $ea $9a $c2
-	pop  af                                          ; $4b76: $f1
-	call FarCall                                       ; $4b77: $cd $62 $09
+	M_FarCall Func_3e_66a5
+
 	jr   nz, jr_024_4b84                             ; $4b7a: $20 $08
 
 jr_024_4b7c:
@@ -1774,54 +1721,29 @@ BattleSubstate16:
 	call ClearOam                                       ; $4b8b: $cd $d7 $0d
 	call AnimateAllAnimatedSpriteSpecs                                       ; $4b8e: $cd $d3 $2e
 	ld   a, [$ca75]                                  ; $4b91: $fa $75 $ca
-	push af                                          ; $4b94: $f5
-	ld   a, $de                                      ; $4b95: $3e $de
-	ld   [wFarCallAddr], a                                  ; $4b97: $ea $98 $c2
-	ld   a, $65                                      ; $4b9a: $3e $65
-	ld   [wFarCallAddr+1], a                                  ; $4b9c: $ea $99 $c2
-	ld   a, $3e                                      ; $4b9f: $3e $3e
-	ld   [wFarCallBank], a                                  ; $4ba1: $ea $9a $c2
-	pop  af                                          ; $4ba4: $f1
-	call FarCall                                       ; $4ba5: $cd $62 $09
+
+	M_FarCall Call_03e_65de
+
 	ld   hl, wGameSubstate                                   ; $4ba8: $21 $a1 $c2
 	inc  [hl]                                        ; $4bab: $34
 	ret                                              ; $4bac: $c9
 
 
 BattleSubstate17:
-	push af                                          ; $4bad: $f5
-	ld   a, $ae                                      ; $4bae: $3e $ae
-	ld   [wFarCallAddr], a                                  ; $4bb0: $ea $98 $c2
-	ld   a, $66                                      ; $4bb3: $3e $66
-	ld   [wFarCallAddr+1], a                                  ; $4bb5: $ea $99 $c2
-	ld   a, $3e                                      ; $4bb8: $3e $3e
-	ld   [wFarCallBank], a                                  ; $4bba: $ea $9a $c2
-	pop  af                                          ; $4bbd: $f1
-	call FarCall                                       ; $4bbe: $cd $62 $09
+	M_FarCall Func_3e_66ae
+
 	jr   nz, jr_024_4bf7                             ; $4bc1: $20 $34
 
 	ld   hl, $ca79                                   ; $4bc3: $21 $79 $ca
 	ld   a, [hl]                                     ; $4bc6: $7e
-	push af                                          ; $4bc7: $f5
-	ld   a, $fd                                      ; $4bc8: $3e $fd
-	ld   [wFarCallAddr], a                                  ; $4bca: $ea $98 $c2
-	ld   a, $66                                      ; $4bcd: $3e $66
-	ld   [wFarCallAddr+1], a                                  ; $4bcf: $ea $99 $c2
-	ld   a, $3e                                      ; $4bd2: $3e $3e
-	ld   [wFarCallBank], a                                  ; $4bd4: $ea $9a $c2
-	pop  af                                          ; $4bd7: $f1
-	call FarCall                                       ; $4bd8: $cd $62 $09
+
+	M_FarCall Call_03e_66fd
+
 	ld   hl, $ca7b                                   ; $4bdb: $21 $7b $ca
 	ld   a, [hl]                                     ; $4bde: $7e
-	push af                                          ; $4bdf: $f5
-	ld   a, $c7                                      ; $4be0: $3e $c7
-	ld   [wFarCallAddr], a                                  ; $4be2: $ea $98 $c2
-	ld   a, $66                                      ; $4be5: $3e $66
-	ld   [wFarCallAddr+1], a                                  ; $4be7: $ea $99 $c2
-	ld   a, $3e                                      ; $4bea: $3e $3e
-	ld   [wFarCallBank], a                                  ; $4bec: $ea $9a $c2
-	pop  af                                          ; $4bef: $f1
-	call FarCall                                       ; $4bf0: $cd $62 $09
+
+	M_FarCall Call_03e_66c7
+
 	ld   hl, wGameSubstate                                   ; $4bf3: $21 $a1 $c2
 	inc  [hl]                                        ; $4bf6: $34
 
@@ -1834,26 +1756,13 @@ jr_024_4bf7:
 BattleSubstate18:
 	call ClearOam                                       ; $4bfe: $cd $d7 $0d
 	call AnimateAllAnimatedSpriteSpecs                                       ; $4c01: $cd $d3 $2e
-	push af                                          ; $4c04: $f5
-	ld   a, $9d                                      ; $4c05: $3e $9d
-	ld   [wFarCallAddr], a                                  ; $4c07: $ea $98 $c2
-	ld   a, $6b                                      ; $4c0a: $3e $6b
-	ld   [wFarCallAddr+1], a                                  ; $4c0c: $ea $99 $c2
-	ld   a, $3e                                      ; $4c0f: $3e $3e
-	ld   [wFarCallBank], a                                  ; $4c11: $ea $9a $c2
-	pop  af                                          ; $4c14: $f1
-	call FarCall                                       ; $4c15: $cd $62 $09
+
+	M_FarCall Func_3e_6b9d
+
 	jr   nz, jr_024_4c3d                             ; $4c18: $20 $23
 
-	push af                                          ; $4c1a: $f5
-	ld   a, $18                                      ; $4c1b: $3e $18
-	ld   [wFarCallAddr], a                                  ; $4c1d: $ea $98 $c2
-	ld   a, $67                                      ; $4c20: $3e $67
-	ld   [wFarCallAddr+1], a                                  ; $4c22: $ea $99 $c2
-	ld   a, $3e                                      ; $4c25: $3e $3e
-	ld   [wFarCallBank], a                                  ; $4c27: $ea $9a $c2
-	pop  af                                          ; $4c2a: $f1
-	call FarCall                                       ; $4c2b: $cd $62 $09
+	M_FarCall Func_3e_6718
+
 	jr   nz, jr_024_4c3d                             ; $4c2e: $20 $0d
 
 	ld   a, [$ca79]                                  ; $4c30: $fa $79 $ca
@@ -1874,15 +1783,9 @@ BattleSubstate19:
 	call ClearOam                                       ; $4c3e: $cd $d7 $0d
 	call AnimateAllAnimatedSpriteSpecs                                       ; $4c41: $cd $d3 $2e
 	ld   bc, $0001                                   ; $4c44: $01 $01 $00
-	push af                                          ; $4c47: $f5
-	ld   a, $ba                                      ; $4c48: $3e $ba
-	ld   [wFarCallAddr], a                                  ; $4c4a: $ea $98 $c2
-	ld   a, $54                                      ; $4c4d: $3e $54
-	ld   [wFarCallAddr+1], a                                  ; $4c4f: $ea $99 $c2
-	ld   a, $0a                                      ; $4c52: $3e $0a
-	ld   [wFarCallBank], a                                  ; $4c54: $ea $9a $c2
-	pop  af                                          ; $4c57: $f1
-	call FarCall                                       ; $4c58: $cd $62 $09
+
+	M_FarCall todo_DisplayCharacterPortrait
+
 	ld   hl, wGameSubstate                                   ; $4c5b: $21 $a1 $c2
 	inc  [hl]                                        ; $4c5e: $34
 	ret                                              ; $4c5f: $c9
@@ -1901,15 +1804,8 @@ BattleSubstate1a:
 	cp   b                                           ; $4c73: $b8
 	jr   z, jr_024_4c8c                              ; $4c74: $28 $16
 
-	push af                                          ; $4c76: $f5
-	ld   a, $a5                                      ; $4c77: $3e $a5
-	ld   [wFarCallAddr], a                                  ; $4c79: $ea $98 $c2
-	ld   a, $66                                      ; $4c7c: $3e $66
-	ld   [wFarCallAddr+1], a                                  ; $4c7e: $ea $99 $c2
-	ld   a, $3e                                      ; $4c81: $3e $3e
-	ld   [wFarCallBank], a                                  ; $4c83: $ea $9a $c2
-	pop  af                                          ; $4c86: $f1
-	call FarCall                                       ; $4c87: $cd $62 $09
+	M_FarCall Func_3e_66a5
+
 	jr   nz, jr_024_4c90                             ; $4c8a: $20 $04
 
 jr_024_4c8c:
@@ -1928,15 +1824,9 @@ jr_024_4c91:
 	jr   z, jr_024_4cb9                              ; $4c9b: $28 $1c
 
 	ld   a, $01                                      ; $4c9d: $3e $01
-	push af                                          ; $4c9f: $f5
-	ld   a, $cc                                      ; $4ca0: $3e $cc
-	ld   [wFarCallAddr], a                                  ; $4ca2: $ea $98 $c2
-	ld   a, $65                                      ; $4ca5: $3e $65
-	ld   [wFarCallAddr+1], a                                  ; $4ca7: $ea $99 $c2
-	ld   a, $3e                                      ; $4caa: $3e $3e
-	ld   [wFarCallBank], a                                  ; $4cac: $ea $9a $c2
-	pop  af                                          ; $4caf: $f1
-	call FarCall                                       ; $4cb0: $cd $62 $09
+
+	M_FarCall Call_03e_65cc
+
 	ld   a, $37                                      ; $4cb3: $3e $37
 	ld   [wGameSubstate], a                                  ; $4cb5: $ea $a1 $c2
 	ret                                              ; $4cb8: $c9
@@ -1957,7 +1847,7 @@ BattleSubstate1b:
 	call ClearOam                                       ; $4cc5: $cd $d7 $0d
 	call AnimateAllAnimatedSpriteSpecs                                       ; $4cc8: $cd $d3 $2e
 	ld   a, [$ca8c]                                  ; $4ccb: $fa $8c $ca
-	ld   a, [$ca87]                                  ; $4cce: $fa $87 $ca
+	ld   a, [wLastPlayerRelatedBattleText]                                  ; $4cce: $fa $87 $ca
 
 ; Nailed it!
 	cp   $0e                                         ; $4cd1: $fe $0e
@@ -2013,7 +1903,7 @@ jr_024_4d0a:
 BattleSubstate1c:
 	call ClearOam                                       ; $4d14: $cd $d7 $0d
 	call AnimateAllAnimatedSpriteSpecs                                       ; $4d17: $cd $d3 $2e
-	ld   a, [$ca87]                                  ; $4d1a: $fa $87 $ca
+	ld   a, [wLastPlayerRelatedBattleText]                                  ; $4d1a: $fa $87 $ca
 	cp   $ff                                         ; $4d1d: $fe $ff
 	jr   z, jr_024_4d86                              ; $4d1f: $28 $65
 
@@ -2025,7 +1915,7 @@ BattleSubstate1c:
 	cp   $03                                         ; $4d25: $fe $03
 	jr   z, jr_024_4d86                              ; $4d27: $28 $5d
 
-	call Call_024_6c6d                               ; $4d29: $cd $6d $6c
+	call CheckIfBattleTextBoxDone                               ; $4d29: $cd $6d $6c
 	ret  nc                                          ; $4d2c: $d0
 
 	ld   c, $01                                      ; $4d2d: $0e $01
@@ -2094,7 +1984,7 @@ BattleSubstate1d:
 	xor  a                                           ; $4da6: $af
 	ld   [$ca98], a                                  ; $4da7: $ea $98 $ca
 	ld   hl, $4df7                                   ; $4daa: $21 $f7 $4d
-	ld   a, [$ca70]                                  ; $4dad: $fa $70 $ca
+	ld   a, [wEnemyKouboChosen]                                  ; $4dad: $fa $70 $ca
 	sla  a                                           ; $4db0: $cb $27
 	ld   b, $00                                      ; $4db2: $06 $00
 	ld   c, a                                        ; $4db4: $4f
@@ -2195,7 +2085,7 @@ jr_024_4df1:
 BattleSubstate1e:
 	call ClearOam                                       ; $4e13: $cd $d7 $0d
 	call AnimateAllAnimatedSpriteSpecs                                       ; $4e16: $cd $d3 $2e
-	call Call_024_6c6d                               ; $4e19: $cd $6d $6c
+	call CheckIfBattleTextBoxDone                               ; $4e19: $cd $6d $6c
 	ret  nc                                          ; $4e1c: $d0
 
 	ld   c, $01                                      ; $4e1d: $0e $01
@@ -2258,7 +2148,7 @@ BattleSubstate1f:
 	call ClearOam                                       ; $4e89: $cd $d7 $0d
 	call AnimateAllAnimatedSpriteSpecs                                       ; $4e8c: $cd $d3 $2e
 	ld   d, $04                                      ; $4e8f: $16 $04
-	ld   a, [$ca70]                                  ; $4e91: $fa $70 $ca
+	ld   a, [wEnemyKouboChosen]                                  ; $4e91: $fa $70 $ca
 	cp   $04                                         ; $4e94: $fe $04
 	jr   nz, jr_024_4e9a                             ; $4e96: $20 $02
 
@@ -2274,16 +2164,10 @@ jr_024_4e9a:
 BattleSubstate20:
 	call ClearOam                                       ; $4ea1: $cd $d7 $0d
 	call AnimateAllAnimatedSpriteSpecs                                       ; $4ea4: $cd $d3 $2e
-	ld   a, [$ca7e]                                  ; $4ea7: $fa $7e $ca
-	push af                                          ; $4eaa: $f5
-	ld   a, $e2                                      ; $4eab: $3e $e2
-	ld   [wFarCallAddr], a                                  ; $4ead: $ea $98 $c2
-	ld   a, $66                                      ; $4eb0: $3e $66
-	ld   [wFarCallAddr+1], a                                  ; $4eb2: $ea $99 $c2
-	ld   a, $3e                                      ; $4eb5: $3e $3e
-	ld   [wFarCallBank], a                                  ; $4eb7: $ea $9a $c2
-	pop  af                                          ; $4eba: $f1
-	call FarCall                                       ; $4ebb: $cd $62 $09
+	ld   a, [wBattleSPCharged]                                  ; $4ea7: $fa $7e $ca
+
+	M_FarCall Call_03e_66e2
+
 	ld   hl, wGameSubstate                                   ; $4ebe: $21 $a1 $c2
 	inc  [hl]                                        ; $4ec1: $34
 	ret                                              ; $4ec2: $c9
@@ -2304,15 +2188,8 @@ BattleSubstate21:
 	ld   [$ca9a], a                                  ; $4eda: $ea $9a $ca
 
 jr_024_4edd:
-	push af                                          ; $4edd: $f5
-	ld   a, $33                                      ; $4ede: $3e $33
-	ld   [wFarCallAddr], a                                  ; $4ee0: $ea $98 $c2
-	ld   a, $67                                      ; $4ee3: $3e $67
-	ld   [wFarCallAddr+1], a                                  ; $4ee5: $ea $99 $c2
-	ld   a, $3e                                      ; $4ee8: $3e $3e
-	ld   [wFarCallBank], a                                  ; $4eea: $ea $9a $c2
-	pop  af                                          ; $4eed: $f1
-	call FarCall                                       ; $4eee: $cd $62 $09
+	M_FarCall Func_3e_6733
+
 	jr   nz, jr_024_4ef7                             ; $4ef1: $20 $04
 
 	ld   hl, wGameSubstate                                   ; $4ef3: $21 $a1 $c2
@@ -2359,7 +2236,7 @@ jr_024_4f19:
 	cp   $02                                         ; $4f31: $fe $02
 	jr   nz, jr_024_4f3d                             ; $4f33: $20 $08
 
-	ld   hl, $ca71                                   ; $4f35: $21 $71 $ca
+	ld   hl, wBattleDistanceToEnemy                                   ; $4f35: $21 $71 $ca
 	dec  [hl]                                        ; $4f38: $35
 
 ; It's closing in on me!
@@ -2367,7 +2244,7 @@ jr_024_4f19:
 	jr   jr_024_4f43                                 ; $4f3b: $18 $06
 
 jr_024_4f3d:
-	ld   hl, $ca71                                   ; $4f3d: $21 $71 $ca
+	ld   hl, wBattleDistanceToEnemy                                   ; $4f3d: $21 $71 $ca
 	inc  [hl]                                        ; $4f40: $34
 
 ; The enemy's backing off.
@@ -2382,13 +2259,13 @@ jr_024_4f43:
 
 ; The enemy's backing off.
 	ld   a, $11                                      ; $4f50: $3e $11
-	ld   [$ca89], a                                  ; $4f52: $ea $89 $ca
+	ld   [wLastEnemyRelatedBattleText], a                                  ; $4f52: $ea $89 $ca
 	xor  a                                           ; $4f55: $af
 	ld   [$ca76], a                                  ; $4f56: $ea $76 $ca
 	call Func_24_7657                                       ; $4f59: $cd $57 $76
 	rst  WaitUntilVBlankIntHandledIfLCDOn                                         ; $4f5c: $cf
 	ld   d, $04                                      ; $4f5d: $16 $04
-	ld   a, [$ca70]                                  ; $4f5f: $fa $70 $ca
+	ld   a, [wEnemyKouboChosen]                                  ; $4f5f: $fa $70 $ca
 	cp   $04                                         ; $4f62: $fe $04
 	jr   nz, jr_024_4f68                             ; $4f64: $20 $02
 
@@ -2399,15 +2276,9 @@ jr_024_4f68:
 	ld   a, $00                                      ; $4f6a: $3e $00
 	add  d                                           ; $4f6c: $82
 	ld   c, a                                        ; $4f6d: $4f
-	push af                                          ; $4f6e: $f5
-	ld   a, $ba                                      ; $4f6f: $3e $ba
-	ld   [wFarCallAddr], a                                  ; $4f71: $ea $98 $c2
-	ld   a, $54                                      ; $4f74: $3e $54
-	ld   [wFarCallAddr+1], a                                  ; $4f76: $ea $99 $c2
-	ld   a, $0a                                      ; $4f79: $3e $0a
-	ld   [wFarCallBank], a                                  ; $4f7b: $ea $9a $c2
-	pop  af                                          ; $4f7e: $f1
-	call FarCall                                       ; $4f7f: $cd $62 $09
+
+	M_FarCall todo_DisplayCharacterPortrait
+
 	ld   a, $50                                      ; $4f82: $3e $50
 	ld   [wGameSubstate], a                                  ; $4f84: $ea $a1 $c2
 	ret                                              ; $4f87: $c9
@@ -2416,7 +2287,7 @@ jr_024_4f68:
 jr_024_4f88:
 	ld   a, [$ca76]                                  ; $4f88: $fa $76 $ca
 	ld   [$ca77], a                                  ; $4f8b: $ea $77 $ca
-	ld   a, [$ca71]                                  ; $4f8e: $fa $71 $ca
+	ld   a, [wBattleDistanceToEnemy]                                  ; $4f8e: $fa $71 $ca
 	cp   $00                                         ; $4f91: $fe $00
 	jr   z, jr_024_4f99                              ; $4f93: $28 $04
 
@@ -2428,15 +2299,8 @@ jr_024_4f99:
 
 jr_024_4f9b:
 	ld   [$ca76], a                                  ; $4f9b: $ea $76 $ca
-	push af                                          ; $4f9e: $f5
-	ld   a, $cc                                      ; $4f9f: $3e $cc
-	ld   [wFarCallAddr], a                                  ; $4fa1: $ea $98 $c2
-	ld   a, $65                                      ; $4fa4: $3e $65
-	ld   [wFarCallAddr+1], a                                  ; $4fa6: $ea $99 $c2
-	ld   a, $3e                                      ; $4fa9: $3e $3e
-	ld   [wFarCallBank], a                                  ; $4fab: $ea $9a $c2
-	pop  af                                          ; $4fae: $f1
-	call FarCall                                       ; $4faf: $cd $62 $09
+
+	M_FarCall Call_03e_65cc
 
 ; Here it comes!
 	ld   d, $16                                      ; $4fb2: $16 $16
@@ -2446,7 +2310,7 @@ jr_024_4f9b:
 
 ; Alright! I'm at the perfect distance!
 	ld   a, $00                                      ; $4fbb: $3e $00
-	ld   [$ca89], a                                  ; $4fbd: $ea $89 $ca
+	ld   [wLastEnemyRelatedBattleText], a                                  ; $4fbd: $ea $89 $ca
 	ret                                              ; $4fc0: $c9
 
 
@@ -2455,15 +2319,8 @@ Jump_024_4fc1:
 	ld   [$ca77], a                                  ; $4fc4: $ea $77 $ca
 	ld   a, $01                                      ; $4fc7: $3e $01
 	ld   [$ca76], a                                  ; $4fc9: $ea $76 $ca
-	push af                                          ; $4fcc: $f5
-	ld   a, $cc                                      ; $4fcd: $3e $cc
-	ld   [wFarCallAddr], a                                  ; $4fcf: $ea $98 $c2
-	ld   a, $65                                      ; $4fd2: $3e $65
-	ld   [wFarCallAddr+1], a                                  ; $4fd4: $ea $99 $c2
-	ld   a, $3e                                      ; $4fd7: $3e $3e
-	ld   [wFarCallBank], a                                  ; $4fd9: $ea $9a $c2
-	pop  af                                          ; $4fdc: $f1
-	call FarCall                                       ; $4fdd: $cd $62 $09
+
+	M_FarCall Call_03e_65cc
 
 ; It's reeling! Now's my chance!
 	ld   d, $17                                      ; $4fe0: $16 $17
@@ -2480,17 +2337,11 @@ Jump_024_4feb:
 	ld   [$ca77], a                                  ; $4ff2: $ea $77 $ca
 	ld   a, $00                                      ; $4ff5: $3e $00
 	ld   [$ca76], a                                  ; $4ff7: $ea $76 $ca
-	push af                                          ; $4ffa: $f5
-	ld   a, $cc                                      ; $4ffb: $3e $cc
-	ld   [wFarCallAddr], a                                  ; $4ffd: $ea $98 $c2
-	ld   a, $65                                      ; $5000: $3e $65
-	ld   [wFarCallAddr+1], a                                  ; $5002: $ea $99 $c2
-	ld   a, $3e                                      ; $5005: $3e $3e
-	ld   [wFarCallBank], a                                  ; $5007: $ea $9a $c2
-	pop  af                                          ; $500a: $f1
-	call FarCall                                       ; $500b: $cd $62 $09
+
+	M_FarCall Call_03e_65cc
+
 	ld   d, $04                                      ; $500e: $16 $04
-	ld   a, [$ca70]                                  ; $5010: $fa $70 $ca
+	ld   a, [wEnemyKouboChosen]                                  ; $5010: $fa $70 $ca
 	cp   $04                                         ; $5013: $fe $04
 	jr   nz, jr_024_5019                             ; $5015: $20 $02
 
@@ -2502,15 +2353,9 @@ jr_024_5019:
 	add  d                                           ; $501d: $82
 	ld   c, a                                        ; $501e: $4f
 	ld   bc, $0001                                   ; $501f: $01 $01 $00
-	push af                                          ; $5022: $f5
-	ld   a, $ba                                      ; $5023: $3e $ba
-	ld   [wFarCallAddr], a                                  ; $5025: $ea $98 $c2
-	ld   a, $54                                      ; $5028: $3e $54
-	ld   [wFarCallAddr+1], a                                  ; $502a: $ea $99 $c2
-	ld   a, $0a                                      ; $502d: $3e $0a
-	ld   [wFarCallBank], a                                  ; $502f: $ea $9a $c2
-	pop  af                                          ; $5032: $f1
-	call FarCall                                       ; $5033: $cd $62 $09
+
+	M_FarCall todo_DisplayCharacterPortrait
+
 	ld   a, $4f                                      ; $5036: $3e $4f
 	ld   [wGameSubstate], a                                  ; $5038: $ea $a1 $c2
 	ret                                              ; $503b: $c9
@@ -2525,15 +2370,8 @@ BattleSubstate4d:
 	cp   b                                           ; $5049: $b8
 	jr   z, jr_024_5062                              ; $504a: $28 $16
 
-	push af                                          ; $504c: $f5
-	ld   a, $a5                                      ; $504d: $3e $a5
-	ld   [wFarCallAddr], a                                  ; $504f: $ea $98 $c2
-	ld   a, $66                                      ; $5052: $3e $66
-	ld   [wFarCallAddr+1], a                                  ; $5054: $ea $99 $c2
-	ld   a, $3e                                      ; $5057: $3e $3e
-	ld   [wFarCallBank], a                                  ; $5059: $ea $9a $c2
-	pop  af                                          ; $505c: $f1
-	call FarCall                                       ; $505d: $cd $62 $09
+	M_FarCall Func_3e_66a5
+
 	jr   nz, jr_024_5066                             ; $5060: $20 $04
 
 jr_024_5062:
@@ -2547,7 +2385,7 @@ jr_024_5066:
 BattleSubstate4e:
 	call ClearOam                                       ; $5067: $cd $d7 $0d
 	call AnimateAllAnimatedSpriteSpecs                                       ; $506a: $cd $d3 $2e
-	call Call_024_6c6d                               ; $506d: $cd $6d $6c
+	call CheckIfBattleTextBoxDone                               ; $506d: $cd $6d $6c
 	ret  nc                                          ; $5070: $d0
 
 	ld   c, $01                                      ; $5071: $0e $01
@@ -2609,15 +2447,9 @@ jr_024_50ca:
 BattleSubstate4f:
 	call ClearOam                                       ; $50de: $cd $d7 $0d
 	call AnimateAllAnimatedSpriteSpecs                                       ; $50e1: $cd $d3 $2e
-	push af                                          ; $50e4: $f5
-	ld   a, $a5                                      ; $50e5: $3e $a5
-	ld   [wFarCallAddr], a                                  ; $50e7: $ea $98 $c2
-	ld   a, $66                                      ; $50ea: $3e $66
-	ld   [wFarCallAddr+1], a                                  ; $50ec: $ea $99 $c2
-	ld   a, $3e                                      ; $50ef: $3e $3e
-	ld   [wFarCallBank], a                                  ; $50f1: $ea $9a $c2
-	pop  af                                          ; $50f4: $f1
-	call FarCall                                       ; $50f5: $cd $62 $09
+
+	M_FarCall Func_3e_66a5
+
 	jr   nz, jr_024_50ff                             ; $50f8: $20 $05
 
 	ld   a, $22                                      ; $50fa: $3e $22
@@ -2630,7 +2462,7 @@ jr_024_50ff:
 BattleSubstate50:
 	call ClearOam                                       ; $5100: $cd $d7 $0d
 	call AnimateAllAnimatedSpriteSpecs                                       ; $5103: $cd $d3 $2e
-	call Call_024_6c6d                               ; $5106: $cd $6d $6c
+	call CheckIfBattleTextBoxDone                               ; $5106: $cd $6d $6c
 	ret  nc                                          ; $5109: $d0
 
 	ld   c, $01                                      ; $510a: $0e $01
@@ -2684,24 +2516,10 @@ jr_024_5163:
 	rst  WaitUntilVBlankIntHandledIfLCDOn                                         ; $516b: $cf
 	ld   a, $01                                      ; $516c: $3e $01
 	call PlaySoundEffect                                       ; $516e: $cd $df $1a
-	push af                                          ; $5171: $f5
-	ld   a, $3c                                      ; $5172: $3e $3c
-	ld   [wFarCallAddr], a                                  ; $5174: $ea $98 $c2
-	ld   a, $61                                      ; $5177: $3e $61
-	ld   [wFarCallAddr+1], a                                  ; $5179: $ea $99 $c2
-	ld   a, $3e                                      ; $517c: $3e $3e
-	ld   [wFarCallBank], a                                  ; $517e: $ea $9a $c2
-	pop  af                                          ; $5181: $f1
-	call FarCall                                       ; $5182: $cd $62 $09
-	push af                                          ; $5185: $f5
-	ld   a, $e9                                      ; $5186: $3e $e9
-	ld   [wFarCallAddr], a                                  ; $5188: $ea $98 $c2
-	ld   a, $61                                      ; $518b: $3e $61
-	ld   [wFarCallAddr+1], a                                  ; $518d: $ea $99 $c2
-	ld   a, $3e                                      ; $5190: $3e $3e
-	ld   [wFarCallBank], a                                  ; $5192: $ea $9a $c2
-	pop  af                                          ; $5195: $f1
-	call FarCall                                       ; $5196: $cd $62 $09
+
+	M_FarCall Call_03e_613c
+	M_FarCall Call_03e_61e9
+
 	rst  WaitUntilVBlankIntHandledIfLCDOn                                         ; $5199: $cf
 	ld   a, $06                                      ; $519a: $3e $06
 	ld   [wGameSubstate], a                                  ; $519c: $ea $a1 $c2
@@ -2711,7 +2529,7 @@ jr_024_5163:
 BattleSubstate25:
 	call ClearOam                                       ; $51a0: $cd $d7 $0d
 	call AnimateAllAnimatedSpriteSpecs                                       ; $51a3: $cd $d3 $2e
-	call Call_024_6c6d                               ; $51a6: $cd $6d $6c
+	call CheckIfBattleTextBoxDone                               ; $51a6: $cd $6d $6c
 	ret  nc                                          ; $51a9: $d0
 
 	ld   hl, wGameSubstate                                   ; $51aa: $21 $a1 $c2
@@ -2724,7 +2542,7 @@ BattleSubstate23:
 	call AnimateAllAnimatedSpriteSpecs                                       ; $51b2: $cd $d3 $2e
 
 ; Alright! I'm at the perfect distance!
-	ld   a, [$ca89]                                  ; $51b5: $fa $89 $ca
+	ld   a, [wLastEnemyRelatedBattleText]                                  ; $51b5: $fa $89 $ca
 	cp   $00                                         ; $51b8: $fe $00
 	jr   z, jr_024_51c6                              ; $51ba: $28 $0a
 
@@ -2739,7 +2557,7 @@ jr_024_51c6:
 	call Func_24_7657                                       ; $51c6: $cd $57 $76
 	rst  WaitUntilVBlankIntHandledIfLCDOn                                         ; $51c9: $cf
 	ld   d, $04                                      ; $51ca: $16 $04
-	ld   a, [$ca70]                                  ; $51cc: $fa $70 $ca
+	ld   a, [wEnemyKouboChosen]                                  ; $51cc: $fa $70 $ca
 	cp   $04                                         ; $51cf: $fe $04
 	jr   nz, jr_024_51d5                             ; $51d1: $20 $02
 
@@ -2756,15 +2574,9 @@ jr_024_51d5:
 jr_024_51e0:
 	add  d                                           ; $51e0: $82
 	ld   c, a                                        ; $51e1: $4f
-	push af                                          ; $51e2: $f5
-	ld   a, $ba                                      ; $51e3: $3e $ba
-	ld   [wFarCallAddr], a                                  ; $51e5: $ea $98 $c2
-	ld   a, $54                                      ; $51e8: $3e $54
-	ld   [wFarCallAddr+1], a                                  ; $51ea: $ea $99 $c2
-	ld   a, $0a                                      ; $51ed: $3e $0a
-	ld   [wFarCallBank], a                                  ; $51ef: $ea $9a $c2
-	pop  af                                          ; $51f2: $f1
-	call FarCall                                       ; $51f3: $cd $62 $09
+
+	M_FarCall todo_DisplayCharacterPortrait
+
 	ld   hl, wGameSubstate                                   ; $51f6: $21 $a1 $c2
 	inc  [hl]                                        ; $51f9: $34
 	ret                                              ; $51fa: $c9
@@ -2779,15 +2591,8 @@ BattleSubstate24:
 	cp   b                                           ; $5208: $b8
 	jr   z, jr_024_5221                              ; $5209: $28 $16
 
-	push af                                          ; $520b: $f5
-	ld   a, $a5                                      ; $520c: $3e $a5
-	ld   [wFarCallAddr], a                                  ; $520e: $ea $98 $c2
-	ld   a, $66                                      ; $5211: $3e $66
-	ld   [wFarCallAddr+1], a                                  ; $5213: $ea $99 $c2
-	ld   a, $3e                                      ; $5216: $3e $3e
-	ld   [wFarCallBank], a                                  ; $5218: $ea $9a $c2
-	pop  af                                          ; $521b: $f1
-	call FarCall                                       ; $521c: $cd $62 $09
+	M_FarCall Func_3e_66a5
+
 	jr   nz, jr_024_5225                             ; $521f: $20 $04
 
 jr_024_5221:
@@ -2801,20 +2606,14 @@ jr_024_5225:
 BattleSubstate26:
 	call ClearOam                                       ; $5226: $cd $d7 $0d
 	call AnimateAllAnimatedSpriteSpecs                                       ; $5229: $cd $d3 $2e
-	ld   a, [$ca71]                                  ; $522c: $fa $71 $ca
+	ld   a, [wBattleDistanceToEnemy]                                  ; $522c: $fa $71 $ca
 	cp   $00                                         ; $522f: $fe $00
 	jr   z, jr_024_524e                              ; $5231: $28 $1b
 
 	ld   a, $0b                                      ; $5233: $3e $0b
-	push af                                          ; $5235: $f5
-	ld   a, $de                                      ; $5236: $3e $de
-	ld   [wFarCallAddr], a                                  ; $5238: $ea $98 $c2
-	ld   a, $65                                      ; $523b: $3e $65
-	ld   [wFarCallAddr+1], a                                  ; $523d: $ea $99 $c2
-	ld   a, $3e                                      ; $5240: $3e $3e
-	ld   [wFarCallBank], a                                  ; $5242: $ea $9a $c2
-	pop  af                                          ; $5245: $f1
-	call FarCall                                       ; $5246: $cd $62 $09
+
+	M_FarCall Call_03e_65de
+
 	ld   hl, wGameSubstate                                   ; $5249: $21 $a1 $c2
 	inc  [hl]                                        ; $524c: $34
 	ret                                              ; $524d: $c9
@@ -2822,30 +2621,17 @@ BattleSubstate26:
 
 jr_024_524e:
 	ld   a, $05                                      ; $524e: $3e $05
-	push af                                          ; $5250: $f5
-	ld   a, $de                                      ; $5251: $3e $de
-	ld   [wFarCallAddr], a                                  ; $5253: $ea $98 $c2
-	ld   a, $65                                      ; $5256: $3e $65
-	ld   [wFarCallAddr+1], a                                  ; $5258: $ea $99 $c2
-	ld   a, $3e                                      ; $525b: $3e $3e
-	ld   [wFarCallBank], a                                  ; $525d: $ea $9a $c2
-	pop  af                                          ; $5260: $f1
-	call FarCall                                       ; $5261: $cd $62 $09
+
+	M_FarCall Call_03e_65de
+
 	ld   hl, wGameSubstate                                   ; $5264: $21 $a1 $c2
 	inc  [hl]                                        ; $5267: $34
 	ret                                              ; $5268: $c9
 
 
 BattleSubstate27:
-	push af                                          ; $5269: $f5
-	ld   a, $ae                                      ; $526a: $3e $ae
-	ld   [wFarCallAddr], a                                  ; $526c: $ea $98 $c2
-	ld   a, $66                                      ; $526f: $3e $66
-	ld   [wFarCallAddr+1], a                                  ; $5271: $ea $99 $c2
-	ld   a, $3e                                      ; $5274: $3e $3e
-	ld   [wFarCallBank], a                                  ; $5276: $ea $9a $c2
-	pop  af                                          ; $5279: $f1
-	call FarCall                                       ; $527a: $cd $62 $09
+	M_FarCall Func_3e_66ae
+
 	jr   nz, jr_024_5283                             ; $527d: $20 $04
 
 	ld   hl, wGameSubstate                                   ; $527f: $21 $a1 $c2
@@ -3004,15 +2790,9 @@ BattleSubstate2a:
 	ld   a, $02                                      ; $5386: $3e $02
 	ld   [wWramBank], a                                  ; $5388: $ea $93 $c2
 	ldh  [rSVBK], a                                  ; $538b: $e0 $70
-	push af                                          ; $538d: $f5
-	ld   a, $cb                                      ; $538e: $3e $cb
-	ld   [wFarCallAddr], a                                  ; $5390: $ea $98 $c2
-	ld   a, $4f                                      ; $5393: $3e $4f
-	ld   [wFarCallAddr+1], a                                  ; $5395: $ea $99 $c2
-	ld   a, $09                                      ; $5398: $3e $09
-	ld   [wFarCallBank], a                                  ; $539a: $ea $9a $c2
-	pop  af                                          ; $539d: $f1
-	call FarCall                                       ; $539e: $cd $62 $09
+
+	M_FarCall Func_09_4fcb
+
 	ld   a, [$ca6e]                                  ; $53a1: $fa $6e $ca
 	sla  a                                           ; $53a4: $cb $27
 	ld   b, $00                                      ; $53a6: $06 $00
@@ -3147,15 +2927,9 @@ BattleSubstate2b:
 
 jr_024_5447:
 	call AnimateAllAnimatedSpriteSpecs                                       ; $5447: $cd $d3 $2e
-	push af                                          ; $544a: $f5
-	ld   a, $dd                                      ; $544b: $3e $dd
-	ld   [wFarCallAddr], a                                  ; $544d: $ea $98 $c2
-	ld   a, $4f                                      ; $5450: $3e $4f
-	ld   [wFarCallAddr+1], a                                  ; $5452: $ea $99 $c2
-	ld   a, $09                                      ; $5455: $3e $09
-	ld   [wFarCallBank], a                                  ; $5457: $ea $9a $c2
-	pop  af                                          ; $545a: $f1
-	call FarCall                                       ; $545b: $cd $62 $09
+
+	M_FarCall Func_09_4fdd
+
 	ld   a, [$cbe4]                                  ; $545e: $fa $e4 $cb
 	bit  7, a                                        ; $5461: $cb $7f
 	jr   z, jr_024_5494                              ; $5463: $28 $2f
@@ -3171,15 +2945,8 @@ jr_024_5447:
 	ld   a, [hl]                                     ; $5473: $7e
 
 jr_024_5474:
-	push af                                          ; $5474: $f5
-	ld   a, $34                                      ; $5475: $3e $34
-	ld   [wFarCallAddr], a                                  ; $5477: $ea $98 $c2
-	ld   a, $49                                      ; $547a: $3e $49
-	ld   [wFarCallAddr+1], a                                  ; $547c: $ea $99 $c2
-	ld   a, $0a                                      ; $547f: $3e $0a
-	ld   [wFarCallBank], a                                  ; $5481: $ea $9a $c2
-	pop  af                                          ; $5484: $f1
-	call FarCall                                       ; $5485: $cd $62 $09
+	M_FarCall Func_0a_4934
+
 	xor  a                                           ; $5488: $af
 	ld   [$cbe5], a                                  ; $5489: $ea $e5 $cb
 	xor  a                                           ; $548c: $af
@@ -3259,27 +3026,21 @@ BattleSubstate2d:
 	call Call_024_6723                               ; $54f9: $cd $23 $67
 
 ; Alright! I'm at the perfect distance!
-	ld   a, [$ca89]                                  ; $54fc: $fa $89 $ca
+	ld   a, [wLastEnemyRelatedBattleText]                                  ; $54fc: $fa $89 $ca
 	cp   $00                                         ; $54ff: $fe $00
 	jr   nz, jr_024_5520                             ; $5501: $20 $1d
 
 	ld   a, [$ca75]                                  ; $5503: $fa $75 $ca
-	push af                                          ; $5506: $f5
-	ld   a, $de                                      ; $5507: $3e $de
-	ld   [wFarCallAddr], a                                  ; $5509: $ea $98 $c2
-	ld   a, $65                                      ; $550c: $3e $65
-	ld   [wFarCallAddr+1], a                                  ; $550e: $ea $99 $c2
-	ld   a, $3e                                      ; $5511: $3e $3e
-	ld   [wFarCallBank], a                                  ; $5513: $ea $9a $c2
-	pop  af                                          ; $5516: $f1
-	call FarCall                                       ; $5517: $cd $62 $09
+
+	M_FarCall Call_03e_65de
+
 	ld   a, $2f                                      ; $551a: $3e $2f
 	ld   [wGameSubstate], a                                  ; $551c: $ea $a1 $c2
 	ret                                              ; $551f: $c9
 
 
 jr_024_5520:
-	ld   a, [$ca87]                                  ; $5520: $fa $87 $ca
+	ld   a, [wLastPlayerRelatedBattleText]                                  ; $5520: $fa $87 $ca
 	ld   d, a                                        ; $5523: $57
 	call todo_DisplayBattleText                               ; $5524: $cd $df $6b
 	ld   hl, wGameSubstate                                   ; $5527: $21 $a1 $c2
@@ -3291,15 +3052,9 @@ BattleSubstate2e:
 	call ClearOam                                       ; $552c: $cd $d7 $0d
 	call AnimateAllAnimatedSpriteSpecs                                       ; $552f: $cd $d3 $2e
 	ld   bc, $0001                                   ; $5532: $01 $01 $00
-	push af                                          ; $5535: $f5
-	ld   a, $ba                                      ; $5536: $3e $ba
-	ld   [wFarCallAddr], a                                  ; $5538: $ea $98 $c2
-	ld   a, $54                                      ; $553b: $3e $54
-	ld   [wFarCallAddr+1], a                                  ; $553d: $ea $99 $c2
-	ld   a, $0a                                      ; $5540: $3e $0a
-	ld   [wFarCallBank], a                                  ; $5542: $ea $9a $c2
-	pop  af                                          ; $5545: $f1
-	call FarCall                                       ; $5546: $cd $62 $09
+
+	M_FarCall todo_DisplayCharacterPortrait
+
 	ld   a, $31                                      ; $5549: $3e $31
 	ld   [wGameSubstate], a                                  ; $554b: $ea $a1 $c2
 	ret                                              ; $554e: $c9
@@ -3309,7 +3064,7 @@ BattleSubstate2f:
 	call ClearOam                                       ; $554f: $cd $d7 $0d
 	call AnimateAllAnimatedSpriteSpecs                                       ; $5552: $cd $d3 $2e
 	ld   d, $04                                      ; $5555: $16 $04
-	ld   a, [$ca70]                                  ; $5557: $fa $70 $ca
+	ld   a, [wEnemyKouboChosen]                                  ; $5557: $fa $70 $ca
 	cp   $04                                         ; $555a: $fe $04
 	jr   nz, jr_024_5560                             ; $555c: $20 $02
 
@@ -3325,57 +3080,32 @@ jr_024_5560:
 
 jr_024_556b:
 	ld   bc, $0001                                   ; $556b: $01 $01 $00
-	push af                                          ; $556e: $f5
-	ld   a, $ba                                      ; $556f: $3e $ba
-	ld   [wFarCallAddr], a                                  ; $5571: $ea $98 $c2
-	ld   a, $54                                      ; $5574: $3e $54
-	ld   [wFarCallAddr+1], a                                  ; $5576: $ea $99 $c2
-	ld   a, $0a                                      ; $5579: $3e $0a
-	ld   [wFarCallBank], a                                  ; $557b: $ea $9a $c2
-	pop  af                                          ; $557e: $f1
-	call FarCall                                       ; $557f: $cd $62 $09
+
+	M_FarCall todo_DisplayCharacterPortrait
+
 	ld   hl, wGameSubstate                                   ; $5582: $21 $a1 $c2
 	inc  [hl]                                        ; $5585: $34
 	ret                                              ; $5586: $c9
 
 
 BattleSubstate30:
-	push af                                          ; $5587: $f5
-	ld   a, $ae                                      ; $5588: $3e $ae
-	ld   [wFarCallAddr], a                                  ; $558a: $ea $98 $c2
-	ld   a, $66                                      ; $558d: $3e $66
-	ld   [wFarCallAddr+1], a                                  ; $558f: $ea $99 $c2
-	ld   a, $3e                                      ; $5592: $3e $3e
-	ld   [wFarCallBank], a                                  ; $5594: $ea $9a $c2
-	pop  af                                          ; $5597: $f1
-	call FarCall                                       ; $5598: $cd $62 $09
+	M_FarCall Func_3e_66ae
+
 	jr   nz, jr_024_55ef                             ; $559b: $20 $52
 
 	ld   a, [$ca7b]                                  ; $559d: $fa $7b $ca
-	push af                                          ; $55a0: $f5
-	ld   a, $c7                                      ; $55a1: $3e $c7
-	ld   [wFarCallAddr], a                                  ; $55a3: $ea $98 $c2
-	ld   a, $66                                      ; $55a6: $3e $66
-	ld   [wFarCallAddr+1], a                                  ; $55a8: $ea $99 $c2
-	ld   a, $3e                                      ; $55ab: $3e $3e
-	ld   [wFarCallBank], a                                  ; $55ad: $ea $9a $c2
-	pop  af                                          ; $55b0: $f1
-	call FarCall                                       ; $55b1: $cd $62 $09
+
+	M_FarCall Call_03e_66c7
+
 	ld   a, [$ca79]                                  ; $55b4: $fa $79 $ca
-	push af                                          ; $55b7: $f5
-	ld   a, $fd                                      ; $55b8: $3e $fd
-	ld   [wFarCallAddr], a                                  ; $55ba: $ea $98 $c2
-	ld   a, $66                                      ; $55bd: $3e $66
-	ld   [wFarCallAddr+1], a                                  ; $55bf: $ea $99 $c2
-	ld   a, $3e                                      ; $55c2: $3e $3e
-	ld   [wFarCallBank], a                                  ; $55c4: $ea $9a $c2
-	pop  af                                          ; $55c7: $f1
-	call FarCall                                       ; $55c8: $cd $62 $09
+
+	M_FarCall Call_03e_66fd
+
 	ld   a, [$ca7b]                                  ; $55cb: $fa $7b $ca
 	and  a                                           ; $55ce: $a7
 	jr   z, jr_024_55de                              ; $55cf: $28 $0d
 
-	ld   a, [$ca87]                                  ; $55d1: $fa $87 $ca
+	ld   a, [wLastPlayerRelatedBattleText]                                  ; $55d1: $fa $87 $ca
 	ld   d, a                                        ; $55d4: $57
 	call todo_DisplayBattleText                               ; $55d5: $cd $df $6b
 	ld   hl, wGameSubstate                                   ; $55d8: $21 $a1 $c2
@@ -3387,7 +3117,7 @@ jr_024_55de:
 
 ; Ahhhhh!!
 	ld   a, $2e                                      ; $55e1: $3e $2e
-	ld   [$ca87], a                                  ; $55e3: $ea $87 $ca
+	ld   [wLastPlayerRelatedBattleText], a                                  ; $55e3: $ea $87 $ca
 	ld   d, a                                        ; $55e6: $57
 	call todo_DisplayBattleText                               ; $55e7: $cd $df $6b
 	ld   a, $32                                      ; $55ea: $3e $32
@@ -3403,11 +3133,11 @@ BattleSubstate31:
 	call ClearOam                                       ; $55f6: $cd $d7 $0d
 	call AnimateAllAnimatedSpriteSpecs                                       ; $55f9: $cd $d3 $2e
 	ld   a, [$ca76]                                  ; $55fc: $fa $76 $ca
-	ld   a, [$ca87]                                  ; $55ff: $fa $87 $ca
+	ld   a, [wLastPlayerRelatedBattleText]                                  ; $55ff: $fa $87 $ca
 	cp   $ff                                         ; $5602: $fe $ff
 	jr   z, jr_024_5663                              ; $5604: $28 $5d
 
-	call Call_024_6c6d                               ; $5606: $cd $6d $6c
+	call CheckIfBattleTextBoxDone                               ; $5606: $cd $6d $6c
 	ret  nc                                          ; $5609: $d0
 
 	ld   c, $01                                      ; $560a: $0e $01
@@ -3469,38 +3199,19 @@ jr_024_5663:
 BattleSubstate32:
 	call ClearOam                                       ; $5676: $cd $d7 $0d
 	call AnimateAllAnimatedSpriteSpecs                                       ; $5679: $cd $d3 $2e
-	push af                                          ; $567c: $f5
-	ld   a, $18                                      ; $567d: $3e $18
-	ld   [wFarCallAddr], a                                  ; $567f: $ea $98 $c2
-	ld   a, $67                                      ; $5682: $3e $67
-	ld   [wFarCallAddr+1], a                                  ; $5684: $ea $99 $c2
-	ld   a, $3e                                      ; $5687: $3e $3e
-	ld   [wFarCallBank], a                                  ; $5689: $ea $9a $c2
-	pop  af                                          ; $568c: $f1
-	call FarCall                                       ; $568d: $cd $62 $09
+
+	M_FarCall Func_3e_6718
+
 	jr   nz, jr_024_56c3                             ; $5690: $20 $31
 
-	push af                                          ; $5692: $f5
-	ld   a, $9d                                      ; $5693: $3e $9d
-	ld   [wFarCallAddr], a                                  ; $5695: $ea $98 $c2
-	ld   a, $6b                                      ; $5698: $3e $6b
-	ld   [wFarCallAddr+1], a                                  ; $569a: $ea $99 $c2
-	ld   a, $3e                                      ; $569d: $3e $3e
-	ld   [wFarCallBank], a                                  ; $569f: $ea $9a $c2
-	pop  af                                          ; $56a2: $f1
-	call FarCall                                       ; $56a3: $cd $62 $09
+	M_FarCall Func_3e_6b9d
+
 	jr   nz, jr_024_56c3                             ; $56a6: $20 $1b
 
-	ld   a, [$ca7e]                                  ; $56a8: $fa $7e $ca
-	push af                                          ; $56ab: $f5
-	ld   a, $e2                                      ; $56ac: $3e $e2
-	ld   [wFarCallAddr], a                                  ; $56ae: $ea $98 $c2
-	ld   a, $66                                      ; $56b1: $3e $66
-	ld   [wFarCallAddr+1], a                                  ; $56b3: $ea $99 $c2
-	ld   a, $3e                                      ; $56b6: $3e $3e
-	ld   [wFarCallBank], a                                  ; $56b8: $ea $9a $c2
-	pop  af                                          ; $56bb: $f1
-	call FarCall                                       ; $56bc: $cd $62 $09
+	ld   a, [wBattleSPCharged]                                  ; $56a8: $fa $7e $ca
+
+	M_FarCall Call_03e_66e2
+
 	ld   hl, wGameSubstate                                   ; $56bf: $21 $a1 $c2
 	inc  [hl]                                        ; $56c2: $34
 
@@ -3524,21 +3235,14 @@ BattleSubstate33:
 	ld   [$ca9a], a                                  ; $56dc: $ea $9a $ca
 
 jr_024_56df:
-	push af                                          ; $56df: $f5
-	ld   a, $33                                      ; $56e0: $3e $33
-	ld   [wFarCallAddr], a                                  ; $56e2: $ea $98 $c2
-	ld   a, $67                                      ; $56e5: $3e $67
-	ld   [wFarCallAddr+1], a                                  ; $56e7: $ea $99 $c2
-	ld   a, $3e                                      ; $56ea: $3e $3e
-	ld   [wFarCallBank], a                                  ; $56ec: $ea $9a $c2
-	pop  af                                          ; $56ef: $f1
-	call FarCall                                       ; $56f0: $cd $62 $09
+	M_FarCall Func_3e_6733
+
 	jr   nz, jr_024_5703                             ; $56f3: $20 $0e
 
 	call Call_024_7731                               ; $56f5: $cd $31 $77
 
 ; Alright! I'm at the perfect distance!
-	ld   a, [$ca89]                                  ; $56f8: $fa $89 $ca
+	ld   a, [wLastEnemyRelatedBattleText]                                  ; $56f8: $fa $89 $ca
 	cp   $00                                         ; $56fb: $fe $00
 	jr   nz, jr_024_5704                             ; $56fd: $20 $05
 
@@ -3572,15 +3276,8 @@ BattleSubstate34:
 	cp   b                                           ; $5723: $b8
 	jr   z, jr_024_573c                              ; $5724: $28 $16
 
-	push af                                          ; $5726: $f5
-	ld   a, $a5                                      ; $5727: $3e $a5
-	ld   [wFarCallAddr], a                                  ; $5729: $ea $98 $c2
-	ld   a, $66                                      ; $572c: $3e $66
-	ld   [wFarCallAddr+1], a                                  ; $572e: $ea $99 $c2
-	ld   a, $3e                                      ; $5731: $3e $3e
-	ld   [wFarCallBank], a                                  ; $5733: $ea $9a $c2
-	pop  af                                          ; $5736: $f1
-	call FarCall                                       ; $5737: $cd $62 $09
+	M_FarCall Func_3e_66a5
+
 	jr   nz, jr_024_5740                             ; $573a: $20 $04
 
 jr_024_573c:
@@ -3610,15 +3307,9 @@ jr_024_5754:
 	jr   z, jr_024_577c                              ; $575e: $28 $1c
 
 	ld   a, $01                                      ; $5760: $3e $01
-	push af                                          ; $5762: $f5
-	ld   a, $cc                                      ; $5763: $3e $cc
-	ld   [wFarCallAddr], a                                  ; $5765: $ea $98 $c2
-	ld   a, $65                                      ; $5768: $3e $65
-	ld   [wFarCallAddr+1], a                                  ; $576a: $ea $99 $c2
-	ld   a, $3e                                      ; $576d: $3e $3e
-	ld   [wFarCallBank], a                                  ; $576f: $ea $9a $c2
-	pop  af                                          ; $5772: $f1
-	call FarCall                                       ; $5773: $cd $62 $09
+
+	M_FarCall Call_03e_65cc
+
 	ld   a, $37                                      ; $5776: $3e $37
 	ld   [wGameSubstate], a                                  ; $5778: $ea $a1 $c2
 	ret                                              ; $577b: $c9
@@ -3633,24 +3324,10 @@ jr_024_577c:
 BattleSubstate35:
 	call ClearOam                                       ; $5782: $cd $d7 $0d
 	call AnimateAllAnimatedSpriteSpecs                                       ; $5785: $cd $d3 $2e
-	push af                                          ; $5788: $f5
-	ld   a, $3c                                      ; $5789: $3e $3c
-	ld   [wFarCallAddr], a                                  ; $578b: $ea $98 $c2
-	ld   a, $61                                      ; $578e: $3e $61
-	ld   [wFarCallAddr+1], a                                  ; $5790: $ea $99 $c2
-	ld   a, $3e                                      ; $5793: $3e $3e
-	ld   [wFarCallBank], a                                  ; $5795: $ea $9a $c2
-	pop  af                                          ; $5798: $f1
-	call FarCall                                       ; $5799: $cd $62 $09
-	push af                                          ; $579c: $f5
-	ld   a, $e9                                      ; $579d: $3e $e9
-	ld   [wFarCallAddr], a                                  ; $579f: $ea $98 $c2
-	ld   a, $61                                      ; $57a2: $3e $61
-	ld   [wFarCallAddr+1], a                                  ; $57a4: $ea $99 $c2
-	ld   a, $3e                                      ; $57a7: $3e $3e
-	ld   [wFarCallBank], a                                  ; $57a9: $ea $9a $c2
-	pop  af                                          ; $57ac: $f1
-	call FarCall                                       ; $57ad: $cd $62 $09
+
+	M_FarCall Call_03e_613c
+	M_FarCall Call_03e_61e9
+
 	ld   a, $06                                      ; $57b0: $3e $06
 	ld   [wGameSubstate], a                                  ; $57b2: $ea $a1 $c2
 	ret                                              ; $57b5: $c9
@@ -3687,15 +3364,8 @@ BattleSubstate37:
 	inc  [hl]                                        ; $57e3: $34
 
 jr_024_57e4:
-	push af                                          ; $57e4: $f5
-	ld   a, $a5                                      ; $57e5: $3e $a5
-	ld   [wFarCallAddr], a                                  ; $57e7: $ea $98 $c2
-	ld   a, $66                                      ; $57ea: $3e $66
-	ld   [wFarCallAddr+1], a                                  ; $57ec: $ea $99 $c2
-	ld   a, $3e                                      ; $57ef: $3e $3e
-	ld   [wFarCallBank], a                                  ; $57f1: $ea $9a $c2
-	pop  af                                          ; $57f4: $f1
-	call FarCall                                       ; $57f5: $cd $62 $09
+	M_FarCall Func_3e_66a5
+
 	call ClearOam                                       ; $57f8: $cd $d7 $0d
 	call AnimateAllAnimatedSpriteSpecs                                       ; $57fb: $cd $d3 $2e
 	ret                                              ; $57fe: $c9
@@ -3730,30 +3400,17 @@ BattleSubstate39:
 	call ClearOam                                       ; $581f: $cd $d7 $0d
 	call AnimateAllAnimatedSpriteSpecs                                       ; $5822: $cd $d3 $2e
 	ld   a, $0f                                      ; $5825: $3e $0f
-	push af                                          ; $5827: $f5
-	ld   a, $de                                      ; $5828: $3e $de
-	ld   [wFarCallAddr], a                                  ; $582a: $ea $98 $c2
-	ld   a, $65                                      ; $582d: $3e $65
-	ld   [wFarCallAddr+1], a                                  ; $582f: $ea $99 $c2
-	ld   a, $3e                                      ; $5832: $3e $3e
-	ld   [wFarCallBank], a                                  ; $5834: $ea $9a $c2
-	pop  af                                          ; $5837: $f1
-	call FarCall                                       ; $5838: $cd $62 $09
+
+	M_FarCall Call_03e_65de
+
 	ld   hl, wGameSubstate                                   ; $583b: $21 $a1 $c2
 	inc  [hl]                                        ; $583e: $34
 	ret                                              ; $583f: $c9
 
 
 BattleSubstate3a:
-	push af                                          ; $5840: $f5
-	ld   a, $ae                                      ; $5841: $3e $ae
-	ld   [wFarCallAddr], a                                  ; $5843: $ea $98 $c2
-	ld   a, $66                                      ; $5846: $3e $66
-	ld   [wFarCallAddr+1], a                                  ; $5848: $ea $99 $c2
-	ld   a, $3e                                      ; $584b: $3e $3e
-	ld   [wFarCallBank], a                                  ; $584d: $ea $9a $c2
-	pop  af                                          ; $5850: $f1
-	call FarCall                                       ; $5851: $cd $62 $09
+	M_FarCall Func_3e_66ae
+
 	ld   a, [$ca86]                                  ; $5854: $fa $86 $ca
 	inc  a                                           ; $5857: $3c
 	ld   [$ca86], a                                  ; $5858: $ea $86 $ca
@@ -3774,7 +3431,7 @@ jr_024_5867:
 BattleSubstate3b:
 	call ClearOam                                       ; $586e: $cd $d7 $0d
 	call AnimateAllAnimatedSpriteSpecs                                       ; $5871: $cd $d3 $2e
-	call Call_024_6c6d                               ; $5874: $cd $6d $6c
+	call CheckIfBattleTextBoxDone                               ; $5874: $cd $6d $6c
 	ret  nc                                          ; $5877: $d0
 
 	ld   c, $01                                      ; $5878: $0e $01
@@ -3851,7 +3508,7 @@ BattleSubstate3c:
 	ld   hl, $4613                                   ; $5908: $21 $13 $46
 	ld   bc, $0008                                   ; $590b: $01 $08 $00
 	call FarMemCopy                                       ; $590e: $cd $b2 $09
-	ld   a, [$ca70]                                  ; $5911: $fa $70 $ca
+	ld   a, [wEnemyKouboChosen]                                  ; $5911: $fa $70 $ca
 	cp   $04                                         ; $5914: $fe $04
 	jr   nz, jr_024_5934                             ; $5916: $20 $1c
 
@@ -3930,15 +3587,9 @@ BattleSubstate3d:
 BattleSubstate3e:
 	ld   b, $00                                      ; $59a6: $06 $00
 	ld   c, $01                                      ; $59a8: $0e $01
-	push af                                          ; $59aa: $f5
-	ld   a, $ba                                      ; $59ab: $3e $ba
-	ld   [wFarCallAddr], a                                  ; $59ad: $ea $98 $c2
-	ld   a, $54                                      ; $59b0: $3e $54
-	ld   [wFarCallAddr+1], a                                  ; $59b2: $ea $99 $c2
-	ld   a, $0a                                      ; $59b5: $3e $0a
-	ld   [wFarCallBank], a                                  ; $59b7: $ea $9a $c2
-	pop  af                                          ; $59ba: $f1
-	call FarCall                                       ; $59bb: $cd $62 $09
+
+	M_FarCall todo_DisplayCharacterPortrait
+
 	call ClearOam                                       ; $59be: $cd $d7 $0d
 	call AnimateAllAnimatedSpriteSpecs                                       ; $59c1: $cd $d3 $2e
 	ld   a, [$ca7b]                                  ; $59c4: $fa $7b $ca
@@ -3984,7 +3635,7 @@ jr_024_59ea:
 BattleSubstate3f:
 	call ClearOam                                       ; $59f0: $cd $d7 $0d
 	call AnimateAllAnimatedSpriteSpecs                                       ; $59f3: $cd $d3 $2e
-	call Call_024_6c6d                               ; $59f6: $cd $6d $6c
+	call CheckIfBattleTextBoxDone                               ; $59f6: $cd $6d $6c
 	ret  nc                                          ; $59f9: $d0
 
 	ld   c, $01                                      ; $59fa: $0e $01
@@ -4065,7 +3716,7 @@ BattleSubstate40:
 BattleSubstate41:
 	call ClearOam                                       ; $5a7a: $cd $d7 $0d
 	call AnimateAllAnimatedSpriteSpecs                                       ; $5a7d: $cd $d3 $2e
-	call Call_024_6c6d                               ; $5a80: $cd $6d $6c
+	call CheckIfBattleTextBoxDone                               ; $5a80: $cd $6d $6c
 	ret  nc                                          ; $5a83: $d0
 
 	ld   c, $01                                      ; $5a84: $0e $01
@@ -4128,7 +3779,7 @@ BattleSubstate42:
 	call ClearOam                                       ; $5af0: $cd $d7 $0d
 	call AnimateAllAnimatedSpriteSpecs                                       ; $5af3: $cd $d3 $2e
 	ld   a, $01                                      ; $5af6: $3e $01
-	ld   [$ca95], a                                  ; $5af8: $ea $95 $ca
+	ld   [wUsedSpecialBattleMove], a                                  ; $5af8: $ea $95 $ca
 
 ; Floral Divinity!
 ; Butterfly Waltz!
@@ -4149,15 +3800,9 @@ BattleSubstate43:
 	call ClearOam                                       ; $5b09: $cd $d7 $0d
 	call AnimateAllAnimatedSpriteSpecs                                       ; $5b0c: $cd $d3 $2e
 	ld   a, [wKouboChosen0idxed]                                  ; $5b0f: $fa $6f $ca
-	push af                                          ; $5b12: $f5
-	ld   a, $9f                                      ; $5b13: $3e $9f
-	ld   [wFarCallAddr], a                                  ; $5b15: $ea $98 $c2
-	ld   a, $67                                      ; $5b18: $3e $67
-	ld   [wFarCallAddr+1], a                                  ; $5b1a: $ea $99 $c2
-	ld   a, $3e                                      ; $5b1d: $3e $3e
-	ld   [wFarCallBank], a                                  ; $5b1f: $ea $9a $c2
-	pop  af                                          ; $5b22: $f1
-	call FarCall                                       ; $5b23: $cd $62 $09
+
+	M_FarCall Call_03e_679f
+
 	ld   hl, wGameSubstate                                   ; $5b26: $21 $a1 $c2
 	inc  [hl]                                        ; $5b29: $34
 	ret                                              ; $5b2a: $c9
@@ -4166,15 +3811,8 @@ BattleSubstate43:
 BattleSubstate44:
 	call ClearOam                                       ; $5b2b: $cd $d7 $0d
 	call AnimateAllAnimatedSpriteSpecs                                       ; $5b2e: $cd $d3 $2e
-	push af                                          ; $5b31: $f5
-	ld   a, $a7                                      ; $5b32: $3e $a7
-	ld   [wFarCallAddr], a                                  ; $5b34: $ea $98 $c2
-	ld   a, $67                                      ; $5b37: $3e $67
-	ld   [wFarCallAddr+1], a                                  ; $5b39: $ea $99 $c2
-	ld   a, $3e                                      ; $5b3c: $3e $3e
-	ld   [wFarCallBank], a                                  ; $5b3e: $ea $9a $c2
-	pop  af                                          ; $5b41: $f1
-	call FarCall                                       ; $5b42: $cd $62 $09
+
+	M_FarCall Func_3e_67a7
 	ret  nz                                          ; $5b45: $c0
 
 	ld   hl, wGameSubstate                                   ; $5b46: $21 $a1 $c2
@@ -4185,7 +3823,7 @@ BattleSubstate44:
 BattleSubstate45:
 	call ClearOam                                       ; $5b4b: $cd $d7 $0d
 	call AnimateAllAnimatedSpriteSpecs                                       ; $5b4e: $cd $d3 $2e
-	call Call_024_6c6d                               ; $5b51: $cd $6d $6c
+	call CheckIfBattleTextBoxDone                               ; $5b51: $cd $6d $6c
 	ret  nc                                          ; $5b54: $d0
 
 	ld   c, $01                                      ; $5b55: $0e $01
@@ -4251,15 +3889,8 @@ BattleSubstate46:
 	cp   $03                                         ; $5bca: $fe $03
 	jr   z, jr_024_5be7                              ; $5bcc: $28 $19
 
-	push af                                          ; $5bce: $f5
-	ld   a, $c0                                      ; $5bcf: $3e $c0
-	ld   [wFarCallAddr], a                                  ; $5bd1: $ea $98 $c2
-	ld   a, $67                                      ; $5bd4: $3e $67
-	ld   [wFarCallAddr+1], a                                  ; $5bd6: $ea $99 $c2
-	ld   a, $3e                                      ; $5bd9: $3e $3e
-	ld   [wFarCallBank], a                                  ; $5bdb: $ea $9a $c2
-	pop  af                                          ; $5bde: $f1
-	call FarCall                                       ; $5bdf: $cd $62 $09
+	M_FarCall Call_03e_67c0
+
 	ld   hl, wGameSubstate                                   ; $5be2: $21 $a1 $c2
 	inc  [hl]                                        ; $5be5: $34
 	ret                                              ; $5be6: $c9
@@ -4267,36 +3898,18 @@ BattleSubstate46:
 
 jr_024_5be7:
 	ld   a, $09                                      ; $5be7: $3e $09
-	push af                                          ; $5be9: $f5
-	ld   a, $de                                      ; $5bea: $3e $de
-	ld   [wFarCallAddr], a                                  ; $5bec: $ea $98 $c2
-	ld   a, $65                                      ; $5bef: $3e $65
-	ld   [wFarCallAddr+1], a                                  ; $5bf1: $ea $99 $c2
-	ld   a, $3e                                      ; $5bf4: $3e $3e
-	ld   [wFarCallBank], a                                  ; $5bf6: $ea $9a $c2
-	pop  af                                          ; $5bf9: $f1
-	call FarCall                                       ; $5bfa: $cd $62 $09
+
+	M_FarCall Call_03e_65de
+
 	ld   a, $fa                                      ; $5bfd: $3e $fa
-	push af                                          ; $5bff: $f5
-	ld   a, $c7                                      ; $5c00: $3e $c7
-	ld   [wFarCallAddr], a                                  ; $5c02: $ea $98 $c2
-	ld   a, $66                                      ; $5c05: $3e $66
-	ld   [wFarCallAddr+1], a                                  ; $5c07: $ea $99 $c2
-	ld   a, $3e                                      ; $5c0a: $3e $3e
-	ld   [wFarCallBank], a                                  ; $5c0c: $ea $9a $c2
-	pop  af                                          ; $5c0f: $f1
-	call FarCall                                       ; $5c10: $cd $62 $09
+
+	M_FarCall Call_03e_66c7
+
 	xor  a                                           ; $5c13: $af
-	ld   [$ca7e], a                                  ; $5c14: $ea $7e $ca
-	push af                                          ; $5c17: $f5
-	ld   a, $e2                                      ; $5c18: $3e $e2
-	ld   [wFarCallAddr], a                                  ; $5c1a: $ea $98 $c2
-	ld   a, $66                                      ; $5c1d: $3e $66
-	ld   [wFarCallAddr+1], a                                  ; $5c1f: $ea $99 $c2
-	ld   a, $3e                                      ; $5c22: $3e $3e
-	ld   [wFarCallBank], a                                  ; $5c24: $ea $9a $c2
-	pop  af                                          ; $5c27: $f1
-	call FarCall                                       ; $5c28: $cd $62 $09
+	ld   [wBattleSPCharged], a                                  ; $5c14: $ea $7e $ca
+
+	M_FarCall Call_03e_66e2
+
 	ld   hl, wGameSubstate                                   ; $5c2b: $21 $a1 $c2
 	inc  [hl]                                        ; $5c2e: $34
 	ret                                              ; $5c2f: $c9
@@ -4307,36 +3920,13 @@ BattleSubstate47:
 	cp   $03                                         ; $5c33: $fe $03
 	jr   z, jr_024_5c4d                              ; $5c35: $28 $16
 
-	push af                                          ; $5c37: $f5
-	ld   a, $c5                                      ; $5c38: $3e $c5
-	ld   [wFarCallAddr], a                                  ; $5c3a: $ea $98 $c2
-	ld   a, $67                                      ; $5c3d: $3e $67
-	ld   [wFarCallAddr+1], a                                  ; $5c3f: $ea $99 $c2
-	ld   a, $3e                                      ; $5c42: $3e $3e
-	ld   [wFarCallBank], a                                  ; $5c44: $ea $9a $c2
-	pop  af                                          ; $5c47: $f1
-	call FarCall                                       ; $5c48: $cd $62 $09
+	M_FarCall Func_3e_67c5
+
 	jr   jr_024_5c75                                 ; $5c4b: $18 $28
 
 jr_024_5c4d:
-	push af                                          ; $5c4d: $f5
-	ld   a, $18                                      ; $5c4e: $3e $18
-	ld   [wFarCallAddr], a                                  ; $5c50: $ea $98 $c2
-	ld   a, $67                                      ; $5c53: $3e $67
-	ld   [wFarCallAddr+1], a                                  ; $5c55: $ea $99 $c2
-	ld   a, $3e                                      ; $5c58: $3e $3e
-	ld   [wFarCallBank], a                                  ; $5c5a: $ea $9a $c2
-	pop  af                                          ; $5c5d: $f1
-	call FarCall                                       ; $5c5e: $cd $62 $09
-	push af                                          ; $5c61: $f5
-	ld   a, $ae                                      ; $5c62: $3e $ae
-	ld   [wFarCallAddr], a                                  ; $5c64: $ea $98 $c2
-	ld   a, $66                                      ; $5c67: $3e $66
-	ld   [wFarCallAddr+1], a                                  ; $5c69: $ea $99 $c2
-	ld   a, $3e                                      ; $5c6c: $3e $3e
-	ld   [wFarCallBank], a                                  ; $5c6e: $ea $9a $c2
-	pop  af                                          ; $5c71: $f1
-	call FarCall                                       ; $5c72: $cd $62 $09
+	M_FarCall Func_3e_6718
+	M_FarCall Func_3e_66ae
 
 jr_024_5c75:
 	jr   nz, jr_024_5cd8                             ; $5c75: $20 $61
@@ -4354,34 +3944,14 @@ jr_024_5c75:
 	jr   z, jr_024_5cd3                              ; $5c8b: $28 $46
 
 	ld   a, $00                                      ; $5c8d: $3e $00
-	push af                                          ; $5c8f: $f5
-	ld   a, $fd                                      ; $5c90: $3e $fd
-	ld   [wFarCallAddr], a                                  ; $5c92: $ea $98 $c2
-	ld   a, $66                                      ; $5c95: $3e $66
-	ld   [wFarCallAddr+1], a                                  ; $5c97: $ea $99 $c2
-	ld   a, $3e                                      ; $5c9a: $3e $3e
-	ld   [wFarCallBank], a                                  ; $5c9c: $ea $9a $c2
-	pop  af                                          ; $5c9f: $f1
-	call FarCall                                       ; $5ca0: $cd $62 $09
-	push af                                          ; $5ca3: $f5
-	ld   a, $e4                                      ; $5ca4: $3e $e4
-	ld   [wFarCallAddr], a                                  ; $5ca6: $ea $98 $c2
-	ld   a, $67                                      ; $5ca9: $3e $67
-	ld   [wFarCallAddr+1], a                                  ; $5cab: $ea $99 $c2
-	ld   a, $3e                                      ; $5cae: $3e $3e
-	ld   [wFarCallBank], a                                  ; $5cb0: $ea $9a $c2
-	pop  af                                          ; $5cb3: $f1
-	call FarCall                                       ; $5cb4: $cd $62 $09
+
+	M_FarCall Call_03e_66fd
+	M_FarCall Call_03e_67e4
+
 	ld   a, $0f                                      ; $5cb7: $3e $0f
-	push af                                          ; $5cb9: $f5
-	ld   a, $de                                      ; $5cba: $3e $de
-	ld   [wFarCallAddr], a                                  ; $5cbc: $ea $98 $c2
-	ld   a, $65                                      ; $5cbf: $3e $65
-	ld   [wFarCallAddr+1], a                                  ; $5cc1: $ea $99 $c2
-	ld   a, $3e                                      ; $5cc4: $3e $3e
-	ld   [wFarCallBank], a                                  ; $5cc6: $ea $9a $c2
-	pop  af                                          ; $5cc9: $f1
-	call FarCall                                       ; $5cca: $cd $62 $09
+
+	M_FarCall Call_03e_65de
+
 	ld   hl, wGameSubstate                                   ; $5ccd: $21 $a1 $c2
 	inc  [hl]                                        ; $5cd0: $34
 	jr   jr_024_5cd8                                 ; $5cd1: $18 $05
@@ -4401,33 +3971,9 @@ BattleSubstate48:
 	cp   $03                                         ; $5ce2: $fe $03
 	jr   z, jr_024_5d35                              ; $5ce4: $28 $4f
 
-	push af                                          ; $5ce6: $f5
-	ld   a, $ae                                      ; $5ce7: $3e $ae
-	ld   [wFarCallAddr], a                                  ; $5ce9: $ea $98 $c2
-	ld   a, $66                                      ; $5cec: $3e $66
-	ld   [wFarCallAddr+1], a                                  ; $5cee: $ea $99 $c2
-	ld   a, $3e                                      ; $5cf1: $3e $3e
-	ld   [wFarCallBank], a                                  ; $5cf3: $ea $9a $c2
-	pop  af                                          ; $5cf6: $f1
-	call FarCall                                       ; $5cf7: $cd $62 $09
-	push af                                          ; $5cfa: $f5
-	ld   a, $9d                                      ; $5cfb: $3e $9d
-	ld   [wFarCallAddr], a                                  ; $5cfd: $ea $98 $c2
-	ld   a, $6b                                      ; $5d00: $3e $6b
-	ld   [wFarCallAddr+1], a                                  ; $5d02: $ea $99 $c2
-	ld   a, $3e                                      ; $5d05: $3e $3e
-	ld   [wFarCallBank], a                                  ; $5d07: $ea $9a $c2
-	pop  af                                          ; $5d0a: $f1
-	call FarCall                                       ; $5d0b: $cd $62 $09
-	push af                                          ; $5d0e: $f5
-	ld   a, $e9                                      ; $5d0f: $3e $e9
-	ld   [wFarCallAddr], a                                  ; $5d11: $ea $98 $c2
-	ld   a, $67                                      ; $5d14: $3e $67
-	ld   [wFarCallAddr+1], a                                  ; $5d16: $ea $99 $c2
-	ld   a, $3e                                      ; $5d19: $3e $3e
-	ld   [wFarCallBank], a                                  ; $5d1b: $ea $9a $c2
-	pop  af                                          ; $5d1e: $f1
-	call FarCall                                       ; $5d1f: $cd $62 $09
+	M_FarCall Func_3e_66ae
+	M_FarCall Func_3e_6b9d
+	M_FarCall Func_3e_67e9
 	jr   nz, jr_024_5d2e                             ; $5d22: $20 $0a
 
 	ld   a, $01                                      ; $5d24: $3e $01
@@ -4443,16 +3989,10 @@ jr_024_5d2e:
 
 jr_024_5d35:
 	xor  a                                           ; $5d35: $af
-	ld   [$ca7e], a                                  ; $5d36: $ea $7e $ca
-	push af                                          ; $5d39: $f5
-	ld   a, $e2                                      ; $5d3a: $3e $e2
-	ld   [wFarCallAddr], a                                  ; $5d3c: $ea $98 $c2
-	ld   a, $66                                      ; $5d3f: $3e $66
-	ld   [wFarCallAddr+1], a                                  ; $5d41: $ea $99 $c2
-	ld   a, $3e                                      ; $5d44: $3e $3e
-	ld   [wFarCallBank], a                                  ; $5d46: $ea $9a $c2
-	pop  af                                          ; $5d49: $f1
-	call FarCall                                       ; $5d4a: $cd $62 $09
+	ld   [wBattleSPCharged], a                                  ; $5d36: $ea $7e $ca
+
+	M_FarCall Call_03e_66e2
+
 	ld   hl, wGameSubstate                                   ; $5d4d: $21 $a1 $c2
 	inc  [hl]                                        ; $5d50: $34
 	ret                                              ; $5d51: $c9
@@ -4476,15 +4016,9 @@ BattleSubstate49:
 	ld   a, $00                                      ; $5d70: $3e $00
 	ld   [$ca76], a                                  ; $5d72: $ea $76 $ca
 	set  7, a                                        ; $5d75: $cb $ff
-	push af                                          ; $5d77: $f5
-	ld   a, $cc                                      ; $5d78: $3e $cc
-	ld   [wFarCallAddr], a                                  ; $5d7a: $ea $98 $c2
-	ld   a, $65                                      ; $5d7d: $3e $65
-	ld   [wFarCallAddr+1], a                                  ; $5d7f: $ea $99 $c2
-	ld   a, $3e                                      ; $5d82: $3e $3e
-	ld   [wFarCallBank], a                                  ; $5d84: $ea $9a $c2
-	pop  af                                          ; $5d87: $f1
-	call FarCall                                       ; $5d88: $cd $62 $09
+
+	M_FarCall Call_03e_65cc
+
 	jr   jr_024_5df4                                 ; $5d8b: $18 $67
 
 jr_024_5d8d:
@@ -4493,15 +4027,9 @@ jr_024_5d8d:
 	ld   a, $04                                      ; $5d93: $3e $04
 	ld   [$ca76], a                                  ; $5d95: $ea $76 $ca
 	set  7, a                                        ; $5d98: $cb $ff
-	push af                                          ; $5d9a: $f5
-	ld   a, $cc                                      ; $5d9b: $3e $cc
-	ld   [wFarCallAddr], a                                  ; $5d9d: $ea $98 $c2
-	ld   a, $65                                      ; $5da0: $3e $65
-	ld   [wFarCallAddr+1], a                                  ; $5da2: $ea $99 $c2
-	ld   a, $3e                                      ; $5da5: $3e $3e
-	ld   [wFarCallBank], a                                  ; $5da7: $ea $9a $c2
-	pop  af                                          ; $5daa: $f1
-	call FarCall                                       ; $5dab: $cd $62 $09
+
+	M_FarCall Call_03e_65cc
+
 	jr   jr_024_5df4                                 ; $5dae: $18 $44
 
 	ld   a, [$ca76]                                  ; $5db0: $fa $76 $ca
@@ -4509,15 +4037,9 @@ jr_024_5d8d:
 	ld   a, $05                                      ; $5db6: $3e $05
 	ld   [$ca76], a                                  ; $5db8: $ea $76 $ca
 	set  7, a                                        ; $5dbb: $cb $ff
-	push af                                          ; $5dbd: $f5
-	ld   a, $cc                                      ; $5dbe: $3e $cc
-	ld   [wFarCallAddr], a                                  ; $5dc0: $ea $98 $c2
-	ld   a, $65                                      ; $5dc3: $3e $65
-	ld   [wFarCallAddr+1], a                                  ; $5dc5: $ea $99 $c2
-	ld   a, $3e                                      ; $5dc8: $3e $3e
-	ld   [wFarCallBank], a                                  ; $5dca: $ea $9a $c2
-	pop  af                                          ; $5dcd: $f1
-	call FarCall                                       ; $5dce: $cd $62 $09
+
+	M_FarCall Call_03e_65cc
+
 	jr   jr_024_5df4                                 ; $5dd1: $18 $21
 
 	ld   a, [$ca76]                                  ; $5dd3: $fa $76 $ca
@@ -4525,15 +4047,8 @@ jr_024_5d8d:
 	ld   a, $01                                      ; $5dd9: $3e $01
 	ld   [$ca76], a                                  ; $5ddb: $ea $76 $ca
 	set  7, a                                        ; $5dde: $cb $ff
-	push af                                          ; $5de0: $f5
-	ld   a, $cc                                      ; $5de1: $3e $cc
-	ld   [wFarCallAddr], a                                  ; $5de3: $ea $98 $c2
-	ld   a, $65                                      ; $5de6: $3e $65
-	ld   [wFarCallAddr+1], a                                  ; $5de8: $ea $99 $c2
-	ld   a, $3e                                      ; $5deb: $3e $3e
-	ld   [wFarCallBank], a                                  ; $5ded: $ea $9a $c2
-	pop  af                                          ; $5df0: $f1
-	call FarCall                                       ; $5df1: $cd $62 $09
+
+	M_FarCall Call_03e_65cc
 
 jr_024_5df4:
 	ld   a, $00                                      ; $5df4: $3e $00
@@ -4552,7 +4067,7 @@ jr_024_5df4:
 BattleSubstate4a:
 	call ClearOam                                       ; $5e08: $cd $d7 $0d
 	call AnimateAllAnimatedSpriteSpecs                                       ; $5e0b: $cd $d3 $2e
-	call Call_024_6c6d                               ; $5e0e: $cd $6d $6c
+	call CheckIfBattleTextBoxDone                               ; $5e0e: $cd $6d $6c
 	ret  nc                                          ; $5e11: $d0
 
 	ld   c, $01                                      ; $5e12: $0e $01
@@ -4615,15 +4130,9 @@ jr_024_5e6d:
 BattleSubstate4b:
 	call ClearOam                                       ; $5e80: $cd $d7 $0d
 	call AnimateAllAnimatedSpriteSpecs                                       ; $5e83: $cd $d3 $2e
-	push af                                          ; $5e86: $f5
-	ld   a, $a5                                      ; $5e87: $3e $a5
-	ld   [wFarCallAddr], a                                  ; $5e89: $ea $98 $c2
-	ld   a, $66                                      ; $5e8c: $3e $66
-	ld   [wFarCallAddr+1], a                                  ; $5e8e: $ea $99 $c2
-	ld   a, $3e                                      ; $5e91: $3e $3e
-	ld   [wFarCallBank], a                                  ; $5e93: $ea $9a $c2
-	pop  af                                          ; $5e96: $f1
-	call FarCall                                       ; $5e97: $cd $62 $09
+
+	M_FarCall Func_3e_66a5
+
 	jr   nz, jr_024_5ea0                             ; $5e9a: $20 $04
 
 	ld   hl, wGameSubstate                                   ; $5e9c: $21 $a1 $c2
@@ -4634,15 +4143,7 @@ jr_024_5ea0:
 
 
 BattleSubstate4c:
-	push af                                          ; $5ea1: $f5
-	ld   a, $33                                      ; $5ea2: $3e $33
-	ld   [wFarCallAddr], a                                  ; $5ea4: $ea $98 $c2
-	ld   a, $67                                      ; $5ea7: $3e $67
-	ld   [wFarCallAddr+1], a                                  ; $5ea9: $ea $99 $c2
-	ld   a, $3e                                      ; $5eac: $3e $3e
-	ld   [wFarCallBank], a                                  ; $5eae: $ea $9a $c2
-	pop  af                                          ; $5eb1: $f1
-	call FarCall                                       ; $5eb2: $cd $62 $09
+	M_FarCall Func_3e_6733
 	ret  nz                                          ; $5eb5: $c0
 
 	xor  a                                           ; $5eb6: $af
@@ -4658,25 +4159,34 @@ BattleSubstate51:
 	jp   Jump_024_5947                               ; $5ec6: $c3 $47 $59
 
 
-Call_024_5ec9:
-	ld   hl, $5ef9                                   ; $5ec9: $21 $f9 $5e
+SetStatsForMockBattle:
+;
+	ld   hl, .statsData                                   ; $5ec9: $21 $f9 $5e
 	ld   a, [wKouboChosen0idxed]                                  ; $5ecc: $fa $6f $ca
 	sla  a                                           ; $5ecf: $cb $27
 	ld   b, $00                                      ; $5ed1: $06 $00
 	ld   c, a                                        ; $5ed3: $4f
 	add  hl, bc                                      ; $5ed4: $09
+
+;
 	ld   a, [hl+]                                    ; $5ed5: $2a
 	ld   h, [hl]                                     ; $5ed6: $66
 	ld   l, a                                        ; $5ed7: $6f
-	ld   a, [$ca70]                                  ; $5ed8: $fa $70 $ca
+
+;
+	ld   a, [wEnemyKouboChosen]                                  ; $5ed8: $fa $70 $ca
 	sla  a                                           ; $5edb: $cb $27
 	ld   b, $00                                      ; $5edd: $06 $00
 	ld   c, a                                        ; $5edf: $4f
 	add  hl, bc                                      ; $5ee0: $09
+
+;
 	ld   a, [hl+]                                    ; $5ee1: $2a
 	ld   h, [hl]                                     ; $5ee2: $66
 	ld   l, a                                        ; $5ee3: $6f
-	ld   de, $afd0                                   ; $5ee4: $11 $d0 $af
+
+; Set stamina, SRAM2_INTELLECT, SRAM2_SPIRIT_POWER, SRAM2_GUTS, SRAM2_SPEED, SRAM2_ACCURACY
+	ld   de, sSramVals2+SRAM2_STAMINA                                   ; $5ee4: $11 $d0 $af
 	ld   a, [hl+]                                    ; $5ee7: $2a
 	ld   [de], a                                     ; $5ee8: $12
 	inc  de                                          ; $5ee9: $13
@@ -4696,100 +4206,68 @@ Call_024_5ec9:
 	ld   [de], a                                     ; $5ef7: $12
 	ret                                              ; $5ef8: $c9
 
+.statsData:
+	dw .sakura
+	dw .sumire
+	dw .maria
+	dw .iris
+	dw .kohran
+	dw .kanna
 
-	dec  b                                           ; $5ef9: $05
-	ld   e, a                                        ; $5efa: $5f
-	ld   hl, $135f                                   ; $5efb: $21 $5f $13
-	ld   e, a                                        ; $5efe: $5f
-	cpl                                              ; $5eff: $2f
-	ld   e, a                                        ; $5f00: $5f
-	dec  a                                           ; $5f01: $3d
-	ld   e, a                                        ; $5f02: $5f
-	ld   c, e                                        ; $5f03: $4b
-	ld   e, a                                        ; $5f04: $5f
+.sakura:
+	dw $5f59
+	dw $5f5f
+	dw $5f65
+	dw $5f6b
+	dw $5f71
+	dw $5f77
+	dw $5f7d
 
+.maria:
+	dw $5fad
+	dw $5fb3
+	dw $5fb9
+	dw $5fbf
+	dw $5fc5
+	dw $5fcb
+	dw $5fd1
 
-	ld   e, c                                        ; $5f05: $59
-	ld   e, a                                        ; $5f06: $5f
-	ld   e, a                                        ; $5f07: $5f
-	ld   e, a                                        ; $5f08: $5f
-	ld   h, l                                        ; $5f09: $65
-	ld   e, a                                        ; $5f0a: $5f
-	ld   l, e                                        ; $5f0b: $6b
-	ld   e, a                                        ; $5f0c: $5f
-	ld   [hl], c                                     ; $5f0d: $71
-	ld   e, a                                        ; $5f0e: $5f
-	ld   [hl], a                                     ; $5f0f: $77
-	ld   e, a                                        ; $5f10: $5f
-	ld   a, l                                        ; $5f11: $7d
-	ld   e, a                                        ; $5f12: $5f
-	xor  l                                           ; $5f13: $ad
-	ld   e, a                                        ; $5f14: $5f
-	or   e                                           ; $5f15: $b3
-	ld   e, a                                        ; $5f16: $5f
-	cp   c                                           ; $5f17: $b9
-	ld   e, a                                        ; $5f18: $5f
-	cp   a                                           ; $5f19: $bf
-	ld   e, a                                        ; $5f1a: $5f
-	push bc                                          ; $5f1b: $c5
-	ld   e, a                                        ; $5f1c: $5f
-	bit  3, a                                        ; $5f1d: $cb $5f
-	pop  de                                          ; $5f1f: $d1
-	ld   e, a                                        ; $5f20: $5f
-	add  e                                           ; $5f21: $83
-	ld   e, a                                        ; $5f22: $5f
-	adc  c                                           ; $5f23: $89
-	ld   e, a                                        ; $5f24: $5f
-	adc  a                                           ; $5f25: $8f
-	ld   e, a                                        ; $5f26: $5f
-	sub  l                                           ; $5f27: $95
-	ld   e, a                                        ; $5f28: $5f
-	sbc  e                                           ; $5f29: $9b
-	ld   e, a                                        ; $5f2a: $5f
-	and  c                                           ; $5f2b: $a1
-	ld   e, a                                        ; $5f2c: $5f
-	and  a                                           ; $5f2d: $a7
-	ld   e, a                                        ; $5f2e: $5f
-	rst  $10                                         ; $5f2f: $d7
-	ld   e, a                                        ; $5f30: $5f
-	db   $dd                                         ; $5f31: $dd
-	ld   e, a                                        ; $5f32: $5f
-	db   $e3                                         ; $5f33: $e3
-	ld   e, a                                        ; $5f34: $5f
-	jp   hl                                          ; $5f35: $e9
+.sumire:
+	dw $5f83
+	dw $5f89
+	dw $5f8f
+	dw $5f95
+	dw $5f9b
+	dw $5fa1
+	dw $5fa7
 
+.iris:
+	dw $5fd7
+	dw $5fdd
+	dw $5fe3
+	dw $5fe9
+	dw $5fef
+	dw $5ff5
+	dw $5ffb
 
-	ld   e, a                                        ; $5f36: $5f
-	rst  $28                                         ; $5f37: $ef
-	ld   e, a                                        ; $5f38: $5f
-	push af                                          ; $5f39: $f5
-	ld   e, a                                        ; $5f3a: $5f
-	ei                                               ; $5f3b: $fb
-	ld   e, a                                        ; $5f3c: $5f
-	ld   bc, $0760                                   ; $5f3d: $01 $60 $07
-	ld   h, b                                        ; $5f40: $60
-	dec  c                                           ; $5f41: $0d
-	ld   h, b                                        ; $5f42: $60
-	inc  de                                          ; $5f43: $13
-	ld   h, b                                        ; $5f44: $60
-	add  hl, de                                      ; $5f45: $19
-	ld   h, b                                        ; $5f46: $60
-	rra                                              ; $5f47: $1f
-	ld   h, b                                        ; $5f48: $60
-	dec  h                                           ; $5f49: $25
-	ld   h, b                                        ; $5f4a: $60
-	dec  hl                                          ; $5f4b: $2b
-	ld   h, b                                        ; $5f4c: $60
-	ld   sp, $3760                                   ; $5f4d: $31 $60 $37
-	ld   h, b                                        ; $5f50: $60
-	dec  a                                           ; $5f51: $3d
-	ld   h, b                                        ; $5f52: $60
-	ld   b, e                                        ; $5f53: $43
-	ld   h, b                                        ; $5f54: $60
-	ld   c, c                                        ; $5f55: $49
-	ld   h, b                                        ; $5f56: $60
-	ld   c, a                                        ; $5f57: $4f
-	ld   h, b                                        ; $5f58: $60
+.kohran:
+	dw $6001
+	dw $6007
+	dw $600d
+	dw $6013
+	dw $6019
+	dw $601f
+	dw $6025
+
+.kanna:
+	dw $602b
+	dw $6031
+	dw $6037
+	dw $603d
+	dw $6043
+	dw $6049
+	dw $604f
+
 	rst  $38                                         ; $5f59: $ff
 	ccf                                              ; $5f5a: $3f
 	ccf                                              ; $5f5b: $3f
@@ -5038,6 +4516,8 @@ Call_024_5fff:
 	rst  $38                                         ; $6052: $ff
 	sub  c                                           ; $6053: $91
 	adc  a                                           ; $6054: $8f
+; end of mock battle stats
+
 
 Call_024_6055:
 	xor  a                                           ; $6055: $af
@@ -5047,7 +4527,7 @@ Call_024_6055:
 	ld   [$ca9c], a                                  ; $605f: $ea $9c $ca
 	ld   [$ca9d], a                                  ; $6062: $ea $9d $ca
 	ld   [$ca9e], a                                  ; $6065: $ea $9e $ca
-	ld   a, [$ca70]                                  ; $6068: $fa $70 $ca
+	ld   a, [wEnemyKouboChosen]                                  ; $6068: $fa $70 $ca
 	sla  a                                           ; $606b: $cb $27
 	ld   hl, $6185                                   ; $606d: $21 $85 $61
 	ld   b, $00                                      ; $6070: $06 $00
@@ -5086,10 +4566,10 @@ Call_024_6055:
 
 jr_024_60a9:
 	ld   a, b                                        ; $60a9: $78
-	ld   [wNapOrTrainIdx], a                                  ; $60aa: $ea $6d $ca
+	ld   [$ca6d], a                                  ; $60aa: $ea $6d $ca
 	ld   [$ca6e], a                                  ; $60ad: $ea $6e $ca
 	xor  a                                           ; $60b0: $af
-	ld   [$ca95], a                                  ; $60b1: $ea $95 $ca
+	ld   [wUsedSpecialBattleMove], a                                  ; $60b1: $ea $95 $ca
 	call Call_024_61b6                               ; $60b4: $cd $b6 $61
 	ld   a, [wKouboChosen0idxed]                                  ; $60b7: $fa $6f $ca
 	cp   $00                                         ; $60ba: $fe $00
@@ -5294,14 +4774,14 @@ jr_024_6184:
 
 Call_024_61b6:
 	xor  a                                           ; $61b6: $af
-	ld   [$ca90], a                                  ; $61b7: $ea $90 $ca
-	ld   [$ca91], a                                  ; $61ba: $ea $91 $ca
+	ld   [wBattleStatsTotal], a                                  ; $61b7: $ea $90 $ca
+	ld   [wBattleStatsTotal+1], a                                  ; $61ba: $ea $91 $ca
 	xor  a                                           ; $61bd: $af
-	ld   [$ca90], a                                  ; $61be: $ea $90 $ca
+	ld   [wBattleStatsTotal], a                                  ; $61be: $ea $90 $ca
 	ld   d, $00                                      ; $61c1: $16 $00
 	ld   a, [sSramVals2+SRAM2_SPIRIT_POWER]                                  ; $61c3: $fa $d2 $af
 	ld   e, a                                        ; $61c6: $5f
-	ld   hl, $ca90                                   ; $61c7: $21 $90 $ca
+	ld   hl, wBattleStatsTotal                                   ; $61c7: $21 $90 $ca
 	ld   a, [hl]                                     ; $61ca: $7e
 	add  e                                           ; $61cb: $83
 	ld   [hl+], a                                    ; $61cc: $22
@@ -5326,7 +4806,7 @@ Call_024_61b6:
 	ld   a, [hl]                                     ; $61e8: $7e
 	ld   d, $00                                      ; $61e9: $16 $00
 	ld   e, a                                        ; $61eb: $5f
-	ld   hl, $ca90                                   ; $61ec: $21 $90 $ca
+	ld   hl, wBattleStatsTotal                                   ; $61ec: $21 $90 $ca
 	ld   a, [hl]                                     ; $61ef: $7e
 	add  e                                           ; $61f0: $83
 	ld   [hl+], a                                    ; $61f1: $22
@@ -5378,20 +4858,20 @@ jr_024_61f8:
 	call LAequHLdivmodA                                       ; $6236: $cd $50 $0c
 	ld   d, $00                                      ; $6239: $16 $00
 	ld   e, l                                        ; $623b: $5d
-	ld   hl, $ca90                                   ; $623c: $21 $90 $ca
+	ld   hl, wBattleStatsTotal                                   ; $623c: $21 $90 $ca
 	ld   a, [hl]                                     ; $623f: $7e
 	add  e                                           ; $6240: $83
 	ld   [hl+], a                                    ; $6241: $22
 	ld   a, [hl]                                     ; $6242: $7e
 	adc  d                                           ; $6243: $8a
 	ld   [hl], a                                     ; $6244: $77
-	ld   a, [$ca70]                                  ; $6245: $fa $70 $ca
+	ld   a, [wEnemyKouboChosen]                                  ; $6245: $fa $70 $ca
 	and  a                                           ; $6248: $a7
 	jr   z, jr_024_6258                              ; $6249: $28 $0d
 
 	ld   d, $00                                      ; $624b: $16 $00
 	ld   e, $40                                      ; $624d: $1e $40
-	ld   hl, $ca90                                   ; $624f: $21 $90 $ca
+	ld   hl, wBattleStatsTotal                                   ; $624f: $21 $90 $ca
 	ld   a, [hl]                                     ; $6252: $7e
 	add  e                                           ; $6253: $83
 	ld   [hl+], a                                    ; $6254: $22
@@ -5459,7 +4939,7 @@ Jump_024_625b:
 	call LAequHLdivmodA                                       ; $62b0: $cd $50 $0c
 	ld   d, $00                                      ; $62b3: $16 $00
 	ld   e, l                                        ; $62b5: $5d
-	ld   hl, $ca90                                   ; $62b6: $21 $90 $ca
+	ld   hl, wBattleStatsTotal                                   ; $62b6: $21 $90 $ca
 	ld   a, [hl]                                     ; $62b9: $7e
 	add  e                                           ; $62ba: $83
 	ld   [hl+], a                                    ; $62bb: $22
@@ -5468,22 +4948,22 @@ Jump_024_625b:
 	ld   [hl], a                                     ; $62be: $77
 
 Jump_024_62bf:
-	ld   a, [$afd0]                                  ; $62bf: $fa $d0 $af
+	ld   a, [sSramVals2+SRAM2_STAMINA]                                  ; $62bf: $fa $d0 $af
 	ld   h, a                                        ; $62c2: $67
 	ld   l, $08                                      ; $62c3: $2e $08
 	call HLequHdivModL                                       ; $62c5: $cd $fb $0b
 	ld   d, $00                                      ; $62c8: $16 $00
 	ld   e, h                                        ; $62ca: $5c
-	ld   hl, $ca90                                   ; $62cb: $21 $90 $ca
+	ld   hl, wBattleStatsTotal                                   ; $62cb: $21 $90 $ca
 	ld   a, [hl]                                     ; $62ce: $7e
 	add  e                                           ; $62cf: $83
 	ld   [hl+], a                                    ; $62d0: $22
 	ld   a, [hl]                                     ; $62d1: $7e
 	adc  d                                           ; $62d2: $8a
 	ld   [hl], a                                     ; $62d3: $77
-	ld   a, [$ca90]                                  ; $62d4: $fa $90 $ca
+	ld   a, [wBattleStatsTotal]                                  ; $62d4: $fa $90 $ca
 	ld   l, a                                        ; $62d7: $6f
-	ld   a, [$ca91]                                  ; $62d8: $fa $91 $ca
+	ld   a, [wBattleStatsTotal+1]                                  ; $62d8: $fa $91 $ca
 	ld   h, a                                        ; $62db: $67
 	ld   a, $02                                      ; $62dc: $3e $02
 	call LAequHLdivmodA                                       ; $62de: $cd $50 $0c
@@ -5500,7 +4980,7 @@ Jump_024_62bf:
 	ld   a, [$ca80]                                  ; $62fc: $fa $80 $ca
 	ld   [$ca80], a                                  ; $62ff: $ea $80 $ca
 	xor  a                                           ; $6302: $af
-	ld   [$ca7e], a                                  ; $6303: $ea $7e $ca
+	ld   [wBattleSPCharged], a                                  ; $6303: $ea $7e $ca
 	ld   a, [sSramVals2+SRAM2_INTELLECT]                                  ; $6306: $fa $d1 $af
 	sub  $3f                                         ; $6309: $d6 $3f
 	ld   h, a                                        ; $630b: $67
@@ -5551,14 +5031,14 @@ Call_024_632e:
 	jp   z, Jump_024_6358                            ; $634c: $ca $58 $63
 
 Jump_024_634f:
-	ld   a, [$ca71]                                  ; $634f: $fa $71 $ca
+	ld   a, [wBattleDistanceToEnemy]                                  ; $634f: $fa $71 $ca
 	cp   $00                                         ; $6352: $fe $00
 	jr   z, jr_024_636a                              ; $6354: $28 $14
 
 	jr   jr_024_6371                                 ; $6356: $18 $19
 
 Jump_024_6358:
-	ld   a, [$ca71]                                  ; $6358: $fa $71 $ca
+	ld   a, [wBattleDistanceToEnemy]                                  ; $6358: $fa $71 $ca
 	cp   $02                                         ; $635b: $fe $02
 	jr   z, jr_024_6371                              ; $635d: $28 $12
 
@@ -5585,7 +5065,7 @@ jr_024_6378:
 	ld   [wRandomNumRange], a                                  ; $637a: $ea $a5 $c2
 
 jr_024_637d:
-	ld   a, [$ca7e]                                  ; $637d: $fa $7e $ca
+	ld   a, [wBattleSPCharged]                                  ; $637d: $fa $7e $ca
 	cp   $64                                         ; $6380: $fe $64
 	jr   nz, jr_024_638b                             ; $6382: $20 $07
 
@@ -5666,14 +5146,14 @@ jr_024_63e4:
 	jr   jr_024_63fc                                 ; $63e4: $18 $16
 
 Jump_024_63e6:
-	ld   a, [$ca71]                                  ; $63e6: $fa $71 $ca
+	ld   a, [wBattleDistanceToEnemy]                                  ; $63e6: $fa $71 $ca
 	cp   $00                                         ; $63e9: $fe $00
 	jr   z, jr_024_640a                              ; $63eb: $28 $1d
 
 	jr   jr_024_6403                                 ; $63ed: $18 $14
 
 Jump_024_63ef:
-	ld   a, [$ca71]                                  ; $63ef: $fa $71 $ca
+	ld   a, [wBattleDistanceToEnemy]                                  ; $63ef: $fa $71 $ca
 	cp   $00                                         ; $63f2: $fe $00
 	jr   z, jr_024_640a                              ; $63f4: $28 $14
 
@@ -5697,7 +5177,7 @@ jr_024_640a:
 	ld   [wRandomNumRange], a                                  ; $640c: $ea $a5 $c2
 
 jr_024_640f:
-	ld   a, [$ca71]                                  ; $640f: $fa $71 $ca
+	ld   a, [wBattleDistanceToEnemy]                                  ; $640f: $fa $71 $ca
 	cp   $00                                         ; $6412: $fe $00
 	jr   z, jr_024_641d                              ; $6414: $28 $07
 
@@ -5752,7 +5232,7 @@ Call_024_644e:
 	ld   a, $00                                      ; $644e: $3e $00
 	ld   [$ca8a], a                                  ; $6450: $ea $8a $ca
 	ld   a, $ff                                      ; $6453: $3e $ff
-	ld   [$ca87], a                                  ; $6455: $ea $87 $ca
+	ld   [wLastPlayerRelatedBattleText], a                                  ; $6455: $ea $87 $ca
 	ld   a, [$cbec]                                  ; $6458: $fa $ec $cb
 	cp   $ff                                         ; $645b: $fe $ff
 	jp   z, Jump_024_663b                            ; $645d: $ca $3b $66
@@ -5783,7 +5263,7 @@ Call_024_644e:
 	ld   a, [hl+]                                    ; $6488: $2a
 	ld   h, [hl]                                     ; $6489: $66
 	ld   l, a                                        ; $648a: $6f
-	ld   a, [$ca71]                                  ; $648b: $fa $71 $ca
+	ld   a, [wBattleDistanceToEnemy]                                  ; $648b: $fa $71 $ca
 	ld   d, $00                                      ; $648e: $16 $00
 	ld   e, a                                        ; $6490: $5f
 	add  hl, de                                      ; $6491: $19
@@ -5796,10 +5276,10 @@ Call_024_644e:
 
 ; Nailed it!
 	ld   a, $0e                                      ; $64a1: $3e $0e
-	ld   [$ca87], a                                  ; $64a3: $ea $87 $ca
+	ld   [wLastPlayerRelatedBattleText], a                                  ; $64a3: $ea $87 $ca
 
 ; Not good!
-	ld   a, [$ca89]                                  ; $64a6: $fa $89 $ca
+	ld   a, [wLastEnemyRelatedBattleText]                                  ; $64a6: $fa $89 $ca
 	cp   $14                                         ; $64a9: $fe $14
 	jp   nz, Jump_024_6558                           ; $64ab: $c2 $58 $65
 
@@ -5874,7 +5354,7 @@ jr_024_6505:
 
 ; Oh no! It dodged!
 	ld   a, $1b                                      ; $6510: $3e $1b
-	ld   [$ca87], a                                  ; $6512: $ea $87 $ca
+	ld   [wLastPlayerRelatedBattleText], a                                  ; $6512: $ea $87 $ca
 	ld   a, [wKouboChosen0idxed]                                  ; $6515: $fa $6f $ca
 	cp   $00                                         ; $6518: $fe $00
 	jp   z, Jump_024_6539                            ; $651a: $ca $39 $65
@@ -5925,7 +5405,7 @@ jr_024_6547:
 Jump_024_6558:
 jr_024_6558:
 ; Ugh! It blocked my attack!
-	ld   a, [$ca89]                                  ; $6558: $fa $89 $ca
+	ld   a, [wLastEnemyRelatedBattleText]                                  ; $6558: $fa $89 $ca
 	cp   $12                                         ; $655b: $fe $12
 	jr   z, jr_024_6566                              ; $655d: $28 $07
 
@@ -5958,7 +5438,7 @@ jr_024_657c:
 Jump_024_6583:
 ; Yaahhh!
 	ld   a, $22                                      ; $6583: $3e $22
-	ld   [$ca87], a                                  ; $6585: $ea $87 $ca
+	ld   [wLastPlayerRelatedBattleText], a                                  ; $6585: $ea $87 $ca
 	ld   a, $04                                      ; $6588: $3e $04
 	ld   [wRandomNumRange], a                                  ; $658a: $ea $a5 $c2
 	call UpdateSramRandomSeed                                       ; $658d: $cd $70 $0c
@@ -5982,11 +5462,11 @@ jr_024_65a2:
 	ld   [$caa1], a                                  ; $65aa: $ea $a1 $ca
 
 jr_024_65ad:
-	ld   hl, $ca71                                   ; $65ad: $21 $71 $ca
+	ld   hl, wBattleDistanceToEnemy                                   ; $65ad: $21 $71 $ca
 	dec  [hl]                                        ; $65b0: $35
 	ld   a, $08                                      ; $65b1: $3e $08
 	ld   [$ca75], a                                  ; $65b3: $ea $75 $ca
-	ld   a, [$ca70]                                  ; $65b6: $fa $70 $ca
+	ld   a, [wEnemyKouboChosen]                                  ; $65b6: $fa $70 $ca
 	sla  a                                           ; $65b9: $cb $27
 	ld   b, $00                                      ; $65bb: $06 $00
 	ld   c, a                                        ; $65bd: $4f
@@ -6025,25 +5505,25 @@ jr_024_65e0:
 
 
 Jump_024_65e5:
-	ld   hl, $ca71                                   ; $65e5: $21 $71 $ca
+	ld   hl, wBattleDistanceToEnemy                                   ; $65e5: $21 $71 $ca
 	dec  [hl]                                        ; $65e8: $35
 	ld   a, $ff                                      ; $65e9: $3e $ff
 	ld   [$ca75], a                                  ; $65eb: $ea $75 $ca
 	ld   a, $ff                                      ; $65ee: $3e $ff
-	ld   [$ca87], a                                  ; $65f0: $ea $87 $ca
+	ld   [wLastPlayerRelatedBattleText], a                                  ; $65f0: $ea $87 $ca
 	jr   jr_024_6646                                 ; $65f3: $18 $51
 
 Jump_024_65f5:
-	ld   hl, $ca71                                   ; $65f5: $21 $71 $ca
+	ld   hl, wBattleDistanceToEnemy                                   ; $65f5: $21 $71 $ca
 	inc  [hl]                                        ; $65f8: $34
 	ld   a, $ff                                      ; $65f9: $3e $ff
 	ld   [$ca75], a                                  ; $65fb: $ea $75 $ca
 	ld   a, $ff                                      ; $65fe: $3e $ff
-	ld   [$ca87], a                                  ; $6600: $ea $87 $ca
+	ld   [wLastPlayerRelatedBattleText], a                                  ; $6600: $ea $87 $ca
 	jr   jr_024_6646                                 ; $6603: $18 $41
 
 Jump_024_6605:
-	ld   a, [$ca7e]                                  ; $6605: $fa $7e $ca
+	ld   a, [wBattleSPCharged]                                  ; $6605: $fa $7e $ca
 	cp   $50                                         ; $6608: $fe $50
 	jr   nc, jr_024_6610                             ; $660a: $30 $04
 
@@ -6054,7 +5534,7 @@ jr_024_6610:
 	ld   a, $64                                      ; $6610: $3e $64
 
 jr_024_6612:
-	ld   [$ca7e], a                                  ; $6612: $ea $7e $ca
+	ld   [wBattleSPCharged], a                                  ; $6612: $ea $7e $ca
 	ld   a, $ff                                      ; $6615: $3e $ff
 	ld   [$ca75], a                                  ; $6617: $ea $75 $ca
 	ld   a, $02                                      ; $661a: $3e $02
@@ -6066,13 +5546,13 @@ jr_024_6612:
 
 ; I won't lose!!
 	ld   a, $08                                      ; $6629: $3e $08
-	ld   [$ca87], a                                  ; $662b: $ea $87 $ca
+	ld   [wLastPlayerRelatedBattleText], a                                  ; $662b: $ea $87 $ca
 	jr   jr_024_6635                                 ; $662e: $18 $05
 
 jr_024_6630:
 ; I'm fired up!!
 	ld   a, $09                                      ; $6630: $3e $09
-	ld   [$ca87], a                                  ; $6632: $ea $87 $ca
+	ld   [wLastPlayerRelatedBattleText], a                                  ; $6632: $ea $87 $ca
 
 jr_024_6635:
 	ld   a, $ff                                      ; $6635: $3e $ff
@@ -6086,7 +5566,7 @@ Jump_024_663b:
 
 ; Crap!
 	ld   a, $0b                                      ; $6640: $3e $0b
-	ld   [$ca87], a                                  ; $6642: $ea $87 $ca
+	ld   [wLastPlayerRelatedBattleText], a                                  ; $6642: $ea $87 $ca
 	ret                                              ; $6645: $c9
 
 
@@ -6161,26 +5641,26 @@ jr_024_6690:
 	cp   $03                                         ; $66a2: $fe $03
 	jr   nz, jr_024_66c8                             ; $66a4: $20 $22
 
-	ld   hl, $ca71                                   ; $66a6: $21 $71 $ca
+	ld   hl, wBattleDistanceToEnemy                                   ; $66a6: $21 $71 $ca
 	ld   a, [hl]                                     ; $66a9: $7e
 	cp   $02                                         ; $66aa: $fe $02
 	jr   z, jr_024_66c8                              ; $66ac: $28 $1a
 
 ; Oh, no! It's getting away!
 	ld   a, $02                                      ; $66ae: $3e $02
-	ld   [$ca87], a                                  ; $66b0: $ea $87 $ca
+	ld   [wLastPlayerRelatedBattleText], a                                  ; $66b0: $ea $87 $ca
 	inc  [hl]                                        ; $66b3: $34
 	jr   jr_024_66c8                                 ; $66b4: $18 $12
 
 jr_024_66b6:
-	ld   hl, $ca71                                   ; $66b6: $21 $71 $ca
+	ld   hl, wBattleDistanceToEnemy                                   ; $66b6: $21 $71 $ca
 	ld   a, [hl]                                     ; $66b9: $7e
 	cp   $00                                         ; $66ba: $fe $00
 	jr   z, jr_024_66c8                              ; $66bc: $28 $0a
 
 ; It's too close!
 	ld   a, $03                                      ; $66be: $3e $03
-	ld   [$ca87], a                                  ; $66c0: $ea $87 $ca
+	ld   [wLastPlayerRelatedBattleText], a                                  ; $66c0: $ea $87 $ca
 	dec  [hl]                                        ; $66c3: $35
 
 jr_024_66c4:
@@ -6199,7 +5679,7 @@ Jump_024_66c9:
 	cp   $03                                         ; $66d0: $fe $03
 	jr   nz, jr_024_66e8                             ; $66d2: $20 $14
 
-	ld   hl, $ca71                                   ; $66d4: $21 $71 $ca
+	ld   hl, wBattleDistanceToEnemy                                   ; $66d4: $21 $71 $ca
 	ld   a, [hl]                                     ; $66d7: $7e
 	cp   $02                                         ; $66d8: $fe $02
 	jr   z, jr_024_66c8                              ; $66da: $28 $ec
@@ -6208,7 +5688,7 @@ Jump_024_66c9:
 	jr   jr_024_66e8                                 ; $66dd: $18 $09
 
 jr_024_66df:
-	ld   hl, $ca71                                   ; $66df: $21 $71 $ca
+	ld   hl, wBattleDistanceToEnemy                                   ; $66df: $21 $71 $ca
 	ld   a, [hl]                                     ; $66e2: $7e
 	cp   $00                                         ; $66e3: $fe $00
 	jr   z, jr_024_66c8                              ; $66e5: $28 $e1
@@ -6270,7 +5750,7 @@ Call_024_6723:
 	ld   a, $00                                      ; $6723: $3e $00
 	ld   [$ca8e], a                                  ; $6725: $ea $8e $ca
 	ld   a, $ff                                      ; $6728: $3e $ff
-	ld   [$ca87], a                                  ; $672a: $ea $87 $ca
+	ld   [wLastPlayerRelatedBattleText], a                                  ; $672a: $ea $87 $ca
 	ld   a, $01                                      ; $672d: $3e $01
 	ld   [$ca8a], a                                  ; $672f: $ea $8a $ca
 	ld   a, $00                                      ; $6732: $3e $00
@@ -6305,7 +5785,7 @@ Call_024_6723:
 jr_024_6764:
 ; Yaahhh!
 	ld   a, $22                                      ; $6764: $3e $22
-	ld   [$ca87], a                                  ; $6766: $ea $87 $ca
+	ld   [wLastPlayerRelatedBattleText], a                                  ; $6766: $ea $87 $ca
 	ld   a, $04                                      ; $6769: $3e $04
 	ld   [wRandomNumRange], a                                  ; $676b: $ea $a5 $c2
 	call UpdateSramRandomSeed                                       ; $676e: $cd $70 $0c
@@ -6331,7 +5811,7 @@ jr_024_6783:
 jr_024_678e:
 	ld   a, $08                                      ; $678e: $3e $08
 	ld   [$ca75], a                                  ; $6790: $ea $75 $ca
-	ld   a, [$ca70]                                  ; $6793: $fa $70 $ca
+	ld   a, [wEnemyKouboChosen]                                  ; $6793: $fa $70 $ca
 	sla  a                                           ; $6796: $cb $27
 	ld   b, $00                                      ; $6798: $06 $00
 	ld   c, a                                        ; $679a: $4f
@@ -6371,7 +5851,7 @@ jr_024_67bf:
 
 Jump_024_67c6:
 	ld   a, $ff                                      ; $67c6: $3e $ff
-	ld   [$ca87], a                                  ; $67c8: $ea $87 $ca
+	ld   [wLastPlayerRelatedBattleText], a                                  ; $67c8: $ea $87 $ca
 	ld   a, $01                                      ; $67cb: $3e $01
 	ld   [$ca8e], a                                  ; $67cd: $ea $8e $ca
 	jp   Jump_024_68c3                               ; $67d0: $c3 $c3 $68
@@ -6379,14 +5859,14 @@ Jump_024_67c6:
 
 Jump_024_67d3:
 	ld   a, $ff                                      ; $67d3: $3e $ff
-	ld   [$ca87], a                                  ; $67d5: $ea $87 $ca
+	ld   [wLastPlayerRelatedBattleText], a                                  ; $67d5: $ea $87 $ca
 	ld   a, $02                                      ; $67d8: $3e $02
 	ld   [$ca8e], a                                  ; $67da: $ea $8e $ca
 	jp   Jump_024_68c3                               ; $67dd: $c3 $c3 $68
 
 
 Jump_024_67e0:
-	ld   a, [$ca7e]                                  ; $67e0: $fa $7e $ca
+	ld   a, [wBattleSPCharged]                                  ; $67e0: $fa $7e $ca
 	cp   $50                                         ; $67e3: $fe $50
 	jr   nc, jr_024_67eb                             ; $67e5: $30 $04
 
@@ -6397,11 +5877,11 @@ jr_024_67eb:
 	ld   a, $64                                      ; $67eb: $3e $64
 
 jr_024_67ed:
-	ld   [$ca7e], a                                  ; $67ed: $ea $7e $ca
+	ld   [wBattleSPCharged], a                                  ; $67ed: $ea $7e $ca
 
 ; I'm fired up!!
 	ld   a, $09                                      ; $67f0: $3e $09
-	ld   [$ca87], a                                  ; $67f2: $ea $87 $ca
+	ld   [wLastPlayerRelatedBattleText], a                                  ; $67f2: $ea $87 $ca
 	ld   a, $ff                                      ; $67f5: $3e $ff
 	ld   [$ca9a], a                                  ; $67f7: $ea $9a $ca
 	jp   Jump_024_68c3                               ; $67fa: $c3 $c3 $68
@@ -6414,7 +5894,7 @@ Jump_024_67fd:
 
 ; Ugh!
 	ld   a, $0a                                      ; $6805: $3e $0a
-	ld   [$ca87], a                                  ; $6807: $ea $87 $ca
+	ld   [wLastPlayerRelatedBattleText], a                                  ; $6807: $ea $87 $ca
 	jp   Jump_024_68c3                               ; $680a: $c3 $c3 $68
 
 
@@ -6491,8 +5971,8 @@ jr_024_685e:
 
 ; Alright! I dodged it!
 	ld   a, $0c                                      ; $6868: $3e $0c
-	ld   [$ca87], a                                  ; $686a: $ea $87 $ca
-	ld   a, [$ca71]                                  ; $686d: $fa $71 $ca
+	ld   [wLastPlayerRelatedBattleText], a                                  ; $686a: $ea $87 $ca
+	ld   a, [wBattleDistanceToEnemy]                                  ; $686d: $fa $71 $ca
 	cp   $00                                         ; $6870: $fe $00
 	jr   z, jr_024_687a                              ; $6872: $28 $06
 
@@ -6513,7 +5993,7 @@ jr_024_687e:
 	jr   z, jr_024_6893                              ; $6889: $28 $08
 
 	ld   a, $01                                      ; $688b: $3e $01
-	ld   [$ca71], a                                  ; $688d: $ea $71 $ca
+	ld   [wBattleDistanceToEnemy], a                                  ; $688d: $ea $71 $ca
 	ld   [$ca97], a                                  ; $6890: $ea $97 $ca
 
 jr_024_6893:
@@ -6529,7 +6009,7 @@ jr_024_6894:
 
 ; Whoa!! That hit me?!
 	ld   a, $0d                                      ; $689f: $3e $0d
-	ld   [$ca87], a                                  ; $68a1: $ea $87 $ca
+	ld   [wLastPlayerRelatedBattleText], a                                  ; $68a1: $ea $87 $ca
 	jr   jr_024_68c3                                 ; $68a4: $18 $1d
 
 Jump_024_68a6:
@@ -6542,14 +6022,14 @@ Jump_024_68a6:
 
 ; It didn't do anything.
 	ld   a, $1a                                      ; $68b6: $3e $1a
-	ld   [$ca87], a                                  ; $68b8: $ea $87 $ca
+	ld   [wLastPlayerRelatedBattleText], a                                  ; $68b8: $ea $87 $ca
 	ret                                              ; $68bb: $c9
 
 
 Jump_024_68bc:
 ; Crap!
 	ld   a, $0b                                      ; $68bc: $3e $0b
-	ld   [$ca87], a                                  ; $68be: $ea $87 $ca
+	ld   [wLastPlayerRelatedBattleText], a                                  ; $68be: $ea $87 $ca
 	jr   jr_024_68c3                                 ; $68c1: $18 $00
 
 Jump_024_68c3:
@@ -6571,12 +6051,12 @@ jr_024_68d4:
 
 jr_024_68d8:
 ; Alright! I'm at the perfect distance!
-	ld   a, [$ca89]                                  ; $68d8: $fa $89 $ca
+	ld   a, [wLastEnemyRelatedBattleText]                                  ; $68d8: $fa $89 $ca
 	and  a                                           ; $68db: $a7
 	jp   nz, Jump_024_69ca                           ; $68dc: $c2 $ca $69
 
 ; Ugh!
-	ld   a, [$ca87]                                  ; $68df: $fa $87 $ca
+	ld   a, [wLastPlayerRelatedBattleText]                                  ; $68df: $fa $87 $ca
 	cp   $0a                                         ; $68e2: $fe $0a
 	jr   z, jr_024_68ed                              ; $68e4: $28 $07
 
@@ -6597,7 +6077,7 @@ jr_024_68f2:
 
 	sub  c                                           ; $68fd: $91
 	ld   [$ca7b], a                                  ; $68fe: $ea $7b $ca
-	ld   a, [$ca7e]                                  ; $6901: $fa $7e $ca
+	ld   a, [wBattleSPCharged]                                  ; $6901: $fa $7e $ca
 	cp   $55                                         ; $6904: $fe $55
 	jr   nc, jr_024_690c                             ; $6906: $30 $04
 
@@ -6608,7 +6088,7 @@ jr_024_690c:
 	ld   a, $64                                      ; $690c: $3e $64
 
 jr_024_690e:
-	ld   [$ca7e], a                                  ; $690e: $ea $7e $ca
+	ld   [wBattleSPCharged], a                                  ; $690e: $ea $7e $ca
 	jr   jr_024_6917                                 ; $6911: $18 $04
 
 Jump_024_6913:
@@ -6617,7 +6097,7 @@ Jump_024_6913:
 
 jr_024_6917:
 	ld   hl, $6a6a                                   ; $6917: $21 $6a $6a
-	ld   a, [$ca71]                                  ; $691a: $fa $71 $ca
+	ld   a, [wBattleDistanceToEnemy]                                  ; $691a: $fa $71 $ca
 	sla  a                                           ; $691d: $cb $27
 	ld   d, $00                                      ; $691f: $16 $00
 	ld   e, a                                        ; $6921: $5f
@@ -6630,11 +6110,11 @@ jr_024_6917:
 	ld   [$ca76], a                                  ; $692e: $ea $76 $ca
 
 ; Yaahhh!
-	ld   a, [$ca87]                                  ; $6931: $fa $87 $ca
+	ld   a, [wLastPlayerRelatedBattleText]                                  ; $6931: $fa $87 $ca
 	cp   $22                                         ; $6934: $fe $22
 	jr   nz, jr_024_693c                             ; $6936: $20 $04
 
-	ld   hl, $ca71                                   ; $6938: $21 $71 $ca
+	ld   hl, wBattleDistanceToEnemy                                   ; $6938: $21 $71 $ca
 	dec  [hl]                                        ; $693b: $35
 
 jr_024_693c:
@@ -6699,7 +6179,7 @@ jr_024_697d:
 
 ; Damn!
 	ld   a, $15                                      ; $698b: $3e $15
-	ld   [$ca87], a                                  ; $698d: $ea $87 $ca
+	ld   [wLastPlayerRelatedBattleText], a                                  ; $698d: $ea $87 $ca
 	ld   a, $00                                      ; $6990: $3e $00
 	ld   [$ca8e], a                                  ; $6992: $ea $8e $ca
 	jr   jr_024_69c9                                 ; $6995: $18 $32
@@ -6711,7 +6191,7 @@ jr_024_6997:
 	cp   $02                                         ; $699e: $fe $02
 	jr   z, jr_024_69b2                              ; $69a0: $28 $10
 
-	ld   hl, $ca71                                   ; $69a2: $21 $71 $ca
+	ld   hl, wBattleDistanceToEnemy                                   ; $69a2: $21 $71 $ca
 	ld   a, [hl]                                     ; $69a5: $7e
 	cp   $00                                         ; $69a6: $fe $00
 	jr   z, jr_024_69c9                              ; $69a8: $28 $1f
@@ -6720,7 +6200,7 @@ jr_024_6997:
 
 ; Ugh!
 	ld   a, $21                                      ; $69ab: $3e $21
-	ld   [$ca87], a                                  ; $69ad: $ea $87 $ca
+	ld   [wLastPlayerRelatedBattleText], a                                  ; $69ad: $ea $87 $ca
 	jr   jr_024_69c9                                 ; $69b0: $18 $17
 
 jr_024_69b2:
@@ -6728,7 +6208,7 @@ jr_024_69b2:
 	cp   $02                                         ; $69b5: $fe $02
 	jr   nz, jr_024_69c9                             ; $69b7: $20 $10
 
-	ld   hl, $ca71                                   ; $69b9: $21 $71 $ca
+	ld   hl, wBattleDistanceToEnemy                                   ; $69b9: $21 $71 $ca
 	ld   a, [hl]                                     ; $69bc: $7e
 	cp   $02                                         ; $69bd: $fe $02
 	jr   z, jr_024_69c9                              ; $69bf: $28 $08
@@ -6737,7 +6217,7 @@ jr_024_69b2:
 
 ; Ugh!
 	ld   a, $21                                      ; $69c2: $3e $21
-	ld   [$ca87], a                                  ; $69c4: $ea $87 $ca
+	ld   [wLastPlayerRelatedBattleText], a                                  ; $69c4: $ea $87 $ca
 	jr   jr_024_69c9                                 ; $69c7: $18 $00
 
 Jump_024_69c9:
@@ -6790,13 +6270,13 @@ jr_024_69ec:
 	cp   $01                                         ; $6a01: $fe $01
 	jr   nz, jr_024_6a15                             ; $6a03: $20 $10
 
-	ld   hl, $ca71                                   ; $6a05: $21 $71 $ca
+	ld   hl, wBattleDistanceToEnemy                                   ; $6a05: $21 $71 $ca
 	ld   a, [hl]                                     ; $6a08: $7e
 	cp   $00                                         ; $6a09: $fe $00
 	jr   z, jr_024_6a2a                              ; $6a0b: $28 $1d
 
 	ld   a, $ff                                      ; $6a0d: $3e $ff
-	ld   [$ca87], a                                  ; $6a0f: $ea $87 $ca
+	ld   [wLastPlayerRelatedBattleText], a                                  ; $6a0f: $ea $87 $ca
 	dec  [hl]                                        ; $6a12: $35
 	jr   jr_024_6a2a                                 ; $6a13: $18 $15
 
@@ -6805,13 +6285,13 @@ jr_024_6a15:
 	cp   $02                                         ; $6a18: $fe $02
 	jr   nz, jr_024_6a2a                             ; $6a1a: $20 $0e
 
-	ld   hl, $ca71                                   ; $6a1c: $21 $71 $ca
+	ld   hl, wBattleDistanceToEnemy                                   ; $6a1c: $21 $71 $ca
 	ld   a, [hl]                                     ; $6a1f: $7e
 	cp   $02                                         ; $6a20: $fe $02
 	jr   z, jr_024_6a2a                              ; $6a22: $28 $06
 
 	ld   a, $ff                                      ; $6a24: $3e $ff
-	ld   [$ca87], a                                  ; $6a26: $ea $87 $ca
+	ld   [wLastPlayerRelatedBattleText], a                                  ; $6a26: $ea $87 $ca
 	inc  [hl]                                        ; $6a29: $34
 
 jr_024_6a2a:
@@ -6829,7 +6309,7 @@ Jump_024_6a36:
 
 ; Damn! I can't catch up!
 	ld   a, $05                                      ; $6a3d: $3e $05
-	ld   [$ca87], a                                  ; $6a3f: $ea $87 $ca
+	ld   [wLastPlayerRelatedBattleText], a                                  ; $6a3f: $ea $87 $ca
 	jr   jr_024_6a5e                                 ; $6a42: $18 $1a
 
 jr_024_6a44:
@@ -6847,7 +6327,7 @@ jr_024_6a44:
 
 ; I can't shake it!
 	ld   a, $04                                      ; $6a59: $3e $04
-	ld   [$ca87], a                                  ; $6a5b: $ea $87 $ca
+	ld   [wLastPlayerRelatedBattleText], a                                  ; $6a5b: $ea $87 $ca
 
 jr_024_6a5e:
 	ld   a, [$ca76]                                  ; $6a5e: $fa $76 $ca
@@ -7018,7 +6498,7 @@ jr_024_6b30:
 
 	inc  a                                           ; $6b42: $3c
 	ld   [$ca94], a                                  ; $6b43: $ea $94 $ca
-	ld   hl, $ca71                                   ; $6b46: $21 $71 $ca
+	ld   hl, wBattleDistanceToEnemy                                   ; $6b46: $21 $71 $ca
 	ld   a, [hl]                                     ; $6b49: $7e
 	cp   $00                                         ; $6b4a: $fe $00
 	jr   z, jr_024_6ad1                              ; $6b4c: $28 $83
@@ -7034,7 +6514,7 @@ jr_024_6b55:
 
 	inc  a                                           ; $6b5d: $3c
 	ld   [$ca94], a                                  ; $6b5e: $ea $94 $ca
-	ld   hl, $ca71                                   ; $6b61: $21 $71 $ca
+	ld   hl, wBattleDistanceToEnemy                                   ; $6b61: $21 $71 $ca
 	ld   a, [hl]                                     ; $6b64: $7e
 	cp   $02                                         ; $6b65: $fe $02
 	jp   z, Jump_024_6ad1                            ; $6b67: $ca $d1 $6a
@@ -7092,7 +6572,7 @@ jr_024_6ba2:
 
 	inc  a                                           ; $6bb4: $3c
 	ld   [$ca94], a                                  ; $6bb5: $ea $94 $ca
-	ld   hl, $ca71                                   ; $6bb8: $21 $71 $ca
+	ld   hl, wBattleDistanceToEnemy                                   ; $6bb8: $21 $71 $ca
 	ld   a, [hl]                                     ; $6bbb: $7e
 	cp   $00                                         ; $6bbc: $fe $00
 	jr   z, jr_024_6b9c                              ; $6bbe: $28 $dc
@@ -7109,7 +6589,7 @@ jr_024_6bc6:
 
 	inc  a                                           ; $6bcd: $3c
 	ld   [$ca94], a                                  ; $6bce: $ea $94 $ca
-	ld   hl, $ca71                                   ; $6bd1: $21 $71 $ca
+	ld   hl, wBattleDistanceToEnemy                                   ; $6bd1: $21 $71 $ca
 	ld   a, [hl]                                     ; $6bd4: $7e
 	cp   $02                                         ; $6bd5: $fe $02
 	jr   z, jr_024_6b9c                              ; $6bd7: $28 $c3
@@ -7239,31 +6719,33 @@ todo_DisplayBattleText:
 	db $45 ; I need to back off...
 
 
-Call_024_6c6d:
+; Returns carry set when textbox done
+CheckIfBattleTextBoxDone:
+;
 	call CheckIfReachedLastKanjiIdxInCurrTextBox                                       ; $6c6d: $cd $71 $14
 	or   a                                           ; $6c70: $b7
-	jr   nz, jr_024_6c75                             ; $6c71: $20 $02
+	jr   nz, .textboxNotDone                             ; $6c71: $20 $02
 
 	scf                                              ; $6c73: $37
 	ret                                              ; $6c74: $c9
 
-jr_024_6c75:
+.textboxNotDone:
+;
 	ld   a, [wInGameButtonsHeld]                                  ; $6c75: $fa $0f $c2
-	and  $82                                         ; $6c78: $e6 $82
-	jr   nz, jr_024_6c84                             ; $6c7a: $20 $08
+	and  PADF_DOWN|PADF_B                                         ; $6c78: $e6 $82
+	jr   nz, .spedUp                             ; $6c7a: $20 $08
 
 	ld   hl, hScriptOpcodeParams+1                                   ; $6c7c: $21 $a1 $ff
 	dec  [hl]                                        ; $6c7f: $35
 	bit  7, [hl]                                     ; $6c80: $cb $7e
-	jr   z, jr_024_6c8c                              ; $6c82: $28 $08
+	jr   z, .done                              ; $6c82: $28 $08
 
-jr_024_6c84:
+.spedUp:
 	ld   a, [sTextSpeedBaseCounter]                                  ; $6c84: $fa $b3 $b1
 	ldh  [hScriptOpcodeParams+1], a                                    ; $6c87: $e0 $a1
 	jp   HDMAEnqueueNextTextBoxKanji                                       ; $6c89: $c3 $55 $10
 
-
-jr_024_6c8c:
+.done:
 	ret                                              ; $6c8c: $c9
 
 
@@ -7294,7 +6776,7 @@ jr_024_6cb9:
 	ld   a, [hl+]                                    ; $6cb9: $2a
 	ld   h, [hl]                                     ; $6cba: $66
 	ld   l, a                                        ; $6cbb: $6f
-	ld   a, [$ca71]                                  ; $6cbc: $fa $71 $ca
+	ld   a, [wBattleDistanceToEnemy]                                  ; $6cbc: $fa $71 $ca
 	cp   $01                                         ; $6cbf: $fe $01
 	jr   z, jr_024_6cc9                              ; $6cc1: $28 $06
 
@@ -7405,7 +6887,7 @@ jr_024_6d13:
 	jr   nz, .cont_6d7c                             ; $6d42: $20 $38
 
 	push hl                                          ; $6d44: $e5
-	ld   a, [$ca70]                                  ; $6d45: $fa $70 $ca
+	ld   a, [wEnemyKouboChosen]                                  ; $6d45: $fa $70 $ca
 	sla  a                                           ; $6d48: $cb $27
 	ld   b, $00                                      ; $6d4a: $06 $00
 	ld   c, a                                        ; $6d4c: $4f
@@ -7439,36 +6921,38 @@ jr_024_6d13:
 	ld   a, $02                                      ; $6d75: $3e $02
 	ld   [hl], a                                     ; $6d77: $77
 	pop  hl                                          ; $6d78: $e1
+
+; Back away
 	ld   de, $0002                                   ; $6d79: $11 $02 $00
 
 .cont_6d7c:
-	call Call_024_77cc                               ; $6d7c: $cd $cc $77
-	jr   c, .lastPartOfLoop                              ; $6d7f: $38 $44
+	call CheckIfStatsAllowSpecialAttacks                               ; $6d7c: $cd $cc $77
+	jr   c, .addTextOptionE                              ; $6d7f: $38 $44
 
-	ld   a, [$ca96]                                  ; $6d81: $fa $96 $ca
+	ld   a, [wCanUseSpecialBattleMove]                                  ; $6d81: $fa $96 $ca
 	and  a                                           ; $6d84: $a7
-	jr   z, .lastPartOfLoop                              ; $6d85: $28 $3e
+	jr   z, .addTextOptionE                              ; $6d85: $28 $3e
 
-	ld   a, [$ca95]                                  ; $6d87: $fa $95 $ca
+	ld   a, [wUsedSpecialBattleMove]                                  ; $6d87: $fa $95 $ca
 	and  a                                           ; $6d8a: $a7
-	jr   nz, .lastPartOfLoop                             ; $6d8b: $20 $38
+	jr   nz, .addTextOptionE                             ; $6d8b: $20 $38
 
-	ld   a, [$ca9f]                                  ; $6d8d: $fa $9f $ca
+	ld   a, [wIsMockBattle]                                  ; $6d8d: $fa $9f $ca
 	and  a                                           ; $6d90: $a7
 	jr   nz, .br_6d9a                             ; $6d91: $20 $07
 
-	ld   a, [$ca70]                                  ; $6d93: $fa $70 $ca
+	ld   a, [wEnemyKouboChosen]                                  ; $6d93: $fa $70 $ca
 	cp   $04                                         ; $6d96: $fe $04
-	jr   nz, .lastPartOfLoop                             ; $6d98: $20 $2b
+	jr   nz, .addTextOptionE                             ; $6d98: $20 $2b
 
 .br_6d9a:
-	ld   a, [$ca7e]                                  ; $6d9a: $fa $7e $ca
+	ld   a, [wBattleSPCharged]                                  ; $6d9a: $fa $7e $ca
 	cp   $64                                         ; $6d9d: $fe $64
-	jr   nz, .lastPartOfLoop                             ; $6d9f: $20 $24
+	jr   nz, .addTextOptionE                             ; $6d9f: $20 $24
 
 	ld   a, [hl]                                     ; $6da1: $7e
 	cp   $03                                         ; $6da2: $fe $03
-	jr   nz, .lastPartOfLoop                             ; $6da4: $20 $1f
+	jr   nz, .addTextOptionE                             ; $6da4: $20 $1f
 
 	ld   a, [wKouboChosen0idxed]                                  ; $6da6: $fa $6f $ca
 	cp   $01                                         ; $6da9: $fe $01
@@ -7477,24 +6961,24 @@ jr_024_6d13:
 	cp   $05                                         ; $6dad: $fe $05
 	jr   z, .br_6dbc                              ; $6daf: $28 $0b
 
-	jr   .eEqu6                                 ; $6db1: $18 $10
+	jr   .specialAttack                                 ; $6db1: $18 $10
 
 .br_6db3:
-	ld   a, [$ca71]                                  ; $6db3: $fa $71 $ca
+	ld   a, [wBattleDistanceToEnemy]                                  ; $6db3: $fa $71 $ca
 	cp   $02                                         ; $6db6: $fe $02
-	jr   z, .lastPartOfLoop                              ; $6db8: $28 $0b
+	jr   z, .addTextOptionE                              ; $6db8: $28 $0b
 
-	jr   .eEqu6                                 ; $6dba: $18 $07
+	jr   .specialAttack                                 ; $6dba: $18 $07
 
 .br_6dbc:
-	ld   a, [$ca71]                                  ; $6dbc: $fa $71 $ca
+	ld   a, [wBattleDistanceToEnemy]                                  ; $6dbc: $fa $71 $ca
 	cp   $00                                         ; $6dbf: $fe $00
-	jr   nz, .lastPartOfLoop                             ; $6dc1: $20 $02
+	jr   nz, .addTextOptionE                             ; $6dc1: $20 $02
 
-.eEqu6:
+.specialAttack:
 	ld   e, $06                                      ; $6dc3: $1e $06
 
-.lastPartOfLoop:
+.addTextOptionE:
 ;
 	ld   hl, PlayerLimitedBattleTexts                                   ; $6dc5: $21 $86 $6e
 	add  hl, de                                      ; $6dc8: $19
@@ -7518,7 +7002,7 @@ jr_024_6d13:
 	ld   d, h                                        ; $6dd9: $54
 	ld   e, l                                        ; $6dda: $5d
 	ld   hl, $d000                                   ; $6ddb: $21 $00 $d0
-	ld   a, $24                                      ; $6dde: $3e $24
+	ld   a, BANK(BattleInstantTexts)                                      ; $6dde: $3e $24
 	call LoadInstantText                                       ; $6de0: $cd $06 $13
 
 ;
@@ -7696,6 +7180,8 @@ Data_24_6e91:
 	nop                                              ; $6ea1: $00
 	ld   bc, $0102                                   ; $6ea2: $01 $02 $01
 	nop                                              ; $6ea5: $00
+
+	
 	or   h                                           ; $6ea6: $b4
 	ld   l, [hl]                                     ; $6ea7: $6e
 	or   l                                           ; $6ea8: $b5
@@ -7770,7 +7256,7 @@ jr_024_6f04:
 	ld   a, [hl+]                                    ; $6f04: $2a
 	ld   h, [hl]                                     ; $6f05: $66
 	ld   l, a                                        ; $6f06: $6f
-	ld   a, [$ca71]                                  ; $6f07: $fa $71 $ca
+	ld   a, [wBattleDistanceToEnemy]                                  ; $6f07: $fa $71 $ca
 	sla  a                                           ; $6f0a: $cb $27
 	ld   d, $00                                      ; $6f0c: $16 $00
 	ld   e, a                                        ; $6f0e: $5f
@@ -7863,7 +7349,7 @@ Jump_024_6f5e:
 	jr   nz, jr_024_6fc1                             ; $6f87: $20 $38
 
 	push hl                                          ; $6f89: $e5
-	ld   a, [$ca70]                                  ; $6f8a: $fa $70 $ca
+	ld   a, [wEnemyKouboChosen]                                  ; $6f8a: $fa $70 $ca
 	sla  a                                           ; $6f8d: $cb $27
 	ld   b, $00                                      ; $6f8f: $06 $00
 	ld   c, a                                        ; $6f91: $4f
@@ -7960,7 +7446,7 @@ jr_024_6ff4:
 	ld   d, h                                        ; $7008: $54
 	ld   e, l                                        ; $7009: $5d
 	ld   hl, $d000                                   ; $700a: $21 $00 $d0
-	ld   a, $24                                      ; $700d: $3e $24
+	ld   a, BANK(BattleInstantTexts)                                      ; $700d: $3e $24
 	call LoadInstantText                                       ; $700f: $cd $06 $13
 
 ;
@@ -9557,15 +9043,8 @@ Call_024_7731:
 	ld   [$ca77], a                                  ; $774f: $ea $77 $ca
 	ld   a, $00                                      ; $7752: $3e $00
 	ld   [$ca76], a                                  ; $7754: $ea $76 $ca
-	push af                                          ; $7757: $f5
-	ld   a, $cc                                      ; $7758: $3e $cc
-	ld   [wFarCallAddr], a                                  ; $775a: $ea $98 $c2
-	ld   a, $65                                      ; $775d: $3e $65
-	ld   [wFarCallAddr+1], a                                  ; $775f: $ea $99 $c2
-	ld   a, $3e                                      ; $7762: $3e $3e
-	ld   [wFarCallBank], a                                  ; $7764: $ea $9a $c2
-	pop  af                                          ; $7767: $f1
-	call FarCall                                       ; $7768: $cd $62 $09
+
+	M_FarCall Call_03e_65cc
 	ret                                              ; $776b: $c9
 
 
@@ -9574,15 +9053,8 @@ jr_024_776c:
 	ld   [$ca77], a                                  ; $776f: $ea $77 $ca
 	ld   a, $04                                      ; $7772: $3e $04
 	ld   [$ca76], a                                  ; $7774: $ea $76 $ca
-	push af                                          ; $7777: $f5
-	ld   a, $cc                                      ; $7778: $3e $cc
-	ld   [wFarCallAddr], a                                  ; $777a: $ea $98 $c2
-	ld   a, $65                                      ; $777d: $3e $65
-	ld   [wFarCallAddr+1], a                                  ; $777f: $ea $99 $c2
-	ld   a, $3e                                      ; $7782: $3e $3e
-	ld   [wFarCallBank], a                                  ; $7784: $ea $9a $c2
-	pop  af                                          ; $7787: $f1
-	call FarCall                                       ; $7788: $cd $62 $09
+
+	M_FarCall Call_03e_65cc
 	ret                                              ; $778b: $c9
 
 
@@ -9590,15 +9062,8 @@ jr_024_776c:
 	ld   [$ca77], a                                  ; $778f: $ea $77 $ca
 	ld   a, $05                                      ; $7792: $3e $05
 	ld   [$ca76], a                                  ; $7794: $ea $76 $ca
-	push af                                          ; $7797: $f5
-	ld   a, $cc                                      ; $7798: $3e $cc
-	ld   [wFarCallAddr], a                                  ; $779a: $ea $98 $c2
-	ld   a, $65                                      ; $779d: $3e $65
-	ld   [wFarCallAddr+1], a                                  ; $779f: $ea $99 $c2
-	ld   a, $3e                                      ; $77a2: $3e $3e
-	ld   [wFarCallBank], a                                  ; $77a4: $ea $9a $c2
-	pop  af                                          ; $77a7: $f1
-	call FarCall                                       ; $77a8: $cd $62 $09
+
+	M_FarCall Call_03e_65cc
 	ret                                              ; $77ab: $c9
 
 
@@ -9607,174 +9072,184 @@ Jump_024_77ac:
 	ld   [$ca77], a                                  ; $77af: $ea $77 $ca
 	ld   a, $01                                      ; $77b2: $3e $01
 	ld   [$ca76], a                                  ; $77b4: $ea $76 $ca
-	push af                                          ; $77b7: $f5
-	ld   a, $cc                                      ; $77b8: $3e $cc
-	ld   [wFarCallAddr], a                                  ; $77ba: $ea $98 $c2
-	ld   a, $65                                      ; $77bd: $3e $65
-	ld   [wFarCallAddr+1], a                                  ; $77bf: $ea $99 $c2
-	ld   a, $3e                                      ; $77c2: $3e $3e
-	ld   [wFarCallBank], a                                  ; $77c4: $ea $9a $c2
-	pop  af                                          ; $77c7: $f1
-	call FarCall                                       ; $77c8: $cd $62 $09
+
+	M_FarCall Call_03e_65cc
 	ret                                              ; $77cb: $c9
 
 
-Call_024_77cc:
-	push de                                          ; $77cc: $d5
-	push bc                                          ; $77cd: $c5
-	push hl                                          ; $77ce: $e5
-	push af                                          ; $77cf: $f5
-	ld   a, [wKouboChosen0idxed]                                  ; $77d0: $fa $6f $ca
-	cp   $00                                         ; $77d3: $fe $00
-	jp   z, Jump_024_77f1                            ; $77d5: $ca $f1 $77
+; Sets carry flag if stats are too low
+CheckIfStatsAllowSpecialAttacks:
+	push de                                                         ; $77cc
+	push bc                                                         ; $77cd
+	push hl                                                         ; $77ce
+	push af                                                         ; $77cf
 
-	cp   $05                                         ; $77d8: $fe $05
-	jp   z, Jump_024_787a                            ; $77da: $ca $7a $78
+; Branch based on player koubo
+	ld   a, [wKouboChosen0idxed]                                    ; $77d0
+	cp   $00                                                        ; $77d3
+	jp   z, .sakura                                                 ; $77d5
 
-	cp   $01                                         ; $77dd: $fe $01
-	jp   z, Jump_024_7846                            ; $77df: $ca $46 $78
+	cp   $05                                                        ; $77d8
+	jp   z, .kanna                                                  ; $77da
 
-	cp   $03                                         ; $77e2: $fe $03
-	jp   z, Jump_024_7860                            ; $77e4: $ca $60 $78
+	cp   $01                                                        ; $77dd
+	jp   z, .sumire                                                 ; $77df
 
-	cp   $02                                         ; $77e7: $fe $02
-	jp   z, Jump_024_7853                            ; $77e9: $ca $53 $78
+	cp   $03                                                        ; $77e2
+	jp   z, .iris                                                   ; $77e4
 
-	cp   $04                                         ; $77ec: $fe $04
-	jp   z, Jump_024_786d                            ; $77ee: $ca $6d $78
+	cp   $02                                                        ; $77e7
+	jp   z, .maria                                                  ; $77e9
 
-Jump_024_77f1:
-	xor  a                                           ; $77f1: $af
-	ld   [$ca90], a                                  ; $77f2: $ea $90 $ca
-	ld   [$ca91], a                                  ; $77f5: $ea $91 $ca
-	ld   d, $00                                      ; $77f8: $16 $00
-	ld   a, [sSramVals2+SRAM2_GUTS]                                  ; $77fa: $fa $d3 $af
-	ld   e, a                                        ; $77fd: $5f
-	ld   hl, $ca90                                   ; $77fe: $21 $90 $ca
-	ld   a, [hl]                                     ; $7801: $7e
-	add  e                                           ; $7802: $83
-	ld   [hl+], a                                    ; $7803: $22
-	ld   a, [hl]                                     ; $7804: $7e
-	adc  d                                           ; $7805: $8a
-	ld   [hl], a                                     ; $7806: $77
-	ld   a, [sSramVals2+SRAM2_SPIRIT_POWER]                                  ; $7807: $fa $d2 $af
-	ld   e, a                                        ; $780a: $5f
-	ld   hl, $ca90                                   ; $780b: $21 $90 $ca
-	ld   a, [hl]                                     ; $780e: $7e
-	add  e                                           ; $780f: $83
-	ld   [hl+], a                                    ; $7810: $22
-	ld   a, [hl]                                     ; $7811: $7e
-	adc  d                                           ; $7812: $8a
-	ld   [hl], a                                     ; $7813: $77
-	ld   a, [sSramVals2+SRAM2_ACCURACY]                                  ; $7814: $fa $d5 $af
-	ld   e, a                                        ; $7817: $5f
-	ld   hl, $ca90                                   ; $7818: $21 $90 $ca
-	ld   a, [hl]                                     ; $781b: $7e
-	add  e                                           ; $781c: $83
-	ld   [hl+], a                                    ; $781d: $22
-	ld   a, [hl]                                     ; $781e: $7e
-	adc  d                                           ; $781f: $8a
-	ld   [hl], a                                     ; $7820: $77
-	ld   a, [sSramVals2+SRAM2_SPEED]                                  ; $7821: $fa $d4 $af
-	ld   e, a                                        ; $7824: $5f
-	ld   hl, $ca90                                   ; $7825: $21 $90 $ca
-	ld   a, [hl]                                     ; $7828: $7e
-	add  e                                           ; $7829: $83
-	ld   [hl+], a                                    ; $782a: $22
-	ld   a, [hl]                                     ; $782b: $7e
-	adc  d                                           ; $782c: $8a
-	ld   [hl], a                                     ; $782d: $77
-	ld   a, [$ca90]                                  ; $782e: $fa $90 $ca
-	ld   l, a                                        ; $7831: $6f
-	ld   a, [$ca91]                                  ; $7832: $fa $91 $ca
-	ld   h, a                                        ; $7835: $67
-	ld   a, $04                                      ; $7836: $3e $04
-	call LAequHLdivmodA                                       ; $7838: $cd $50 $0c
-	ld   a, l                                        ; $783b: $7d
-	cp   $9b                                         ; $783c: $fe $9b
-	jr   nc, jr_024_7887                             ; $783e: $30 $47
+	cp   $04                                                        ; $77ec
+	jp   z, .kohran                                                 ; $77ee
 
-	pop  hl                                          ; $7840: $e1
-	pop  hl                                          ; $7841: $e1
-	pop  bc                                          ; $7842: $c1
-	pop  de                                          ; $7843: $d1
-	scf                                              ; $7844: $37
-	ret                                              ; $7845: $c9
+.sakura:
+; Start with cleared stats total
+	xor  a                                                          ; $77f1
+	ld   [wBattleStatsTotal], a                                     ; $77f2
+	ld   [wBattleStatsTotal+1], a                                   ; $77f5
+
+	ld   d, $00                                                     ; $77f8
+
+; Add guts to total, and store it
+	ld   a, [sSramVals2+SRAM2_GUTS]                                 ; $77fa
+	ld   e, a                                                       ; $77fd
+	ld   hl, wBattleStatsTotal                                      ; $77fe
+	ld   a, [hl]                                                    ; $7801
+	add  e                                                          ; $7802
+	ld   [hl+], a                                                   ; $7803
+	ld   a, [hl]                                                    ; $7804
+	adc  d                                                          ; $7805
+	ld   [hl], a                                                    ; $7806
+
+; Add spirit power to total, and store it
+	ld   a, [sSramVals2+SRAM2_SPIRIT_POWER]                         ; $7807
+	ld   e, a                                                       ; $780a
+	ld   hl, wBattleStatsTotal                                      ; $780b
+	ld   a, [hl]                                                    ; $780e
+	add  e                                                          ; $780f
+	ld   [hl+], a                                                   ; $7810
+	ld   a, [hl]                                                    ; $7811
+	adc  d                                                          ; $7812
+	ld   [hl], a                                                    ; $7813
+
+; Add accuracy to total, and store it
+	ld   a, [sSramVals2+SRAM2_ACCURACY]                             ; $7814
+	ld   e, a                                                       ; $7817
+	ld   hl, wBattleStatsTotal                                      ; $7818
+	ld   a, [hl]                                                    ; $781b
+	add  e                                                          ; $781c
+	ld   [hl+], a                                                   ; $781d
+	ld   a, [hl]                                                    ; $781e
+	adc  d                                                          ; $781f
+	ld   [hl], a                                                    ; $7820
+
+; Add speed to total, and store it
+	ld   a, [sSramVals2+SRAM2_SPEED]                                ; $7821
+	ld   e, a                                                       ; $7824
+	ld   hl, wBattleStatsTotal                                      ; $7825
+	ld   a, [hl]                                                    ; $7828
+	add  e                                                          ; $7829
+	ld   [hl+], a                                                   ; $782a
+	ld   a, [hl]                                                    ; $782b
+	adc  d                                                          ; $782c
+	ld   [hl], a                                                    ; $782d
+
+; Get total / 4
+	ld   a, [wBattleStatsTotal]                                     ; $782e
+	ld   l, a                                                       ; $7831
+	ld   a, [wBattleStatsTotal+1]                                   ; $7832
+	ld   h, a                                                       ; $7835
+	ld   a, $04                                                     ; $7836
+	call LAequHLdivmodA                                             ; $7838
+
+; If average < 155, return with carry set
+	ld   a, l                                                       ; $783b
+	cp   155                                                        ; $783c
+	jr   nc, .done                                                  ; $783e
+
+	pop  hl                                                         ; $7840
+	pop  hl                                                         ; $7841
+	pop  bc                                                         ; $7842
+	pop  de                                                         ; $7843
+	scf                                                             ; $7844
+	ret                                                             ; $7845
+
+.sumire:
+; If speed < 200, return with carry set
+	ld   a, [sSramVals2+SRAM2_SPEED]                                ; $7846
+	cp   200                                                        ; $7849
+	jr   nc, .done                                                  ; $784b
+
+	pop  hl                                                         ; $784d
+	pop  hl                                                         ; $784e
+	pop  bc                                                         ; $784f
+	pop  de                                                         ; $7850
+	scf                                                             ; $7851
+	ret                                                             ; $7852
+
+.maria:
+; If accuracy < 200, return with carry set
+	ld   a, [sSramVals2+SRAM2_ACCURACY]                             ; $7853
+	cp   200                                                        ; $7856
+	jr   nc, .done                                                  ; $7858
+
+	pop  hl                                                         ; $785a
+	pop  hl                                                         ; $785b
+	pop  bc                                                         ; $785c
+	pop  de                                                         ; $785d
+	scf                                                             ; $785e
+	ret                                                             ; $785f
+
+.iris:
+; If spirit power < 200, return with carry set
+	ld   a, [sSramVals2+SRAM2_SPIRIT_POWER]                         ; $7860
+	cp   200                                                        ; $7863
+	jr   nc, .done                                                  ; $7865
+
+	pop  hl                                                         ; $7867
+	pop  hl                                                         ; $7868
+	pop  bc                                                         ; $7869
+	pop  de                                                         ; $786a
+	scf                                                             ; $786b
+	ret                                                             ; $786c
+
+.kohran:
+; If intellect < 200, return with carry set
+	ld   a, [sSramVals2+SRAM2_INTELLECT]                            ; $786d
+	cp   200                                                        ; $7870
+	jr   nc, .done                                                  ; $7872
+
+	pop  hl                                                         ; $7874
+	pop  hl                                                         ; $7875
+	pop  bc                                                         ; $7876
+	pop  de                                                         ; $7877
+	scf                                                             ; $7878
+	ret                                                             ; $7879
+
+.kanna:
+; If guts < 200, return with carry set
+	ld   a, [sSramVals2+SRAM2_GUTS]                                 ; $787a
+	cp   200                                                        ; $787d
+	jr   nc, .done                                                  ; $787f
+
+	pop  hl                                                         ; $7881
+	pop  hl                                                         ; $7882
+	pop  bc                                                         ; $7883
+	pop  de                                                         ; $7884
+	scf                                                             ; $7885
+	ret                                                             ; $7886
+
+.done:
+	pop  hl                                                         ; $7887
+	pop  hl                                                         ; $7888
+	pop  bc                                                         ; $7889
+	pop  de                                                         ; $788a
+	ret                                                             ; $788b
 
 
-Jump_024_7846:
-	ld   a, [sSramVals2+SRAM2_SPEED]                                  ; $7846: $fa $d4 $af
-	cp   $c8                                         ; $7849: $fe $c8
-	jr   nc, jr_024_7887                             ; $784b: $30 $3a
-
-	pop  hl                                          ; $784d: $e1
-	pop  hl                                          ; $784e: $e1
-	pop  bc                                          ; $784f: $c1
-	pop  de                                          ; $7850: $d1
-	scf                                              ; $7851: $37
-	ret                                              ; $7852: $c9
-
-
-Jump_024_7853:
-	ld   a, [sSramVals2+SRAM2_ACCURACY]                                  ; $7853: $fa $d5 $af
-	cp   $c8                                         ; $7856: $fe $c8
-	jr   nc, jr_024_7887                             ; $7858: $30 $2d
-
-	pop  hl                                          ; $785a: $e1
-	pop  hl                                          ; $785b: $e1
-	pop  bc                                          ; $785c: $c1
-	pop  de                                          ; $785d: $d1
-	scf                                              ; $785e: $37
-	ret                                              ; $785f: $c9
-
-
-Jump_024_7860:
-	ld   a, [sSramVals2+SRAM2_SPIRIT_POWER]                                  ; $7860: $fa $d2 $af
-	cp   $c8                                         ; $7863: $fe $c8
-	jr   nc, jr_024_7887                             ; $7865: $30 $20
-
-	pop  hl                                          ; $7867: $e1
-	pop  hl                                          ; $7868: $e1
-	pop  bc                                          ; $7869: $c1
-	pop  de                                          ; $786a: $d1
-	scf                                              ; $786b: $37
-	ret                                              ; $786c: $c9
-
-
-Jump_024_786d:
-	ld   a, [sSramVals2+SRAM2_INTELLECT]                                  ; $786d: $fa $d1 $af
-	cp   $c8                                         ; $7870: $fe $c8
-	jr   nc, jr_024_7887                             ; $7872: $30 $13
-
-	pop  hl                                          ; $7874: $e1
-	pop  hl                                          ; $7875: $e1
-	pop  bc                                          ; $7876: $c1
-	pop  de                                          ; $7877: $d1
-	scf                                              ; $7878: $37
-	ret                                              ; $7879: $c9
-
-
-Jump_024_787a:
-	ld   a, [sSramVals2+SRAM2_GUTS]                                  ; $787a: $fa $d3 $af
-	cp   $c8                                         ; $787d: $fe $c8
-	jr   nc, jr_024_7887                             ; $787f: $30 $06
-
-	pop  hl                                          ; $7881: $e1
-	pop  hl                                          ; $7882: $e1
-	pop  bc                                          ; $7883: $c1
-	pop  de                                          ; $7884: $d1
-	scf                                              ; $7885: $37
-	ret                                              ; $7886: $c9
-
-
-jr_024_7887:
-	pop  hl                                          ; $7887: $e1
-	pop  hl                                          ; $7888: $e1
-	pop  bc                                          ; $7889: $c1
-	pop  de                                          ; $788a: $d1
-	ret                                              ; $788b: $c9
-
-
+;
 	ret                                              ; $788c: $c9
 
 
@@ -9967,7 +9442,7 @@ BattleInstantTextsentry47::
 	db $22, $39, $46, $39, $10, $23, $10, $37, $43, $41, $39, $fa, $00
 BattleInstantTextsentry48::
 	db $20, $3d, $46, $47, $48, $e1, $10, $23, $10, $42, $39, $39, $38, $10, $48, $43, $10, $41, $35, $3f, $39, $0d
-	db $47, $43, $41, $39, $10, $38, $3d, $47, $48, $35, $42, $37, $39, $f2, $0d
+	db $47, $43, $41, $39, $10, $38, $3d, $47, $48, $35, $42, $37, $39, $f2, $00
 BattleInstantTextsentry49::
 	db $2e, $3c, $3d, $47, $10, $3d, $47, $10, $35, $40, $40, $10, $47, $43, $10, $47, $49, $38, $38, $39, $42, $f2, $f2, $f2, $0d
 	db $1d, $35, $42, $10, $23, $10, $39, $4a, $39, $42, $10, $3a, $3d, $3b, $3c, $48, $10, $4b, $39, $40, $40, $f9, $00

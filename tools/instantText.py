@@ -180,7 +180,7 @@ for i, jp in enumerate(tableItems):
         for j, line in enumerate(lines):
             textboxes, _ = ScriptExtractor.convertEnglish(line, limit)
             if not textboxes:
-                continue
+                raise Exception(lines)
 
             try:
                 assert len(textboxes) == 1

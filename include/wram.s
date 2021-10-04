@@ -523,14 +523,59 @@ wca6e:
 wKouboChosen0idxed:: ; $ca6f
     db
 
-wca70:
-    ds $85-$70
+wEnemyKouboChosen:: ; $ca70
+    db
+
+wBattleDistanceToEnemy:: ; $ca71
+    db
+
+wca72:
+    ds $e-2
+
+wBattleSPCharged:: ; $ca7e
+    db
+
+wca7f:
+    ds $85-$7f
 
 wBattleWon:: ; $ca85
     db
 
 wca86:
-    ds $b0e-$a86
+    ds 7-6
+
+wLastPlayerRelatedBattleText:: ; $ca87
+    db
+
+wca88:
+    ds 9-8
+
+wLastEnemyRelatedBattleText:: ; $ca89
+    db
+
+wca8a:
+    ds $90-$8a
+
+wBattleStatsTotal:: ; $ca90
+    dw
+
+wca92:
+    ds 5-2
+
+wUsedSpecialBattleMove:: ; $ca95
+    db
+
+wCanUseSpecialBattleMove:: ; $ca96
+    db
+
+wca97:
+    ds $f-7
+
+wIsMockBattle:: ; $ca9f
+    db
+
+wcaa0:
+    ds $b0e-$aa0
 
 wPlayerName:: ; $cb0e
     ds 6

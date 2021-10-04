@@ -7922,6 +7922,13 @@ ReplaceSumireMiniGameTSPopup::
 	ld   hl, Gfx_MiniGamePopup
 	call MemCopy
 
+	ld   a, $ff
+	ld   [$d000+$230], a
+	ld   [$d000+$232], a
+	ld   [$d000+$234], a
+	ld   [$d000+$236], a
+	ld   [$d000+$238], a
+
 	ld   c, $81
 	ld   de, $8800
 	ld   a, $03

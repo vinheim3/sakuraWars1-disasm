@@ -962,7 +962,7 @@ jr_021_44c1:
 
 
 Call_021_44d4:
-	ld   a, [$afd0]                                  ; $44d4: $fa $d0 $af
+	ld   a, [sSramVals2+SRAM2_STAMINA]                                  ; $44d4: $fa $d0 $af
 	ld   [$caa7], a                                  ; $44d7: $ea $a7 $ca
 	ld   a, [sSramVals2+SRAM2_INTELLECT]                                  ; $44da: $fa $d1 $af
 	ld   [$caa8], a                                  ; $44dd: $ea $a8 $ca
@@ -997,9 +997,9 @@ Jump_021_44f8:
 	ld   hl, $caa7                                   ; $452e: $21 $a7 $ca
 	ld   bc, $ca9e                                   ; $4531: $01 $9e $ca
 	call Call_021_4582                               ; $4534: $cd $82 $45
-	ld   a, [$ca9f]                                  ; $4537: $fa $9f $ca
+	ld   a, [wIsMockBattle]                                  ; $4537: $fa $9f $ca
 	dec  a                                           ; $453a: $3d
-	ld   [$ca9f], a                                  ; $453b: $ea $9f $ca
+	ld   [wIsMockBattle], a                                  ; $453b: $ea $9f $ca
 	jp   nz, Jump_021_44f8                           ; $453e: $c2 $f8 $44
 
 	ld   a, [$caa7]                                  ; $4541: $fa $a7 $ca
@@ -1229,10 +1229,10 @@ endc
 	ld   [$ca6e], a                                  ; $46f6: $ea $6e $ca
 	ld   [$ca76], a                                  ; $46f9: $ea $76 $ca
 	ld   [$ca94], a                                  ; $46fc: $ea $94 $ca
-	ld   [$ca87], a                                  ; $46ff: $ea $87 $ca
+	ld   [wLastPlayerRelatedBattleText], a                                  ; $46ff: $ea $87 $ca
 	ld   [$ca8f], a                                  ; $4702: $ea $8f $ca
 	ld   [$ca93], a                                  ; $4705: $ea $93 $ca
-	ld   [$ca96], a                                  ; $4708: $ea $96 $ca
+	ld   [wCanUseSpecialBattleMove], a                                  ; $4708: $ea $96 $ca
 	ld   a, $01                                      ; $470b: $3e $01
 	call Call_021_416b                               ; $470d: $cd $6b $41
 	call Call_021_4766                               ; $4710: $cd $66 $47
@@ -1252,7 +1252,7 @@ endc
 	pop  af                                          ; $4732: $f1
 	call FarCall                                       ; $4733: $cd $62 $09
 	call TurnOnLCD                                       ; $4736: $cd $09 $09
-	ld   hl, $afd0                                   ; $4739: $21 $d0 $af
+	ld   hl, sSramVals2+SRAM2_STAMINA                                   ; $4739: $21 $d0 $af
 	
 	M_FarCall LoadStatBars
 
@@ -1310,11 +1310,11 @@ jr_021_47ba:
 	ret                                              ; $47ba: $c9
 
 
-	ld   hl, $afd0                                   ; $47bb: $21 $d0 $af
+	ld   hl, sSramVals2+SRAM2_STAMINA                                   ; $47bb: $21 $d0 $af
 
 	M_FarCall LoadStatBars
 
-	ld   a, [$ca87]                                  ; $47d2: $fa $87 $ca
+	ld   a, [wLastPlayerRelatedBattleText]                                  ; $47d2: $fa $87 $ca
 	cp   $01                                         ; $47d5: $fe $01
 	jr   z, jr_021_47fd                              ; $47d7: $28 $24
 
@@ -1330,9 +1330,9 @@ jr_021_47ba:
 
 	xor  a                                           ; $47eb: $af
 	ld   [$ca94], a                                  ; $47ec: $ea $94 $ca
-	ld   a, [$ca87]                                  ; $47ef: $fa $87 $ca
+	ld   a, [wLastPlayerRelatedBattleText]                                  ; $47ef: $fa $87 $ca
 	inc  a                                           ; $47f2: $3c
-	ld   [$ca87], a                                  ; $47f3: $ea $87 $ca
+	ld   [wLastPlayerRelatedBattleText], a                                  ; $47f3: $ea $87 $ca
 
 jr_021_47f6:
 	call Call_021_480a                               ; $47f6: $cd $0a $48
@@ -1342,7 +1342,7 @@ jr_021_47f6:
 
 jr_021_47fd:
 	ld   a, $50                                      ; $47fd: $3e $50
-	ld   [$ca9f], a                                  ; $47ff: $ea $9f $ca
+	ld   [wIsMockBattle], a                                  ; $47ff: $ea $9f $ca
 	call Call_021_44d4                               ; $4802: $cd $d4 $44
 	ld   hl, wGameSubstate                                   ; $4805: $21 $a1 $c2
 	inc  [hl]                                        ; $4808: $34
@@ -1363,7 +1363,7 @@ Call_021_480a:
 	ld   a, [hl+]                                    ; $4820: $2a
 	ld   h, [hl]                                     ; $4821: $66
 	ld   l, a                                        ; $4822: $6f
-	ld   a, [$ca71]                                  ; $4823: $fa $71 $ca
+	ld   a, [wBattleDistanceToEnemy]                                  ; $4823: $fa $71 $ca
 	cp   $01                                         ; $4826: $fe $01
 	jr   nz, jr_021_483a                             ; $4828: $20 $10
 
@@ -1399,7 +1399,7 @@ jr_021_4854:
 	ld   b, a                                        ; $485c: $47
 	ld   a, [$ca73]                                  ; $485d: $fa $73 $ca
 	ld   c, a                                        ; $4860: $4f
-	ld   a, [$ca70]                                  ; $4861: $fa $70 $ca
+	ld   a, [wEnemyKouboChosen]                                  ; $4861: $fa $70 $ca
 	call LoadSpriteFromMainTable                                       ; $4864: $cd $16 $0e
 	ret                                              ; $4867: $c9
 
@@ -1571,7 +1571,7 @@ jr_021_492c:
 	and  a                                           ; $4936: $a7
 	jr   nz, jr_021_4963                             ; $4937: $20 $2a
 
-	ld   hl, $afd0                                   ; $4939: $21 $d0 $af
+	ld   hl, sSramVals2+SRAM2_STAMINA                                   ; $4939: $21 $d0 $af
 
 	M_FarCall LoadStatBars
 
@@ -1613,7 +1613,7 @@ jr_021_498e:
 
 jr_021_498f:
 	ld   a, [$ca97]                                  ; $498f: $fa $97 $ca
-	ld   [$afd0], a                                  ; $4992: $ea $d0 $af
+	ld   [sSramVals2+SRAM2_STAMINA], a                                  ; $4992: $ea $d0 $af
 	ld   a, [$ca98]                                  ; $4995: $fa $98 $ca
 	ld   [sSramVals2+SRAM2_INTELLECT], a                                  ; $4998: $ea $d1 $af
 	ld   a, [$ca99]                                  ; $499b: $fa $99 $ca
@@ -1641,9 +1641,9 @@ jr_021_498f:
 	and  $03                                         ; $49c9: $e6 $03
 	jr   nz, jr_021_49d7                             ; $49cb: $20 $0a
 
-	ld   a, [$ca96]                                  ; $49cd: $fa $96 $ca
+	ld   a, [wCanUseSpecialBattleMove]                                  ; $49cd: $fa $96 $ca
 	inc  a                                           ; $49d0: $3c
-	ld   [$ca96], a                                  ; $49d1: $ea $96 $ca
+	ld   [wCanUseSpecialBattleMove], a                                  ; $49d1: $ea $96 $ca
 	cp   $b4                                         ; $49d4: $fe $b4
 	ret  nz                                          ; $49d6: $c0
 
@@ -1825,8 +1825,8 @@ endc
 	ld   [$ca8f], a                                  ; $4b51: $ea $8f $ca
 	ld   [$ca93], a                                  ; $4b54: $ea $93 $ca
 	ld   [$ca94], a                                  ; $4b57: $ea $94 $ca
-	ld   [$ca87], a                                  ; $4b5a: $ea $87 $ca
-	ld   [$ca96], a                                  ; $4b5d: $ea $96 $ca
+	ld   [wLastPlayerRelatedBattleText], a                                  ; $4b5a: $ea $87 $ca
+	ld   [wCanUseSpecialBattleMove], a                                  ; $4b5d: $ea $96 $ca
 	ld   a, $04                                      ; $4b60: $3e $04
 	call Call_021_416b                               ; $4b62: $cd $6b $41
 	call Call_021_4bbb                               ; $4b65: $cd $bb $4b
@@ -1846,7 +1846,7 @@ endc
 	pop  af                                          ; $4b87: $f1
 	call FarCall                                       ; $4b88: $cd $62 $09
 	call TurnOnLCD                                       ; $4b8b: $cd $09 $09
-	ld   hl, $afd0                                   ; $4b8e: $21 $d0 $af
+	ld   hl, sSramVals2+SRAM2_STAMINA                                   ; $4b8e: $21 $d0 $af
 
 	M_FarCall LoadStatBars
 
@@ -1904,11 +1904,11 @@ jr_021_4c0f:
 	ret                                              ; $4c0f: $c9
 
 
-	ld   hl, $afd0                                   ; $4c10: $21 $d0 $af
+	ld   hl, sSramVals2+SRAM2_STAMINA                                   ; $4c10: $21 $d0 $af
 
 	M_FarCall LoadStatBars
 
-	ld   a, [$ca87]                                  ; $4c27: $fa $87 $ca
+	ld   a, [wLastPlayerRelatedBattleText]                                  ; $4c27: $fa $87 $ca
 	cp   $01                                         ; $4c2a: $fe $01
 	jr   z, jr_021_4c52                              ; $4c2c: $28 $24
 
@@ -1924,9 +1924,9 @@ jr_021_4c0f:
 
 	xor  a                                           ; $4c40: $af
 	ld   [$ca94], a                                  ; $4c41: $ea $94 $ca
-	ld   a, [$ca87]                                  ; $4c44: $fa $87 $ca
+	ld   a, [wLastPlayerRelatedBattleText]                                  ; $4c44: $fa $87 $ca
 	inc  a                                           ; $4c47: $3c
-	ld   [$ca87], a                                  ; $4c48: $ea $87 $ca
+	ld   [wLastPlayerRelatedBattleText], a                                  ; $4c48: $ea $87 $ca
 
 jr_021_4c4b:
 	call Call_021_4c5f                               ; $4c4b: $cd $5f $4c
@@ -1936,7 +1936,7 @@ jr_021_4c4b:
 
 jr_021_4c52:
 	ld   a, $50                                      ; $4c52: $3e $50
-	ld   [$ca9f], a                                  ; $4c54: $ea $9f $ca
+	ld   [wIsMockBattle], a                                  ; $4c54: $ea $9f $ca
 	call Call_021_44d4                               ; $4c57: $cd $d4 $44
 	ld   hl, wGameSubstate                                   ; $4c5a: $21 $a1 $c2
 	inc  [hl]                                        ; $4c5d: $34
@@ -1957,7 +1957,7 @@ Call_021_4c5f:
 	ld   a, [hl+]                                    ; $4c75: $2a
 	ld   h, [hl]                                     ; $4c76: $66
 	ld   l, a                                        ; $4c77: $6f
-	ld   a, [$ca71]                                  ; $4c78: $fa $71 $ca
+	ld   a, [wBattleDistanceToEnemy]                                  ; $4c78: $fa $71 $ca
 	cp   $02                                         ; $4c7b: $fe $02
 	jr   nz, jr_021_4c8f                             ; $4c7d: $20 $10
 
@@ -1993,7 +1993,7 @@ jr_021_4ca9:
 	ld   b, a                                        ; $4cb1: $47
 	ld   a, [$ca73]                                  ; $4cb2: $fa $73 $ca
 	ld   c, a                                        ; $4cb5: $4f
-	ld   a, [$ca70]                                  ; $4cb6: $fa $70 $ca
+	ld   a, [wEnemyKouboChosen]                                  ; $4cb6: $fa $70 $ca
 	call LoadSpriteFromMainTable                                       ; $4cb9: $cd $16 $0e
 	ret                                              ; $4cbc: $c9
 
@@ -2180,7 +2180,7 @@ jr_021_4db1:
 	and  a                                           ; $4dbb: $a7
 	jr   nz, jr_021_4de8                             ; $4dbc: $20 $2a
 
-	ld   hl, $afd0                                   ; $4dbe: $21 $d0 $af
+	ld   hl, sSramVals2+SRAM2_STAMINA                                   ; $4dbe: $21 $d0 $af
 
 	M_FarCall LoadStatBars
 
@@ -2222,7 +2222,7 @@ jr_021_4e13:
 
 jr_021_4e14:
 	ld   a, [$ca97]                                  ; $4e14: $fa $97 $ca
-	ld   [$afd0], a                                  ; $4e17: $ea $d0 $af
+	ld   [sSramVals2+SRAM2_STAMINA], a                                  ; $4e17: $ea $d0 $af
 	ld   a, [$ca98]                                  ; $4e1a: $fa $98 $ca
 	ld   [sSramVals2+SRAM2_INTELLECT], a                                  ; $4e1d: $ea $d1 $af
 	ld   a, [$ca99]                                  ; $4e20: $fa $99 $ca
@@ -2250,9 +2250,9 @@ jr_021_4e14:
 	and  $03                                         ; $4e4e: $e6 $03
 	jr   nz, jr_021_4e5c                             ; $4e50: $20 $0a
 
-	ld   a, [$ca96]                                  ; $4e52: $fa $96 $ca
+	ld   a, [wCanUseSpecialBattleMove]                                  ; $4e52: $fa $96 $ca
 	inc  a                                           ; $4e55: $3c
-	ld   [$ca96], a                                  ; $4e56: $ea $96 $ca
+	ld   [wCanUseSpecialBattleMove], a                                  ; $4e56: $ea $96 $ca
 	cp   $b4                                         ; $4e59: $fe $b4
 	ret  nz                                          ; $4e5b: $c0
 
@@ -2434,12 +2434,12 @@ endc
 	xor  a                                           ; $4fd4: $af
 	ld   [$ca6e], a                                  ; $4fd5: $ea $6e $ca
 	ld   [$ca76], a                                  ; $4fd8: $ea $76 $ca
-	ld   [$ca7e], a                                  ; $4fdb: $ea $7e $ca
+	ld   [wBattleSPCharged], a                                  ; $4fdb: $ea $7e $ca
 	ld   [$ca8f], a                                  ; $4fde: $ea $8f $ca
 	ld   [$ca93], a                                  ; $4fe1: $ea $93 $ca
 	ld   [$ca94], a                                  ; $4fe4: $ea $94 $ca
-	ld   [$ca87], a                                  ; $4fe7: $ea $87 $ca
-	ld   [$ca96], a                                  ; $4fea: $ea $96 $ca
+	ld   [wLastPlayerRelatedBattleText], a                                  ; $4fe7: $ea $87 $ca
+	ld   [wCanUseSpecialBattleMove], a                                  ; $4fea: $ea $96 $ca
 	call Call_021_42c6                               ; $4fed: $cd $c6 $42
 	call Call_021_5049                               ; $4ff0: $cd $49 $50
 	call TurnOffLCD                                       ; $4ff3: $cd $e3 $08
@@ -2458,7 +2458,7 @@ endc
 	pop  af                                          ; $5012: $f1
 	call FarCall                                       ; $5013: $cd $62 $09
 	call TurnOnLCD                                       ; $5016: $cd $09 $09
-	ld   hl, $afd0                                   ; $5019: $21 $d0 $af
+	ld   hl, sSramVals2+SRAM2_STAMINA                                   ; $5019: $21 $d0 $af
 
 	M_FarCall LoadStatBars
 
@@ -2532,11 +2532,11 @@ jr_021_50c7:
 	ret                                              ; $50c7: $c9
 
 
-	ld   hl, $afd0                                   ; $50c8: $21 $d0 $af
+	ld   hl, sSramVals2+SRAM2_STAMINA                                   ; $50c8: $21 $d0 $af
 
 	M_FarCall LoadStatBars
 
-	ld   a, [$ca87]                                  ; $50df: $fa $87 $ca
+	ld   a, [wLastPlayerRelatedBattleText]                                  ; $50df: $fa $87 $ca
 	cp   $01                                         ; $50e2: $fe $01
 	jr   z, jr_021_5113                              ; $50e4: $28 $2d
 
@@ -2550,15 +2550,15 @@ jr_021_50c7:
 	and  a                                           ; $50f5: $a7
 	jr   z, jr_021_5109                              ; $50f6: $28 $11
 
-	ld   a, [$ca7e]                                  ; $50f8: $fa $7e $ca
+	ld   a, [wBattleSPCharged]                                  ; $50f8: $fa $7e $ca
 	and  a                                           ; $50fb: $a7
 	jr   z, jr_021_5109                              ; $50fc: $28 $0b
 
 	xor  a                                           ; $50fe: $af
 	ld   [$ca94], a                                  ; $50ff: $ea $94 $ca
-	ld   a, [$ca87]                                  ; $5102: $fa $87 $ca
+	ld   a, [wLastPlayerRelatedBattleText]                                  ; $5102: $fa $87 $ca
 	inc  a                                           ; $5105: $3c
-	ld   [$ca87], a                                  ; $5106: $ea $87 $ca
+	ld   [wLastPlayerRelatedBattleText], a                                  ; $5106: $ea $87 $ca
 
 jr_021_5109:
 	call Call_021_5120                               ; $5109: $cd $20 $51
@@ -2569,7 +2569,7 @@ jr_021_5109:
 
 jr_021_5113:
 	ld   a, $50                                      ; $5113: $3e $50
-	ld   [$ca9f], a                                  ; $5115: $ea $9f $ca
+	ld   [wIsMockBattle], a                                  ; $5115: $ea $9f $ca
 	call Call_021_44d4                               ; $5118: $cd $d4 $44
 	ld   hl, wGameSubstate                                   ; $511b: $21 $a1 $c2
 	inc  [hl]                                        ; $511e: $34
@@ -2591,7 +2591,7 @@ Call_021_5120:
 	ld   a, [hl+]                                    ; $5137: $2a
 	ld   h, [hl]                                     ; $5138: $66
 	ld   l, a                                        ; $5139: $6f
-	ld   a, [$ca71]                                  ; $513a: $fa $71 $ca
+	ld   a, [wBattleDistanceToEnemy]                                  ; $513a: $fa $71 $ca
 	cp   $03                                         ; $513d: $fe $03
 	jr   nz, jr_021_514f                             ; $513f: $20 $0e
 
@@ -2626,7 +2626,7 @@ jr_021_5169:
 	ld   b, a                                        ; $5171: $47
 	ld   a, [$ca73]                                  ; $5172: $fa $73 $ca
 	ld   c, a                                        ; $5175: $4f
-	ld   a, [$ca70]                                  ; $5176: $fa $70 $ca
+	ld   a, [wEnemyKouboChosen]                                  ; $5176: $fa $70 $ca
 	call LoadSpriteFromMainTable                                       ; $5179: $cd $16 $0e
 	ret                                              ; $517c: $c9
 
@@ -2838,7 +2838,7 @@ jr_021_527f:
 	jr   nz, jr_021_529d                             ; $5296: $20 $05
 
 	ld   a, $01                                      ; $5298: $3e $01
-	ld   [$ca7e], a                                  ; $529a: $ea $7e $ca
+	ld   [wBattleSPCharged], a                                  ; $529a: $ea $7e $ca
 
 jr_021_529d:
 	ld   a, $04                                      ; $529d: $3e $04
@@ -2988,7 +2988,7 @@ jr_021_5358:
 	and  a                                           ; $5362: $a7
 	jr   nz, jr_021_538f                             ; $5363: $20 $2a
 
-	ld   hl, $afd0                                   ; $5365: $21 $d0 $af
+	ld   hl, sSramVals2+SRAM2_STAMINA                                   ; $5365: $21 $d0 $af
 
 	M_FarCall LoadStatBars
 
@@ -3030,7 +3030,7 @@ jr_021_53ba:
 
 jr_021_53bb:
 	ld   a, [$ca97]                                  ; $53bb: $fa $97 $ca
-	ld   [$afd0], a                                  ; $53be: $ea $d0 $af
+	ld   [sSramVals2+SRAM2_STAMINA], a                                  ; $53be: $ea $d0 $af
 	ld   a, [$ca98]                                  ; $53c1: $fa $98 $ca
 	ld   [sSramVals2+SRAM2_INTELLECT], a                                  ; $53c4: $ea $d1 $af
 	ld   a, [$ca99]                                  ; $53c7: $fa $99 $ca
@@ -3058,9 +3058,9 @@ jr_021_53bb:
 	and  $03                                         ; $53f5: $e6 $03
 	jr   nz, jr_021_5403                             ; $53f7: $20 $0a
 
-	ld   a, [$ca96]                                  ; $53f9: $fa $96 $ca
+	ld   a, [wCanUseSpecialBattleMove]                                  ; $53f9: $fa $96 $ca
 	inc  a                                           ; $53fc: $3c
-	ld   [$ca96], a                                  ; $53fd: $ea $96 $ca
+	ld   [wCanUseSpecialBattleMove], a                                  ; $53fd: $ea $96 $ca
 	cp   $b4                                         ; $5400: $fe $b4
 	ret  nz                                          ; $5402: $c0
 
@@ -3239,12 +3239,12 @@ endc
 	xor  a                                           ; $5576: $af
 	ld   [$ca6e], a                                  ; $5577: $ea $6e $ca
 	ld   [$ca76], a                                  ; $557a: $ea $76 $ca
-	ld   [$ca7e], a                                  ; $557d: $ea $7e $ca
+	ld   [wBattleSPCharged], a                                  ; $557d: $ea $7e $ca
 	ld   [$ca94], a                                  ; $5580: $ea $94 $ca
-	ld   [$ca87], a                                  ; $5583: $ea $87 $ca
+	ld   [wLastPlayerRelatedBattleText], a                                  ; $5583: $ea $87 $ca
 	ld   [$ca8f], a                                  ; $5586: $ea $8f $ca
 	ld   [$ca93], a                                  ; $5589: $ea $93 $ca
-	ld   [$ca96], a                                  ; $558c: $ea $96 $ca
+	ld   [wCanUseSpecialBattleMove], a                                  ; $558c: $ea $96 $ca
 	ld   a, $02                                      ; $558f: $3e $02
 	call Call_021_416b                               ; $5591: $cd $6b $41
 	call Call_021_55ed                               ; $5594: $cd $ed $55
@@ -3264,7 +3264,7 @@ endc
 	pop  af                                          ; $55b6: $f1
 	call FarCall                                       ; $55b7: $cd $62 $09
 	call TurnOnLCD                                       ; $55ba: $cd $09 $09
-	ld   hl, $afd0                                   ; $55bd: $21 $d0 $af
+	ld   hl, sSramVals2+SRAM2_STAMINA                                   ; $55bd: $21 $d0 $af
 
 	M_FarCall LoadStatBars
 
@@ -3344,11 +3344,11 @@ jr_021_567a:
 	ret                                              ; $567a: $c9
 
 
-	ld   hl, $afd0                                   ; $567b: $21 $d0 $af
+	ld   hl, sSramVals2+SRAM2_STAMINA                                   ; $567b: $21 $d0 $af
 
 	M_FarCall LoadStatBars
 
-	ld   a, [$ca87]                                  ; $5692: $fa $87 $ca
+	ld   a, [wLastPlayerRelatedBattleText]                                  ; $5692: $fa $87 $ca
 	cp   $01                                         ; $5695: $fe $01
 	jr   z, jr_021_56c6                              ; $5697: $28 $2d
 
@@ -3362,15 +3362,15 @@ jr_021_567a:
 	and  a                                           ; $56a8: $a7
 	jr   z, jr_021_56bc                              ; $56a9: $28 $11
 
-	ld   a, [$ca7e]                                  ; $56ab: $fa $7e $ca
+	ld   a, [wBattleSPCharged]                                  ; $56ab: $fa $7e $ca
 	and  a                                           ; $56ae: $a7
 	jr   z, jr_021_56bc                              ; $56af: $28 $0b
 
 	xor  a                                           ; $56b1: $af
 	ld   [$ca94], a                                  ; $56b2: $ea $94 $ca
-	ld   a, [$ca87]                                  ; $56b5: $fa $87 $ca
+	ld   a, [wLastPlayerRelatedBattleText]                                  ; $56b5: $fa $87 $ca
 	inc  a                                           ; $56b8: $3c
-	ld   [$ca87], a                                  ; $56b9: $ea $87 $ca
+	ld   [wLastPlayerRelatedBattleText], a                                  ; $56b9: $ea $87 $ca
 
 jr_021_56bc:
 	call Call_021_56d3                               ; $56bc: $cd $d3 $56
@@ -3381,7 +3381,7 @@ jr_021_56bc:
 
 jr_021_56c6:
 	ld   a, $50                                      ; $56c6: $3e $50
-	ld   [$ca9f], a                                  ; $56c8: $ea $9f $ca
+	ld   [wIsMockBattle], a                                  ; $56c8: $ea $9f $ca
 	call Call_021_44d4                               ; $56cb: $cd $d4 $44
 	ld   hl, wGameSubstate                                   ; $56ce: $21 $a1 $c2
 	inc  [hl]                                        ; $56d1: $34
@@ -3402,7 +3402,7 @@ Call_021_56d3:
 	ld   a, [hl+]                                    ; $56e9: $2a
 	ld   h, [hl]                                     ; $56ea: $66
 	ld   l, a                                        ; $56eb: $6f
-	ld   a, [$ca71]                                  ; $56ec: $fa $71 $ca
+	ld   a, [wBattleDistanceToEnemy]                                  ; $56ec: $fa $71 $ca
 	cp   $0f                                         ; $56ef: $fe $0f
 	jr   nz, jr_021_5703                             ; $56f1: $20 $10
 
@@ -3438,7 +3438,7 @@ jr_021_571d:
 	ld   b, a                                        ; $5725: $47
 	ld   a, [$ca73]                                  ; $5726: $fa $73 $ca
 	ld   c, a                                        ; $5729: $4f
-	ld   a, [$ca70]                                  ; $572a: $fa $70 $ca
+	ld   a, [wEnemyKouboChosen]                                  ; $572a: $fa $70 $ca
 	call LoadSpriteFromMainTable                                       ; $572d: $cd $16 $0e
 	ret                                              ; $5730: $c9
 
@@ -3665,7 +3665,7 @@ Call_021_582c:
 	jr   nz, jr_021_585f                             ; $5858: $20 $05
 
 	ld   a, $01                                      ; $585a: $3e $01
-	ld   [$ca7e], a                                  ; $585c: $ea $7e $ca
+	ld   [wBattleSPCharged], a                                  ; $585c: $ea $7e $ca
 
 jr_021_585f:
 	ld   a, $04                                      ; $585f: $3e $04
@@ -3782,7 +3782,7 @@ jr_021_58f4:
 	and  a                                           ; $58fe: $a7
 	jr   nz, jr_021_592b                             ; $58ff: $20 $2a
 
-	ld   hl, $afd0                                   ; $5901: $21 $d0 $af
+	ld   hl, sSramVals2+SRAM2_STAMINA                                   ; $5901: $21 $d0 $af
 
 	M_FarCall LoadStatBars
 
@@ -3824,7 +3824,7 @@ jr_021_5956:
 
 jr_021_5957:
 	ld   a, [$ca97]                                  ; $5957: $fa $97 $ca
-	ld   [$afd0], a                                  ; $595a: $ea $d0 $af
+	ld   [sSramVals2+SRAM2_STAMINA], a                                  ; $595a: $ea $d0 $af
 	ld   a, [$ca98]                                  ; $595d: $fa $98 $ca
 	ld   [sSramVals2+SRAM2_INTELLECT], a                                  ; $5960: $ea $d1 $af
 	ld   a, [$ca99]                                  ; $5963: $fa $99 $ca
@@ -3852,15 +3852,15 @@ jr_021_5957:
 	and  $03                                         ; $5991: $e6 $03
 	jr   nz, jr_021_59a3                             ; $5993: $20 $0e
 
-	ld   a, [$ca96]                                  ; $5995: $fa $96 $ca
+	ld   a, [wCanUseSpecialBattleMove]                                  ; $5995: $fa $96 $ca
 	inc  a                                           ; $5998: $3c
-	ld   [$ca96], a                                  ; $5999: $ea $96 $ca
+	ld   [wCanUseSpecialBattleMove], a                                  ; $5999: $ea $96 $ca
 	cp   $b4                                         ; $599c: $fe $b4
 	ret  nz                                          ; $599e: $c0
 
 jr_021_599f:
 	xor  a                                           ; $599f: $af
-	ld   [$ca96], a                                  ; $59a0: $ea $96 $ca
+	ld   [wCanUseSpecialBattleMove], a                                  ; $59a0: $ea $96 $ca
 
 Jump_021_59a3:
 jr_021_59a3:
@@ -4036,12 +4036,12 @@ endc
 	xor  a                                           ; $5b16: $af
 	ld   [$ca6e], a                                  ; $5b17: $ea $6e $ca
 	ld   [$ca76], a                                  ; $5b1a: $ea $76 $ca
-	ld   [$ca7e], a                                  ; $5b1d: $ea $7e $ca
+	ld   [wBattleSPCharged], a                                  ; $5b1d: $ea $7e $ca
 	ld   [$ca8f], a                                  ; $5b20: $ea $8f $ca
 	ld   [$ca93], a                                  ; $5b23: $ea $93 $ca
 	ld   [$ca94], a                                  ; $5b26: $ea $94 $ca
-	ld   [$ca87], a                                  ; $5b29: $ea $87 $ca
-	ld   [$ca96], a                                  ; $5b2c: $ea $96 $ca
+	ld   [wLastPlayerRelatedBattleText], a                                  ; $5b29: $ea $87 $ca
+	ld   [wCanUseSpecialBattleMove], a                                  ; $5b2c: $ea $96 $ca
 	ld   a, $05                                      ; $5b2f: $3e $05
 	call Call_021_416b                               ; $5b31: $cd $6b $41
 	ld   a, $6f                                      ; $5b34: $3e $6f
@@ -4073,7 +4073,7 @@ endc
 	pop  af                                          ; $5b78: $f1
 	call FarCall                                       ; $5b79: $cd $62 $09
 	call TurnOnLCD                                       ; $5b7c: $cd $09 $09
-	ld   hl, $afd0                                   ; $5b7f: $21 $d0 $af
+	ld   hl, sSramVals2+SRAM2_STAMINA                                   ; $5b7f: $21 $d0 $af
 
 	M_FarCall LoadStatBars
 
@@ -4089,11 +4089,11 @@ endc
 	ret                                              ; $5bae: $c9
 
 
-	ld   hl, $afd0                                   ; $5baf: $21 $d0 $af
+	ld   hl, sSramVals2+SRAM2_STAMINA                                   ; $5baf: $21 $d0 $af
 
 	M_FarCall LoadStatBars
 
-	ld   a, [$ca87]                                  ; $5bc6: $fa $87 $ca
+	ld   a, [wLastPlayerRelatedBattleText]                                  ; $5bc6: $fa $87 $ca
 	cp   $01                                         ; $5bc9: $fe $01
 	jp   z, Jump_021_5bfb                            ; $5bcb: $ca $fb $5b
 
@@ -4107,15 +4107,15 @@ endc
 	and  a                                           ; $5bdd: $a7
 	jr   z, jr_021_5bf1                              ; $5bde: $28 $11
 
-	ld   a, [$ca7e]                                  ; $5be0: $fa $7e $ca
+	ld   a, [wBattleSPCharged]                                  ; $5be0: $fa $7e $ca
 	and  a                                           ; $5be3: $a7
 	jr   z, jr_021_5bf1                              ; $5be4: $28 $0b
 
 	xor  a                                           ; $5be6: $af
 	ld   [$ca94], a                                  ; $5be7: $ea $94 $ca
-	ld   a, [$ca87]                                  ; $5bea: $fa $87 $ca
+	ld   a, [wLastPlayerRelatedBattleText]                                  ; $5bea: $fa $87 $ca
 	inc  a                                           ; $5bed: $3c
-	ld   [$ca87], a                                  ; $5bee: $ea $87 $ca
+	ld   [wLastPlayerRelatedBattleText], a                                  ; $5bee: $ea $87 $ca
 
 jr_021_5bf1:
 	call Call_021_5c08                               ; $5bf1: $cd $08 $5c
@@ -4126,7 +4126,7 @@ jr_021_5bf1:
 
 Jump_021_5bfb:
 	ld   a, $50                                      ; $5bfb: $3e $50
-	ld   [$ca9f], a                                  ; $5bfd: $ea $9f $ca
+	ld   [wIsMockBattle], a                                  ; $5bfd: $ea $9f $ca
 	call Call_021_44d4                               ; $5c00: $cd $d4 $44
 	ld   hl, wGameSubstate                                   ; $5c03: $21 $a1 $c2
 	inc  [hl]                                        ; $5c06: $34
@@ -4147,7 +4147,7 @@ Call_021_5c08:
 	ld   a, [hl+]                                    ; $5c1e: $2a
 	ld   h, [hl]                                     ; $5c1f: $66
 	ld   l, a                                        ; $5c20: $6f
-	ld   a, [$ca71]                                  ; $5c21: $fa $71 $ca
+	ld   a, [wBattleDistanceToEnemy]                                  ; $5c21: $fa $71 $ca
 	cp   $02                                         ; $5c24: $fe $02
 	jr   nz, jr_021_5c38                             ; $5c26: $20 $10
 
@@ -4183,7 +4183,7 @@ jr_021_5c52:
 	ld   b, a                                        ; $5c5a: $47
 	ld   a, [$ca73]                                  ; $5c5b: $fa $73 $ca
 	ld   c, a                                        ; $5c5e: $4f
-	ld   a, [$ca70]                                  ; $5c5f: $fa $70 $ca
+	ld   a, [wEnemyKouboChosen]                                  ; $5c5f: $fa $70 $ca
 	call LoadSpriteFromMainTable                                       ; $5c62: $cd $16 $0e
 	ret                                              ; $5c65: $c9
 
@@ -4396,7 +4396,7 @@ Call_021_5d61:
 	jr   nz, jr_021_5d94                             ; $5d8d: $20 $05
 
 	ld   a, $01                                      ; $5d8f: $3e $01
-	ld   [$ca7e], a                                  ; $5d91: $ea $7e $ca
+	ld   [wBattleSPCharged], a                                  ; $5d91: $ea $7e $ca
 
 jr_021_5d94:
 	ld   a, $04                                      ; $5d94: $3e $04
@@ -4479,7 +4479,7 @@ jr_021_5e01:
 	and  a                                           ; $5e0b: $a7
 	jr   nz, jr_021_5e38                             ; $5e0c: $20 $2a
 
-	ld   hl, $afd0                                   ; $5e0e: $21 $d0 $af
+	ld   hl, sSramVals2+SRAM2_STAMINA                                   ; $5e0e: $21 $d0 $af
 
 	M_FarCall LoadStatBars
 
@@ -4521,7 +4521,7 @@ jr_021_5e63:
 
 jr_021_5e64:
 	ld   a, [$ca97]                                  ; $5e64: $fa $97 $ca
-	ld   [$afd0], a                                  ; $5e67: $ea $d0 $af
+	ld   [sSramVals2+SRAM2_STAMINA], a                                  ; $5e67: $ea $d0 $af
 	ld   a, [$ca98]                                  ; $5e6a: $fa $98 $ca
 	ld   [sSramVals2+SRAM2_INTELLECT], a                                  ; $5e6d: $ea $d1 $af
 	ld   a, [$ca99]                                  ; $5e70: $fa $99 $ca
@@ -4549,9 +4549,9 @@ jr_021_5e64:
 	and  $03                                         ; $5e9e: $e6 $03
 	jr   nz, jr_021_5eac                             ; $5ea0: $20 $0a
 
-	ld   a, [$ca96]                                  ; $5ea2: $fa $96 $ca
+	ld   a, [wCanUseSpecialBattleMove]                                  ; $5ea2: $fa $96 $ca
 	inc  a                                           ; $5ea5: $3c
-	ld   [$ca96], a                                  ; $5ea6: $ea $96 $ca
+	ld   [wCanUseSpecialBattleMove], a                                  ; $5ea6: $ea $96 $ca
 	cp   $b4                                         ; $5ea9: $fe $b4
 	ret  nz                                          ; $5eab: $c0
 
@@ -4733,11 +4733,11 @@ endc
 	xor  a                                           ; $6022: $af
 	ld   [$ca6e], a                                  ; $6023: $ea $6e $ca
 	ld   [$ca76], a                                  ; $6026: $ea $76 $ca
-	ld   [$ca87], a                                  ; $6029: $ea $87 $ca
+	ld   [wLastPlayerRelatedBattleText], a                                  ; $6029: $ea $87 $ca
 	ld   [$ca94], a                                  ; $602c: $ea $94 $ca
 	ld   [$ca8f], a                                  ; $602f: $ea $8f $ca
 	ld   [$ca93], a                                  ; $6032: $ea $93 $ca
-	ld   [$ca96], a                                  ; $6035: $ea $96 $ca
+	ld   [wCanUseSpecialBattleMove], a                                  ; $6035: $ea $96 $ca
 	ld   a, $03                                      ; $6038: $3e $03
 	call Call_021_416b                               ; $603a: $cd $6b $41
 	call Call_021_60a8                               ; $603d: $cd $a8 $60
@@ -4757,7 +4757,7 @@ endc
 	pop  af                                          ; $605f: $f1
 	call FarCall                                       ; $6060: $cd $62 $09
 	call TurnOnLCD                                       ; $6063: $cd $09 $09
-	ld   hl, $afd0                                   ; $6066: $21 $d0 $af
+	ld   hl, sSramVals2+SRAM2_STAMINA                                   ; $6066: $21 $d0 $af
 
 	M_FarCall LoadStatBars
 
@@ -4826,11 +4826,11 @@ jr_021_60ea:
 	ret                                              ; $60ea: $c9
 
 
-	ld   hl, $afd0                                   ; $60eb: $21 $d0 $af
+	ld   hl, sSramVals2+SRAM2_STAMINA                                   ; $60eb: $21 $d0 $af
 
 	M_FarCall LoadStatBars
 
-	ld   a, [$ca87]                                  ; $6102: $fa $87 $ca
+	ld   a, [wLastPlayerRelatedBattleText]                                  ; $6102: $fa $87 $ca
 	cp   $01                                         ; $6105: $fe $01
 	jp   z, Jump_021_614a                            ; $6107: $ca $4a $61
 
@@ -4851,9 +4851,9 @@ jr_021_60ea:
 jr_021_6123:
 	xor  a                                           ; $6123: $af
 	ld   [$ca94], a                                  ; $6124: $ea $94 $ca
-	ld   a, [$ca87]                                  ; $6127: $fa $87 $ca
+	ld   a, [wLastPlayerRelatedBattleText]                                  ; $6127: $fa $87 $ca
 	inc  a                                           ; $612a: $3c
-	ld   [$ca87], a                                  ; $612b: $ea $87 $ca
+	ld   [wLastPlayerRelatedBattleText], a                                  ; $612b: $ea $87 $ca
 
 jr_021_612e:
 	ld   a, [$ca86]                                  ; $612e: $fa $86 $ca
@@ -4880,7 +4880,7 @@ jr_021_6149:
 
 Jump_021_614a:
 	ld   a, $50                                      ; $614a: $3e $50
-	ld   [$ca9f], a                                  ; $614c: $ea $9f $ca
+	ld   [wIsMockBattle], a                                  ; $614c: $ea $9f $ca
 	call Call_021_44d4                               ; $614f: $cd $d4 $44
 	ld   hl, wGameSubstate                                   ; $6152: $21 $a1 $c2
 	inc  [hl]                                        ; $6155: $34
@@ -4893,7 +4893,7 @@ Call_021_6157:
 	ld   a, $59                                      ; $615c: $3e $59
 	ld   [$ca73], a                                  ; $615e: $ea $73 $ca
 	ld   hl, $61a9                                   ; $6161: $21 $a9 $61
-	ld   a, [$ca71]                                  ; $6164: $fa $71 $ca
+	ld   a, [wBattleDistanceToEnemy]                                  ; $6164: $fa $71 $ca
 	cp   $0e                                         ; $6167: $fe $0e
 	jr   nz, jr_021_617b                             ; $6169: $20 $10
 
@@ -4929,7 +4929,7 @@ jr_021_6195:
 	ld   b, a                                        ; $619d: $47
 	ld   a, [$ca73]                                  ; $619e: $fa $73 $ca
 	ld   c, a                                        ; $61a1: $4f
-	ld   a, [$ca70]                                  ; $61a2: $fa $70 $ca
+	ld   a, [wEnemyKouboChosen]                                  ; $61a2: $fa $70 $ca
 	call LoadSpriteFromMainTable                                       ; $61a5: $cd $16 $0e
 	ret                                              ; $61a8: $c9
 
@@ -5016,7 +5016,7 @@ Call_021_621c:
 	ld   a, $59                                      ; $6221: $3e $59
 	ld   [$ca73], a                                  ; $6223: $ea $73 $ca
 	ld   hl, $626e                                   ; $6226: $21 $6e $62
-	ld   a, [$ca71]                                  ; $6229: $fa $71 $ca
+	ld   a, [wBattleDistanceToEnemy]                                  ; $6229: $fa $71 $ca
 	cp   $0e                                         ; $622c: $fe $0e
 	jr   nz, jr_021_6240                             ; $622e: $20 $10
 
@@ -5052,7 +5052,7 @@ jr_021_625a:
 	ld   b, a                                        ; $6262: $47
 	ld   a, [$ca73]                                  ; $6263: $fa $73 $ca
 	ld   c, a                                        ; $6266: $4f
-	ld   a, [$ca70]                                  ; $6267: $fa $70 $ca
+	ld   a, [wEnemyKouboChosen]                                  ; $6267: $fa $70 $ca
 	call LoadSpriteFromMainTable                                       ; $626a: $cd $16 $0e
 	ret                                              ; $626d: $c9
 
@@ -5105,7 +5105,7 @@ Call_021_629d:
 	ld   a, $59                                      ; $62a2: $3e $59
 	ld   [$ca73], a                                  ; $62a4: $ea $73 $ca
 	ld   hl, $62ef                                   ; $62a7: $21 $ef $62
-	ld   a, [$ca71]                                  ; $62aa: $fa $71 $ca
+	ld   a, [wBattleDistanceToEnemy]                                  ; $62aa: $fa $71 $ca
 	cp   $0e                                         ; $62ad: $fe $0e
 	jr   nz, jr_021_62c1                             ; $62af: $20 $10
 
@@ -5141,7 +5141,7 @@ jr_021_62db:
 	ld   b, a                                        ; $62e3: $47
 	ld   a, [$ca73]                                  ; $62e4: $fa $73 $ca
 	ld   c, a                                        ; $62e7: $4f
-	ld   a, [$ca70]                                  ; $62e8: $fa $70 $ca
+	ld   a, [wEnemyKouboChosen]                                  ; $62e8: $fa $70 $ca
 	call LoadSpriteFromMainTable                                       ; $62eb: $cd $16 $0e
 	ret                                              ; $62ee: $c9
 
@@ -5215,7 +5215,7 @@ jr_021_634a:
 	and  a                                           ; $6354: $a7
 	jr   nz, jr_021_6381                             ; $6355: $20 $2a
 
-	ld   hl, $afd0                                   ; $6357: $21 $d0 $af
+	ld   hl, sSramVals2+SRAM2_STAMINA                                   ; $6357: $21 $d0 $af
 
 	M_FarCall LoadStatBars
 
@@ -5257,7 +5257,7 @@ jr_021_63ac:
 
 jr_021_63ad:
 	ld   a, [$ca97]                                  ; $63ad: $fa $97 $ca
-	ld   [$afd0], a                                  ; $63b0: $ea $d0 $af
+	ld   [sSramVals2+SRAM2_STAMINA], a                                  ; $63b0: $ea $d0 $af
 	ld   a, [$ca98]                                  ; $63b3: $fa $98 $ca
 	ld   [sSramVals2+SRAM2_INTELLECT], a                                  ; $63b6: $ea $d1 $af
 	ld   a, [$ca99]                                  ; $63b9: $fa $99 $ca
@@ -5285,9 +5285,9 @@ jr_021_63ad:
 	and  $03                                         ; $63e7: $e6 $03
 	jr   nz, jr_021_63f5                             ; $63e9: $20 $0a
 
-	ld   a, [$ca96]                                  ; $63eb: $fa $96 $ca
+	ld   a, [wCanUseSpecialBattleMove]                                  ; $63eb: $fa $96 $ca
 	inc  a                                           ; $63ee: $3c
-	ld   [$ca96], a                                  ; $63ef: $ea $96 $ca
+	ld   [wCanUseSpecialBattleMove], a                                  ; $63ef: $ea $96 $ca
 	cp   $b4                                         ; $63f2: $fe $b4
 	ret  nz                                          ; $63f4: $c0
 
@@ -5477,11 +5477,11 @@ endc
 	xor  a                                           ; $6580: $af
 	ld   [$ca6e], a                                  ; $6581: $ea $6e $ca
 	ld   [$ca76], a                                  ; $6584: $ea $76 $ca
-	ld   [$ca7e], a                                  ; $6587: $ea $7e $ca
+	ld   [wBattleSPCharged], a                                  ; $6587: $ea $7e $ca
 	ld   [$ca8f], a                                  ; $658a: $ea $8f $ca
 	ld   [$ca93], a                                  ; $658d: $ea $93 $ca
-	ld   [$ca87], a                                  ; $6590: $ea $87 $ca
-	ld   [$ca96], a                                  ; $6593: $ea $96 $ca
+	ld   [wLastPlayerRelatedBattleText], a                                  ; $6590: $ea $87 $ca
+	ld   [wCanUseSpecialBattleMove], a                                  ; $6593: $ea $96 $ca
 	ld   a, $ff                                      ; $6596: $3e $ff
 	ld   [$ca94], a                                  ; $6598: $ea $94 $ca
 	ld   a, $00                                      ; $659b: $3e $00
@@ -5506,7 +5506,7 @@ endc
 	call FarCall                                       ; $65c8: $cd $62 $09
 	call TurnOnLCD                                       ; $65cb: $cd $09 $09
 	call Call_021_666e                               ; $65ce: $cd $6e $66
-	ld   hl, $afd0                                   ; $65d1: $21 $d0 $af
+	ld   hl, sSramVals2+SRAM2_STAMINA                                   ; $65d1: $21 $d0 $af
 
 	M_FarCall LoadStatBars
 
@@ -5526,11 +5526,11 @@ Call_021_65f8:
 	ret                                              ; $6601: $c9
 
 
-	ld   hl, $afd0                                   ; $6602: $21 $d0 $af
+	ld   hl, sSramVals2+SRAM2_STAMINA                                   ; $6602: $21 $d0 $af
 
 	M_FarCall LoadStatBars
 
-	ld   a, [$ca87]                                  ; $6619: $fa $87 $ca
+	ld   a, [wLastPlayerRelatedBattleText]                                  ; $6619: $fa $87 $ca
 	cp   $02                                         ; $661c: $fe $02
 	jr   z, jr_021_663e                              ; $661e: $28 $1e
 
@@ -5543,9 +5543,9 @@ Call_021_65f8:
 	xor  a                                           ; $662c: $af
 	ld   [$ca6e], a                                  ; $662d: $ea $6e $ca
 	call Call_021_65f8                               ; $6630: $cd $f8 $65
-	ld   a, [$ca87]                                  ; $6633: $fa $87 $ca
+	ld   a, [wLastPlayerRelatedBattleText]                                  ; $6633: $fa $87 $ca
 	inc  a                                           ; $6636: $3c
-	ld   [$ca87], a                                  ; $6637: $ea $87 $ca
+	ld   [wLastPlayerRelatedBattleText], a                                  ; $6637: $ea $87 $ca
 
 jr_021_663a:
 	call Call_021_666e                               ; $663a: $cd $6e $66
@@ -5562,7 +5562,7 @@ jr_021_663e:
 	ld   [$ca9c], a                                  ; $664e: $ea $9c $ca
 	ld   [$ca9e], a                                  ; $6651: $ea $9e $ca
 	ld   a, $80                                      ; $6654: $3e $80
-	ld   [$ca9f], a                                  ; $6656: $ea $9f $ca
+	ld   [wIsMockBattle], a                                  ; $6656: $ea $9f $ca
 	ld   a, $80                                      ; $6659: $3e $80
 	ld   [$ca97], a                                  ; $665b: $ea $97 $ca
 	call Call_021_65f8                               ; $665e: $cd $f8 $65
@@ -5603,7 +5603,7 @@ jr_021_6695:
 	ld   b, a                                        ; $669d: $47
 	ld   a, [$ca73]                                  ; $669e: $fa $73 $ca
 	ld   c, a                                        ; $66a1: $4f
-	ld   a, [$ca70]                                  ; $66a2: $fa $70 $ca
+	ld   a, [wEnemyKouboChosen]                                  ; $66a2: $fa $70 $ca
 	call LoadSpriteFromMainTable                                       ; $66a5: $cd $16 $0e
 	ret                                              ; $66a8: $c9
 
@@ -5639,7 +5639,7 @@ jr_021_66cc:
 	and  a                                           ; $66d6: $a7
 	jr   nz, jr_021_6703                             ; $66d7: $20 $2a
 
-	ld   hl, $afd0                                   ; $66d9: $21 $d0 $af
+	ld   hl, sSramVals2+SRAM2_STAMINA                                   ; $66d9: $21 $d0 $af
 
 	M_FarCall LoadStatBars
 
@@ -5681,7 +5681,7 @@ jr_021_672e:
 
 jr_021_672f:
 	ld   a, [$ca97]                                  ; $672f: $fa $97 $ca
-	ld   [$afd0], a                                  ; $6732: $ea $d0 $af
+	ld   [sSramVals2+SRAM2_STAMINA], a                                  ; $6732: $ea $d0 $af
 	ld   a, [$ca98]                                  ; $6735: $fa $98 $ca
 	ld   [sSramVals2+SRAM2_INTELLECT], a                                  ; $6738: $ea $d1 $af
 	ld   a, [$ca99]                                  ; $673b: $fa $99 $ca
@@ -5709,9 +5709,9 @@ jr_021_672f:
 	and  $03                                         ; $6769: $e6 $03
 	jr   nz, jr_021_6777                             ; $676b: $20 $0a
 
-	ld   a, [$ca96]                                  ; $676d: $fa $96 $ca
+	ld   a, [wCanUseSpecialBattleMove]                                  ; $676d: $fa $96 $ca
 	inc  a                                           ; $6770: $3c
-	ld   [$ca96], a                                  ; $6771: $ea $96 $ca
+	ld   [wCanUseSpecialBattleMove], a                                  ; $6771: $ea $96 $ca
 	cp   $b4                                         ; $6774: $fe $b4
 	ret  nz                                          ; $6776: $c0
 
@@ -6896,7 +6896,7 @@ Jump_021_6eac:
 	ld   a, [hl+]                                    ; $6eda: $2a
 	ld   h, [hl]                                     ; $6edb: $66
 	ld   l, a                                        ; $6edc: $6f
-	ld   de, $afd0                                   ; $6edd: $11 $d0 $af
+	ld   de, sSramVals2+SRAM2_STAMINA                                   ; $6edd: $11 $d0 $af
 	ld   a, [hl+]                                    ; $6ee0: $2a
 	ld   [de], a                                     ; $6ee1: $12
 	inc  de                                          ; $6ee2: $13
@@ -7379,8 +7379,8 @@ jr_021_7135:
 	xor  a                                           ; $713b: $af
 	ld   [$ca6e], a                                  ; $713c: $ea $6e $ca
 	ld   [$ca94], a                                  ; $713f: $ea $94 $ca
-	ld   [$ca87], a                                  ; $7142: $ea $87 $ca
-	ld   [$ca96], a                                  ; $7145: $ea $96 $ca
+	ld   [wLastPlayerRelatedBattleText], a                                  ; $7142: $ea $87 $ca
+	ld   [wCanUseSpecialBattleMove], a                                  ; $7145: $ea $96 $ca
 	ld   hl, wGameSubstate                                   ; $7148: $21 $a1 $c2
 	inc  [hl]                                        ; $714b: $34
 	ret                                              ; $714c: $c9
@@ -7692,7 +7692,7 @@ jr_021_735f:
 	dec  l                                           ; $7360: $2d
 	ld   b, c                                        ; $7361: $41
 	dec  l                                           ; $7362: $2d
-	ld   a, [$ca87]                                  ; $7363: $fa $87 $ca
+	ld   a, [wLastPlayerRelatedBattleText]                                  ; $7363: $fa $87 $ca
 	cp   $01                                         ; $7366: $fe $01
 	jr   z, jr_021_7386                              ; $7368: $28 $1c
 
@@ -7706,9 +7706,9 @@ jr_021_7373:
 
 	ld   a, $ff                                      ; $7376: $3e $ff
 	ld   [$ca94], a                                  ; $7378: $ea $94 $ca
-	ld   a, [$ca87]                                  ; $737b: $fa $87 $ca
+	ld   a, [wLastPlayerRelatedBattleText]                                  ; $737b: $fa $87 $ca
 	inc  a                                           ; $737e: $3c
-	ld   [$ca87], a                                  ; $737f: $ea $87 $ca
+	ld   [wLastPlayerRelatedBattleText], a                                  ; $737f: $ea $87 $ca
 
 jr_021_7382:
 	call Call_021_738b                               ; $7382: $cd $8b $73
@@ -7763,7 +7763,7 @@ jr_021_73c1:
 	ld   b, a                                        ; $73c9: $47
 	ld   a, [$ca73]                                  ; $73ca: $fa $73 $ca
 	ld   c, a                                        ; $73cd: $4f
-	ld   a, [$ca70]                                  ; $73ce: $fa $70 $ca
+	ld   a, [wEnemyKouboChosen]                                  ; $73ce: $fa $70 $ca
 	call LoadSpriteFromMainTable                                       ; $73d1: $cd $16 $0e
 	ret                                              ; $73d4: $c9
 
@@ -8071,14 +8071,14 @@ jr_021_7541:
 	jr   nc, @+$0f                                   ; $7546: $30 $0d
 
 	nop                                              ; $7548: $00
-	ld   a, [$ca96]                                  ; $7549: $fa $96 $ca
+	ld   a, [wCanUseSpecialBattleMove]                                  ; $7549: $fa $96 $ca
 	inc  a                                           ; $754c: $3c
-	ld   [$ca96], a                                  ; $754d: $ea $96 $ca
+	ld   [wCanUseSpecialBattleMove], a                                  ; $754d: $ea $96 $ca
 	cp   $1e                                         ; $7550: $fe $1e
 	ret  nz                                          ; $7552: $c0
 
 	xor  a                                           ; $7553: $af
-	ld   [$ca96], a                                  ; $7554: $ea $96 $ca
+	ld   [wCanUseSpecialBattleMove], a                                  ; $7554: $ea $96 $ca
 	ld   a, [wNapOrTrainReturnState]                                  ; $7557: $fa $4c $ca
 	ld   [wGameState], a                                  ; $755a: $ea $a0 $c2
 	ld   a, [wNapOrTrainReturnSubstate]                                  ; $755d: $fa $4d $ca
@@ -8284,8 +8284,8 @@ jr_021_7677:
 	xor  a                                           ; $767d: $af
 	ld   [$ca6e], a                                  ; $767e: $ea $6e $ca
 	ld   [$ca94], a                                  ; $7681: $ea $94 $ca
-	ld   [$ca87], a                                  ; $7684: $ea $87 $ca
-	ld   [$ca96], a                                  ; $7687: $ea $96 $ca
+	ld   [wLastPlayerRelatedBattleText], a                                  ; $7684: $ea $87 $ca
+	ld   [wCanUseSpecialBattleMove], a                                  ; $7687: $ea $96 $ca
 	ld   [$cab2], a                                  ; $768a: $ea $b2 $ca
 	ld   [$cab3], a                                  ; $768d: $ea $b3 $ca
 	ld   hl, wGameSubstate                                   ; $7690: $21 $a1 $c2
@@ -8796,7 +8796,7 @@ Call_021_79c5:
 	dec  [hl]                                        ; $7a1c: $35
 	ld   [hl], b                                     ; $7a1d: $70
 	dec  l                                           ; $7a1e: $2d
-	ld   a, [$ca87]                                  ; $7a1f: $fa $87 $ca
+	ld   a, [wLastPlayerRelatedBattleText]                                  ; $7a1f: $fa $87 $ca
 	cp   $01                                         ; $7a22: $fe $01
 	jp   z, Jump_021_7a96                            ; $7a24: $ca $96 $7a
 
@@ -8809,7 +8809,7 @@ Call_021_79c5:
 	add  hl, bc                                      ; $7a36: $09
 	ld   a, [hl]                                     ; $7a37: $7e
 	ld   d, a                                        ; $7a38: $57
-	ld   a, [$ca71]                                  ; $7a39: $fa $71 $ca
+	ld   a, [wBattleDistanceToEnemy]                                  ; $7a39: $fa $71 $ca
 	cp   d                                           ; $7a3c: $ba
 	jp   c, Jump_021_7a85                            ; $7a3d: $da $85 $7a
 
@@ -8857,9 +8857,9 @@ jr_021_7a85:
 	and  a                                           ; $7a88: $a7
 	jr   z, jr_021_7a92                              ; $7a89: $28 $07
 
-	ld   a, [$ca87]                                  ; $7a8b: $fa $87 $ca
+	ld   a, [wLastPlayerRelatedBattleText]                                  ; $7a8b: $fa $87 $ca
 	inc  a                                           ; $7a8e: $3c
-	ld   [$ca87], a                                  ; $7a8f: $ea $87 $ca
+	ld   [wLastPlayerRelatedBattleText], a                                  ; $7a8f: $ea $87 $ca
 
 jr_021_7a92:
 	call Call_021_7aa1                               ; $7a92: $cd $a1 $7a
@@ -8919,7 +8919,7 @@ jr_021_7ad7:
 	ld   b, a                                        ; $7adf: $47
 	ld   a, [$ca73]                                  ; $7ae0: $fa $73 $ca
 	ld   c, a                                        ; $7ae3: $4f
-	ld   a, [$ca70]                                  ; $7ae4: $fa $70 $ca
+	ld   a, [wEnemyKouboChosen]                                  ; $7ae4: $fa $70 $ca
 	call LoadSpriteFromMainTable                                       ; $7ae7: $cd $16 $0e
 	ret                                              ; $7aea: $c9
 
@@ -9158,9 +9158,9 @@ jr_021_7c0a:
 	and  $03                                         ; $7c1e: $e6 $03
 	jr   nz, jr_021_7c2c                             ; $7c20: $20 $0a
 
-	ld   a, [$ca96]                                  ; $7c22: $fa $96 $ca
+	ld   a, [wCanUseSpecialBattleMove]                                  ; $7c22: $fa $96 $ca
 	inc  a                                           ; $7c25: $3c
-	ld   [$ca96], a                                  ; $7c26: $ea $96 $ca
+	ld   [wCanUseSpecialBattleMove], a                                  ; $7c26: $ea $96 $ca
 	cp   $3c                                         ; $7c29: $fe $3c
 	ret  nz                                          ; $7c2b: $c0
 

@@ -687,7 +687,7 @@ ScriptEngineTable:
 	ScriptOpData ScriptOpcode24_Credits, $03
 	ScriptOpData ScriptOpcode25_NapOrTrain, $00
 	ScriptOpData ScriptOpcode26, $00
-	;
+	; Enemy koubo idx
 	ScriptOpData ScriptOpcode27_Battle, $01
 	;
 	ScriptOpData ScriptOpcode28, $06

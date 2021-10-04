@@ -4228,7 +4228,7 @@ GameState1a_MockBattle::
 	pop  af                                          ; $5afc: $f1
 	call FarCall                                       ; $5afd: $cd $62 $09
 	ld   a, $04                                      ; $5b00: $3e $04
-	ld   [$ca71], a                                  ; $5b02: $ea $71 $ca
+	ld   [wBattleDistanceToEnemy], a                                  ; $5b02: $ea $71 $ca
 	ld   a, $00                                      ; $5b05: $3e $00
 	ld   [$c9cf], a                                  ; $5b07: $ea $cf $c9
 	xor  a                                           ; $5b0a: $af
@@ -4915,7 +4915,7 @@ jr_03e_5f96:
 	ret                                              ; $5f96: $c9
 
 
-Call_03e_5f97:
+Call_03e_5f97::
 	ld   hl, $c9bc                                   ; $5f97: $21 $bc $c9
 	dec  [hl]                                        ; $5f9a: $35
 	jr   nz, jr_03e_5fbc                             ; $5f9b: $20 $1f
@@ -5143,7 +5143,7 @@ jr_03e_613b:
 	ret                                              ; $613b: $c9
 
 
-Call_03e_613c:
+Call_03e_613c::
 	ld   a, [$c9b2]                                  ; $613c: $fa $b2 $c9
 
 Call_03e_613f:
@@ -5272,7 +5272,7 @@ jr_03e_61e8:
 	ret                                              ; $61e8: $c9
 
 
-Call_03e_61e9:
+Call_03e_61e9::
 	ld   a, [$c9b2]                                  ; $61e9: $fa $b2 $c9
 
 Call_03e_61ec:
@@ -5861,7 +5861,7 @@ jr_03e_6502:
 	ret                                              ; $65cb: $c9
 
 
-Call_03e_65cc:
+Call_03e_65cc::
 	ld   b, $03                                      ; $65cc: $06 $03
 	bit  7, a                                        ; $65ce: $cb $7f
 	jr   nz, jr_03e_65d4                             ; $65d0: $20 $02
@@ -5876,7 +5876,7 @@ jr_03e_65d4:
 	ret                                              ; $65dd: $c9
 
 
-Call_03e_65de:
+Call_03e_65de::
 	ld   [$c9b9], a                                  ; $65de: $ea $b9 $c9
 	ld   c, a                                        ; $65e1: $4f
 	ld   b, $00                                      ; $65e2: $06 $00
@@ -6003,12 +6003,16 @@ jr_03e_665f:
 	ld   d, b                                        ; $66a2: $50
 	ld   h, b                                        ; $66a3: $60
 	ld   h, c                                        ; $66a4: $61
+
+
+Func_3e_66a5::
 	call Call_03e_5dd0                               ; $66a5: $cd $d0 $5d
 	ld   a, [$c9be]                                  ; $66a8: $fa $be $c9
 	cp   $02                                         ; $66ab: $fe $02
 	ret                                              ; $66ad: $c9
 
 
+Func_3e_66ae::
 	ld   a, [$c9b9]                                  ; $66ae: $fa $b9 $c9
 	cp   $09                                         ; $66b1: $fe $09
 	jr   z, jr_03e_66be                              ; $66b3: $28 $09
@@ -6026,7 +6030,7 @@ jr_03e_66be:
 	ret                                              ; $66c6: $c9
 
 
-Call_03e_66c7:
+Call_03e_66c7::
 	ld   h, a                                        ; $66c7: $67
 	ld   l, $68                                      ; $66c8: $2e $68
 	call AequHtimesL                                       ; $66ca: $cd $ac $0b
@@ -6048,7 +6052,7 @@ jr_03e_66de:
 	ret                                              ; $66e1: $c9
 
 
-Call_03e_66e2:
+Call_03e_66e2::
 	ld   h, a                                        ; $66e2: $67
 	ld   l, $30                                      ; $66e3: $2e $30
 	call AequHtimesL                                       ; $66e5: $cd $ac $0b
@@ -6070,7 +6074,7 @@ jr_03e_66f9:
 	ret                                              ; $66fc: $c9
 
 
-Call_03e_66fd:
+Call_03e_66fd::
 	ld   h, a                                        ; $66fd: $67
 	ld   l, $68                                      ; $66fe: $2e $68
 	call AequHtimesL                                       ; $6700: $cd $ac $0b
@@ -6092,6 +6096,7 @@ jr_03e_6714:
 	ret                                              ; $6717: $c9
 
 
+Func_3e_6718::
 	ld   a, [$c9c1]                                  ; $6718: $fa $c1 $c9
 	ld   hl, $c9c2                                   ; $671b: $21 $c2 $c9
 	cp   [hl]                                        ; $671e: $be
@@ -6116,6 +6121,7 @@ jr_03e_672b:
 	ret                                              ; $6732: $c9
 
 
+Func_3e_6733::
 	ld   a, [$c9c4]                                  ; $6733: $fa $c4 $c9
 	ld   hl, $c9c5                                   ; $6736: $21 $c5 $c9
 	cp   [hl]                                        ; $6739: $be
@@ -6192,13 +6198,14 @@ jr_03e_6797:
 	ret                                              ; $679e: $c9
 
 
-Call_03e_679f:
+Call_03e_679f::
 	ld   [$c9cc], a                                  ; $679f: $ea $cc $c9
 	xor  a                                           ; $67a2: $af
 	ld   [$c9be], a                                  ; $67a3: $ea $be $c9
 	ret                                              ; $67a6: $c9
 
 
+Func_3e_67a7::
 	call Call_03e_67b0                               ; $67a7: $cd $b0 $67
 	ld   a, [$c9be]                                  ; $67aa: $fa $be $c9
 	cp   $05                                         ; $67ad: $fe $05
@@ -6221,12 +6228,14 @@ Call_03e_67b0:
 	inc  l                                           ; $67be: $2c
 	ld   l, e                                        ; $67bf: $6b
 
-Call_03e_67c0:
+
+Call_03e_67c0::
 	xor  a                                           ; $67c0: $af
 	ld   [$c9be], a                                  ; $67c1: $ea $be $c9
 	ret                                              ; $67c4: $c9
 
 
+Func_3e_67c5::
 	call Call_03e_67ce                               ; $67c5: $cd $ce $67
 	ld   a, [$c9be]                                  ; $67c8: $fa $be $c9
 	cp   $08                                         ; $67cb: $fe $08
@@ -6253,12 +6262,13 @@ Call_03e_67ce:
 	ld   [$ee6a], a                                  ; $67e0: $ea $6a $ee
 	ld   l, d                                        ; $67e3: $6a
 
-Call_03e_67e4:
+Call_03e_67e4::
 	xor  a                                           ; $67e4: $af
 	ld   [$c9b8], a                                  ; $67e5: $ea $b8 $c9
 	ret                                              ; $67e8: $c9
 
 
+Func_3e_67e9::
 	call Call_03e_67f2                               ; $67e9: $cd $f2 $67
 	ld   a, [$c9b8]                                  ; $67ec: $fa $b8 $c9
 	cp   $02                                         ; $67ef: $fe $02
@@ -6830,6 +6840,9 @@ jr_03e_6b8c:
 	ld   c, d                                        ; $6b9a: $4a
 	add  hl, bc                                      ; $6b9b: $09
 	add  hl, bc                                      ; $6b9c: $09
+
+
+Func_3e_6b9d::
 	ld   a, [$c9c7]                                  ; $6b9d: $fa $c7 $c9
 	ld   hl, $c9c8                                   ; $6ba0: $21 $c8 $c9
 	cp   [hl]                                        ; $6ba3: $be

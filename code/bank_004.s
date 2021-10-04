@@ -3353,9 +3353,17 @@ LoadDormRoomDaySprites:
 
 ; Load day kanji sprite
 	ld   a, [wDormRoomDaySpritesX]                                  ; $585e
+if def(VWF)
+	add  $11
+else
 	add  $24                                                        ; $5861
+endc
 	ld   b, a                                                       ; $5863
+if def(VWF)
+	ld   c, $3d
+else
 	ld   c, $3c                                                     ; $5864
+endc
 	ld   a, SGC_DORM_ROOM_DAY                                       ; $5866
 	call LoadSpriteFromMainTable                                    ; $5868
 
@@ -3368,7 +3376,11 @@ LoadDormRoomDaySprites:
 ; Load day 10's digit sprite
 	push hl                                                         ; $5874
 	ld   a, [wDormRoomDaySpritesX]                                  ; $5875
+if def(VWF)
+	add  $25
+else
 	add  $14                                                        ; $5878
+endc
 	ld   b, a                                                       ; $587a
 	ld   c, $3c                                                     ; $587b
 	ld   a, h                                                       ; $587d
@@ -3378,7 +3390,11 @@ LoadDormRoomDaySprites:
 
 ; Load day 1's digit sprite
 	ld   a, [wDormRoomDaySpritesX]                                  ; $5884
+if def(VWF)
+	add  $2d
+else
 	add  $1c                                                        ; $5887
+endc
 	ld   b, a                                                       ; $5889
 	ld   c, $3c                                                     ; $588a
 	ld   a, l                                                       ; $588c
@@ -3654,7 +3670,7 @@ endc
 	M_FarCall Func_0c_5b79
 	
 	call TurnOnLCD                                       ; $5a60: $cd $09 $09
-	ld   hl, $afd0                                   ; $5a63: $21 $d0 $af
+	ld   hl, sSramVals2+SRAM2_STAMINA                                   ; $5a63: $21 $d0 $af
 
 	M_FarCall LoadStatBars
 	jp   IncDormRoomAnimationStep                               ; $5a7a: $c3 $cc $58

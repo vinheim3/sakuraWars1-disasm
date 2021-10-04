@@ -15,16 +15,16 @@ GameState26_SumireMiniGameMain::
 	dw SumireMiniGameMainSubstate2
 	dw SumireMiniGameMainSubstate3
 	dw SumireMiniGameMainSubstate4
-	dw $4108
+	dw SumireMiniGameMainSubstate5
 	dw SumireMiniGameMainSubstate6
 	dw SumireMiniGameMainSubstate7
 	dw SumireMiniGameMainSubstate8
-	dw $57e4
+	dw SumireMiniGameMainSubstate9
 
 
 	ld   [$ca61], a                                  ; $4018: $ea $61 $ca
 	ld   a, c                                        ; $401b: $79
-	ld   [$ca71], a                                  ; $401c: $ea $71 $ca
+	ld   [wBattleDistanceToEnemy], a                                  ; $401c: $ea $71 $ca
 	ld   a, h                                        ; $401f: $7c
 	ld   [$ca4e], a                                  ; $4020: $ea $4e $ca
 	ld   a, l                                        ; $4023: $7d
@@ -172,6 +172,7 @@ SumireMiniGameMainSubstate2:
 	ret                                              ; $4107: $c9
 
 
+SumireMiniGameMainSubstate5:
 	call Call_020_578a                               ; $4108: $cd $8a $57
 	ld   a, [$cb1d]                                  ; $410b: $fa $1d $cb
 	or   a                                           ; $410e: $b7
@@ -232,7 +233,7 @@ jr_020_4162:
 	ld   a, [$ca4f]                                  ; $416a: $fa $4f $ca
 	ld   e, a                                        ; $416d: $5f
 	ld   b, $01                                      ; $416e: $06 $01
-	ld   a, [$ca71]                                  ; $4170: $fa $71 $ca
+	ld   a, [wBattleDistanceToEnemy]                                  ; $4170: $fa $71 $ca
 	ld   c, a                                        ; $4173: $4f
 	ld   a, [$ca5e]                                  ; $4174: $fa $5e $ca
 	push af                                          ; $4177: $f5
@@ -303,7 +304,7 @@ SumireMiniGameMainSubstate3:
 	ld   [wLCDC], a                                  ; $41cb: $ea $03 $c2
 	ld   a, $01                                      ; $41ce: $3e $01
 	ldh  [rVBK], a                                   ; $41d0: $e0 $4f
-	ld   a, [$ca71]                                  ; $41d2: $fa $71 $ca
+	ld   a, [wBattleDistanceToEnemy]                                  ; $41d2: $fa $71 $ca
 	cp   $00                                         ; $41d5: $fe $00
 	jr   nz, .br_41e9                             ; $41d7: $20 $10
 
@@ -342,7 +343,7 @@ endc
 ;
 	xor  a                                           ; $4213: $af
 	ldh  [rVBK], a                                   ; $4214: $e0 $4f
-	ld   a, [$ca71]                                  ; $4216: $fa $71 $ca
+	ld   a, [wBattleDistanceToEnemy]                                  ; $4216: $fa $71 $ca
 	cp   $00                                         ; $4219: $fe $00
 	jr   nz, .br_422d                             ; $421b: $20 $10
 
@@ -437,7 +438,7 @@ endc
 	ld   [wWY], a                                  ; $42bf: $ea $0a $c2
 	ld   a, $07                                      ; $42c2: $3e $07
 	ld   [wWX], a                                  ; $42c4: $ea $09 $c2
-	ld   a, [$ca71]                                  ; $42c7: $fa $71 $ca
+	ld   a, [wBattleDistanceToEnemy]                                  ; $42c7: $fa $71 $ca
 	cp   $00                                         ; $42ca: $fe $00
 	jr   nz, .br_42e0                             ; $42cc: $20 $12
 
@@ -503,19 +504,19 @@ Call_020_433c:
 	ld   [$ca7c], a                                  ; $4352: $ea $7c $ca
 	ld   [$ca7a], a                                  ; $4355: $ea $7a $ca
 	ld   [$ca7d], a                                  ; $4358: $ea $7d $ca
-	ld   [$ca7e], a                                  ; $435b: $ea $7e $ca
+	ld   [wBattleSPCharged], a                                  ; $435b: $ea $7e $ca
 	ld   [$ca5e], a                                  ; $435e: $ea $5e $ca
 	ld   [$ca7f], a                                  ; $4361: $ea $7f $ca
 	ld   [$ca80], a                                  ; $4364: $ea $80 $ca
 	ld   [$ca83], a                                  ; $4367: $ea $83 $ca
 	ld   [$ca84], a                                  ; $436a: $ea $84 $ca
-	ld   [$ca87], a                                  ; $436d: $ea $87 $ca
+	ld   [wLastPlayerRelatedBattleText], a                                  ; $436d: $ea $87 $ca
 	ld   [$ca88], a                                  ; $4370: $ea $88 $ca
-	ld   [$ca89], a                                  ; $4373: $ea $89 $ca
+	ld   [wLastEnemyRelatedBattleText], a                                  ; $4373: $ea $89 $ca
 	ld   [$ca92], a                                  ; $4376: $ea $92 $ca
 	ld   [$ca8a], a                                  ; $4379: $ea $8a $ca
-	ld   [$ca90], a                                  ; $437c: $ea $90 $ca
-	ld   [$ca91], a                                  ; $437f: $ea $91 $ca
+	ld   [wBattleStatsTotal], a                                  ; $437c: $ea $90 $ca
+	ld   [wBattleStatsTotal+1], a                                  ; $437f: $ea $91 $ca
 	ld   [wBattleWon], a                                  ; $4382: $ea $85 $ca
 	ld   [$ca86], a                                  ; $4385: $ea $86 $ca
 	ld   [$ca93], a                                  ; $4388: $ea $93 $ca
@@ -659,14 +660,14 @@ jr_020_4480:
 	cp   $ff                                         ; $4483: $fe $ff
 	jr   nz, jr_020_44a1                             ; $4485: $20 $1a
 
-	ld   a, [$ca7e]                                  ; $4487: $fa $7e $ca
+	ld   a, [wBattleSPCharged]                                  ; $4487: $fa $7e $ca
 	inc  a                                           ; $448a: $3c
-	ld   [$ca7e], a                                  ; $448b: $ea $7e $ca
+	ld   [wBattleSPCharged], a                                  ; $448b: $ea $7e $ca
 	cp   $3c                                         ; $448e: $fe $3c
 	jr   nz, jr_020_44a1                             ; $4490: $20 $0f
 
 	xor  a                                           ; $4492: $af
-	ld   [$ca7e], a                                  ; $4493: $ea $7e $ca
+	ld   [wBattleSPCharged], a                                  ; $4493: $ea $7e $ca
 	ld   a, [$ca7d]                                  ; $4496: $fa $7d $ca
 	inc  a                                           ; $4499: $3c
 	cp   $3c                                         ; $449a: $fe $3c
@@ -696,13 +697,13 @@ jr_020_44c1:
 	call Call_020_45f6                               ; $44c4: $cd $f6 $45
 
 jr_020_44c7:
-	ld   a, [$ca89]                                  ; $44c7: $fa $89 $ca
+	ld   a, [wLastEnemyRelatedBattleText]                                  ; $44c7: $fa $89 $ca
 	cp   $f0                                         ; $44ca: $fe $f0
 	jr   nz, jr_020_4518                             ; $44cc: $20 $4a
 
 	ld   hl, wBGPalettes                                   ; $44ce: $21 $de $c2
 	ld   b, $00                                      ; $44d1: $06 $00
-	ld   a, [$ca87]                                  ; $44d3: $fa $87 $ca
+	ld   a, [wLastPlayerRelatedBattleText]                                  ; $44d3: $fa $87 $ca
 	or   a                                           ; $44d6: $b7
 	jr   nz, jr_020_44f1                             ; $44d7: $20 $18
 
@@ -715,17 +716,17 @@ jr_020_44c7:
 	ld   de, $7080                                   ; $44e7: $11 $80 $70
 	call FarLoadPaletteValsFadeToValsAndSetFadeSpeed                                       ; $44ea: $cd $48 $07
 	xor  a                                           ; $44ed: $af
-	ld   [$ca87], a                                  ; $44ee: $ea $87 $ca
+	ld   [wLastPlayerRelatedBattleText], a                                  ; $44ee: $ea $87 $ca
 
 jr_020_44f1:
-	ld   a, [$ca87]                                  ; $44f1: $fa $87 $ca
+	ld   a, [wLastPlayerRelatedBattleText]                                  ; $44f1: $fa $87 $ca
 	inc  a                                           ; $44f4: $3c
-	ld   [$ca87], a                                  ; $44f5: $ea $87 $ca
+	ld   [wLastPlayerRelatedBattleText], a                                  ; $44f5: $ea $87 $ca
 	cp   $04                                         ; $44f8: $fe $04
 	jr   c, jr_020_4518                              ; $44fa: $38 $1c
 
 	xor  a                                           ; $44fc: $af
-	ld   [$ca87], a                                  ; $44fd: $ea $87 $ca
+	ld   [wLastPlayerRelatedBattleText], a                                  ; $44fd: $ea $87 $ca
 	ld   hl, $ca88                                   ; $4500: $21 $88 $ca
 	ld   a, [hl]                                     ; $4503: $7e
 	inc  [hl]                                        ; $4504: $34
@@ -740,7 +741,7 @@ jr_020_44f1:
 
 jr_020_4513:
 	ld   a, $ff                                      ; $4513: $3e $ff
-	ld   [$ca89], a                                  ; $4515: $ea $89 $ca
+	ld   [wLastEnemyRelatedBattleText], a                                  ; $4515: $ea $89 $ca
 
 jr_020_4518:
 	ld   a, [$ca7f]                                  ; $4518: $fa $7f $ca
@@ -898,7 +899,7 @@ jr_020_45eb:
 
 Call_020_45f6:
 	ld   a, $00                                      ; $45f6: $3e $00
-	ld   [$ca70], a                                  ; $45f8: $ea $70 $ca
+	ld   [wEnemyKouboChosen], a                                  ; $45f8: $ea $70 $ca
 	call Call_020_483c                               ; $45fb: $cd $3c $48
 	call Call_020_50c4                               ; $45fe: $cd $c4 $50
 	call Call_020_525a                               ; $4601: $cd $5a $52
@@ -934,7 +935,7 @@ jr_020_4615:
 	ld   a, $01                                      ; $4638: $3e $01
 	ld   [$ca84], a                                  ; $463a: $ea $84 $ca
 	ld   a, $f0                                      ; $463d: $3e $f0
-	ld   [$ca89], a                                  ; $463f: $ea $89 $ca
+	ld   [wLastEnemyRelatedBattleText], a                                  ; $463f: $ea $89 $ca
 
 jr_020_4642:
 	ret                                              ; $4642: $c9
@@ -954,7 +955,7 @@ jr_020_464f:
 
 Call_020_4650:
 	ld   a, $ff                                      ; $4650: $3e $ff
-	ld   [$ca70], a                                  ; $4652: $ea $70 $ca
+	ld   [wEnemyKouboChosen], a                                  ; $4652: $ea $70 $ca
 	call Call_020_47db                               ; $4655: $cd $db $47
 	call Call_020_46e5                               ; $4658: $cd $e5 $46
 	call Call_020_50bf                               ; $465b: $cd $bf $50
@@ -984,7 +985,7 @@ Call_020_4650:
 	ld   a, $02                                      ; $468b: $3e $02
 	ld   [$ca84], a                                  ; $468d: $ea $84 $ca
 	ld   a, $f0                                      ; $4690: $3e $f0
-	ld   [$ca89], a                                  ; $4692: $ea $89 $ca
+	ld   [wLastEnemyRelatedBattleText], a                                  ; $4692: $ea $89 $ca
 
 jr_020_4695:
 	call Call_020_47db                               ; $4695: $cd $db $47
@@ -1005,7 +1006,7 @@ jr_020_46a5:
 
 
 Call_020_46a9:
-	ld   a, [$ca71]                                  ; $46a9: $fa $71 $ca
+	ld   a, [wBattleDistanceToEnemy]                                  ; $46a9: $fa $71 $ca
 	cp   $00                                         ; $46ac: $fe $00
 	jr   nz, jr_020_46bc                             ; $46ae: $20 $0c
 
@@ -1026,7 +1027,7 @@ jr_020_46c6:
 
 
 Call_020_46c7:
-	ld   a, [$ca71]                                  ; $46c7: $fa $71 $ca
+	ld   a, [wBattleDistanceToEnemy]                                  ; $46c7: $fa $71 $ca
 	cp   $00                                         ; $46ca: $fe $00
 	jr   nz, jr_020_46da                             ; $46cc: $20 $0c
 
@@ -1100,11 +1101,11 @@ Call_020_470b:
 	cp   $fa                                         ; $4737: $fe $fa
 	jr   nz, jr_020_4767                             ; $4739: $20 $2c
 
-	ld   a, [$ca90]                                  ; $473b: $fa $90 $ca
+	ld   a, [wBattleStatsTotal]                                  ; $473b: $fa $90 $ca
 	cp   b                                           ; $473e: $b8
 	jr   nz, jr_020_475b                             ; $473f: $20 $1a
 
-	ld   a, [$ca91]                                  ; $4741: $fa $91 $ca
+	ld   a, [wBattleStatsTotal+1]                                  ; $4741: $fa $91 $ca
 	cp   c                                           ; $4744: $b9
 	jr   nz, jr_020_475b                             ; $4745: $20 $14
 
@@ -1125,9 +1126,9 @@ jr_020_475b:
 	xor  a                                           ; $475b: $af
 	ld   [$ca8a], a                                  ; $475c: $ea $8a $ca
 	ld   a, b                                        ; $475f: $78
-	ld   [$ca90], a                                  ; $4760: $ea $90 $ca
+	ld   [wBattleStatsTotal], a                                  ; $4760: $ea $90 $ca
 	ld   a, c                                        ; $4763: $79
-	ld   [$ca91], a                                  ; $4764: $ea $91 $ca
+	ld   [wBattleStatsTotal+1], a                                  ; $4764: $ea $91 $ca
 
 jr_020_4767:
 	pop  af                                          ; $4767: $f1
@@ -1237,7 +1238,7 @@ Call_020_47f1:
 	ld   [$ca9c], a                                  ; $47fb: $ea $9c $ca
 	ld   [$ca9d], a                                  ; $47fe: $ea $9d $ca
 	ld   [$ca9e], a                                  ; $4801: $ea $9e $ca
-	ld   [$ca9f], a                                  ; $4804: $ea $9f $ca
+	ld   [wIsMockBattle], a                                  ; $4804: $ea $9f $ca
 	ld   [$caa0], a                                  ; $4807: $ea $a0 $ca
 	ld   [$caa2], a                                  ; $480a: $ea $a2 $ca
 	ld   [$caca], a                                  ; $480d: $ea $ca $ca
@@ -1344,7 +1345,7 @@ jr_020_48b1:
 	ld   a, [wGameState]                                  ; $48b7: $fa $a0 $c2
 	ld   [$ca94], a                                  ; $48ba: $ea $94 $ca
 	ld   a, [wGameSubstate]                                  ; $48bd: $fa $a1 $c2
-	ld   [$ca95], a                                  ; $48c0: $ea $95 $ca
+	ld   [wUsedSpecialBattleMove], a                                  ; $48c0: $ea $95 $ca
 	ld   a, $09                                      ; $48c3: $3e $09
 	ld   [wGameSubstate], a                                  ; $48c5: $ea $a1 $c2
 	ret                                              ; $48c8: $c9
@@ -1477,7 +1478,7 @@ jr_020_494b:
 	ld   [$caa7], a                                  ; $4958: $ea $a7 $ca
 	ld   a, l                                        ; $495b: $7d
 	ld   [$caa6], a                                  ; $495c: $ea $a6 $ca
-	ld   a, [$ca9f]                                  ; $495f: $fa $9f $ca
+	ld   a, [wIsMockBattle]                                  ; $495f: $fa $9f $ca
 	bit  7, a                                        ; $4962: $cb $7f
 	jr   z, jr_020_496a                              ; $4964: $28 $04
 
@@ -1759,12 +1760,12 @@ jr_020_4abd:
 
 Jump_020_4adc:
 jr_020_4adc:
-	ld   a, [$ca96]                                  ; $4adc: $fa $96 $ca
+	ld   a, [wCanUseSpecialBattleMove]                                  ; $4adc: $fa $96 $ca
 	cp   $14                                         ; $4adf: $fe $14
 	jr   z, jr_020_4b27                              ; $4ae1: $28 $44
 
 	inc  a                                           ; $4ae3: $3c
-	ld   [$ca96], a                                  ; $4ae4: $ea $96 $ca
+	ld   [wCanUseSpecialBattleMove], a                                  ; $4ae4: $ea $96 $ca
 	xor  a                                           ; $4ae7: $af
 	ld   [$caa7], a                                  ; $4ae8: $ea $a7 $ca
 	ld   [$caa6], a                                  ; $4aeb: $ea $a6 $ca
@@ -1776,18 +1777,18 @@ jr_020_4adc:
 
 Jump_020_4af9:
 jr_020_4af9:
-	ld   a, [$ca96]                                  ; $4af9: $fa $96 $ca
+	ld   a, [wCanUseSpecialBattleMove]                                  ; $4af9: $fa $96 $ca
 	cp   $14                                         ; $4afc: $fe $14
 	jr   z, jr_020_4b27                              ; $4afe: $28 $27
 
 	inc  a                                           ; $4b00: $3c
-	ld   [$ca96], a                                  ; $4b01: $ea $96 $ca
+	ld   [wCanUseSpecialBattleMove], a                                  ; $4b01: $ea $96 $ca
 	xor  a                                           ; $4b04: $af
 	ld   [$caa9], a                                  ; $4b05: $ea $a9 $ca
 	ld   [$caa8], a                                  ; $4b08: $ea $a8 $ca
-	ld   a, [$ca9f]                                  ; $4b0b: $fa $9f $ca
+	ld   a, [wIsMockBattle]                                  ; $4b0b: $fa $9f $ca
 	sra  a                                           ; $4b0e: $cb $2f
-	ld   [$ca9f], a                                  ; $4b10: $ea $9f $ca
+	ld   [wIsMockBattle], a                                  ; $4b10: $ea $9f $ca
 	jp   $49ca                                       ; $4b13: $c3 $ca $49
 
 
@@ -1796,9 +1797,9 @@ jr_020_4b16:
 	xor  a                                           ; $4b16: $af
 	ld   [$caa9], a                                  ; $4b17: $ea $a9 $ca
 	ld   [$caa8], a                                  ; $4b1a: $ea $a8 $ca
-	ld   a, [$ca9f]                                  ; $4b1d: $fa $9f $ca
+	ld   a, [wIsMockBattle]                                  ; $4b1d: $fa $9f $ca
 	sra  a                                           ; $4b20: $cb $2f
-	ld   [$ca9f], a                                  ; $4b22: $ea $9f $ca
+	ld   [wIsMockBattle], a                                  ; $4b22: $ea $9f $ca
 	jr   jr_020_4adc                                 ; $4b25: $18 $b5
 
 jr_020_4b27:
@@ -1837,7 +1838,7 @@ jr_020_4b45:
 Jump_020_4b4e:
 jr_020_4b4e:
 	xor  a                                           ; $4b4e: $af
-	ld   [$ca96], a                                  ; $4b4f: $ea $96 $ca
+	ld   [wCanUseSpecialBattleMove], a                                  ; $4b4f: $ea $96 $ca
 	ld   hl, $caa6                                   ; $4b52: $21 $a6 $ca
 	ld   a, [hl+]                                    ; $4b55: $2a
 	ld   d, [hl]                                     ; $4b56: $56
@@ -2049,7 +2050,7 @@ jr_020_4c42:
 Call_020_4c64:
 	push bc                                          ; $4c64: $c5
 	ld   e, b                                        ; $4c65: $58
-	ld   a, [$ca71]                                  ; $4c66: $fa $71 $ca
+	ld   a, [wBattleDistanceToEnemy]                                  ; $4c66: $fa $71 $ca
 	cp   $00                                         ; $4c69: $fe $00
 	jr   nz, jr_020_4c72                             ; $4c6b: $20 $05
 
@@ -2243,7 +2244,7 @@ jr_020_4d47:
 	bit  1, b                                        ; $4d54: $cb $48
 	jr   nz, jr_020_4d61                             ; $4d56: $20 $09
 
-	ld   a, [$ca70]                                  ; $4d58: $fa $70 $ca
+	ld   a, [wEnemyKouboChosen]                                  ; $4d58: $fa $70 $ca
 	and  a                                           ; $4d5b: $a7
 	jr   nz, jr_020_4d61                             ; $4d5c: $20 $03
 
@@ -2258,7 +2259,7 @@ jr_020_4d61:
 	inc  [hl]                                        ; $4d69: $34
 
 jr_020_4d6a:
-	ld   a, [$ca70]                                  ; $4d6a: $fa $70 $ca
+	ld   a, [wEnemyKouboChosen]                                  ; $4d6a: $fa $70 $ca
 	and  a                                           ; $4d6d: $a7
 	jr   nz, jr_020_4d76                             ; $4d6e: $20 $06
 
@@ -3288,7 +3289,7 @@ jr_020_533d:
 	ld   [hl], $3c                                   ; $533d: $36 $3c
 
 jr_020_533f:
-	ld   a, [$ca71]                                  ; $533f: $fa $71 $ca
+	ld   a, [wBattleDistanceToEnemy]                                  ; $533f: $fa $71 $ca
 	cp   $00                                         ; $5342: $fe $00
 	jr   nz, jr_020_5375                             ; $5344: $20 $2f
 
@@ -3348,7 +3349,7 @@ jr_020_53b1:
 	ld   e, a                                        ; $53b1: $5f
 	ld   d, $00                                      ; $53b2: $16 $00
 	sla  e                                           ; $53b4: $cb $23
-	ld   a, [$ca71]                                  ; $53b6: $fa $71 $ca
+	ld   a, [wBattleDistanceToEnemy]                                  ; $53b6: $fa $71 $ca
 	cp   $00                                         ; $53b9: $fe $00
 	jr   nz, jr_020_53c2                             ; $53bb: $20 $05
 
@@ -3395,7 +3396,7 @@ jr_020_53f6:
 	ld   [wGameSubstate], a                                  ; $53f8: $ea $a1 $c2
 
 jr_020_53fb:
-	ld   a, [$ca71]                                  ; $53fb: $fa $71 $ca
+	ld   a, [wBattleDistanceToEnemy]                                  ; $53fb: $fa $71 $ca
 	cp   $00                                         ; $53fe: $fe $00
 	jr   nz, jr_020_5422                             ; $5400: $20 $20
 
@@ -4028,7 +4029,7 @@ jr_020_5777:
 
 
 Call_020_578a:
-	ld   a, [$ca71]                                  ; $578a: $fa $71 $ca
+	ld   a, [wBattleDistanceToEnemy]                                  ; $578a: $fa $71 $ca
 	ld   b, $00                                      ; $578d: $06 $00
 	ld   c, a                                        ; $578f: $4f
 	ld   hl, $57b7                                   ; $5790: $21 $b7 $57
@@ -4061,7 +4062,7 @@ Call_020_578a:
 Call_020_57b9:
 	ld   hl, $caab                                   ; $57b9: $21 $ab $ca
 	push hl                                          ; $57bc: $e5
-	ld   a, [$ca71]                                  ; $57bd: $fa $71 $ca
+	ld   a, [wBattleDistanceToEnemy]                                  ; $57bd: $fa $71 $ca
 	ld   b, $00                                      ; $57c0: $06 $00
 	ld   c, a                                        ; $57c2: $4f
 	ld   hl, $57e2                                   ; $57c3: $21 $e2 $57
@@ -4086,6 +4087,9 @@ Call_020_57b9:
 
 	inc  c                                           ; $57e2: $0c
 	dec  c                                           ; $57e3: $0d
+
+
+SumireMiniGameMainSubstate9:
 	ld   a, [wInGameButtonsPressed]                                  ; $57e4: $fa $10 $c2
 	and  $08                                         ; $57e7: $e6 $08
 	jr   z, jr_020_57fb                              ; $57e9: $28 $10
@@ -4094,7 +4098,7 @@ Call_020_57b9:
 	ld   [$ca93], a                                  ; $57ec: $ea $93 $ca
 	ld   a, [$ca94]                                  ; $57ef: $fa $94 $ca
 	ld   [wGameState], a                                  ; $57f2: $ea $a0 $c2
-	ld   a, [$ca95]                                  ; $57f5: $fa $95 $ca
+	ld   a, [wUsedSpecialBattleMove]                                  ; $57f5: $fa $95 $ca
 	ld   [wGameSubstate], a                                  ; $57f8: $ea $a1 $c2
 
 jr_020_57fb:
@@ -6708,7 +6712,7 @@ KohranMiniGameMainSubstate4:
 	ld   bc, $0180                                   ; $64aa: $01 $80 $01
 	call FarMemCopy                                       ; $64ad: $cd $b2 $09
 	xor  a                                           ; $64b0: $af
-	ld   [$ca71], a                                  ; $64b1: $ea $71 $ca
+	ld   [wBattleDistanceToEnemy], a                                  ; $64b1: $ea $71 $ca
 	ld   [$ca72], a                                  ; $64b4: $ea $72 $ca
 	ld   [$ca6e], a                                  ; $64b7: $ea $6e $ca
 	ld   [$ca73], a                                  ; $64ba: $ea $73 $ca
@@ -6754,7 +6758,7 @@ jr_020_6513:
 	ld   a, $06                                      ; $6521: $3e $06
 	ld   [wKouboChosen0idxed], a                                  ; $6523: $ea $6f $ca
 	ld   a, $ff                                      ; $6526: $3e $ff
-	ld   [$ca9f], a                                  ; $6528: $ea $9f $ca
+	ld   [wIsMockBattle], a                                  ; $6528: $ea $9f $ca
 	ld   [$caa0], a                                  ; $652b: $ea $a0 $ca
 	ld   [$caa1], a                                  ; $652e: $ea $a1 $ca
 	ld   [$cabc], a                                  ; $6531: $ea $bc $ca
@@ -6798,7 +6802,7 @@ jr_020_6575:
 	call Call_020_6b8f                               ; $657b: $cd $8f $6b
 	call Call_020_7407                               ; $657e: $cd $07 $74
 	call Call_020_6ec9                               ; $6581: $cd $c9 $6e
-	ld   a, [$ca9f]                                  ; $6584: $fa $9f $ca
+	ld   a, [wIsMockBattle]                                  ; $6584: $fa $9f $ca
 	cp   $ff                                         ; $6587: $fe $ff
 	jr   z, jr_020_658e                              ; $6589: $28 $03
 
@@ -7005,7 +7009,7 @@ KohranMiniGameMainSubstate5:
 	call Call_020_6b8f                               ; $668b: $cd $8f $6b
 	call Call_020_7407                               ; $668e: $cd $07 $74
 	call Call_020_6ec9                               ; $6691: $cd $c9 $6e
-	ld   a, [$ca9f]                                  ; $6694: $fa $9f $ca
+	ld   a, [wIsMockBattle]                                  ; $6694: $fa $9f $ca
 	cp   $ff                                         ; $6697: $fe $ff
 	jr   z, jr_020_669e                              ; $6699: $28 $03
 
@@ -7062,7 +7066,7 @@ KohranMiniGameMainSubstate6:
 	call Call_020_6b8f                               ; $66ff: $cd $8f $6b
 	call Call_020_7407                               ; $6702: $cd $07 $74
 	call Call_020_6ec9                               ; $6705: $cd $c9 $6e
-	ld   a, [$ca9f]                                  ; $6708: $fa $9f $ca
+	ld   a, [wIsMockBattle]                                  ; $6708: $fa $9f $ca
 	cp   $ff                                         ; $670b: $fe $ff
 	jr   z, jr_020_6712                              ; $670d: $28 $03
 
@@ -7115,14 +7119,14 @@ jr_020_6726:
 
 jr_020_675c:
 	ld   a, $01                                      ; $675c: $3e $01
-	ld   [$ca71], a                                  ; $675e: $ea $71 $ca
+	ld   [wBattleDistanceToEnemy], a                                  ; $675e: $ea $71 $ca
 	call $6f11                                       ; $6761: $cd $11 $6f
 	ret                                              ; $6764: $c9
 
 
 jr_020_6765:
 	xor  a                                           ; $6765: $af
-	ld   [$ca71], a                                  ; $6766: $ea $71 $ca
+	ld   [wBattleDistanceToEnemy], a                                  ; $6766: $ea $71 $ca
 	ld   hl, wGameSubstate                                   ; $6769: $21 $a1 $c2
 	inc  [hl]                                        ; $676c: $34
 	ret                                              ; $676d: $c9
@@ -7133,7 +7137,7 @@ KohranMiniGameMainSubstate7:
 	call Call_020_6b8f                               ; $6771: $cd $8f $6b
 	call Call_020_7407                               ; $6774: $cd $07 $74
 	call Call_020_6ec9                               ; $6777: $cd $c9 $6e
-	ld   a, [$ca9f]                                  ; $677a: $fa $9f $ca
+	ld   a, [wIsMockBattle]                                  ; $677a: $fa $9f $ca
 	cp   $ff                                         ; $677d: $fe $ff
 	jr   z, jr_020_6784                              ; $677f: $28 $03
 
@@ -7186,7 +7190,7 @@ KohranMiniGameMainSubstate8:
 	cp   $00                                         ; $67ce: $fe $00
 	jp   z, Jump_020_6b28                            ; $67d0: $ca $28 $6b
 
-	ld   a, [$ca71]                                  ; $67d3: $fa $71 $ca
+	ld   a, [wBattleDistanceToEnemy]                                  ; $67d3: $fa $71 $ca
 	and  a                                           ; $67d6: $a7
 	jr   nz, jr_020_67e9                             ; $67d7: $20 $10
 
@@ -7203,7 +7207,7 @@ jr_020_67e6:
 	ld   [$cac8], a                                  ; $67e6: $ea $c8 $ca
 
 jr_020_67e9:
-	ld   a, [$ca9f]                                  ; $67e9: $fa $9f $ca
+	ld   a, [wIsMockBattle]                                  ; $67e9: $fa $9f $ca
 	cp   $ff                                         ; $67ec: $fe $ff
 	jr   z, jr_020_67f3                              ; $67ee: $28 $03
 
@@ -7251,7 +7255,7 @@ jr_020_682e:
 
 
 jr_020_6834:
-	ld   a, [$ca71]                                  ; $6834: $fa $71 $ca
+	ld   a, [wBattleDistanceToEnemy]                                  ; $6834: $fa $71 $ca
 	cp   $01                                         ; $6837: $fe $01
 	jp   z, Jump_020_6954                            ; $6839: $ca $54 $69
 
@@ -7476,7 +7480,7 @@ Jump_020_6954:
 	jp   z, Jump_020_6ad4                            ; $6963: $ca $d4 $6a
 
 	ld   a, $10                                      ; $6966: $3e $10
-	ld   [$ca71], a                                  ; $6968: $ea $71 $ca
+	ld   [wBattleDistanceToEnemy], a                                  ; $6968: $ea $71 $ca
 	xor  a                                           ; $696b: $af
 	ld   [$ca72], a                                  ; $696c: $ea $72 $ca
 	ld   a, $16                                      ; $696f: $3e $16
@@ -7513,7 +7517,7 @@ jr_020_6987:
 
 jr_020_69a5:
 	ld   a, $02                                      ; $69a5: $3e $02
-	ld   [$ca71], a                                  ; $69a7: $ea $71 $ca
+	ld   [wBattleDistanceToEnemy], a                                  ; $69a7: $ea $71 $ca
 	ld   a, $17                                      ; $69aa: $3e $17
 	call PlaySoundEffect                                       ; $69ac: $cd $df $1a
 
@@ -7542,14 +7546,14 @@ jr_020_69ca:
 	ld   [$cabc], a                                  ; $69d0: $ea $bc $ca
 	ld   [$cabd], a                                  ; $69d3: $ea $bd $ca
 	ld   [$cabe], a                                  ; $69d6: $ea $be $ca
-	ld   [$ca9f], a                                  ; $69d9: $ea $9f $ca
+	ld   [wIsMockBattle], a                                  ; $69d9: $ea $9f $ca
 	xor  a                                           ; $69dc: $af
 	ld   [$cac3], a                                  ; $69dd: $ea $c3 $ca
 	ld   [$cac5], a                                  ; $69e0: $ea $c5 $ca
 	ld   [$ca7b], a                                  ; $69e3: $ea $7b $ca
 	ld   [$ca7c], a                                  ; $69e6: $ea $7c $ca
 	ld   [$ca7d], a                                  ; $69e9: $ea $7d $ca
-	ld   [$ca7e], a                                  ; $69ec: $ea $7e $ca
+	ld   [wBattleSPCharged], a                                  ; $69ec: $ea $7e $ca
 	ld   [$ca7f], a                                  ; $69ef: $ea $7f $ca
 	ld   [$ca80], a                                  ; $69f2: $ea $80 $ca
 	ld   [$ca81], a                                  ; $69f5: $ea $81 $ca
@@ -7558,11 +7562,11 @@ jr_020_69ca:
 	ld   [$ca84], a                                  ; $69fe: $ea $84 $ca
 	ld   [wBattleWon], a                                  ; $6a01: $ea $85 $ca
 	ld   [$ca86], a                                  ; $6a04: $ea $86 $ca
-	ld   [$ca87], a                                  ; $6a07: $ea $87 $ca
+	ld   [wLastPlayerRelatedBattleText], a                                  ; $6a07: $ea $87 $ca
 	ld   [$ca43], a                                  ; $6a0a: $ea $43 $ca
 	ld   [$ca44], a                                  ; $6a0d: $ea $44 $ca
 	ld   a, $ff                                      ; $6a10: $3e $ff
-	ld   [$ca9f], a                                  ; $6a12: $ea $9f $ca
+	ld   [wIsMockBattle], a                                  ; $6a12: $ea $9f $ca
 	ld   [$caa0], a                                  ; $6a15: $ea $a0 $ca
 	ld   [$caa1], a                                  ; $6a18: $ea $a1 $ca
 	call Call_020_7227                               ; $6a1b: $cd $27 $72
@@ -7577,7 +7581,7 @@ jr_020_69ca:
 
 jr_020_6a2e:
 	ld   a, $04                                      ; $6a2e: $3e $04
-	ld   [$ca71], a                                  ; $6a30: $ea $71 $ca
+	ld   [wBattleDistanceToEnemy], a                                  ; $6a30: $ea $71 $ca
 	xor  a                                           ; $6a33: $af
 	ld   [wBattleInstantTextTableIdx], a                                  ; $6a34: $ea $42 $ca
 	ld   a, $18                                      ; $6a37: $3e $18
@@ -7637,7 +7641,7 @@ jr_020_6a76:
 
 jr_020_6a86:
 	ld   a, $08                                      ; $6a86: $3e $08
-	ld   [$ca71], a                                  ; $6a88: $ea $71 $ca
+	ld   [wBattleDistanceToEnemy], a                                  ; $6a88: $ea $71 $ca
 	xor  a                                           ; $6a8b: $af
 	ld   [$ca72], a                                  ; $6a8c: $ea $72 $ca
 	ld   [wSCX], a                                  ; $6a8f: $ea $07 $c2
@@ -7663,7 +7667,7 @@ jr_020_6aae:
 	ld   a, $16                                      ; $6aae: $3e $16
 	call PlaySoundEffect                                       ; $6ab0: $cd $df $1a
 	ld   a, $00                                      ; $6ab3: $3e $00
-	ld   [$ca71], a                                  ; $6ab5: $ea $71 $ca
+	ld   [wBattleDistanceToEnemy], a                                  ; $6ab5: $ea $71 $ca
 
 Jump_020_6ab8:
 jr_020_6ab8:
@@ -7995,7 +7999,7 @@ Call_020_6c89:
 Call_020_6ca3:
 	call Call_020_6c63                               ; $6ca3: $cd $63 $6c
 	ld   b, $00                                      ; $6ca6: $06 $00
-	ld   a, [$ca9f]                                  ; $6ca8: $fa $9f $ca
+	ld   a, [wIsMockBattle]                                  ; $6ca8: $fa $9f $ca
 	cp   $ff                                         ; $6cab: $fe $ff
 	jr   z, jr_020_6cc0                              ; $6cad: $28 $11
 
@@ -8059,7 +8063,7 @@ jr_020_6cc0:
 	ld   a, [$cab0]                                  ; $6d05: $fa $b0 $ca
 	ld   b, $00                                      ; $6d08: $06 $00
 	ld   c, a                                        ; $6d0a: $4f
-	ld   hl, $ca96                                   ; $6d0b: $21 $96 $ca
+	ld   hl, wCanUseSpecialBattleMove                                   ; $6d0b: $21 $96 $ca
 	add  hl, bc                                      ; $6d0e: $09
 	ld   a, [$ca78]                                  ; $6d0f: $fa $78 $ca
 	swap a                                           ; $6d12: $cb $37
@@ -8096,7 +8100,7 @@ jr_020_6d3e:
 	ld   a, [$ca45]                                  ; $6d43: $fa $45 $ca
 	ld   d, $00                                      ; $6d46: $16 $00
 	ld   e, a                                        ; $6d48: $5f
-	ld   hl, $ca9f                                   ; $6d49: $21 $9f $ca
+	ld   hl, wIsMockBattle                                   ; $6d49: $21 $9f $ca
 	add  hl, de                                      ; $6d4c: $19
 	ld   a, [$cab0]                                  ; $6d4d: $fa $b0 $ca
 	ld   [hl], a                                     ; $6d50: $77
@@ -8159,12 +8163,12 @@ jr_020_6d96:
 Call_020_6da1:
 	xor  a                                           ; $6da1: $af
 	ld   [$cacc], a                                  ; $6da2: $ea $cc $ca
-	ld   [$ca71], a                                  ; $6da5: $ea $71 $ca
+	ld   [wBattleDistanceToEnemy], a                                  ; $6da5: $ea $71 $ca
 	ld   a, [$cac4]                                  ; $6da8: $fa $c4 $ca
 	dec  a                                           ; $6dab: $3d
 	ld   b, $00                                      ; $6dac: $06 $00
 	ld   c, a                                        ; $6dae: $4f
-	ld   hl, $ca9f                                   ; $6daf: $21 $9f $ca
+	ld   hl, wIsMockBattle                                   ; $6daf: $21 $9f $ca
 	add  hl, bc                                      ; $6db2: $09
 	ld   a, [hl]                                     ; $6db3: $7e
 	ld   c, a                                        ; $6db4: $4f
@@ -8210,12 +8214,12 @@ jr_020_6deb:
 	dec  a                                           ; $6dee: $3d
 	ld   b, $00                                      ; $6def: $06 $00
 	ld   c, a                                        ; $6df1: $4f
-	ld   hl, $ca9f                                   ; $6df2: $21 $9f $ca
+	ld   hl, wIsMockBattle                                   ; $6df2: $21 $9f $ca
 	add  hl, bc                                      ; $6df5: $09
 	ld   a, [hl]                                     ; $6df6: $7e
 	ld   b, $00                                      ; $6df7: $06 $00
 	ld   c, a                                        ; $6df9: $4f
-	ld   hl, $ca96                                   ; $6dfa: $21 $96 $ca
+	ld   hl, wCanUseSpecialBattleMove                                   ; $6dfa: $21 $96 $ca
 	add  hl, bc                                      ; $6dfd: $09
 	ld   a, [hl]                                     ; $6dfe: $7e
 	and  $0f                                         ; $6dff: $e6 $0f
@@ -8234,7 +8238,7 @@ jr_020_6deb:
 	ld   a, [$ca43]                                  ; $6e17: $fa $43 $ca
 	ld   b, $00                                      ; $6e1a: $06 $00
 	ld   c, a                                        ; $6e1c: $4f
-	ld   hl, $ca9f                                   ; $6e1d: $21 $9f $ca
+	ld   hl, wIsMockBattle                                   ; $6e1d: $21 $9f $ca
 	add  hl, bc                                      ; $6e20: $09
 	ld   a, [hl]                                     ; $6e21: $7e
 	ld   a, $ff                                      ; $6e22: $3e $ff
@@ -8267,7 +8271,7 @@ Call_020_6e48:
 	ret  nz                                          ; $6e4d: $c0
 
 	ld   a, $80                                      ; $6e4e: $3e $80
-	ld   [$ca71], a                                  ; $6e50: $ea $71 $ca
+	ld   [wBattleDistanceToEnemy], a                                  ; $6e50: $ea $71 $ca
 	ld   a, [$cacc]                                  ; $6e53: $fa $cc $ca
 	inc  a                                           ; $6e56: $3c
 	ld   [$cacc], a                                  ; $6e57: $ea $cc $ca
@@ -8285,7 +8289,7 @@ Call_020_6e48:
 	ld   a, $1b                                      ; $6e6d: $3e $1b
 	call PlaySoundEffect                                       ; $6e6f: $cd $df $1a
 	ld   a, $01                                      ; $6e72: $3e $01
-	ld   [$ca71], a                                  ; $6e74: $ea $71 $ca
+	ld   [wBattleDistanceToEnemy], a                                  ; $6e74: $ea $71 $ca
 	ld   a, $ff                                      ; $6e77: $3e $ff
 	ld   [$cac3], a                                  ; $6e79: $ea $c3 $ca
 	ld   a, $05                                      ; $6e7c: $3e $05
@@ -8306,7 +8310,7 @@ jr_020_6e91:
 	ld   [$cac4], a                                  ; $6e97: $ea $c4 $ca
 	ld   [$cac6], a                                  ; $6e9a: $ea $c6 $ca
 	ld   a, $ff                                      ; $6e9d: $3e $ff
-	ld   [$ca9f], a                                  ; $6e9f: $ea $9f $ca
+	ld   [wIsMockBattle], a                                  ; $6e9f: $ea $9f $ca
 	ld   [$caa0], a                                  ; $6ea2: $ea $a0 $ca
 	ld   [$caa1], a                                  ; $6ea5: $ea $a1 $ca
 	ld   hl, $ca73                                   ; $6ea8: $21 $73 $ca
@@ -8321,7 +8325,7 @@ jr_020_6e91:
 	ld   [$cab1], a                                  ; $6ebd: $ea $b1 $ca
 	ld   [$ca44], a                                  ; $6ec0: $ea $44 $ca
 	ld   a, $00                                      ; $6ec3: $3e $00
-	ld   [$ca71], a                                  ; $6ec5: $ea $71 $ca
+	ld   [wBattleDistanceToEnemy], a                                  ; $6ec5: $ea $71 $ca
 	ret                                              ; $6ec8: $c9
 
 
@@ -9070,7 +9074,7 @@ Call_020_72a8:
 	ld   a, [$cac4]                                  ; $72d9: $fa $c4 $ca
 	ld   d, $00                                      ; $72dc: $16 $00
 	ld   e, a                                        ; $72de: $5f
-	ld   hl, $ca9f                                   ; $72df: $21 $9f $ca
+	ld   hl, wIsMockBattle                                   ; $72df: $21 $9f $ca
 	add  hl, de                                      ; $72e2: $19
 	ld   a, [$cac4]                                  ; $72e3: $fa $c4 $ca
 	ld   [hl], a                                     ; $72e6: $77
@@ -9825,7 +9829,7 @@ jr_020_76bc:
 	adc  b                                           ; $76ce: $88
 
 Call_020_76cf:
-	ld   a, [$ca71]                                  ; $76cf: $fa $71 $ca
+	ld   a, [wBattleDistanceToEnemy]                                  ; $76cf: $fa $71 $ca
 	cp   $00                                         ; $76d2: $fe $00
 	jr   z, jr_020_76d9                              ; $76d4: $28 $03
 
@@ -9867,7 +9871,7 @@ jr_020_76d9:
 
 
 Call_020_7719:
-	ld   a, [$ca71]                                  ; $7719: $fa $71 $ca
+	ld   a, [wBattleDistanceToEnemy]                                  ; $7719: $fa $71 $ca
 	cp   $00                                         ; $771c: $fe $00
 	jr   z, jr_020_7723                              ; $771e: $28 $03
 

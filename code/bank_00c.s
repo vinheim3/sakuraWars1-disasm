@@ -3265,7 +3265,7 @@ ScheduleSubstate1:
 	ld   [wWramBank], a                                  ; $55b2: $ea $93 $c2
 	ldh  [rSVBK], a                                  ; $55b5: $e0 $70
 	call ClearOam                                       ; $55b7: $cd $d7 $0d
-	ld   hl, $afd0                                   ; $55ba: $21 $d0 $af
+	ld   hl, sSramVals2+SRAM2_STAMINA                                   ; $55ba: $21 $d0 $af
 
 	M_FarCall LoadStatBars
 
@@ -7328,7 +7328,7 @@ jr_00c_70ea:
 	pop  af                                          ; $7103: $f1
 	call FarCall                                       ; $7104: $cd $62 $09
 	ld   a, $ff                                      ; $7107: $3e $ff
-	ld   [$afd0], a                                  ; $7109: $ea $d0 $af
+	ld   [sSramVals2+SRAM2_STAMINA], a                                  ; $7109: $ea $d0 $af
 	jr   jr_00c_70ba                                 ; $710c: $18 $ac
 
 jr_00c_710e:

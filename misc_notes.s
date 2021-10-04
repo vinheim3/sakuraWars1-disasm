@@ -105,6 +105,15 @@
 ; TODO: optimize kanna's title screen tile usage
 ; TODO: redo special case when a textbox text is supposed to be centered or slightly indented
 
+; battles
+; 18 - 7+8
+; 261 - 0
+; 359 - 1
+; 494 - 2
+; 658 - 3
+; 735 - 5
+; 768 - 4
+; 769 - 5
 
 ; Flag 1 outstanding
 ; search for CheckIfNextFlagSet1
