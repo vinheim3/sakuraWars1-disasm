@@ -1855,6 +1855,30 @@ Gfx_TrainingShchedule::
 	INCBIN "en_trainingSchedule.2bpp"
 .end::
 
+
+_CinematronTileAttrHook::
+	call RLEXorCopy
+
+	ld   a, BANK(.layout)
+	ldbc 18, 8
+	ld   de, .layout
+	ld   hl, $d300
+	call FarCopyLayout
+	ret
+.layout:
+; Pocket sakura
+	db $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f
+	db $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f
+; Yes/No
+	db $0f, $0f, $0f, $0f, $0f, $0f, $07, $07, $0f, $0f, $0f, $0f, $07, $07, $0f, $0f, $0f, $0f
+	db $0f, $0f, $0f, $0f, $0f, $0f, $07, $07, $0f, $0f, $0f, $0f, $07, $07, $0f, $0f, $0f, $0f
+; GBC
+	db $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f
+	db $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f
+; TV adapter
+	db $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f
+	db $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f
+
 endc
 
 if def(PORTRAITLESS_UNTIMED)

@@ -11319,12 +11319,12 @@ endc
 
 if def(VWF)
 Layout_SakuraYoureAPro1::
-	db $04, $04, $04, $04
+	db $0c, $04, $04, $04
 	db $03, $03, $03, $03
 	db $0b, $0b, $0b, $0b
 	db $0b, $0b, $0b, $0b
 
-	db $91, $62, $63, $64
+	db $13, $62, $63, $64
 	db $71, $72, $73, $74
 	db $81, $82, $83, $84
 	db $91, $92, $93, $94
@@ -11344,7 +11344,7 @@ Layout_SakuraYoureAPro2::
 
 Layout_SakuraYoureAPro3::
 	db $04, $04, $04, $04
-	db $03, $03, $03, $04
+	db $03, $03, $04, $04
 	db $0b, $0b, $0b, $0b
 	db $0b, $0b, $0b, $0b
 

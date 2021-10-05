@@ -847,6 +847,11 @@ CinematronTileDataHook1::
 	ld   hl, .gameboyBottomRight
 	call MemCopy
 
+	ld   bc, $20
+	ld   de, $8e60
+	ld   hl, .gameboyCorners
+	call MemCopy
+
 	ld   bc, $40
 	ld   de, $8e00
 	ld   hl, .tvTopRight
@@ -935,6 +940,8 @@ CinematronTileDataHook1::
 	INCBIN "en_cinematron.2bpp", (6*20+8)*$10, $40
 .gameboyBottomRight:
 	INCBIN "en_cinematron.2bpp", (7*20+8)*$10, $40
+.gameboyCorners:
+	INCBIN "en_cinematron.2bpp", (7*20+12)*$10, $20
 .tvTopRight:
 	INCBIN "en_cinematron.2bpp", (8*20+2)*$10, $40
 .tvBottomRight:

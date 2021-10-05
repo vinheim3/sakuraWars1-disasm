@@ -2102,6 +2102,11 @@ EnLoadSakuraMiniGameGfx1::
 	ld   hl, .row12
 	call MemCopy
 
+	ld   bc, $10
+	ld   de, $9130
+	ld   hl, .row1_1stTile
+	call MemCopy
+
 	ret
 .row2_2:
 	INCBIN "en_sakuraMiniGameMain.2bpp", 37*$10, $10
@@ -2131,6 +2136,8 @@ EnLoadSakuraMiniGameGfx1::
 	INCBIN "en_sakuraMiniGameMain.2bpp", 205*$10, $a0
 .row12:
 	INCBIN "en_sakuraMiniGameMain.2bpp", 225*$10, $a0
+.row1_1stTile:
+	INCBIN "en_sakuraMiniGameMain.2bpp", 2*$10, $10
 
 
 _CinematronTileMapHook::
@@ -2155,29 +2162,5 @@ _CinematronTileMapHook::
 ; TV adapter
 	db $65, $44, $45, $46, $47, $48, $49, $4a, $4b, $4c, $4d, $4e, $4f, $60, $61, $62, $63, $65
 	db $65, $54, $55, $56, $57, $58, $59, $5a, $5b, $5c, $5d, $5e, $5f, $70, $71, $72, $73, $65
-
-
-_CinematronTileAttrHook::
-	call RLEXorCopy
-
-	ld   a, BANK(.layout)
-	ldbc 18, 8
-	ld   de, .layout
-	ld   hl, $d300
-	call FarCopyLayout
-	ret
-.layout:
-; Pocket sakura
-	db $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f
-	db $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f
-; Yes/No
-	db $0f, $0f, $0f, $0f, $0f, $0f, $07, $07, $0f, $0f, $0f, $0f, $07, $07, $0f, $0f, $0f, $0f
-	db $0f, $0f, $0f, $0f, $0f, $0f, $07, $07, $0f, $0f, $0f, $0f, $07, $07, $0f, $0f, $0f, $0f
-; GBC
-	db $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f
-	db $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f
-; TV adapter
-	db $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f
-	db $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f
 
 endc
