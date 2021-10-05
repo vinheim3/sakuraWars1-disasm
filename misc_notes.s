@@ -15,7 +15,6 @@
 ; rgbgfx -o en_dormRoomDayDetails.2bpp -h en_dormRoomDayDetails.png
 ; rgbgfx -o en_enterName.2bpp en_enterName.png
 ; rgbgfx -o en_battleKanjis.2bpp en_battleKanjis.png
-; rgbgfx -o en_cinematron.2bpp en_cinematron.png
 ; rgbgfx -o en_sakuraMiniGameTitleScreen.2bpp en_sakuraMiniGameTitleScreen.png
 ; rgbgfx -o en_sumireMiniGameTitleScreen.2bpp en_sumireMiniGameTitleScreen.png
 ; rgbgfx -o en_sumireMGTitleScreenPressA.2bpp en_sumireMGTitleScreenPressA.png
@@ -65,6 +64,7 @@
 ; rgbgfx -o en_tvadapter.2bpp -u -T en_tvadapter.png
 ; rgbgfx -o en_gameboyComms.2bpp -u -T en_gameboyComms.png
 ; rgbgfx -o en_pocketSakura.2bpp -u -T en_pocketSakura.png
+; rgbgfx -o en_cinematron.2bpp en_cinematron.png
 ; tools/gfx.py 1bpp newLetters.png --from=png --interleave
 
 ; empty banks
@@ -76,8 +76,8 @@
 ; 0x41 - 0x6a
 
 ; hook banks
-; $ff ($a4), $fd ($276), $fb ($155), $a4 ($45), $8b ($19f), $85 ($4c3)
-; $6b ($862), $2b ($59e), $1f ($24e), $40 ($798), $3f ($42b), $35 ($2d88)
+; $ff ($a4), $fd ($42), $fb ($17), $a4 ($45), $8b ($19f), $85 ($4c3)
+; $6b ($85f), $2b ($59e), $1f ($46f), $40 ($798), $3f ($42b), $35 ($21e8)
 ; -> $31, $2f, $2a
 
 ; To 'day passed'

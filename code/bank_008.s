@@ -7647,7 +7647,7 @@ ScriptOpcode2a_Main:
 	srl  c                                           ; $73db: $cb $39
 	srl  c                                           ; $73dd: $cb $39
 	srl  c                                           ; $73df: $cb $39
-	ld   hl, $b0ac                                   ; $73e1: $21 $ac $b0
+	ld   hl, sSramVals2+SRAM2_HINT_ICON1                                   ; $73e1: $21 $ac $b0
 	add  hl, bc                                      ; $73e4: $09
 	ld   b, $01                                      ; $73e5: $06 $01
 	and  $07                                         ; $73e7: $e6 $07

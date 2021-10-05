@@ -1028,13 +1028,15 @@
                             canvasHeight: 32*8,
                         },
                         {
-                            name: "Cinematron (todo) (gs $14)",
+                            name: "Cinematron (gs $14)",
                             sources: [
                                 ['rleXorCopy', 0x14, 0x60df, 0x0000, 'vram1'],
-                                ['simpleCopy', 0x1e, 0x647c, 0x0000, 0x40, 'rom', 'bgPalettes'],
+                                ['rleXorCopy', 0x13, 0x6a00, 0x8000, 'memory'],
+                                ['rleXorCopy', 0x1d, 0x60f4, 0x1800, 'vram1'],
+                                ['rleXorCopy', 0x1c, 0x66fd, 0x9800, 'memory'],
+                                ['simpleCopy', 0x1e, 0x667c, 0x0000, 0x40, 'rom', 'bgPalettes'],
                             ],
                             isGBC: true,
-                            showTileData: true,
                         },
                         {
                             name: "TV Comms (gs $11)",

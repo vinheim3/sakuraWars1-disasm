@@ -11,7 +11,7 @@ GameState39_Explore::
 ;
 	ld   a, [wGameSubstate]                                  ; $4000: $fa $a1 $c2
 	bit  7, a                                        ; $4003: $cb $7f
-	jp   nz, Jump_00c_451d                           ; $4005: $c2 $1d $45
+	jp   nz, ExploreSubstateMain                           ; $4005: $c2 $1d $45
 
 ;
 	ld   a, [wWramBank]                                  ; $4008: $fa $93 $c2
@@ -414,16 +414,23 @@ ExploreSubstate9:
 jr_00c_42f6:
 	dec  hl                                          ; $42f6: $2b
 
+
 Call_00c_42f7:
+;
 	ld   hl, $dc40                                   ; $42f7: $21 $40 $dc
 	ld   bc, $0010                                   ; $42fa: $01 $10 $00
 	ld   a, $ff                                      ; $42fd: $3e $ff
 	call MemSet                                       ; $42ff: $cd $96 $09
+
+;
 	ld   a, [wWramBank]                                  ; $4302: $fa $93 $c2
 	push af                                          ; $4305: $f5
+
 	ld   a, $07                                      ; $4306: $3e $07
 	ld   [wWramBank], a                                  ; $4308: $ea $93 $c2
 	ldh  [rSVBK], a                                  ; $430b: $e0 $70
+
+;
 	ld   a, $10                                      ; $430d: $3e $10
 	ld   de, $d000                                   ; $430f: $11 $00 $d0
 	ld   hl, $7000                                   ; $4312: $21 $00 $70
@@ -458,15 +465,20 @@ jr_00c_4324:
 	dec  a                                           ; $4338: $3d
 	jr   nz, jr_00c_4315                             ; $4339: $20 $da
 
+;
 	pop  af                                          ; $433b: $f1
 	ld   [wWramBank], a                                  ; $433c: $ea $93 $c2
 	ldh  [rSVBK], a                                  ; $433f: $e0 $70
+
+;
 	ld   c, $80                                      ; $4341: $0e $80
 	ld   de, $8400                                   ; $4343: $11 $00 $84
 	ld   a, $07                                      ; $4346: $3e $07
 	ld   hl, $d000                                   ; $4348: $21 $00 $d0
 	ld   b, $40                                      ; $434b: $06 $40
 	call EnqueueHDMATransfer                                       ; $434d: $cd $7c $02
+
+;
 	ld   a, [wExploreFloor]                                  ; $4350: $fa $2f $cb
 	sla  a                                           ; $4353: $cb $27
 	ld   b, $00                                      ; $4355: $06 $00
@@ -478,14 +490,14 @@ jr_00c_4324:
 	ld   l, a                                        ; $435e: $6f
 	ld   d, $ff                                      ; $435f: $16 $ff
 
-jr_00c_4361:
+.nextRegion:
 	ld   a, [hl]                                     ; $4361: $7e
 	or   a                                           ; $4362: $b7
 	ret  z                                           ; $4363: $c8
 
 	push hl                                          ; $4364: $e5
 	cp   d                                           ; $4365: $ba
-	jr   z, jr_00c_43bc                              ; $4366: $28 $54
+	jr   z, .toNextRegion                              ; $4366: $28 $54
 
 	ld   b, $00                                      ; $4368: $06 $00
 	ld   c, a                                        ; $436a: $4f
@@ -495,7 +507,7 @@ jr_00c_4361:
 	add  hl, bc                                      ; $4370: $09
 	ld   a, [hl]                                     ; $4371: $7e
 	bit  7, a                                        ; $4372: $cb $7f
-	jr   nz, jr_00c_43bc                             ; $4374: $20 $46
+	jr   nz, .toNextRegion                             ; $4374: $20 $46
 
 	push af                                          ; $4376: $f5
 	ld   h, $00                                      ; $4377: $26 $00
@@ -521,12 +533,9 @@ jr_00c_4361:
 	ld   h, a                                        ; $4398: $67
 	call Call_00c_4443                               ; $4399: $cd $43 $44
 	or   a                                           ; $439c: $b7
-	jr   nz, jr_00c_43a1                             ; $439d: $20 $02
-
+	jr   nz, :+                             ; $439d: $20 $02
 	ld   h, $00                                      ; $439f: $26 $00
-
-jr_00c_43a1:
-	ld   a, $15                                      ; $43a1: $3e $15
+:	ld   a, $15                                      ; $43a1: $3e $15
 	add  h                                           ; $43a3: $84
 	ld   [de], a                                     ; $43a4: $12
 	inc  de                                          ; $43a5: $13
@@ -551,23 +560,24 @@ jr_00c_43a1:
 	adc  b                                           ; $43ba: $88
 	ld   [de], a                                     ; $43bb: $12
 
-jr_00c_43bc:
+.toNextRegion:
 	pop  hl                                          ; $43bc: $e1
 	ld   d, [hl]                                     ; $43bd: $56
 	ld   bc, $0007                                   ; $43be: $01 $07 $00
 	add  hl, bc                                      ; $43c1: $09
-	jr   jr_00c_4361                                 ; $43c2: $18 $9d
+	jr   .nextRegion                                 ; $43c2: $18 $9d
+
 
 Call_00c_43c4:
-	ld   a, [$b0ac]                                  ; $43c4: $fa $ac $b0
-	ld   [$cb41], a                                  ; $43c7: $ea $41 $cb
-	ld   a, [$b0ad]                                  ; $43ca: $fa $ad $b0
-	ld   [$cb42], a                                  ; $43cd: $ea $42 $cb
+	ld   a, [sSramVals2+SRAM2_HINT_ICON1]                                  ; $43c4: $fa $ac $b0
+	ld   [wExploreHintIcons], a                                  ; $43c7: $ea $41 $cb
+	ld   a, [sSramVals2+SRAM2_HINT_ICON2]                                  ; $43ca: $fa $ad $b0
+	ld   [wExploreHintIcons+1], a                                  ; $43cd: $ea $42 $cb
 	ld   a, [$b1b8]                                  ; $43d0: $fa $b8 $b1
 	or   a                                           ; $43d3: $b7
 	jr   nz, jr_00c_4400                             ; $43d4: $20 $2a
 
-	ld   hl, $0100                                   ; $43d6: $21 $00 $01
+	ld   hl, FLAG1_SAKURAS_SCHEDULE                                   ; $43d6: $21 $00 $01
 	ld   b, $01                                      ; $43d9: $06 $01
 
 jr_00c_43db:
@@ -623,7 +633,7 @@ Call_00c_4419:
 	srl  a                                           ; $4420: $cb $3f
 	ld   d, $00                                      ; $4422: $16 $00
 	ld   e, a                                        ; $4424: $5f
-	ld   hl, $cb41                                   ; $4425: $21 $41 $cb
+	ld   hl, wExploreHintIcons                                   ; $4425: $21 $41 $cb
 	add  hl, de                                      ; $4428: $19
 	pop  af                                          ; $4429: $f1
 	push hl                                          ; $442a: $e5
@@ -654,7 +664,7 @@ Call_00c_4443:
 	srl  c                                           ; $4449: $cb $39
 	srl  c                                           ; $444b: $cb $39
 	and  $07                                         ; $444d: $e6 $07
-	ld   hl, $cb41                                   ; $444f: $21 $41 $cb
+	ld   hl, wExploreHintIcons                                   ; $444f: $21 $41 $cb
 	add  hl, bc                                      ; $4452: $09
 	ld   b, [hl]                                     ; $4453: $46
 
@@ -765,7 +775,7 @@ ExploreLoadCursorTileDataAndSetSpriteDetails:
 	jr   .end                                 ; $451b: $18 $b3
 
 
-Jump_00c_451d:
+ExploreSubstateMain:
 ;
 	ld   a, [wWramBank]                                  ; $451d: $fa $93 $c2
 	push af                                          ; $4520: $f5

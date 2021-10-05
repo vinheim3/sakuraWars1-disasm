@@ -17,6 +17,7 @@ else
 endc
 endm
 
+; ???, script idx & ???, ???, rpn condition to trigger
 if def(VWF)
 Data_40_4000::
 	db $e4, $00, $11, $22

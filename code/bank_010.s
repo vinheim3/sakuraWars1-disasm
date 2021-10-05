@@ -4452,9 +4452,17 @@ CinematronSubstate0_DefaultInit:
 
 CinematronSubstate1_MainInit:
 ; Check if TV adapter is connected, set flag, and jump if it is
+;DEF TV_ADAPTER = $01
+if def(TV_ADAPTER)
+	ld   a, $00
+	nop
+	nop
+	nop
+else
 	di                                                              ; $5c21
 	call CheckIfTVAdapterConnected                                  ; $5c22
 	ei                                                              ; $5c25
+endc
 
 	ld   [wTVAdapterDisconnected], a                                ; $5c26
 	or   a                                                          ; $5c29
@@ -4548,7 +4556,11 @@ endc
 	ld   a, $13                                      ; $5ca1: $3e $13
 	ld   hl, $8000                                   ; $5ca3: $21 $00 $80
 	ld   de, $6a00                                   ; $5ca6: $11 $00 $6a
+if def(VWF)
+	call CinematronTileDataHook_0_8000h
+else
 	call RLEXorCopy                                       ; $5ca9: $cd $d2 $09
+endc
 	ld   c, $81                                      ; $5cac: $0e $81
 	ld   de, $9800                                   ; $5cae: $11 $00 $98
 	ld   a, $03                                      ; $5cb1: $3e $03
@@ -4607,12 +4619,9 @@ endc
 	ld   d, $00                                      ; $5d38: $16 $00
 	ld   a, [$c926]                                  ; $5d3a: $fa $26 $c9
 	or   a                                           ; $5d3d: $b7
-	jr   nz, jr_010_5d42                             ; $5d3e: $20 $02
-
+	jr   nz, :+                             ; $5d3e: $20 $02
 	ld   d, $28                                      ; $5d40: $16 $28
-
-jr_010_5d42:
-	ld   a, d                                        ; $5d42: $7a
+:	ld   a, d                                        ; $5d42: $7a
 	ld   de, AnimatedSpriteSpecs                                   ; $5d43: $11 $80 $71
 	push af                                          ; $5d46: $f5
 	ld   a, $03                                      ; $5d47: $3e $03
@@ -5779,39 +5788,66 @@ Call_010_6493:
 	ld   hl, $d640                                   ; $64ad: $21 $40 $d6
 	ld   bc, $00b4                                   ; $64b0: $01 $b4 $00
 	call MemCopy                                       ; $64b3: $cd $a9 $09
+
 	ld   a, [wGameSubstate]                                  ; $64b6: $fa $a1 $c2
 	cp   $04                                         ; $64b9: $fe $04
-	jr   z, jr_010_64f5                              ; $64bb: $28 $38
+	jr   z, .cont_64f5                              ; $64bb: $28 $38
 
 	call Call_010_65fd                               ; $64bd: $cd $fd $65
+
+; copy chosen texts
 	ld   a, [wCinematronChosenOption]                                  ; $64c0: $fa $1d $c9
 	add  a                                           ; $64c3: $87
 	ld   c, a                                        ; $64c4: $4f
 	ld   b, $00                                      ; $64c5: $06 $00
 	push bc                                          ; $64c7: $c5
-	ld   hl, $651a                                   ; $64c8: $21 $1a $65
+	ld   hl, .textboxTileMapSources                                   ; $64c8: $21 $1a $65
 	add  hl, bc                                      ; $64cb: $09
+
+;
 	ld   a, [hl+]                                    ; $64cc: $2a
 	ld   h, [hl]                                     ; $64cd: $66
 	ld   l, a                                        ; $64ce: $6f
+if def(VWF)
+	ld   de, $dda1
+else
 	ld   de, $dda2                                   ; $64cf: $11 $a2 $dd
+endc
 	call Copy2RowsOf10hBytes                               ; $64d2: $cd $2a $65
+
+;
 	pop  bc                                          ; $64d5: $c1
-	ld   hl, $6522                                   ; $64d6: $21 $22 $65
+	ld   hl, .textboxTileAttrSources                                   ; $64d6: $21 $22 $65
 	add  hl, bc                                      ; $64d9: $09
+
+;
 	ld   a, [hl+]                                    ; $64da: $2a
 	ld   h, [hl]                                     ; $64db: $66
 	ld   l, a                                        ; $64dc: $6f
+if def(VWF)
+	ld   de, $de61
+else
 	ld   de, $de62                                   ; $64dd: $11 $62 $de
+endc
 	call Copy2RowsOf10hBytes                               ; $64e0: $cd $2a $65
+
+; copy yes/no
 	ld   hl, $d740                                   ; $64e3: $21 $40 $d7
+if def(VWF)
+	ld   de, $dde1
+else
 	ld   de, $dde2                                   ; $64e6: $11 $e2 $dd
+endc
 	call Copy2RowsOf10hBytes                               ; $64e9: $cd $2a $65
 	ld   hl, $d340                                   ; $64ec: $21 $40 $d3
+if def(VWF)
+	ld   de, $dea1
+else
 	ld   de, $dea2                                   ; $64ef: $11 $a2 $de
+endc
 	call Copy2RowsOf10hBytes                               ; $64f2: $cd $2a $65
 
-jr_010_64f5:
+.cont_64f5:
 	pop  af                                          ; $64f5: $f1
 	ld   [wWramBank], a                                  ; $64f6: $ea $93 $c2
 	ldh  [rSVBK], a                                  ; $64f9: $e0 $70
@@ -5829,48 +5865,56 @@ jr_010_64f5:
 	call EnqueueHDMATransfer                                       ; $6516: $cd $7c $02
 	ret                                              ; $6519: $c9
 
+.textboxTileMapSources:
+	dw $d700
+	dw $d780
+	dw $d7c0
+	dw $d710
 
-	nop                                              ; $651a: $00
-	rst  $10                                         ; $651b: $d7
-	add  b                                           ; $651c: $80
-	rst  $10                                         ; $651d: $d7
-	ret  nz                                          ; $651e: $c0
-
-	rst  $10                                         ; $651f: $d7
-	db   $10                                         ; $6520: $10
-	rst  $10                                         ; $6521: $d7
-	nop                                              ; $6522: $00
-	db   $d3                                         ; $6523: $d3
-	add  b                                           ; $6524: $80
-	db   $d3                                         ; $6525: $d3
-	ret  nz                                          ; $6526: $c0
-
-	db   $d3                                         ; $6527: $d3
-	db   $10                                         ; $6528: $10
-	db   $d3                                         ; $6529: $d3
+.textboxTileAttrSources:
+	dw $d300
+	dw $d380
+	dw $d3c0
+	dw $d310
 
 
 ; DE - dest addr
 ; HL - src addr
 Copy2RowsOf10hBytes:
 ; Copy $10 bytes
+if def(VWF)
+	ld   bc, $12
+else
 	ld   bc, $0010                                                  ; $652a
+endc
 	call MemCopy                                                    ; $652d
 
 ; Push HL+$10 (orig HL+$20)
+if def(VWF)
+	ld   bc, $0e
+else
 	ld   bc, $0010                                                  ; $6530
+endc
 	add  hl, bc                                                     ; $6533
 	push hl                                                         ; $6534
 
 ; DE += $10 (orig DE+$20)
+if def(VWF)
+	ld   hl, $0e
+else
 	ld   hl, $0010                                                  ; $6535
+endc
 	add  hl, de                                                     ; $6538
 	ld   e, l                                                       ; $6539
 	ld   d, h                                                       ; $653a
 
 ; Copy another $10 bytes
 	pop  hl                                                         ; $653b
+if def(VWF)
+	ld   bc, $12
+else
 	ld   bc, $0010                                                  ; $653c
+endc
 	call MemCopy                                                    ; $653f
 	ret                                                             ; $6542
 
@@ -9539,63 +9583,23 @@ Gfx_EnEnterName:
 .end:
 
 
-CinematronTileDataHook_1_8000h:
-	call RLEXorCopy
+CinematronTileDataHook_0_8000h:
+	M_FarCall CinematronTileDataHook0
 	ret
 
-	ld   a, BANK(Gfx_EnCinematron)
-	ld   bc, Gfx_EnCinematron.end-Gfx_EnCinematron
-	ld   de, $8800
-	ld   hl, Gfx_EnCinematron
-	call FarMemCopy
+
+CinematronTileDataHook_1_8000h:
+	M_FarCall CinematronTileDataHook1
 	ret
 
 
 CinematronTileMapHook:
-	call RLEXorCopy
+	M_FarCall _CinematronTileMapHook
 	ret
-
-	ld   a, BANK(.topLayout)
-	ldbc 6, 4
-	ld   de, .topLayout
-	ld   hl, $d400+$4e
-	call FarCopyLayout
-
-	ld   a, BANK(.bottomLayout)
-	ldbc 6, 2
-	ld   de, .bottomLayout
-	ld   hl, $d400+$12e
-	call FarCopyLayout
-
-	ret
-
-.topLayout:
-	db $80, $81, $82, $83, $84, $85
-	db $86, $87, $88, $89, $8a, $8b
-	db $8c, $8d, $8e, $8f, $90, $91
-	db $92, $93, $94, $95, $96, $97
-.bottomLayout:
-	db $98, $99, $9a, $9b, $9c, $9d
-	db $9e, $9f, $a0, $a1, $a2, $a3
 
 
 CinematronTileAttrHook:
-	call RLEXorCopy
-	ret
-
-	ld   a, [$d000+$12e]
-	res  3, a
-	ld   [$d000+$12e], a
-	ld   a, [$d000+$12f]
-	res  3, a
-	ld   [$d000+$12f], a
-	ld   a, [$d000+$14e]
-	res  3, a
-	ld   [$d000+$14e], a
-	ld   a, [$d000+$14f]
-	res  3, a
-	ld   [$d000+$14f], a
-
+	M_FarCall _CinematronTileAttrHook
 	ret
 
 

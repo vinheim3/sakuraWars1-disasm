@@ -9,11 +9,6 @@ Gfx_EnTitleMenuScreenOpts::
 	INCBIN "en_titleMenuScreenOpts.2bpp"
 
 
-Gfx_EnCinematron::
-	INCBIN "en_cinematron.2bpp"
-.end::
-
-
 LoadSakuraMiniGameTitleScreenGfx0::
 	ld   bc, 38*$10
 	ld   de, $d000+$570
@@ -2136,5 +2131,53 @@ EnLoadSakuraMiniGameGfx1::
 	INCBIN "en_sakuraMiniGameMain.2bpp", 205*$10, $a0
 .row12:
 	INCBIN "en_sakuraMiniGameMain.2bpp", 225*$10, $a0
+
+
+_CinematronTileMapHook::
+	call RLEXorCopy
+
+	ld   a, BANK(.layout)
+	ldbc 18, 8
+	ld   de, .layout
+	ld   hl, $d700
+	call FarCopyLayout
+	ret
+.layout:
+; Pocket sakura
+	db $a0, $a1, $a2, $a3, $a4, $a5, $a6, $a7, $a8, $a9, $aa, $ab, $ac, $ad, $ae, $af, $c2, $c3
+	db $b0, $b1, $b2, $b3, $b4, $b5, $b6, $b7, $b8, $b9, $ba, $bb, $bc, $bd, $be, $bf, $d2, $d3
+; Yes/No
+	db $65, $65, $65, $65, $65, $65, $11, $12, $65, $65, $65, $65, $13, $14, $65, $65, $65, $65
+	db $65, $65, $65, $65, $65, $65, $21, $22, $65, $65, $65, $65, $23, $24, $65, $65, $65, $65
+; GBC
+	db $80, $81, $82, $83, $84, $85, $86, $87, $88, $89, $8a, $8b, $8c, $8d, $8e, $8f, $c0, $c1
+	db $90, $91, $92, $93, $94, $95, $96, $97, $98, $99, $9a, $9b, $9c, $9d, $9e, $9f, $d0, $d1
+; TV adapter
+	db $65, $44, $45, $46, $47, $48, $49, $4a, $4b, $4c, $4d, $4e, $4f, $60, $61, $62, $63, $65
+	db $65, $54, $55, $56, $57, $58, $59, $5a, $5b, $5c, $5d, $5e, $5f, $70, $71, $72, $73, $65
+
+
+_CinematronTileAttrHook::
+	call RLEXorCopy
+
+	ld   a, BANK(.layout)
+	ldbc 18, 8
+	ld   de, .layout
+	ld   hl, $d300
+	call FarCopyLayout
+	ret
+.layout:
+; Pocket sakura
+	db $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f
+	db $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f
+; Yes/No
+	db $0f, $0f, $0f, $0f, $0f, $0f, $07, $07, $0f, $0f, $0f, $0f, $07, $07, $0f, $0f, $0f, $0f
+	db $0f, $0f, $0f, $0f, $0f, $0f, $07, $07, $0f, $0f, $0f, $0f, $07, $07, $0f, $0f, $0f, $0f
+; GBC
+	db $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f
+	db $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f
+; TV adapter
+	db $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f
+	db $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f
 
 endc

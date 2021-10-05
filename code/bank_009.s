@@ -444,9 +444,9 @@ DPTransition1a:
 
 
 	ld   a, $80                                      ; $4324: $3e $80
-	ld   [$b0ac], a                                  ; $4326: $ea $ac $b0
+	ld   [sSramVals2+SRAM2_HINT_ICON1], a                                  ; $4326: $ea $ac $b0
 	ld   a, $7f                                      ; $4329: $3e $7f
-	ld   [$b0ad], a                                  ; $432b: $ea $ad $b0
+	ld   [sSramVals2+SRAM2_HINT_ICON2], a                                  ; $432b: $ea $ad $b0
 	ld   a, $04                                      ; $432e: $3e $04
 	ld   [sDayPeriodIdx], a                                  ; $4330: $ea $b1 $af
 	ret                                              ; $4333: $c9

@@ -655,8 +655,11 @@ wExploreCurrRegionTopY:: ; $cb3f
 wExploreCurrRegionBottomY:: ; $cb40
     db
 
-wcb41:
-    ds $51-$41
+wExploreHintIcons:: ; $cb41
+    dw
+
+wcb43:
+    ds $51-$43
 
 wScriptEngineIsRunning:: ; $cb51
     db
