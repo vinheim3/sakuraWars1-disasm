@@ -1635,7 +1635,7 @@ endc
 	set  6, [hl]                                     ; $49f6: $cb $f6
 	ld   hl, wIE                                   ; $49f8: $21 $0d $c2
 	set  1, [hl]                                     ; $49fb: $cb $ce
-	ld   a, $06                                      ; $49fd: $3e $06
+	ld   a, LCDINT_06                                      ; $49fd: $3e $06
 	ld   [wLCDCIntFuncIdx], a                                  ; $49ff: $ea $8d $c2
 	ret                                              ; $4a02: $c9
 
@@ -1653,7 +1653,7 @@ jr_00c_4a03:
 	set  6, [hl]                                     ; $4a19: $cb $f6
 	ld   hl, wIE                                   ; $4a1b: $21 $0d $c2
 	set  1, [hl]                                     ; $4a1e: $cb $ce
-	ld   a, $07                                      ; $4a20: $3e $07
+	ld   a, LCDINT_07                                      ; $4a20: $3e $07
 	ld   [wLCDCIntFuncIdx], a                                  ; $4a22: $ea $8d $c2
 	ret                                              ; $4a25: $c9
 
@@ -4979,7 +4979,7 @@ Jump_00c_6212:
 	set  6, [hl]                                     ; $624d: $cb $f6
 	ld   hl, wIE                                   ; $624f: $21 $0d $c2
 	set  1, [hl]                                     ; $6252: $cb $ce
-	ld   a, $09                                      ; $6254: $3e $09
+	ld   a, LCDINT_09                                      ; $6254: $3e $09
 	ld   [wLCDCIntFuncIdx], a                                  ; $6256: $ea $8d $c2
 	ld   a, $70                                      ; $6259: $3e $70
 	ld   [wSCY], a                                  ; $625b: $ea $08 $c2

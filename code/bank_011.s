@@ -338,12 +338,12 @@ jr_011_423d:
 	or   a                                           ; $4245: $b7
 	jr   z, jr_011_424f                              ; $4246: $28 $07
 
-	call Call_011_4b96                               ; $4248: $cd $96 $4b
+	call todo_GetKannaMiniGameRankInA_2                               ; $4248: $cd $96 $4b
 	ld   b, $04                                      ; $424b: $06 $04
 	jr   jr_011_4254                                 ; $424d: $18 $05
 
 jr_011_424f:
-	call Call_011_4b81                               ; $424f: $cd $81 $4b
+	call todo_GetKannaMiniGameRankInA_1                               ; $424f: $cd $81 $4b
 	ld   b, $02                                      ; $4252: $06 $02
 
 jr_011_4254:
@@ -370,7 +370,7 @@ jr_011_425c:
 	or   a                                           ; $427d: $b7
 	jr   nz, jr_011_4293                             ; $427e: $20 $13
 
-	call Call_011_4b81                               ; $4280: $cd $81 $4b
+	call todo_GetKannaMiniGameRankInA_1                               ; $4280: $cd $81 $4b
 	ld   [wMiniGameTrainingBattleRank], a                                  ; $4283: $ea $21 $cb
 	ld   a, [$c809]                                  ; $4286: $fa $09 $c8
 	ld   [wGameState], a                                  ; $4289: $ea $a0 $c2
@@ -385,7 +385,7 @@ jr_011_4293:
 	ld   [hl+], a                                    ; $4299: $22
 	ld   a, [$c7f1]                                  ; $429a: $fa $f1 $c7
 	ld   [hl], a                                     ; $429d: $77
-	call Call_011_4b96                               ; $429e: $cd $96 $4b
+	call todo_GetKannaMiniGameRankInA_2                               ; $429e: $cd $96 $4b
 	push af                                          ; $42a1: $f5
 	ld   h, $0b                                      ; $42a2: $26 $0b
 	ld   l, $00                                      ; $42a4: $2e $00
@@ -1055,7 +1055,7 @@ jr_011_4687:
 	add  hl, bc                                      ; $468a: $09
 	ld   a, [hl]                                     ; $468b: $7e
 	call Call_011_4803                               ; $468c: $cd $03 $48
-	call $4bc2                                       ; $468f: $cd $c2 $4b
+	call Func_11_4bc2                                       ; $468f: $cd $c2 $4b
 	call Call_011_45b3                               ; $4692: $cd $b3 $45
 	jr   jr_011_46ad                                 ; $4695: $18 $16
 
@@ -1478,7 +1478,7 @@ jr_011_4897:
 	add  hl, bc                                      ; $48a4: $09
 	ld   a, [hl]                                     ; $48a5: $7e
 	call Call_011_4803                               ; $48a6: $cd $03 $48
-	call $4bc2                                       ; $48a9: $cd $c2 $4b
+	call Func_11_4bc2                                       ; $48a9: $cd $c2 $4b
 
 jr_011_48ac:
 	ld   hl, $c7a8                                   ; $48ac: $21 $a8 $c7
@@ -1882,64 +1882,53 @@ jr_011_4b69:
 	ret                                              ; $4b80: $c9
 
 
-Call_011_4b81:
+todo_GetKannaMiniGameRankInA_1:
 	ld   c, $02                                      ; $4b81: $0e $02
 	ld   hl, $c7f0                                   ; $4b83: $21 $f0 $c7
 	ld   a, [hl+]                                    ; $4b86: $2a
 	ld   d, [hl]                                     ; $4b87: $56
-
-jr_011_4b88:
 	ld   e, a                                        ; $4b88: $5f
-	ld   hl, $4b90                                   ; $4b89: $21 $90 $4b
-	call Call_011_585b                               ; $4b8c: $cd $5b $58
+	ld   hl, .table                                   ; $4b89: $21 $90 $4b
+	call ReturnMiniGameRankInA                               ; $4b8c: $cd $5b $58
 	ret                                              ; $4b8f: $c9
 
+.table:
+	dw 0
+	dw 1000
+	dw 2000
 
-	nop                                              ; $4b90: $00
-	nop                                              ; $4b91: $00
-	add  sp, $03                                     ; $4b92: $e8 $03
-	ret  nc                                          ; $4b94: $d0
 
-	rlca                                             ; $4b95: $07
-
-Call_011_4b96:
+todo_GetKannaMiniGameRankInA_2:
 	ld   c, $04                                      ; $4b96: $0e $04
 	ld   hl, $c7f0                                   ; $4b98: $21 $f0 $c7
 	ld   a, [hl+]                                    ; $4b9b: $2a
 	ld   d, [hl]                                     ; $4b9c: $56
 	ld   e, a                                        ; $4b9d: $5f
-	ld   hl, $4bae                                   ; $4b9e: $21 $ae $4b
+	ld   hl, .table1                                  ; $4b9e: $21 $ae $4b
 	ld   a, [$c805]                                  ; $4ba1: $fa $05 $c8
 	or   a                                           ; $4ba4: $b7
-	jr   z, jr_011_4baa                              ; $4ba5: $28 $03
-
-	ld   hl, $4bb8                                   ; $4ba7: $21 $b8 $4b
-
-jr_011_4baa:
-	call Call_011_585b                               ; $4baa: $cd $5b $58
+	jr   z, :+                              ; $4ba5: $28 $03
+	ld   hl, .table2                                   ; $4ba7: $21 $b8 $4b
+:	call ReturnMiniGameRankInA                               ; $4baa: $cd $5b $58
 	ret                                              ; $4bad: $c9
 
+.table1:
+	dw 0
+	dw 840
+	dw 1680
+	dw 2520
+	dw 3360
 
-	nop                                              ; $4bae: $00
-	nop                                              ; $4baf: $00
-	ld   c, b                                        ; $4bb0: $48
-	inc  bc                                          ; $4bb1: $03
-	sub  b                                           ; $4bb2: $90
-	ld   b, $d8                                      ; $4bb3: $06 $d8
-	add  hl, bc                                      ; $4bb5: $09
-	jr   nz, @+$0f                                   ; $4bb6: $20 $0d
+.table2:
+	dw 0
+	dw 1560
+	dw 3120
+	dw 4680
+	dw 6240
 
-	nop                                              ; $4bb8: $00
-	nop                                              ; $4bb9: $00
-	jr   @+$08                                       ; $4bba: $18 $06
 
-	jr   nc, @+$0e                                   ; $4bbc: $30 $0c
-
-	ld   c, b                                        ; $4bbe: $48
-	ld   [de], a                                     ; $4bbf: $12
-	ld   h, b                                        ; $4bc0: $60
-	jr   jr_011_4b88                                 ; $4bc1: $18 $c5
-
+Func_11_4bc2:
+	push bc ; $4bc2: $c5
 	ld   a, [$c7fb]                                  ; $4bc3: $fa $fb $c7
 	ld   c, a                                        ; $4bc6: $4f
 	ld   b, $00                                      ; $4bc7: $06 $00
@@ -4009,7 +3998,7 @@ Call_011_581d:
 	ld   d, [hl]                                     ; $5829: $56
 	ld   e, a                                        ; $582a: $5f
 	ld   hl, $5837                                   ; $582b: $21 $37 $58
-	call Call_011_585b                               ; $582e: $cd $5b $58
+	call ReturnMiniGameRankInA                               ; $582e: $cd $5b $58
 	ld   [$c82d], a                                  ; $5831: $ea $2d $c8
 	cp   $02                                         ; $5834: $fe $02
 	ret                                              ; $5836: $c9
@@ -4031,7 +4020,7 @@ jr_011_583d:
 	ld   d, [hl]                                     ; $5843: $56
 	ld   e, a                                        ; $5844: $5f
 	ld   hl, $5851                                   ; $5845: $21 $51 $58
-	call Call_011_585b                               ; $5848: $cd $5b $58
+	call ReturnMiniGameRankInA                               ; $5848: $cd $5b $58
 	ld   [$c82d], a                                  ; $584b: $ea $2d $c8
 	cp   $04                                         ; $584e: $fe $04
 	ret                                              ; $5850: $c9
@@ -4047,34 +4036,38 @@ jr_011_5856:
 	ld   bc, $030c                                   ; $5856: $01 $0c $03
 	add  sp, $03                                     ; $5859: $e8 $03
 
-Call_011_585b:
+
+; C - idx of last table entry
+; DE - score
+; HL - table of score thresholds
+ReturnMiniGameRankInA:
 	sla  c                                           ; $585b: $cb $21
 	ld   b, $00                                      ; $585d: $06 $00
 	add  hl, bc                                      ; $585f: $09
 	inc  hl                                          ; $5860: $23
 
-jr_011_5861:
+.nextRank:
 	ld   a, d                                        ; $5861: $7a
 	cp   [hl]                                        ; $5862: $be
-	jr   c, jr_011_586d                              ; $5863: $38 $08
+	jr   c, .toNextRank                              ; $5863: $38 $08
 
-	jr   nz, jr_011_5873                             ; $5865: $20 $0c
+	jr   nz, .done                             ; $5865: $20 $0c
 
 	dec  hl                                          ; $5867: $2b
 	ld   a, e                                        ; $5868: $7b
 	cp   [hl]                                        ; $5869: $be
-	jr   nc, jr_011_5873                             ; $586a: $30 $07
+	jr   nc, .done                             ; $586a: $30 $07
 
 	inc  hl                                          ; $586c: $23
 
-jr_011_586d:
+.toNextRank:
 	dec  hl                                          ; $586d: $2b
 	dec  hl                                          ; $586e: $2b
 	dec  c                                           ; $586f: $0d
 	dec  c                                           ; $5870: $0d
-	jr   nz, jr_011_5861                             ; $5871: $20 $ee
+	jr   nz, .nextRank                             ; $5871: $20 $ee
 
-jr_011_5873:
+.done:
 	ld   a, c                                        ; $5873: $79
 	srl  a                                           ; $5874: $cb $3f
 	ret                                              ; $5876: $c9
@@ -6967,10 +6960,9 @@ Call_011_6a97:
 	ld   hl, $0000                                   ; $6a9d: $21 $00 $00
 	ld   a, [$c895]                                  ; $6aa0: $fa $95 $c8
 	or   a                                           ; $6aa3: $b7
-	jr   nz, jr_011_6aa6                             ; $6aa4: $20 $00
+	jr   nz, :+                             ; $6aa4: $20 $00
 
-jr_011_6aa6:
-	add  hl, de                                      ; $6aa6: $19
+:	add  hl, de                                      ; $6aa6: $19
 	ld   e, l                                        ; $6aa7: $5d
 	ld   a, l                                        ; $6aa8: $7d
 	ld   [$c860], a                                  ; $6aa9: $ea $60 $c8
@@ -6980,13 +6972,10 @@ jr_011_6aa6:
 	ld   hl, $6ac3                                   ; $6ab1: $21 $c3 $6a
 	ld   a, [$c8ab]                                  ; $6ab4: $fa $ab $c8
 	or   a                                           ; $6ab7: $b7
-	jr   z, jr_011_6abd                              ; $6ab8: $28 $03
-
+	jr   z, :+                              ; $6ab8: $28 $03
 	ld   hl, $6acd                                   ; $6aba: $21 $cd $6a
-
-jr_011_6abd:
-	ld   c, $04                                      ; $6abd: $0e $04
-	call Call_011_585b                               ; $6abf: $cd $5b $58
+:	ld   c, $04                                      ; $6abd: $0e $04
+	call ReturnMiniGameRankInA                               ; $6abf: $cd $5b $58
 	ret                                              ; $6ac2: $c9
 
 

@@ -1136,7 +1136,7 @@ Func_05_4562::
 	set  6, [hl]                                     ; $46c1: $cb $f6
 	ld   hl, wIE                                   ; $46c3: $21 $0d $c2
 	set  1, [hl]                                     ; $46c6: $cb $ce
-	ld   a, $0d                                      ; $46c8: $3e $0d
+	ld   a, LCDINT_0d                                      ; $46c8: $3e $0d
 	ld   [wLCDCIntFuncIdx], a                                  ; $46ca: $ea $8d $c2
 	ld   a, $4f                                      ; $46cd: $3e $4f
 	ld   [$c20b], a                                  ; $46cf: $ea $0b $c2
@@ -2232,7 +2232,7 @@ Jump_005_4e92:
 	set  6, [hl]                                     ; $4e9e: $cb $f6
 	ld   hl, wIE                                   ; $4ea0: $21 $0d $c2
 	set  1, [hl]                                     ; $4ea3: $cb $ce
-	ld   a, $0e                                      ; $4ea5: $3e $0e
+	ld   a, LCDINT_0e                                      ; $4ea5: $3e $0e
 	ld   [wLCDCIntFuncIdx], a                                  ; $4ea7: $ea $8d $c2
 	ld   a, $4f                                      ; $4eaa: $3e $4f
 	ld   [$c20b], a                                  ; $4eac: $ea $0b $c2
@@ -2999,7 +2999,7 @@ GameState43_FlagSettings::
 	set  6, [hl]                                     ; $53d4: $cb $f6
 	ld   hl, wIE                                   ; $53d6: $21 $0d $c2
 	set  1, [hl]                                     ; $53d9: $cb $ce
-	ld   a, $11                                      ; $53db: $3e $11
+	ld   a, LCDINT_11                                      ; $53db: $3e $11
 	ld   [wLCDCIntFuncIdx], a                                  ; $53dd: $ea $8d $c2
 	ld   a, $70                                      ; $53e0: $3e $70
 	ld   [wSCY], a                                  ; $53e2: $ea $08 $c2

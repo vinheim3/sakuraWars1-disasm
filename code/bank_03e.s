@@ -6918,7 +6918,7 @@ jr_03e_6be9:
 	set  6, [hl]                                     ; $6bfc: $cb $f6
 	ld   hl, wIE                                   ; $6bfe: $21 $0d $c2
 	set  1, [hl]                                     ; $6c01: $cb $ce
-	ld   a, $05                                      ; $6c03: $3e $05
+	ld   a, LCDINT_05                                      ; $6c03: $3e $05
 	ld   [wLCDCIntFuncIdx], a                                  ; $6c05: $ea $8d $c2
 	ld   hl, $c9be                                   ; $6c08: $21 $be $c9
 	inc  [hl]                                        ; $6c0b: $34
@@ -6937,7 +6937,7 @@ LCDCFunc05::
 	ld   a, $ff                                      ; $6c17: $3e $ff
 	ld   [$ca3d], a                                  ; $6c19: $ea $3d $ca
 	ld   [$ca3e], a                                  ; $6c1c: $ea $3e $ca
-	ld   a, $04                                      ; $6c1f: $3e $04
+	ld   a, LCDINT_04                                      ; $6c1f: $3e $04
 	ld   [wLCDCIntFuncIdx], a                                  ; $6c21: $ea $8d $c2
 	ld   a, [$c9cb]                                  ; $6c24: $fa $cb $c9
 	or   a                                           ; $6c27: $b7
@@ -7013,7 +7013,7 @@ jr_03e_6c67:
 	jr   jr_03e_6c97                                 ; $6c84: $18 $11
 
 jr_03e_6c86:
-	ld   a, $05                                      ; $6c86: $3e $05
+	ld   a, LCDINT_05                                      ; $6c86: $3e $05
 	ld   [wLCDCIntFuncIdx], a                                  ; $6c88: $ea $8d $c2
 	ld   a, [$c9ca]                                  ; $6c8b: $fa $ca $c9
 	ld   [$c20b], a                                  ; $6c8e: $ea $0b $c2

@@ -395,12 +395,12 @@ class ScriptExtractor:
                 paramH = self.get_script_byte()
                 paramL = self.get_script_byte()
                 totalBytes += 2
-                comps.append(f"RpnCheckLocalByte ${paramH:02x}, ${paramL:02x}")
+                comps.append(f"RpnCheckLocalFlag ${paramH:02x}, ${paramL:02x}")
             elif ctrl == 6:
                 paramH = self.get_script_byte()
                 paramL = self.get_script_byte()
                 totalBytes += 2
-                comps.append(f"RpnCheckGlobalByte ${paramH:02x}, ${paramL:02x}")
+                comps.append(f"RpnCheckGlobalFlag ${paramH:02x}, ${paramL:02x}")
             elif ctrl == 0:
                 comps.append("RpnEnd")
                 break
@@ -576,8 +576,8 @@ class ScriptExtractor:
             else:
                 raise Exception(f"opcode ${op:02x}")
 
-    def genComps(self, non_dictionary=None):
-        non_dictionary = non_dictionary or []
+    def genComps(self, sampled_instructions=None):
+        sampled_instructions = sampled_instructions or {}
 
         totalBytes = 0
         prompted = True # if a new textbox has started
@@ -618,7 +618,7 @@ class ScriptExtractor:
                 else:
                     lineCounter = 0
                 textboxes, lineCounter = self.convertEnglish(
-                    english, dictionary=address not in non_dictionary, startingLine=lineCounter,
+                    english, dictionary=address not in sampled_instructions, startingLine=lineCounter,
                 )
                 for line in self.englishMap[address+1].split('\n'):
                     comps.append(f"; {line}")
@@ -628,14 +628,16 @@ class ScriptExtractor:
                         if self.scriptNum == 6:
                             comps.append("\tScriptOpt_SetDelay $3c")
                             totalBytes += 1
-                        # comps.append("\tScriptOpt_DisplayText")
-                        # comps.append("\t\tTEXT $0d")
                         comps.append("\tScriptOpt_ContinuePrompt")
                         totalBytes += 1
 
                     paramStr = ','.join(f"${kanji:02x}" for kanji in textbox)
                     comps.append(f"\t{name} ; {address+offset}")
                     comps.append(f"\t\tTEXT {paramStr}")
+                    if address in sampled_instructions:
+                        if len(textboxes) == 1 or i == 0:
+                            comps.append(f"\tdb $15, {sampled_instructions[address]}")
+                            totalBytes += 2
                     totalBytes += 1 + len(textbox) + 1
 
                 prompted = False
@@ -760,53 +762,76 @@ class ScriptExtractor:
         if self.scriptNum == 500:
             self.instructions[480] = self.simpleCodes[0x0a]
 
-        non_dictionary = []
+        sampled_instructions = {}
 
-        # import json
-        # with open('temp.json', 'w') as f:
-        #     f.write(json.dumps(self.instructions, indent=2))
+        import json
+        with open('temp.json', 'w') as f:
+            f.write(json.dumps(self.instructions, indent=2))
 
         # Ending sequence voice samples
         if ENDING_SAMPLES:
-            # Non-dictionary texts
-            instantTexts = [
-                3356, 3397, 3437, 3473, 3501,  # kohran
-            ]
-            for t in instantTexts:
-                assert t in self.instructions, t
-                self.instructions[t]["name"] = "db $32"
-            non_dictionary = instantTexts
-
-            # Samples + mute music
-            ending_sample_offset = 6
             if self.scriptNum == 736:
-                # Kohran
-                self.instructions[3350] = {
-                    "name": "db $13, $00", 
-                    "params": ""
-                }
-                self.instructions[3358] = {
-                    "name": f"db $15, {ending_sample_offset+0x0b}", 
-                    "params": ""
-                }
-                self.instructions[3399] = {
-                    "name": f"db $15, {ending_sample_offset+0x11}", 
-                    "params": ""
-                }
-                self.instructions[3439] = {
-                    "name": f"db $15, {ending_sample_offset+0x17}", 
-                    "params": ""
-                }
-                self.instructions[3475] = {
-                    "name": f"db $15, {ending_sample_offset+0x1d}", 
-                    "params": ""
-                }
-                self.instructions[3503] = {
-                    "name": f"db $15, {ending_sample_offset+0x23}", 
-                    "params": ""
-                }
+                sampled_instructions = {
+                    # sakura
+                    1762: 6+0x07,
+                    1814: 6+0x0d,
+                    1854: 6+0x13,
+                    1888: 6+0x19,
+                    1916: 6+0x1f,
 
-        comps, totalBytes = self.genComps(non_dictionary)
+                    # sumire
+                    2081: 6+0x08,
+                    2125: 6+0x0e,
+                    2163: 6+0x14,
+                    2195: 6+0x1a,
+                    2223: 6+0x20,
+
+                    # maria
+                    2417: 6+0x09,
+                    2459: 6+0x0f,
+                    2494: 6+0x15,
+                    2525: 6+0x1b,
+                    2551: 6+0x21,
+
+                    # iris
+                    3043: 6+0x0a,
+                    3083: 6+0x10,
+                    3130: 6+0x16,
+                    3165: 6+0x1c,
+                    3193: 6+0x22,
+
+                    # kohran
+                    3356: 6+0x0b,
+                    3397: 6+0x11,
+                    3437: 6+0x17,
+                    3473: 6+0x1d,
+                    3501: 6+0x23,
+
+                    # kanna
+                    2736: 6+0x0c,
+                    2778: 6+0x12,
+                    2818: 6+0x18,
+                    2848: 6+0x1e,
+                    2880: 6+0x24,
+                }
+                for t in sampled_instructions.keys():
+                    assert t in self.instructions, t
+                    assert self.instructions[t]["name"] == "ScriptOpt_DisplayText", t
+                    self.instructions[t]["name"] = "db $32"
+
+                mute_musics = [1756, 2075, 2411, 3036, 3350, 2730]
+                for t in mute_musics:
+                    assert t in self.instructions, t
+                    assert self.instructions[t]["name"] == "ScriptOpt_PlaySong"
+
+                    self.instructions[t] = {
+                        "name": "db $13, $00", 
+                    "name": "db $13, $00", 
+                        "name": "db $13, $00", 
+                        "params": ""
+                    }
+
+        comps, totalBytes = self.genComps(sampled_instructions)
 
         if self.scriptNum in (330, 500):
             totalBytes += 1

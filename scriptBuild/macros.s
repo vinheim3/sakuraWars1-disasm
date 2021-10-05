@@ -281,11 +281,11 @@ macro RpnGetLocalByte
     db $03, \1
 endm
 
-macro RpnCheckLocalByte
+macro RpnCheckLocalFlag
     db $04, \1, \2
 endm
 
-macro RpnCheckGlobalByte
+macro RpnCheckGlobalFlag
     db $06, \1, \2
 endm
 

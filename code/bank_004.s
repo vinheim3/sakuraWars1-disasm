@@ -47,7 +47,7 @@ RomandoShopSubstate0:
 	set  6, [hl]                                     ; $404b: $cb $f6
 	ld   hl, wIE                                   ; $404d: $21 $0d $c2
 	set  1, [hl]                                     ; $4050: $cb $ce
-	ld   a, $0b                                      ; $4052: $3e $0b
+	ld   a, LCDINT_0b                                      ; $4052: $3e $0b
 	ld   [wLCDCIntFuncIdx], a                                  ; $4054: $ea $8d $c2
 	ld   a, $70                                      ; $4057: $3e $70
 	ld   [wSCY], a                                  ; $4059: $ea $08 $c2

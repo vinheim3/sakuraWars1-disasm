@@ -2868,7 +2868,7 @@ jr_009_50c9:
 	set  1, [hl]                                     ; $50e6: $cb $ce
 	ld   a, $4f                                      ; $50e8: $3e $4f
 	ld   [$c20b], a                                  ; $50ea: $ea $0b $c2
-	ld   a, $08                                      ; $50ed: $3e $08
+	ld   a, LCDINT_08                                      ; $50ed: $3e $08
 	ld   [wLCDCIntFuncIdx], a                                  ; $50ef: $ea $8d $c2
 	xor  a                                           ; $50f2: $af
 	ld   [wStartingColorIdxToLoadCompDataFor], a                                  ; $50f3: $ea $62 $c3
@@ -2956,7 +2956,7 @@ jr_009_5137:
 	set  1, [hl]                                     ; $51a3: $cb $ce
 	ld   a, $4f                                      ; $51a5: $3e $4f
 	ld   [$c20b], a                                  ; $51a7: $ea $0b $c2
-	ld   a, $08                                      ; $51aa: $3e $08
+	ld   a, LCDINT_08                                      ; $51aa: $3e $08
 	ld   [wLCDCIntFuncIdx], a                                  ; $51ac: $ea $8d $c2
 	ld   hl, wLCDC                                   ; $51af: $21 $03 $c2
 	set  5, [hl]                                     ; $51b2: $cb $ee

@@ -4218,8 +4218,7 @@ ScriptOpcode15_PlaySampledSound_Main:
 
 	call DequeueAScriptOpcode                               ; $5b8c: $cd $bc $40
 	call GetNextScriptOpcodeToProcess                               ; $5b8f: $cd $70 $42
-;DEF ENDING_SAMPLES = $01
-if def(ENDING_SAMPLES)
+if def(VWF)
 	cp   EnSampledSounds.end-EnSampledSounds
 else
 	cp   $0d                                         ; $5b92: $fe $0d
@@ -4228,7 +4227,7 @@ endc
 
 	ld   h, $00                                      ; $5b95: $26 $00
 	ld   l, a                                        ; $5b97: $6f
-if def(ENDING_SAMPLES)
+if def(VWF)
 	ld   bc, EnSampledSounds
 else
 	ld   bc, .table                                   ; $5b98: $01 $a1 $5b
@@ -7858,7 +7857,7 @@ Jump_008_74a1:
 	set  6, [hl]                                     ; $752f: $cb $f6
 	ld   hl, wIE                                   ; $7531: $21 $0d $c2
 	set  1, [hl]                                     ; $7534: $cb $ce
-	ld   a, $10                                      ; $7536: $3e $10
+	ld   a, LCDINT_10                                      ; $7536: $3e $10
 	ld   [wLCDCIntFuncIdx], a                                  ; $7538: $ea $8d $c2
 
 Jump_008_753b:
@@ -8177,7 +8176,7 @@ AddSpaceInUntimedAnswer:
 
 endc
 
-if def(ENDING_SAMPLES)
+if def(VWF)
 
 EnSampledSounds:
 	db $00, $01, $02, $03, $04, $05, $06

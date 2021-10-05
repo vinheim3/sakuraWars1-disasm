@@ -3384,7 +3384,7 @@ else
 Script_005::
 endc
 	ScriptOpt_JumpIfCalcValIsNon0 .ref_b
-		RpnCheckGlobalByte $20, $00
+		RpnCheckGlobalFlag $20, $00
 		RpnPush $00
 		RpnEq
 		RpnEnd

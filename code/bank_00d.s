@@ -4587,7 +4587,7 @@ jr_00d_56de:
 	set  6, [hl]                                     ; $5717: $cb $f6
 	ld   hl, wIE                                   ; $5719: $21 $0d $c2
 	set  1, [hl]                                     ; $571c: $cb $ce
-	ld   a, $0c                                      ; $571e: $3e $0c
+	ld   a, LCDINT_0c                                      ; $571e: $3e $0c
 	ld   [wLCDCIntFuncIdx], a                                  ; $5720: $ea $8d $c2
 
 jr_00d_5723:

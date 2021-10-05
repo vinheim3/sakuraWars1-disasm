@@ -156,7 +156,7 @@ Reset:
 	jr   c, :-                                                      ; $01a0
 
 ; Turn on LCD and clear DMG palette regs
-	ld   a, $80                                                     ; $01a2
+	ld   a, LCDCF_ON                                                ; $01a2
 	ldh  [rLCDC], a                                                 ; $01a4
 	xor  a                                                          ; $01a6
 	ldh  [rBGP], a                                                  ; $01a7
@@ -232,7 +232,7 @@ Reset:
 
 ; Jump to main loop
 	ei                                                              ; $020f
-	ld   a, $00                                                     ; $0210
+	ld   a, BANK(MainLoop)                                          ; $0210
 	ld   [wRomBank], a                                              ; $0212
 	ld   [rROMB0], a                                                ; $0215
 	jp   MainLoop                                                   ; $0218

@@ -3119,7 +3119,7 @@ MiniGamesSubstate1:
 	set  6, [hl]                                     ; $50d8: $cb $f6
 	ld   hl, wIE                                   ; $50da: $21 $0d $c2
 	set  1, [hl]                                     ; $50dd: $cb $ce
-	ld   a, $01                                      ; $50df: $3e $01
+	ld   a, LCDINT_01                                      ; $50df: $3e $01
 	ld   [wLCDCIntFuncIdx], a                                  ; $50e1: $ea $8d $c2
 	ld   a, $ff                                      ; $50e4: $3e $ff
 	ld   [wInGameInputsEnabled], a                                  ; $50e6: $ea $0e $c2
@@ -6439,7 +6439,7 @@ jr_030_63b7:
 	set  6, [hl]                                     ; $63d5: $cb $f6
 	ld   hl, wIE                                   ; $63d7: $21 $0d $c2
 	set  1, [hl]                                     ; $63da: $cb $ce
-	ld   a, $02                                      ; $63dc: $3e $02
+	ld   a, LCDINT_02                                      ; $63dc: $3e $02
 	ld   [wLCDCIntFuncIdx], a                                  ; $63de: $ea $8d $c2
 	call ClearOam                                       ; $63e1: $cd $d7 $0d
 	ld   a, b                                        ; $63e4: $78
@@ -6668,7 +6668,7 @@ CreditsSubstate2:
 	ld   a, $18                                      ; $6567: $3e $18
 	ld   [$c20b], a                                  ; $6569: $ea $0b $c2
 
-	ld   a, $03                                      ; $656c: $3e $03
+	ld   a, LCDINT_03                                      ; $656c: $3e $03
 	ld   [wLCDCIntFuncIdx], a                                  ; $656e: $ea $8d $c2
 
 ;
