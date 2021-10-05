@@ -9,9 +9,13 @@ from util import bankConv, getRom, conv, bankAddr, wordIn, stringB, groupBytes
 from common_words import get_chosen
 from openpyxl import load_workbook
 
-ENDING_SAMPLES = False
-SRAM_BYTES_TO_CHECK = (0x55, 0x60,)
-SRAM_FLAGS_TO_CHECK = (0xd2,)
+ENDING_SAMPLES = True
+SRAM_BYTES_TO_CHECK = (
+    # 0x55, 0x60,
+)
+SRAM_FLAGS_TO_CHECK = (
+    # 0xd2,
+)
 
 
 class ScriptExtractor:
@@ -92,7 +96,7 @@ class ScriptExtractor:
             "params": "bb",
         },
         0x15: {
-            "name": "ScriptOpt_15",
+            "name": "ScriptOpt_PlaySampledSound",
             "params": "b",
         },
         0x16: {
@@ -100,7 +104,7 @@ class ScriptExtractor:
             "params": "b",
         },
         0x1a: {
-            "name": "ScriptOpt_1a",
+            "name": "ScriptOpt_MiniGame",
             "params": "b",
         },
         0x1b: {
@@ -112,11 +116,11 @@ class ScriptExtractor:
             "params": "bbb",
         },
         0x1e: {
-            "name": "ScriptOpt_1e",
+            "name": "ScriptOpt_GiftShop",
             "params": "",
         },
         0x21: {
-            "name": "ScriptOpt_21",
+            "name": "ScriptOpt_EnterName",
             "params": "",
         },
         0x23: {
@@ -124,11 +128,11 @@ class ScriptExtractor:
             "params": "b",
         },
         0x24: {
-            "name": "ScriptOpt_24",
+            "name": "ScriptOpt_Credits",
             "params": "b",
         },
         0x25: {
-            "name": "ScriptOpt_25",
+            "name": "ScriptOpt_NapOrTrain",
             "params": "b",
         },
         0x26: {
@@ -136,7 +140,7 @@ class ScriptExtractor:
             "params": "",
         },
         0x27: {
-            "name": "ScriptOpt_27",
+            "name": "ScriptOpt_Battle",
             "params": "b",
         },
         0x28: {
@@ -538,7 +542,7 @@ class ScriptExtractor:
                 self.offset += 2
                 rpn_comps, totalBytes = self.handleRPN()
                 self.instructions[currOpAddress] = {
-                    "name": "ScriptOpt_20", 
+                    "name": "ScriptOpt_GenRandomNum", 
                     "params": "bbR",
                     "rpn": rpn_comps,
                     "rpnLen": totalBytes,
@@ -546,7 +550,7 @@ class ScriptExtractor:
 
             elif op == 0x2e:
                 self.instructions[currOpAddress] = {
-                    "name": "ScriptOpt_2e",
+                    "name": "ScriptOpt_StartScript",
                     "params": "bb",
                 }
                 jumps = list(filter(lambda item: item >= self.offset, self.jumpAddresses))
@@ -572,7 +576,9 @@ class ScriptExtractor:
             else:
                 raise Exception(f"opcode ${op:02x}")
 
-    def genComps(self):
+    def genComps(self, non_dictionary=None):
+        non_dictionary = non_dictionary or []
+
         totalBytes = 0
         prompted = True # if a new textbox has started
 
@@ -612,7 +618,7 @@ class ScriptExtractor:
                 else:
                     lineCounter = 0
                 textboxes, lineCounter = self.convertEnglish(
-                    english, dictionary=True, startingLine=lineCounter,
+                    english, dictionary=address not in non_dictionary, startingLine=lineCounter,
                 )
                 for line in self.englishMap[address+1].split('\n'):
                     comps.append(f"; {line}")
@@ -628,7 +634,7 @@ class ScriptExtractor:
                         totalBytes += 1
 
                     paramStr = ','.join(f"${kanji:02x}" for kanji in textbox)
-                    comps.append(f"\tScriptOpt_DisplayText ; {address+offset}")
+                    comps.append(f"\t{name} ; {address+offset}")
                     comps.append(f"\t\tTEXT {paramStr}")
                     totalBytes += 1 + len(textbox) + 1
 
@@ -754,11 +760,31 @@ class ScriptExtractor:
         if self.scriptNum == 500:
             self.instructions[480] = self.simpleCodes[0x0a]
 
+        non_dictionary = []
+
+        # import json
+        # with open('temp.json', 'w') as f:
+        #     f.write(json.dumps(self.instructions, indent=2))
+
         # Ending sequence voice samples
         if ENDING_SAMPLES:
+            # Non-dictionary texts
+            instantTexts = [
+                3356, 3397, 3437, 3473, 3501,  # kohran
+            ]
+            for t in instantTexts:
+                assert t in self.instructions, t
+                self.instructions[t]["name"] = "db $32"
+            non_dictionary = instantTexts
+
+            # Samples + mute music
             ending_sample_offset = 6
             if self.scriptNum == 736:
                 # Kohran
+                self.instructions[3350] = {
+                    "name": "db $13, $00", 
+                    "params": ""
+                }
                 self.instructions[3358] = {
                     "name": f"db $15, {ending_sample_offset+0x0b}", 
                     "params": ""
@@ -775,12 +801,12 @@ class ScriptExtractor:
                     "name": f"db $15, {ending_sample_offset+0x1d}", 
                     "params": ""
                 }
-                self.instructions[3550] = {
+                self.instructions[3503] = {
                     "name": f"db $15, {ending_sample_offset+0x23}", 
                     "params": ""
                 }
 
-        comps, totalBytes = self.genComps()
+        comps, totalBytes = self.genComps(non_dictionary)
 
         if self.scriptNum in (330, 500):
             totalBytes += 1

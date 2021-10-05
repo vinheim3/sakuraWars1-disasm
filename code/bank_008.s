@@ -229,19 +229,19 @@ Call_008_418d:
 	ret                                              ; $419f: $c9
 
 .table:
-	dw .entry0
+	dw .addPlayerName
 	dw .entryStub
-	dw .entry2
+	dw .add2KanjisToTextBox
 	dw .entryStub
 	dw .entry4
 
-.entry0:
+.addPlayerName:
 	ld   d, $01                                      ; $41aa: $16 $01
 	ld   a, [$cba8]                                  ; $41ac: $fa $a8 $cb
 	ld   e, a                                        ; $41af: $5f
 	ld   a, [$cbaa]                                  ; $41b0: $fa $aa $cb
 	cp   e                                           ; $41b3: $bb
-	jr   nz, .entry0cont                             ; $41b4: $20 $17
+	jr   nz, .addPlayerNamecont                             ; $41b4: $20 $17
 
 	ld   a, [wIdxInScriptOpcodeStructForCurrOpcode]                                  ; $41b6: $fa $53 $cb
 	ld   b, $00                                      ; $41b9: $06 $00
@@ -250,15 +250,15 @@ Call_008_418d:
 	add  hl, bc                                      ; $41bf: $09
 	ld   a, [hl]                                     ; $41c0: $7e
 	cp   $01                                         ; $41c1: $fe $01
-	jr   nz, .entry0cont                             ; $41c3: $20 $08
+	jr   nz, .addPlayerNamecont                             ; $41c3: $20 $08
 
 	call CheckIfNextTextCharIsPunctuation                                       ; $41c5: $cd $7b $14
 	or   a                                           ; $41c8: $b7
-	jr   z, .entry0cont                              ; $41c9: $28 $02
+	jr   z, .addPlayerNamecont                              ; $41c9: $28 $02
 
 	set  1, d                                        ; $41cb: $cb $ca
 
-.entry0cont:
+.addPlayerNamecont:
 	ld   a, [$cba8]                                  ; $41cd: $fa $a8 $cb
 	ld   h, a                                        ; $41d0: $67
 	ld   a, [$cba9]                                  ; $41d1: $fa $a9 $cb
@@ -270,13 +270,13 @@ Call_008_418d:
 	
 	ret                                              ; $41ed: $c9
 
-.entry2:
+.add2KanjisToTextBox:
 	ld   d, $01                                      ; $41ee: $16 $01
 	ld   a, [$cbad]                                  ; $41f0: $fa $ad $cb
 	ld   e, a                                        ; $41f3: $5f
 	ld   a, [$cbaa]                                  ; $41f4: $fa $aa $cb
 	cp   e                                           ; $41f7: $bb
-	jr   nz, .entry2cont                             ; $41f8: $20 $17
+	jr   nz, .add2KanjisToTextBoxcont                             ; $41f8: $20 $17
 
 	ld   a, [wIdxInScriptOpcodeStructForCurrOpcode]                                  ; $41fa: $fa $53 $cb
 	ld   b, $00                                      ; $41fd: $06 $00
@@ -285,15 +285,15 @@ Call_008_418d:
 	add  hl, bc                                      ; $4203: $09
 	ld   a, [hl]                                     ; $4204: $7e
 	cp   $01                                         ; $4205: $fe $01
-	jr   nz, .entry2cont                             ; $4207: $20 $08
+	jr   nz, .add2KanjisToTextBoxcont                             ; $4207: $20 $08
 
 	call CheckIfNextTextCharIsPunctuation                                       ; $4209: $cd $7b $14
 	or   a                                           ; $420c: $b7
-	jr   z, .entry2cont                              ; $420d: $28 $02
+	jr   z, .add2KanjisToTextBoxcont                              ; $420d: $28 $02
 
 	set  1, d                                        ; $420f: $cb $ca
 
-.entry2cont:
+.add2KanjisToTextBoxcont:
 	ld   a, [$cbac]                                  ; $4211: $fa $ac $cb
 	ld   h, a                                        ; $4214: $67
 	ld   a, [$cba7]                                  ; $4215: $fa $a7 $cb
@@ -641,6 +641,7 @@ ScriptEngineTable:
 	ScriptOpData ScriptOpcode09_SetDelay, $01
 	; Counter for deciding arrow y coord
 	ScriptOpData ScriptOpcode0a_ContinuePrompt, $01
+; unused
 	ScriptOpData ScriptOpcode0b_SetTextSpeed, $00
 	;
 	ScriptOpData ScriptOpcode0c, $01
@@ -674,12 +675,14 @@ ScriptEngineTable:
 	;
 	ScriptOpData ScriptOpcode1d, $04
 	;
-	ScriptOpData ScriptOpcode1e, $04
+	ScriptOpData ScriptOpcode1e_GiftShop, $04
+; unused
 	;
-	ScriptOpData ScriptOpcode1f, $01
+	ScriptOpData ScriptOpcode1f_GirlImage, $01
 	ScriptOpData ScriptOpcode20_GenRandomNum, $00
 	;
 	ScriptOpData ScriptOpcode21_EnterName, $01
+; unused
 	ScriptOpData ScriptOpcode22_Stub, $00
 	;
 	ScriptOpData ScriptOpcode23, $03
@@ -696,6 +699,7 @@ ScriptEngineTable:
 	;
 	ScriptOpData ScriptOpcode2b, $02
 	ScriptOpData ScriptOpcode2c, $00
+; unused
 	;
 	ScriptOpData ScriptOpcode2d, $03
 	ScriptOpData ScriptOpcode2e_StartScript, $00
@@ -703,7 +707,9 @@ ScriptEngineTable:
 	ScriptOpData ScriptOpcode2f, $01
 	ScriptOpData ScriptOpcode30, $00
 	ScriptOpData ScriptOpcode31, $00
-	ScriptOpData ScriptOpcode32, $00
+; unused
+	ScriptOpData ScriptOpcode32_InstantText, $00
+; unused
 	;
 	ScriptOpData ScriptOpcode33, $01
 	;
@@ -781,16 +787,16 @@ ScriptCalcCode2_pushSpecialRamByte:
 	jp   hl                                          ; $4510: $e9
 
 .table:
-	dw .entry0_currDay
+	dw .addPlayerName_currDay
 	dw .entry1_timeOfDay
-	dw .entry2_untimedAnswer
-	dw .entry3_timedAnswer
+	dw .add2KanjisToTextBox_untimedAnswer
+	dw .addNewLine_timedAnswer
 	dw .entry4_miniGameTrainingBattleRank
 	dw .entry5_randomNum
 	dw $453f
 	dw .entry7_kouboChosen
 
-.entry0_currDay:
+.addPlayerName_currDay:
 	ld   a, [sCurrDay]                                  ; $4521: $fa $b0 $af
 	jr   PushAOntoScriptCalcStack                                 ; $4524: $18 $23
 
@@ -798,11 +804,11 @@ ScriptCalcCode2_pushSpecialRamByte:
 	ld   a, [wTimeOfDay]                                  ; $4526: $fa $20 $cb
 	jr   PushAOntoScriptCalcStack                                 ; $4529: $18 $1e
 
-.entry2_untimedAnswer:
+.add2KanjisToTextBox_untimedAnswer:
 	ld   a, [wUntimedQuestionAnswer]                                  ; $452b: $fa $92 $cb
 	jr   PushAOntoScriptCalcStack                                 ; $452e: $18 $19
 
-.entry3_timedAnswer:
+.addNewLine_timedAnswer:
 	ld   a, [wTimedQuestionAnswer]                                  ; $4530: $fa $93 $cb
 	jr   PushAOntoScriptCalcStack                                 ; $4533: $18 $14
 
@@ -1323,24 +1329,24 @@ ScriptOpcode01_DisplayText_Main:
 	ret                                                             ; $47ed
 
 
-ScriptOpcode32_Init:
+ScriptOpcode32_InstantText_Init:
 	ld   a, $32                                      ; $47ee: $3e $32
 	call EnqueueAScriptOpcode                               ; $47f0: $cd $97 $40
 	call ClearKanjiIdxInConvoAndTextBox                                       ; $47f3: $cd $1c $14
 	ld   a, $03                                      ; $47f6: $3e $03
 	call SetDefaultAndCurrKanjiTileTextStyle                                       ; $47f8: $cd $3f $15
 
-.loopUp:
+.nextOpcode:
 	ld   h, $00                                      ; $47fb: $26 $00
 	call GetNextScriptOpcodeToProcess                               ; $47fd: $cd $70 $42
 	or   a                                           ; $4800: $b7
 	jp   z, AddKanjiToConvoStructForCurrTextBox                                    ; $4801: $ca $5f $14
 
 	cp   $10                                         ; $4804: $fe $10
-	jr   nc, .br_4859                             ; $4806: $30 $51
+	jr   nc, .addKanjiToTextBox                             ; $4806: $30 $51
 
 	cp   $08                                         ; $4808: $fe $08
-	jr   c, .entry2                              ; $480a: $38 $49
+	jr   c, .add2KanjisToTextBox                              ; $480a: $38 $49
 
 	push af                                          ; $480c: $f5
 	ld   b, $00                                      ; $480d: $06 $00
@@ -1355,7 +1361,7 @@ ScriptOpcode32_Init:
 	pop  af                                          ; $481a: $f1
 	jp   hl                                          ; $481b: $e9
 
-.entry0:
+.addPlayerName:
 	ld   de, wPlayerName                                   ; $481c: $11 $0e $cb
 	ld   hl, sPlayerName                                   ; $481f: $21 $aa $af
 	ld   bc, $0006                                   ; $4822: $01 $06 $00
@@ -1367,48 +1373,44 @@ ScriptOpcode32_Init:
 
 	ld   de, wPlayerName                                   ; $4840: $11 $0e $cb
 
-.loop_4843:
+.loopNameChars:
 	ld   a, [de]                                     ; $4843: $1a
 	inc  de                                          ; $4844: $13
 	or   a                                           ; $4845: $b7
-	jr   z, .loopUp                              ; $4846: $28 $b3
+	jr   z, .nextOpcode                              ; $4846: $28 $b3
 
 	call AddKanjiToConvoStructForCurrTextBox                                       ; $4848: $cd $5f $14
-	jr   .loop_4843                                 ; $484b: $18 $f6
+	jr   .loopNameChars                                 ; $484b: $18 $f6
 
-.entry1:
-	jr   .loopUp                                 ; $484d: $18 $ac
+.noop:
+	jr   .nextOpcode                                 ; $484d: $18 $ac
 
-.entry3:
-.entry4:
-.entry5:
-.entry6:
-.entry7:
+.addNewLine:
 	ld   h, $00                                      ; $484f: $26 $00
 	ld   a, $0d                                      ; $4851: $3e $0d
-	jr   .br_4859                                 ; $4853: $18 $04
+	jr   .addKanjiToTextBox                                 ; $4853: $18 $04
 
-.entry2:
+.add2KanjisToTextBox:
 	ld   h, a                                        ; $4855: $67
 	call GetNextScriptOpcodeToProcess                               ; $4856: $cd $70 $42
 
-.br_4859:
+.addKanjiToTextBox:
 	ld   l, a                                        ; $4859: $6f
 	call AddQuarterBankOffsetAndKanjiToConvoStructForCurrTextBox                                       ; $485a: $cd $57 $14
-	jr   .loopUp                                 ; $485d: $18 $9c
+	jr   .nextOpcode                                 ; $485d: $18 $9c
 
 .table:
-	dw .entry0
-	dw .entry1
-	dw .entry2
-	dw .entry3
-	dw .entry4
-	dw .entry5
-	dw .entry6
-	dw .entry7
+	dw .addPlayerName
+	dw .noop
+	dw .add2KanjisToTextBox
+	dw .addNewLine
+	dw .addNewLine
+	dw .addNewLine
+	dw .addNewLine
+	dw .addNewLine
 
 
-ScriptOpcode32_Main:
+ScriptOpcode32_InstantText_Main:
 	xor  a                                           ; $486f: $af
 	ld   [wScriptEngineContsRunningThisMainLoop], a                                  ; $4870: $ea $52 $cb
 	ld   a, [wWramBank]                                  ; $4873: $fa $93 $c2
@@ -2852,13 +2854,13 @@ ScriptOpcode23_Main:
 	jp   hl                                          ; $52c2: $e9
 
 .table:
-	dw todo_Opcode23Entry0
+	dw todo_Opcode23addPlayerName
 	dw todo_Opcode23Entry1
-	dw todo_Opcode23Entry2
-	dw todo_Opcode23Entry3
+	dw todo_Opcode23add2KanjisToTextBox
+	dw todo_Opcode23addNewLine
 
 
-todo_Opcode23Entry0:
+todo_Opcode23addPlayerName:
 	ldh  a, [hScriptOpcodeParams+2]                                    ; $52cb: $f0 $a2
 	or   a                                           ; $52cd: $b7
 	jp   nz, Jump_008_52fc                           ; $52ce: $c2 $fc $52
@@ -3051,7 +3053,7 @@ jr_008_5409:
 	jp   Opcode23_SaveParamsFromHram                               ; $5415: $c3 $13 $55
 
 
-todo_Opcode23Entry2:
+todo_Opcode23add2KanjisToTextBox:
 	ld   hl, hScriptOpcodeParams+2                                   ; $5418: $21 $a2 $ff
 	ld   a, [hl]                                     ; $541b: $7e
 	inc  [hl]                                        ; $541c: $34
@@ -3065,7 +3067,7 @@ todo_Opcode23Entry2:
 	jp   Opcode23_SaveParamsFromHram                               ; $5429: $c3 $13 $55
 
 
-todo_Opcode23Entry3:
+todo_Opcode23addNewLine:
 	ld   c, $81                                      ; $542c: $0e $81
 	ld   de, $9800                                   ; $542e: $11 $00 $98
 	ld   a, $02                                      ; $5431: $3e $02
@@ -4216,6 +4218,7 @@ ScriptOpcode15_PlaySampledSound_Main:
 
 	call DequeueAScriptOpcode                               ; $5b8c: $cd $bc $40
 	call GetNextScriptOpcodeToProcess                               ; $5b8f: $cd $70 $42
+;DEF ENDING_SAMPLES = $01
 if def(ENDING_SAMPLES)
 	cp   EnSampledSounds.end-EnSampledSounds
 else
@@ -4838,10 +4841,10 @@ ScriptOpcode1b_Main:
 	ret                                              ; $5fa5: $c9
 
 .table:
-	dw todo_Opcode1bEntry0
+	dw todo_Opcode1baddPlayerName
 	dw todo_Opcode1bEntry1
-	dw todo_Opcode1bEntry2
-	dw todo_Opcode1bEntry3
+	dw todo_Opcode1badd2KanjisToTextBox
+	dw todo_Opcode1baddNewLine
 
 
 Opcode1b_SaveParamsFromHram:
@@ -4858,7 +4861,7 @@ Opcode1b_SaveParamsFromHram:
 	ret                                              ; $5fbd: $c9
 
 
-todo_Opcode1bEntry0:
+todo_Opcode1baddPlayerName:
 	ldh  a, [hScriptOpcodeParams+2]                                    ; $5fbe: $f0 $a2
 	or   a                                           ; $5fc0: $b7
 	jr   nz, jr_008_5fdc                             ; $5fc1: $20 $19
@@ -4980,7 +4983,7 @@ jr_008_60b3:
 	jp   Opcode1b_SaveParamsFromHram                               ; $60b3: $c3 $ae $5f
 
 
-todo_Opcode1bEntry2:
+todo_Opcode1badd2KanjisToTextBox:
 	ld   a, [$cba6]                                  ; $60b6: $fa $a6 $cb
 	ld   l, a                                        ; $60b9: $6f
 	ld   h, $00                                      ; $60ba: $26 $00
@@ -5000,7 +5003,7 @@ todo_Opcode1bEntry2:
 	jp   Opcode1b_SaveParamsFromHram                               ; $60f1: $c3 $ae $5f
 
 
-todo_Opcode1bEntry3:
+todo_Opcode1baddNewLine:
 	ldh  a, [hScriptOpcodeParams+2]                                    ; $60f4: $f0 $a2
 	or   a                                           ; $60f6: $b7
 	jp   nz, Jump_008_6134                           ; $60f7: $c2 $34 $61
@@ -5971,10 +5974,10 @@ ScriptOpcode1d_Main:
 	jp   hl                                          ; $6890: $e9
 
 .table:
-	dw .entry0
+	dw .addPlayerName
 	dw .entry1
 
-.entry0:
+.addPlayerName:
 	ldh  a, [hScriptOpcodeParams]                                    ; $6895: $f0 $a0
 	bit  7, a                                        ; $6897: $cb $7f
 	jr   nz, .br_68a2                             ; $6899: $20 $07
@@ -6020,7 +6023,7 @@ Opcode1d_SaveParamsFromHram:
 	ret                                              ; $68ce: $c9
 
 
-ScriptOpcode1e_Init:
+ScriptOpcode1e_GiftShop_Init:
 	ld   a, $1e                                      ; $68cf: $3e $1e
 	call EnqueueAScriptOpcode                               ; $68d1: $cd $97 $40
 	xor  a                                           ; $68d4: $af
@@ -6031,7 +6034,7 @@ ScriptOpcode1e_Init:
 	ret                                              ; $68d9: $c9
 
 
-ScriptOpcode1e_Main:
+ScriptOpcode1e_GiftShop_Main:
 	xor  a                                           ; $68da: $af
 	ld   [wScriptEngineContsRunningThisMainLoop], a                                  ; $68db: $ea $52 $cb
 	ld   a, l                                        ; $68de: $7d
@@ -6321,7 +6324,7 @@ Jump_008_6af6:
 	ret                                              ; $6b08: $c9
 
 
-ScriptOpcode1f_Init:
+ScriptOpcode1f_GirlImage_Init:
 	ld   a, $1f                                      ; $6b09: $3e $1f
 	call EnqueueAScriptOpcode                               ; $6b0b: $cd $97 $40
 
@@ -6337,7 +6340,7 @@ ScriptOpcode1f_Init:
 	ret                                              ; $6b1b: $c9
 
 
-ScriptOpcode1f_Main:
+ScriptOpcode1f_GirlImage_Main:
 	xor  a                                           ; $6b1c: $af
 	ld   [wScriptEngineContsRunningThisMainLoop], a                                  ; $6b1d: $ea $52 $cb
 	ld   a, [hl]                                     ; $6b20: $7e
@@ -6454,12 +6457,12 @@ ScriptOpcode24_Credits_Main:
 	jp   hl                                          ; $6bed: $e9
 
 .table:
-	dw todo_Opcode24Entry0
+	dw todo_Opcode24addPlayerName
 	dw todo_Opcode24Entry1
-	dw todo_Opcode24Entry2
+	dw todo_Opcode24add2KanjisToTextBox
 
 
-todo_Opcode24Entry0:
+todo_Opcode24addPlayerName:
 	ld   hl, hScriptOpcodeParams+1                                   ; $6bf4: $21 $a1 $ff
 	ld   a, [hl]                                     ; $6bf7: $7e
 	inc  [hl]                                        ; $6bf8: $34
@@ -6564,7 +6567,7 @@ jr_008_6c6a:
 	jp   Jump_008_6d40                               ; $6c98: $c3 $40 $6d
 
 
-todo_Opcode24Entry2:
+todo_Opcode24add2KanjisToTextBox:
 	ld   hl, hScriptOpcodeParams+1                                   ; $6c9b: $21 $a1 $ff
 	ld   a, [hl]                                     ; $6c9e: $7e
 	inc  [hl]                                        ; $6c9f: $34

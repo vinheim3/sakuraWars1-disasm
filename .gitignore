@@ -6,6 +6,7 @@
 *.xlsx
 *.tbl
 temp.s
+temp.json
 gfx_new.*
 scriptBuild/script.o
 scriptBuild/script.s

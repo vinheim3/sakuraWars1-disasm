@@ -181,7 +181,7 @@ macro ScriptOpt_14
     db $14, \1, \2
 endm
 
-macro ScriptOpt_15
+macro ScriptOpt_PlaySampledSound
     db $15, \1
 endm
 
@@ -197,7 +197,7 @@ macro ScriptOpt_TimedQuestion
     db $19, \1, \2
 endm
 
-macro ScriptOpt_1a
+macro ScriptOpt_MiniGame
     db $1a, \1
 endm
 
@@ -213,15 +213,15 @@ macro ScriptOpt_1d
     db $1d, \1, \2
 endm
 
-macro ScriptOpt_1e
+macro ScriptOpt_GiftShop
     db $1e
 endm
 
-macro ScriptOpt_20
+macro ScriptOpt_GenRandomNum
     db $20, \1, \2
 endm
 
-macro ScriptOpt_21
+macro ScriptOpt_EnterName
     db $21
 endm
 
@@ -229,11 +229,11 @@ macro ScriptOpt_23
     db $23, \1
 endm
 
-macro ScriptOpt_24
+macro ScriptOpt_Credits
     db $24, \1
 endm
 
-macro ScriptOpt_25
+macro ScriptOpt_NapOrTrain
     db $25, \1
 endm
 
@@ -241,7 +241,7 @@ macro ScriptOpt_26
     db $26
 endm
 
-macro ScriptOpt_27
+macro ScriptOpt_Battle
     db $27, \1
 endm
 
@@ -265,7 +265,7 @@ macro ScriptOpt_2c
     db $2c, \1
 endm
 
-macro ScriptOpt_2e
+macro ScriptOpt_StartScript
     db $2e, \1, \2
 endm
 
