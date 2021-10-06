@@ -7651,7 +7651,7 @@ jr_094_61df:
 	ld   bc, $fef6                                   ; $61f6: $01 $f6 $fe
 	add  b                                           ; $61f9: $80
 	db   $fd                                         ; $61fa: $fd
-	ld   bc, $c838                                   ; $61fb: $01 $38 $c8
+	ld   bc, wSakuraMiniGameReturnSubstate                                   ; $61fb: $01 $38 $c8
 	add  b                                           ; $61fe: $80
 	ret  c                                           ; $61ff: $d8
 

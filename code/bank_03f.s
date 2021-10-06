@@ -27,7 +27,7 @@ KannaMiniGameTitleScreenSubstate0:
 	call SafeSetAudVolForMultipleChannels                                       ; $401c: $cd $e0 $1c
 	ld   a, $00                                      ; $401f: $3e $00
 	ld   [$c9ef], a                                  ; $4021: $ea $ef $c9
-	ld   a, [$cb1d]                                  ; $4024: $fa $1d $cb
+	ld   a, [wIsChestMiniGame]                                  ; $4024: $fa $1d $cb
 	or   a                                           ; $4027: $b7
 	jr   z, jr_03f_4049                              ; $4028: $28 $1f
 
@@ -364,7 +364,7 @@ jr_03f_42e7:
 	bit  1, a                                        ; $42e7: $cb $4f
 	jr   z, jr_03f_4300                              ; $42e9: $28 $15
 
-	ld   a, [$cb1d]                                  ; $42eb: $fa $1d $cb
+	ld   a, [wIsChestMiniGame]                                  ; $42eb: $fa $1d $cb
 	or   a                                           ; $42ee: $b7
 	jr   z, jr_03f_4300                              ; $42ef: $28 $0f
 
@@ -381,7 +381,7 @@ jr_03f_4300:
 
 	ld   hl, $c9eb                                   ; $4301: $21 $eb $c9
 	ld   c, $01                                      ; $4304: $0e $01
-	ld   a, [$cb1d]                                  ; $4306: $fa $1d $cb
+	ld   a, [wIsChestMiniGame]                                  ; $4306: $fa $1d $cb
 	or   a                                           ; $4309: $b7
 	jr   nz, jr_03f_430e                             ; $430a: $20 $02
 
@@ -580,7 +580,7 @@ jr_03f_43f9:
 	ld   h, a                                        ; $444b: $67
 	ld   a, [$c9f2]                                  ; $444c: $fa $f2 $c9
 	ld   l, a                                        ; $444f: $6f
-	ld   a, [$cb1d]                                  ; $4450: $fa $1d $cb
+	ld   a, [wIsChestMiniGame]                                  ; $4450: $fa $1d $cb
 	or   a                                           ; $4453: $b7
 	jr   nz, jr_03f_4463                             ; $4454: $20 $0d
 
@@ -696,7 +696,7 @@ Call_03f_4512:
 
 Call_03f_451c:
 	ld   hl, $4530                                   ; $451c: $21 $30 $45
-	ld   a, [$cb1d]                                  ; $451f: $fa $1d $cb
+	ld   a, [wIsChestMiniGame]                                  ; $451f: $fa $1d $cb
 	or   a                                           ; $4522: $b7
 	jr   nz, jr_03f_4528                             ; $4523: $20 $03
 
@@ -794,7 +794,7 @@ Call_03f_458c:
 
 DisplayKanna1stPopupBox:
 	call Call_03f_451c                               ; $45ab: $cd $1c $45
-	ld   a, [$cb1d]                                  ; $45ae: $fa $1d $cb
+	ld   a, [wIsChestMiniGame]                                  ; $45ae: $fa $1d $cb
 	or   a                                           ; $45b1: $b7
 	jr   nz, jr_03f_45d4                             ; $45b2: $20 $20
 

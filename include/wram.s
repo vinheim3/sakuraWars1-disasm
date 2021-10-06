@@ -307,7 +307,28 @@ wCredits1NumNames:: ; $c71a
     db
 
 wc71b:
-    ds $8af-$71b
+    ds $81c-$71b
+
+wSakuraMiniGameScoreDiv10:: ; $c81c
+    dw
+
+wc81e:
+    ds $2d-$1e
+
+wSakuraMiniGameRank:: ; $c82d
+    db
+
+wc82e:
+    ds $37-$2e
+
+wSakuraMiniGameReturnState:: ; $c837
+    db
+
+wSakuraMiniGameReturnSubstate:: ; $c838
+    db
+
+wc839:
+    ds $af-$39
 
 wSaveScreenPopUpBottomRowSpriteSpecIdxUsed:: ; $c8af
     db
@@ -437,7 +458,13 @@ wSettingsScreenFaceIconShown:: ; $c97b
     db
 
 wc97c:
-    ds $ac-$7c
+    ds $86-$7c
+
+wFinalMiniGameScore:: ; $c986
+    dw
+
+wc988:
+    ds $ac-$88
 
 wPushUpsCurrPushupToDo:: ; $c9ac
     db
@@ -452,7 +479,13 @@ wGameResultsReturnSubstate:: ; $ca02
     db
 
 wca03:
-    ds $20-3
+    ds $1d-3
+
+wGameResultsRanking:: ; $ca1d
+    db
+
+wca1e:
+    ds $20-$1e
 
 wGameResultsStatsTotal:: ; $ca20
     dw
@@ -590,7 +623,13 @@ wNameReplacementCurrListNumChars:: ; $cb16
     db
 
 wcb17:
-    ds $20-$17
+    ds $d-7
+
+wIsChestMiniGame:: ; $cb1d
+    db
+
+wcb1e:
+    ds $20-$1e
 
 ; 16 possible values, if +6
 ; 6-10 - morning
@@ -961,16 +1000,46 @@ endc
 SECTION "WRAM 2", WRAMX[$d000], BANK[$2]
 
 w2_d000:
-    ds $880
+    ds $340
+
+wHourlyEventsDetails:: ; $d340
+    ds $400
+
+w2_d740:
+    ds $880-$740
 
 wTitleScreenPressStartRowTileMap:: ; $d880
     ds SCRN_VX_B
 
 w2_d8a0:
-    ds $c9e-$8a0
+    ds $c90-$8a0
+
+wHourlyEventStructIdxToFill:: ; $dc90
+    db
+
+wNumHourlyEventsInStruct:: ; $dc91
+    db
+
+w2_dc92:
+    ds 4-2
+
+wCurrHourlyEventEntryBuffer:: ; $dc94
+    ds 8
+
+w2_dc9c:
+    ds $e-$c
 
 wNextMainConvoScriptIdx:: ; $dc9e
     dw
+
+wGirlAffectionLevelsBuffer:: ; $dca0
+    ds $10
+
+w2_dcb0:
+    ds $c0-$b0
+
+wOrderedGirlAffectionLevels:: ; $dcc0
+    ds $10
 
 SECTION "WRAM 3", WRAMX[$d000], BANK[$3]
 

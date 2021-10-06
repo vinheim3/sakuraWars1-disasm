@@ -952,10 +952,10 @@ Data_3e_46d1::
 	dw Data_3e_46d1entry05-Data_3e_46d1
 
 Data_3e_46d1entry00::
-	db $f2, $f2, $f2, $10, $2c, $39, $38, $10, $40, $3d, $3b, $3c, $48, $fa, $00
+	db $2c, $46, $46, $39, $38, $10, $40, $3d, $3b, $3c, $48, $fa, $00
 
 Data_3e_46d1entry02::
-	db $2c, $46, $46, $39, $38, $10, $40, $3d, $3b, $3c, $48, $fa, $00
+	db $f2, $f2, $f2, $10, $2c, $39, $38, $10, $40, $3d, $3b, $3c, $48, $fa, $00
 Data_3e_46d1entry03::
 	db $2c, $39, $38, $f2, $f2, $f2, $10, $26, $3d, $3b, $3c, $48, $fa, $00
 Data_3e_46d1entry04::
@@ -2941,9 +2941,9 @@ Func_3e_530f:
 	jr   nz, :+                             ; $531c: $20 $04
 
 	xor  a                                           ; $531e: $af
-	ld   [$c987], a                                  ; $531f: $ea $87 $c9
+	ld   [wFinalMiniGameScore+1], a                                  ; $531f: $ea $87 $c9
 
-:	ld   hl, $c986                                   ; $5322: $21 $86 $c9
+:	ld   hl, wFinalMiniGameScore                                   ; $5322: $21 $86 $c9
 if def(VWF)
 	ld   de, $9851
 else
@@ -3165,7 +3165,7 @@ Call_03e_5432:
 
 
 Call_03e_5451:
-	ld   hl, $c986                                   ; $5451: $21 $86 $c9
+	ld   hl, wFinalMiniGameScore                                   ; $5451: $21 $86 $c9
 	ld   a, [$c985]                                  ; $5454: $fa $85 $c9
 	ld   c, a                                        ; $5457: $4f
 	ld   a, [$c984]                                  ; $5458: $fa $84 $c9
@@ -3239,7 +3239,7 @@ Call_03e_54a7:
 	ld   [wFarCallAddr+1], a                                  ; $54b9: $ea $99 $c2
 	ld   a, [hl]                                     ; $54bc: $7e
 	ld   [wFarCallBank], a                                  ; $54bd: $ea $9a $c2
-	ld   hl, $c986                                   ; $54c0: $21 $86 $c9
+	ld   hl, wFinalMiniGameScore                                   ; $54c0: $21 $86 $c9
 	ld   de, $c98a                                   ; $54c3: $11 $8a $c9
 	call FarCall                                       ; $54c6: $cd $62 $09
 	ld   [$c9a1], a                                  ; $54c9: $ea $a1 $c9
@@ -3334,6 +3334,7 @@ jr_03e_5524:
 	ret                                              ; $553b: $c9
 
 
+SetMiniGameResultsState::
 	ld   [$c983], a                                  ; $553c: $ea $83 $c9
 	ld   a, h                                        ; $553f: $7c
 	ld   [$c981], a                                  ; $5540: $ea $81 $c9
@@ -7133,7 +7134,7 @@ KohranMiniGameTitleScreenSubstate0:
 	call SafeSetAudVolForMultipleChannels                                       ; $6d27: $cd $e0 $1c
 	ld   a, $00                                      ; $6d2a: $3e $00
 	ld   [$c9d9], a                                  ; $6d2c: $ea $d9 $c9
-	ld   a, [$cb1d]                                  ; $6d2f: $fa $1d $cb
+	ld   a, [wIsChestMiniGame]                                  ; $6d2f: $fa $1d $cb
 	or   a                                           ; $6d32: $b7
 	jr   z, jr_03e_6d54                              ; $6d33: $28 $1f
 
@@ -7487,7 +7488,7 @@ jr_03e_7007:
 	bit  1, a                                        ; $7007: $cb $4f
 	jr   z, jr_03e_7020                              ; $7009: $28 $15
 
-	ld   a, [$cb1d]                                  ; $700b: $fa $1d $cb
+	ld   a, [wIsChestMiniGame]                                  ; $700b: $fa $1d $cb
 	or   a                                           ; $700e: $b7
 	jr   z, jr_03e_7020                              ; $700f: $28 $0f
 
@@ -7504,7 +7505,7 @@ jr_03e_7020:
 
 	ld   hl, $c9d3                                   ; $7021: $21 $d3 $c9
 	ld   c, $01                                      ; $7024: $0e $01
-	ld   a, [$cb1d]                                  ; $7026: $fa $1d $cb
+	ld   a, [wIsChestMiniGame]                                  ; $7026: $fa $1d $cb
 	or   a                                           ; $7029: $b7
 	jr   nz, jr_03e_702e                             ; $702a: $20 $02
 
@@ -7696,7 +7697,7 @@ jr_03e_7104:
 	ld   h, a                                        ; $7156: $67
 	ld   a, [$c9d8]                                  ; $7157: $fa $d8 $c9
 	ld   l, a                                        ; $715a: $6f
-	ld   a, [$cb1d]                                  ; $715b: $fa $1d $cb
+	ld   a, [wIsChestMiniGame]                                  ; $715b: $fa $1d $cb
 	or   a                                           ; $715e: $b7
 	jr   nz, jr_03e_716e                             ; $715f: $20 $0d
 
@@ -7776,7 +7777,7 @@ Call_03e_71d3:
 	ld   e, $21                                      ; $71dc: $1e $21
 	pop  af                                          ; $71de: $f1
 	ld   [hl], c                                     ; $71df: $71
-	ld   a, [$cb1d]                                  ; $71e0: $fa $1d $cb
+	ld   a, [wIsChestMiniGame]                                  ; $71e0: $fa $1d $cb
 	or   a                                           ; $71e3: $b7
 	jr   nz, jr_03e_71e9                             ; $71e4: $20 $03
 
@@ -7865,7 +7866,7 @@ Call_03e_726b:
 
 DisplayKohran1stPopupBox:
 	call $71dd                                       ; $7275: $cd $dd $71
-	ld   a, [$cb1d]                                  ; $7278: $fa $1d $cb
+	ld   a, [wIsChestMiniGame]                                  ; $7278: $fa $1d $cb
 	or   a                                           ; $727b: $b7
 	jr   nz, jr_03e_729e                             ; $727c: $20 $20
 
@@ -7969,7 +7970,7 @@ IrisMiniGameTitleScreenSubstate1:
 	call SafeSetAudVolForMultipleChannels                                       ; $7330: $cd $e0 $1c
 	ld   a, $00                                      ; $7333: $3e $00
 	ld   [$c9df], a                                  ; $7335: $ea $df $c9
-	ld   a, [$cb1d]                                  ; $7338: $fa $1d $cb
+	ld   a, [wIsChestMiniGame]                                  ; $7338: $fa $1d $cb
 	or   a                                           ; $733b: $b7
 	jr   z, jr_03e_735d                              ; $733c: $28 $1f
 
@@ -8317,7 +8318,7 @@ jr_03e_7600:
 	bit  1, a                                        ; $7600: $cb $4f
 	jr   z, jr_03e_7619                              ; $7602: $28 $15
 
-	ld   a, [$cb1d]                                  ; $7604: $fa $1d $cb
+	ld   a, [wIsChestMiniGame]                                  ; $7604: $fa $1d $cb
 	or   a                                           ; $7607: $b7
 	jr   z, jr_03e_7619                              ; $7608: $28 $0f
 
@@ -8334,7 +8335,7 @@ jr_03e_7619:
 
 	ld   hl, $c9db                                   ; $761a: $21 $db $c9
 	ld   c, $01                                      ; $761d: $0e $01
-	ld   a, [$cb1d]                                  ; $761f: $fa $1d $cb
+	ld   a, [wIsChestMiniGame]                                  ; $761f: $fa $1d $cb
 	or   a                                           ; $7622: $b7
 	jr   nz, jr_03e_7627                             ; $7623: $20 $02
 
@@ -8518,7 +8519,7 @@ jr_03e_76fd:
 	ld   h, a                                        ; $773e: $67
 	ld   a, [$c9e2]                                  ; $773f: $fa $e2 $c9
 	ld   l, a                                        ; $7742: $6f
-	ld   a, [$cb1d]                                  ; $7743: $fa $1d $cb
+	ld   a, [wIsChestMiniGame]                                  ; $7743: $fa $1d $cb
 	or   a                                           ; $7746: $b7
 	jr   nz, jr_03e_7756                             ; $7747: $20 $0d
 
@@ -8641,7 +8642,7 @@ Call_03e_7804:
 
 Call_03e_780e:
 	ld   hl, $7822                                   ; $780e: $21 $22 $78
-	ld   a, [$cb1d]                                  ; $7811: $fa $1d $cb
+	ld   a, [wIsChestMiniGame]                                  ; $7811: $fa $1d $cb
 	or   a                                           ; $7814: $b7
 	jr   nz, jr_03e_781a                             ; $7815: $20 $03
 
@@ -8750,7 +8751,7 @@ Call_03e_789c:
 
 DisplayIris1stPopupBox:
 	call Call_03e_780e                               ; $78a6: $cd $0e $78
-	ld   a, [$cb1d]                                  ; $78a9: $fa $1d $cb
+	ld   a, [wIsChestMiniGame]                                  ; $78a9: $fa $1d $cb
 	or   a                                           ; $78ac: $b7
 	jr   nz, jr_03e_78cf                             ; $78ad: $20 $20
 
@@ -8879,7 +8880,7 @@ SakuraMiniGameTitleScreenSubstate0:
 	call SafeSetAudVolForMultipleChannels                                       ; $797a: $cd $e0 $1c
 	ld   a, $00                                      ; $797d: $3e $00
 	ld   [$c9e7], a                                  ; $797f: $ea $e7 $c9
-	ld   a, [$cb1d]                                  ; $7982: $fa $1d $cb
+	ld   a, [wIsChestMiniGame]                                  ; $7982: $fa $1d $cb
 	or   a                                           ; $7985: $b7
 	jr   z, jr_03e_79a7                              ; $7986: $28 $1f
 
@@ -9217,7 +9218,7 @@ jr_03e_7c47:
 	bit  1, a                                        ; $7c47: $cb $4f
 	jr   z, jr_03e_7c60                              ; $7c49: $28 $15
 
-	ld   a, [$cb1d]                                  ; $7c4b: $fa $1d $cb
+	ld   a, [wIsChestMiniGame]                                  ; $7c4b: $fa $1d $cb
 	or   a                                           ; $7c4e: $b7
 	jr   z, jr_03e_7c60                              ; $7c4f: $28 $0f
 
@@ -9235,7 +9236,7 @@ jr_03e_7c60:
 
 	ld   hl, $c9e3                                   ; $7c64: $21 $e3 $c9
 	ld   c, $01                                      ; $7c67: $0e $01
-	ld   a, [$cb1d]                                  ; $7c69: $fa $1d $cb
+	ld   a, [wIsChestMiniGame]                                  ; $7c69: $fa $1d $cb
 	or   a                                           ; $7c6c: $b7
 	jr   nz, jr_03e_7c71                             ; $7c6d: $20 $02
 
@@ -9409,15 +9410,9 @@ jr_03e_7d47:
 	call FarCall                                       ; $7d73: $cd $62 $09
 	ld   h, $1e                                      ; $7d76: $26 $1e
 	ld   l, $01                                      ; $7d78: $2e $01
-	push af                                          ; $7d7a: $f5
-	ld   a, $ae                                      ; $7d7b: $3e $ae
-	ld   [wFarCallAddr], a                                  ; $7d7d: $ea $98 $c2
-	ld   a, $58                                      ; $7d80: $3e $58
-	ld   [wFarCallAddr+1], a                                  ; $7d82: $ea $99 $c2
-	ld   a, $11                                      ; $7d85: $3e $11
-	ld   [wFarCallBank], a                                  ; $7d87: $ea $9a $c2
-	pop  af                                          ; $7d8a: $f1
-	call FarCall                                       ; $7d8b: $cd $62 $09
+
+	M_FarCall Func_11_58ae
+
 	ld   a, [$c9e3]                                  ; $7d8e: $fa $e3 $c9
 	or   a                                           ; $7d91: $b7
 	jr   z, jr_03e_7ddd                              ; $7d92: $28 $49
@@ -9427,7 +9422,7 @@ jr_03e_7d47:
 	ld   h, a                                        ; $7d99: $67
 	ld   a, [$c9ea]                                  ; $7d9a: $fa $ea $c9
 	ld   l, a                                        ; $7d9d: $6f
-	ld   a, [$cb1d]                                  ; $7d9e: $fa $1d $cb
+	ld   a, [wIsChestMiniGame]                                  ; $7d9e: $fa $1d $cb
 	or   a                                           ; $7da1: $b7
 	jr   nz, jr_03e_7db1                             ; $7da2: $20 $0d
 
@@ -9443,15 +9438,9 @@ jr_03e_7db1:
 	ld   a, [$c9e8]                                  ; $7db1: $fa $e8 $c9
 	ld   c, a                                        ; $7db4: $4f
 	ld   a, b                                        ; $7db5: $78
-	push af                                          ; $7db6: $f5
-	ld   a, $8c                                      ; $7db7: $3e $8c
-	ld   [wFarCallAddr], a                                  ; $7db9: $ea $98 $c2
-	ld   a, $58                                      ; $7dbc: $3e $58
-	ld   [wFarCallAddr+1], a                                  ; $7dbe: $ea $99 $c2
-	ld   a, $11                                      ; $7dc1: $3e $11
-	ld   [wFarCallBank], a                                  ; $7dc3: $ea $9a $c2
-	pop  af                                          ; $7dc6: $f1
-	call FarCall                                       ; $7dc7: $cd $62 $09
+
+	M_FarCall Func_11_588c
+
 	ld   a, [$c9e3]                                  ; $7dca: $fa $e3 $c9
 	cp   $03                                         ; $7dcd: $fe $03
 	jr   nz, jr_03e_7ddd                             ; $7dcf: $20 $0c
@@ -9516,7 +9505,7 @@ Call_03e_7e23:
 
 Call_03e_7e2d:
 	ld   hl, $7e41                                   ; $7e2d: $21 $41 $7e
-	ld   a, [$cb1d]                                  ; $7e30: $fa $1d $cb
+	ld   a, [wIsChestMiniGame]                                  ; $7e30: $fa $1d $cb
 	or   a                                           ; $7e33: $b7
 	jr   nz, jr_03e_7e39                             ; $7e34: $20 $03
 
@@ -9609,7 +9598,7 @@ Call_03e_7ebb:
 
 DisplaySakura1stPopupBox:
 	call Call_03e_7e2d                               ; $7ec5: $cd $2d $7e
-	ld   a, [$cb1d]                                  ; $7ec8: $fa $1d $cb
+	ld   a, [wIsChestMiniGame]                                  ; $7ec8: $fa $1d $cb
 	or   a                                           ; $7ecb: $b7
 	jr   nz, .enqueueShowingPopup                             ; $7ecc: $20 $20
 

@@ -7736,7 +7736,7 @@ SumireMiniGameTitleScreenSubstate0:
 	call SafeSetAudVolForMultipleChannels                                       ; $6f6b: $cd $e0 $1c
 	ld   a, $00                                      ; $6f6e: $3e $00
 	ld   [$c9f7], a                                  ; $6f70: $ea $f7 $c9
-	ld   a, [$cb1d]                                  ; $6f73: $fa $1d $cb
+	ld   a, [wIsChestMiniGame]                                  ; $6f73: $fa $1d $cb
 	or   a                                           ; $6f76: $b7
 	jr   z, jr_010_6f98                              ; $6f77: $28 $1f
 
@@ -8096,7 +8096,7 @@ jr_010_723b:
 	bit  1, a                                        ; $723b: $cb $4f
 	jr   z, jr_010_7254                              ; $723d: $28 $15
 
-	ld   a, [$cb1d]                                  ; $723f: $fa $1d $cb
+	ld   a, [wIsChestMiniGame]                                  ; $723f: $fa $1d $cb
 	or   a                                           ; $7242: $b7
 	jr   z, jr_010_7254                              ; $7243: $28 $0f
 
@@ -8113,7 +8113,7 @@ jr_010_7254:
 
 	ld   hl, $c9f3                                   ; $7255: $21 $f3 $c9
 	ld   c, $01                                      ; $7258: $0e $01
-	ld   a, [$cb1d]                                  ; $725a: $fa $1d $cb
+	ld   a, [wIsChestMiniGame]                                  ; $725a: $fa $1d $cb
 	or   a                                           ; $725d: $b7
 	jr   nz, jr_010_7262                             ; $725e: $20 $02
 
@@ -8299,7 +8299,7 @@ jr_010_7338:
 	ld   h, a                                        ; $738a: $67
 	ld   a, [$c9fa]                                  ; $738b: $fa $fa $c9
 	ld   l, a                                        ; $738e: $6f
-	ld   a, [$cb1d]                                  ; $738f: $fa $1d $cb
+	ld   a, [wIsChestMiniGame]                                  ; $738f: $fa $1d $cb
 	or   a                                           ; $7392: $b7
 	jr   nz, jr_010_73a2                             ; $7393: $20 $0d
 
@@ -8392,7 +8392,7 @@ Call_010_7433:
 
 Call_010_743d:
 	ld   hl, $7451                                   ; $743d: $21 $51 $74
-	ld   a, [$cb1d]                                  ; $7440: $fa $1d $cb
+	ld   a, [wIsChestMiniGame]                                  ; $7440: $fa $1d $cb
 	or   a                                           ; $7443: $b7
 	jr   nz, jr_010_7449                             ; $7444: $20 $03
 
@@ -8509,7 +8509,7 @@ Call_010_74cb:
 
 DisplaySumire1stPopupBox:
 	call Call_010_743d                               ; $74d5: $cd $3d $74
-	ld   a, [$cb1d]                                  ; $74d8: $fa $1d $cb
+	ld   a, [wIsChestMiniGame]                                  ; $74d8: $fa $1d $cb
 	or   a                                           ; $74db: $b7
 	jr   nz, .noPractice                             ; $74dc: $20 $20
 

@@ -19,7 +19,7 @@ sPlayerName:: ; $afaa
 
 sSramVals2:: ; $afb0
     ; can access up to $b7af
-; 1-indexed
+; 1-indexed (1 is Sunday)
 sCurrDay:: ; $afb0
     db
 

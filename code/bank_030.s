@@ -4248,7 +4248,7 @@ jr_030_5811:
 	call Call_030_62ee                               ; $581f: $cd $ee $62
 	call $6316                                       ; $5822: $cd $16 $63
 	ld   b, $02                                      ; $5825: $06 $02
-	ld   a, [$cb1d]                                  ; $5827: $fa $1d $cb
+	ld   a, [wIsChestMiniGame]                                  ; $5827: $fa $1d $cb
 	or   a                                           ; $582a: $b7
 	jr   z, jr_030_582f                              ; $582b: $28 $02
 
@@ -4276,7 +4276,7 @@ jr_030_583a:
 	call TurnOffLCD                                       ; $584c: $cd $e3 $08
 	xor  a                                           ; $584f: $af
 	call PlaySong                                       ; $5850: $cd $92 $1a
-	ld   a, [$cb1d]                                  ; $5853: $fa $1d $cb
+	ld   a, [wIsChestMiniGame]                                  ; $5853: $fa $1d $cb
 	or   a                                           ; $5856: $b7
 	jr   nz, jr_030_586c                             ; $5857: $20 $13
 
@@ -4290,7 +4290,7 @@ jr_030_583a:
 
 
 jr_030_586c:
-	ld   de, $c986                                   ; $586c: $11 $86 $c9
+	ld   de, wFinalMiniGameScore                                   ; $586c: $11 $86 $c9
 	ld   a, [$c71f]                                  ; $586f: $fa $1f $c7
 	ld   [de], a                                     ; $5872: $12
 	inc  de                                          ; $5873: $13
@@ -4306,15 +4306,8 @@ jr_030_586c:
 	ld   a, [$c720]                                  ; $5884: $fa $20 $c7
 	ld   h, $04                                      ; $5887: $26 $04
 	ld   l, $00                                      ; $5889: $2e $00
-	push af                                          ; $588b: $f5
-	ld   a, $3c                                      ; $588c: $3e $3c
-	ld   [wFarCallAddr], a                                  ; $588e: $ea $98 $c2
-	ld   a, $55                                      ; $5891: $3e $55
-	ld   [wFarCallAddr+1], a                                  ; $5893: $ea $99 $c2
-	ld   a, $3e                                      ; $5896: $3e $3e
-	ld   [wFarCallBank], a                                  ; $5898: $ea $9a $c2
-	pop  af                                          ; $589b: $f1
-	call FarCall                                       ; $589c: $cd $62 $09
+
+	M_FarCall SetMiniGameResultsState
 	ret                                              ; $589f: $c9
 
 
@@ -6261,7 +6254,7 @@ Call_030_62af:
 	jr   nz, jr_030_62c3                             ; $62b3: $20 $0e
 
 	ld   hl, $62dd                                   ; $62b5: $21 $dd $62
-	ld   a, [$cb1d]                                  ; $62b8: $fa $1d $cb
+	ld   a, [wIsChestMiniGame]                                  ; $62b8: $fa $1d $cb
 	or   a                                           ; $62bb: $b7
 	jr   z, jr_030_62cf                              ; $62bc: $28 $11
 
@@ -6270,7 +6263,7 @@ Call_030_62af:
 
 jr_030_62c3:
 	ld   hl, $62e5                                   ; $62c3: $21 $e5 $62
-	ld   a, [$cb1d]                                  ; $62c6: $fa $1d $cb
+	ld   a, [wIsChestMiniGame]                                  ; $62c6: $fa $1d $cb
 	or   a                                           ; $62c9: $b7
 	jr   z, jr_030_62cf                              ; $62ca: $28 $03
 
@@ -6310,7 +6303,7 @@ Call_030_62ee:
 	ld   a, $0b                                      ; $62ee: $3e $0b
 	ld   [wSpriteGroup], a                                  ; $62f0: $ea $1a $c2
 	ld   hl, $630e                                   ; $62f3: $21 $0e $63
-	ld   a, [$cb1d]                                  ; $62f6: $fa $1d $cb
+	ld   a, [wIsChestMiniGame]                                  ; $62f6: $fa $1d $cb
 	or   a                                           ; $62f9: $b7
 	jr   z, jr_030_62ff                              ; $62fa: $28 $03
 
@@ -6335,7 +6328,7 @@ jr_030_62ff:
 	ld   de, $0b3e                                   ; $6315: $11 $3e $0b
 	ld   [wSpriteGroup], a                                  ; $6318: $ea $1a $c2
 	ld   hl, $6336                                   ; $631b: $21 $36 $63
-	ld   a, [$cb1d]                                  ; $631e: $fa $1d $cb
+	ld   a, [wIsChestMiniGame]                                  ; $631e: $fa $1d $cb
 	or   a                                           ; $6321: $b7
 	jr   z, jr_030_6327                              ; $6322: $28 $03
 

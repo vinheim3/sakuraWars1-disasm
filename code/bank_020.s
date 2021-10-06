@@ -174,7 +174,7 @@ SumireMiniGameMainSubstate2:
 
 SumireMiniGameMainSubstate5:
 	call Call_020_578a                               ; $4108: $cd $8a $57
-	ld   a, [$cb1d]                                  ; $410b: $fa $1d $cb
+	ld   a, [wIsChestMiniGame]                                  ; $410b: $fa $1d $cb
 	or   a                                           ; $410e: $b7
 	jr   nz, jr_020_413a                             ; $410f: $20 $29
 
@@ -203,7 +203,7 @@ jr_020_413a:
 	and  $02                                         ; $413d: $e6 $02
 	jr   nz, jr_020_4151                             ; $413f: $20 $10
 
-	ld   de, $c986                                   ; $4141: $11 $86 $c9
+	ld   de, wFinalMiniGameScore                                   ; $4141: $11 $86 $c9
 	ld   a, $3b                                      ; $4144: $3e $3b
 	ld   [de], a                                     ; $4146: $12
 	inc  de                                          ; $4147: $13
@@ -215,7 +215,7 @@ jr_020_413a:
 	jr   jr_020_4162                                 ; $414f: $18 $11
 
 jr_020_4151:
-	ld   de, $c986                                   ; $4151: $11 $86 $c9
+	ld   de, wFinalMiniGameScore                                   ; $4151: $11 $86 $c9
 	ld   a, [$cab0]                                  ; $4154: $fa $b0 $ca
 	ld   [de], a                                     ; $4157: $12
 	inc  de                                          ; $4158: $13
@@ -236,15 +236,9 @@ jr_020_4162:
 	ld   a, [wBattleDistanceToEnemy]                                  ; $4170: $fa $71 $ca
 	ld   c, a                                        ; $4173: $4f
 	ld   a, [$ca5e]                                  ; $4174: $fa $5e $ca
-	push af                                          ; $4177: $f5
-	ld   a, $3c                                      ; $4178: $3e $3c
-	ld   [wFarCallAddr], a                                  ; $417a: $ea $98 $c2
-	ld   a, $55                                      ; $417d: $3e $55
-	ld   [wFarCallAddr+1], a                                  ; $417f: $ea $99 $c2
-	ld   a, $3e                                      ; $4182: $3e $3e
-	ld   [wFarCallBank], a                                  ; $4184: $ea $9a $c2
-	pop  af                                          ; $4187: $f1
-	call FarCall                                       ; $4188: $cd $62 $09
+
+	M_FarCall SetMiniGameResultsState
+
 	call ClearDisplayRegsAllowVBlankInt                                       ; $418b: $cd $59 $0b
 	ret                                              ; $418e: $c9
 
@@ -763,7 +757,7 @@ jr_020_452d:
 	cp   $00                                         ; $4533: $fe $00
 	ret  nz                                          ; $4535: $c0
 
-	ld   a, [$cb1d]                                  ; $4536: $fa $1d $cb
+	ld   a, [wIsChestMiniGame]                                  ; $4536: $fa $1d $cb
 	or   a                                           ; $4539: $b7
 	jr   z, jr_020_456f                              ; $453a: $28 $33
 
@@ -836,7 +830,7 @@ jr_020_458f:
 
 
 Jump_020_45a4:
-	ld   a, [$cb1d]                                  ; $45a4: $fa $1d $cb
+	ld   a, [wIsChestMiniGame]                                  ; $45a4: $fa $1d $cb
 	or   a                                           ; $45a7: $b7
 	jr   nz, jr_020_45b9                             ; $45a8: $20 $0f
 
@@ -6449,7 +6443,7 @@ jr_020_62fe:
 	ret                                              ; $6313: $c9
 
 
-	ld   a, [$cb1d]                                  ; $6314: $fa $1d $cb
+	ld   a, [wIsChestMiniGame]                                  ; $6314: $fa $1d $cb
 	or   a                                           ; $6317: $b7
 	jr   nz, jr_020_6343                             ; $6318: $20 $29
 
@@ -6475,7 +6469,7 @@ jr_020_6342:
 
 jr_020_6343:
 	call ClearDisplayRegsAllowVBlankInt                                       ; $6343: $cd $59 $0b
-	ld   de, $c986                                   ; $6346: $11 $86 $c9
+	ld   de, wFinalMiniGameScore                                   ; $6346: $11 $86 $c9
 	ld   a, [$cacd]                                  ; $6349: $fa $cd $ca
 	ld   [de], a                                     ; $634c: $12
 	inc  de                                          ; $634d: $13
@@ -6491,20 +6485,13 @@ jr_020_6343:
 	ld   a, [$cad1]                                  ; $635e: $fa $d1 $ca
 	ld   c, a                                        ; $6361: $4f
 	ld   a, [$ca60]                                  ; $6362: $fa $60 $ca
-	push af                                          ; $6365: $f5
-	ld   a, $3c                                      ; $6366: $3e $3c
-	ld   [wFarCallAddr], a                                  ; $6368: $ea $98 $c2
-	ld   a, $55                                      ; $636b: $3e $55
-	ld   [wFarCallAddr+1], a                                  ; $636d: $ea $99 $c2
-	ld   a, $3e                                      ; $6370: $3e $3e
-	ld   [wFarCallBank], a                                  ; $6372: $ea $9a $c2
-	pop  af                                          ; $6375: $f1
-	call FarCall                                       ; $6376: $cd $62 $09
+
+	M_FarCall SetMiniGameResultsState
 	ret                                              ; $6379: $c9
 
 
 Call_020_637a:
-	ld   a, [$cb1d]                                  ; $637a: $fa $1d $cb
+	ld   a, [wIsChestMiniGame]                                  ; $637a: $fa $1d $cb
 	or   a                                           ; $637d: $b7
 	jr   nz, jr_020_63c0                             ; $637e: $20 $40
 
@@ -7707,7 +7694,7 @@ Jump_020_6ad4:
 	inc  [hl]                                        ; $6aef: $34
 	ld   a, $5c                                      ; $6af0: $3e $5c
 	call PlaySampledSound                                       ; $6af2: $cd $64 $1b
-	ld   a, [$cb1d]                                  ; $6af5: $fa $1d $cb
+	ld   a, [wIsChestMiniGame]                                  ; $6af5: $fa $1d $cb
 	or   a                                           ; $6af8: $b7
 	jr   nz, jr_020_6b02                             ; $6af9: $20 $07
 
@@ -10380,7 +10367,7 @@ GameState24_MiniGameDebugMenu::
 	ld   de, $7ff2                                   ; $7a23: $11 $f2 $7f
 	call Call_020_5762                               ; $7a26: $cd $62 $57
 	ld   a, $ff                                      ; $7a29: $3e $ff
-	ld   [$cb1d], a                                  ; $7a2b: $ea $1d $cb
+	ld   [wIsChestMiniGame], a                                  ; $7a2b: $ea $1d $cb
 	ld   a, $03                                      ; $7a2e: $3e $03
 	call PlaySong                                       ; $7a30: $cd $92 $1a
 	ld   hl, wGameSubstate                                   ; $7a33: $21 $a1 $c2

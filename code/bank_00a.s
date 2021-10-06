@@ -3388,6 +3388,9 @@ Func_0a_5b7a::
 	ld   a, a                                        ; $5ba7: $7f
 	nop                                              ; $5ba8: $00
 	nop                                              ; $5ba9: $00
+
+
+Func_0a_5baa::
 	ld   a, [wInGameButtonsHeld]                                  ; $5baa: $fa $0f $c2
 	bit  1, a                                        ; $5bad: $cb $4f
 	jr   nz, jr_00a_5bdd                             ; $5baf: $20 $2c
@@ -7109,7 +7112,7 @@ NewGameMenuOptHandler:
 	xor  a                                           ; $7418: $af
 	call PlaySong                                       ; $7419: $cd $92 $1a
 	xor  a                                           ; $741c: $af
-	ld   [$cb1d], a                                  ; $741d: $ea $1d $cb
+	ld   [wIsChestMiniGame], a                                  ; $741d: $ea $1d $cb
 	ld   a, $03                                      ; $7420: $3e $03
 
 	M_FarCall Call_00a_4428
@@ -7127,7 +7130,7 @@ ContinueMenuOptHandler:
 	ld   a, $ff                                      ; $7444: $3e $ff
 	ld   [$cc1d], a                                  ; $7446: $ea $1d $cc
 	xor  a                                           ; $7449: $af
-	ld   [$cb1d], a                                  ; $744a: $ea $1d $cb
+	ld   [wIsChestMiniGame], a                                  ; $744a: $ea $1d $cb
 	ld   h, $38                                      ; $744d: $26 $38
 	ld   l, $00                                      ; $744f: $2e $00
 	ld   d, GS_TITLE_MENU_SCREEN                                      ; $7451: $16 $37
@@ -7229,7 +7232,7 @@ MinigamesMenuOptHandler:
 	xor  a                                           ; $7576: $af
 	call PlaySong                                       ; $7577: $cd $92 $1a
 	ld   a, $01                                      ; $757a: $3e $01
-	ld   [$cb1d], a                                  ; $757c: $ea $1d $cb
+	ld   [wIsChestMiniGame], a                                  ; $757c: $ea $1d $cb
 	ld   h, GS_TITLE_MENU_SCREEN                                      ; $757f: $26 $37
 	ld   l, $02                                      ; $7581: $2e $02
 

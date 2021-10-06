@@ -5631,9 +5631,11 @@ jr_000_1b63:
 ;   $13-$18 - hidden ending (Didn't get chance)
 ;   $19-$1e - hidden ending (Here..)
 ;   $1f-$24 - hidden ending (It's a ticket)
-;   $25-$2d - Sakura unk
+; The following setup until the last sample, $6c
+;   $25-$2d - Sakura unk, but in voice mode
 ;   $2e-$2f - Sakura minigame
-;   $30 - Sakura unk
+;     ($3a,$3b, $46,$47, $52,$53, $5e,$5f, $6a,$6b)
+;   $30 - Sakura unk, but in voice mode
 ;   etc
 PlaySampledSound::
 	push af                                                         ; $1b64

@@ -334,7 +334,7 @@ jr_011_423d:
 	ret                                              ; $4241: $c9
 
 
-	ld   a, [$cb1d]                                  ; $4242: $fa $1d $cb
+	ld   a, [wIsChestMiniGame]                                  ; $4242: $fa $1d $cb
 	or   a                                           ; $4245: $b7
 	jr   z, jr_011_424f                              ; $4246: $28 $07
 
@@ -366,7 +366,7 @@ jr_011_425c:
 	call FarLoadPaletteValsFadeToValsAndSetFadeSpeed                                       ; $4271: $cd $48 $07
 	call Call_011_6a58                               ; $4274: $cd $58 $6a
 	call TurnOffLCD                                       ; $4277: $cd $e3 $08
-	ld   a, [$cb1d]                                  ; $427a: $fa $1d $cb
+	ld   a, [wIsChestMiniGame]                                  ; $427a: $fa $1d $cb
 	or   a                                           ; $427d: $b7
 	jr   nz, jr_011_4293                             ; $427e: $20 $13
 
@@ -380,7 +380,7 @@ jr_011_425c:
 
 
 jr_011_4293:
-	ld   hl, $c986                                   ; $4293: $21 $86 $c9
+	ld   hl, wFinalMiniGameScore                                   ; $4293: $21 $86 $c9
 	ld   a, [$c7f0]                                  ; $4296: $fa $f0 $c7
 	ld   [hl+], a                                    ; $4299: $22
 	ld   a, [$c7f1]                                  ; $429a: $fa $f1 $c7
@@ -397,15 +397,8 @@ jr_011_4293:
 	ld   a, [$c805]                                  ; $42b0: $fa $05 $c8
 	ld   c, a                                        ; $42b3: $4f
 	pop  af                                          ; $42b4: $f1
-	push af                                          ; $42b5: $f5
-	ld   a, $3c                                      ; $42b6: $3e $3c
-	ld   [wFarCallAddr], a                                  ; $42b8: $ea $98 $c2
-	ld   a, $55                                      ; $42bb: $3e $55
-	ld   [wFarCallAddr+1], a                                  ; $42bd: $ea $99 $c2
-	ld   a, $3e                                      ; $42c0: $3e $3e
-	ld   [wFarCallBank], a                                  ; $42c2: $ea $9a $c2
-	pop  af                                          ; $42c5: $f1
-	call FarCall                                       ; $42c6: $cd $62 $09
+
+	M_FarCall SetMiniGameResultsState
 	ret                                              ; $42c9: $c9
 
 
@@ -2391,19 +2384,19 @@ jr_011_4daa:
 GameState0c_SakuraMiniGameMain::
 	ld   a, [wGameSubstate]                                  ; $4dcd: $fa $a1 $c2
 	rst  JumpTable                                         ; $4dd0: $df
-	dw SakuraMiniGameMainSubstate0
-	dw SakuraMiniGameMainSubstate1
-	dw SakuraMiniGameMainSubstate2
-	dw SakuraMiniGameMainSubstate3
-	dw SakuraMiniGameMainSubstate4
+	dw SakuraMiniGameMainSubstate0_HelpScreenInit
+	dw SakuraMiniGameMainSubstate1_HelpScreenMain
+	dw SakuraMiniGameMainSubstate2_HelpScreenReturn
+	dw SakuraMiniGameMainSubstate3_MiniGameInit
+	dw SakuraMiniGameMainSubstate4_MiniGameWaitAfterInit
 	dw SakuraMiniGameMainSubstate5
 	dw SakuraMiniGameMainSubstate6
-	dw SakuraMiniGameMainSubstate7
-	dw SakuraMiniGameMainSubstate8
-	dw SakuraMiniGameMainSubstate9
+	dw SakuraMiniGameMainSubstate7_MiniGameFinished
+	dw SakuraMiniGameMainSubstate8_YoureAPro
+	dw SakuraMiniGameMainSubstate9_MiniGameReturn
 
 
-SakuraMiniGameMainSubstate0:
+SakuraMiniGameMainSubstate0_HelpScreenInit:
 ;
 	ld   a, $ff                                    ; $4de5: $3e $ff
 	ld   [wInGameInputsEnabled], a                                  ; $4de7: $ea $0e $c2
@@ -2556,7 +2549,7 @@ endc
 	ret                                              ; $4ed0: $c9
 
 
-SakuraMiniGameMainSubstate1:
+SakuraMiniGameMainSubstate1_HelpScreenMain:
 	ld   a, [wInGameButtonsPressed]                                  ; $4ed1: $fa $10 $c2
 	and  $03                                         ; $4ed4: $e6 $03
 	jr   z, .done                              ; $4ed6: $28 $09
@@ -2570,7 +2563,7 @@ SakuraMiniGameMainSubstate1:
 	ret                                              ; $4ee1: $c9
 
 
-SakuraMiniGameMainSubstate2:
+SakuraMiniGameMainSubstate2_HelpScreenReturn:
 	xor  a                                           ; $4ee2: $af
 	ld   [wStartingColorIdxToLoadCompDataFor], a                                  ; $4ee3: $ea $62 $c3
 	ld   a, $20                                      ; $4ee6: $3e $20
@@ -2589,14 +2582,14 @@ SakuraMiniGameMainSubstate2:
 	call FarMemCopy                                       ; $4f08: $cd $b2 $09
 	ld   bc, $001f                                   ; $4f0b: $01 $1f $00
 	call SetBGandOBJPaletteRangesToUpdate                                       ; $4f0e: $cd $aa $04
-	ld   a, [$c837]                                  ; $4f11: $fa $37 $c8
+	ld   a, [wSakuraMiniGameReturnState]                                  ; $4f11: $fa $37 $c8
 	ld   [wGameState], a                                  ; $4f14: $ea $a0 $c2
-	ld   a, [$c838]                                  ; $4f17: $fa $38 $c8
+	ld   a, [wSakuraMiniGameReturnSubstate]                                  ; $4f17: $fa $38 $c8
 	ld   [wGameSubstate], a                                  ; $4f1a: $ea $a1 $c2
 	ret                                              ; $4f1d: $c9
 
 
-SakuraMiniGameMainSubstate3:
+SakuraMiniGameMainSubstate3_MiniGameInit:
 	call TurnOffLCD                                       ; $4f1e: $cd $e3 $08
 	ld   a, $00                                      ; $4f21: $3e $00
 	call SafeSetAudVolForMultipleChannels                                       ; $4f23: $cd $e0 $1c
@@ -2701,7 +2694,7 @@ endc
 	ld   [wWX], a                                  ; $4fba: $ea $09 $c2
 	ld   [wSCX], a                                  ; $4fbd: $ea $07 $c2
 	ld   [wSCY], a                                  ; $4fc0: $ea $08 $c2
-	ld   hl, $c81c                                   ; $4fc3: $21 $1c $c8
+	ld   hl, wSakuraMiniGameScoreDiv10                                   ; $4fc3: $21 $1c $c8
 	ld   [hl+], a                                    ; $4fc6: $22
 	ld   [hl], a                                     ; $4fc7: $77
 	ld   [$c818], a                                  ; $4fc8: $ea $18 $c8
@@ -2752,7 +2745,7 @@ endc
 	ret                                              ; $503b: $c9
 
 
-SakuraMiniGameMainSubstate4:
+SakuraMiniGameMainSubstate4_MiniGameWaitAfterInit:
 	ld   bc, $0014                                   ; $503c: $01 $14 $00
 	call WaitUntilBCVBlankIntsHandledIfLCDOn                                       ; $503f: $cd $79 $0a
 	ld   c, $80                                      ; $5042: $0e $80
@@ -2857,7 +2850,7 @@ jr_011_50e2:
 	ret                                              ; $50e5: $c9
 
 
-SakuraMiniGameMainSubstate7:
+SakuraMiniGameMainSubstate7_MiniGameFinished:
 	ld   c, $80                                      ; $50e6: $0e $80
 	ld   de, $9840                                   ; $50e8: $11 $40 $98
 	ld   a, $03                                      ; $50eb: $3e $03
@@ -2870,51 +2863,50 @@ SakuraMiniGameMainSubstate7:
 	ld   hl, $d6c0                                   ; $50fc: $21 $c0 $d6
 	ld   b, $08                                      ; $50ff: $06 $08
 	call EnqueueHDMATransfer                                       ; $5101: $cd $7c $02
-	call Call_011_581d                               ; $5104: $cd $1d $58
+	call SetSakuraMiniGameRank                               ; $5104: $cd $1d $58
 	ld   a, $09                                      ; $5107: $3e $09
 	ld   [wGameSubstate], a                                  ; $5109: $ea $a1 $c2
-	ld   hl, $c81d                                   ; $510c: $21 $1d $c8
+	ld   hl, wSakuraMiniGameScoreDiv10+1                                   ; $510c: $21 $1d $c8
 	ld   a, [hl-]                                    ; $510f: $3a
-	cp   $03                                         ; $5110: $fe $03
-	jr   c, jr_011_5121                              ; $5112: $38 $0d
+	cp   HIGH(1000)                                         ; $5110: $fe $03
+	jr   c, .notPro                              ; $5112: $38 $0d
 
-	jr   nz, jr_011_511b                             ; $5114: $20 $05
+	jr   nz, .youreAPro                             ; $5114: $20 $05
 
 	ld   a, [hl]                                     ; $5116: $7e
-	cp   $e8                                         ; $5117: $fe $e8
-	jr   c, jr_011_5121                              ; $5119: $38 $06
+	cp   LOW(1000)                                         ; $5117: $fe $e8
+	jr   c, .notPro                              ; $5119: $38 $06
 
-jr_011_511b:
+.youreAPro:
 	ld   a, $08                                      ; $511b: $3e $08
 	ld   [wGameSubstate], a                                  ; $511d: $ea $a1 $c2
 	ret                                              ; $5120: $c9
 
-
-jr_011_5121:
+.notPro:
 	ld   c, $f0                                      ; $5121: $0e $f0
 
-jr_011_5123:
+.loop:
 	push bc                                          ; $5123: $c5
 	rst  WaitUntilVBlankIntHandledIfLCDOn                                         ; $5124: $cf
 	pop  bc                                          ; $5125: $c1
 	ld   a, [wInGameButtonsPressed]                                  ; $5126: $fa $10 $c2
 	and  $01                                         ; $5129: $e6 $01
-	jr   nz, jr_011_5132                             ; $512b: $20 $05
+	jr   nz, .playSound                             ; $512b: $20 $05
 
 	dec  c                                           ; $512d: $0d
-	jr   nz, jr_011_5123                             ; $512e: $20 $f3
+	jr   nz, .loop                             ; $512e: $20 $f3
 
-	jr   jr_011_5137                                 ; $5130: $18 $05
+	jr   .done                                 ; $5130: $18 $05
 
-jr_011_5132:
+.playSound:
 	ld   a, $21                                      ; $5132: $3e $21
 	call PlaySoundEffect                                       ; $5134: $cd $df $1a
 
-jr_011_5137:
+.done:
 	ret                                              ; $5137: $c9
 
 
-SakuraMiniGameMainSubstate8:
+SakuraMiniGameMainSubstate8_YoureAPro:
 	ld   c, $f0                                      ; $5138: $0e $f0
 
 jr_011_513a:
@@ -2936,13 +2928,13 @@ jr_011_5149:
 
 jr_011_514e:
 	call Call_011_507e                               ; $514e: $cd $7e $50
-	call Call_011_5159                               ; $5151: $cd $59 $51
+	call AnimateYoureAPro                               ; $5151: $cd $59 $51
 	ld   hl, wGameSubstate                                   ; $5154: $21 $a1 $c2
 	inc  [hl]                                        ; $5157: $34
 	ret                                              ; $5158: $c9
 
 
-Call_011_5159:
+AnimateYoureAPro:
 	ld   a, [wWramBank]                                  ; $5159: $fa $93 $c2
 	push af                                          ; $515c: $f5
 	ld   a, $03                                      ; $515d: $3e $03
@@ -3010,23 +3002,20 @@ Call_011_5159:
 	AddrBank Layout_SakuraYoureAPro4
 	
 	
-SakuraMiniGameMainSubstate9:
+SakuraMiniGameMainSubstate9_MiniGameReturn:
 	ld   b, $02 ; $51ca: $06 $02
-	ld   a, [$cb1d]                                  ; $51cc: $fa $1d $cb
+	ld   a, [wIsChestMiniGame]                                  ; $51cc: $fa $1d $cb
 	or   a                                           ; $51cf: $b7
-	jr   z, jr_011_51d4                              ; $51d0: $28 $02
-
+	jr   z, :+                              ; $51d0: $28 $02
 	ld   b, $04                                      ; $51d2: $06 $04
-
-jr_011_51d4:
-	ld   a, [$c82d]                                  ; $51d4: $fa $2d $c8
+:	ld   a, [wSakuraMiniGameRank]                                  ; $51d4: $fa $2d $c8
 	cp   b                                           ; $51d7: $b8
-	jr   c, jr_011_51df                              ; $51d8: $38 $05
+	jr   c, .afterSampleSound                              ; $51d8: $38 $05
 
 	ld   a, $2c                                      ; $51da: $3e $2c
 	call PlaySampledSound                                       ; $51dc: $cd $64 $1b
 
-jr_011_51df:
+.afterSampleSound:
 	xor  a                                           ; $51df: $af
 	ld   [wStartingColorIdxToLoadCompDataFor], a                                  ; $51e0: $ea $62 $c3
 	ld   a, $40                                      ; $51e3: $3e $40
@@ -3039,22 +3028,21 @@ jr_011_51df:
 	call FarLoadPaletteValsFadeToValsAndSetFadeSpeed                                       ; $51f4: $cd $48 $07
 	call FadeBGpalsToWhiteAndAudVol8timesHandlingAnimatedSpriteSpecs                               ; $51f7: $cd $6f $57
 	call TurnOffLCD                                       ; $51fa: $cd $e3 $08
-	ld   a, [$cb1d]                                  ; $51fd: $fa $1d $cb
+	ld   a, [wIsChestMiniGame]                                  ; $51fd: $fa $1d $cb
 	or   a                                           ; $5200: $b7
-	jr   nz, jr_011_5216                             ; $5201: $20 $13
+	jr   nz, .chestMode                             ; $5201: $20 $13
 
-	ld   a, [$c82d]                                  ; $5203: $fa $2d $c8
+	ld   a, [wSakuraMiniGameRank]                                  ; $5203: $fa $2d $c8
 	ld   [wMiniGameTrainingBattleRank], a                                  ; $5206: $ea $21 $cb
-	ld   a, [$c837]                                  ; $5209: $fa $37 $c8
+	ld   a, [wSakuraMiniGameReturnState]                                  ; $5209: $fa $37 $c8
 	ld   [wGameState], a                                  ; $520c: $ea $a0 $c2
-	ld   a, [$c838]                                  ; $520f: $fa $38 $c8
+	ld   a, [wSakuraMiniGameReturnSubstate]                                  ; $520f: $fa $38 $c8
 	ld   [wGameSubstate], a                                  ; $5212: $ea $a1 $c2
 	ret                                              ; $5215: $c9
 
-
-jr_011_5216:
-	call Call_011_524b                               ; $5216: $cd $4b $52
-	ld   de, $c986                                   ; $5219: $11 $86 $c9
+.chestMode:
+	call GetSakuraMiniGameScoreInHL                               ; $5216: $cd $4b $52
+	ld   de, wFinalMiniGameScore                                   ; $5219: $11 $86 $c9
 	ld   a, l                                        ; $521c: $7d
 	ld   [de], a                                     ; $521d: $12
 	inc  de                                          ; $521e: $13
@@ -3062,38 +3050,29 @@ jr_011_5216:
 	ld   [de], a                                     ; $5220: $12
 	ld   h, $0c                                      ; $5221: $26 $0c
 	ld   l, $03                                      ; $5223: $2e $03
-	ld   a, [$c837]                                  ; $5225: $fa $37 $c8
+	ld   a, [wSakuraMiniGameReturnState]                                  ; $5225: $fa $37 $c8
 	ld   d, a                                        ; $5228: $57
-	ld   a, [$c838]                                  ; $5229: $fa $38 $c8
+	ld   a, [wSakuraMiniGameReturnSubstate]                                  ; $5229: $fa $38 $c8
 	ld   e, a                                        ; $522c: $5f
 	ld   b, $00                                      ; $522d: $06 $00
 	ld   a, [$c82f]                                  ; $522f: $fa $2f $c8
 	ld   c, a                                        ; $5232: $4f
-	ld   a, [$c82d]                                  ; $5233: $fa $2d $c8
-	push af                                          ; $5236: $f5
-	ld   a, $3c                                      ; $5237: $3e $3c
-	ld   [wFarCallAddr], a                                  ; $5239: $ea $98 $c2
-	ld   a, $55                                      ; $523c: $3e $55
-	ld   [wFarCallAddr+1], a                                  ; $523e: $ea $99 $c2
-	ld   a, $3e                                      ; $5241: $3e $3e
-	ld   [wFarCallBank], a                                  ; $5243: $ea $9a $c2
-	pop  af                                          ; $5246: $f1
-	call FarCall                                       ; $5247: $cd $62 $09
+	ld   a, [wSakuraMiniGameRank]                                  ; $5233: $fa $2d $c8
+
+	M_FarCall SetMiniGameResultsState
 	ret                                              ; $524a: $c9
 
 
-Call_011_524b:
+GetSakuraMiniGameScoreInHL:
 	ld   hl, $0000                                   ; $524b: $21 $00 $00
-	ld   a, [$c81c]                                  ; $524e: $fa $1c $c8
+	ld   a, [wSakuraMiniGameScoreDiv10]                                  ; $524e: $fa $1c $c8
 	ld   e, a                                        ; $5251: $5f
-	ld   a, [$c81d]                                  ; $5252: $fa $1d $c8
+	ld   a, [wSakuraMiniGameScoreDiv10+1]                                  ; $5252: $fa $1d $c8
 	ld   d, a                                        ; $5255: $57
-	ld   c, $0a                                      ; $5256: $0e $0a
-
-jr_011_5258:
-	add  hl, de                                      ; $5258: $19
+	ld   c, 10                                      ; $5256: $0e $0a
+:	add  hl, de                                      ; $5258: $19
 	dec  c                                           ; $5259: $0d
-	jr   nz, jr_011_5258                             ; $525a: $20 $fc
+	jr   nz, :-                             ; $525a: $20 $fc
 
 	ret                                              ; $525c: $c9
 
@@ -3695,26 +3674,26 @@ Call_011_5663:
 	ld   hl, $568d                                   ; $5669: $21 $8d $56
 	add  hl, bc                                      ; $566c: $09
 	ld   c, [hl]                                     ; $566d: $4e
-	ld   a, [$c81c]                                  ; $566e: $fa $1c $c8
+	ld   a, [wSakuraMiniGameScoreDiv10]                                  ; $566e: $fa $1c $c8
 	ld   l, a                                        ; $5671: $6f
-	ld   a, [$c81d]                                  ; $5672: $fa $1d $c8
+	ld   a, [wSakuraMiniGameScoreDiv10+1]                                  ; $5672: $fa $1d $c8
 	ld   h, a                                        ; $5675: $67
 	add  hl, bc                                      ; $5676: $09
 	ld   a, h                                        ; $5677: $7c
-	cp   $03                                         ; $5678: $fe $03
+	cp   HIGH(1000)                                         ; $5678: $fe $03
 	jr   c, jr_011_5684                              ; $567a: $38 $08
 
 	ld   a, l                                        ; $567c: $7d
-	cp   $e8                                         ; $567d: $fe $e8
+	cp   LOW(1000)                                         ; $567d: $fe $e8
 	jr   c, jr_011_5684                              ; $567f: $38 $03
 
-	ld   hl, $03e8                                   ; $5681: $21 $e8 $03
+	ld   hl, 1000                                   ; $5681: $21 $e8 $03
 
 jr_011_5684:
 	ld   a, l                                        ; $5684: $7d
-	ld   [$c81c], a                                  ; $5685: $ea $1c $c8
+	ld   [wSakuraMiniGameScoreDiv10], a                                  ; $5685: $ea $1c $c8
 	ld   a, h                                        ; $5688: $7c
-	ld   [$c81d], a                                  ; $5689: $ea $1d $c8
+	ld   [wSakuraMiniGameScoreDiv10+1], a                                  ; $5689: $ea $1d $c8
 	ret                                              ; $568c: $c9
 
 
@@ -3987,54 +3966,47 @@ jr_011_57fe:
 	ret                                              ; $581c: $c9
 
 
-Call_011_581d:
-	ld   a, [$cb1d]                                  ; $581d: $fa $1d $cb
+; Compares rank against 4 if from chest, or 2 if from story mode
+SetSakuraMiniGameRank:
+	ld   a, [wIsChestMiniGame]                                  ; $581d: $fa $1d $cb
 	or   a                                           ; $5820: $b7
-	jr   nz, jr_011_583d                             ; $5821: $20 $1a
+	jr   nz, .chestMode                             ; $5821: $20 $1a
 
+; Story mode scores
 	ld   c, $02                                      ; $5823: $0e $02
-	ld   hl, $c81c                                   ; $5825: $21 $1c $c8
+	ld   hl, wSakuraMiniGameScoreDiv10                                   ; $5825: $21 $1c $c8
 	ld   a, [hl+]                                    ; $5828: $2a
 	ld   d, [hl]                                     ; $5829: $56
 	ld   e, a                                        ; $582a: $5f
-	ld   hl, $5837                                   ; $582b: $21 $37 $58
+	ld   hl, .storyScores                                   ; $582b: $21 $37 $58
 	call ReturnMiniGameRankInA                               ; $582e: $cd $5b $58
-	ld   [$c82d], a                                  ; $5831: $ea $2d $c8
+	ld   [wSakuraMiniGameRank], a                                  ; $5831: $ea $2d $c8
 	cp   $02                                         ; $5834: $fe $02
 	ret                                              ; $5836: $c9
 
+.storyScores:
+	dw 0
+	dw 280
+	dw 700
 
-	nop                                              ; $5837: $00
-	nop                                              ; $5838: $00
-	jr   jr_011_583c                                 ; $5839: $18 $01
-
-	cp   h                                           ; $583b: $bc
-
-jr_011_583c:
-	ld   [bc], a                                     ; $583c: $02
-
-jr_011_583d:
+.chestMode:
 	ld   c, $04                                      ; $583d: $0e $04
-	ld   hl, $c81c                                   ; $583f: $21 $1c $c8
+	ld   hl, wSakuraMiniGameScoreDiv10                                   ; $583f: $21 $1c $c8
 	ld   a, [hl+]                                    ; $5842: $2a
 	ld   d, [hl]                                     ; $5843: $56
 	ld   e, a                                        ; $5844: $5f
-	ld   hl, $5851                                   ; $5845: $21 $51 $58
+	ld   hl, .chestScores                                   ; $5845: $21 $51 $58
 	call ReturnMiniGameRankInA                               ; $5848: $cd $5b $58
-	ld   [$c82d], a                                  ; $584b: $ea $2d $c8
+	ld   [wSakuraMiniGameRank], a                                  ; $584b: $ea $2d $c8
 	cp   $04                                         ; $584e: $fe $04
 	ret                                              ; $5850: $c9
 
-
-	nop                                              ; $5851: $00
-	nop                                              ; $5852: $00
-	jr   jr_011_5856                                 ; $5853: $18 $01
-
-	db   $f4                                         ; $5855: $f4
-
-jr_011_5856:
-	ld   bc, $030c                                   ; $5856: $01 $0c $03
-	add  sp, $03                                     ; $5859: $e8 $03
+.chestScores:
+	dw 0
+	dw 280
+	dw 500
+	dw 780
+	dw 1000
 
 
 ; C - idx of last table entry
@@ -4098,8 +4070,9 @@ jr_011_588a:
 	ret                                              ; $588b: $c9
 
 
+Func_11_588c::
 	ld   [$c830], a                                  ; $588c: $ea $30 $c8
-	ld   a, [$cb1d]                                  ; $588f: $fa $1d $cb
+	ld   a, [wIsChestMiniGame]                                  ; $588f: $fa $1d $cb
 	or   a                                           ; $5892: $b7
 	jr   nz, jr_011_5897                             ; $5893: $20 $02
 
@@ -4109,9 +4082,9 @@ jr_011_5897:
 	ld   a, c                                        ; $5897: $79
 	ld   [$c82f], a                                  ; $5898: $ea $2f $c8
 	ld   a, h                                        ; $589b: $7c
-	ld   [$c837], a                                  ; $589c: $ea $37 $c8
+	ld   [wSakuraMiniGameReturnState], a                                  ; $589c: $ea $37 $c8
 	ld   a, l                                        ; $589f: $7d
-	ld   [$c838], a                                  ; $58a0: $ea $38 $c8
+	ld   [wSakuraMiniGameReturnSubstate], a                                  ; $58a0: $ea $38 $c8
 	ld   a, GS_SAKURA_MINI_GAME_MAIN                                      ; $58a3: $3e $0c
 	ld   [wGameState], a                                  ; $58a5: $ea $a0 $c2
 	ld   a, $03                                      ; $58a8: $3e $03
@@ -4119,10 +4092,11 @@ jr_011_5897:
 	ret                                              ; $58ad: $c9
 
 
+Func_11_58ae::
 	ld   a, h                                        ; $58ae: $7c
-	ld   [$c837], a                                  ; $58af: $ea $37 $c8
+	ld   [wSakuraMiniGameReturnState], a                                  ; $58af: $ea $37 $c8
 	ld   a, l                                        ; $58b2: $7d
-	ld   [$c838], a                                  ; $58b3: $ea $38 $c8
+	ld   [wSakuraMiniGameReturnSubstate], a                                  ; $58b3: $ea $38 $c8
 	ld   a, GS_SAKURA_MINI_GAME_MAIN                                      ; $58b6: $3e $0c
 	ld   [wGameState], a                                  ; $58b8: $ea $a0 $c2
 	ld   a, $00                                      ; $58bb: $3e $00
@@ -4149,7 +4123,7 @@ GameState0d_MariaMiniGame::
 	dw $5f9a
 	dw $5fe8
 	dw $6093
-	dw $620c
+	dw MariaMiniGameSubstate10
 
 
 MariaMiniGameSubstate00:
@@ -4161,7 +4135,7 @@ MariaMiniGameSubstate00:
 	call SafeSetAudVolForMultipleChannels                                       ; $58f3: $cd $e0 $1c
 	ld   a, $00                                      ; $58f6: $3e $00
 	ld   [$c89f], a                                  ; $58f8: $ea $9f $c8
-	ld   a, [$cb1d]                                  ; $58fb: $fa $1d $cb
+	ld   a, [wIsChestMiniGame]                                  ; $58fb: $fa $1d $cb
 	or   a                                           ; $58fe: $b7
 	jr   z, jr_011_5920                              ; $58ff: $28 $1f
 
@@ -4472,7 +4446,7 @@ jr_011_5b87:
 	bit  1, a                                        ; $5b87: $cb $4f
 	jr   z, jr_011_5ba0                              ; $5b89: $28 $15
 
-	ld   a, [$cb1d]                                  ; $5b8b: $fa $1d $cb
+	ld   a, [wIsChestMiniGame]                                  ; $5b8b: $fa $1d $cb
 	or   a                                           ; $5b8e: $b7
 	jr   z, jr_011_5ba0                              ; $5b8f: $28 $0f
 
@@ -4489,7 +4463,7 @@ jr_011_5ba0:
 
 	ld   hl, $c89c                                   ; $5ba1: $21 $9c $c8
 	ld   c, $01                                      ; $5ba4: $0e $01
-	ld   a, [$cb1d]                                  ; $5ba6: $fa $1d $cb
+	ld   a, [wIsChestMiniGame]                                  ; $5ba6: $fa $1d $cb
 	or   a                                           ; $5ba9: $b7
 	jr   nz, jr_011_5bae                             ; $5baa: $20 $02
 
@@ -5186,7 +5160,7 @@ jr_011_608d:
 	ret                                              ; $6092: $c9
 
 
-	ld   a, [$cb1d]                                  ; $6093: $fa $1d $cb
+	ld   a, [wIsChestMiniGame]                                  ; $6093: $fa $1d $cb
 	or   a                                           ; $6096: $b7
 	jr   z, jr_011_60d8                              ; $6097: $28 $3f
 
@@ -5233,7 +5207,7 @@ jr_011_60c6:
 	ld   [$c861], a                                  ; $60d5: $ea $61 $c8
 
 jr_011_60d8:
-	ld   a, [$cb1d]                                  ; $60d8: $fa $1d $cb
+	ld   a, [wIsChestMiniGame]                                  ; $60d8: $fa $1d $cb
 	or   a                                           ; $60db: $b7
 	jr   z, jr_011_60e5                              ; $60dc: $28 $07
 
@@ -5448,6 +5422,7 @@ jr_011_6204:
 	ret                                              ; $620b: $c9
 
 
+MariaMiniGameSubstate10:
 	xor  a                                           ; $620c: $af
 	ld   [wStartingColorIdxToLoadCompDataFor], a                                  ; $620d: $ea $62 $c3
 	ld   a, $40                                      ; $6210: $3e $40
@@ -5460,15 +5435,15 @@ jr_011_6204:
 	call FarLoadPaletteValsFadeToValsAndSetFadeSpeed                                       ; $6221: $cd $48 $07
 	call Call_011_6a58                               ; $6224: $cd $58 $6a
 	call TurnOffLCD                                       ; $6227: $cd $e3 $08
-	ld   a, [$cb1d]                                  ; $622a: $fa $1d $cb
+	ld   a, [wIsChestMiniGame]                                  ; $622a: $fa $1d $cb
 	or   a                                           ; $622d: $b7
-	jr   nz, jr_011_6250                             ; $622e: $20 $20
+	jr   nz, .chestMode                             ; $622e: $20 $20
 
 	ld   a, $01                                      ; $6230: $3e $01
 	ld   [wGameSubstate], a                                  ; $6232: $ea $a1 $c2
 	ld   a, [$c89c]                                  ; $6235: $fa $9c $c8
 	cp   $01                                         ; $6238: $fe $01
-	jr   z, jr_011_6286                              ; $623a: $28 $4a
+	jr   z, .done                              ; $623a: $28 $4a
 
 	call Call_011_6a86                               ; $623c: $cd $86 $6a
 	ld   [wMiniGameTrainingBattleRank], a                                  ; $623f: $ea $21 $cb
@@ -5476,12 +5451,12 @@ jr_011_6204:
 	ld   [wGameState], a                                  ; $6245: $ea $a0 $c2
 	ld   a, [$c8ae]                                  ; $6248: $fa $ae $c8
 	ld   [wGameSubstate], a                                  ; $624b: $ea $a1 $c2
-	jr   jr_011_6286                                 ; $624e: $18 $36
+	jr   .done                                 ; $624e: $18 $36
 
-jr_011_6250:
+.chestMode:
 	call Call_011_6a97                               ; $6250: $cd $97 $6a
 	push af                                          ; $6253: $f5
-	ld   hl, $c986                                   ; $6254: $21 $86 $c9
+	ld   hl, wFinalMiniGameScore                                   ; $6254: $21 $86 $c9
 	ld   a, [$c860]                                  ; $6257: $fa $60 $c8
 	ld   [hl+], a                                    ; $625a: $22
 	ld   a, [$c861]                                  ; $625b: $fa $61 $c8
@@ -5496,17 +5471,10 @@ jr_011_6250:
 	ld   a, [$c8ab]                                  ; $626d: $fa $ab $c8
 	ld   c, a                                        ; $6270: $4f
 	pop  af                                          ; $6271: $f1
-	push af                                          ; $6272: $f5
-	ld   a, $3c                                      ; $6273: $3e $3c
-	ld   [wFarCallAddr], a                                  ; $6275: $ea $98 $c2
-	ld   a, $55                                      ; $6278: $3e $55
-	ld   [wFarCallAddr+1], a                                  ; $627a: $ea $99 $c2
-	ld   a, $3e                                      ; $627d: $3e $3e
-	ld   [wFarCallBank], a                                  ; $627f: $ea $9a $c2
-	pop  af                                          ; $6282: $f1
-	call FarCall                                       ; $6283: $cd $62 $09
 
-jr_011_6286:
+	M_FarCall SetMiniGameResultsState
+
+.done:
 	ret                                              ; $6286: $c9
 
 
@@ -7040,7 +7008,7 @@ Call_011_6b0f:
 
 Call_011_6b19:
 	ld   hl, $6b2d                                   ; $6b19: $21 $2d $6b
-	ld   a, [$cb1d]                                  ; $6b1c: $fa $1d $cb
+	ld   a, [wIsChestMiniGame]                                  ; $6b1c: $fa $1d $cb
 	or   a                                           ; $6b1f: $b7
 	jr   nz, jr_011_6b25                             ; $6b20: $20 $03
 
@@ -7133,7 +7101,7 @@ Call_011_6ba7:
 
 DisplayMaria1stPopupBox:
 	call Call_011_6b19                               ; $6bb1: $cd $19 $6b
-	ld   a, [$cb1d]                                  ; $6bb4: $fa $1d $cb
+	ld   a, [wIsChestMiniGame]                                  ; $6bb4: $fa $1d $cb
 	or   a                                           ; $6bb7: $b7
 	jr   nz, jr_011_6bda                             ; $6bb8: $20 $20
 
@@ -7889,22 +7857,22 @@ Call_011_70c3:
 	ld   a, [$ca13]                                  ; $70c3: $fa $13 $ca
 	rst  JumpTable                                         ; $70c6: $df
 	dw Func_11_7a27
-	dw $78eb
-	dw $78d1
-	dw $78db
-	dw $78eb
-	dw $78d1
-	dw $78db
-	dw $78eb
-	dw $78d1
-	dw $78db
-	dw $78eb
-	dw $78d1
-	dw $78db
-	dw $78eb
-	dw $78cb
-	dw $78db
-	dw $7938
+	dw Func_11_78eb
+	dw Func_11_78d1
+	dw Func_11_78db
+	dw Func_11_78eb
+	dw Func_11_78d1
+	dw Func_11_78db
+	dw Func_11_78eb
+	dw Func_11_78d1
+	dw Func_11_78db
+	dw Func_11_78eb
+	dw Func_11_78d1
+	dw Func_11_78db
+	dw Func_11_78eb
+	dw Func_11_78cb
+	dw Func_11_78db
+	dw Func_11_7938
 
 
 GameResultsSubstate8:
@@ -7932,7 +7900,7 @@ GameResultsSubstate8:
 	ld   a, $01                                      ; $711d: $3e $01
 	ld   [$ca16], a                                  ; $711f: $ea $16 $ca
 	ld   hl, $713d                                   ; $7122: $21 $3d $71
-	ld   a, [$ca1d]                                  ; $7125: $fa $1d $ca
+	ld   a, [wGameResultsRanking]                                  ; $7125: $fa $1d $ca
 	cp   $0a                                         ; $7128: $fe $0a
 	jr   nz, jr_011_712f                             ; $712a: $20 $03
 
@@ -8068,22 +8036,16 @@ jr_011_71f0:
 GameResultsSubstateC:
 	call ClearOam                                       ; $71f9: $cd $d7 $0d
 	call AnimateAllAnimatedSpriteSpecs                                       ; $71fc: $cd $d3 $2e
-	push af                                          ; $71ff: $f5
-	ld   a, $aa                                      ; $7200: $3e $aa
-	ld   [wFarCallAddr], a                                  ; $7202: $ea $98 $c2
-	ld   a, $5b                                      ; $7205: $3e $5b
-	ld   [wFarCallAddr+1], a                                  ; $7207: $ea $99 $c2
-	ld   a, $0a                                      ; $720a: $3e $0a
-	ld   [wFarCallBank], a                                  ; $720c: $ea $9a $c2
-	pop  af                                          ; $720f: $f1
-	call FarCall                                       ; $7210: $cd $62 $09
+
+	M_FarCall Func_0a_5baa
+
 	or   a                                           ; $7213: $b7
-	jr   nz, jr_011_724d                             ; $7214: $20 $37
+	jr   nz, .done                             ; $7214: $20 $37
 
 	ld   hl, wGameSubstate                                   ; $7216: $21 $a1 $c2
 	inc  [hl]                                        ; $7219: $34
 	call Call_011_738d                               ; $721a: $cd $8d $73
-	jr   nz, jr_011_724d                             ; $721d: $20 $2e
+	jr   nz, .done                             ; $721d: $20 $2e
 
 	ld   a, [wWramBank]                                  ; $721f: $fa $93 $c2
 	push af                                          ; $7222: $f5
@@ -8093,6 +8055,8 @@ GameResultsSubstateC:
 	ld   hl, $d000                                   ; $722a: $21 $00 $d0
 	ld   bc, $0400                                   ; $722d: $01 $00 $04
 	call MemClear                                       ; $7230: $cd $95 $09
+
+; textbox
 	ld   c, $81                                      ; $7233: $0e $81
 	ld   de, $8800                                   ; $7235: $11 $00 $88
 	ld   a, $03                                      ; $7238: $3e $03
@@ -8105,7 +8069,7 @@ GameResultsSubstateC:
 	ld   a, $0b                                      ; $7248: $3e $0b
 	ld   [wGameSubstate], a                                  ; $724a: $ea $a1 $c2
 
-jr_011_724d:
+.done:
 	ret                                              ; $724d: $c9
 
 
@@ -8284,7 +8248,7 @@ Call_011_738d:
 	ld   [$ca3a], a                                  ; $73a0: $ea $3a $ca
 
 ;
-	ld   a, [$ca1d]                                  ; $73a3: $fa $1d $ca
+	ld   a, [wGameResultsRanking]                                  ; $73a3: $fa $1d $ca
 	add  a                                           ; $73a6: $87
 	ld   c, a                                        ; $73a7: $4f
 	ld   b, $00                                      ; $73a8: $06 $00
@@ -9560,17 +9524,21 @@ jr_011_7889:
 endc
 
 
-;
+Func_11_78cb:
 	ld   a, [$ca1a]                                  ; $78cb: $fa $1a $ca
 	dec  a                                           ; $78ce: $3d
 	jr   jr_011_78d4                                 ; $78cf: $18 $03
 
+
+Func_11_78d1:
 	ld   a, [$ca1a]                                  ; $78d1: $fa $1a $ca
 
 jr_011_78d4:
 	ld   [$ca15], a                                  ; $78d4: $ea $15 $ca
 	ld   hl, $ca13                                   ; $78d7: $21 $13 $ca
 	inc  [hl]                                        ; $78da: $34
+
+Func_11_78db:
 	ld   hl, $ca15                                   ; $78db: $21 $15 $ca
 	ld   a, [hl]                                     ; $78de: $7e
 	or   a                                           ; $78df: $b7
@@ -9586,6 +9554,7 @@ jr_011_78e4:
 	jp   Call_011_70c3                               ; $78e8: $c3 $c3 $70
 
 
+Func_11_78eb:
 	ld   a, [$ca10]                                  ; $78eb: $fa $10 $ca
 	add  a                                           ; $78ee: $87
 	ld   c, a                                        ; $78ef: $4f
@@ -9633,12 +9602,13 @@ Call_011_792a:
 	ret                                              ; $7937: $c9
 
 
+Func_11_7938:
 	ld   a, [$ca1a]                                  ; $7938: $fa $1a $ca
 	cp   $04                                         ; $793b: $fe $04
 	jr   nz, jr_011_7948                             ; $793d: $20 $09
 
 	ld   a, [$ca12]                                  ; $793f: $fa $12 $ca
-	ld   hl, $ca1d                                   ; $7942: $21 $1d $ca
+	ld   hl, wGameResultsRanking                                   ; $7942: $21 $1d $ca
 	cp   [hl]                                        ; $7945: $be
 	jr   z, jr_011_794f                              ; $7946: $28 $07
 
@@ -9715,14 +9685,14 @@ Call_011_7986:
 
 	db $20, $65
 
-	jr   z, jr_011_7a27                              ; $79bf: $28 $66
+	db $28, $66
 
-	jr   nc, jr_011_7a2a                             ; $79c1: $30 $67
+	db $30, $67
 
 	db $38, $00
 
 
-Call_011_79c5:
+LoadAnEndResultsRankingTileData:
 ;
 	ld   a, [wWramBank]                                  ; $79c5: $fa $93 $c2
 	push af                                          ; $79c8: $f5
@@ -9784,10 +9754,8 @@ Call_011_79c5:
 
 
 Func_11_7a27:
-jr_011_7a27:
+.upperLoop:
 	ld   hl, $ca14                                   ; $7a27: $21 $14 $ca
-
-jr_011_7a2a:
 	ld   a, [hl]                                     ; $7a2a: $7e
 	inc  [hl]                                        ; $7a2b: $34
 	ld   c, a                                        ; $7a2c: $4f
@@ -9799,45 +9767,45 @@ jr_011_7a2a:
 	add  hl, bc                                      ; $7a35: $09
 	ld   a, [hl+]                                    ; $7a36: $2a
 	cp   $ff                                         ; $7a37: $fe $ff
-	jr   nz, jr_011_7a49                             ; $7a39: $20 $0e
+	jr   nz, .br_7a49                             ; $7a39: $20 $0e
 
 	xor  a                                           ; $7a3b: $af
 	ld   [$ca14], a                                  ; $7a3c: $ea $14 $ca
 	ld   hl, $ca19                                   ; $7a3f: $21 $19 $ca
 	ld   a, [hl]                                     ; $7a42: $7e
 	or   a                                           ; $7a43: $b7
-	jr   z, jr_011_7a27                              ; $7a44: $28 $e1
+	jr   z, .upperLoop                              ; $7a44: $28 $e1
 
 	dec  [hl]                                        ; $7a46: $35
-	jr   jr_011_7a27                                 ; $7a47: $18 $de
+	jr   .upperLoop                                 ; $7a47: $18 $de
 
-jr_011_7a49:
+.br_7a49:
 	ld   [$ca12], a                                  ; $7a49: $ea $12 $ca
 	ld   a, [$ca19]                                  ; $7a4c: $fa $19 $ca
 	or   a                                           ; $7a4f: $b7
-	jr   nz, jr_011_7a7a                             ; $7a50: $20 $28
+	jr   nz, .done                             ; $7a50: $20 $28
 
-	ld   a, [$ca1d]                                  ; $7a52: $fa $1d $ca
+	ld   a, [wGameResultsRanking]                                  ; $7a52: $fa $1d $ca
 	ld   d, a                                        ; $7a55: $57
 	ld   c, $08                                      ; $7a56: $0e $08
 
-jr_011_7a58:
+.lowerLoop:
 	ld   a, [hl+]                                    ; $7a58: $2a
 	cp   $ff                                         ; $7a59: $fe $ff
-	jr   nz, jr_011_7a65                             ; $7a5b: $20 $08
+	jr   nz, .toLowerLoop                             ; $7a5b: $20 $08
 
 	ld   hl, $ca1e                                   ; $7a5d: $21 $1e $ca
 	ld   a, [hl+]                                    ; $7a60: $2a
 	ld   h, [hl]                                     ; $7a61: $66
 	ld   l, a                                        ; $7a62: $6f
-	jr   jr_011_7a58                                 ; $7a63: $18 $f3
+	jr   .lowerLoop                                 ; $7a63: $18 $f3
 
-jr_011_7a65:
+.toLowerLoop:
 	dec  c                                           ; $7a65: $0d
-	jr   nz, jr_011_7a58                             ; $7a66: $20 $f0
+	jr   nz, .lowerLoop                             ; $7a66: $20 $f0
 
 	cp   d                                           ; $7a68: $ba
-	jr   nz, jr_011_7a7a                             ; $7a69: $20 $0f
+	jr   nz, .done                             ; $7a69: $20 $0f
 
 	ld   a, $04                                      ; $7a6b: $3e $04
 	ld   [$ca1a], a                                  ; $7a6d: $ea $1a $ca
@@ -9846,8 +9814,8 @@ jr_011_7a65:
 	ld   a, $01                                      ; $7a75: $3e $01
 	ld   [$ca38], a                                  ; $7a77: $ea $38 $ca
 
-jr_011_7a7a:
-	call Call_011_79c5                               ; $7a7a: $cd $c5 $79
+.done:
+	call LoadAnEndResultsRankingTileData                               ; $7a7a: $cd $c5 $79
 	ld   hl, $ca11                                   ; $7a7d: $21 $11 $ca
 	ld   a, [hl]                                     ; $7a80: $7e
 	xor  $08                                         ; $7a81: $ee $08
@@ -9913,27 +9881,18 @@ jr_011_7acd:
 
 Call_011_7ad9:
 	call ReturnEndGameRankInA                               ; $7ad9: $cd $23 $7b
-	ld   [$ca1d], a                                  ; $7adc: $ea $1d $ca
+	ld   [wGameResultsRanking], a                                  ; $7adc: $ea $1d $ca
+;
 	ld   hl, $ca1e                                   ; $7adf: $21 $1e $ca
-	ld   a, $e9                                      ; $7ae2: $3e $e9
+	ld   a, LOW(.data)                                      ; $7ae2: $3e $e9
 	ld   [hl+], a                                    ; $7ae4: $22
-	ld   a, $7a                                      ; $7ae5: $3e $7a
+	ld   a, HIGH(.data)                                      ; $7ae5: $3e $7a
 	ld   [hl], a                                     ; $7ae7: $77
 	ret                                              ; $7ae8: $c9
 
-
-	nop                                              ; $7ae9: $00
-	rlca                                             ; $7aea: $07
-	ld   bc, $0208                                   ; $7aeb: $01 $08 $02
-	add  hl, bc                                      ; $7aee: $09
-	inc  bc                                          ; $7aef: $03
-	ld   a, [bc]                                     ; $7af0: $0a
-	inc  b                                           ; $7af1: $04
-	dec  bc                                          ; $7af2: $0b
-	dec  b                                           ; $7af3: $05
-	inc  c                                           ; $7af4: $0c
-	ld   b, $0d                                      ; $7af5: $06 $0d
-	ld   c, $ff                                      ; $7af7: $0e $ff
+.data:
+	db $00, $07, $01, $08, $02, $09, $03, $0a
+	db $04, $0b, $05, $0c, $06, $0d, $0e, $ff
 
 
 JpGetSramByte2:

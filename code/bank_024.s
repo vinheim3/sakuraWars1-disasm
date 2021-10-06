@@ -3538,7 +3538,7 @@ Jump_024_5947:
 	call PlaySong                                       ; $5948: $cd $92 $1a
 	xor  a                                           ; $594b: $af
 	call PlaySoundEffect                                       ; $594c: $cd $df $1a
-	ld   a, [$cb1d]                                  ; $594f: $fa $1d $cb
+	ld   a, [wIsChestMiniGame]                                  ; $594f: $fa $1d $cb
 	or   a                                           ; $5952: $b7
 	jr   nz, jr_024_5974                             ; $5953: $20 $1f
 

@@ -209,6 +209,7 @@ class ScriptExtractor:
             "I figure because these markings only appear in the training room and near her room.":  [[0x0b, 0x06], [0x0b, 0x45]],
         }
         if english in bigMap:
+            print(english)
             return bigMap[english], 0
 
         for j, line in enumerate(lines):
@@ -845,7 +846,7 @@ class ScriptExtractor:
 
 if __name__ == "__main__":
     quotePrefixed = []
-    wb = load_workbook('sakura wars GB - 04:10:21.xlsx')
+    wb = load_workbook('sakura wars GB - 06:10:21.xlsx')
     ws = wb['temp']
     for i, row in enumerate(ws.rows):
         english = row[4]
@@ -880,7 +881,7 @@ if __name__ == "__main__":
     doneEnglish = {}
 
     if translate:
-        with open('sakura wars GB - 04:10:21.csv') as f:
+        with open('sakura wars GB - 06:10:21.csv') as f:
             reader = csv.reader(f)
             for i, (scriptNum, offset, orig, blank, english, char, dupe1, dupe2) in enumerate(reader):
                 if not scriptNum:

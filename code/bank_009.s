@@ -38,54 +38,59 @@ macro DayPeriodTransition
 endm
 
 .dayPeriodTransitions:
-	DayPeriodTransition $00, DROS_EXPLORE_DAY_FOCUS_1, DPTransition00_SetDay1
-	DayPeriodTransition $00, DROS_EXPLORE_DAY_FOCUS_1, DPTransition01
-	DayPeriodTransition $0e, DROS_SAVE_SLEEP,          DPTransition02_SetDormRoomState
-	DayPeriodTransition $0e, DROS_SAVE_SLEEP,          DPTransition03
-	DayPeriodTransition $00, DROS_EXPLORE_DAY_FOCUS_1, DPTransition04_DisplayCurrDate
-	DayPeriodTransition $00, DROS_EXPLORE_DAY_FOCUS_1, DPTransition05
-	DayPeriodTransition $00, DROS_EXPLORE_DAY_FOCUS_1, DPTransition06
-	DayPeriodTransition $01, DROS_TRAIN_NAP_1,         DPTransition07
-	DayPeriodTransition $02, DROS_TRAIN_NAP_1,         DPTransition08
-	DayPeriodTransition $02, DROS_TRAIN_NAP_1,         DPTransition09
-	DayPeriodTransition $03, DROS_TRAIN_NAP_1,         DPTransition0a
-	DayPeriodTransition $04, DROS_TRAIN_NAP_1,         DPTransition0b
-	DayPeriodTransition $05, DROS_TRAIN_NAP_1,         DPTransition0c
-	DayPeriodTransition $05, DROS_EXPLORE_DAY_FOCUS_2, DPTransition0d
-	DayPeriodTransition $06, DROS_EXPLORE_DAY_FOCUS_2, DPTransition0e
-	DayPeriodTransition $07, DROS_EXPLORE_DAY_FOCUS_2, DPTransition0f
-	DayPeriodTransition $08, DROS_TRAIN_NAP_2,         DPTransition10
-	DayPeriodTransition $09, DROS_TRAIN_NAP_2,         DPTransition11
-	DayPeriodTransition $09, DROS_TRAIN_NAP_2,         DPTransition12
-	DayPeriodTransition $0a, DROS_TRAIN_NAP_2,         DPTransition13
-	DayPeriodTransition $0b, DROS_TRAIN_NAP_2,         DPTransition14
-	DayPeriodTransition $0c, DROS_TRAIN_NAP_2,         DPTransition15
-	DayPeriodTransition $0c, DROS_EXPLORE_NIGHT,       DPTransition16
-	DayPeriodTransition $0d, DROS_EXPLORE_NIGHT,       DPTransition17
-	DayPeriodTransition $0e, DROS_EXPLORE_NIGHT,       DPTransition18
-	DayPeriodTransition $0e, DROS_SAVE_SLEEP,          DPTransition19
-	DayPeriodTransition $0e, DROS_SAVE_SLEEP,          DPTransition1a
-	DayPeriodTransition $00, DROS_EXPLORE_DAY_FOCUS_1, DPTransition1b
-	DayPeriodTransition $00, DROS_EXPLORE_DAY_FOCUS_1, DPTransition1c
-	DayPeriodTransition $00, DROS_EXPLORE_DAY_FOCUS_1, DPTransition1d
-	DayPeriodTransition $01, DROS_TRAIN_NAP_1,         DPTransition1e
-	DayPeriodTransition $02, DROS_TRAIN_NAP_1,         DPTransition1f
+; 1st day
+	DayPeriodTransition $00, DROS_EXPLORE_DAY_FOCUS_1, DPTransition_SetDay1
+	DayPeriodTransition $00, DROS_EXPLORE_DAY_FOCUS_1, DPTransition_SetMainConvoState1
+	DayPeriodTransition $0e, DROS_SAVE_SLEEP,          DPTransition_SetDormRoomState1
+	DayPeriodTransition $0e, DROS_SAVE_SLEEP,          DPTransition_ToNextDay1
+
+; Non-last day of the week ($04)
+	DayPeriodTransition $00, DROS_EXPLORE_DAY_FOCUS_1, DPTransition_DisplayCurrDate
+	DayPeriodTransition $00, DROS_EXPLORE_DAY_FOCUS_1, DPTransition_GameResultsOrMainConvoState
+	DayPeriodTransition $00, DROS_EXPLORE_DAY_FOCUS_1, DPTransition_SetDormState2
+	DayPeriodTransition $01, DROS_TRAIN_NAP_1,         DPTransition_Explore1
+	DayPeriodTransition $02, DROS_TRAIN_NAP_1,         DPTransition_SetMainConvoState2
+	DayPeriodTransition $02, DROS_TRAIN_NAP_1,         DPTransition09 ; can go to below, or 2 below
+	DayPeriodTransition $03, DROS_TRAIN_NAP_1,         DPTransition_SetMainConvoState2
+	DayPeriodTransition $04, DROS_TRAIN_NAP_1,         DPTransition_SetMainConvoState2
+	DayPeriodTransition $05, DROS_TRAIN_NAP_1,         DPTransition_SetMainConvoState2
+	DayPeriodTransition $05, DROS_EXPLORE_DAY_FOCUS_2, DPTransition_SetDormState2
+	DayPeriodTransition $06, DROS_EXPLORE_DAY_FOCUS_2, DPTransition_Explore1
+	DayPeriodTransition $07, DROS_EXPLORE_DAY_FOCUS_2, DPTransition_SetMainConvoState2
+	DayPeriodTransition $08, DROS_TRAIN_NAP_2,         DPTransition_SetMainConvoState2
+	DayPeriodTransition $09, DROS_TRAIN_NAP_2,         DPTransition_SetMainConvoState2
+	DayPeriodTransition $09, DROS_TRAIN_NAP_2,         DPTransition12 ; can go to below or 2 below
+	DayPeriodTransition $0a, DROS_TRAIN_NAP_2,         DPTransition_SetMainConvoState2
+	DayPeriodTransition $0b, DROS_TRAIN_NAP_2,         DPTransition_SetMainConvoState2
+	DayPeriodTransition $0c, DROS_TRAIN_NAP_2,         DPTransition_SetMainConvoState2
+	DayPeriodTransition $0c, DROS_EXPLORE_NIGHT,       DPTransition_SetDormState2
+	DayPeriodTransition $0d, DROS_EXPLORE_NIGHT,       DPTransition_Explore1
+	DayPeriodTransition $0e, DROS_EXPLORE_NIGHT,       DPTransition_SetMainConvoState2
+	DayPeriodTransition $0e, DROS_SAVE_SLEEP,          DPTransition_SetDormState2
+	DayPeriodTransition $0e, DROS_SAVE_SLEEP,          DPTransition_NextDay
+
+; Last day of the week ($1b)
+	DayPeriodTransition $00, DROS_EXPLORE_DAY_FOCUS_1, DPTransition_ToDisplayCurrDate
+	DayPeriodTransition $00, DROS_EXPLORE_DAY_FOCUS_1, DPTransition_SetMainConvoState3
+	DayPeriodTransition $00, DROS_EXPLORE_DAY_FOCUS_1, DPTransition_SetDormState3
+	DayPeriodTransition $01, DROS_TRAIN_NAP_1,         DPTransition_Explore2
+	DayPeriodTransition $02, DROS_TRAIN_NAP_1,         DPTransition_SetMainConvoState3
 	DayPeriodTransition $02, DROS_TRAIN_NAP_1,         DPTransition20
-	DayPeriodTransition $03, DROS_TRAIN_NAP_1,         DPTransition21
-	DayPeriodTransition $04, DROS_TRAIN_NAP_1,         DPTransition22
-	DayPeriodTransition $09, DROS_TRAIN_NAP_1,         DPTransition23
+	DayPeriodTransition $03, DROS_TRAIN_NAP_1,         DPTransition_SetMainConvoState3
+	DayPeriodTransition $04, DROS_TRAIN_NAP_1,         DPTransition_SetMainConvoState3
+	DayPeriodTransition $09, DROS_TRAIN_NAP_1,         DPTransition_SetMainConvoState3
 	DayPeriodTransition $09, DROS_EXAM,                DPTransition24
-	DayPeriodTransition $0a, DROS_EXAM,                DPTransition25
-	DayPeriodTransition $0b, DROS_EXAM,                DPTransition26
-	DayPeriodTransition $0c, DROS_EXAM,                DPTransition27
-	DayPeriodTransition $0c, DROS_EXPLORE_NIGHT,       DPTransition28
-	DayPeriodTransition $0d, DROS_EXPLORE_NIGHT,       DPTransition29
-	DayPeriodTransition $0e, DROS_EXPLORE_NIGHT,       DPTransition2a
-	DayPeriodTransition $0e, DROS_SAVE_SLEEP,          DPTransition2b
-	DayPeriodTransition $0e, DROS_SAVE_SLEEP,          DPTransition2c
+	DayPeriodTransition $0a, DROS_EXAM,                DPTransition_SetMainConvoState3
+	DayPeriodTransition $0b, DROS_EXAM,                DPTransition_SetMainConvoState3
+	DayPeriodTransition $0c, DROS_EXAM,                DPTransition_SetMainConvoState3
+	DayPeriodTransition $0c, DROS_EXPLORE_NIGHT,       DPTransition_SetDormState3
+	DayPeriodTransition $0d, DROS_EXPLORE_NIGHT,       DPTransition_Explore2
+	DayPeriodTransition $0e, DROS_EXPLORE_NIGHT,       DPTransition_SetMainConvoState3
+	DayPeriodTransition $0e, DROS_SAVE_SLEEP,          DPTransition_SetDormState3
+	DayPeriodTransition $0e, DROS_SAVE_SLEEP,          DPTransition_ToNextDay2
 
 
-DPTransition00_SetDay1:
+DPTransition_SetDay1:
 ; Set day to 1, then go to next dp idx
 	ld   a, $01                                                     ; $40e0
 	ld   [sCurrDay], a                                              ; $40e2
@@ -95,7 +100,7 @@ DPTransition00_SetDay1:
 	ret                                                             ; $40e9
 
 
-DPTransition01:
+DPTransition_SetMainConvoState1:
 ;
 	ld   a, [wWramBank]                                  ; $40ea: $fa $93 $c2
 	push af                                          ; $40ed: $f5
@@ -110,7 +115,7 @@ DPTransition01:
 
 ;
 	ld   a, [wTimeOfDay]                                  ; $40fa: $fa $20 $cb
-	call Call_009_4841                               ; $40fd: $cd $41 $48
+	call ReturnApplicableMainConvoScriptInA                               ; $40fd: $cd $41 $48
 	or   a                                           ; $4100: $b7
 	jr   z, .done                              ; $4101: $28 $3f
 
@@ -141,13 +146,13 @@ DPTransition01:
 	ld   [wWramBank], a                                  ; $4143: $ea $93 $c2
 	ldh  [rSVBK], a                                  ; $4146: $e0 $70
 
-;
+; To dorm room transition
 	ld   hl, sDayPeriodIdx                                   ; $4148: $21 $b1 $af
 	inc  [hl]                                        ; $414b: $34
 	ret                                              ; $414c: $c9
 
 
-DPTransition02_SetDormRoomState:
+DPTransition_SetDormRoomState1:
 ; Use unchanged setup idx and set state
 	ld   a, [wDormRoomOptionsSetupIdx]                              ; $414d
 	ld   h, GS_DAY_PERIOD_TRANSITION                                ; $4150
@@ -155,17 +160,17 @@ DPTransition02_SetDormRoomState:
 
 	M_FarCall SetDormRoomState
 
-; Go to next dp idx
+; Go to next dp idx - to next day
 	ld   hl, sDayPeriodIdx                                          ; $4168
 	inc  [hl]                                                       ; $416b
 	ret                                                             ; $416c
 
 
-DPTransition03:
-	jp   DPTransition1a                               ; $416d: $c3 $fb $42
+DPTransition_ToNextDay1:
+	jp   DPTransition_NextDay                               ; $416d: $c3 $fb $42
 
 
-DPTransition04_DisplayCurrDate:
+DPTransition_DisplayCurrDate:
 	ld   a, [$cc1d]                                  ; $4170: $fa $1d $cc
 	or   a                                           ; $4173: $b7
 	jr   z, .setDayPassedState                              ; $4174: $28 $12
@@ -196,10 +201,10 @@ DPTransition04_DisplayCurrDate:
 	ret                                                             ; $4195
 
 
-DPTransition05:
+DPTransition_GameResultsOrMainConvoState:
 	ld   a, [sCurrDay]                                  ; $4196: $fa $b0 $af
 	cp   32                                         ; $4199: $fe $20
-	jr   c, .notEndOfGame                              ; $419b: $38 $19
+	jr   c, DPTransition_SetMainConvoState2                              ; $419b: $38 $19
 
 	ld   h, $36                                      ; $419d: $26 $36
 	ld   l, $00                                      ; $419f: $2e $00
@@ -207,18 +212,7 @@ DPTransition05:
 	M_FarCall SetGameResultsState
 	ret                                              ; $41b5: $c9
 
-.notEndOfGame:
-DPTransition08:
-DPTransition0a:
-DPTransition0b:
-DPTransition0c:
-DPTransition0f:
-DPTransition10:
-DPTransition11:
-DPTransition13:
-DPTransition14:
-DPTransition15:
-DPTransition18:
+DPTransition_SetMainConvoState2:
 	ld   a, [wWramBank]                                  ; $41b6: $fa $93 $c2
 	push af                                          ; $41b9: $f5
 
@@ -229,7 +223,7 @@ DPTransition18:
 
 ;
 	ld   a, [wTimeOfDay]                                  ; $41c1: $fa $20 $cb
-	call Call_009_4841                               ; $41c4: $cd $41 $48
+	call ReturnApplicableMainConvoScriptInA                               ; $41c4: $cd $41 $48
 	or   a                                           ; $41c7: $b7
 	jr   z, .done                              ; $41c8: $28 $4e
 
@@ -276,9 +270,7 @@ DPTransition18:
 	ret                                              ; $4222: $c9
 
 
-DPTransition07:
-DPTransition0e:
-DPTransition17:
+DPTransition_Explore1:
 	ld   a, [wWramBank]                                  ; $4223: $fa $93 $c2
 	push af                                          ; $4226: $f5
 	ld   a, $02                                      ; $4227: $3e $02
@@ -343,7 +335,7 @@ DPTransition09:
 	inc  a                                           ; $4288: $3c
 	ld   [$cb1e], a                                  ; $4289: $ea $1e $cb
 	cp   $07                                         ; $428c: $fe $07
-	jr   nz, jr_009_42bb                             ; $428e: $20 $2b
+	jr   nz, DPTransition_SetDormState2                             ; $428e: $20 $2b
 
 	ld   hl, sDayPeriodIdx                                   ; $4290: $21 $b1 $af
 	inc  [hl]                                        ; $4293: $34
@@ -374,18 +366,13 @@ DPTransition12:
 jr_009_42b0:
 	xor  a                                           ; $42b0: $af
 	ld   [$cb1e], a                                  ; $42b1: $ea $1e $cb
-	jr   jr_009_42bb                                 ; $42b4: $18 $05
+	jr   DPTransition_SetDormState2                                 ; $42b4: $18 $05
 
 jr_009_42b6:
 	ld   a, $09                                      ; $42b6: $3e $09
 	ld   [$cb1e], a                                  ; $42b8: $ea $1e $cb
 
-
-DPTransition06:
-DPTransition0d:
-DPTransition16:
-DPTransition19:
-jr_009_42bb:
+DPTransition_SetDormState2:
 ;
 	ld   b, $03                                      ; $42bb: $06 $03
 	call ClearCarryIfNightElseSetIt                               ; $42bd: $cd $3e $45
@@ -414,7 +401,7 @@ jr_009_42bb:
 	ret                                              ; $42fa: $c9
 
 
-DPTransition1a:
+DPTransition_NextDay:
 	ld   hl, sCurrDay                                   ; $42fb: $21 $b0 $af
 	inc  [hl]                                        ; $42fe: $34
 	ld   h, [hl]                                     ; $42ff: $66
@@ -422,56 +409,53 @@ DPTransition1a:
 	call HLequHdivModL                                       ; $4302: $cd $fb $0b
 	ld   h, $00                                      ; $4305: $26 $00
 	add  hl, hl                                      ; $4307: $29
-	ld   bc, $4310                                   ; $4308: $01 $10 $43
+	ld   bc, .table                                   ; $4308: $01 $10 $43
 	add  hl, bc                                      ; $430b: $09
 	ld   a, [hl+]                                    ; $430c: $2a
 	ld   h, [hl]                                     ; $430d: $66
 	ld   l, a                                        ; $430e: $6f
 	jp   hl                                          ; $430f: $e9
 
+.table:
+	dw .entry0
+	dw .entry2
+	dw .entry1
+	dw .entry2
+	dw .entry2
+	dw .entry2
+	dw .entry2
 
-	ld   e, $43                                      ; $4310: $1e $43
-	ld   l, $43                                      ; $4312: $2e $43
-	inc  h                                           ; $4314: $24
-	ld   b, e                                        ; $4315: $43
-	ld   l, $43                                      ; $4316: $2e $43
-	ld   l, $43                                      ; $4318: $2e $43
-	ld   l, $43                                      ; $431a: $2e $43
-	ld   l, $43                                      ; $431c: $2e $43
+.entry0:
+; to DPTransition_ToDisplayCurrDate
 	ld   a, $1b                                      ; $431e: $3e $1b
 	ld   [sDayPeriodIdx], a                                  ; $4320: $ea $b1 $af
 	ret                                              ; $4323: $c9
 
-
+.entry1:
 	ld   a, $80                                      ; $4324: $3e $80
 	ld   [sSramVals2+SRAM2_HINT_ICON1], a                                  ; $4326: $ea $ac $b0
 	ld   a, $7f                                      ; $4329: $3e $7f
 	ld   [sSramVals2+SRAM2_HINT_ICON2], a                                  ; $432b: $ea $ad $b0
+
+.entry2:
+; to DPTransition_DisplayCurrDate
 	ld   a, $04                                      ; $432e: $3e $04
 	ld   [sDayPeriodIdx], a                                  ; $4330: $ea $b1 $af
 	ret                                              ; $4333: $c9
 
 
-DPTransition1b:
-	jp   DPTransition04_DisplayCurrDate                               ; $4334: $c3 $70 $41
+DPTransition_ToDisplayCurrDate:
+	jp   DPTransition_DisplayCurrDate                               ; $4334: $c3 $70 $41
 
 
-DPTransition1c:
-DPTransition1f:
-DPTransition21:
-DPTransition22:
-DPTransition23:
-DPTransition25:
-DPTransition26:
-DPTransition27:
-DPTransition2a:
+DPTransition_SetMainConvoState3:
 	ld   a, [wWramBank]                                  ; $4337: $fa $93 $c2
 	push af                                          ; $433a: $f5
 	ld   a, $02                                      ; $433b: $3e $02
 	ld   [wWramBank], a                                  ; $433d: $ea $93 $c2
 	ldh  [rSVBK], a                                  ; $4340: $e0 $70
 	ld   a, [wTimeOfDay]                                  ; $4342: $fa $20 $cb
-	call Call_009_4841                               ; $4345: $cd $41 $48
+	call ReturnApplicableMainConvoScriptInA                               ; $4345: $cd $41 $48
 	or   a                                           ; $4348: $b7
 	jr   z, jr_009_4399                              ; $4349: $28 $4e
 
@@ -515,8 +499,7 @@ jr_009_4399:
 	ret                                              ; $43a3: $c9
 
 
-DPTransition1e:
-DPTransition29:
+DPTransition_Explore2:
 	ld   a, [wWramBank]                                  ; $43a4: $fa $93 $c2
 	push af                                          ; $43a7: $f5
 	ld   a, $02                                      ; $43a8: $3e $02
@@ -580,26 +563,19 @@ DPTransition20:
 	ld   a, l                                        ; $4408: $7d
 	inc  a                                           ; $4409: $3c
 	ld   [$cb1e], a                                  ; $440a: $ea $1e $cb
-	jr   jr_009_4414                                 ; $440d: $18 $05
+	jr   DPTransition_SetDormState3                                 ; $440d: $18 $05
 
 
 DPTransition24:
 	ld   a, $09                                      ; $440f: $3e $09
 	ld   [$cb1e], a                                  ; $4411: $ea $1e $cb
 
-jr_009_4414:
-
-DPTransition1d:
-DPTransition28:
-DPTransition2b:
+DPTransition_SetDormState3:
 	ld   b, $03                                      ; $4414: $06 $03
 	call ClearCarryIfNightElseSetIt                               ; $4416: $cd $3e $45
-	jr   c, jr_009_441d                              ; $4419: $38 $02
-
+	jr   c, :+                              ; $4419: $38 $02
 	ld   b, $02                                      ; $441b: $06 $02
-
-jr_009_441d:
-	ld   a, b                                        ; $441d: $78
+:	ld   a, b                                        ; $441d: $78
 	call PlaySong                                       ; $441e: $cd $92 $1a
 	ld   a, $07                                      ; $4421: $3e $07
 	call SafeSetAudVolForMultipleChannels                                       ; $4423: $cd $e0 $1c
@@ -609,6 +585,8 @@ jr_009_441d:
 	ld   [wExploreCursorX], a                                  ; $442c: $ea $37 $cb
 	ld   a, $18                                      ; $442f: $3e $18
 	ld   [wExploreCursorY], a                                  ; $4431: $ea $39 $cb
+
+;
 	ld   a, [wDormRoomOptionsSetupIdx]                                  ; $4434: $fa $7e $cc
 	ld   h, GS_DAY_PERIOD_TRANSITION                                      ; $4437: $26 $38
 	ld   l, $00                                      ; $4439: $2e $00
@@ -620,59 +598,71 @@ jr_009_441d:
 	ret                                              ; $4453: $c9
 
 
-DPTransition2c:
-	jp   DPTransition1a                               ; $4454: $c3 $fb $42
+DPTransition_ToNextDay2:
+	jp   DPTransition_NextDay                               ; $4454: $c3 $fb $42
 
 
+; A -
 Func_09_4457::
 	push af                                          ; $4457: $f5
+
+; L = day of week
 	ld   a, [sCurrDay]                                  ; $4458: $fa $b0 $af
 	ld   h, a                                        ; $445b: $67
 	ld   l, $07                                      ; $445c: $2e $07
 	call HLequHdivModL                                       ; $445e: $cd $fb $0b
+
+; A = day of week, HL = param
 	pop  bc                                          ; $4461: $c1
 	ld   a, l                                        ; $4462: $7d
 	ld   h, $00                                      ; $4463: $26 $00
 	ld   l, b                                        ; $4465: $68
+
+;
 	or   a                                           ; $4466: $b7
-	jr   z, jr_009_4475                              ; $4467: $28 $0c
+	jr   z, .param0                              ; $4467: $28 $0c
 
 	dec  a                                           ; $4469: $3d
-	jr   z, jr_009_446c                              ; $446a: $28 $00
+	jr   z, .paramNon0                              ; $446a: $28 $00
 
-jr_009_446c:
-	ld   bc, $447e                                   ; $446c: $01 $7e $44
+.paramNon0:
+	ld   bc, .table1                                   ; $446c: $01 $7e $44
 	add  hl, bc                                      ; $446f: $09
 	ld   a, [hl]                                     ; $4470: $7e
 	ld   [sDayPeriodIdx], a                                  ; $4471: $ea $b1 $af
 	ret                                              ; $4474: $c9
 
-
-jr_009_4475:
-	ld   bc, $4488                                   ; $4475: $01 $88 $44
+.param0:
+	ld   bc, .table2                                   ; $4475: $01 $88 $44
 	add  hl, bc                                      ; $4478: $09
 	ld   a, [hl]                                     ; $4479: $7e
 	ld   [sDayPeriodIdx], a                                  ; $447a: $ea $b1 $af
 	ret                                              ; $447d: $c9
 
+.table1:
+	db $19 ; hour $0e, SetDormState2
+	db $09 ; DPTransition09
+	db $0b ; hour $04, SetMainConvoState2
+	db $0f ; hour $07, SetMainConvoState2
+	db $07 ; hour $01, Explore1
+	db $0c ; hour $05, SetMainConvoState2
+	db $15 ; hour $0c, SetMainConvoState2
+	db $18 ; hour $0e, SetMainConvoState2
+	db $10 ; hour $08, SetMainConvoState2
+	db $08 ; hour $02, SetMainConvoState2
+	
+.table2:
+	db $2b ; hour $0e, SetDormState3
+	db $20 ; DPTransition20
+	db $22 ; hour $04, SetMainConvoState3
+	db $24 ; DPTransition24
+	db $1e ; hour $01, Explore2
+	db $24 ; DPTransition24
+	db $27 ; hour $0c, SetMainConvoState3
+	db $2a ; hour $0e, SetMainConvoState3
+	db $23 ; hour $09, SetMainConvoState3
+	db $1f ; hour $02, SetMainConvoState3
 
-	add  hl, de                                      ; $447e: $19
-	add  hl, bc                                      ; $447f: $09
-	dec  bc                                          ; $4480: $0b
-	rrca                                             ; $4481: $0f
-	rlca                                             ; $4482: $07
-	inc  c                                           ; $4483: $0c
-	dec  d                                           ; $4484: $15
-	jr   @+$12                                       ; $4485: $18 $10
-
-	ld   [$202b], sp                                 ; $4487: $08 $2b $20
-	ld   [hl+], a                                    ; $448a: $22
-	inc  h                                           ; $448b: $24
-	ld   e, $24                                      ; $448c: $1e $24
-	daa                                              ; $448e: $27
-	ld   a, [hl+]                                    ; $448f: $2a
-	inc  hl                                          ; $4490: $23
-	rra                                              ; $4491: $1f
 
 GetSramValOrFlag2:
 	push bc                                          ; $4492: $c5
@@ -1239,7 +1229,7 @@ SetMainConvoState::
 	ret                                                             ; $4840
 
 
-Call_009_4841:
+ReturnApplicableMainConvoScriptInA:
 ;
 	ld   a, [wWramBank]                                  ; $4841: $fa $93 $c2
 	push af                                          ; $4844: $f5
@@ -1249,7 +1239,7 @@ Call_009_4841:
 	ldh  [rSVBK], a                                  ; $484a: $e0 $70
 
 ;
-	ld   hl, $d340                                   ; $484c: $21 $40 $d3
+	ld   hl, wHourlyEventsDetails                                   ; $484c: $21 $40 $d3
 	ld   bc, $0400                                   ; $484f: $01 $00 $04
 	ld   a, $00                                      ; $4852: $3e $00
 	call MemSet                                       ; $4854: $cd $96 $09
@@ -1261,8 +1251,8 @@ Call_009_4841:
 	call MemSet                                       ; $485f: $cd $96 $09
 
 ;
-	call Call_009_48c0                               ; $4862: $cd $c0 $48
-	call Call_009_4912                               ; $4865: $cd $12 $49
+	call PopulateOrderedGirlAffectionLevelsStruct                               ; $4862: $cd $c0 $48
+	call PopulateHourlyEventsStruct                               ; $4865: $cd $12 $49
 	call Call_009_4aa1                               ; $4868: $cd $a1 $4a
 	ld   b, a                                        ; $486b: $47
 
@@ -1280,7 +1270,7 @@ Call_009_4874:
 	ld   a, $02                                      ; $4878: $3e $02
 	ld   [wWramBank], a                                  ; $487a: $ea $93 $c2
 	ldh  [rSVBK], a                                  ; $487d: $e0 $70
-	ld   hl, $d340                                   ; $487f: $21 $40 $d3
+	ld   hl, wHourlyEventsDetails                                   ; $487f: $21 $40 $d3
 	ld   bc, $0400                                   ; $4882: $01 $00 $04
 	ld   a, $00                                      ; $4885: $3e $00
 	call MemSet                                       ; $4887: $cd $96 $09
@@ -1298,7 +1288,7 @@ Call_009_4874:
 	call MemSet                                       ; $48a8: $cd $96 $09
 	ld   a, $ff                                      ; $48ab: $3e $ff
 	ld   [$dc50], a                                  ; $48ad: $ea $50 $dc
-	call Call_009_48c0                               ; $48b0: $cd $c0 $48
+	call PopulateOrderedGirlAffectionLevelsStruct                               ; $48b0: $cd $c0 $48
 	call Call_009_4b1a                               ; $48b3: $cd $1a $4b
 	call Call_009_4bd2                               ; $48b6: $cd $d2 $4b
 	pop  af                                          ; $48b9: $f1
@@ -1307,69 +1297,86 @@ Call_009_4874:
 	ret                                              ; $48bf: $c9
 
 
-Call_009_48c0:
-	ld   hl, $dcc0                                   ; $48c0: $21 $c0 $dc
+PopulateOrderedGirlAffectionLevelsStruct:
+; clear a buffer
+; the most affectionate girl appears earlier
+	ld   hl, wOrderedGirlAffectionLevels                                   ; $48c0: $21 $c0 $dc
 	ld   bc, $0010                                   ; $48c3: $01 $10 $00
 	ld   a, $00                                      ; $48c6: $3e $00
 	call MemSet                                       ; $48c8: $cd $96 $09
-	ld   de, $dca0                                   ; $48cb: $11 $a0 $dc
-	ld   hl, $afc0                                   ; $48ce: $21 $c0 $af
+
+; fill dca0 with affection values
+	ld   de, wGirlAffectionLevelsBuffer                                   ; $48cb: $11 $a0 $dc
+	ld   hl, sSramVals2+SRAM2_DUMMY_AFFECTION                                   ; $48ce: $21 $c0 $af
 	ld   bc, $0010                                   ; $48d1: $01 $10 $00
 	call MemCopy                                       ; $48d4: $cd $a9 $09
+
+;
 	xor  a                                           ; $48d7: $af
 
-jr_009_48d8:
+.nextGirlToPlace:
 	ld   [$dc90], a                                  ; $48d8: $ea $90 $dc
+
+; HL points to the affection val to check, B = the affection value
 	ld   b, $00                                      ; $48db: $06 $00
 	ld   c, a                                        ; $48dd: $4f
-	ld   hl, $dca0                                   ; $48de: $21 $a0 $dc
+	ld   hl, wGirlAffectionLevelsBuffer                                   ; $48de: $21 $a0 $dc
 	add  hl, bc                                      ; $48e1: $09
 	ld   b, [hl]                                     ; $48e2: $46
+
+; Loop through the affection values to compare B against
 	ld   c, $00                                      ; $48e3: $0e $00
-	ld   hl, $dca0                                   ; $48e5: $21 $a0 $dc
+	ld   hl, wGirlAffectionLevelsBuffer                                   ; $48e5: $21 $a0 $dc
 	xor  a                                           ; $48e8: $af
 
-jr_009_48e9:
+.nextGirlToCompareTo:
 	ld   [$dc91], a                                  ; $48e9: $ea $91 $dc
+
+; If the curr affection val < the one pointed at, C += 1
 	ld   a, b                                        ; $48ec: $78
 	cp   [hl]                                        ; $48ed: $be
-	jr   nc, jr_009_48f1                             ; $48ee: $30 $01
-
+	jr   nc, :+                             ; $48ee: $30 $01
 	inc  c                                           ; $48f0: $0c
+:	inc  hl                                          ; $48f1: $23
 
-jr_009_48f1:
-	inc  hl                                          ; $48f1: $23
+; To next affection value to check against
 	ld   a, [$dc91]                                  ; $48f2: $fa $91 $dc
 	inc  a                                           ; $48f5: $3c
 	cp   $10                                         ; $48f6: $fe $10
-	jr   c, jr_009_48e9                              ; $48f8: $38 $ef
+	jr   c, .nextGirlToCompareTo                              ; $48f8: $38 $ef
 
+; C = num people more affectionate
 	ld   b, $00                                      ; $48fa: $06 $00
-	ld   hl, $dcc0                                   ; $48fc: $21 $c0 $dc
+	ld   hl, wOrderedGirlAffectionLevels                                   ; $48fc: $21 $c0 $dc
 	add  hl, bc                                      ; $48ff: $09
 
-jr_009_4900:
-	ld   a, [hl+]                                    ; $4900: $2a
+; HL points to a free spot in the struct to store the girl's idx
+:	ld   a, [hl+]                                    ; $4900: $2a
 	or   a                                           ; $4901: $b7
-	jr   nz, jr_009_4900                             ; $4902: $20 $fc
+	jr   nz, :-                             ; $4902: $20 $fc
 
 	dec  hl                                          ; $4904: $2b
+
+; Store the girl's index, and go to next girl to place in struct
 	ld   a, [$dc90]                                  ; $4905: $fa $90 $dc
 	ld   [hl], a                                     ; $4908: $77
+
 	ld   a, [$dc90]                                  ; $4909: $fa $90 $dc
 	inc  a                                           ; $490c: $3c
 	cp   $10                                         ; $490d: $fe $10
-	jr   c, jr_009_48d8                              ; $490f: $38 $c7
+	jr   c, .nextGirlToPlace                              ; $490f: $38 $c7
 
 	ret                                              ; $4911: $c9
 
 
-Call_009_4912:
+PopulateHourlyEventsStruct:
 	xor  a                                           ; $4912: $af
 
-.bigLoop:
+.nextEvent:
 ;
-	ld   [$dc90], a                                  ; $4913: $ea $90 $dc
+	ld   [wHourlyEventStructIdxToFill], a                                  ; $4913: $ea $90 $dc
+
+; de = d340 + A * $40
 	ld   b, $00                                      ; $4916: $06 $00
 	ld   c, a                                        ; $4918: $4f
 	swap c                                           ; $4919: $cb $31
@@ -1377,13 +1384,13 @@ Call_009_4912:
 	rl   b                                           ; $491d: $cb $10
 	sla  c                                           ; $491f: $cb $21
 	rl   b                                           ; $4921: $cb $10
-	ld   hl, $d340                                   ; $4923: $21 $40 $d3
+	ld   hl, wHourlyEventsDetails                                   ; $4923: $21 $40 $d3
 	add  hl, bc                                      ; $4926: $09
-
-;
 	ld   d, h                                        ; $4927: $54
 	ld   e, l                                        ; $4928: $5d
-	ld   hl, Table_09_4996                                   ; $4929: $21 $96 $49
+
+; HL = 8 day grouping * $20 into table (16 words)
+	ld   hl, DayHourEvents                                   ; $4929: $21 $96 $49
 	ld   a, [sCurrDay]                                  ; $492c: $fa $b0 $af
 	and  $18                                         ; $492f: $e6 $18
 	sla  a                                           ; $4931: $cb $27
@@ -1392,42 +1399,46 @@ Call_009_4912:
 	ld   c, a                                        ; $4937: $4f
 	add  hl, bc                                      ; $4938: $09
 
-;
+; HL = double time of day into the 8 day grouping words
 	ld   a, [wTimeOfDay]                                  ; $4939: $fa $20 $cb
 	sla  a                                           ; $493c: $cb $27
 	ld   b, $00                                      ; $493e: $06 $00
 	ld   c, a                                        ; $4940: $4f
 	add  hl, bc                                      ; $4941: $09
 
-;
+; HL = address pointed to in table
 	ld   a, [hl+]                                    ; $4942: $2a
 	ld   b, [hl]                                     ; $4943: $46
 	ld   c, a                                        ; $4944: $4f
 	ld   hl, $4000                                   ; $4945: $21 $00 $40
 	add  hl, bc                                      ; $4948: $09
+
+;
 	xor  a                                           ; $4949: $af
 
-.nextDayGroupEntry:
-	ld   [$dc91], a                                  ; $494a: $ea $91 $dc
+.nextHrsEventEntry:
+	ld   [wNumHourlyEventsInStruct], a                                  ; $494a: $ea $91 $dc
 
 ;
 	push de                                          ; $494d: $d5
 	push hl                                          ; $494e: $e5
-	ld   a, $40                                      ; $494f: $3e $40
-	ld   de, $dc94                                   ; $4951: $11 $94 $dc
+	ld   a, HOURLY_EVENTS_BANK                                      ; $494f: $3e $40
+	ld   de, wCurrHourlyEventEntryBuffer                                   ; $4951: $11 $94 $dc
 	ld   bc, $0008                                   ; $4954: $01 $08 $00
 	call FarMemCopy                                       ; $4957: $cd $b2 $09
-	call Call_009_4a16                               ; $495a: $cd $16 $4a
+	call todo_GetApplicableScriptEventCheckingEventStructIdx                               ; $495a: $cd $16 $4a
 	pop  hl                                          ; $495d: $e1
 	pop  de                                          ; $495e: $d1
 
 ;
 	or   a                                           ; $495f: $b7
-	jr   z, .end                              ; $4960: $28 $2a
+	jr   z, .toNextEvent                              ; $4960: $28 $2a
 
+; Try new event if we had to skip the current one
 	bit  7, a                                        ; $4962: $cb $7f
-	jr   nz, .toNextDayGroupEntry                             ; $4964: $20 $1b
+	jr   nz, .toNextHrsEventEntry                             ; $4964: $20 $1b
 
+;
 	ld   a, [$dc9c]                                  ; $4966: $fa $9c $dc
 	ld   [de], a                                     ; $4969: $12
 	inc  de                                          ; $496a: $13
@@ -1440,45 +1451,47 @@ Call_009_4912:
 	ld   a, [wNextMainConvoScriptIdx+1]                                  ; $4975: $fa $9f $dc
 	ld   [de], a                                     ; $4978: $12
 	inc  de                                          ; $4979: $13
-	ld   a, [$dc91]                                  ; $497a: $fa $91 $dc
-	inc  a                                           ; $497d: $3c
-	ld   [$dc91], a                                  ; $497e: $ea $91 $dc
 
-.toNextDayGroupEntry:
+; Num events += 1
+	ld   a, [wNumHourlyEventsInStruct]                                  ; $497a: $fa $91 $dc
+	inc  a                                           ; $497d: $3c
+	ld   [wNumHourlyEventsInStruct], a                                  ; $497e: $ea $91 $dc
+
+.toNextHrsEventEntry:
 	ld   bc, $0008                                   ; $4981: $01 $08 $00
 	add  hl, bc                                      ; $4984: $09
-	ld   a, [$dc91]                                  ; $4985: $fa $91 $dc
+	ld   a, [wNumHourlyEventsInStruct]                                  ; $4985: $fa $91 $dc
 	cp   $10                                         ; $4988: $fe $10
-	jr   c, .nextDayGroupEntry                              ; $498a: $38 $be
+	jr   c, .nextHrsEventEntry                              ; $498a: $38 $be
 
-.end:
-	ld   a, [$dc90]                                  ; $498c: $fa $90 $dc
+.toNextEvent:
+	ld   a, [wHourlyEventStructIdxToFill]                                  ; $498c: $fa $90 $dc
 	inc  a                                           ; $498f: $3c
 	cp   $10                                         ; $4990: $fe $10
-	jp   c, .bigLoop                            ; $4992: $da $13 $49
+	jp   c, .nextEvent                            ; $4992: $da $13 $49
 
 	ret                                              ; $4995: $c9
 
 
 ; Entries per group are for hour in the day
-Table_09_4996:
+DayHourEvents:
 ; Day 1 - 8
-	dw Data_40_4000-$4000
-	dw Data_40_4031-$4000
-	dw $0162
-	dw $0173
-	dw $01a4
-	dw $01a5
-	dw $01b6
-	dw $0327
-	dw $0328
-	dw $0329
-	dw $0342
-	dw $0383
-	dw $0384
-	dw $039d
-	dw $04ce
-	dw $04e7
+	dw First8Days6am-$4000
+	dw First8Days7am-$4000
+	dw First8Days8am-$4000
+	dw First8Days9am-$4000
+	dw First8Days10am-$4000
+	dw First8Days11am-$4000
+	dw First8Days12pm-$4000
+	dw First8Days1pm-$4000
+	dw First8Days2pm-$4000
+	dw First8Days3pm-$4000
+	dw First8Days4pm-$4000
+	dw First8Days5pm-$4000
+	dw First8Days6pm-$4000
+	dw First8Days7pm-$4000
+	dw First8Days8pm-$4000
+	dw First8Days9pm-$4000
 
 ; Day 9 - 16
 	dw $04e8
@@ -1535,28 +1548,36 @@ Table_09_4996:
 	dw $1727
 
 
-Call_009_4a16:
-; No more entries for the day group once the 1st byte == 0
-	ld   hl, $dc94                                   ; $4a16: $21 $94 $dc
+; Returns 0 if we run out of entries for the hour
+; Returns 1 if successfully found an applicable event
+; Returns $ff to skip to next hours entry
+todo_GetApplicableScriptEventCheckingEventStructIdx:
+; No more entries for the day+hour entries once the 1st byte == 0
+	ld   hl, wCurrHourlyEventEntryBuffer                                   ; $4a16: $21 $94 $dc
 	ld   a, [hl+]                                    ; $4a19: $2a
 	or   a                                           ; $4a1a: $b7
 	ret  z                                           ; $4a1b: $c8
 
-;
-	ld   a, [$dc90]                                  ; $4a1c: $fa $90 $dc
+; B = idx of event struct to fill
+	ld   a, [wHourlyEventStructIdxToFill]                                  ; $4a1c: $fa $90 $dc
 	ld   b, a                                        ; $4a1f: $47
+
+; Get high byte of script idx, and re-point to low byte
 	inc  hl                                          ; $4a20: $23
 	ld   a, [hl-]                                    ; $4a21: $3a
 	dec  hl                                          ; $4a22: $2b
+
+; Get non-script idx upper nybble and jump if it matches event struct idx to fill
 	and  $f0                                         ; $4a23: $e6 $f0
 	swap a                                           ; $4a25: $cb $37
 	cp   b                                           ; $4a27: $b8
-	jp   z, Jump_009_4a2e                            ; $4a28: $ca $2e $4a
+	jp   z, todo_GetApplicableScriptEvent                            ; $4a28: $ca $2e $4a
 
 	ld   a, $ff                                      ; $4a2b: $3e $ff
 	ret                                              ; $4a2d: $c9
 
-Jump_009_4a2e:
+todo_GetApplicableScriptEvent:
+; clear 4 bytes of this struct
 	ld   hl, $dc9c                                   ; $4a2e: $21 $9c $dc
 	xor  a                                           ; $4a31: $af
 	ld   [hl+], a                                    ; $4a32: $22
@@ -1565,27 +1586,26 @@ Jump_009_4a2e:
 	ld   [hl+], a                                    ; $4a35: $22
 
 ; todo: 1st byte into dc9c and B
-	ld   hl, $dc94                                   ; $4a36: $21 $94 $dc
+	ld   hl, wCurrHourlyEventEntryBuffer                                   ; $4a36: $21 $94 $dc
 	ld   a, [hl+]                                    ; $4a39: $2a
 	ld   b, a                                        ; $4a3a: $47
 	and  $7f                                         ; $4a3b: $e6 $7f
 	ld   [$dc9c], a                                  ; $4a3d: $ea $9c $dc
 
-; todo: 2nd byte into dc9e and E
+; Script idx in DE and ram
 	ld   a, [hl+]                                    ; $4a40: $2a
 	ld   e, a                                        ; $4a41: $5f
 	ld   [wNextMainConvoScriptIdx], a                                  ; $4a42: $ea $9e $dc
 
-; todo: 3rd byte into dc9f and D
 	ld   a, [hl+]                                    ; $4a45: $2a
 	ld   d, a                                        ; $4a46: $57
 	ld   [wNextMainConvoScriptIdx+1], a                                  ; $4a47: $ea $9f $dc
 
-; Jump if bit 7 clear on the 1st byte
+; Allow this script always if bit 7 clear on 1st byte
 	bit  7, b                                        ; $4a4a: $cb $78
-	jr   z, .br_4a60                              ; $4a4c: $28 $12
+	jr   z, .afterFlagCheck                              ; $4a4c: $28 $12
 
-; todo: de becomes a flag 2 that we check
+; Else check if we've run this script before
 	push hl                                          ; $4a4e: $e5
 	ld   l, e                                        ; $4a4f: $6b
 	ld   a, d                                        ; $4a50: $7a
@@ -1595,17 +1615,16 @@ Jump_009_4a2e:
 	call CheckIfFlagSet2                               ; $4a56: $cd $de $44
 	pop  hl                                          ; $4a59: $e1
 
-; Jump if the flag is not set
+; Jump if the flag is not set, else skip this event
 	or   a                                           ; $4a5a: $b7
-	jr   z, .br_4a60                              ; $4a5b: $28 $03
+	jr   z, .afterFlagCheck                              ; $4a5b: $28 $03
 
 .retFFh:
-;
 	ld   a, $ff                                      ; $4a5d: $3e $ff
 	ret                                              ; $4a5f: $c9
 
-.br_4a60:
-; todo: 4th byte's nybbles+1 determines BC
+.afterFlagCheck:
+; 4th byte's nybbles become range of applicable day values (inclusive)
 	ld   a, [hl]                                     ; $4a60: $7e
 	swap a                                           ; $4a61: $cb $37
 	and  $0f                                         ; $4a63: $e6 $0f
@@ -1615,7 +1634,7 @@ Jump_009_4a2e:
 	ld   c, a                                        ; $4a69: $4f
 	inc  c                                           ; $4a6a: $0c
 
-; Jump if the current day of the week is not between the 2 days (inclusive) in the 4th btye
+; Jump if the current day of the week is not between the 2 days
 	ld   a, [sCurrDay]                                  ; $4a6b: $fa $b0 $af
 	and  $07                                         ; $4a6e: $e6 $07
 	cp   b                                           ; $4a70: $b8
@@ -1624,7 +1643,7 @@ Jump_009_4a2e:
 	cp   c                                           ; $4a73: $b9
 	jr   nc, .retFFh                             ; $4a74: $30 $e7
 
-;
+; HL and A become address+bank of RPN calculation
 	ld   a, [hl+]                                    ; $4a76: $2a
 	ld   c, a                                        ; $4a77: $4f
 	ld   a, [hl+]                                    ; $4a78: $2a
@@ -1635,42 +1654,50 @@ Jump_009_4a2e:
 	ld   hl, $4000                                   ; $4a7e: $21 $00 $40
 	add  hl, bc                                      ; $4a81: $09
 
+; Skip this entry if we don't pass the RPN check..
 	M_FarCall StartAndProcessScriptCalcStack
 
 	pop  hl                                          ; $4a96: $e1
 	or   a                                           ; $4a97: $b7
 	jr   z, .retFFh                              ; $4a98: $28 $c3
 
+; Else store the 8th byte a
 	ld   a, [hl]                                     ; $4a9a: $7e
 	ld   [$dc9d], a                                  ; $4a9b: $ea $9d $dc
 	ld   a, $01                                      ; $4a9e: $3e $01
 	ret                                              ; $4aa0: $c9
 
 
+; Returns 0 if no event found, else returns $ff
 Call_009_4aa1:
+; dc9c - 1st hour event byte, with bit 7 clear
+; dc9d - last hour event byte
 	xor  a                                           ; $4aa1: $af
 
-Jump_009_4aa2:
+.outerLoop:
 	ld   [$dc90], a                                  ; $4aa2: $ea $90 $dc
 	xor  a                                           ; $4aa5: $af
 
-jr_009_4aa6:
+.innerLoop:
 	ld   [$dc91], a                                  ; $4aa6: $ea $91 $dc
-	call Call_009_4aef                               ; $4aa9: $cd $ef $4a
+	call todo_HLpointsToA4ByteEvent                               ; $4aa9: $cd $ef $4a
 	ld   a, [hl]                                     ; $4aac: $7e
 	or   a                                           ; $4aad: $b7
-	jr   z, jr_009_4ad5                              ; $4aae: $28 $25
+	jr   z, .toNextInnerLoop                              ; $4aae: $28 $25
 
 	push hl                                          ; $4ab0: $e5
-	ld   a, $64                                      ; $4ab1: $3e $64
+	ld   a, 100                                      ; $4ab1: $3e $64
 	ld   [wRandomNumRange], a                                  ; $4ab3: $ea $a5 $c2
 	call GetRandomNumInPreSpecifiedRange                                       ; $4ab6: $cd $10 $0d
 	ld   b, a                                        ; $4ab9: $47
 	pop  hl                                          ; $4aba: $e1
+
+; ignore event if 1st byte (without bit 7 is lower than the random num)
 	ld   a, [hl+]                                    ; $4abb: $2a
 	cp   b                                           ; $4abc: $b8
-	jr   c, jr_009_4ad5                              ; $4abd: $38 $16
+	jr   c, .toNextInnerLoop                              ; $4abd: $38 $16
 
+;
 	ld   a, [hl+]                                    ; $4abf: $2a
 	ld   [$dc9c], a                                  ; $4ac0: $ea $9c $dc
 	ld   a, [hl+]                                    ; $4ac3: $2a
@@ -1683,17 +1710,16 @@ jr_009_4aa6:
 	ld   a, $ff                                      ; $4ad2: $3e $ff
 	ret                                              ; $4ad4: $c9
 
-
-jr_009_4ad5:
+.toNextInnerLoop:
 	ld   a, [$dc91]                                  ; $4ad5: $fa $91 $dc
 	inc  a                                           ; $4ad8: $3c
 	cp   $10                                         ; $4ad9: $fe $10
-	jr   c, jr_009_4aa6                              ; $4adb: $38 $c9
+	jr   c, .innerLoop                              ; $4adb: $38 $c9
 
 	ld   a, [$dc90]                                  ; $4add: $fa $90 $dc
 	inc  a                                           ; $4ae0: $3c
 	cp   $10                                         ; $4ae1: $fe $10
-	jp   c, Jump_009_4aa2                            ; $4ae3: $da $a2 $4a
+	jp   c, .outerLoop                            ; $4ae3: $da $a2 $4a
 
 	xor  a                                           ; $4ae6: $af
 	ld   hl, $dc9c                                   ; $4ae7: $21 $9c $dc
@@ -1704,12 +1730,15 @@ jr_009_4ad5:
 	ret                                              ; $4aee: $c9
 
 
-Call_009_4aef:
+todo_HLpointsToA4ByteEvent:
+; HL points to the next most affectionate girl
 	ld   a, [$dc91]                                  ; $4aef: $fa $91 $dc
 	ld   b, $00                                      ; $4af2: $06 $00
 	ld   c, a                                        ; $4af4: $4f
-	ld   hl, $dcc0                                   ; $4af5: $21 $c0 $dc
+	ld   hl, wOrderedGirlAffectionLevels                                   ; $4af5: $21 $c0 $dc
 	add  hl, bc                                      ; $4af8: $09
+
+; HL = the girl's idx * $40 into the hourly events details struct
 	ld   b, $00                                      ; $4af9: $06 $00
 	ld   c, [hl]                                     ; $4afb: $4e
 	swap c                                           ; $4afc: $cb $31
@@ -1717,8 +1746,10 @@ Call_009_4aef:
 	rl   b                                           ; $4b00: $cb $10
 	sla  c                                           ; $4b02: $cb $21
 	rl   b                                           ; $4b04: $cb $10
-	ld   hl, $d340                                   ; $4b06: $21 $40 $d3
+	ld   hl, wHourlyEventsDetails                                   ; $4b06: $21 $40 $d3
 	add  hl, bc                                      ; $4b09: $09
+
+; outer loop idx * 4 (hl points to an event)
 	ld   a, [$dc90]                                  ; $4b0a: $fa $90 $dc
 	ld   b, $00                                      ; $4b0d: $06 $00
 	ld   c, a                                        ; $4b0f: $4f
@@ -1745,11 +1776,11 @@ Jump_009_4b1b:
 	rl   b                                           ; $4b2a: $cb $10
 	sla  c                                           ; $4b2c: $cb $21
 	rl   b                                           ; $4b2e: $cb $10
-	ld   hl, $d340                                   ; $4b30: $21 $40 $d3
+	ld   hl, wHourlyEventsDetails                                   ; $4b30: $21 $40 $d3
 	add  hl, bc                                      ; $4b33: $09
 	ld   d, h                                        ; $4b34: $54
 	ld   e, l                                        ; $4b35: $5d
-	ld   hl, Table_09_4996                                   ; $4b36: $21 $96 $49
+	ld   hl, DayHourEvents                                   ; $4b36: $21 $96 $49
 	ld   a, [sCurrDay]                                  ; $4b39: $fa $b0 $af
 	and  $18                                         ; $4b3c: $e6 $18
 	sla  a                                           ; $4b3e: $cb $27
@@ -1774,7 +1805,7 @@ jr_009_4b57:
 	push de                                          ; $4b5a: $d5
 	push hl                                          ; $4b5b: $e5
 	ld   a, $40                                      ; $4b5c: $3e $40
-	ld   de, $dc94                                   ; $4b5e: $11 $94 $dc
+	ld   de, wCurrHourlyEventEntryBuffer                                   ; $4b5e: $11 $94 $dc
 	ld   bc, $0008                                   ; $4b61: $01 $08 $00
 	call FarMemCopy                                       ; $4b64: $cd $b2 $09
 	call Call_009_4ba3                               ; $4b67: $cd $a3 $4b
@@ -1820,7 +1851,7 @@ jr_009_4b99:
 
 
 Call_009_4ba3:
-	ld   hl, $dc94                                   ; $4ba3: $21 $94 $dc
+	ld   hl, wCurrHourlyEventEntryBuffer                                   ; $4ba3: $21 $94 $dc
 	ld   a, [hl+]                                    ; $4ba6: $2a
 	or   a                                           ; $4ba7: $b7
 	ret  z                                           ; $4ba8: $c8
@@ -1836,7 +1867,7 @@ Call_009_4ba3:
 	and  $f0                                         ; $4bb4: $e6 $f0
 	swap a                                           ; $4bb6: $cb $37
 	cp   b                                           ; $4bb8: $b8
-	jp   z, Jump_009_4a2e                            ; $4bb9: $ca $2e $4a
+	jp   z, todo_GetApplicableScriptEvent                            ; $4bb9: $ca $2e $4a
 
 jr_009_4bbc:
 	ld   a, $ff                                      ; $4bbc: $3e $ff
@@ -1850,10 +1881,10 @@ jr_009_4bbf:
 	and  $f0                                         ; $4bc2: $e6 $f0
 	swap a                                           ; $4bc4: $cb $37
 	cp   $0c                                         ; $4bc6: $fe $0c
-	jp   z, Jump_009_4a2e                            ; $4bc8: $ca $2e $4a
+	jp   z, todo_GetApplicableScriptEvent                            ; $4bc8: $ca $2e $4a
 
 	cp   $0d                                         ; $4bcb: $fe $0d
-	jp   z, Jump_009_4a2e                            ; $4bcd: $ca $2e $4a
+	jp   z, todo_GetApplicableScriptEvent                            ; $4bcd: $ca $2e $4a
 
 	jr   jr_009_4bbc                                 ; $4bd0: $18 $ea
 
@@ -1906,7 +1937,7 @@ jr_009_4bd7:
 	ld   a, [$dc91]                                  ; $4c15: $fa $91 $dc
 	ld   b, $00                                      ; $4c18: $06 $00
 	ld   c, a                                        ; $4c1a: $4f
-	ld   hl, $dcc0                                   ; $4c1b: $21 $c0 $dc
+	ld   hl, wOrderedGirlAffectionLevels                                   ; $4c1b: $21 $c0 $dc
 	add  hl, bc                                      ; $4c1e: $09
 	ld   a, [$dc9d]                                  ; $4c1f: $fa $9d $dc
 	cp   [hl]                                        ; $4c22: $be
@@ -1975,7 +2006,7 @@ jr_009_4c41:
 	ld   a, [$dc91]                                  ; $4c80: $fa $91 $dc
 	ld   b, $00                                      ; $4c83: $06 $00
 	ld   c, a                                        ; $4c85: $4f
-	ld   hl, $dcc0                                   ; $4c86: $21 $c0 $dc
+	ld   hl, wOrderedGirlAffectionLevels                                   ; $4c86: $21 $c0 $dc
 	add  hl, bc                                      ; $4c89: $09
 	ld   a, [$dc9d]                                  ; $4c8a: $fa $9d $dc
 	cp   [hl]                                        ; $4c8d: $be
@@ -2011,23 +2042,20 @@ Call_009_4cb5:
 	ld   a, [$dc91]                                  ; $4cb5: $fa $91 $dc
 	ld   b, $00                                      ; $4cb8: $06 $00
 	ld   c, a                                        ; $4cba: $4f
-	ld   hl, $dcc0                                   ; $4cbb: $21 $c0 $dc
+	ld   hl, wOrderedGirlAffectionLevels                                   ; $4cbb: $21 $c0 $dc
 	add  hl, bc                                      ; $4cbe: $09
 	ld   a, [hl]                                     ; $4cbf: $7e
 	cp   $0d                                         ; $4cc0: $fe $0d
-	jr   nz, jr_009_4cc5                             ; $4cc2: $20 $01
-
+	jr   nz, :+                             ; $4cc2: $20 $01
 	dec  a                                           ; $4cc4: $3d
-
-jr_009_4cc5:
-	ld   b, $00                                      ; $4cc5: $06 $00
+:	ld   b, $00                                      ; $4cc5: $06 $00
 	ld   c, a                                        ; $4cc7: $4f
 	swap c                                           ; $4cc8: $cb $31
 	sla  c                                           ; $4cca: $cb $21
 	rl   b                                           ; $4ccc: $cb $10
 	sla  c                                           ; $4cce: $cb $21
 	rl   b                                           ; $4cd0: $cb $10
-	ld   hl, $d340                                   ; $4cd2: $21 $40 $d3
+	ld   hl, wHourlyEventsDetails                                   ; $4cd2: $21 $40 $d3
 	add  hl, bc                                      ; $4cd5: $09
 	ld   a, [$dc90]                                  ; $4cd6: $fa $90 $dc
 	ld   b, $00                                      ; $4cd9: $06 $00
@@ -6197,7 +6225,7 @@ Jump_009_6509:
 	ld   h, [hl]                                     ; $651b: $66
 	ld   l, a                                        ; $651c: $6f
 	ld   a, $01                                      ; $651d: $3e $01
-	ld   [$cb1d], a                                  ; $651f: $ea $1d $cb
+	ld   [wIsChestMiniGame], a                                  ; $651f: $ea $1d $cb
 	jp   hl                                          ; $6522: $e9
 
 
