@@ -977,4 +977,30 @@ CinematronTileDataHook1::
 .textboxesTVBottomRight:
 	INCBIN "en_cinematron.2bpp", (5*20+12)*$10, $40
 
+
+_FileLoadDisplayTileDataHook::
+	call RLEXorCopy
+
+	ld   a, $01
+	ldh  [rVBK], a
+	ld   bc, .end-.gfx
+	ld   de, $8800
+	ld   hl, .gfx
+	call MemCopy
+
+	xor  a
+	ldh  [rVBK], a
+
+	ld   bc, .end2-.gfx2
+	ld   de, $8660
+	ld   hl, .gfx2
+	call MemCopy
+	ret
+.gfx:
+	INCBIN "en_fileLoadProgressIndicator.2bpp"
+.end:
+.gfx2:
+	INCBIN "en_fileLoadDisplaySpr.2bpp"
+.end2:
+
 endc

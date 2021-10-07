@@ -1755,6 +1755,187 @@ EnLoadVoiceModeTileMap::
 	db $18, $19, $1a, $1b, $1c
 	db $1d, $1e, $1f, $20, $21
 
+
+_FileLoadDisplayLayoutHook::
+; attr - $d000
+; map - $d400
+	ld   a, BANK(.trialEnlistmentMap)
+	ldbc 16, 3
+	ld   de, .trialEnlistmentMap
+	ld   hl, $d400+$62
+	call FarCopyLayout
+
+	ld   a, BANK(.trialEnlistmentAttr)
+	ldbc 16, 3
+	ld   de, .trialEnlistmentAttr
+	ld   hl, $d000+$62
+	call FarCopyLayout
+
+	ld   a, BANK(.logoMap)
+	ldbc 16, 6
+	ld   de, .logoMap
+	ld   hl, $d400+$162
+	call FarCopyLayout
+
+	ld   a, BANK(.logoAttr)
+	ldbc 16, 6
+	ld   de, .logoAttr
+	ld   hl, $d000+$162
+	call FarCopyLayout
+
+	ret
+.trialEnlistmentMap::
+	db $80, $81, $82, $83, $84, $85, $86, $83, $87, $88, $83, $83, $83, $83, $83, $83
+	db $89, $8a, $8b, $8c, $8d, $8e, $8f, $90, $91, $92, $93, $94, $95, $96, $97, $98
+	db $99, $9a, $9b, $9c, $9d, $9e, $9f, $a0, $a1, $a2, $a3, $a0, $a4, $a5, $a6, $a7
+.trialEnlistmentAttr::
+	db $0d, $0d, $0d, $0d, $0d, $0d, $0d, $0d, $0d, $0d, $0d, $0d, $0d, $0d, $0d, $0d
+	db $0d, $0d, $0d, $0d, $0d, $0d, $0d, $0d, $0d, $0d, $0d, $0d, $0d, $0d, $0d, $0d
+	db $0d, $0d, $0d, $0d, $0d, $0d, $0d, $0d, $0d, $0d, $0d, $0d, $0d, $0d, $0d, $0d
+.logoMap:
+	db $83, $83, $83, $83, $83, $83, $83, $83, $83, $83, $3a, $3b, $3c, $3d, $3e, $83
+	db $83, $83, $83, $83, $83, $83, $83, $83, $83, $83, $40, $41, $42, $43, $44, $45
+	db $46, $47, $48, $49, $4a, $83, $4b, $4c, $4d, $83, $4e, $4f, $50, $51, $52, $53
+	db $54, $55, $56, $57, $58, $59, $5a, $5b, $5c, $5d, $5e, $5f, $60, $61, $62, $63
+	db $64, $65, $66, $67, $68, $69, $6a, $6b, $6c, $6d, $6e, $6f, $70, $71, $72, $73
+	db $74, $75, $76, $76, $76, $76, $76, $76, $76, $76, $76, $77, $83, $83, $83, $83
+.logoAttr:
+	db $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $0a, $0a, $0a, $0a, $0a, $08
+	db $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $0a, $0a, $0a, $0a, $0a, $0a
+	db $08, $08, $08, $08, $08, $08, $09, $09, $09, $08, $0a, $0a, $0a, $0a, $0a, $0a
+	db $08, $08, $08, $08, $08, $08, $08, $09, $09, $09, $09, $0a, $0a, $0a, $0a, $0a
+	db $0c, $0c, $0c, $0c, $0c, $0b, $0b, $0b, $0b, $0b, $0b, $0a, $0a, $0a, $0f, $0f
+	db $0b, $0b, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08
+
+
+_FileLoadDisplayDayOfWeekHook::
+; L = day of the week, from Sunday
+	ld   a, [sCurrDay]
+	dec  a
+	ld   h, a
+	ld   l, $07
+	call HLequHdivModL
+	push hl
+
+	ld   a, l
+	ld   hl, .sundayMap
+	or   a
+	jr   z, .afterMult
+	ld   bc, 27
+:	add  hl, bc
+	dec  a
+	jr   nz, :-
+
+.afterMult:
+	ld   a, BANK(.sundayMap)
+	ldbc 9, 3
+	push hl
+	ld   d, h
+	ld   e, l
+	ld   hl, $d400+$c2
+	call FarCopyLayout
+
+	pop  hl
+	ld   bc, .sundayAttr-.sundayMap
+	add  hl, bc
+	ld   d, h
+	ld   e, l
+	ldbc 9, 3
+	ld   hl, $d000+$c2
+	call FarCopyLayout
+
+; create sprites for day of weeks
+	pop  hl
+	ld   a, l
+	cp   $00
+	jr   z, .valid
+	cp   $06
+	ret  nz
+.valid:
+	push af
+
+; Create an animatable type-0 sprite spec, and return its details addr in HL
+	ld   a, ASST_0                                                  ; $4e75
+	ld   hl, $0000                                                  ; $4e77
+	ld   d, h                                                       ; $4e7a
+	ld   e, l                                                       ; $4e7b
+	call ReserveBaseAnimSpriteSpecAndInstance                       ; $4e7c
+	call StartAnimatingAnimatedSpriteSpec                           ; $4e7f
+	call HLequAddrOfAnimSpriteSpecDetails                           ; $4e82
+
+	pop  af
+	push hl
+
+	ld   e, $82
+	or   a
+	jr   z, :+
+; saturday
+	ld   e, $88
+:	ld   d, SG_1
+	pop  hl
+	ldbc $08, $10
+	M_FarCall LoadType0NewAnimatedSpriteSpecDetails
+
+	ret
+
+.sundayMap:
+	db $83, $11, $12, $13, $14, $15, $16, $17, $83
+	db $83, $1c, $1d, $1e, $1f, $20, $21, $22, $83
+	db $fb, $fc, $fd, $fd, $fd, $fd, $27, $fd, $fd
+.mondayMap:
+	db $83, $a8, $a9, $aa, $ab, $ac, $ad, $ae, $83
+	db $83, $b8, $b9, $ba, $bb, $bc, $bd, $be, $83
+	db $fb, $fc, $fd, $fd, $fd, $fd, $c6, $c7, $fd
+.tuesdayMap:
+	db $af, $b0, $b1, $b2, $b3, $b4, $b5, $b6, $b7
+	db $83, $bf, $c0, $c1, $c2, $c3, $c4, $c5, $83
+	db $fb, $fc, $fd, $fd, $fd, $fd, $fd, $c8, $fd
+.wednesdayMap:
+	db $c9, $ca, $cb, $cc, $cd, $ce, $cf, $d0, $d1
+	db $db, $dc, $dd, $de, $df, $e0, $e1, $e2, $e3
+	db $fb, $fc, $fd, $fd, $fd, $fd, $fd, $ed, $ee
+.thursdayMap:
+	db $d2, $d3, $d4, $d5, $d6, $d7, $d8, $d9, $da
+	db $e4, $e5, $e6, $e7, $e8, $e9, $ea, $eb, $ec
+	db $fb, $fc, $fd, $fd, $fd, $fd, $fd, $c6, $c7
+.fridayMap:
+	db $83, $ef, $f0, $f1, $f2, $f3, $f4, $f5, $83
+	db $83, $ff, $00, $01, $02, $03, $04, $05, $83
+	db $fb, $fc, $fd, $fd, $fd, $fd, $c6, $fd, $fd
+.saturdayMap:
+	db $f6, $f7, $f8, $f9, $fa, $fb, $fc, $fd, $fe
+	db $06, $07, $08, $09, $0a, $0b, $0c, $0d, $0e
+	db $fb, $fc, $fd, $fd, $fd, $fd, $fd, $0f, $10
+
+.sundayAttr:
+	db $0e, $0e, $0e, $0e, $0e, $0e, $0e, $0e, $0e
+	db $0e, $0e, $0e, $0e, $0e, $0e, $0e, $0e, $0e
+	db $05, $05, $05, $05, $05, $05, $0d, $05, $05
+.mondayAttr:
+	db $0d, $0d, $0d, $0d, $0d, $0d, $0d, $0d, $0d
+	db $0d, $0d, $0d, $0d, $0d, $0d, $0d, $0d, $0d
+	db $05, $05, $05, $05, $05, $05, $0d, $0d, $05
+.tuesdayAttr:
+	db $0d, $0d, $0d, $0d, $0d, $0d, $0d, $0d, $0d
+	db $0d, $0d, $0d, $0d, $0d, $0d, $0d, $0d, $0d
+	db $05, $05, $05, $05, $05, $05, $05, $0d, $05
+.wednesdayAttr:
+	db $0d, $0d, $0d, $0d, $0d, $0d, $0d, $0d, $0d
+	db $0d, $0d, $0d, $0d, $0d, $0d, $0d, $0d, $0d
+	db $05, $05, $05, $05, $05, $05, $05, $0d, $0d
+.thursdayAttr:
+	db $0d, $0d, $0d, $0d, $0d, $0d, $0d, $0d, $0d
+	db $0d, $0d, $0d, $0d, $0d, $0d, $0d, $0d, $0d
+	db $05, $05, $05, $05, $05, $05, $05, $0d, $0d
+.fridayAttr:
+	db $0d, $0d, $0d, $0d, $0d, $0d, $0d, $0d, $0d
+	db $0d, $0d, $0d, $0d, $0d, $0d, $0d, $0d, $0d
+	db $05, $05, $05, $05, $05, $05, $0d, $05, $05
+.saturdayAttr:
+	db $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f
+	db $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f
+	db $05, $05, $05, $05, $05, $05, $05, $0d, $0d
+
 endc
 
 

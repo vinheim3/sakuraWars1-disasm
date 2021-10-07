@@ -2108,7 +2108,12 @@ GameState3c_FileLoadDisplay::
 	ld   a, BANK(RleXorTileData_FileLoadDisplay)                    ; $4e17
 	ld   hl, _VRAM                                                  ; $4e19
 	ld   de, RleXorTileData_FileLoadDisplay                         ; $4e1c
+
+if def(VWF)
+	call FileLoadDisplayTileDataHook
+else
 	call RLEXorCopy                                                 ; $4e1f
+endc
 
 ; Layout copy into tile attr, then TileMap_FileLoadDisplay into map buffer
 	ld   hl, wFileLoadDisplayTileAttrBuffer                         ; $4e22
@@ -2118,7 +2123,11 @@ GameState3c_FileLoadDisplay::
 	call FarCopyLayout                                              ; $4e2d
 
 	ld   hl, wFileLoadDisplayTileMapBuffer                          ; $4e30
+if def(VWF)
+	call FileLoadDisplayLayoutHook
+else
 	call FarCopyLayout                                              ; $4e33
+endc
 
 ; Jump if not the last day
 	ld   a, [sCurrDay]                                              ; $4e36
@@ -2126,6 +2135,21 @@ GameState3c_FileLoadDisplay::
 	jr   nz, .notLastDay                                            ; $4e3b
 
 ; Last day - copy last day kanji top row, from off-screen to on-screen
+if def(VWF)
+	ld   a, BANK(FileLoadDisplayLastDayMap)
+	ldbc 9, 3
+	ld   de, FileLoadDisplayLastDayMap
+	ld   hl, $d400+$c2
+	call FarCopyLayout
+
+	ld   a, BANK(FileLoadDisplayLastDayAttr)
+	ldbc 9, 3
+	ld   de, FileLoadDisplayLastDayAttr
+	ld   hl, $d000+$c2
+	call FarCopyLayout
+
+	ds $4e73-@, 0
+else
 	ld   hl, wFileLoadDisplayTileMapBuffer+$285                     ; $4e3d
 	ld   a, [hl+]                                                   ; $4e40
 	ld   [wFileLoadDisplayTileMapBuffer+$c7], a                     ; $4e41
@@ -2154,9 +2178,15 @@ GameState3c_FileLoadDisplay::
 	ld   [wFileLoadDisplayTileMapBuffer+$eb], a                     ; $4e6c
 	ld   a, [hl+]                                                   ; $4e6f
 	ld   [wFileLoadDisplayTileMapBuffer+$ec], a                     ; $4e70
+endc
 	jr   .afterDayBranch                                            ; $4e73
 
 .notLastDay:
+if def(VWF)
+	M_FarCall _FileLoadDisplayDayOfWeekHook
+
+	ds $4eae-@, 0
+else
 ; Create an animatable type-0 sprite spec, and return its details addr in HL
 	ld   a, ASST_0                                                  ; $4e75
 	ld   hl, $0000                                                  ; $4e77
@@ -2183,10 +2213,14 @@ GameState3c_FileLoadDisplay::
 	pop  hl                                                         ; $4e99
 
 	M_FarCall LoadType0NewAnimatedSpriteSpecDetails
-
+endc
 .afterDayBranch:
 ; sprite for curr day 10's digit
+if def(VWF)
+	call FileLoadDisplayLayoutCommon
+else
 	ld   a, [sCurrDay]                                  ; $4eae: $fa $b0 $af
+endc
 	cp   $0a                                         ; $4eb1: $fe $0a
 	ld   a, $00                                      ; $4eb3: $3e $00
 	ld   hl, $0000                                   ; $4eb5: $21 $00 $00
@@ -2202,7 +2236,11 @@ GameState3c_FileLoadDisplay::
 	call HLequHdivModL                                       ; $4eca: $cd $fb $0b
 	ld   a, $78                                      ; $4ecd: $3e $78
 	add  h                                           ; $4ecf: $84
+if def(VWF)
+	ldbc ($5c+$20), ($28+$0e)
+else
 	ld   bc, $5c28                                   ; $4ed0: $01 $28 $5c
+endc
 	ld   d, $01                                      ; $4ed3: $16 $01
 	ld   e, a                                        ; $4ed5: $5f
 	pop  hl                                          ; $4ed6: $e1
@@ -2224,7 +2262,11 @@ GameState3c_FileLoadDisplay::
 	call HLequHdivModL                                       ; $4f02: $cd $fb $0b
 	ld   a, $78                                      ; $4f05: $3e $78
 	add  l                                           ; $4f07: $85
+if def(VWF)
+	ldbc ($68+$20), ($28+$0e)
+else
 	ld   bc, $6828                                   ; $4f08: $01 $28 $68
+endc
 	ld   d, $01                                      ; $4f0b: $16 $01
 	ld   e, a                                        ; $4f0d: $5f
 	pop  hl                                          ; $4f0e: $e1
@@ -8541,5 +8583,34 @@ InventoryLayout0Hook:
 	db $83, $85, $87, $89, $8b, $8d, $8f, $91, $93, $95, $97, $99, $9b, $9d, $9f, $a1, $a3, $a5, $a7, $a9
 	db $aa, $ac, $ae, $b0, $b2, $b4, $b6, $b8, $ba, $bc, $be, $c0, $c2, $c4, $c6, $c8, $ca, $cc, $ce, $d0
 	db $ab, $ad, $af, $b1, $b3, $b5, $b7, $b9, $bb, $bd, $bf, $c1, $c3, $c5, $c7, $c9, $cb, $cd, $cf, $d1
+
+
+FileLoadDisplayTileDataHook:
+	M_FarCall _FileLoadDisplayTileDataHook
+	ret
+
+
+FileLoadDisplayLayoutHook:
+	call FarCopyLayout
+	M_FarCall _FileLoadDisplayLayoutHook
+	ret
+
+
+FileLoadDisplayLayoutCommon::
+; day
+	ld   a, BANK(FileLoadDisplayDayMap)
+	ldbc 4, 3
+	ld   de, FileLoadDisplayDayMap
+	ld   hl, $d400+$cb
+	call FarCopyLayout
+
+	ld   a, BANK(FileLoadDisplayDayAttr)
+	ldbc 7, 3
+	ld   de, FileLoadDisplayDayAttr
+	ld   hl, $d000+$cb
+	call FarCopyLayout
+
+	ld   a, [sCurrDay]
+	ret
 
 endc

@@ -10603,7 +10603,11 @@ Palettes_FileLoadDisplay::
 	db $bf, $76, $80, $46, $80, $2d, $ff, $7f
 	db $bf, $76, $60, $5b, $80, $46, $ff, $7f
 	db $ff, $7f, $bf, $76, $bf, $02, $84, $10
+if def(VWF)
+	db $ff, $7f, $7f, $4d, $1d, $28, $84, $10
+else
 	db $ff, $7f, $d6, $5a, $ad, $35, $84, $10
+endc
 	db $ff, $7f, $bf, $76, $00, $55, $84, $10
 
 	db $ff, $7f, $16, $7d, $11, $7c, $84, $10
@@ -10611,8 +10615,13 @@ Palettes_FileLoadDisplay::
 	db $ff, $7f, $19, $7f, $df, $2e, $1e, $02
 	db $ff, $7f, $94, $52, $08, $21, $a5, $14
 	db $ff, $7f, $80, $46, $80, $2d, $ff, $7f
+if def(VWF)
+	db $ff, $7f, $ff, $7f, $3f, $51, $1d, $28
+	db $ff, $7f, $ff, $7f, $45, $7e, $00, $55
+else
 	db $ff, $7f, $ff, $7f, $3f, $51, $18, $24
 	db $ff, $7f, $ff, $7f, $45, $7e, $40, $59
+endc
 	db $00, $00, $00, $00, $00, $00, $00, $00
 
 

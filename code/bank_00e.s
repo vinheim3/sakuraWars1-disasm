@@ -175,8 +175,8 @@ SpriteGroup1Pointers::
 	dw Data_0e_4944
 	dw Data_0e_4948
 	dw Data_0e_494c ; title menu screen - arrow end
-	dw $4950
-	dw $498c
+	dw SpriteGroup2_Idx77h_FileLoadDisplayLogo
+	dw SpriteGroup2_Idx78h
 	dw $4994
 	dw $499c
 	dw $49a4
@@ -186,13 +186,13 @@ SpriteGroup1Pointers::
 	dw $49c4
 	dw $49cc
 	dw $49d4
-	dw $49dc
-	dw $49e4
-	dw $49ec
-	dw $49f4
-	dw $49fc
-	dw $4a04
-	dw $4a0c
+	dw SpriteGroup2_Idx82h_FileLoadDisplaySunday
+	dw SpriteGroup2_Idx83h_FileLoadDisplayMonday
+	dw SpriteGroup2_Idx84h_FileLoadDisplayTuesday
+	dw SpriteGroup2_Idx85h_FileLoadDisplayWednesday
+	dw SpriteGroup2_Idx86h_FileLoadDisplayThursday
+	dw SpriteGroup2_Idx87h_FileLoadDisplayFriday
+	dw SpriteGroup2_Idx88h_FileLoadDisplaySaturday
 	dw $4a14
 	dw $4a18
 	dw $4a1c
@@ -1729,56 +1729,34 @@ Data_0e_494c:
 endc
 
 
-
-	db $18 ; 4950
-
-jr_00e_4951:
-	ld   hl, sp+$02                                  ; $4951: $f8 $02
-	inc  b                                           ; $4953: $04
-	nop                                              ; $4954: $00
-	nop                                              ; $4955: $00
-	ld   [de], a                                     ; $4956: $12
-	ld   bc, $0018                                   ; $4957: $01 $18 $00
-	stop                                             ; $495a: $10 $00
-	ld   [$0400], sp                                 ; $495c: $08 $00 $04
-	nop                                              ; $495f: $00
-	db   $10                                         ; $4960: $10
-	ldh  [rAUD1HIGH], a                              ; $4961: $e0 $14
-	ld   bc, $d818                                   ; $4963: $01 $18 $d8
-	ld   c, $01                                      ; $4966: $0e $01
-	db $18, $d0
-
-	inc  c                                           ; $496a: $0c
-	ld   bc, $c018                                   ; $496b: $01 $18 $c0
-	ld   a, [bc]                                     ; $496e: $0a
-	ld   bc, $f11b                                   ; $496f: $01 $1b $f1
-	inc  e                                           ; $4972: $1c
-	ld   [bc], a                                     ; $4973: $02
-	dec  de                                          ; $4974: $1b
-	jp   hl                                          ; $4975: $e9
+SpriteGroup2_Idx77h_FileLoadDisplayLogo:
+if def(VWF)
+	db 14*8+4 +$10-$68, 12*8+3 +8-$68, $68, $04
+	db 14*8+5 +$10-$68, 13*8+0 +8-$68, $6a, $04
+	db 16*8+0 +$10-$68, 9*8+4 +8-$68, $6c, $04 ; 2 pixel-wide line
+	db 16*8+0 +$10-$68, 2*8+6 +8-$68, $6e, $03
+	db 16*8+0 +$10-$68, 3*8+6 +8-$68, $6c, $03
+	db 14*8+5 +$10-$68, 13*8+0 +8-$68, $70, $13
+else
+	db $18, $f8, $02, $04
+	db $00, $00, $12, $01
+	db $18, $00, $10, $00
+	db $08, $00, $04, $00
+	db $10, $e0, $14, $01
+	db $18, $d8, $0e, $01
+endc
+	db $18, $d0, $0c, $01
+	db $18, $c0, $0a, $01
+	db $1b, $f1, $1c, $02
+	db $1b, $e9, $1a, $02
+	db $1b, $e1, $18, $02
+	db $1b, $d9, $16, $02
+	db $0e, $19, $20, $02
+	db $0e, $11, $1e, $02
+	db $08, $f8, $00, $10
 
 
-	ld   a, [de]                                     ; $4976: $1a
-	ld   [bc], a                                     ; $4977: $02
-	dec  de                                          ; $4978: $1b
-	pop  hl                                          ; $4979: $e1
-	jr   jr_00e_497e                                 ; $497a: $18 $02
-
-	dec  de                                          ; $497c: $1b
-	reti                                             ; $497d: $d9
-
-
-jr_00e_497e:
-	ld   d, $02                                      ; $497e: $16 $02
-	ld   c, $19                                      ; $4980: $0e $19
-	jr   nz, jr_00e_4986                             ; $4982: $20 $02
-
-	ld   c, $11                                      ; $4984: $0e $11
-
-jr_00e_4986:
-	ld   e, $02                                      ; $4986: $1e $02
-	ld   [$00f8], sp                                 ; $4988: $08 $f8 $00
-	db   $10                                         ; $498b: $10
+SpriteGroup2_Idx78h:
 	ld   [$3208], sp                                 ; $498c: $08 $08 $32
 	inc  bc                                          ; $498f: $03
 	ld   [rROMB1], sp                                 ; $4990: $08 $00 $30
@@ -1819,35 +1797,53 @@ jr_00e_4986:
 	inc  bc                                          ; $49d7: $03
 	ld   [$5400], sp                                 ; $49d8: $08 $00 $54
 	inc  de                                          ; $49db: $13
-	ld   [$5a08], sp                                 ; $49dc: $08 $08 $5a
-	dec  b                                           ; $49df: $05
-	ld   [$5800], sp                                 ; $49e0: $08 $00 $58
-	dec  d                                           ; $49e3: $15
-	ld   [$5e08], sp                                 ; $49e4: $08 $08 $5e
-	inc  bc                                          ; $49e7: $03
-	ld   [$5c00], sp                                 ; $49e8: $08 $00 $5c
-	inc  de                                          ; $49eb: $13
-	ld   [$6208], sp                                 ; $49ec: $08 $08 $62
-	inc  bc                                          ; $49ef: $03
-	ld   [$6000], sp                                 ; $49f0: $08 $00 $60
-	inc  de                                          ; $49f3: $13
-	ld   [$2608], sp                                 ; $49f4: $08 $08 $26
-	inc  bc                                          ; $49f7: $03
-	ld   [$6400], sp                                 ; $49f8: $08 $00 $64
-	inc  de                                          ; $49fb: $13
-	ld   [$2a08], sp                                 ; $49fc: $08 $08 $2a
-	inc  bc                                          ; $49ff: $03
-	ld   [$2800], sp                                 ; $4a00: $08 $00 $28
-	inc  de                                          ; $4a03: $13
-	ld   [$2e08], sp                                 ; $4a04: $08 $08 $2e
-	inc  bc                                          ; $4a07: $03
-	ld   [$2c00], sp                                 ; $4a08: $08 $00 $2c
-	inc  de                                          ; $4a0b: $13
-	ld   [$2408], sp                                 ; $4a0c: $08 $08 $24
-	ld   b, $08                                      ; $4a0f: $06 $08
-	nop                                              ; $4a11: $00
-	ld   [hl+], a                                    ; $4a12: $22
-	ld   d, $10                                      ; $4a13: $16 $10
+
+
+SpriteGroup2_Idx82h_FileLoadDisplaySunday:
+if def(VWF)
+	db 8*8, 8*8+4, $66, $15
+else
+	db $08, $08, $5a, $05
+endc
+	db $08, $00, $58, $15
+	
+
+SpriteGroup2_Idx83h_FileLoadDisplayMonday:
+	db $08, $08, $5e, $03
+	db $08, $00, $5c, $13
+	
+
+SpriteGroup2_Idx84h_FileLoadDisplayTuesday::
+	db $08, $08, $62, $03
+	db $08, $00, $60, $13
+
+
+SpriteGroup2_Idx85h_FileLoadDisplayWednesday::
+	db $08, $08, $26, $03
+	db $08, $00, $64, $13
+
+
+SpriteGroup2_Idx86h_FileLoadDisplayThursday::
+	db $08, $08, $2a, $03
+	db $08, $00, $28, $13
+
+
+SpriteGroup2_Idx87h_FileLoadDisplayFriday:
+	db $08, $08, $2e, $03
+	db $08, $00, $2c, $13
+
+
+SpriteGroup2_Idx88h_FileLoadDisplaySaturday:
+if def(VWF)
+	db 8*8, 9*8+6, $66, $16
+else
+	db $08, $08, $24, $06
+endc
+	db $08, $00, $22, $16
+
+
+;	
+	db $10 ; $4a14: $10
 	ld   [$1482], sp                                 ; $4a15: $08 $82 $14
 	db   $10                                         ; $4a18: $10
 	ld   [$1484], sp                                 ; $4a19: $08 $84 $14

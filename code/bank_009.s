@@ -39,9 +39,9 @@ endm
 
 .dayPeriodTransitions:
 ; 1st day
-	DayPeriodTransition $00, DROS_EXPLORE_DAY_FOCUS_1, DPTransition_SetDay1
+	DayPeriodTransition $00, DROS_EXPLORE_DAY_FOCUS_1, DPTransition_SetDayTo1
 	DayPeriodTransition $00, DROS_EXPLORE_DAY_FOCUS_1, DPTransition_SetMainConvoState1
-	DayPeriodTransition $0e, DROS_SAVE_SLEEP,          DPTransition_SetDormRoomState1
+	DayPeriodTransition $0e, DROS_SAVE_SLEEP,          DPTransition_SetDormState1
 	DayPeriodTransition $0e, DROS_SAVE_SLEEP,          DPTransition_ToNextDay1
 
 ; Non-last day of the week ($04)
@@ -90,7 +90,7 @@ endm
 	DayPeriodTransition $0e, DROS_SAVE_SLEEP,          DPTransition_ToNextDay2
 
 
-DPTransition_SetDay1:
+DPTransition_SetDayTo1:
 ; Set day to 1, then go to next dp idx
 	ld   a, $01                                                     ; $40e0
 	ld   [sCurrDay], a                                              ; $40e2
@@ -152,7 +152,7 @@ DPTransition_SetMainConvoState1:
 	ret                                              ; $414c: $c9
 
 
-DPTransition_SetDormRoomState1:
+DPTransition_SetDormState1:
 ; Use unchanged setup idx and set state
 	ld   a, [wDormRoomOptionsSetupIdx]                              ; $414d
 	ld   h, GS_DAY_PERIOD_TRANSITION                                ; $4150
@@ -1476,7 +1476,6 @@ PopulateHourlyEventsStruct:
 ; Entries per group are for hour in the day
 DayHourEvents:
 ; Day 1 - 8
-	dw First8Days6am-$4000
 	dw First8Days7am-$4000
 	dw First8Days8am-$4000
 	dw First8Days9am-$4000
@@ -1492,6 +1491,7 @@ DayHourEvents:
 	dw First8Days7pm-$4000
 	dw First8Days8pm-$4000
 	dw First8Days9pm-$4000
+	dw First8Days10pm-$4000
 
 ; Day 9 - 16
 	dw $04e8
@@ -1661,7 +1661,7 @@ todo_GetApplicableScriptEvent:
 	or   a                                           ; $4a97: $b7
 	jr   z, .retFFh                              ; $4a98: $28 $c3
 
-; Else store the 8th byte a
+;
 	ld   a, [hl]                                     ; $4a9a: $7e
 	ld   [$dc9d], a                                  ; $4a9b: $ea $9d $dc
 	ld   a, $01                                      ; $4a9e: $3e $01

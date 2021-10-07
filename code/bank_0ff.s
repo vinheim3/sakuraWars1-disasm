@@ -1332,4 +1332,28 @@ _AllEndingsHook::
 	M_FarCall SetOrUnsetNextFlag1
 	ret
 
+
+FileLoadDisplayLastDayMap::
+	db $28, $29, $2a, $2b, $2c, $2d, $2e, $2f, $30
+	db $31, $32, $33, $34, $35, $36, $37, $38, $39
+	db $fb, $fc, $fd, $fd, $fd, $fd, $fd, $3f, $fd
+
+
+FileLoadDisplayLastDayAttr::
+	db $0d, $0d, $0d, $0d, $0d, $0d, $0d, $0d, $0d
+	db $0d, $0d, $0d, $0d, $0d, $0d, $0d, $0d, $0d
+	db $05, $05, $05, $05, $05, $05, $05, $0d, $05
+
+
+FileLoadDisplayDayMap::
+	db $18, $19, $1a, $1b
+	db $23, $24, $25, $26
+	db $fd, $fd, $ed, $fd
+
+
+FileLoadDisplayDayAttr::
+	db $0d, $0d, $0d, $0d, $05, $05, $05
+	db $0d, $0d, $0d, $0d, $05, $05, $05
+	db $05, $05, $0d, $05, $05, $05, $05
+
 endc

@@ -25,7 +25,7 @@ endm
 ; word/byte 4-6 - rpn condition to trigger
 ; byte 7 - ???
 if def(VWF)
-First8Days6am::
+First8Days7am::
 	db $e4, $00, $11, $22
 	RpnSrc RpnData_41_4000
 	db $00
@@ -52,7 +52,7 @@ First8Days6am::
 
 	db $00
 
-First8Days7am::
+First8Days8am::
 	db $e4, $06, $39, $56
 	RpnSrc RpnData_43_5af9
 	db $28
@@ -207,7 +207,7 @@ First8Days7am::
 
 	db $00
 
-First8Days8am::
+First8Days9am::
 	db $e4, $2c, $01, $27
 	RpnSrc RpnData_45_4d1e
 	db $01
@@ -218,7 +218,7 @@ First8Days8am::
 
 	db $00
 
-First8Days9am::
+First8Days10am::
 	db $64, $2e, $61, $27
 	RpnSrc RpnData_45_4f2f
 	db $00
@@ -245,10 +245,10 @@ First8Days9am::
 
 	db $00
 
-First8Days10am::
+First8Days11am::
 	db $00
 
-First8Days11am::
+First8Days12pm::
 	db $e4, $34, $01, $22
 	RpnSrc RpnData_41_4000
 	db $01
@@ -259,7 +259,7 @@ First8Days11am::
 
 	db $00
 
-First8Days12pm::
+First8Days1pm::
 	db $e4, $36, $29, $34
 	RpnSrc RpnData_46_4f52
 	db $00
@@ -446,13 +446,13 @@ First8Days12pm::
 
 	db $00
 
-First8Days1pm::
-	db $00
-
 First8Days2pm::
 	db $00
 
 First8Days3pm::
+	db $00
+
+First8Days4pm::
 	db $e4, $64, $01, $27
 	RpnSrc RpnData_48_4c58
 	db $01
@@ -467,7 +467,7 @@ First8Days3pm::
 
 	db $00
 
-First8Days4pm::
+First8Days5pm::
 	db $e4, $67, $91, $17
 	RpnSrc RpnData_48_4d7f
 	db $00
@@ -502,10 +502,10 @@ First8Days4pm::
 
 	db $00
 
-First8Days5pm::
+First8Days6pm::
 	db $00
 
-First8Days6pm::
+First8Days7pm::
 	db $e4, $6f, $01, $22
 	RpnSrc RpnData_41_4000
 	db $01
@@ -520,7 +520,7 @@ First8Days6pm::
 
 	db $00
 
-First8Days7pm::
+First8Days8pm::
 	db $e4, $72, $49, $34
 	RpnSrc RpnData_49_65c7
 	db $1b
@@ -675,7 +675,7 @@ First8Days7pm::
 
 	db $00
 
-First8Days8pm::
+First8Days9pm::
 	db $e4, $98, $01, $22
 	RpnSrc RpnData_41_4000
 	db $01
@@ -690,7 +690,7 @@ First8Days8pm::
 
 	db $00
 
-First8Days9pm::
+First8Days10pm::
 	db $00
 
 Data_40_44e8::
@@ -3150,7 +3150,7 @@ Data_40_5727::
 	db $00
 
 else
-First8Days6am::
+First8Days7am::
 	db $e4, $00, $11, $22
 	dwb $0000, $00
 	db $00
@@ -3177,7 +3177,7 @@ First8Days6am::
 
 	db $00
 
-First8Days7am::
+First8Days8am::
 	db $e4, $06, $39, $56
 	dwb $1af9, $02
 	db $28
@@ -3332,7 +3332,7 @@ First8Days7am::
 
 	db $00
 
-First8Days8am::
+First8Days9am::
 	db $e4, $2c, $01, $27
 	dwb $0d1e, $04
 	db $01
@@ -3343,7 +3343,7 @@ First8Days8am::
 
 	db $00
 
-First8Days9am::
+First8Days10am::
 	db $64, $2e, $61, $27
 	dwb $0f2f, $04
 	db $00
@@ -3370,10 +3370,10 @@ First8Days9am::
 
 	db $00
 
-First8Days10am::
+First8Days11am::
 	db $00
 
-First8Days11am::
+First8Days12pm::
 	db $e4, $34, $01, $22
 	dwb $0000, $00
 	db $01
@@ -3384,7 +3384,7 @@ First8Days11am::
 
 	db $00
 
-First8Days12pm::
+First8Days1pm::
 	db $e4, $36, $29, $34
 	dwb $0f52, $05
 	db $00
@@ -3571,13 +3571,13 @@ First8Days12pm::
 
 	db $00
 
-First8Days1pm::
-	db $00
-
 First8Days2pm::
 	db $00
 
 First8Days3pm::
+	db $00
+
+First8Days4pm::
 	db $e4, $64, $01, $27
 	dwb $0c58, $07
 	db $01
@@ -3592,7 +3592,7 @@ First8Days3pm::
 
 	db $00
 
-First8Days4pm::
+First8Days5pm::
 	db $e4, $67, $91, $17
 	dwb $0d7f, $07
 	db $00
@@ -3627,10 +3627,10 @@ First8Days4pm::
 
 	db $00
 
-First8Days5pm::
+First8Days6pm::
 	db $00
 
-First8Days6pm::
+First8Days7pm::
 	db $e4, $6f, $01, $22
 	dwb $0000, $00
 	db $01
@@ -3645,7 +3645,7 @@ First8Days6pm::
 
 	db $00
 
-First8Days7pm::
+First8Days8pm::
 	db $e4, $72, $49, $34
 	dwb $25c7, $08
 	db $1b
@@ -3800,7 +3800,7 @@ First8Days7pm::
 
 	db $00
 
-First8Days8pm::
+First8Days9pm::
 	db $e4, $98, $01, $22
 	dwb $0000, $00
 	db $01
@@ -3815,7 +3815,7 @@ First8Days8pm::
 
 	db $00
 
-First8Days9pm::
+First8Days10pm::
 	db $00
 
 Data_40_44e8::

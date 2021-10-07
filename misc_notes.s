@@ -65,6 +65,8 @@
 ; rgbgfx -o en_gameboyComms.2bpp -u -T en_gameboyComms.png
 ; rgbgfx -o en_pocketSakura.2bpp -u -T en_pocketSakura.png
 ; rgbgfx -o en_cinematron.2bpp en_cinematron.png
+; rgbgfx -o en_fileLoadProgressIndicator.2bpp -u -T en_fileLoadProgressIndicator.png
+; rgbgfx -o en_fileLoadDisplaySpr.2bpp -h en_fileLoadDisplaySpr.png
 ; tools/gfx.py 1bpp newLetters.png --from=png --interleave
 
 ; empty banks
@@ -76,9 +78,10 @@
 ; 0x41 - 0x6a
 
 ; hook banks
-; $ff ($a4), $fd ($42), $fb ($9b), $a4 ($45), $8b ($107), $85 ($4c3)
-; $6b ($85f), $2b ($59e), $1f ($46f), $40 ($798), $3f ($42b), $35 ($21e8)
-; -> $31, $2f, $2a, $22, $0f, $0e, $0d, $0b, $0a, $09, $08, $07, $04
+; $ff ($4d), $fd ($42), $fb ($9d), $a4 ($34), $8b ($da), $85 ($107)
+; $6b ($85f), $2b ($2be), $1f ($46f), $40 ($7ad), $3f ($42b), $35 ($1159)
+; -> $31 ($1f4d), $2f ($146f), $2a ($1d20), $22 ($2ec4), $0f ($e83), $0e ($685)
+;    $0d ($d23), $0b ($e4e), $09 ($15f3), $08 ($82f), $07 ($1153)
 
 ; To 'day passed'
 ; New game

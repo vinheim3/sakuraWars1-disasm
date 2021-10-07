@@ -631,10 +631,10 @@ wIsChestMiniGame:: ; $cb1d
 wcb1e:
     ds $20-$1e
 
-; 16 possible values, if +6
-; 6-10 - morning
-; 11-17 - noon
-; 18-21 - night
+; 16 possible values, if +7
+; 7:00-11:59 - morning
+; 12:00-18:59 - noon
+; 19:00-22:59 - night
 wTimeOfDay:: ; $cb20
     db
 

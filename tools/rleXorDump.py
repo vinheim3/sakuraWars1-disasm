@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 
+import clipboard
 import sys
-from util import getRom, bankConv, wordIn
+from util import getRom, bankConv, wordIn, stringB, groupBytes
 
 if len(sys.argv) < 2:
     print('Usage: ' + sys.argv[0] + ' startAddress')
@@ -32,5 +33,9 @@ for i in range(numCopies):
             offset += 1
             dest.append(lastByte)
 
+final_str = '\n'.join(stringB(group) for group in groupBytes(data[start_address:start_address+offset], 32))
+print(final_str)
+print(hex(start_address+offset), hex(len(dest)))
+clipboard.copy(final_str)
 with open("gfx_new.bin", 'wb') as f:
     f.write(bytes(dest))

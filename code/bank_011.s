@@ -9736,21 +9736,21 @@ LoadAnEndResultsRankingTileData:
 	ret                                              ; $79f9: $c9
 
 .table:
-	db $00, $40, $19
-	db $1b, $50, $17
-	db $a0, $75, $18
-	db $20, $6d, $17
-	db $a4, $5e, $17
-	db $e5, $65, $17
-	db $6e, $46, $19
-	db $e4, $76, $1b
-	db $65, $5d, $1b
-	db $bb, $63, $1c
-	db $00, $40, $1c
-	db $75, $6d, $1c
-	db $45, $4b, $1c
-	db $cf, $7a, $1b
-	db $e3, $72, $1b
+	AddrBank RLEXorTileData_Ranking0
+	AddrBank RLEXorTileData_Ranking1
+	AddrBank RLEXorTileData_Ranking2
+	AddrBank RLEXorTileData_Ranking3
+	AddrBank RLEXorTileData_Ranking4
+	AddrBank RLEXorTileData_Ranking5
+	AddrBank RLEXorTileData_Ranking6
+	AddrBank RLEXorTileData_Ranking7
+	AddrBank RLEXorTileData_Ranking8
+	AddrBank RLEXorTileData_Ranking9
+	AddrBank RLEXorTileData_RankingA
+	AddrBank RLEXorTileData_RankingB
+	AddrBank RLEXorTileData_RankingC
+	AddrBank RLEXorTileData_RankingD
+	AddrBank RLEXorTileData_RankingE
 
 
 Func_11_7a27:
