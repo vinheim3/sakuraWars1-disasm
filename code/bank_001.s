@@ -1342,8 +1342,8 @@ AnimatedSpriteSpecs::
 	dw $76ab
 	dw $764b
 	dw $7672
-	dw $76ae
-	dw $76b7
+	dw AnimatedSpriteSpec_62-3
+	dw AnimatedSpriteSpec_63-3
 	dw $76c0
 	dw $76c9
 	dw $76d2
@@ -2379,13 +2379,15 @@ jr_001_749d:
 	ld   [bc], a                                     ; $76ae: $02
 	ld   a, d                                        ; $76af: $7a
 	nop                                              ; $76b0: $00
-	ld   a, [bc]                                     ; $76b1: $0a
-	inc  sp                                          ; $76b2: $33
-	ld   c, $80                                      ; $76b3: $0e $80
-	ld   c, $00                                      ; $76b5: $0e $00
-	add  d                                           ; $76b7: $82
-	or   c                                           ; $76b8: $b1
-	halt                                             ; $76b9: $76
+
+
+AnimatedSpriteSpec_62:
+:	db $0a, $33, $0e
+	AnimHide $0e
+	AnimJump :-
+
+
+AnimatedSpriteSpec_63:
 	ld   a, [bc]                                     ; $76ba: $0a
 	inc  [hl]                                        ; $76bb: $34
 	ld   c, $80                                      ; $76bc: $0e $80

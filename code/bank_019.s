@@ -7,6 +7,12 @@ INCLUDE "includes.s"
 
 SECTION "ROM Bank $019", ROMX[$4000], BANK[$19]
 
+if def(VWF)
+RLEXorTileData_Ranking0::
+	INCBIN "en_endResultsTitles.2bpp", 0*$800, $800
+
+	ds $4ccf-@, 0
+else
 RLEXorTileData_Ranking0::
 	db $d2, $01, $8c, $ff, $02, $00, $ff, $00, $81, $ff, $00, $fe, $81, $ff, $00, $fe, $83, $ff, $02, $00, $ff, $00, $81, $ff, $04, $27, $ff, $f8, $ff, $78, $81, $ff
 	db $04, $b1, $ff, $16, $ff, $00, $81, $ff, $0c, $f4, $ff, $3f, $ff, $eb, $ff, $eb, $ff, $fb, $ff, $cf, $ff, $00, $81, $ff, $0c, $83, $ff, $fe, $ff, $4e, $ff, $7f
@@ -115,6 +121,7 @@ RLEXorTileData_Ranking6::
 	db $ff, $86, $01, $82, $1f, $80, $00, $80, $ff, $86, $00, $82, $f1, $80, $00, $80, $ff, $80, $18, $82, $30, $80, $70, $80, $e0, $80, $c0, $80, $00, $80, $ff, $80
 	db $06, $82, $0c, $80, $1c, $80, $78, $80, $70, $80, $00, $80, $ff, $86, $00, $82, $3f, $80, $00, $80, $ff, $86, $03, $80, $c2, $80, $c4, $80, $00, $80, $ff, $8c
 	db $00
+endc
 
 
 RleXorTileData_ResetData::

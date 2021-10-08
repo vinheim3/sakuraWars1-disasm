@@ -2340,4 +2340,8 @@ AddDictWordToConvoStructForCurrTextBox::
 .itemff:
 	db "perfectly", 0
 
+
+RLEXorTileData_Ranking4::
+	INCBIN "en_endResultsTitles.2bpp", 4*$800, $800
+
 endc

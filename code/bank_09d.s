@@ -8639,7 +8639,7 @@ jr_09d_6596:
 	ld   b, b                                        ; $65ed: $40
 	ld   bc, $0c46                                   ; $65ee: $01 $46 $0c
 	add  b                                           ; $65f1: $80
-	ld   [$ca03], sp                                 ; $65f2: $08 $03 $ca
+	ld   [wGameResultsStatValueCounter], sp                                 ; $65f2: $08 $03 $ca
 	or   c                                           ; $65f5: $b1
 	ld   sp, $8200                                   ; $65f6: $31 $00 $82
 	rra                                              ; $65f9: $1f

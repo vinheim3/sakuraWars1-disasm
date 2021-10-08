@@ -12435,7 +12435,10 @@ Call_018_7480:
 	call c, $00cd                                    ; $759d: $dc $cd $00
 
 
+if def(VWF)
+else
 RLEXorTileData_Ranking2::
+endc
 	db $bc, $01, $8c, $ff, $02, $00, $ff, $00, $81, $ff, $0c, $f8, $ff, $f8, $ff, $f8, $ff, $fd, $ff, $fe, $ff, $04, $ff, $00, $81, $ff, $0c, $01, $ff, $61, $ff, $61
 	db $ff, $6b, $ff, $73, $ff, $e6, $ff, $00, $81, $ff, $04, $9c, $ff, $f7, $ff, $ef, $81, $ff, $04, $8f, $ff, $0b, $ff, $00, $81, $ff, $0c, $fe, $ff, $99, $ff, $7a
 	db $ff, $1f, $ff, $df, $ff, $22, $ff, $00, $81, $ff, $04, $60, $ff, $9b, $ff, $df, $81, $ff, $04, $f8, $ff, $dc, $ff, $00, $81, $ff, $0c, $c4, $ff, $eb, $ff, $fd

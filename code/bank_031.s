@@ -4301,4 +4301,16 @@ PortraitGalleryNonNonePlayerHook:
 	ld   hl, $d0c6
 	ret
 
+
+RLEXorTileData_Ranking7::
+	INCBIN "en_endResultsTitles.2bpp", 7*$800, $800
+
+
+RLEXorTileData_Ranking8::
+	INCBIN "en_endResultsTitles.2bpp", 8*$800, $800
+
+
+RLEXorTileData_Ranking9::
+	INCBIN "en_endResultsTitles.2bpp", 9*$800, $800
+
 endc

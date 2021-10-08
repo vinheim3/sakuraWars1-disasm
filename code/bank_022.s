@@ -3454,4 +3454,24 @@ SpriteGroup3_Idx80h:
 	db $f0, $08, $22, $0e
 	db $f0, $00, $20, $1e
 
+
+RLEXorTileData_RankingA::
+	INCBIN "en_endResultsTitles.2bpp", 10*$800, $800
+
+
+RLEXorTileData_RankingB::
+	INCBIN "en_endResultsTitles.2bpp", 11*$800, $800
+
+
+RLEXorTileData_RankingC::
+	INCBIN "en_endResultsTitles.2bpp", 12*$800, $800
+
+
+RLEXorTileData_RankingD::
+	INCBIN "en_endResultsTitles.2bpp", 13*$800, $800
+
+
+RLEXorTileData_RankingE::
+	INCBIN "en_endResultsTitles.2bpp", 14*$800, $800
+
 endc

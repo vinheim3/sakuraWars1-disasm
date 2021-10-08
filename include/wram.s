@@ -478,8 +478,17 @@ wGameResultsReturnState:: ; $ca01
 wGameResultsReturnSubstate:: ; $ca02
     db
 
-wca03:
-    ds $1d-3
+wGameResultsStatValueCounter:: ; $ca03
+    ds 6
+
+wca09:
+    ds $f-9
+
+wGameResultsStatBeingUpdated:: ; $ca0f
+    db
+
+wca10:
+    ds $d-0
 
 wGameResultsRanking:: ; $ca1d
     db

@@ -1003,4 +1003,12 @@ _FileLoadDisplayTileDataHook::
 	INCBIN "en_fileLoadDisplaySpr.2bpp"
 .end2:
 
+
+RLEXorTileData_Ranking5::
+	INCBIN "en_endResultsTitles.2bpp", 5*$800, $800
+
+
+RLEXorTileData_Ranking6::
+	INCBIN "en_endResultsTitles.2bpp", 6*$800, $800
+
 endc

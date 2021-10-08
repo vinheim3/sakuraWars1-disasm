@@ -7438,12 +7438,12 @@ SpriteGroupAPointers::
 	dw $6e64
 	dw $6e6c
 	dw $6e74
-	dw $6e7c
-	dw $6e90
-	dw $6ea4
-	dw $6eb8
-	dw $6ecc
-	dw $6ee0
+	dw SpriteGroupA_Idx33h_EndResultsStamina
+	dw SpriteGroupA_Idx34h_EndResultsIntellect
+	dw SpriteGroupA_Idx35h_EndResultsSpiritPower
+	dw SpriteGroupA_Idx36h_EndResultsGuts
+	dw SpriteGroupA_Idx37h_EndResultsAgility
+	dw SpriteGroupA_Idx38h_EndResultsAccuracy
 	dw $6ef4
 	dw $6f44
 	dw $6f94
@@ -9751,121 +9751,106 @@ jr_03f_6e76:
 
 jr_03f_6e79:
 	ld   [$109a], sp                                 ; $6e79: $08 $9a $10
-	db   $10                                         ; $6e7c: $10
-	jr   z, jr_03f_6e45                              ; $6e7d: $28 $c6
-
-	inc  b                                           ; $6e7f: $04
-	db   $10                                         ; $6e80: $10
-	jr   nz, @-$39                                   ; $6e81: $20 $c5
-
-	inc  b                                           ; $6e83: $04
-	db   $10                                         ; $6e84: $10
-	jr   jr_03f_6e4b                                 ; $6e85: $18 $c4
-
-	inc  b                                           ; $6e87: $04
-	db   $10                                         ; $6e88: $10
-	db   $10                                         ; $6e89: $10
-
-jr_03f_6e8a:
-	jp   $1004                                       ; $6e8a: $c3 $04 $10
 
 
-jr_03f_6e8d:
-	ld   [$14c2], sp                                 ; $6e8d: $08 $c2 $14
+if def(VWF)
+SpriteGroupA_Idx33h_EndResultsStamina:
+	db $10, $28, $e0, $04
+	db $10, $20, $df, $04
+	db $10, $18, $de, $04
+	db $10, $10, $dd, $04
+	db $10, $08, $dc, $14
 
-jr_03f_6e90:
-	db   $10                                         ; $6e90: $10
-	jr   z, jr_03f_6e59                              ; $6e91: $28 $c6
 
-	inc  b                                           ; $6e93: $04
-	db   $10                                         ; $6e94: $10
-	jr   nz, jr_03f_6e5c                             ; $6e95: $20 $c5
+SpriteGroupA_Idx34h_EndResultsIntellect:
+	db $10, $28, $e5, $04
+	db $10, $20, $e4, $04
+	db $10, $18, $e3, $04
+	db $10, $10, $e2, $04
+	db $10, $08, $e1, $14
 
-	inc  b                                           ; $6e97: $04
-	db   $10                                         ; $6e98: $10
-	jr   jr_03f_6e5f                                 ; $6e99: $18 $c4
 
-	inc  b                                           ; $6e9b: $04
-	db   $10                                         ; $6e9c: $10
-	db   $10                                         ; $6e9d: $10
-	ret  z                                           ; $6e9e: $c8
+SpriteGroupA_Idx35h_EndResultsSpiritPower:
+	db $10, $28, $e9, $04
+	db $10, $20, $e8, $04
+	db $10, $18, $e7, $04
+	db $10, $10, $e6, $04
+	db $10, $08, $dc, $14
 
-	inc  b                                           ; $6e9f: $04
-	db   $10                                         ; $6ea0: $10
-	ld   [$14c7], sp                                 ; $6ea1: $08 $c7 $14
-	db   $10                                         ; $6ea4: $10
-	jr   z, @-$38                                    ; $6ea5: $28 $c6
 
-	inc  b                                           ; $6ea7: $04
-	db   $10                                         ; $6ea8: $10
+SpriteGroupA_Idx36h_EndResultsGuts:
+	db $10, $28, $e0, $04
+	db $10, $20, $ed, $04
+	db $10, $18, $ec, $04
+	db $10, $10, $eb, $04
+	db $10, $08, $ea, $14
 
-jr_03f_6ea9:
-	jr   nz, jr_03f_6e70                             ; $6ea9: $20 $c5
 
-	inc  b                                           ; $6eab: $04
-	db   $10                                         ; $6eac: $10
-	jr   @-$3a                                       ; $6ead: $18 $c4
+SpriteGroupA_Idx37h_EndResultsAgility:
+	db $10, $28, $e0, $04
+	db $10, $20, $f1, $04
+	db $10, $18, $f0, $04
+	db $10, $10, $ef, $04
+	db $10, $08, $ee, $14
 
-	inc  b                                           ; $6eaf: $04
-	db   $10                                         ; $6eb0: $10
-	db   $10                                         ; $6eb1: $10
-	jp   z, $1004                                    ; $6eb2: $ca $04 $10
 
-	ld   [$14c9], sp                                 ; $6eb5: $08 $c9 $14
-	db   $10                                         ; $6eb8: $10
-	jr   z, jr_03f_6e8a                              ; $6eb9: $28 $cf
+SpriteGroupA_Idx38h_EndResultsAccuracy:
+	db $10, $28, $f5, $04
+	db $10, $20, $f4, $04
+	db $10, $18, $f3, $04
+	db $10, $10, $f2, $04
+	db $10, $08, $ee, $14
+else
+SpriteGroupA_Idx33h_EndResultsStamina:
+	db $10, $28, $c6, $04
+	db $10, $20, $c5, $04
+	db $10, $18, $c4, $04
+	db $10, $10, $c3, $04
+	db $10, $08, $c2, $14
 
-	inc  b                                           ; $6ebb: $04
 
-jr_03f_6ebc:
-	db   $10                                         ; $6ebc: $10
-	jr   nz, jr_03f_6e8d                             ; $6ebd: $20 $ce
+SpriteGroupA_Idx34h_EndResultsIntellect:
+	db $10, $28, $c6, $04
+	db $10, $20, $c5, $04
+	db $10, $18, $c4, $04
+	db $10, $10, $c8, $04
+	db $10, $08, $c7, $14
 
-jr_03f_6ebf:
-	inc  b                                           ; $6ebf: $04
-	db   $10                                         ; $6ec0: $10
-	jr   jr_03f_6e90                                 ; $6ec1: $18 $cd
 
-	inc  b                                           ; $6ec3: $04
-	db   $10                                         ; $6ec4: $10
-	db   $10                                         ; $6ec5: $10
-	call z, $1004                                    ; $6ec6: $cc $04 $10
-	ld   [$14cb], sp                                 ; $6ec9: $08 $cb $14
-	db   $10                                         ; $6ecc: $10
-	jr   z, @-$2a                                    ; $6ecd: $28 $d4
+SpriteGroupA_Idx35h_EndResultsSpiritPower:
+	db $10, $28, $c6, $04
+	db $10, $20, $c5, $04
+	db $10, $18, $c4, $04
+	db $10, $10, $ca, $04
+	db $10, $08, $c9, $14
 
-	inc  b                                           ; $6ecf: $04
-	db   $10                                         ; $6ed0: $10
-	jr   nz, @-$2b                                   ; $6ed1: $20 $d3
 
-	inc  b                                           ; $6ed3: $04
-	db   $10                                         ; $6ed4: $10
-	jr   jr_03f_6ea9                                 ; $6ed5: $18 $d2
+SpriteGroupA_Idx36h_EndResultsGuts:
+	db $10, $28, $cf, $04
+	db $10, $20, $ce, $04
+	db $10, $18, $cd, $04
+	db $10, $10, $cc, $04
+	db $10, $08, $cb, $14
 
-	inc  b                                           ; $6ed7: $04
-	db   $10                                         ; $6ed8: $10
-	db   $10                                         ; $6ed9: $10
-	pop  de                                          ; $6eda: $d1
-	inc  b                                           ; $6edb: $04
-	db   $10                                         ; $6edc: $10
-	ld   [$14d0], sp                                 ; $6edd: $08 $d0 $14
-	db   $10                                         ; $6ee0: $10
-	jr   z, jr_03f_6ebc                              ; $6ee1: $28 $d9
 
-	inc  b                                           ; $6ee3: $04
-	db   $10                                         ; $6ee4: $10
-	jr   nz, jr_03f_6ebf                             ; $6ee5: $20 $d8
+SpriteGroupA_Idx37h_EndResultsAgility:
+	db $10, $28, $d4, $04
+	db $10, $20, $d3, $04
+	db $10, $18, $d2, $04
+	db $10, $10, $d1, $04
+	db $10, $08, $d0, $14
 
-	inc  b                                           ; $6ee7: $04
-	db   $10                                         ; $6ee8: $10
-	jr   @-$27                                       ; $6ee9: $18 $d7
 
-	inc  b                                           ; $6eeb: $04
-	db   $10                                         ; $6eec: $10
-	db   $10                                         ; $6eed: $10
-	sub  $04                                         ; $6eee: $d6 $04
-	db   $10                                         ; $6ef0: $10
-	ld   [$14d5], sp                                 ; $6ef1: $08 $d5 $14
+SpriteGroupA_Idx38h_EndResultsAccuracy:
+	db $10, $28, $d9, $04
+	db $10, $20, $d8, $04
+	db $10, $18, $d7, $04
+	db $10, $10, $d6, $04
+	db $10, $08, $d5, $14
+endc
+
+
+;
 	jr   z, jr_03f_6f06                              ; $6ef4: $28 $10
 
 	ld   d, a                                        ; $6ef6: $57

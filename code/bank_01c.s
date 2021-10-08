@@ -7,7 +7,10 @@ INCLUDE "includes.s"
 
 SECTION "ROM Bank $01c", ROMX[$4000], BANK[$1c]
 
+if def(VWF)
+else
 RLEXorTileData_RankingA::
+endc
 	db $4e, $01, $8c, $ff, $02, $00, $ff, $00, $8b, $ff, $02, $00, $ff, $00, $8b, $ff, $02, $00, $ff, $00, $8b, $ff, $02, $00, $ff, $00, $8b, $ff, $02, $00, $ff, $00
 	db $81, $ff, $0c, $f9, $ff, $86, $ff, $86, $ff, $c6, $ff, $c6, $ff, $06, $ff, $00, $81, $ff, $0c, $fc, $ff, $1f, $ff, $1f, $ff, $3a, $ff, $38, $ff, $01, $ff, $00
 	db $81, $ff, $08, $30, $ff, $3c, $ff, $0c, $ff, $c6, $ff, $c6, $81, $ff, $00, $00, $81, $ff, $00, $f3, $81, $ff, $08, $7c, $ff, $6d, $ff, $d7, $ff, $35, $ff, $00
@@ -1727,7 +1730,10 @@ jr_01c_4b3f:
 	ld   bc, $3000                                   ; $4b42: $01 $00 $30
 
 
+if def(VWF)
+else
 RLEXorTileData_RankingC::
+endc
 	db $65, $01, $8c, $ff, $02, $00, $ff, $00, $8b, $ff, $02, $00, $ff, $00, $8b, $ff, $02, $00, $ff, $00, $8b, $ff, $02, $00, $ff, $00, $8b, $ff, $02, $00, $ff, $00
 	db $81, $ff, $00, $cf, $85, $ff, $04, $f0, $ff, $3f, $ff, $00, $81, $ff, $00, $58, $81, $ff, $08, $f8, $ff, $50, $ff, $3f, $ff, $cf, $ff, $00, $81, $ff, $06, $0e
 	db $ff, $fe, $ff, $0f, $ff, $06, $81, $ff, $02, $f9, $ff, $00, $81, $ff, $02, $04, $ff, $a4, $81, $ff, $06, $a7, $ff, $bf, $ff, $b8, $ff, $00, $81, $ff, $00, $33
@@ -5730,7 +5736,10 @@ jr_01c_6333:
 	db $16 
 	
 
+if def(VWF)
+else
 RLEXorTileData_Ranking9::
+endc
 	db $49, $01, $8c, $ff, $02, $00, $ff, $00, $8b, $ff, $02, $00, $ff, $00, $8b, $ff, $02, $00, $ff, $00, $8b, $ff, $02, $00, $ff, $00, $8b, $ff, $02, $00, $ff, $00
 	db $8b, $ff, $02, $00, $ff, $00, $81, $ff, $00, $cf, $83, $ff, $06, $30, $ff, $30, $ff, $30, $ff, $00, $85, $ff, $02, $f8, $ff, $f8, $81, $ff, $06, $00, $ff, $00
 	db $ff, $f5, $ff, $3f, $81, $ff, $02, $c5, $ff, $cf, $81, $ff, $02, $c0, $ff, $00, $81, $ff, $00, $9e, $85, $ff, $04, $f7, $ff, $69, $ff, $00, $81, $ff, $00, $7f
@@ -7079,7 +7088,10 @@ jr_01c_6c91:
 	nop                                              ; $6d74: $00
 
 
+if def(VWF)
+else
 RLEXorTileData_RankingB::
+endc
 	db $21, $01, $8c, $ff, $02, $00, $ff, $00, $8b, $ff, $02, $00, $ff, $00, $8b, $ff, $02, $00, $ff, $00, $8b, $ff, $02, $00, $ff, $00, $8b, $ff, $02, $00, $ff, $00
 	db $8b, $ff, $02, $00, $ff, $00, $81, $ff, $0c, $e0, $ff, $f9, $ff, $f9, $ff, $f9, $ff, $f9, $ff, $1f, $ff, $00, $81, $ff, $0c, $07, $ff, $9f, $ff, $9f, $ff, $9f
 	db $ff, $9f, $ff, $f8, $ff, $00, $81, $ff, $0c, $c0, $ff, $c0, $ff, $fe, $ff, $f8, $ff, $fa, $ff, $03, $ff, $00, $81, $ff, $00, $3f, $83, $ff, $00, $3f, $81, $ff

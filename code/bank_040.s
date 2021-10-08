@@ -7517,4 +7517,41 @@ EnLoadNewGBCCommsAttrsAndTileData::
 	INCBIN "en_gameboyComms.2bpp"
 .end:
 
+
+EndResultsMapAndTileDataHook::
+; Original pt 1
+	ldh  [rVBK], a                                   ; $6e7a: $e0 $4f
+	ld   a, $1c                                      ; $6e7c: $3e $1c
+	ld   hl, $9800                                   ; $6e7e: $21 $00 $98
+	call FarCopyLayout                                       ; $6e81: $cd $2c $0b
+
+	ld   a, BANK(.layout)
+	ldbc 5, 6
+	ld   de, .layout
+	ld   hl, $9821
+	call FarCopyLayout
+
+; Original pt 2
+	ld   a, $15                                      ; $6e84: $3e $15
+	ld   hl, $8000                                   ; $6e86: $21 $00 $80
+	ld   de, $4000                                   ; $6e89: $11 $00 $40
+	call RLEXorCopy                                       ; $6e8c: $cd $d2 $09
+
+	ld   bc, .layout-.gfx
+	ld   de, $8c20
+	ld   hl, .gfx
+	call MemCopy
+	ret
+
+.gfx:
+	INCBIN "en_endResultsStatsLabels.2bpp"
+
+.layout:
+	db $c2, $c3, $c4, $c5, $c6
+	db $c7, $c8, $c9, $ca, $cb
+	db $c2, $cc, $cd, $ce, $cf
+	db $d0, $d1, $d2, $d3, $c6
+	db $d4, $d5, $d6, $d7, $c6
+	db $d4, $d8, $d9, $da, $db
+
 endc

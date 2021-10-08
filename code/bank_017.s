@@ -3694,7 +3694,10 @@ jr_017_4fb7:
 	sbc  h                                           ; $501a: $9c
 
 
+if def(VWF)
+else
 RLEXorTileData_Ranking1::
+endc
 	db $dc, $01, $82, $ff, $02, $c2, $ff, $ef, $81, $ff, $06, $fc, $ff, $e9, $ff, $38, $ff, $00, $81, $ff, $02, $0f, $ff, $be, $81, $ff, $06, $2f, $ff, $6f, $ff, $f1
 	db $ff, $00, $81, $ff, $0c, $f3, $ff, $0c, $ff, $92, $ff, $92, $ff, $bb, $ff, $bb, $ff, $00, $81, $ff, $0c, $e6, $ff, $7d, $ff, $6e, $ff, $77, $ff, $63, $ff, $1e
 	db $ff, $00, $81, $ff, $04, $43, $ff, $f6, $ff, $7e, $81, $ff, $04, $7e, $ff, $b5, $ff, $00, $81, $ff, $0c, $c8, $ff, $35, $ff, $b7, $ff, $b7, $ff, $f8, $ff, $fa
@@ -5464,6 +5467,17 @@ jr_017_5e15:
 	nop                                              ; $5ea3: $00
 
 
+if def(VWF)
+
+RLEXorTileData_Ranking1::
+	INCBIN "en_endResultsTitles.2bpp", 1*$800, $800
+
+
+RLEXorTileData_Ranking2::
+	INCBIN "en_endResultsTitles.2bpp", 2*$800, $800
+
+	ds $7458-@, 0
+else
 RLEXorTileData_Ranking4::
 	db $de, $01, $82, $ff, $0c, $87, $ff, $d8, $ff, $fa, $ff, $fa, $ff, $d0, $ff, $70, $ff, $00, $81, $ff, $0c, $0f, $ff, $fc, $ff, $af, $ff, $af, $ff, $3c, $ff, $30
 	db $ff, $00, $81, $ff, $0c, $e7, $ff, $18, $ff, $00, $ff, $95, $ff, $fe, $ff, $6b, $ff, $00, $81, $ff, $0c, $f9, $ff, $3f, $ff, $f5, $ff, $e9, $ff, $27, $ff, $02
@@ -5646,7 +5660,7 @@ RLEXorTileData_Ranking3::
 	db $80, $ff, $80, $03, $80, $7f, $80, $03, $80, $ff, $80, $00, $80, $ff, $80, $3e, $80, $0a, $80, $38, $80, $3a, $80, $2a, $80, $2b, $80, $00, $80, $ff, $80, $98
 	db $80, $f8, $84, $98, $80, $fc, $80, $00, $80, $ff, $80, $2e, $80, $39, $80, $33, $80, $36, $80, $30, $80, $31, $80, $00, $80, $ff, $80, $e3, $80, $d2, $80, $d3
 	db $80, $d2, $80, $c1, $80, $c3, $80, $00, $80, $ff, $80, $fc, $80, $0c, $80, $fc, $80, $04, $80, $98, $80, $8c, $80, $00
-
+endc
 
 
 	add  hl, sp                                      ; $7458: $39

@@ -7524,23 +7524,23 @@ SetDMGState::
 GameState20_GameResults::
 	ld   a, [wGameSubstate]                                  ; $6e19: $fa $a1 $c2
 	rst  JumpTable                                         ; $6e1c: $df
-	dw GameResultsSubstate0
-	dw GameResultsSubstate1
-	dw GameResultsSubstate2
-	dw GameResultsSubstate3
-	dw GameResultsSubstate4
-	dw GameResultsSubstate5
-	dw GameResultsSubstate6
-	dw GameResultsSubstate7
+	dw GameResultsSubstate0_StaticScreenInit
+	dw GameResultsSubstate1_StaticScreenWait
+	dw GameResultsSubstate2_StaticScreenFadeOut
+	dw GameResultsSubstate3_ResultsScreenInit
+	dw GameResultsSubstate4_ResultsScreenUpdateStats
+	dw GameResultsSubstate5_ResultsScreenFadeVolDown
+	dw GameResultsSubstate6_ResultsScreenShowIris
+	dw GameResultsSubstate7_ResultsScreenShuffleTitles
 	dw GameResultsSubstate8
-	dw GameResultsSubstate9
-	dw GameResultsSubstateA
-	dw GameResultsSubstateB
-	dw GameResultsSubstateC
-	dw GameResultsSubstateD
+	dw GameResultsSubstate9_ResultsScreenFlashingTitle
+	dw GameResultsSubstateA_ResultsScreenIrisLeaving
+	dw GameResultsSubstateB_ResultsScreenDisplayTextbox
+	dw GameResultsSubstateC_ResultsScreenClearTextbox
+	dw GameResultsSubstateD_ResultsScreenExit
 
 
-GameResultsSubstate3:
+GameResultsSubstate3_ResultsScreenInit:
 	call TurnOffLCD                                       ; $6e39: $cd $e3 $08
 	ld   a, $00                                      ; $6e3c: $3e $00
 	call SafeSetAudVolForMultipleChannels                                       ; $6e3e: $cd $e0 $1c
@@ -7570,6 +7570,10 @@ GameResultsSubstate3:
 
 ;
 	xor  a                                           ; $6e79: $af
+if def(VWF)
+	nop
+	M_FarCall EndResultsMapAndTileDataHook
+else
 	ldh  [rVBK], a                                   ; $6e7a: $e0 $4f
 	ld   a, $1c                                      ; $6e7c: $3e $1c
 	ld   hl, $9800                                   ; $6e7e: $21 $00 $98
@@ -7580,6 +7584,9 @@ GameResultsSubstate3:
 	ld   hl, $8000                                   ; $6e86: $21 $00 $80
 	ld   de, $4000                                   ; $6e89: $11 $00 $40
 	call RLEXorCopy                                       ; $6e8c: $cd $d2 $09
+endc
+
+;
 	ld   hl, $9200                                   ; $6e8f: $21 $00 $92
 	ld   bc, $0100                                   ; $6e92: $01 $00 $01
 	call Call_011_7acd                               ; $6e95: $cd $cd $7a
@@ -7599,14 +7606,14 @@ GameResultsSubstate3:
 	ld   [wWY], a                                  ; $6eb6: $ea $0a $c2
 	ld   [wSCX], a                                  ; $6eb9: $ea $07 $c2
 	ld   [wSCY], a                                  ; $6ebc: $ea $08 $c2
-	ld   [$ca0f], a                                  ; $6ebf: $ea $0f $ca
+	ld   [wGameResultsStatBeingUpdated], a                                  ; $6ebf: $ea $0f $ca
 	ld   [$ca38], a                                  ; $6ec2: $ea $38 $ca
 	ld   [$ca39], a                                  ; $6ec5: $ea $39 $ca
 	ld   [$ca3b], a                                  ; $6ec8: $ea $3b $ca
 	ld   a, $08                                      ; $6ecb: $3e $08
 	ld   [$ca11], a                                  ; $6ecd: $ea $11 $ca
 	xor  a                                           ; $6ed0: $af
-	ld   hl, $ca03                                   ; $6ed1: $21 $03 $ca
+	ld   hl, wGameResultsStatValueCounter                                   ; $6ed1: $21 $03 $ca
 	ld   c, $06                                      ; $6ed4: $0e $06
 
 jr_011_6ed6:
@@ -7644,7 +7651,7 @@ jr_011_6ee1:
 	call ReserveBaseAnimSpriteSpecAndInstance                                       ; $6f10: $cd $4b $2f
 	ld   [$ca00], a                                  ; $6f13: $ea $00 $ca
 	call StartAnimatingAnimatedSpriteSpec                                       ; $6f16: $cd $14 $30
-	call Call_011_7986                               ; $6f19: $cd $86 $79
+	call AnimateNewEndResultsFlashingStat                               ; $6f19: $cd $86 $79
 	ld   a, $01                                      ; $6f1c: $3e $01
 	ld   hl, $0000                                   ; $6f1e: $21 $00 $00
 	call ReserveBaseAnimSpriteSpecAndInstance                                       ; $6f21: $cd $4b $2f
@@ -7685,7 +7692,7 @@ jr_011_6ee1:
 	call PlaySong                                       ; $6f7a: $cd $92 $1a
 	ld   a, $07                                      ; $6f7d: $3e $07
 	call SafeSetAudVolForMultipleChannels                                       ; $6f7f: $cd $e0 $1c
-	call Call_011_796e                               ; $6f82: $cd $6e $79
+	call LoadGameResultsStatsBars                               ; $6f82: $cd $6e $79
 	push af                                          ; $6f85: $f5
 	ld   a, $43                                      ; $6f86: $3e $43
 	ld   [wFarCallAddr], a                                  ; $6f88: $ea $98 $c2
@@ -7707,82 +7714,87 @@ jr_011_6ee1:
 	ret                                              ; $6fb1: $c9
 
 
-GameResultsSubstate4:
-	ld   a, [$ca0f]                                  ; $6fb2: $fa $0f $ca
-	ld   c, a                                        ; $6fb5: $4f
-	ld   b, $00                                      ; $6fb6: $06 $00
-	ld   hl, sSramVals2+SRAM2_STAMINA                                   ; $6fb8: $21 $d0 $af
-	add  hl, bc                                      ; $6fbb: $09
-	ld   d, h                                        ; $6fbc: $54
-	ld   e, l                                        ; $6fbd: $5d
-	ld   hl, $ca03                                   ; $6fbe: $21 $03 $ca
-	add  hl, bc                                      ; $6fc1: $09
-	ld   c, $04                                      ; $6fc2: $0e $04
+GameResultsSubstate4_ResultsScreenUpdateStats:
+; DE points to value of stat being updated
+	ld   a, [wGameResultsStatBeingUpdated]                          ; $6fb2
+	ld   c, a                                                       ; $6fb5
+	ld   b, $00                                                     ; $6fb6
+	ld   hl, sSramVals2+SRAM2_STAMINA                               ; $6fb8
+	add  hl, bc                                                     ; $6fbb
+	ld   d, h                                                       ; $6fbc
+	ld   e, l                                                       ; $6fbd
 
-jr_011_6fc4:
-	ld   a, [de]                                     ; $6fc4: $1a
-	cp   [hl]                                        ; $6fc5: $be
-	jr   z, jr_011_6fd5                              ; $6fc6: $28 $0d
+; HL points to current counter for the stat
+	ld   hl, wGameResultsStatValueCounter                           ; $6fbe
+	add  hl, bc                                                     ; $6fc1
 
-	inc  [hl]                                        ; $6fc8: $34
-	ld   a, [wInGameButtonsHeld]                                  ; $6fc9: $fa $0f $c2
-	and  $03                                         ; $6fcc: $e6 $03
-	jr   z, jr_011_6fec                              ; $6fce: $28 $1c
+; Can go up to 4 times faster
+	ld   c, $04                                                     ; $6fc2
 
-	dec  c                                           ; $6fd0: $0d
-	jr   nz, jr_011_6fc4                             ; $6fd1: $20 $f1
+.loop:
+; If actual stat level hit, go to next stat, else inc stat counter
+	ld   a, [de]                                                    ; $6fc4
+	cp   [hl]                                                       ; $6fc5
+	jr   z, .nextStat                                               ; $6fc6
 
-	jr   jr_011_6fec                                 ; $6fd3: $18 $17
+	inc  [hl]                                                       ; $6fc8
 
-jr_011_6fd5:
-	ld   hl, $ca0f                                   ; $6fd5: $21 $0f $ca
-	inc  [hl]                                        ; $6fd8: $34
-	call Call_011_7986                               ; $6fd9: $cd $86 $79
-	ld   a, [$ca0f]                                  ; $6fdc: $fa $0f $ca
+; If B/A held, we loop up to 4 times to inc the stat counter
+	ld   a, [wInGameButtonsHeld]                                    ; $6fc9
+	and  PADF_B|PADF_A                                              ; $6fcc
+	jr   z, .common                                                 ; $6fce
+
+	dec  c                                                          ; $6fd0
+	jr   nz, .loop                                                  ; $6fd1
+
+	jr   .common                                                    ; $6fd3
+
+.nextStat:
+; Inc stat to update
+	ld   hl, wGameResultsStatBeingUpdated                           ; $6fd5
+	inc  [hl]                                                       ; $6fd8
+
+;
+	call AnimateNewEndResultsFlashingStat                               ; $6fd9: $cd $86 $79
+
+; If not done with all stats, do normal updates
+	ld   a, [wGameResultsStatBeingUpdated]                                  ; $6fdc: $fa $0f $ca
 	cp   $06                                         ; $6fdf: $fe $06
-	jr   c, jr_011_6fec                              ; $6fe1: $38 $09
+	jr   c, .common                              ; $6fe1: $38 $09
 
+; Else inc substate..
 	ld   hl, wGameSubstate                                   ; $6fe3: $21 $a1 $c2
 	inc  [hl]                                        ; $6fe6: $34
+
+;
 	ld   a, $6e                                      ; $6fe7: $3e $6e
 	call Call_011_7a8d                               ; $6fe9: $cd $8d $7a
 
-jr_011_6fec:
-	call ClearOam                                       ; $6fec: $cd $d7 $0d
-	call Call_011_796e                               ; $6fef: $cd $6e $79
-	call AnimateAllAnimatedSpriteSpecs                                       ; $6ff2: $cd $d3 $2e
-	ret                                              ; $6ff5: $c9
+.common:
+; Update stats bars (with sprites), and animate the flashing text sprite spec
+	call ClearOam                                                   ; $6fec
+	call LoadGameResultsStatsBars                                   ; $6fef
+	call AnimateAllAnimatedSpriteSpecs                              ; $6ff2
+	ret                                                             ; $6ff5
 
 
-GameResultsSubstate6:
+GameResultsSubstate6_ResultsScreenShowIris:
 	call ClearOam                                       ; $6ff6: $cd $d7 $0d
 	call AnimateAllAnimatedSpriteSpecs                                       ; $6ff9: $cd $d3 $2e
 	ld   a, [$c9ff]                                  ; $6ffc: $fa $ff $c9
 	call HLequAddrOfAnimSpriteSpecDetails                                       ; $6fff: $cd $76 $30
-	push af                                          ; $7002: $f5
-	ld   a, $39                                      ; $7003: $3e $39
-	ld   [wFarCallAddr], a                                  ; $7005: $ea $98 $c2
-	ld   a, $41                                      ; $7008: $3e $41
-	ld   [wFarCallAddr+1], a                                  ; $700a: $ea $99 $c2
-	ld   a, $01                                      ; $700d: $3e $01
-	ld   [wFarCallBank], a                                  ; $700f: $ea $9a $c2
-	pop  af                                          ; $7012: $f1
-	call FarCall                                       ; $7013: $cd $62 $09
+
+	M_FarCall BCequType1AnimSpriteSpecInstancesCoords
+
 	ld   a, b                                        ; $7016: $78
 	cp   $72                                         ; $7017: $fe $72
 	jr   z, jr_011_7033                              ; $7019: $28 $18
 
 	dec  b                                           ; $701b: $05
 	dec  b                                           ; $701c: $05
-	push af                                          ; $701d: $f5
-	ld   a, $2f                                      ; $701e: $3e $2f
-	ld   [wFarCallAddr], a                                  ; $7020: $ea $98 $c2
-	ld   a, $41                                      ; $7023: $3e $41
-	ld   [wFarCallAddr+1], a                                  ; $7025: $ea $99 $c2
-	ld   a, $01                                      ; $7028: $3e $01
-	ld   [wFarCallBank], a                                  ; $702a: $ea $9a $c2
-	pop  af                                          ; $702d: $f1
-	call FarCall                                       ; $702e: $cd $62 $09
+
+	M_FarCall SetType1AnimSpriteSpecInstanceCoords
+
 	jr   jr_011_704d                                 ; $7031: $18 $1a
 
 jr_011_7033:
@@ -7802,7 +7814,7 @@ jr_011_704d:
 	ret                                              ; $704d: $c9
 
 
-GameResultsSubstate5:
+GameResultsSubstate5_ResultsScreenFadeVolDown:
 	call ClearOam                                       ; $704e: $cd $d7 $0d
 	call AnimateAllAnimatedSpriteSpecs                                       ; $7051: $cd $d3 $2e
 	ld   bc, $0008                                   ; $7054: $01 $08 $00
@@ -7845,7 +7857,7 @@ GameResultsSubstate5:
 	ret                                              ; $70b5: $c9
 
 
-GameResultsSubstate7:
+GameResultsSubstate7_ResultsScreenShuffleTitles:
 	call ClearOam                                       ; $70b6: $cd $d7 $0d
 	call AnimateAllAnimatedSpriteSpecs                                       ; $70b9: $cd $d3 $2e
 	call Call_011_7dfb                               ; $70bc: $cd $fb $7d
@@ -7902,12 +7914,9 @@ GameResultsSubstate8:
 	ld   hl, $713d                                   ; $7122: $21 $3d $71
 	ld   a, [wGameResultsRanking]                                  ; $7125: $fa $1d $ca
 	cp   $0a                                         ; $7128: $fe $0a
-	jr   nz, jr_011_712f                             ; $712a: $20 $03
-
+	jr   nz, :+                             ; $712a: $20 $03
 	ld   hl, $713f                                   ; $712c: $21 $3f $71
-
-jr_011_712f:
-	ld   a, [hl+]                                    ; $712f: $2a
+:	ld   a, [hl+]                                    ; $712f: $2a
 	ld   [$ca1b], a                                  ; $7130: $ea $1b $ca
 	ld   a, [hl]                                     ; $7133: $7e
 	call Call_011_7a8d                               ; $7134: $cd $8d $7a
@@ -7944,7 +7953,7 @@ jr_011_715b:
 	ret                                              ; $715b: $c9
 
 
-GameResultsSubstate9:
+GameResultsSubstate9_ResultsScreenFlashingTitle:
 	call ClearOam                                       ; $715c: $cd $d7 $0d
 	call AnimateAllAnimatedSpriteSpecs                                       ; $715f: $cd $d3 $2e
 
@@ -7961,50 +7970,38 @@ jr_011_716f:
 	ret                                              ; $716f: $c9
 
 
-GameResultsSubstateA:
+GameResultsSubstateA_ResultsScreenIrisLeaving:
 	call ClearOam                                       ; $7170: $cd $d7 $0d
 	call AnimateAllAnimatedSpriteSpecs                                       ; $7173: $cd $d3 $2e
 	call Call_011_7141                               ; $7176: $cd $41 $71
 	ld   a, [$c9ff]                                  ; $7179: $fa $ff $c9
 	call HLequAddrOfAnimSpriteSpecDetails                                       ; $717c: $cd $76 $30
-	push af                                          ; $717f: $f5
-	ld   a, $39                                      ; $7180: $3e $39
-	ld   [wFarCallAddr], a                                  ; $7182: $ea $98 $c2
-	ld   a, $41                                      ; $7185: $3e $41
-	ld   [wFarCallAddr+1], a                                  ; $7187: $ea $99 $c2
-	ld   a, $01                                      ; $718a: $3e $01
-	ld   [wFarCallBank], a                                  ; $718c: $ea $9a $c2
-	pop  af                                          ; $718f: $f1
-	call FarCall                                       ; $7190: $cd $62 $09
+
+	M_FarCall BCequType1AnimSpriteSpecInstancesCoords
+
 	ld   a, b                                        ; $7193: $78
 	cp   $b0                                         ; $7194: $fe $b0
-	jr   z, jr_011_71b0                              ; $7196: $28 $18
+	jr   z, .br_71b0                              ; $7196: $28 $18
 
 	inc  b                                           ; $7198: $04
 	inc  b                                           ; $7199: $04
-	push af                                          ; $719a: $f5
-	ld   a, $2f                                      ; $719b: $3e $2f
-	ld   [wFarCallAddr], a                                  ; $719d: $ea $98 $c2
-	ld   a, $41                                      ; $71a0: $3e $41
-	ld   [wFarCallAddr+1], a                                  ; $71a2: $ea $99 $c2
-	ld   a, $01                                      ; $71a5: $3e $01
-	ld   [wFarCallBank], a                                  ; $71a7: $ea $9a $c2
-	pop  af                                          ; $71aa: $f1
-	call FarCall                                       ; $71ab: $cd $62 $09
-	jr   jr_011_71bc                                 ; $71ae: $18 $0c
 
-jr_011_71b0:
+	M_FarCall SetType1AnimSpriteSpecInstanceCoords
+
+	jr   .done                                 ; $71ae: $18 $0c
+
+.br_71b0:
 	call Call_011_7abd                               ; $71b0: $cd $bd $7a
 	ld   hl, wGameSubstate                                   ; $71b3: $21 $a1 $c2
 	inc  [hl]                                        ; $71b6: $34
 	ld   a, $0f                                      ; $71b7: $3e $0f
 	call PlaySong                                       ; $71b9: $cd $92 $1a
 
-jr_011_71bc:
+.done:
 	ret                                              ; $71bc: $c9
 
 
-GameResultsSubstateB:
+GameResultsSubstateB_ResultsScreenDisplayTextbox:
 	call ClearOam                                       ; $71bd: $cd $d7 $0d
 	call AnimateAllAnimatedSpriteSpecs                                       ; $71c0: $cd $d3 $2e
 	call CheckIfReachedLastKanjiIdxInCurrTextBox                                       ; $71c3: $cd $71 $14
@@ -8033,7 +8030,7 @@ jr_011_71f0:
 	jp   HDMAEnqueueNextTextBoxKanji                                       ; $71f6: $c3 $55 $10
 
 
-GameResultsSubstateC:
+GameResultsSubstateC_ResultsScreenClearTextbox:
 	call ClearOam                                       ; $71f9: $cd $d7 $0d
 	call AnimateAllAnimatedSpriteSpecs                                       ; $71fc: $cd $d3 $2e
 
@@ -8073,7 +8070,7 @@ GameResultsSubstateC:
 	ret                                              ; $724d: $c9
 
 
-GameResultsSubstateD:
+GameResultsSubstateD_ResultsScreenExit:
 	xor  a                                           ; $724e: $af
 	ld   [wStartingColorIdxToLoadCompDataFor], a                                  ; $724f: $ea $62 $c3
 	ld   a, $40                                      ; $7252: $3e $40
@@ -8103,7 +8100,7 @@ GameResultsSubstateD:
 	ret                                              ; $728d: $c9
 
 
-GameResultsSubstate0:
+GameResultsSubstate0_StaticScreenInit:
 	call TurnOffLCD                                       ; $728e: $cd $e3 $08
 	ld   a, $00                                      ; $7291: $3e $00
 	call SafeSetAudVolForMultipleChannels                                       ; $7293: $cd $e0 $1c
@@ -8186,7 +8183,7 @@ endc
 	ret                                              ; $733c: $c9
 
 
-GameResultsSubstate1:
+GameResultsSubstate1_StaticScreenWait:
 	ld   bc, $005a                                   ; $733d: $01 $5a $00
 
 jr_011_7340:
@@ -8211,7 +8208,7 @@ jr_011_7354:
 	ret                                              ; $7358: $c9
 
 
-GameResultsSubstate2:
+GameResultsSubstate2_StaticScreenFadeOut:
 	xor  a                                           ; $7359: $af
 	ld   [wStartingColorIdxToLoadCompDataFor], a                                  ; $735a: $ea $62 $c3
 	ld   a, $40                                      ; $735d: $3e $40
@@ -9643,52 +9640,46 @@ jr_011_795b:
 	ret                                              ; $796d: $c9
 
 
-Call_011_796e:
-	ld   hl, $ca03                                   ; $796e: $21 $03 $ca
-
+LoadGameResultsStatsBars:
+	ld   hl, wGameResultsStatValueCounter                           ; $796e
 	M_FarCall LoadStatBars
-	ret                                              ; $7985: $c9
+	ret                                                             ; $7985
 
 
-Call_011_7986:
-	ld   a, [$ca0f]                                  ; $7986: $fa $0f $ca
+AnimateNewEndResultsFlashingStat:
+; DE points to the relevant 2-byte entry in the table below, for the relevant stat
+	ld   a, [wGameResultsStatBeingUpdated]                                  ; $7986: $fa $0f $ca
 	add  a                                           ; $7989: $87
 	ld   c, a                                        ; $798a: $4f
 	ld   b, $00                                      ; $798b: $06 $00
-	ld   hl, $79b7                                   ; $798d: $21 $b7 $79
+	ld   hl, .table                                   ; $798d: $21 $b7 $79
 	add  hl, bc                                      ; $7990: $09
 	ld   d, h                                        ; $7991: $54
 	ld   e, l                                        ; $7992: $5d
+
+;
 	ld   a, [$ca00]                                  ; $7993: $fa $00 $ca
 	call HLequAddrOfAnimSpriteSpecDetails                                       ; $7996: $cd $76 $30
+
+;
 	ld   a, [de]                                     ; $7999: $1a
 	ld   c, a                                        ; $799a: $4f
 	ld   b, $08                                      ; $799b: $06 $08
 	inc  de                                          ; $799d: $13
 	ld   a, [de]                                     ; $799e: $1a
-	ld   de, $7180                                   ; $799f: $11 $80 $71
-	push af                                          ; $79a2: $f5
-	ld   a, $03                                      ; $79a3: $3e $03
-	ld   [wFarCallAddr], a                                  ; $79a5: $ea $98 $c2
-	ld   a, $41                                      ; $79a8: $3e $41
-	ld   [wFarCallAddr+1], a                                  ; $79aa: $ea $99 $c2
-	ld   a, $01                                      ; $79ad: $3e $01
-	ld   [wFarCallBank], a                                  ; $79af: $ea $9a $c2
-	pop  af                                          ; $79b2: $f1
-	call FarCall                                       ; $79b3: $cd $62 $09
+	ld   de, AnimatedSpriteSpecs                                  ; $799f: $11 $80 $71
+
+	M_FarCall LoadType1NewAnimatedSpriteSpecDetails
 	ret                                              ; $79b6: $c9
 
-
-	ld   [$1062], sp                                 ; $79b7: $08 $62 $10
-	ld   h, e                                        ; $79ba: $63
+.table:
+; y offset, anim sprite idx
+	db $08, $62
+	db $10, $63
 	db $18, $64
-
 	db $20, $65
-
 	db $28, $66
-
 	db $30, $67
-
 	db $38, $00
 
 
@@ -9728,7 +9719,11 @@ LoadAnEndResultsRankingTileData:
 :	pop  af                                          ; $79ef: $f1
 
 ; Copy tile data over and restore ram bank
+if def(VWF)
+	call EndResultsLoadRankingGfxHook
+else
 	call RLEXorCopy                                       ; $79f0: $cd $d2 $09
+endc
 
 	pop  af                                          ; $79f3: $f1
 	ld   [wWramBank], a                                  ; $79f4: $ea $93 $c2
@@ -9833,15 +9828,8 @@ Call_011_7a8d:
 	call HLequAddrOfAnimSpriteSpecDetails                                       ; $7a91: $cd $76 $30
 	pop  af                                          ; $7a94: $f1
 	ld   de, $7180                                   ; $7a95: $11 $80 $71
-	push af                                          ; $7a98: $f5
-	ld   a, $1c                                      ; $7a99: $3e $1c
-	ld   [wFarCallAddr], a                                  ; $7a9b: $ea $98 $c2
-	ld   a, $41                                      ; $7a9e: $3e $41
-	ld   [wFarCallAddr+1], a                                  ; $7aa0: $ea $99 $c2
-	ld   a, $01                                      ; $7aa3: $3e $01
-	ld   [wFarCallBank], a                                  ; $7aa5: $ea $9a $c2
-	pop  af                                          ; $7aa8: $f1
-	call FarCall                                       ; $7aa9: $cd $62 $09
+
+	M_FarCall LoadType1NewAnimatedSpriteSpecAddress
 	ret                                              ; $7aac: $c9
 
 
@@ -10747,6 +10735,19 @@ SakuraMiniGameTileAttrHook1:
 
 	ld   hl, $9800
 	M_FarCall EnLoadSakuraMiniGameTileAttr
+	ret
+
+
+EndResultsLoadRankingGfxHook:
+; de - src addr
+; a - src bank
+; hl - dest addr
+	ld   bc, $800
+	push hl
+	ld   h, d
+	ld   l, e
+	pop  de
+	call FarMemCopy
 	ret
 
 endc
