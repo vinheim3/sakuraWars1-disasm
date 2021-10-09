@@ -675,8 +675,17 @@ wcb2b:
 wExploreFloor:: ; $cb2f
     db
 
-wcb30:
-    ds 7-0
+wExploreHoveredSpriteSpecIdxUsed:: ; $cb30
+    db
+
+wcb31:
+    ds 5-1
+
+wExploreCursorSpriteSpecIdxUsed:: ; $cb35
+    db
+
+wcb36:
+    ds 7-6
 
 wExploreCursorX:: ; $cb37
     db
@@ -848,8 +857,8 @@ wDayPassedAnimationStep:: ; $cc18
 wDayPassedMiscCounterIdx:: ; $cc19
     db
 
-wcc1a:
-    ds $b-$a
+wDayPassedIsHoldingB:: ; $cc1a
+    db
 
 wFileLoadDisplayAnimationStep:: ; $cc1b
     db
@@ -857,8 +866,8 @@ wFileLoadDisplayAnimationStep:: ; $cc1b
 wFileLoadDisplayMiscCounterIdx:: ; $cc1c
     db
 
-wcc1d:
-    ds $e-$d
+wFileBeingLoaded:: ; $cc1d
+    db
 
 wFileLoadDisplayShouldSkip:: ; $cc1e
     db
@@ -938,8 +947,11 @@ wPrologueReturnSubstate:: ; $cc9b
 wPrologueScriptIdx:: ; $cc9c
     dw
 
-wcc9e:
-    ds $da9-$c9e
+wPrologueSongToPlay:: ; $cc9e
+    db
+
+wcc9f:
+    ds $da9-$c9f
 
 wCurrAudChannelIdx:: ; $cda9
     db
@@ -978,8 +990,11 @@ wInstantCrossedTile:: ; $cf27
 wInstantCharWidth:: ; $cf28
     db
 
-wcf29:
-    ds $1000-$f29
+wExploreStatusBarText:: ; $cf29
+    db ; unknown size
+
+wcf2a:
+    ds $1000-$f2a
 
 wStackTop:: ; $d000
 

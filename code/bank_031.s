@@ -4313,4 +4313,15 @@ RLEXorTileData_Ranking8::
 RLEXorTileData_Ranking9::
 	INCBIN "en_endResultsTitles.2bpp", 9*$800, $800
 
+
+_DayPassedTileDataHook::
+	ld   bc, .end-.gfx
+	ld   de, $d000+$140
+	ld   hl, .gfx
+	call MemCopy
+	ret
+.gfx:
+	INCBIN "en_dayPassedSpr.2bpp"
+.end:
+
 endc

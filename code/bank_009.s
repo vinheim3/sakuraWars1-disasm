@@ -167,17 +167,18 @@ DPTransition_SetDormState1:
 
 
 DPTransition_ToNextDay1:
-	jp   DPTransition_NextDay                               ; $416d: $c3 $fb $42
+	jp   DPTransition_NextDay                                       ; $416d
 
 
 DPTransition_DisplayCurrDate:
-	ld   a, [$cc1d]                                  ; $4170: $fa $1d $cc
-	or   a                                           ; $4173: $b7
-	jr   z, .setDayPassedState                              ; $4174: $28 $12
+; Choose date display date based on if file was just loaded
+	ld   a, [wFileBeingLoaded]                                      ; $4170
+	or   a                                                          ; $4173
+	jr   z, .setDayPassedState                                      ; $4174
 
 ; Else set file load display state
-	xor  a                                           ; $4176: $af
-	ld   [$cc1d], a                                  ; $4177: $ea $1d $cc
+	xor  a                                                          ; $4176
+	ld   [wFileBeingLoaded], a                                      ; $4177
 
 ; Set file load display state, and inc dp idx
 	ld   a, GS_FILE_LOAD_DISPLAY                                    ; $417a
@@ -229,7 +230,7 @@ DPTransition_SetMainConvoState2:
 
 ; B = 3 if night, else 2
 	ld   b, $03                                      ; $41ca: $06 $03
-	call ClearCarryIfNightElseSetIt                               ; $41cc: $cd $3e $45
+	call CheckIfBeforeNight                               ; $41cc: $cd $3e $45
 	jr   c, :+                              ; $41cf: $38 $02
 	ld   b, $02                                      ; $41d1: $06 $02
 :	push bc                                          ; $41d3: $c5
@@ -287,7 +288,7 @@ jr_009_4239:
 	jr   z, jr_009_426e                              ; $423b: $28 $31
 
 	ld   b, $03                                      ; $423d: $06 $03
-	call ClearCarryIfNightElseSetIt                               ; $423f: $cd $3e $45
+	call CheckIfBeforeNight                               ; $423f: $cd $3e $45
 	jr   c, jr_009_4246                              ; $4242: $38 $02
 
 	ld   b, $02                                      ; $4244: $06 $02
@@ -375,7 +376,7 @@ jr_009_42b6:
 DPTransition_SetDormState2:
 ;
 	ld   b, $03                                      ; $42bb: $06 $03
-	call ClearCarryIfNightElseSetIt                               ; $42bd: $cd $3e $45
+	call CheckIfBeforeNight                               ; $42bd: $cd $3e $45
 	jr   c, :+                              ; $42c0: $38 $02
 	ld   b, $02                                      ; $42c2: $06 $02
 :	ld   a, b                                        ; $42c4: $78
@@ -460,7 +461,7 @@ DPTransition_SetMainConvoState3:
 	jr   z, jr_009_4399                              ; $4349: $28 $4e
 
 	ld   b, $03                                      ; $434b: $06 $03
-	call ClearCarryIfNightElseSetIt                               ; $434d: $cd $3e $45
+	call CheckIfBeforeNight                               ; $434d: $cd $3e $45
 	jr   c, jr_009_4354                              ; $4350: $38 $02
 
 	ld   b, $02                                      ; $4352: $06 $02
@@ -516,7 +517,7 @@ jr_009_43ba:
 	jr   z, jr_009_43ef                              ; $43bc: $28 $31
 
 	ld   b, $03                                      ; $43be: $06 $03
-	call ClearCarryIfNightElseSetIt                               ; $43c0: $cd $3e $45
+	call CheckIfBeforeNight                               ; $43c0: $cd $3e $45
 	jr   c, jr_009_43c7                              ; $43c3: $38 $02
 
 	ld   b, $02                                      ; $43c5: $06 $02
@@ -572,7 +573,7 @@ DPTransition24:
 
 DPTransition_SetDormState3:
 	ld   b, $03                                      ; $4414: $06 $03
-	call ClearCarryIfNightElseSetIt                               ; $4416: $cd $3e $45
+	call CheckIfBeforeNight                               ; $4416: $cd $3e $45
 	jr   c, :+                              ; $4419: $38 $02
 	ld   b, $02                                      ; $441b: $06 $02
 :	ld   a, b                                        ; $441d: $78
@@ -816,10 +817,11 @@ SetOrUnsetFlag2::
 	jp   SetSramValOrFlag2                               ; $453b: $c3 $e5 $44
 
 
-ClearCarryIfNightElseSetIt::
-	ld   a, [wTimeOfDay]                                  ; $453e: $fa $20 $cb
-	cp   $0c                                         ; $4541: $fe $0c
-	ret                                              ; $4543: $c9
+; Sets carry if before night
+CheckIfBeforeNight::
+	ld   a, [wTimeOfDay]                                            ; $453e
+	cp   $0c                                                        ; $4541
+	ret                                                             ; $4543
 
 
 ; Returns idx in A
@@ -975,7 +977,7 @@ Call_009_4643:
 
 ; Return 2nd byte if day, else 3rd byte
 	inc  hl                                          ; $464d: $23
-	call ClearCarryIfNightElseSetIt                               ; $464e: $cd $3e $45
+	call CheckIfBeforeNight                               ; $464e: $cd $3e $45
 	jr   c, :+                              ; $4651: $38 $01
 	inc  hl                                          ; $4653: $23
 :	ld   a, [hl]                                     ; $4654: $7e
@@ -4091,7 +4093,7 @@ if def(VWF)
 else
 	ld   l, $14                                      ; $586d: $2e $14
 endc
-	call AequHtimesL                                       ; $586f: $cd $ac $0b
+	call HLandAequHtimesL                                       ; $586f: $cd $ac $0b
 if def(VWF)
 	add  $c0
 	ld   hl, $d404
@@ -4435,7 +4437,7 @@ else
 	ld   h, $14                                      ; $5a23: $26 $14
 endc
 	ld   l, a                                        ; $5a25: $6f
-	call AequHtimesL                                       ; $5a26: $cd $ac $0b
+	call HLandAequHtimesL                                       ; $5a26: $cd $ac $0b
 	add  hl, hl                                      ; $5a29: $29
 	add  hl, hl                                      ; $5a2a: $29
 	add  hl, hl                                      ; $5a2b: $29
@@ -6230,7 +6232,7 @@ Jump_009_6509:
 
 
 jr_009_6523:
-	ld   [$b0aa], a                                  ; $6523: $ea $aa $b0
+	ld   [sSramVals2+SRAM2_ARGUMENT_1], a                                  ; $6523: $ea $aa $b0
 	ld   h, $41                                      ; $6526: $26 $41
 	ld   l, $01                                      ; $6528: $2e $01
 	ld   bc, $0012                                   ; $652a: $01 $12 $00
@@ -6381,7 +6383,7 @@ HLequAddrOfChestItemMetadata:
 	push bc                                          ; $664f: $c5
 	ld   h, a                                        ; $6650: $67
 	ld   l, $06                                      ; $6651: $2e $06
-	call AequHtimesL                                       ; $6653: $cd $ac $0b
+	call HLandAequHtimesL                                       ; $6653: $cd $ac $0b
 	ld   bc, .table                                   ; $6656: $01 $5c $66
 	add  hl, bc                                      ; $6659: $09
 	pop  bc                                          ; $665a: $c1

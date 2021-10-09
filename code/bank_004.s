@@ -267,7 +267,7 @@ Call_004_41a7:
 	and  $07                                         ; $41b8: $e6 $07
 	ld   h, a                                        ; $41ba: $67
 	ld   l, $1c                                      ; $41bb: $2e $1c
-	call AequHtimesL                                       ; $41bd: $cd $ac $0b
+	call HLandAequHtimesL                                       ; $41bd: $cd $ac $0b
 	add  $80                                         ; $41c0: $c6 $80
 	ld   hl, $d402                                   ; $41c2: $21 $02 $d4
 	ld   de, $0011                                   ; $41c5: $11 $11 $00
@@ -696,7 +696,7 @@ Jump_004_440b:
 	and  $07                                         ; $440b: $e6 $07
 	ld   h, $1c                                      ; $440d: $26 $1c
 	ld   l, a                                        ; $440f: $6f
-	call AequHtimesL                                       ; $4410: $cd $ac $0b
+	call HLandAequHtimesL                                       ; $4410: $cd $ac $0b
 	add  hl, hl                                      ; $4413: $29
 	add  hl, hl                                      ; $4414: $29
 	add  hl, hl                                      ; $4415: $29
@@ -2617,7 +2617,7 @@ HLequAddrOfRomandoItemMetadata:
 	push bc                                                         ; $501f
 	ld   h, a                                                       ; $5020
 	ld   l, $0f                                                     ; $5021
-	call AequHtimesL                                                ; $5023
+	call HLandAequHtimesL                                           ; $5023
 	ld   bc, RomandoShopItemMetadata                                ; $5026
 	add  hl, bc                                                     ; $5029
 	pop  bc                                                         ; $502a
@@ -2776,7 +2776,7 @@ Call_004_54c5:
 	call Call_004_431b                               ; $54c7: $cd $1b $43
 	ld   h, a                                        ; $54ca: $67
 	ld   l, $0f                                      ; $54cb: $2e $0f
-	call AequHtimesL                                       ; $54cd: $cd $ac $0b
+	call HLandAequHtimesL                                       ; $54cd: $cd $ac $0b
 	ld   bc, RomandoShopItemMetadata+6                                   ; $54d0: $01 $32 $50
 	add  hl, bc                                      ; $54d3: $09
 	ld   a, [hl+]                                    ; $54d4: $2a
@@ -3474,7 +3474,7 @@ DormRoomAnimationHandler00:
 	ret                                                             ; $58fc
 
 .dataLoadHandlers:
-	dw .dataLoad0
+	dw .dataLoad0_Layout
 	dw .dataLoad1
 	dw .dataLoad2
 	dw .dataLoad3
@@ -3486,7 +3486,7 @@ DormRoomAnimationHandler00:
 	dw .dataLoad9
 	dw .dataLoadA
 
-.dataLoad0:
+.dataLoad0_Layout:
 ;
 	ld   a, $93                                      ; $5913: $3e $93
 	ld   hl, $d000                                   ; $5915: $21 $00 $d0
@@ -3588,7 +3588,7 @@ endc
 	ret                                              ; $59b6: $c9
 
 .dataLoad8:
-	M_FarCall ClearCarryIfNightElseSetIt
+	M_FarCall CheckIfBeforeNight
 	jr   nc, .br_59e3                             ; $59cb: $30 $16
 
 	ld   hl, $d800                                   ; $59cd: $21 $00 $d8
@@ -3625,7 +3625,7 @@ endc
 
 .dataLoad9:
 	ld   hl, $dfa5                                   ; $5a0a: $21 $a5 $df
-	ld   de, $afe1                                   ; $5a0d: $11 $e1 $af
+	ld   de, sSramVals2+SRAM2_TRAINING_MON                                   ; $5a0d: $11 $e1 $af
 	ld   b, $05                                      ; $5a10: $06 $05
 
 .loop_5a12:
@@ -6242,7 +6242,7 @@ GivePocketSakuraRewards::
 	inc  de                                          ; $6b9e: $13
 	ld   h, a                                        ; $6b9f: $67
 	ld   l, $64                                      ; $6ba0: $2e $64
-	call AequHtimesL                                       ; $6ba2: $cd $ac $0b
+	call HLandAequHtimesL                                       ; $6ba2: $cd $ac $0b
 	ld   b, h                                        ; $6ba5: $44
 	ld   c, l                                        ; $6ba6: $4d
 	ld   a, [de]                                     ; $6ba7: $1a
@@ -6250,7 +6250,7 @@ GivePocketSakuraRewards::
 	swap a                                           ; $6baa: $cb $37
 	ld   h, a                                        ; $6bac: $67
 	ld   l, $0a                                      ; $6bad: $2e $0a
-	call AequHtimesL                                       ; $6baf: $cd $ac $0b
+	call HLandAequHtimesL                                       ; $6baf: $cd $ac $0b
 	add  hl, bc                                      ; $6bb2: $09
 	ld   a, [de]                                     ; $6bb3: $1a
 	inc  de                                          ; $6bb4: $13
@@ -7032,7 +7032,7 @@ GameState49_DayPassed::
 	ret                                                             ; $7250
 
 
-Call_004_7251:
+LoadDayPassedCloudsSprite:
 	ld   a, $0c                                      ; $7251: $3e $0c
 	ld   [wSpriteGroup], a                                  ; $7253: $ea $1a $c2
 	ldbc $00, $00                                   ; $7256: $01 $00 $00
@@ -7046,7 +7046,7 @@ DayPassedSubstate1Main:
 	call ClearOam                                       ; $725f: $cd $d7 $0d
 
 	xor  a                                           ; $7262: $af
-	ld   [$cc1a], a                                  ; $7263: $ea $1a $cc
+	ld   [wDayPassedIsHoldingB], a                                  ; $7263: $ea $1a $cc
 
 ;
 	ld   a, [wInGameButtonsHeld]                                  ; $7266: $fa $0f $c2
@@ -7054,7 +7054,7 @@ DayPassedSubstate1Main:
 	jr   z, :+                              ; $726b: $28 $05
 
 	ld   a, $ff                                      ; $726d: $3e $ff
-	ld   [$cc1a], a                                  ; $726f: $ea $1a $cc
+	ld   [wDayPassedIsHoldingB], a                                  ; $726f: $ea $1a $cc
 
 ;
 :	ld   a, [wWramBank]                                  ; $7272: $fa $93 $c2
@@ -7083,8 +7083,9 @@ DayPassedSubstate1Main:
 	jp   hl                                                         ; $728f
 
 .return:
-	call Call_004_7251                               ; $7290: $cd $51 $72
-	call AnimateAllAnimatedSpriteSpecs                                       ; $7293: $cd $d3 $2e
+; Load an unchanging sprite, and animate the text sprites
+	call LoadDayPassedCloudsSprite                                  ; $7290
+	call AnimateAllAnimatedSpriteSpecs                              ; $7293
 
 ; Restore ram bank
 	pop  af                                                         ; $7296
@@ -7093,15 +7094,15 @@ DayPassedSubstate1Main:
 	ret                                                             ; $729c
 
 .animationStepHandlers:
-	dw DayPassedAnimationStep0
-	dw DayPassedAnimationStep1
-	dw DayPassedAnimationStep2
-	dw DayPassedAnimationStep3
-	dw DayPassedAnimationStep4
-	dw DayPassedAnimationStep5
+	dw DayPassedAnimationStep0_Init
+	dw DayPassedAnimationStep1_FadeToNight
+	dw DayPassedAnimationStep2_Wait1
+	dw DayPassedAnimationStep3_Main
+	dw DayPassedAnimationStep4_WaitToExit
+	dw DayPassedAnimationStep5_Exit
 
 
-DayPassedAnimationStep0:
+DayPassedAnimationStep0_Init:
 ; Inc data load idx, and get curr in A
 	ld   hl, wDayPassedMiscCounterIdx                                   ; $72a9: $21 $19 $cc
 	ld   a, [hl]                                     ; $72ac: $7e
@@ -7125,16 +7126,16 @@ DayPassedAnimationStep0:
 	ret                                              ; $72bb: $c9
 
 .dataLoadHandlers:
-	dw .dataLoad0
-	dw .dataLoad1
-	dw .dataLoad2
-	dw .dataLoad3
-	dw .dataLoad4
-	dw .dataLoad5
-	dw .dataLoad6
-	dw .dataLoad7
+	dw .dataLoad0_Layout
+	dw .dataLoad1_Bank0_8800h
+	dw .dataLoad2_Bank0_8e00h
+	dw .dataLoad3_Bank0_9400h_Bank1_9000h
+	dw .dataLoad4_Bank1_9200h
+	dw .dataLoad5_Bank1_8800h
+	dw .dataLoad6_Bank1_8e00h_Bank0_8000h
+	dw .dataLoad7_Bank0_8200h
 
-.dataLoad0:
+.dataLoad0_Layout:
 	ld   hl, $d000                                   ; $72cc: $21 $00 $d0
 	ld   a, $a0                                      ; $72cf: $3e $a0
 	ld   de, $6a8e                                   ; $72d1: $11 $8e $6a
@@ -7156,7 +7157,7 @@ DayPassedAnimationStep0:
 	call EnqueueHDMATransfer                                       ; $72fb: $cd $7c $02
 	ret                                              ; $72fe: $c9
 
-.dataLoad1:
+.dataLoad1_Bank0_8800h:
 	ld   a, $8d                                      ; $72ff: $3e $8d
 	ld   hl, $d000                                   ; $7301: $21 $00 $d0
 	ld   de, $6dd0                                   ; $7304: $11 $d0 $6d
@@ -7169,7 +7170,7 @@ DayPassedAnimationStep0:
 	call EnqueueHDMATransfer                                       ; $7316: $cd $7c $02
 	ret                                              ; $7319: $c9
 
-.dataLoad2:
+.dataLoad2_Bank0_8e00h:
 	ld   c, $80                                      ; $731a: $0e $80
 	ld   de, $8e00                                   ; $731c: $11 $00 $8e
 	ld   a, $07                                      ; $731f: $3e $07
@@ -7178,7 +7179,7 @@ DayPassedAnimationStep0:
 	call EnqueueHDMATransfer                                       ; $7326: $cd $7c $02
 	ret                                              ; $7329: $c9
 
-.dataLoad3:
+.dataLoad3_Bank0_9400h_Bank1_9000h:
 	ld   c, $80                                      ; $732a: $0e $80
 	ld   de, $9400                                   ; $732c: $11 $00 $94
 	ld   a, $07                                      ; $732f: $3e $07
@@ -7197,7 +7198,7 @@ DayPassedAnimationStep0:
 	call EnqueueHDMATransfer                                       ; $7350: $cd $7c $02
 	ret                                              ; $7353: $c9
 
-.dataLoad4:
+.dataLoad4_Bank1_9200h:
 	ld   c, $81                                      ; $7354: $0e $81
 	ld   de, $9200                                   ; $7356: $11 $00 $92
 	ld   a, $07                                      ; $7359: $3e $07
@@ -7206,7 +7207,7 @@ DayPassedAnimationStep0:
 	call EnqueueHDMATransfer                                       ; $7360: $cd $7c $02
 	ret                                              ; $7363: $c9
 
-.dataLoad5:
+.dataLoad5_Bank1_8800h:
 	ld   a, $a0                                      ; $7364: $3e $a0
 	ld   hl, $d800                                   ; $7366: $21 $00 $d8
 	ld   de, $75ad                                   ; $7369: $11 $ad $75
@@ -7219,7 +7220,7 @@ DayPassedAnimationStep0:
 	call EnqueueHDMATransfer                                       ; $737b: $cd $7c $02
 	ret                                              ; $737e: $c9
 
-.dataLoad6:
+.dataLoad6_Bank1_8e00h_Bank0_8000h:
 	ld   c, $81                                      ; $737f: $0e $81
 	ld   de, $8e00                                   ; $7381: $11 $00 $8e
 	ld   a, $07                                      ; $7384: $3e $07
@@ -7229,7 +7230,11 @@ DayPassedAnimationStep0:
 	ld   a, $97                                      ; $738e: $3e $97
 	ld   hl, $d000                                   ; $7390: $21 $00 $d0
 	ld   de, $6041                                   ; $7393: $11 $41 $60
+if def(VWF)
+	call DayPassedTileDataHook
+else
 	call RLEXorCopy                                       ; $7396: $cd $d2 $09
+endc
 	ld   c, $80                                      ; $7399: $0e $80
 	ld   de, $8000                                   ; $739b: $11 $00 $80
 	ld   a, $07                                      ; $739e: $3e $07
@@ -7238,7 +7243,7 @@ DayPassedAnimationStep0:
 	call EnqueueHDMATransfer                                       ; $73a5: $cd $7c $02
 	ret                                              ; $73a8: $c9
 
-.dataLoad7:
+.dataLoad7_Bank0_8200h:
 	ld   c, $80                                      ; $73a9: $0e $80
 	ld   de, $8200                                   ; $73ab: $11 $00 $82
 	ld   a, $07                                      ; $73ae: $3e $07
@@ -7255,7 +7260,7 @@ IncDayPassedAnimStep:
 	ret                                                             ; $73c0
 
 
-DayPassedAnimationStep1:
+DayPassedAnimationStep1_FadeToNight:
 	ld   a, [wDayPassedMiscCounterIdx]                                  ; $73c1: $fa $19 $cc
 	or   a                                           ; $73c4: $b7
 	jr   nz, .afterInit                             ; $73c5: $20 $18
@@ -7273,7 +7278,7 @@ DayPassedAnimationStep1:
 
 .afterInit:
 	ld   hl, wDayPassedMiscCounterIdx                                   ; $73df: $21 $19 $cc
-	ld   a, [$cc1a]                                  ; $73e2: $fa $1a $cc
+	ld   a, [wDayPassedIsHoldingB]                                  ; $73e2: $fa $1a $cc
 	or   a                                           ; $73e5: $b7
 	jr   z, jr_004_73ee                              ; $73e6: $28 $06
 
@@ -7305,162 +7310,253 @@ jr_004_73fd:
 	jp   IncDayPassedAnimStep                               ; $7411: $c3 $b8 $73
 
 
-DayPassedAnimationStep2:
-	ld   hl, wDayPassedMiscCounterIdx                                   ; $7414: $21 $19 $cc
-	ld   a, [$cc1a]                                  ; $7417: $fa $1a $cc
-	or   a                                           ; $741a: $b7
-	jp   nz, IncDayPassedAnimStep                           ; $741b: $c2 $b8 $73
+DayPassedAnimationStep2_Wait1:
+	ld   hl, wDayPassedMiscCounterIdx                               ; $7414
 
-	ld   a, [hl]                                     ; $741e: $7e
-	inc  [hl]                                        ; $741f: $34
-	cp   $3c                                         ; $7420: $fe $3c
-	jp   nc, IncDayPassedAnimStep                           ; $7422: $d2 $b8 $73
+; Skip wait if holding B
+	ld   a, [wDayPassedIsHoldingB]                                  ; $7417
+	or   a                                                          ; $741a
+	jp   nz, IncDayPassedAnimStep                                   ; $741b
 
-	ld   a, [wInGameButtonsPressed]                                  ; $7425: $fa $10 $c2
-	and  $03                                         ; $7428: $e6 $03
-	ret  z                                           ; $742a: $c8
+; Inc misc counter, going to next substate after 60 frames
+	ld   a, [hl]                                                    ; $741e
+	inc  [hl]                                                       ; $741f
+	cp   $3c                                                        ; $7420
+	jp   nc, IncDayPassedAnimStep                                   ; $7422
 
-	jp   IncDayPassedAnimStep                               ; $742b: $c3 $b8 $73
+; Can also go to next substate if A pressed
+	ld   a, [wInGameButtonsPressed]                                 ; $7425
+	and  PADF_B|PADF_A                                              ; $7428
+	ret  z                                                          ; $742a
 
-
-DayPassedAnimationStep3:
-	ld   a, [wDayPassedMiscCounterIdx]                                  ; $742e: $fa $19 $cc
-	srl  a                                           ; $7431: $cb $3f
-	srl  a                                           ; $7433: $cb $3f
-	call Call_004_7495                               ; $7435: $cd $95 $74
-	ld   a, [wDayPassedMiscCounterIdx]                                  ; $7438: $fa $19 $cc
-	or   a                                           ; $743b: $b7
-	jr   nz, jr_004_7460                             ; $743c: $20 $22
-
-	xor  a                                           ; $743e: $af
-	ld   [wStartingColorIdxToLoadCompDataFor], a                                  ; $743f: $ea $62 $c3
-	ld   a, $40                                      ; $7442: $3e $40
-	ld   [wNumPaletteColorsToLoadCompDataFor], a                                  ; $7444: $ea $63 $c3
-	ld   a, $03                                      ; $7447: $3e $03
-	ld   b, $00                                      ; $7449: $06 $00
-	ld   hl, wBGPalettes                                   ; $744b: $21 $de $c2
-	ld   c, $a3                                      ; $744e: $0e $a3
-	ld   de, $70cc                                   ; $7450: $11 $cc $70
-	call FarLoadPaletteValsFadeToValsAndSetFadeSpeed                                       ; $7453: $cd $48 $07
-	ld   a, $11                                      ; $7456: $3e $11
-	call PlaySong                                       ; $7458: $cd $92 $1a
-	ld   a, $07                                      ; $745b: $3e $07
-	call SafeSetAudVolForMultipleChannels                                       ; $745d: $cd $e0 $1c
-
-jr_004_7460:
-	ld   hl, wDayPassedMiscCounterIdx                                   ; $7460: $21 $19 $cc
-	ld   a, [$cc1a]                                  ; $7463: $fa $1a $cc
-	or   a                                           ; $7466: $b7
-	jr   z, jr_004_746f                              ; $7467: $28 $06
-
-	ld   a, [hl]                                     ; $7469: $7e
-	add  $0f                                         ; $746a: $c6 $0f
-	and  $f8                                         ; $746c: $e6 $f8
-	ld   [hl], a                                     ; $746e: $77
-
-jr_004_746f:
-	ld   a, [hl]                                     ; $746f: $7e
-	inc  [hl]                                        ; $7470: $34
-	cp   $7f                                         ; $7471: $fe $7f
-	jr   nc, jr_004_747e                             ; $7473: $30 $09
-
-	and  $0f                                         ; $7475: $e6 $0f
-	ret  nz                                          ; $7477: $c0
-
-	ld   bc, $0040                                   ; $7478: $01 $40 $00
-	jp   FadePalettesAndSetRangeToUpdate                                       ; $747b: $c3 $32 $08
+	jp   IncDayPassedAnimStep                                       ; $742b
 
 
-jr_004_747e:
-	ld   a, $a3                                      ; $747e: $3e $a3
-	ld   hl, $70cc                                   ; $7480: $21 $cc $70
-	ld   de, wBGPalettes                                   ; $7483: $11 $de $c2
-	ld   bc, $0080                                   ; $7486: $01 $80 $00
-	call FarMemCopy                                       ; $7489: $cd $b2 $09
-	ld   bc, $003f                                   ; $748c: $01 $3f $00
-	call SetBGandOBJPaletteRangesToUpdate                                       ; $748f: $cd $aa $04
-	jp   IncDayPassedAnimStep                               ; $7492: $c3 $b8 $73
+DayPassedAnimationStep3_Main:
+; Every 4 frames, 'fade in' the text sprite
+	ld   a, [wDayPassedMiscCounterIdx]                              ; $742e
+	srl  a                                                          ; $7431
+	srl  a                                                          ; $7433
+	call UpdateDayPassedTextSprite                                  ; $7435
+
+; Jump if we've already set palettes and audio
+	ld   a, [wDayPassedMiscCounterIdx]                              ; $7438
+	or   a                                                          ; $743b
+	jr   nz, .afterInit                                             ; $743c
+
+; Set BG + OBJ day palettes to fade to, at 1/8th speed
+	xor  a                                                          ; $743e
+	ld   [wStartingColorIdxToLoadCompDataFor], a                    ; $743f
+	ld   a, $40                                                     ; $7442
+	ld   [wNumPaletteColorsToLoadCompDataFor], a                    ; $7444
+
+	ld   a, $03                                                     ; $7447
+	ld   b, $00                                                     ; $7449
+	ld   hl, wBGPalettes                                            ; $744b
+	ld   c, BANK(Palettes_DayPassedDay)                             ; $744e
+	ld   de, Palettes_DayPassedDay                                  ; $7450
+	call FarLoadPaletteValsFadeToValsAndSetFadeSpeed                ; $7453
+
+; Play song, and set max vol
+	ld   a, SONG_11                                                 ; $7456
+	call PlaySong                                                   ; $7458
+
+	ld   a, $07                                                     ; $745b
+	call SafeSetAudVolForMultipleChannels                           ; $745d
+
+.afterInit:
+; If holding B..
+	ld   hl, wDayPassedMiscCounterIdx                               ; $7460
+	ld   a, [wDayPassedIsHoldingB]                                  ; $7463
+	or   a                                                          ; $7466
+	jr   z, .afterBCheck                                            ; $7467
+
+; Skip counter to next multiple of 8
+	ld   a, [hl]                                                    ; $7469
+	add  $0f                                                        ; $746a
+	and  $f8                                                        ; $746c
+	ld   [hl], a                                                    ; $746e
+
+.afterBCheck:
+; Inc the counter, and go to next step once $7f frames passed
+	ld   a, [hl]                                                    ; $746f
+	inc  [hl]                                                       ; $7470
+	cp   $7f                                                        ; $7471
+	jr   nc, .end                                                   ; $7473
+
+; Every 16 frames..
+	and  $0f                                                        ; $7475
+	ret  nz                                                         ; $7477
+
+; Fade palettes
+	ld   bc, $0040                                                  ; $7478
+	jp   FadePalettesAndSetRangeToUpdate                            ; $747b
+
+.end:
+; Set final palettes for BG + OBJ, then go to the next anim step
+	ld   a, BANK(Palettes_DayPassedDay)                             ; $747e
+	ld   hl, Palettes_DayPassedDay                                  ; $7480
+	ld   de, wBGPalettes                                            ; $7483
+	ld   bc, NUM_PALETTE_BYTES * 2                                  ; $7486
+	call FarMemCopy                                                 ; $7489
+
+	ldbc $00, $3f                                                   ; $748c
+	call SetBGandOBJPaletteRangesToUpdate                           ; $748f
+
+	jp   IncDayPassedAnimStep                                       ; $7492
 
 
-Call_004_7495:
+; A - text fade counter
+UpdateDayPassedTextSprite:
+; Store counter in B
 	ld   b, a                                        ; $7495: $47
+
+;
 	ld   a, [sCurrDay]                                  ; $7496: $fa $b0 $af
 	cp   $1f                                         ; $7499: $fe $1f
 	ld   a, b                                        ; $749b: $78
-	jp   z, Jump_004_766e                            ; $749c: $ca $6e $76
+	jp   z, .lastDay                            ; $749c: $ca $6e $76
 
 	cp   $20                                         ; $749f: $fe $20
-	jp   nc, Jump_004_7555                           ; $74a1: $d2 $55 $75
+	jp   nc, .loadSprite1                           ; $74a1: $d2 $55 $75
 
+; copies certain sprites into a tile data region for masking
+; copy "Trial Enlistment" kanji
 	push af                                          ; $74a4: $f5
+if def(VWF)
+	ld   de, $d800
+	ld   hl, $d140
+	ld   bc, $140
+else
 	ld   de, $d580                                   ; $74a5: $11 $80 $d5
 	ld   hl, $d300                                   ; $74a8: $21 $00 $d3
 	ld   bc, $0100                                   ; $74ab: $01 $00 $01
+endc
 	call MemCopy                                       ; $74ae: $cd $a9 $09
+
+; copy "Day" kanji
+if def(VWF)
+	ld   de, $d940
+	ld   hl, $d280
+	ld   bc, $60
+else
 	ld   de, $d6c0                                   ; $74b1: $11 $c0 $d6
 	ld   hl, $d4c0                                   ; $74b4: $21 $c0 $d4
 	ld   bc, $0080                                   ; $74b7: $01 $80 $00
+endc
 	call MemCopy                                       ; $74ba: $cd $a9 $09
+
+; copy "-day" kanji
+if def(VWF)
+	ds $74d4-@, 0
+else
 	ld   de, $d780                                   ; $74bd: $11 $80 $d7
 	ld   hl, $d540                                   ; $74c0: $21 $40 $d5
 	ld   bc, $0040                                   ; $74c3: $01 $40 $00
 	call MemCopy                                       ; $74c6: $cd $a9 $09
+
+; Useless memset
 	ld   hl, $3800                                   ; $74c9: $21 $00 $38
 	ld   bc, $0020                                   ; $74cc: $01 $20 $00
 	ld   a, $00                                      ; $74cf: $3e $00
 	call MemSet                                       ; $74d1: $cd $96 $09
+endc
+
+; Get curr day 10s in H, 1s in L
 	ld   a, [sCurrDay]                                  ; $74d4: $fa $b0 $af
 	ld   h, a                                        ; $74d7: $67
 	ld   l, $0a                                      ; $74d8: $2e $0a
 	call HLequHdivModL                                       ; $74da: $cd $fb $0b
+
+; HL = 10s * $20
 	ld   a, h                                        ; $74dd: $7c
 	or   a                                           ; $74de: $b7
 	push hl                                          ; $74df: $e5
 	ld   l, $20                                      ; $74e0: $2e $20
-	call AequHtimesL                                       ; $74e2: $cd $ac $0b
+	call HLandAequHtimesL                                       ; $74e2: $cd $ac $0b
+
+;
 	ld   bc, $d000                                   ; $74e5: $01 $00 $d0
 	add  hl, bc                                      ; $74e8: $09
+if def(VWF)
+	ld   de, $d9a0
+else
 	ld   de, $d680                                   ; $74e9: $11 $80 $d6
+endc
 	ld   bc, $0020                                   ; $74ec: $01 $20 $00
 	call MemCopy                                       ; $74ef: $cd $a9 $09
+
+; HL = 1s * $20
 	pop  hl                                          ; $74f2: $e1
 	ld   h, l                                        ; $74f3: $65
 	ld   l, $20                                      ; $74f4: $2e $20
-	call AequHtimesL                                       ; $74f6: $cd $ac $0b
+	call HLandAequHtimesL                                       ; $74f6: $cd $ac $0b
+
+;
 	ld   bc, $d000                                   ; $74f9: $01 $00 $d0
 	add  hl, bc                                      ; $74fc: $09
+if def(VWF)
+	ld   de, $d9c0
+else
 	ld   de, $d6a0                                   ; $74fd: $11 $a0 $d6
+endc
 	ld   bc, $0020                                   ; $7500: $01 $20 $00
 	call MemCopy                                       ; $7503: $cd $a9 $09
+
+; L = day of week, 0-idxed (0 = Sunday)
 	ld   a, [sCurrDay]                                  ; $7506: $fa $b0 $af
 	dec  a                                           ; $7509: $3d
 	ld   h, a                                        ; $750a: $67
 	ld   l, $07                                      ; $750b: $2e $07
 	call HLequHdivModL                                       ; $750d: $cd $fb $0b
+
+; HL = day of week * $40
 	ld   h, l                                        ; $7510: $65
+if def(VWF)
+	ld   l, $a0
+else
 	ld   l, $40                                      ; $7511: $2e $40
-	call AequHtimesL                                       ; $7513: $cd $ac $0b
+endc
+	call HLandAequHtimesL                                       ; $7513: $cd $ac $0b
+
+;
+if def(VWF)
+	ld   bc, $d380
+	add  hl, bc
+	ld   de, $d9e0
+	ld   bc, $a0
+else
 	ld   bc, $d140                                   ; $7516: $01 $40 $d1
 	add  hl, bc                                      ; $7519: $09
 	ld   de, $d740                                   ; $751a: $11 $40 $d7
 	ld   bc, $0040                                   ; $751d: $01 $40 $00
+endc
 	call MemCopy                                       ; $7520: $cd $a9 $09
+
+; HL = 'fade' counter * 8
 	pop  af                                          ; $7523: $f1
 	ld   h, $00                                      ; $7524: $26 $00
 	ld   l, a                                        ; $7526: $6f
 	add  hl, hl                                      ; $7527: $29
 	add  hl, hl                                      ; $7528: $29
 	add  hl, hl                                      ; $7529: $29
-	ld   bc, $756e                                   ; $752a: $01 $6e $75
+
+;
+	ld   bc, .masks                                   ; $752a: $01 $6e $75
 	add  hl, bc                                      ; $752d: $09
+if def(VWF)
+	ld   de, $d800
+	ld   b, $28
+else
 	ld   de, $d580                                   ; $752e: $11 $80 $d5
 	ld   b, $24                                      ; $7531: $06 $24
+endc
 
-jr_004_7533:
+.loopB1:
 	push hl                                          ; $7533: $e5
 	ld   c, $08                                      ; $7534: $0e $08
 
-jr_004_7536:
+.loopC1:
 	ld   a, [de]                                     ; $7536: $1a
 	and  [hl]                                        ; $7537: $a6
 	ld   [de], a                                     ; $7538: $12
@@ -7471,20 +7567,29 @@ jr_004_7536:
 	inc  de                                          ; $753d: $13
 	inc  hl                                          ; $753e: $23
 	dec  c                                           ; $753f: $0d
-	jr   nz, jr_004_7536                             ; $7540: $20 $f4
+	jr   nz, .loopC1                             ; $7540: $20 $f4
 
 	pop  hl                                          ; $7542: $e1
 	dec  b                                           ; $7543: $05
-	jr   nz, jr_004_7533                             ; $7544: $20 $ed
+	jr   nz, .loopB1                             ; $7544: $20 $ed
 
+; Finally, enqueue built up sprites
+if def(VWF)
+	ld   c, $81
+	ld   de, $8000
+	ld   a, $07
+	ld   hl, $d800
+	ld   b, $28
+else
 	ld   c, $80                                      ; $7546: $0e $80
 	ld   de, $8580                                   ; $7548: $11 $80 $85
 	ld   a, $07                                      ; $754b: $3e $07
 	ld   hl, $d580                                   ; $754d: $21 $80 $d5
 	ld   b, $24                                      ; $7550: $06 $24
+endc
 	call EnqueueHDMATransfer                                       ; $7552: $cd $7c $02
 
-Jump_004_7555:
+.loadSprite1:
 	ld   a, $0c                                      ; $7555: $3e $0c
 	ld   [wSpriteGroup], a                                  ; $7557: $ea $1a $c2
 	ld   a, [sCurrDay]                                  ; $755a: $fa $b0 $af
@@ -7498,285 +7603,102 @@ Jump_004_7555:
 	call LoadSpriteFromMainTable                                       ; $756a: $cd $16 $0e
 	ret                                              ; $756d: $c9
 
+.masks:
+	db $80, $00, $00, $00, $00, $00, $00, $01
+	db $a0, $00, $00, $00, $00, $00, $00, $05
+	db $a8, $00, $00, $00, $00, $00, $00, $15
+	db $aa, $00, $00, $00, $00, $00, $00, $55
+	db $aa, $80, $00, $00, $00, $00, $01, $55
+	db $aa, $a0, $00, $00, $00, $00, $05, $55
+	db $aa, $a8, $00, $00, $00, $00, $15, $55
+	db $aa, $aa, $00, $00, $00, $00, $55, $55
+	db $aa, $aa, $80, $00, $00, $01, $55, $55
+	db $aa, $aa, $a0, $00, $00, $05, $55, $55
+	db $aa, $aa, $a8, $00, $00, $15, $55, $55
+	db $aa, $aa, $aa, $00, $00, $55, $55, $55
+	db $aa, $aa, $aa, $80, $01, $55, $55, $55
+	db $aa, $aa, $aa, $a0, $05, $55, $55, $55
+	db $aa, $aa, $aa, $a8, $15, $55, $55, $55
+	db $aa, $aa, $aa, $aa, $55, $55, $55, $55
+	db $aa, $aa, $aa, $ab, $d5, $55, $55, $55
+	db $aa, $aa, $aa, $af, $f5, $55, $55, $55
+	db $aa, $aa, $aa, $bf, $fd, $55, $55, $55
+	db $aa, $aa, $aa, $ff, $ff, $55, $55, $55
+	db $aa, $aa, $ab, $ff, $ff, $d5, $55, $55
+	db $aa, $aa, $af, $ff, $ff, $f5, $55, $55
+	db $aa, $aa, $bf, $ff, $ff, $fd, $55, $55
+	db $aa, $aa, $ff, $ff, $ff, $ff, $55, $55
+	db $aa, $ab, $ff, $ff, $ff, $ff, $d5, $55
+	db $aa, $af, $ff, $ff, $ff, $ff, $f5, $55
+	db $aa, $bf, $ff, $ff, $ff, $ff, $fd, $55
+	db $aa, $ff, $ff, $ff, $ff, $ff, $ff, $55
+	db $ab, $ff, $ff, $ff, $ff, $ff, $ff, $d5
+	db $af, $ff, $ff, $ff, $ff, $ff, $ff, $f5
+	db $bf, $ff, $ff, $ff, $ff, $ff, $ff, $fd
+	db $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff
 
-	add  b                                           ; $756e: $80
-	nop                                              ; $756f: $00
-	nop                                              ; $7570: $00
-	nop                                              ; $7571: $00
-	nop                                              ; $7572: $00
-	nop                                              ; $7573: $00
-	nop                                              ; $7574: $00
-	ld   bc, $00a0                                   ; $7575: $01 $a0 $00
-	nop                                              ; $7578: $00
-	nop                                              ; $7579: $00
-	nop                                              ; $757a: $00
-	nop                                              ; $757b: $00
-	nop                                              ; $757c: $00
-	dec  b                                           ; $757d: $05
-	xor  b                                           ; $757e: $a8
-	nop                                              ; $757f: $00
-	nop                                              ; $7580: $00
-	nop                                              ; $7581: $00
-	nop                                              ; $7582: $00
-	nop                                              ; $7583: $00
-	nop                                              ; $7584: $00
-	dec  d                                           ; $7585: $15
-	xor  d                                           ; $7586: $aa
-	nop                                              ; $7587: $00
-	nop                                              ; $7588: $00
-	nop                                              ; $7589: $00
-	nop                                              ; $758a: $00
-	nop                                              ; $758b: $00
-	nop                                              ; $758c: $00
-	ld   d, l                                        ; $758d: $55
-	xor  d                                           ; $758e: $aa
-	add  b                                           ; $758f: $80
-	nop                                              ; $7590: $00
-	nop                                              ; $7591: $00
-	nop                                              ; $7592: $00
-	nop                                              ; $7593: $00
-	ld   bc, $aa55                                   ; $7594: $01 $55 $aa
-	and  b                                           ; $7597: $a0
-	nop                                              ; $7598: $00
-	nop                                              ; $7599: $00
-	nop                                              ; $759a: $00
-	nop                                              ; $759b: $00
-	dec  b                                           ; $759c: $05
-	ld   d, l                                        ; $759d: $55
-	xor  d                                           ; $759e: $aa
-	xor  b                                           ; $759f: $a8
-	nop                                              ; $75a0: $00
-	nop                                              ; $75a1: $00
-	nop                                              ; $75a2: $00
-	nop                                              ; $75a3: $00
-	dec  d                                           ; $75a4: $15
-	ld   d, l                                        ; $75a5: $55
-	xor  d                                           ; $75a6: $aa
-	xor  d                                           ; $75a7: $aa
-	nop                                              ; $75a8: $00
-	nop                                              ; $75a9: $00
-	nop                                              ; $75aa: $00
-	nop                                              ; $75ab: $00
-	ld   d, l                                        ; $75ac: $55
-	ld   d, l                                        ; $75ad: $55
-	xor  d                                           ; $75ae: $aa
-	xor  d                                           ; $75af: $aa
-	add  b                                           ; $75b0: $80
-	nop                                              ; $75b1: $00
-	nop                                              ; $75b2: $00
-	ld   bc, $5555                                   ; $75b3: $01 $55 $55
-	xor  d                                           ; $75b6: $aa
-	xor  d                                           ; $75b7: $aa
-	and  b                                           ; $75b8: $a0
-	nop                                              ; $75b9: $00
-	nop                                              ; $75ba: $00
-	dec  b                                           ; $75bb: $05
-	ld   d, l                                        ; $75bc: $55
-	ld   d, l                                        ; $75bd: $55
-	xor  d                                           ; $75be: $aa
-	xor  d                                           ; $75bf: $aa
-	xor  b                                           ; $75c0: $a8
-	nop                                              ; $75c1: $00
-	nop                                              ; $75c2: $00
-	dec  d                                           ; $75c3: $15
-	ld   d, l                                        ; $75c4: $55
-	ld   d, l                                        ; $75c5: $55
-	xor  d                                           ; $75c6: $aa
-	xor  d                                           ; $75c7: $aa
-	xor  d                                           ; $75c8: $aa
-	nop                                              ; $75c9: $00
-	nop                                              ; $75ca: $00
-	ld   d, l                                        ; $75cb: $55
-	ld   d, l                                        ; $75cc: $55
-	ld   d, l                                        ; $75cd: $55
-	xor  d                                           ; $75ce: $aa
-	xor  d                                           ; $75cf: $aa
-	xor  d                                           ; $75d0: $aa
-	add  b                                           ; $75d1: $80
-	ld   bc, $5555                                   ; $75d2: $01 $55 $55
-	ld   d, l                                        ; $75d5: $55
-	xor  d                                           ; $75d6: $aa
-	xor  d                                           ; $75d7: $aa
-	xor  d                                           ; $75d8: $aa
-	and  b                                           ; $75d9: $a0
-	dec  b                                           ; $75da: $05
-	ld   d, l                                        ; $75db: $55
-	ld   d, l                                        ; $75dc: $55
-	ld   d, l                                        ; $75dd: $55
-	xor  d                                           ; $75de: $aa
-	xor  d                                           ; $75df: $aa
-	xor  d                                           ; $75e0: $aa
-	xor  b                                           ; $75e1: $a8
-	dec  d                                           ; $75e2: $15
-	ld   d, l                                        ; $75e3: $55
-	ld   d, l                                        ; $75e4: $55
-	ld   d, l                                        ; $75e5: $55
-	xor  d                                           ; $75e6: $aa
-	xor  d                                           ; $75e7: $aa
-	xor  d                                           ; $75e8: $aa
-	xor  d                                           ; $75e9: $aa
-	ld   d, l                                        ; $75ea: $55
-	ld   d, l                                        ; $75eb: $55
-	ld   d, l                                        ; $75ec: $55
-	ld   d, l                                        ; $75ed: $55
-	xor  d                                           ; $75ee: $aa
-	xor  d                                           ; $75ef: $aa
-	xor  d                                           ; $75f0: $aa
-	xor  e                                           ; $75f1: $ab
-	push de                                          ; $75f2: $d5
-	ld   d, l                                        ; $75f3: $55
-	ld   d, l                                        ; $75f4: $55
-	ld   d, l                                        ; $75f5: $55
-	xor  d                                           ; $75f6: $aa
-	xor  d                                           ; $75f7: $aa
-	xor  d                                           ; $75f8: $aa
-	xor  a                                           ; $75f9: $af
-	push af                                          ; $75fa: $f5
-	ld   d, l                                        ; $75fb: $55
-	ld   d, l                                        ; $75fc: $55
-	ld   d, l                                        ; $75fd: $55
-	xor  d                                           ; $75fe: $aa
-	xor  d                                           ; $75ff: $aa
-	xor  d                                           ; $7600: $aa
-	cp   a                                           ; $7601: $bf
-	db   $fd                                         ; $7602: $fd
-	ld   d, l                                        ; $7603: $55
-	ld   d, l                                        ; $7604: $55
-	ld   d, l                                        ; $7605: $55
-	xor  d                                           ; $7606: $aa
-	xor  d                                           ; $7607: $aa
-	xor  d                                           ; $7608: $aa
-	rst  $38                                         ; $7609: $ff
-	rst  $38                                         ; $760a: $ff
-	ld   d, l                                        ; $760b: $55
-	ld   d, l                                        ; $760c: $55
-	ld   d, l                                        ; $760d: $55
-	xor  d                                           ; $760e: $aa
-	xor  d                                           ; $760f: $aa
-	xor  e                                           ; $7610: $ab
-	rst  $38                                         ; $7611: $ff
-	rst  $38                                         ; $7612: $ff
-	push de                                          ; $7613: $d5
-	ld   d, l                                        ; $7614: $55
-	ld   d, l                                        ; $7615: $55
-	xor  d                                           ; $7616: $aa
-	xor  d                                           ; $7617: $aa
-	xor  a                                           ; $7618: $af
-	rst  $38                                         ; $7619: $ff
-	rst  $38                                         ; $761a: $ff
-	push af                                          ; $761b: $f5
-	ld   d, l                                        ; $761c: $55
-	ld   d, l                                        ; $761d: $55
-	xor  d                                           ; $761e: $aa
-	xor  d                                           ; $761f: $aa
-	cp   a                                           ; $7620: $bf
-	rst  $38                                         ; $7621: $ff
-	rst  $38                                         ; $7622: $ff
-	db   $fd                                         ; $7623: $fd
-	ld   d, l                                        ; $7624: $55
-	ld   d, l                                        ; $7625: $55
-	xor  d                                           ; $7626: $aa
-	xor  d                                           ; $7627: $aa
-	rst  $38                                         ; $7628: $ff
-	rst  $38                                         ; $7629: $ff
-	rst  $38                                         ; $762a: $ff
-	rst  $38                                         ; $762b: $ff
-	ld   d, l                                        ; $762c: $55
-	ld   d, l                                        ; $762d: $55
-	xor  d                                           ; $762e: $aa
-	xor  e                                           ; $762f: $ab
-	rst  $38                                         ; $7630: $ff
-	rst  $38                                         ; $7631: $ff
-	rst  $38                                         ; $7632: $ff
-	rst  $38                                         ; $7633: $ff
-	push de                                          ; $7634: $d5
-	ld   d, l                                        ; $7635: $55
-	xor  d                                           ; $7636: $aa
-	xor  a                                           ; $7637: $af
-	rst  $38                                         ; $7638: $ff
-	rst  $38                                         ; $7639: $ff
-	rst  $38                                         ; $763a: $ff
-	rst  $38                                         ; $763b: $ff
-	push af                                          ; $763c: $f5
-	ld   d, l                                        ; $763d: $55
-	xor  d                                           ; $763e: $aa
-	cp   a                                           ; $763f: $bf
-	rst  $38                                         ; $7640: $ff
-	rst  $38                                         ; $7641: $ff
-	rst  $38                                         ; $7642: $ff
-	rst  $38                                         ; $7643: $ff
-	db   $fd                                         ; $7644: $fd
-	ld   d, l                                        ; $7645: $55
-	xor  d                                           ; $7646: $aa
-	rst  $38                                         ; $7647: $ff
-	rst  $38                                         ; $7648: $ff
-	rst  $38                                         ; $7649: $ff
-	rst  $38                                         ; $764a: $ff
-	rst  $38                                         ; $764b: $ff
-	rst  $38                                         ; $764c: $ff
-	ld   d, l                                        ; $764d: $55
-	xor  e                                           ; $764e: $ab
-	rst  $38                                         ; $764f: $ff
-	rst  $38                                         ; $7650: $ff
-	rst  $38                                         ; $7651: $ff
-	rst  $38                                         ; $7652: $ff
-	rst  $38                                         ; $7653: $ff
-	rst  $38                                         ; $7654: $ff
-	push de                                          ; $7655: $d5
-	xor  a                                           ; $7656: $af
-	rst  $38                                         ; $7657: $ff
-	rst  $38                                         ; $7658: $ff
-	rst  $38                                         ; $7659: $ff
-	rst  $38                                         ; $765a: $ff
-	rst  $38                                         ; $765b: $ff
-	rst  $38                                         ; $765c: $ff
-	push af                                          ; $765d: $f5
-	cp   a                                           ; $765e: $bf
-	rst  $38                                         ; $765f: $ff
-	rst  $38                                         ; $7660: $ff
-	rst  $38                                         ; $7661: $ff
-	rst  $38                                         ; $7662: $ff
-	rst  $38                                         ; $7663: $ff
-	rst  $38                                         ; $7664: $ff
-	db   $fd                                         ; $7665: $fd
-	rst  $38                                         ; $7666: $ff
-	rst  $38                                         ; $7667: $ff
-	rst  $38                                         ; $7668: $ff
-	rst  $38                                         ; $7669: $ff
-	rst  $38                                         ; $766a: $ff
-	rst  $38                                         ; $766b: $ff
-	rst  $38                                         ; $766c: $ff
-	rst  $38                                         ; $766d: $ff
-
-Jump_004_766e:
+.lastDay:
 	cp   $20                                         ; $766e: $fe $20
-	jp   nc, Jump_004_76e7                           ; $7670: $d2 $e7 $76
+	jp   nc, .loadSprite2                           ; $7670: $d2 $e7 $76
 
 	push af                                          ; $7673: $f5
+if def(VWF)
+	ld   de, $d800
+	ld   hl, $d140
+	ld   bc, $140
+else
 	ld   de, $d580                                   ; $7674: $11 $80 $d5
 	ld   hl, $d300                                   ; $7677: $21 $00 $d3
 	ld   bc, $0100                                   ; $767a: $01 $00 $01
+endc
 	call MemCopy                                       ; $767d: $cd $a9 $09
+
+;
+if def(VWF)
+	ld   de, $d940
+	ld   hl, $d2e0
+	ld   bc, $a0
+else
 	ld   de, $d680                                   ; $7680: $11 $80 $d6
 	ld   hl, $d440                                   ; $7683: $21 $40 $d4
 	ld   bc, $00c0                                   ; $7686: $01 $c0 $00
+endc
 	call MemCopy                                       ; $7689: $cd $a9 $09
+
+if def(VWF)
+	ds $7698-@, 0
+else
 	ld   de, $d780                                   ; $768c: $11 $80 $d7
 	ld   hl, $d540                                   ; $768f: $21 $40 $d5
 	ld   bc, $0040                                   ; $7692: $01 $40 $00
 	call MemCopy                                       ; $7695: $cd $a9 $09
+endc
+
 	ld   a, [sCurrDay]                                  ; $7698: $fa $b0 $af
 	dec  a                                           ; $769b: $3d
 	ld   h, a                                        ; $769c: $67
 	ld   l, $07                                      ; $769d: $2e $07
 	call HLequHdivModL                                       ; $769f: $cd $fb $0b
 	ld   h, l                                        ; $76a2: $65
+if def(VWF)
+	ld   l, $a0
+else
 	ld   l, $40                                      ; $76a3: $2e $40
-	call AequHtimesL                                       ; $76a5: $cd $ac $0b
+endc
+	call HLandAequHtimesL                                       ; $76a5: $cd $ac $0b
+
+;
+if def(VWF)
+	ld   bc, $d380
+	add  hl, bc
+	ld   de, $d9e0
+	ld   bc, $a0
+else
 	ld   bc, $d140                                   ; $76a8: $01 $40 $d1
 	add  hl, bc                                      ; $76ab: $09
 	ld   de, $d740                                   ; $76ac: $11 $40 $d7
 	ld   bc, $0040                                   ; $76af: $01 $40 $00
+endc
 	call MemCopy                                       ; $76b2: $cd $a9 $09
 	pop  af                                          ; $76b5: $f1
 	ld   h, $00                                      ; $76b6: $26 $00
@@ -7786,14 +7708,19 @@ Jump_004_766e:
 	add  hl, hl                                      ; $76bb: $29
 	ld   bc, $756e                                   ; $76bc: $01 $6e $75
 	add  hl, bc                                      ; $76bf: $09
+if def(VWF)
+	ld   de, $d800
+	ld   b, $28
+else
 	ld   de, $d580                                   ; $76c0: $11 $80 $d5
 	ld   b, $24                                      ; $76c3: $06 $24
+endc
 
-jr_004_76c5:
+.loopC2:
 	push hl                                          ; $76c5: $e5
 	ld   c, $08                                      ; $76c6: $0e $08
 
-jr_004_76c8:
+.loopB2:
 	ld   a, [de]                                     ; $76c8: $1a
 	and  [hl]                                        ; $76c9: $a6
 	ld   [de], a                                     ; $76ca: $12
@@ -7804,20 +7731,28 @@ jr_004_76c8:
 	inc  de                                          ; $76cf: $13
 	inc  hl                                          ; $76d0: $23
 	dec  c                                           ; $76d1: $0d
-	jr   nz, jr_004_76c8                             ; $76d2: $20 $f4
+	jr   nz, .loopB2                             ; $76d2: $20 $f4
 
 	pop  hl                                          ; $76d4: $e1
 	dec  b                                           ; $76d5: $05
-	jr   nz, jr_004_76c5                             ; $76d6: $20 $ed
+	jr   nz, .loopC2                             ; $76d6: $20 $ed
 
+if def(VWF)
+	ld   c, $81
+	ld   de, $8000
+	ld   a, $07
+	ld   hl, $d800
+	ld   b, $28
+else
 	ld   c, $80                                      ; $76d8: $0e $80
 	ld   de, $8580                                   ; $76da: $11 $80 $85
 	ld   a, $07                                      ; $76dd: $3e $07
 	ld   hl, $d580                                   ; $76df: $21 $80 $d5
 	ld   b, $24                                      ; $76e2: $06 $24
+endc
 	call EnqueueHDMATransfer                                       ; $76e4: $cd $7c $02
 
-Jump_004_76e7:
+.loadSprite2:
 	ld   a, $0c                                      ; $76e7: $3e $0c
 	ld   [wSpriteGroup], a                                  ; $76e9: $ea $1a $c2
 	ld   bc, $2430                                   ; $76ec: $01 $30 $24
@@ -7826,10 +7761,10 @@ Jump_004_76e7:
 	ret                                              ; $76f4: $c9
 
 
-DayPassedAnimationStep4:
+DayPassedAnimationStep4_WaitToExit:
 	ld   a, $1f                                      ; $76f5: $3e $1f
-	call Call_004_7495                               ; $76f7: $cd $95 $74
-	ld   a, [$cc1a]                                  ; $76fa: $fa $1a $cc
+	call UpdateDayPassedTextSprite                               ; $76f7: $cd $95 $74
+	ld   a, [wDayPassedIsHoldingB]                                  ; $76fa: $fa $1a $cc
 	or   a                                           ; $76fd: $b7
 	jp   nz, IncDayPassedAnimStep                           ; $76fe: $c2 $b8 $73
 
@@ -7847,9 +7782,9 @@ DayPassedAnimationStep4:
 	jp   IncDayPassedAnimStep                               ; $7715: $c3 $b8 $73
 
 
-DayPassedAnimationStep5:
+DayPassedAnimationStep5_Exit:
 	ld   a, $ff                                      ; $7718: $3e $ff
-	call Call_004_7495                               ; $771a: $cd $95 $74
+	call UpdateDayPassedTextSprite                               ; $771a: $cd $95 $74
 	ld   a, [wDayPassedMiscCounterIdx]                                  ; $771d: $fa $19 $cc
 	or   a                                           ; $7720: $b7
 	jr   nz, jr_004_773b                             ; $7721: $20 $18
@@ -7867,7 +7802,7 @@ DayPassedAnimationStep5:
 
 jr_004_773b:
 	ld   hl, wDayPassedMiscCounterIdx                                   ; $773b: $21 $19 $cc
-	ld   a, [$cc1a]                                  ; $773e: $fa $1a $cc
+	ld   a, [wDayPassedIsHoldingB]                                  ; $773e: $fa $1a $cc
 	or   a                                           ; $7741: $b7
 	jr   z, jr_004_774a                              ; $7742: $28 $06
 
@@ -8059,6 +7994,13 @@ SpecificCharEndingHook:
 	pop  af
 	sla  a
 	ld   h, $00
+	ret
+
+
+DayPassedTileDataHook:
+	call RLEXorCopy
+
+	M_FarCall _DayPassedTileDataHook
 	ret
 
 endc

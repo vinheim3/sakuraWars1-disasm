@@ -1464,7 +1464,7 @@ jr_079_45fa:
 	rst  $20                                         ; $4690: $e7
 	cp   $85                                         ; $4691: $fe $85
 	nop                                              ; $4693: $00
-	ld   [$cb30], sp                                 ; $4694: $08 $30 $cb
+	ld   [wExploreHoveredSpriteSpecIdxUsed], sp                                 ; $4694: $08 $30 $cb
 	ld   d, c                                        ; $4697: $51
 	ld   d, a                                        ; $4698: $57
 	ld   b, $03                                      ; $4699: $06 $03

@@ -2403,6 +2403,7 @@ ClearDisplayRegsAllowVBlankInt::
 ; BC - byte sequences length
 ; DE - sequence 1
 ; HL - sequence 2
+; Returns z flag set if matching
 CheckIf2ByteSequencesMatch::
 .loop:
 ; Ret with nz if [de]-[hl] != 0 (no match)
@@ -2458,7 +2459,7 @@ jr_000_0ba1:
 	ret                                              ; $0bab: $c9
 
 
-AequHtimesL::
+HLandAequHtimesL::
 	push bc                                                         ; $0bac
 
 ; BC = H
@@ -2523,14 +2524,13 @@ AequHtimesL::
 	jr   z, :+                                                      ; $0bf5
 	add  hl, bc                                                     ; $0bf7
 
-; Then set result in A
+; Then set result in A and L
 :	ld   a, l                                                       ; $0bf8
 	pop  bc                                                         ; $0bf9
 	ret                                                             ; $0bfa
 
 
-; Returns divisor in H
-; Returns remainder in L
+; Preserves AF, BC and DE
 HLequHdivModL::
 	push af                                                         ; $0bfb
 	xor  a                                                          ; $0bfc

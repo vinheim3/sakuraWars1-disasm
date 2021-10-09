@@ -104,22 +104,27 @@ jr_00a_4077:
 	ret                                              ; $4082: $c9
 
 
-; HL -
+; HL - pointer to sram area containing a Kurumi checksum
+; Returns 1 if checksum not matched
 Call_00a_4083:
 	push hl                                          ; $4083: $e5
+
+; Check checksum
 	ld   bc, $0150                                   ; $4084: $01 $50 $01
 	add  hl, bc                                      ; $4087: $09
-	ld   de, $40fc                                   ; $4088: $11 $fc $40
+	ld   de, KurumiChecksum                                   ; $4088: $11 $fc $40
 	ld   bc, $0010                                   ; $408b: $01 $10 $00
 	call CheckIf2ByteSequencesMatch                                       ; $408e: $cd $72 $0b
+
+; Return with 1 if the checksum is not correct
 	pop  hl                                          ; $4091: $e1
 	or   a                                           ; $4092: $b7
-	jr   z, jr_00a_4098                              ; $4093: $28 $03
+	jr   z, .match                              ; $4093: $28 $03
 
 	ld   a, $01                                      ; $4095: $3e $01
 	ret                                              ; $4097: $c9
 
-jr_00a_4098:
+.match:
 	push hl                                          ; $4098: $e5
 	call Call_00a_42ab                               ; $4099: $cd $ab $42
 	pop  hl                                          ; $409c: $e1
@@ -168,10 +173,13 @@ Call_00a_40d3:
 
 
 Call_00a_40e0:
+; Copy Kurumi checksum into sram
 	ld   de, $a150                                   ; $40e0: $11 $50 $a1
-	ld   hl, $40fc                                   ; $40e3: $21 $fc $40
+	ld   hl, KurumiChecksum                                   ; $40e3: $21 $fc $40
 	ld   bc, $0010                                   ; $40e6: $01 $10 $00
 	call MemCopy                                       ; $40e9: $cd $a9 $09
+
+;
 	ld   hl, $a000                                   ; $40ec: $21 $00 $a0
 	call Call_00a_410c                               ; $40ef: $cd $0c $41
 	ld   hl, $a000                                   ; $40f2: $21 $00 $a0
@@ -180,22 +188,14 @@ Call_00a_40e0:
 	ret                                              ; $40fb: $c9
 
 
-	ld   c, e                                        ; $40fc: $4b
-	ld   [hl], l                                     ; $40fd: $75
-	ld   [hl], d                                     ; $40fe: $72
-	ld   [hl], l                                     ; $40ff: $75
-	ld   l, l                                        ; $4100: $6d
-	ld   l, c                                        ; $4101: $69
-	ld   c, h                                        ; $4102: $4c
-	ld   l, a                                        ; $4103: $6f
-	halt                                             ; $4104: $76
-	ld   h, l                                        ; $4105: $65
-	ld   c, l                                        ; $4106: $4d
-	ld   h, c                                        ; $4107: $61
-	ld   l, l                                        ; $4108: $6d
-	ld   l, c                                        ; $4109: $69
-	ld   a, c                                        ; $410a: $79
-	ld   h, c                                        ; $410b: $61
+pushc
+setcharmap main
+
+KurumiChecksum:
+	db "KurumiLoveMamiya"
+
+popc
+
 
 Call_00a_410c:
 	push hl                                          ; $410c: $e5
@@ -510,9 +510,9 @@ GetCurrPoints::
 	ret                                                             ; $4254
 
 
-Func_0a_4255::
+todo_SetBaseSettingsDetails::
 	ld   de, $a102                                   ; $4255: $11 $02 $a1
-	ld   hl, sTextSpeedBaseCounter                                   ; $4258: $21 $b3 $b1
+	ld   hl, sTextSpeedCurrCounter                                   ; $4258: $21 $b3 $b1
 	ld   bc, $0006                                   ; $425b: $01 $06 $00
 	call MemCopy                                       ; $425e: $cd $a9 $09
 	ld   hl, $a000                                   ; $4261: $21 $00 $a0
@@ -521,8 +521,8 @@ Func_0a_4255::
 	ret                                              ; $426a: $c9
 
 
-Func_0a_426b::
-	ld   de, sTextSpeedBaseCounter                                   ; $426b: $11 $b3 $b1
+todo_GetBaseSettingsDetails::
+	ld   de, sTextSpeedCurrCounter                                   ; $426b: $11 $b3 $b1
 	ld   hl, $a102                                   ; $426e: $21 $02 $a1
 	ld   bc, $0006                                   ; $4271: $01 $06 $00
 	call MemCopy                                       ; $4274: $cd $a9 $09
@@ -1863,6 +1863,7 @@ Jump_00a_4a94:
 
 
 ; HL - scenery idx starting from 1
+; Returns pointer in HL
 GetPointerToSceneryDataSources:
 	ld   b, h                                                       ; $4af1
 	ld   c, l                                                       ; $4af2
@@ -3207,7 +3208,7 @@ jr_00a_5a94:
 	ret  z                                           ; $5aa1: $c8
 
 jr_00a_5aa2:
-	ld   a, [sTextSpeedBaseCounter]                                  ; $5aa2: $fa $b3 $b1
+	ld   a, [sTextSpeedCurrCounter]                                  ; $5aa2: $fa $b3 $b1
 	ld   [$cbe3], a                                  ; $5aa5: $ea $e3 $cb
 	call HDMAEnqueueNextTextBoxKanji                                       ; $5aa8: $cd $55 $10
 	ret                                              ; $5aab: $c9
@@ -3511,7 +3512,7 @@ Call_00a_5c6b:
 	ld   [wTitleScreenGirlHairAnimIdx], a                                  ; $5c88: $ea $12 $cc
 	ld   h, a                                        ; $5c8b: $67
 	ld   l, $c0                                      ; $5c8c: $2e $c0
-	call AequHtimesL                                       ; $5c8e: $cd $ac $0b
+	call HLandAequHtimesL                                       ; $5c8e: $cd $ac $0b
 	push hl                                          ; $5c91: $e5
 	ld   bc, $d240                                   ; $5c92: $01 $40 $d2
 	add  hl, bc                                      ; $5c95: $09
@@ -4347,7 +4348,7 @@ ProcessTitleScreenAnimations:
 ; It is 6 rows high
 	ld   h, a                                                       ; $6260
 	ld   l, SCRN_VX_B * 6                                           ; $6261
-	call AequHtimesL                                                ; $6263
+	call HLandAequHtimesL                                           ; $6263
 	push hl                                                         ; $6266
 
 ; The 4 6-row tile attr data is in the buffer after main title screen + copyright
@@ -7128,7 +7129,7 @@ ContinueMenuOptHandler:
 	xor  a                                           ; $7440: $af
 	call PlaySong                                       ; $7441: $cd $92 $1a
 	ld   a, $ff                                      ; $7444: $3e $ff
-	ld   [$cc1d], a                                  ; $7446: $ea $1d $cc
+	ld   [wFileBeingLoaded], a                                  ; $7446: $ea $1d $cc
 	xor  a                                           ; $7449: $af
 	ld   [wIsChestMiniGame], a                                  ; $744a: $ea $1d $cb
 	ld   h, $38                                      ; $744d: $26 $38
@@ -7178,17 +7179,17 @@ RomandoShopMenuOptHandler:
 
 .gameNotBeaten:
 	xor  a                                           ; $74f0: $af
-	ld   [$b0aa], a                                  ; $74f1: $ea $aa $b0
+	ld   [sSramVals2+SRAM2_ARGUMENT_1], a                                  ; $74f1: $ea $aa $b0
 	jr   Func_0a_7502                                 ; $74f4: $18 $0c
 
 .allItemsBought:
 	ld   a, $02                                      ; $74f6: $3e $02
-	ld   [$b0aa], a                                  ; $74f8: $ea $aa $b0
+	ld   [sSramVals2+SRAM2_ARGUMENT_1], a                                  ; $74f8: $ea $aa $b0
 	jr   Func_0a_7502                                 ; $74fb: $18 $05
 
 .noItemsBuyable:
 	ld   a, $03                                      ; $74fd: $3e $03
-	ld   [$b0aa], a                                  ; $74ff: $ea $aa $b0
+	ld   [sSramVals2+SRAM2_ARGUMENT_1], a                                  ; $74ff: $ea $aa $b0
 
 Func_0a_7502:
 	ld   bc, $0011                                   ; $7502: $01 $11 $00
@@ -7217,7 +7218,7 @@ TreasureChestMenuOptHandler:
 
 .toIntroScript:
 	ld   a, $0a                                      ; $7555: $3e $0a
-	ld   [$b0aa], a                                  ; $7557: $ea $aa $b0
+	ld   [sSramVals2+SRAM2_ARGUMENT_1], a                                  ; $7557: $ea $aa $b0
 	jr   Func_0a_7502                                 ; $755a: $18 $a6
 
 
@@ -7241,7 +7242,7 @@ MinigamesMenuOptHandler:
 
 .toIntroScript:
 	ld   a, $14                                      ; $7598: $3e $14
-	ld   [$b0aa], a                                  ; $759a: $ea $aa $b0
+	ld   [sSramVals2+SRAM2_ARGUMENT_1], a                                  ; $759a: $ea $aa $b0
 	jp   Func_0a_7502                               ; $759d: $c3 $02 $75
 
 

@@ -1239,7 +1239,7 @@ jr_03e_4815:
 	ret  z                                           ; $4822: $c8
 
 jr_03e_4823:
-	ld   a, [sTextSpeedBaseCounter]                                  ; $4823: $fa $b3 $b1
+	ld   a, [sTextSpeedCurrCounter]                                  ; $4823: $fa $b3 $b1
 	ld   [$c93e], a                                  ; $4826: $ea $3e $c9
 	jp   HDMAEnqueueNextTextBoxKanji                                       ; $4829: $c3 $55 $10
 
@@ -1272,7 +1272,7 @@ jr_03e_483b:
 	ret  z                                           ; $484d: $c8
 
 jr_03e_484e:
-	ld   a, [sTextSpeedBaseCounter]                                  ; $484e: $fa $b3 $b1
+	ld   a, [sTextSpeedCurrCounter]                                  ; $484e: $fa $b3 $b1
 	ld   [$c93e], a                                  ; $4851: $ea $3e $c9
 	jp   HDMAEnqueueNextTextBoxKanji                                       ; $4854: $c3 $55 $10
 
@@ -1333,7 +1333,7 @@ GameState17_Settings::
 :	ld   a, [$c97e]                                  ; $48c0: $fa $7e $c9
 	or   a                                           ; $48c3: $b7
 
-	M_FarCall "nz", Func_0a_426b
+	M_FarCall "nz", todo_GetBaseSettingsDetails
 
 	call Call_03e_4ead                               ; $48d8: $cd $ad $4e
 	ld   a, $ff                                      ; $48db: $3e $ff
@@ -2300,17 +2300,17 @@ Call_03e_4e8f:
 
 
 Call_03e_4ead:
-	ld   a, [sTextSpeedBaseCounter]                                  ; $4ead: $fa $b3 $b1
+	ld   a, [sTextSpeedCurrCounter]                                  ; $4ead: $fa $b3 $b1
 	call Call_03e_4f19                               ; $4eb0: $cd $19 $4f
 	ld   [$c971], a                                  ; $4eb3: $ea $71 $c9
-	ld   a, [$b1b4]                                  ; $4eb6: $fa $b4 $b1
+	ld   a, [sMenuSpeedCurrCounter]                                  ; $4eb6: $fa $b4 $b1
 	ld   [$c972], a                                  ; $4eb9: $ea $72 $c9
-	ld   a, [$b1b5]                                  ; $4ebc: $fa $b5 $b1
+	ld   a, [sCursorSpeedCurrCounter]                                  ; $4ebc: $fa $b5 $b1
 	xor  $01                                         ; $4ebf: $ee $01
 	ld   [$c976], a                                  ; $4ec1: $ea $76 $c9
 	ld   a, [$b1b6]                                  ; $4ec4: $fa $b6 $b1
 	ld   [$c973], a                                  ; $4ec7: $ea $73 $c9
-	ld   a, [sCursorType]                                  ; $4eca: $fa $b7 $b1
+	ld   a, [sCurrCursorType]                                  ; $4eca: $fa $b7 $b1
 	ld   [$c974], a                                  ; $4ecd: $ea $74 $c9
 	ld   a, [$b1b8]                                  ; $4ed0: $fa $b8 $b1
 	ld   [$c975], a                                  ; $4ed3: $ea $75 $c9
@@ -2320,22 +2320,22 @@ Call_03e_4ead:
 Call_03e_4ed7:
 	ld   a, [$c971]                                  ; $4ed7: $fa $71 $c9
 	call Call_03e_4f28                               ; $4eda: $cd $28 $4f
-	ld   [sTextSpeedBaseCounter], a                                  ; $4edd: $ea $b3 $b1
+	ld   [sTextSpeedCurrCounter], a                                  ; $4edd: $ea $b3 $b1
 	ld   a, [$c972]                                  ; $4ee0: $fa $72 $c9
-	ld   [$b1b4], a                                  ; $4ee3: $ea $b4 $b1
+	ld   [sMenuSpeedCurrCounter], a                                  ; $4ee3: $ea $b4 $b1
 	ld   a, [$c976]                                  ; $4ee6: $fa $76 $c9
 	xor  $01                                         ; $4ee9: $ee $01
-	ld   [$b1b5], a                                  ; $4eeb: $ea $b5 $b1
+	ld   [sCursorSpeedCurrCounter], a                                  ; $4eeb: $ea $b5 $b1
 	ld   a, [$c973]                                  ; $4eee: $fa $73 $c9
 	ld   [$b1b6], a                                  ; $4ef1: $ea $b6 $b1
 	ld   a, [$c974]                                  ; $4ef4: $fa $74 $c9
-	ld   [sCursorType], a                                  ; $4ef7: $ea $b7 $b1
+	ld   [sCurrCursorType], a                                  ; $4ef7: $ea $b7 $b1
 	ld   a, [$c975]                                  ; $4efa: $fa $75 $c9
 	ld   [$b1b8], a                                  ; $4efd: $ea $b8 $b1
 	ld   a, [$c97e]                                  ; $4f00: $fa $7e $c9
 	or   a                                           ; $4f03: $b7
 
-	M_FarCall "nz", Func_0a_4255
+	M_FarCall "nz", todo_SetBaseSettingsDetails
 	ret                                              ; $4f18: $c9
 
 
@@ -3633,7 +3633,7 @@ PushUpsSubstate1:
 	ret  z                                           ; $57c8: $c8
 
 jr_03e_57c9:
-	ld   a, [sTextSpeedBaseCounter]                                  ; $57c9: $fa $b3 $b1
+	ld   a, [sTextSpeedCurrCounter]                                  ; $57c9: $fa $b3 $b1
 	ld   [$c9ae], a                                  ; $57cc: $ea $ae $c9
 	call HDMAEnqueueNextTextBoxKanji                                       ; $57cf: $cd $55 $10
 	ret                                              ; $57d2: $c9
@@ -6034,7 +6034,7 @@ jr_03e_66be:
 Call_03e_66c7::
 	ld   h, a                                        ; $66c7: $67
 	ld   l, $68                                      ; $66c8: $2e $68
-	call AequHtimesL                                       ; $66ca: $cd $ac $0b
+	call HLandAequHtimesL                                       ; $66ca: $cd $ac $0b
 	ld   a, [$c9c0]                                  ; $66cd: $fa $c0 $c9
 	call LAequHLdivmodA                                       ; $66d0: $cd $50 $0c
 	ld   h, a                                        ; $66d3: $67
@@ -6056,7 +6056,7 @@ jr_03e_66de:
 Call_03e_66e2::
 	ld   h, a                                        ; $66e2: $67
 	ld   l, $30                                      ; $66e3: $2e $30
-	call AequHtimesL                                       ; $66e5: $cd $ac $0b
+	call HLandAequHtimesL                                       ; $66e5: $cd $ac $0b
 	ld   a, [$c9c3]                                  ; $66e8: $fa $c3 $c9
 	call LAequHLdivmodA                                       ; $66eb: $cd $50 $0c
 	ld   h, a                                        ; $66ee: $67
@@ -6078,7 +6078,7 @@ jr_03e_66f9:
 Call_03e_66fd::
 	ld   h, a                                        ; $66fd: $67
 	ld   l, $68                                      ; $66fe: $2e $68
-	call AequHtimesL                                       ; $6700: $cd $ac $0b
+	call HLandAequHtimesL                                       ; $6700: $cd $ac $0b
 	ld   a, [$c9c6]                                  ; $6703: $fa $c6 $c9
 	call LAequHLdivmodA                                       ; $6706: $cd $50 $0c
 	ld   h, a                                        ; $6709: $67
@@ -6148,7 +6148,7 @@ jr_03e_6745:
 
 	ld   h, a                                        ; $674d: $67
 	ld   l, $68                                      ; $674e: $2e $68
-	call AequHtimesL                                       ; $6750: $cd $ac $0b
+	call HLandAequHtimesL                                       ; $6750: $cd $ac $0b
 	ld   a, [$c9c0]                                  ; $6753: $fa $c0 $c9
 	call LAequHLdivmodA                                       ; $6756: $cd $50 $0c
 	ld   a, l                                        ; $6759: $7d

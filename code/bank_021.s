@@ -336,7 +336,7 @@ Call_021_412a:
 	and  a                                           ; $412b: $a7
 	ret  z                                           ; $412c: $c8
 
-	ld   a, [$b1b4]                                  ; $412d: $fa $b4 $b1
+	ld   a, [sMenuSpeedCurrCounter]                                  ; $412d: $fa $b4 $b1
 	and  a                                           ; $4130: $a7
 	jr   nz, jr_021_413b                             ; $4131: $20 $08
 
@@ -1629,7 +1629,7 @@ jr_021_498f:
 	ret                                              ; $49b7: $c9
 
 
-	ld   a, [$b1b4]                                  ; $49b8: $fa $b4 $b1
+	ld   a, [sMenuSpeedCurrCounter]                                  ; $49b8: $fa $b4 $b1
 	and  a                                           ; $49bb: $a7
 	jr   nz, jr_021_49d7                             ; $49bc: $20 $19
 
@@ -2238,7 +2238,7 @@ jr_021_4e14:
 	ret                                              ; $4e3c: $c9
 
 
-	ld   a, [$b1b4]                                  ; $4e3d: $fa $b4 $b1
+	ld   a, [sMenuSpeedCurrCounter]                                  ; $4e3d: $fa $b4 $b1
 	and  a                                           ; $4e40: $a7
 	jr   nz, jr_021_4e5c                             ; $4e41: $20 $19
 
@@ -3046,7 +3046,7 @@ jr_021_53bb:
 	ret                                              ; $53e3: $c9
 
 
-	ld   a, [$b1b4]                                  ; $53e4: $fa $b4 $b1
+	ld   a, [sMenuSpeedCurrCounter]                                  ; $53e4: $fa $b4 $b1
 	and  a                                           ; $53e7: $a7
 	jr   nz, jr_021_5403                             ; $53e8: $20 $19
 
@@ -3840,7 +3840,7 @@ jr_021_5957:
 	ret                                              ; $597f: $c9
 
 
-	ld   a, [$b1b4]                                  ; $5980: $fa $b4 $b1
+	ld   a, [sMenuSpeedCurrCounter]                                  ; $5980: $fa $b4 $b1
 	and  a                                           ; $5983: $a7
 	jr   nz, jr_021_599f                             ; $5984: $20 $19
 
@@ -4537,7 +4537,7 @@ jr_021_5e64:
 	ret                                              ; $5e8c: $c9
 
 
-	ld   a, [$b1b4]                                  ; $5e8d: $fa $b4 $b1
+	ld   a, [sMenuSpeedCurrCounter]                                  ; $5e8d: $fa $b4 $b1
 	and  a                                           ; $5e90: $a7
 	jr   nz, jr_021_5eac                             ; $5e91: $20 $19
 
@@ -5273,7 +5273,7 @@ jr_021_63ad:
 	ret                                              ; $63d5: $c9
 
 
-	ld   a, [$b1b4]                                  ; $63d6: $fa $b4 $b1
+	ld   a, [sMenuSpeedCurrCounter]                                  ; $63d6: $fa $b4 $b1
 	and  a                                           ; $63d9: $a7
 	jr   nz, jr_021_63f5                             ; $63da: $20 $19
 
@@ -5697,7 +5697,7 @@ jr_021_672f:
 	ret                                              ; $6757: $c9
 
 
-	ld   a, [$b1b4]                                  ; $6758: $fa $b4 $b1
+	ld   a, [sMenuSpeedCurrCounter]                                  ; $6758: $fa $b4 $b1
 	and  a                                           ; $675b: $a7
 	jr   nz, jr_021_6777                             ; $675c: $20 $19
 

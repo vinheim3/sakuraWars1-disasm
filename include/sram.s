@@ -32,17 +32,21 @@ safb2:
 sGlobalFlags2:: ; $b0b0
     ds $1b3-$b0 ; can access up to $b8af
 
-sTextSpeedBaseCounter:: ; $b1b3
+sTextSpeedCurrCounter:: ; $b1b3
     db
-
-sb1b4:
-    ds 7-4
-
-sCursorType:: ; $b1b7
+sMenuSpeedCurrCounter:: ; $b1b4
     db
-
+sCursorSpeedCurrCounter:: ; $b1b5
+    db
+sb1b6:
+    ds 7-6
+sCurrCursorType:: ; $b1b7
+    db
 sb1b8:
-    ds $fff-$1b8
+    ds $b-8
+
+sb1bb:
+    ds $fff-$1bb
 
 sRandomSeed:: ; $bfff
     db

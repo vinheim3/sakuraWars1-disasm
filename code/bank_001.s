@@ -691,7 +691,7 @@ AnimSpriteSpecType2Update::
 	ld   h, a                                        ; $4290: $67
 	ldh  a, [$8a]                                    ; $4291: $f0 $8a
 	ld   l, a                                        ; $4293: $6f
-	call AequHtimesL                                       ; $4294: $cd $ac $0b
+	call HLandAequHtimesL                                       ; $4294: $cd $ac $0b
 
 ;
 	ld   a, [$c64b]                                  ; $4297: $fa $4b $c6
@@ -1155,7 +1155,7 @@ Func_01_44d7::
 	push hl                                          ; $44e0: $e5
 	ld   h, c                                        ; $44e1: $61
 	ld   l, a                                        ; $44e2: $6f
-	call AequHtimesL                                       ; $44e3: $cd $ac $0b
+	call HLandAequHtimesL                                       ; $44e3: $cd $ac $0b
 	add  b                                           ; $44e6: $80
 	pop  hl                                          ; $44e7: $e1
 	ld   [hl], a                                     ; $44e8: $77

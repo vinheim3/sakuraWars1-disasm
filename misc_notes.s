@@ -69,6 +69,7 @@
 ; rgbgfx -o en_fileLoadDisplaySpr.2bpp -h en_fileLoadDisplaySpr.png
 ; rgbgfx -o en_endResultsTitles.2bpp en_endResultsTitles.png
 ; rgbgfx -o en_endResultsStatsLabels.2bpp -u -T en_endResultsStatsLabels.png
+; rgbgfx -o en_dayPassedSpr.2bpp -h en_dayPassedSpr.png
 ; tools/gfx.py 1bpp newLetters.png --from=png --interleave
 
 ; empty banks
@@ -81,7 +82,7 @@
 
 ; hook banks
 ; $ff ($4d), $fd ($42), $fb ($9d), $a4 ($34), $8b ($da), $85 ($107)
-; $6b ($5f), $40 ($41f), $3f ($42b), $35 ($159), $31 ($74d), $2b ($2be)
+; $6b ($5f), $40 ($41f), $3f ($42b), $35 ($159), $31 ($a0), $2b ($2be)
 ; $22 ($6c4), $1f ($46f)
 ; -> $2f ($146f), $2a ($1d20), $0f ($e83), $0e ($685)
 ;    $0d ($d23), $0b ($e4e), $09 ($15f3), $08 ($82f), $07 ($1153)
@@ -109,7 +110,7 @@
 ; IMPORTANT
 ; When adding new characters, add map+width in scriptExtract, and width in getCharWidth
 ; TODO: optimize kanna's title screen tile usage
-; TODO: redo special case when a textbox text is supposed to be centered or slightly indented
+; TODO: optimize day passed tile usage
 
 ; battles
 ; 18 - 7+8

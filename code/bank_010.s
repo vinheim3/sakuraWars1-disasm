@@ -5254,7 +5254,7 @@ Jump_010_6117:
 	ret  z                                           ; $6124: $c8
 
 jr_010_6125:
-	ld   a, [sTextSpeedBaseCounter]                                  ; $6125: $fa $b3 $b1
+	ld   a, [sTextSpeedCurrCounter]                                  ; $6125: $fa $b3 $b1
 	ld   [$c925], a                                  ; $6128: $ea $25 $c9
 	jp   HDMAEnqueueNextTextBoxKanji                                       ; $612b: $c3 $55 $10
 
@@ -7405,7 +7405,7 @@ HandleEnterNameLetterSelected:
 	ld   a, [wEnterNameCursorLetterRowIdx]                          ; $6de6
 	ld   l, a                                                       ; $6de9
 	ld   h, ENTER_NAME_SELECTABLE_LETTERS_COLS+1                    ; $6dea
-	call AequHtimesL                                                ; $6dec
+	call HLandAequHtimesL                                           ; $6dec
 
 ; HL = above + col idx, ie 1-dimensional value of the letter
 	ld   a, [wEnterNameCursorLetterColIdx]                          ; $6def

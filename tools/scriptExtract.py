@@ -244,6 +244,11 @@ class ScriptExtractor:
                         wordIdx += 6
                         continue
 
+                    if word[wordIdx:wordIdx+2] == "``":
+                        boxBytes.append(0x10)
+                        wordIdx += 2
+                        continue
+
                     if dictionary:
                         seekIdx = wordIdx+1
                         while seekIdx < len(word) and word[seekIdx] != 0:
@@ -338,6 +343,11 @@ class ScriptExtractor:
                 if wordIdx != len(word)-1 and word[wordIdx+1] in "0123456789":
                     wordIdx += 2
                     continue
+
+            if word[wordIdx:wordIdx+2] == "``":
+                wordIdx += 2
+                total += 3
+                continue
 
             char = word[wordIdx]
             wordIdx += 1
@@ -647,6 +657,7 @@ class ScriptExtractor:
             extra_comps = []
             totalBytes += 1
 
+            # Changing portrait for peeping tom event
             if self.scriptNum == 633 and address == 2350:
                 offset += 2
                 param_comps.append(f"$0d")
@@ -890,21 +901,6 @@ if __name__ == "__main__":
                 if i in quotePrefixed:
                     english = f"'{english}"
 
-                # Special cases starting with a space/s
-                if (int(scriptNum), int(offset)) in (
-                    (368, 864),
-                    (457, 242),
-                    (469, 927),
-                    (469, 1208),
-                    (621, 547),
-                    (621, 756),
-                    (621, 961),
-                    (694, 709),
-                    (723, 3147),
-                ):
-                    if english and english[0] != "=" and english[0] != " ":
-                        english = f" {english}"
-
                 # Remove the odd leading new line
                 if english.startswith('\n'):
                     english = english[1:]
@@ -918,7 +914,7 @@ if __name__ == "__main__":
                     (733, 2605),
                 ):
                     if english and english[0] != "=" and english[0] != " ":
-                        english = " "*8+english
+                        english = "``"*9+english
 
                 fullEnglishMap.setdefault(int(scriptNum), {})
 

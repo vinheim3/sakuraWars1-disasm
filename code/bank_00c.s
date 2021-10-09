@@ -46,19 +46,19 @@ GameState39_Explore::
 	ret                                              ; $402c: $c9
 
 .substates:
-	dw ExploreSubstate0
-	dw ExploreSubstate1_Bank0BG2
-	dw ExploreSubstate2_Bank0BG3
-	dw ExploreSubstate3_Bank0BG4
-	dw ExploreSubstate4
-	dw ExploreSubstate5_Bank1BG2
+	dw ExploreSubstate0_InitAndMapBank0TileData1
+	dw ExploreSubstate1_MapBank0TileData2
+	dw ExploreSubstate2_MapBank0TileData3
+	dw ExploreSubstate3_MapBank0TileData4
+	dw ExploreSubstate4_MapBank1TileData1
+	dw ExploreSubstate5_MapBank1TileData2
 	dw ExploreSubstate6_Layout
 	dw ExploreSubstate7_StatusBarMain
-	dw ExploreSubstate8
+	dw ExploreSubstate8_StatusBarCurrAndFade
 	dw ExploreSubstate9
 
 
-ExploreSubstate0:
+ExploreSubstate0_InitAndMapBank0TileData1:
 	call ClearDisplayRegsAllowVBlankInt                                       ; $4041: $cd $59 $0b
 	ld   a, [wLCDC]                                  ; $4044: $fa $03 $c2
 	and  $e0                                         ; $4047: $e6 $e0
@@ -68,14 +68,14 @@ ExploreSubstate0:
 	ld   [wInGameInputsEnabled], a                                  ; $4050: $ea $0e $c2
 	call ClearOam                                       ; $4053: $cd $d7 $0d
 	call ClearBaseAnimSpriteSpecDetails                                       ; $4056: $cd $c9 $2e
-	call Call_00c_43c4                               ; $4059: $cd $c4 $43
+	call todo_ReplaceExploreHintIconGfx                               ; $4059: $cd $c4 $43
 	ld   a, [wWramBank]                                  ; $405c: $fa $93 $c2
 	push af                                          ; $405f: $f5
 	ld   a, $07                                      ; $4060: $3e $07
 	ld   [wWramBank], a                                  ; $4062: $ea $93 $c2
 	ldh  [rSVBK], a                                  ; $4065: $e0 $70
 	ld   a, [wExploreFloor]                                  ; $4067: $fa $2f $cb
-	call Call_00c_4b1a                               ; $406a: $cd $1a $4b
+	call GetPointerToExploreMapDataSources                               ; $406a: $cd $1a $4b
 	call FarGetAddrBank                                       ; $406d: $cd $09 $0b
 	ld   d, h                                        ; $4070: $54
 	ld   e, l                                        ; $4071: $5d
@@ -95,7 +95,7 @@ ExploreSubstate0:
 	ret                                              ; $4091: $c9
 
 
-ExploreSubstate1_Bank0BG2:
+ExploreSubstate1_MapBank0TileData2:
 	ld   c, $80                                      ; $4092: $0e $80
 	ld   de, $8c00                                   ; $4094: $11 $00 $8c
 	ld   a, $07                                      ; $4097: $3e $07
@@ -107,7 +107,7 @@ ExploreSubstate1_Bank0BG2:
 	ret                                              ; $40a5: $c9
 
 
-ExploreSubstate2_Bank0BG3:
+ExploreSubstate2_MapBank0TileData3:
 	ld   c, $80                                      ; $40a6: $0e $80
 	ld   de, $9000                                   ; $40a8: $11 $00 $90
 	ld   a, $07                                      ; $40ab: $3e $07
@@ -119,7 +119,7 @@ ExploreSubstate2_Bank0BG3:
 	ret                                              ; $40b9: $c9
 
 
-ExploreSubstate3_Bank0BG4:
+ExploreSubstate3_MapBank0TileData4:
 	ld   c, $80                                      ; $40ba: $0e $80
 	ld   de, $9400                                   ; $40bc: $11 $00 $94
 	ld   a, $07                                      ; $40bf: $3e $07
@@ -131,7 +131,7 @@ ExploreSubstate3_Bank0BG4:
 	ret                                              ; $40cd: $c9
 
 
-ExploreSubstate4:
+ExploreSubstate4_MapBank1TileData1:
 ;
 	ld   a, [wWramBank]                                  ; $40ce: $fa $93 $c2
 	push af                                          ; $40d1: $f5
@@ -142,7 +142,7 @@ ExploreSubstate4:
 
 ;
 	ld   a, [wExploreFloor]                                  ; $40d9: $fa $2f $cb
-	call Call_00c_4b1a                               ; $40dc: $cd $1a $4b
+	call GetPointerToExploreMapDataSources                               ; $40dc: $cd $1a $4b
 	inc  hl                                          ; $40df: $23
 	inc  hl                                          ; $40e0: $23
 	inc  hl                                          ; $40e1: $23
@@ -165,7 +165,7 @@ ExploreSubstate4:
 	ret                                              ; $4106: $c9
 
 
-ExploreSubstate5_Bank1BG2:
+ExploreSubstate5_MapBank1TileData2:
 	ld   c, $81                                      ; $4107: $0e $81
 	ld   de, $9400                                   ; $4109: $11 $00 $94
 	ld   a, $07                                      ; $410c: $3e $07
@@ -188,7 +188,7 @@ ExploreSubstate6_Layout:
 
 ;
 	ld   a, [wExploreFloor]                                  ; $4126: $fa $2f $cb
-	call Call_00c_4b1a                               ; $4129: $cd $1a $4b
+	call GetPointerToExploreMapDataSources                               ; $4129: $cd $1a $4b
 	ld   bc, $0009                                   ; $412c: $01 $09 $00
 	add  hl, bc                                      ; $412f: $09
 	call FarGetAddrBank                                       ; $4130: $cd $09 $0b
@@ -220,51 +220,146 @@ ExploreSubstate6_Layout:
 
 
 ExploreSubstate7_StatusBarMain:
+; cursor
 	ld   c, $00                                      ; $416d: $0e $00
 	ld   de, $8100                                   ; $416f: $11 $00 $81
 	ld   a, $8f                                      ; $4172: $3e $8f
 	ld   hl, $4000                                   ; $4174: $21 $00 $40
 	ld   b, $10                                      ; $4177: $06 $10
 	call EnqueueHDMATransfer                                       ; $4179: $cd $7c $02
+
+; common status bar
 	ld   c, $01                                      ; $417c: $0e $01
 	ld   de, $8000                                   ; $417e: $11 $00 $80
 	ld   a, $8f                                      ; $4181: $3e $8f
 	ld   hl, $4fd0                                   ; $4183: $21 $d0 $4f
 	ld   b, $10                                      ; $4186: $06 $10
 	call EnqueueHDMATransfer                                       ; $4188: $cd $7c $02
+
+; base status bar attr
 	ld   hl, $d000                                   ; $418b: $21 $00 $d0
 	ld   bc, $0040                                   ; $418e: $01 $40 $00
 	ld   a, $0f                                      ; $4191: $3e $0f
 	call MemSet                                       ; $4193: $cd $96 $09
+
+; base status bar map
 	ld   de, $d140                                   ; $4196: $11 $40 $d1
-	ld   hl, $42c3                                   ; $4199: $21 $c3 $42
+	ld   hl, TileMap_ExploreStatusBar                                   ; $4199: $21 $c3 $42
 	ld   bc, $0040                                   ; $419c: $01 $40 $00
 	call MemCopy                                       ; $419f: $cd $a9 $09
+
+; vertically flip the bottom left corner
 	ld   a, $4f                                      ; $41a2: $3e $4f
 	ld   [$d020], a                                  ; $41a4: $ea $20 $d0
+
+; status bar map
 	ld   c, $80                                      ; $41a7: $0e $80
 	ld   de, $9bc0                                   ; $41a9: $11 $c0 $9b
 	ld   a, $02                                      ; $41ac: $3e $02
 	ld   hl, $d140                                   ; $41ae: $21 $40 $d1
 	ld   b, $04                                      ; $41b1: $06 $04
 	call EnqueueHDMATransfer                                       ; $41b3: $cd $7c $02
+
+; status bar attr
 	ld   c, $81                                      ; $41b6: $0e $81
 	ld   de, $9bc0                                   ; $41b8: $11 $c0 $9b
 	ld   a, $02                                      ; $41bb: $3e $02
 	ld   hl, $d000                                   ; $41bd: $21 $00 $d0
 	ld   b, $04                                      ; $41c0: $06 $04
 	call EnqueueHDMATransfer                                       ; $41c2: $cd $7c $02
+
+;
 	ld   hl, wGameSubstate                                   ; $41c5: $21 $a1 $c2
 	inc  [hl]                                        ; $41c8: $34
 	ret                                              ; $41c9: $c9
 
 
-ExploreSubstate8:
+ExploreSubstate8_StatusBarCurrAndFade:
+if def(VWF)
+	call InitWideTextBoxDimensions
+	ldbc 11, 1
+	call SetKanjiTextBoxDimensions
+
+	ld   bc, 11 * $20
+	ld   hl, $d340
+	call MemSet
+
+; "Day "
+	ld   bc, 4
+	ld   de, wExploreStatusBarText
+	ld   hl, .day
+	call MemCopy
+
+; "<curr day> / "
+	ld   a, [sCurrDay]
+	ld   h, a
+	ld   l, 10
+	call HLequHdivModL
+	ld   a, l
+	push af
+	ld   a, h
+	ld   hl, wExploreStatusBarText+4
+	or   a
+	jr   z, :+
+	add  "0"
+	ld   [hl+], a
+:	pop  af
+	add  "0"
+	ld   [hl+], a
+
+	ld   a, " "
+	ld   [hl+], a
+	ld   a, $01
+	ld   [hl+], a
+	dec  a
+	ld   [hl+], a
+	ld   a, " "
+	ld   [hl+], a
+	ld   d, h
+	ld   e, l
+
+; "<day of week>"
+	ld   a, [sCurrDay]
+	dec  a
+	ld   h, a
+	ld   l, $07
+	call HLequHdivModL
+	ld   a, l
+	sla  a
+	add  l
+	add  LOW(.dayOfWeek)
+	ld   l, a
+	ld   a, 0
+	adc  HIGH(.dayOfWeek)
+	ld   h, a
+	ld   bc, 3
+	call MemCopy
+	
+	jp   ExploreStatusBarJumpAhead
+
+.day:
+	db "Day "
+.dayOfWeek:
+	db "Sun"
+	db "Mon"
+	db "Tue"
+	db "Wed"
+	db "Thu"
+	db "Fri"
+	db "Sat"
+.returnBack:
+
+	ds $424d-@, 0
+	
+else
+; H = 10s of curr day, L = 1s
 	ld   a, [sCurrDay]                                  ; $41ca: $fa $b0 $af
 	ld   h, a                                        ; $41cd: $67
 	ld   l, $0a                                      ; $41ce: $2e $0a
 	call HLequHdivModL                                       ; $41d0: $cd $fb $0b
 	push hl                                          ; $41d3: $e5
+
+; Enqueue tile data for 10s
 	ld   b, $00                                      ; $41d4: $06 $00
 	ld   c, h                                        ; $41d6: $4c
 	swap c                                           ; $41d7: $cb $31
@@ -275,6 +370,8 @@ ExploreSubstate8:
 	ld   de, $8100                                   ; $41e0: $11 $00 $81
 	ld   bc, $0201                                   ; $41e3: $01 $01 $02
 	call EnqueueHDMATransfer                                       ; $41e6: $cd $7c $02
+
+; Enqueue tile data for 1s
 	pop  hl                                          ; $41e9: $e1
 	ld   b, $00                                      ; $41ea: $06 $00
 	ld   c, l                                        ; $41ec: $4d
@@ -286,11 +383,15 @@ ExploreSubstate8:
 	ld   de, $8120                                   ; $41f6: $11 $20 $81
 	ld   bc, $0201                                   ; $41f9: $01 $01 $02
 	call EnqueueHDMATransfer                                       ; $41fc: $cd $7c $02
+
+; L = day of week, 0-idxed (0 = Sunday)
 	ld   a, [sCurrDay]                                  ; $41ff: $fa $b0 $af
 	dec  a                                           ; $4202: $3d
 	ld   h, a                                        ; $4203: $67
 	ld   l, $07                                      ; $4204: $2e $07
 	call HLequHdivModL                                       ; $4206: $cd $fb $0b
+
+; Enqueue tile data for day of week
 	ld   h, $00                                      ; $4209: $26 $00
 	swap l                                           ; $420b: $cb $35
 	add  hl, hl                                      ; $420d: $29
@@ -301,6 +402,8 @@ ExploreSubstate8:
 	ld   de, $8140                                   ; $4215: $11 $40 $81
 	ld   bc, $0401                                   ; $4218: $01 $01 $04
 	call EnqueueHDMATransfer                                       ; $421b: $cd $7c $02
+
+; Enqueue tile data for time of day
 	ld   a, [wTimeOfDay]                                  ; $421e: $fa $20 $cb
 
 	M_FarCall GetNameIdxOfTimeOfDay
@@ -316,12 +419,17 @@ ExploreSubstate8:
 	ld   de, $8180                                   ; $4244: $11 $80 $81
 	ld   bc, $0401                                   ; $4247: $01 $01 $04
 	call EnqueueHDMATransfer                                       ; $424a: $cd $7c $02
+endc
+
+; Enqueue cleared room name tile data
 	ld   c, $01                                      ; $424d: $0e $01
 	ld   de, $81c0                                   ; $424f: $11 $c0 $81
 	ld   a, $8c                                      ; $4252: $3e $8c
 	ld   hl, $4000                                   ; $4254: $21 $00 $40
 	ld   b, $10                                      ; $4257: $06 $10
 	call EnqueueHDMATransfer                                       ; $4259: $cd $7c $02
+
+; Fade to white
 	ld   a, BANK(Palettes_AllWhite)                                      ; $425c: $3e $01
 	ld   hl, Palettes_AllWhite                                   ; $425e: $21 $00 $70
 	ld   de, wBGPalettes                                   ; $4261: $11 $de $c2
@@ -329,12 +437,15 @@ ExploreSubstate8:
 	call FarMemCopy                                       ; $4267: $cd $b2 $09
 	ld   bc, $003f                                   ; $426a: $01 $3f $00
 	call SetBGandOBJPaletteRangesToUpdate                                       ; $426d: $cd $aa $04
+
+; To next substate
 	ld   hl, wGameSubstate                                   ; $4270: $21 $a1 $c2
 	inc  [hl]                                        ; $4273: $34
 	ret                                              ; $4274: $c9
 
 
 ExploreSubstate9:
+;
 	xor  a                                           ; $4275: $af
 	ld   [$cb32], a                                  ; $4276: $ea $32 $cb
 	ld   [$cb33], a                                  ; $4279: $ea $33 $cb
@@ -342,80 +453,58 @@ ExploreSubstate9:
 	ld   a, $ff                                      ; $427f: $3e $ff
 	ld   [$cb31], a                                  ; $4281: $ea $31 $cb
 	ld   [$cb43], a                                  ; $4284: $ea $43 $cb
+
+; Get data for initial region
 	call GetExploreRegionData                               ; $4287: $cd $d8 $48
 	ld   de, wExploreCurrRegionData                                   ; $428a: $11 $3a $cb
 	ld   bc, $0007                                   ; $428d: $01 $07 $00
 	call MemCopy                                       ; $4290: $cd $a9 $09
+
+;
 	ld   a, $01                                      ; $4293: $3e $01
 	ld   hl, $0000                                   ; $4295: $21 $00 $00
 	ld   d, h                                        ; $4298: $54
 	ld   e, l                                        ; $4299: $5d
 	call ReserveBaseAnimSpriteSpecAndInstance                                       ; $429a: $cd $4b $2f
-	ld   [$cb30], a                                  ; $429d: $ea $30 $cb
-	call Call_00c_42f7                               ; $42a0: $cd $f7 $42
+	ld   [wExploreHoveredSpriteSpecIdxUsed], a                                  ; $429d: $ea $30 $cb
+
+;
+	call todo_EnqueueExploreEventIcons                               ; $42a0: $cd $f7 $42
+
+;
 	ld   a, $01                                      ; $42a3: $3e $01
 	ld   hl, $0000                                   ; $42a5: $21 $00 $00
 	ld   d, h                                        ; $42a8: $54
 	ld   e, l                                        ; $42a9: $5d
 	call ReserveBaseAnimSpriteSpecAndInstance                                       ; $42aa: $cd $4b $2f
-	ld   [$cb35], a                                  ; $42ad: $ea $35 $cb
+	ld   [wExploreCursorSpriteSpecIdxUsed], a                                  ; $42ad: $ea $35 $cb
 	call StartAnimatingAnimatedSpriteSpec                                       ; $42b0: $cd $14 $30
+
+;
 	call ExploreLoadCursorTileDataAndSetSpriteDetails                               ; $42b3: $cd $61 $44
+
+;
 	xor  a                                           ; $42b6: $af
 	ld   [$cb2b], a                                  ; $42b7: $ea $2b $cb
 	ld   [$cb2c], a                                  ; $42ba: $ea $2c $cb
+
+; Go to main substate
 	ld   a, $ff                                      ; $42bd: $3e $ff
 	ld   [wGameSubstate], a                                  ; $42bf: $ea $a1 $c2
 	ret                                              ; $42c2: $c9
 
 
-	nop                                              ; $42c3: $00
-	db   $10                                         ; $42c4: $10
-	ld   [de], a                                     ; $42c5: $12
-	ld   [bc], a                                     ; $42c6: $02
-	inc  bc                                          ; $42c7: $03
-	inc  b                                           ; $42c8: $04
-	ld   [$1514], sp                                 ; $42c9: $08 $14 $15
-	ld   [$1918], sp                                 ; $42cc: $08 $18 $19
-	inc  e                                           ; $42cf: $1c
-	dec  e                                           ; $42d0: $1d
-	ld   e, $1f                                      ; $42d1: $1e $1f
-	jr   nz, jr_00c_42f6                             ; $42d3: $20 $21
-
-	ld   [hl+], a                                    ; $42d5: $22
-	inc  hl                                          ; $42d6: $23
-	nop                                              ; $42d7: $00
-	nop                                              ; $42d8: $00
-	nop                                              ; $42d9: $00
-	nop                                              ; $42da: $00
-	nop                                              ; $42db: $00
-	nop                                              ; $42dc: $00
-	nop                                              ; $42dd: $00
-	nop                                              ; $42de: $00
-	nop                                              ; $42df: $00
-	nop                                              ; $42e0: $00
-	nop                                              ; $42e1: $00
-	nop                                              ; $42e2: $00
-	nop                                              ; $42e3: $00
-	ld   de, $0513                                   ; $42e4: $11 $13 $05
-	ld   b, $07                                      ; $42e7: $06 $07
-	add  hl, bc                                      ; $42e9: $09
-	ld   d, $17                                      ; $42ea: $16 $17
-	add  hl, bc                                      ; $42ec: $09
-	ld   a, [de]                                     ; $42ed: $1a
-	dec  de                                          ; $42ee: $1b
-	inc  h                                           ; $42ef: $24
-	dec  h                                           ; $42f0: $25
-	ld   h, $27                                      ; $42f1: $26 $27
-	jr   z, jr_00c_431e                              ; $42f3: $28 $29
-
-	ld   a, [hl+]                                    ; $42f5: $2a
-
-jr_00c_42f6:
-	dec  hl                                          ; $42f6: $2b
+TileMap_ExploreStatusBar:
+if def(VWF)
+	db $00, $4a, $4c, $4e, $50, $52, $54, $56, $58, $5a, $5c, $5e,  $1c, $1d, $1e, $1f, $20, $21, $22, $23, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $00, $4b, $4d, $4f, $51, $53, $55, $57, $59, $5b, $5d, $5f,  $24, $25, $26, $27, $28, $29, $2a, $2b
+else
+	db $00, $10, $12, $02, $03, $04, $08, $14, $15, $08, $18, $19, $1c, $1d, $1e, $1f, $20, $21, $22, $23, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $00, $11, $13, $05, $06, $07, $09, $16, $17, $09, $1a, $1b, $24, $25, $26, $27, $28, $29, $2a, $2b
+endc
 
 
-Call_00c_42f7:
+todo_EnqueueExploreEventIcons:
 ;
 	ld   hl, $dc40                                   ; $42f7: $21 $40 $dc
 	ld   bc, $0010                                   ; $42fa: $01 $10 $00
@@ -442,8 +531,6 @@ jr_00c_4315:
 	dec  a                                           ; $4318: $3d
 	xor  $0f                                         ; $4319: $ee $0f
 	call Call_00c_4443                               ; $431b: $cd $43 $44
-
-jr_00c_431e:
 	or   a                                           ; $431e: $b7
 	jr   nz, jr_00c_4324                             ; $431f: $20 $03
 
@@ -568,7 +655,7 @@ jr_00c_4324:
 	jr   .nextRegion                                 ; $43c2: $18 $9d
 
 
-Call_00c_43c4:
+todo_ReplaceExploreHintIconGfx:
 	ld   a, [sSramVals2+SRAM2_HINT_ICON1]                                  ; $43c4: $fa $ac $b0
 	ld   [wExploreHintIcons], a                                  ; $43c7: $ea $41 $cb
 	ld   a, [sSramVals2+SRAM2_HINT_ICON2]                                  ; $43ca: $fa $ad $b0
@@ -685,7 +772,7 @@ jr_00c_445c:
 
 ExploreLoadCursorTileDataAndSetSpriteDetails:
 ;
-	ld   a, [$cb35]                                  ; $4461: $fa $35 $cb
+	ld   a, [wExploreCursorSpriteSpecIdxUsed]                                  ; $4461: $fa $35 $cb
 	call HLequAddrOfAnimSpriteSpecDetails                                       ; $4464: $cd $76 $30
 
 ;
@@ -705,7 +792,7 @@ ExploreLoadCursorTileDataAndSetSpriteDetails:
 	jp   nz, .downstairs                           ; $448d: $c2 $0a $45
 
 ;
-	ld   a, [sCursorType]                                  ; $4490: $fa $b7 $b1
+	ld   a, [sCurrCursorType]                                  ; $4490: $fa $b7 $b1
 	dec  a                                           ; $4493: $3d
 	jr   z, .petalCursor                              ; $4494: $28 $16
 
@@ -746,7 +833,7 @@ ExploreLoadCursorTileDataAndSetSpriteDetails:
 	ret  z                                           ; $44d4: $c8
 
 	ld   [hl], a                                     ; $44d5: $77
-	ld   a, [$cb35]                                  ; $44d6: $fa $35 $cb
+	ld   a, [wExploreCursorSpriteSpecIdxUsed]                                  ; $44d6: $fa $35 $cb
 	call HLequAddrOfAnimSpriteSpecDetails                                       ; $44d9: $cd $76 $30
 	ld   de, AnimatedSpriteSpecs_7762                                   ; $44dc: $11 $62 $77
 	ld   a, [$cb43]                                  ; $44df: $fa $43 $cb
@@ -823,7 +910,7 @@ ExploreSubstateMain:
 	jr   nz, jr_00c_4592                             ; $4557: $20 $39
 
 	ld   a, [wExploreFloor]                                  ; $4559: $fa $2f $cb
-	call Call_00c_4b1a                               ; $455c: $cd $1a $4b
+	call GetPointerToExploreMapDataSources                               ; $455c: $cd $1a $4b
 	ld   bc, $0006                                   ; $455f: $01 $06 $00
 	add  hl, bc                                      ; $4562: $09
 	ld   a, [hl+]                                    ; $4563: $2a
@@ -865,7 +952,7 @@ jr_00c_4592:
 
 jr_00c_45a4:
 	ld   a, [wExploreFloor]                                  ; $45a4: $fa $2f $cb
-	call Call_00c_4b1a                               ; $45a7: $cd $1a $4b
+	call GetPointerToExploreMapDataSources                               ; $45a7: $cd $1a $4b
 	ld   bc, $0006                                   ; $45aa: $01 $06 $00
 	add  hl, bc                                      ; $45ad: $09
 	ld   a, [hl+]                                    ; $45ae: $2a
@@ -1255,7 +1342,7 @@ jr_00c_47cf:
 
 	ld   a, [hl]                                     ; $47d4: $7e
 	push af                                          ; $47d5: $f5
-	ld   a, [$cb30]                                  ; $47d6: $fa $30 $cb
+	ld   a, [wExploreHoveredSpriteSpecIdxUsed]                                  ; $47d6: $fa $30 $cb
 	call StopAnimatingAnimatedSpriteSpec                                       ; $47d9: $cd $06 $30
 	ld   a, [$cb31]                                  ; $47dc: $fa $31 $cb
 	bit  7, a                                        ; $47df: $cb $7f
@@ -1299,7 +1386,7 @@ jr_00c_47f7:
 	ld   a, [hl+]                                    ; $481e: $2a
 	ld   b, a                                        ; $481f: $47
 	ld   c, [hl]                                     ; $4820: $4e
-	ld   a, [$cb30]                                  ; $4821: $fa $30 $cb
+	ld   a, [wExploreHoveredSpriteSpecIdxUsed]                                  ; $4821: $fa $30 $cb
 	call StartAnimatingAnimatedSpriteSpec                                       ; $4824: $cd $14 $30
 	call HLequAddrOfAnimSpriteSpecDetails                                       ; $4827: $cd $76 $30
 	push af                                          ; $482a: $f5
@@ -1836,129 +1923,40 @@ jr_00c_4b01:
 	jp   LCDCInterruptHandler.return                                       ; $4b17: $c3 $4a $04
 
 
-Call_00c_4b1a:
+; A - floor idx
+; Returns pointer in HL
+; Returns this bank in A
+GetPointerToExploreMapDataSources:
 	swap a                                           ; $4b1a: $cb $37
 	ld   b, $00                                      ; $4b1c: $06 $00
 	ld   c, a                                        ; $4b1e: $4f
-	ld   hl, $4b40                                   ; $4b1f: $21 $40 $4b
+	ld   hl, .table                                   ; $4b1f: $21 $40 $4b
 	add  hl, bc                                      ; $4b22: $09
-	push af                                          ; $4b23: $f5
-	ld   a, $3e                                      ; $4b24: $3e $3e
-	ld   [wFarCallAddr], a                                  ; $4b26: $ea $98 $c2
-	ld   a, $45                                      ; $4b29: $3e $45
-	ld   [wFarCallAddr+1], a                                  ; $4b2b: $ea $99 $c2
-	ld   a, $09                                      ; $4b2e: $3e $09
-	ld   [wFarCallBank], a                                  ; $4b30: $ea $9a $c2
-	pop  af                                          ; $4b33: $f1
-	call FarCall                                       ; $4b34: $cd $62 $09
-	jr   c, jr_00c_4b3d                              ; $4b37: $38 $04
 
-	ld   bc, $0030                                   ; $4b39: $01 $30 $00
+	M_FarCall CheckIfBeforeNight
+
+	jr   c, .done                              ; $4b37: $38 $04
+
+; Night
+	ld   bc, .night-.table                                  ; $4b39: $01 $30 $00
 	add  hl, bc                                      ; $4b3c: $09
 
-jr_00c_4b3d:
-	ld   a, $0c                                      ; $4b3d: $3e $0c
+.done:
+	ld   a, BANK(@)                                      ; $4b3d: $3e $0c
 	ret                                              ; $4b3f: $c9
 
-
-	ld   d, b                                        ; $4b40: $50
-	ld   e, d                                        ; $4b41: $5a
-	adc  [hl]                                        ; $4b42: $8e
-	ld   d, b                                        ; $4b43: $50
-	ld   h, c                                        ; $4b44: $61
-	adc  a                                           ; $4b45: $8f
-	and  b                                           ; $4b46: $a0
-	ld   a, a                                        ; $4b47: $7f
-	adc  a                                           ; $4b48: $8f
-	sub  b                                           ; $4b49: $90
-	halt                                             ; $4b4a: $76
-	adc  a                                           ; $4b4b: $8f
-	nop                                              ; $4b4c: $00
-	nop                                              ; $4b4d: $00
-	nop                                              ; $4b4e: $00
-	nop                                              ; $4b4f: $00
-	nop                                              ; $4b50: $00
-	ld   b, b                                        ; $4b51: $40
-	adc  [hl]                                        ; $4b52: $8e
-	sub  b                                           ; $4b53: $90
-	ld   e, e                                        ; $4b54: $5b
-	adc  a                                           ; $4b55: $8f
-	ret  nc                                          ; $4b56: $d0
-
-	ld   c, h                                        ; $4b57: $4c
-	sub  b                                           ; $4b58: $90
-	ld   h, b                                        ; $4b59: $60
-	ld   a, c                                        ; $4b5a: $79
-	adc  a                                           ; $4b5b: $8f
-	nop                                              ; $4b5c: $00
-	nop                                              ; $4b5d: $00
-	nop                                              ; $4b5e: $00
-	nop                                              ; $4b5f: $00
-	ld   h, b                                        ; $4b60: $60
-	ld   [hl], c                                     ; $4b61: $71
-	adc  [hl]                                        ; $4b62: $8e
-	jr   nc, @+$6e                                   ; $4b63: $30 $6c
-
-	adc  a                                           ; $4b65: $8f
-	db   $10                                         ; $4b66: $10
-	ld   c, l                                        ; $4b67: $4d
-	sub  b                                           ; $4b68: $90
-	db $30, $7c
-
-	adc  a                                           ; $4b6b: $8f
-	nop                                              ; $4b6c: $00
-	nop                                              ; $4b6d: $00
-	nop                                              ; $4b6e: $00
-	nop                                              ; $4b6f: $00
-	db $30, $4d
-
-	adc  [hl]                                        ; $4b72: $8e
-	ldh  a, [$66]                                    ; $4b73: $f0 $66
-	adc  a                                           ; $4b75: $8f
-	ld   d, b                                        ; $4b76: $50
-	ld   c, l                                        ; $4b77: $4d
-	sub  b                                           ; $4b78: $90
-	nop                                              ; $4b79: $00
-	ld   b, b                                        ; $4b7a: $40
-	sub  b                                           ; $4b7b: $90
-	nop                                              ; $4b7c: $00
-	nop                                              ; $4b7d: $00
-	nop                                              ; $4b7e: $00
-	nop                                              ; $4b7f: $00
-	nop                                              ; $4b80: $00
-	ld   h, b                                        ; $4b81: $60
-	adc  l                                           ; $4b82: $8d
-	ret  nc                                          ; $4b83: $d0
-
-	ld   d, l                                        ; $4b84: $55
-	adc  a                                           ; $4b85: $8f
-	sub  b                                           ; $4b86: $90
-	ld   c, l                                        ; $4b87: $4d
-	sub  b                                           ; $4b88: $90
-	ret  nc                                          ; $4b89: $d0
-
-	ld   b, d                                        ; $4b8a: $42
-	sub  b                                           ; $4b8b: $90
-	nop                                              ; $4b8c: $00
-	nop                                              ; $4b8d: $00
-	nop                                              ; $4b8e: $00
-	nop                                              ; $4b8f: $00
-	ldh  a, [$66]                                    ; $4b90: $f0 $66
-	adc  [hl]                                        ; $4b92: $8e
-	ld   [hl], b                                     ; $4b93: $70
-	ld   [hl], c                                     ; $4b94: $71
-	adc  a                                           ; $4b95: $8f
-	ret  nc                                          ; $4b96: $d0
-
-	ld   c, l                                        ; $4b97: $4d
-	sub  b                                           ; $4b98: $90
-	and  b                                           ; $4b99: $a0
-	ld   b, l                                        ; $4b9a: $45
-	sub  b                                           ; $4b9b: $90
-	nop                                              ; $4b9c: $00
-	nop                                              ; $4b9d: $00
-	nop                                              ; $4b9e: $00
-	nop                                              ; $4b9f: $00
+.table:
+; 3 bytes - bank 0 $8800
+; 3 bytes - bank 1 $9000
+; 3 bytes - palette
+; 3 bytes - attr, then map
+	db $50, $5a, $8e, $50, $61, $8f, $a0, $7f, $8f, $90, $76, $8f, $00, $00, $00, $00
+	db $00, $40, $8e, $90, $5b, $8f, $d0, $4c, $90, $60, $79, $8f, $00, $00, $00, $00
+	db $60, $71, $8e, $30, $6c, $8f, $10, $4d, $90, $30, $7c, $8f, $00, $00, $00, $00
+.night:
+	db $30, $4d, $8e, $f0, $66, $8f, $50, $4d, $90, $00, $40, $90, $00, $00, $00, $00
+	db $00, $60, $8d, $d0, $55, $8f, $90, $4d, $90, $d0, $42, $90, $00, $00, $00, $00
+	db $f0, $66, $8e, $70, $71, $8f, $d0, $4d, $90, $a0, $45, $90, $00, $00, $00, $00
 
 
 ; Hovered area idx, wExploreHoverFloorTransition, text idx
@@ -3275,7 +3273,7 @@ endc
 	ld   [hl+], a                                    ; $557b: $22
 	ld   [hl+], a                                    ; $557c: $22
 	xor  a                                           ; $557d: $af
-	ld   hl, $afe1                                   ; $557e: $21 $e1 $af
+	ld   hl, sSramVals2+SRAM2_TRAINING_MON                                   ; $557e: $21 $e1 $af
 	ld   [hl+], a                                    ; $5581: $22
 	ld   [hl+], a                                    ; $5582: $22
 	ld   [hl+], a                                    ; $5583: $22
@@ -3468,7 +3466,7 @@ jr_00c_56c4:
 	ld   [$cc37], a                                  ; $56cf: $ea $37 $cc
 	ld   l, a                                        ; $56d2: $6f
 	ld   h, $00                                      ; $56d3: $26 $00
-	ld   bc, $afe1                                   ; $56d5: $01 $e1 $af
+	ld   bc, sSramVals2+SRAM2_TRAINING_MON                                   ; $56d5: $01 $e1 $af
 	add  hl, bc                                      ; $56d8: $09
 	ld   l, [hl]                                     ; $56d9: $6e
 	ld   h, $00                                      ; $56da: $26 $00
@@ -3496,7 +3494,7 @@ jr_00c_56ec:
 	ld   a, [$cc37]                                  ; $56f8: $fa $37 $cc
 	ld   l, a                                        ; $56fb: $6f
 	ld   h, $00                                      ; $56fc: $26 $00
-	ld   bc, $afe1                                   ; $56fe: $01 $e1 $af
+	ld   bc, sSramVals2+SRAM2_TRAINING_MON                                   ; $56fe: $01 $e1 $af
 	add  hl, bc                                      ; $5701: $09
 	ld   [hl], d                                     ; $5702: $72
 	ld   a, d                                        ; $5703: $7a
@@ -4569,7 +4567,7 @@ GameState3f_GameOver::
 
 ;
 	xor  a                                           ; $5e47: $af
-	ld   [$b0aa], a                                  ; $5e48: $ea $aa $b0
+	ld   [sSramVals2+SRAM2_ARGUMENT_1], a                                  ; $5e48: $ea $aa $b0
 
 ;
 	ld   a, [$b1b2]                                  ; $5e4b: $fa $b2 $b1
@@ -4577,11 +4575,11 @@ GameState3f_GameOver::
 	jr   nz, jr_00c_5ec4                             ; $5e4f: $20 $73
 
 	ld   a, $ff                                      ; $5e51: $3e $ff
-	ld   [$b0aa], a                                  ; $5e53: $ea $aa $b0
+	ld   [sSramVals2+SRAM2_ARGUMENT_1], a                                  ; $5e53: $ea $aa $b0
 
 	M_FarCall ReturnMostAffectionateGirlInA
 
-	ld   [$b0ab], a                                  ; $5e6a: $ea $ab $b0
+	ld   [sSramVals2+SRAM2_ARGUMENT_2], a                                  ; $5e6a: $ea $ab $b0
 
 ;
 	ld   a, [sCurrDay]                                  ; $5e6d: $fa $b0 $af
@@ -4593,7 +4591,7 @@ GameState3f_GameOver::
 ;
 	inc  h                                           ; $5e77: $24
 	ld   l, $c8                                      ; $5e78: $2e $c8
-	call AequHtimesL                                       ; $5e7a: $cd $ac $0b
+	call HLandAequHtimesL                                       ; $5e7a: $cd $ac $0b
 	push hl                                          ; $5e7d: $e5
 
 ;
@@ -5207,7 +5205,7 @@ Call_00c_637d:
 	and  $07                                         ; $638e: $e6 $07
 	ld   h, a                                        ; $6390: $67
 	ld   l, $14                                      ; $6391: $2e $14
-	call AequHtimesL                                       ; $6393: $cd $ac $0b
+	call HLandAequHtimesL                                       ; $6393: $cd $ac $0b
 	add  $e0                                         ; $6396: $c6 $e0
 	ld   hl, $d405                                   ; $6398: $21 $05 $d4
 	ld   de, $0016                                   ; $639b: $11 $16 $00
@@ -5515,7 +5513,7 @@ jr_00c_6558:
 	and  $07                                         ; $6558: $e6 $07
 	ld   h, $14                                      ; $655a: $26 $14
 	ld   l, a                                        ; $655c: $6f
-	call AequHtimesL                                       ; $655d: $cd $ac $0b
+	call HLandAequHtimesL                                       ; $655d: $cd $ac $0b
 	add  hl, hl                                      ; $6560: $29
 	add  hl, hl                                      ; $6561: $29
 	add  hl, hl                                      ; $6562: $29
@@ -7604,7 +7602,7 @@ AequFFh_0c_7273::
 	ret                                              ; $7275: $c9
 
 
-	ld   hl, $0002                                   ; $7276: $21 $02 $00
+	ld   hl, FLAG1_GAME_BEATEN                                   ; $7276: $21 $02 $00
 
 	M_FarCall CheckIfFlagSet1
 	ret                                              ; $728d: $c9
@@ -7615,7 +7613,7 @@ AequFFh_0c_728e::
 	ret                                              ; $7290: $c9
 
 
-	ld   hl, $0002                                   ; $7291: $21 $02 $00
+	ld   hl, FLAG1_GAME_BEATEN                                   ; $7291: $21 $02 $00
 
 	M_FarCall CheckIfFlagSet1
 
@@ -7632,7 +7630,7 @@ AequFFh_0c_72af::
 	ret                                              ; $72b1: $c9
 
 
-	ld   hl, $0002                                   ; $72b2: $21 $02 $00
+	ld   hl, FLAG1_GAME_BEATEN                                   ; $72b2: $21 $02 $00
 
 	M_FarCall CheckIfFlagSet1
 
@@ -7681,7 +7679,7 @@ AequFFh_0c_72af::
 
 
 Func_0c_7360::
-	M_FarCall Func_0a_426b
+	M_FarCall todo_GetBaseSettingsDetails
 	ret                                              ; $7374: $c9
 
 
@@ -7727,7 +7725,7 @@ GameState44_IntroScript::
 ;
 	ld   bc, $0000                                   ; $73b3: $01 $00 $00
 	M_FarCall SetAnimSpriteType0CoordsRelativeTo
-	M_FarCall Func_0a_426b
+	M_FarCall todo_GetBaseSettingsDetails
 	M_FarCall InitScriptEngine
 	
 ;
@@ -7967,7 +7965,7 @@ GameState46_PreTitleScreen::
 	call PlaySong                                       ; $75c3: $cd $92 $1a
 
 ;
-	M_FarCall Func_0a_426b
+	M_FarCall todo_GetBaseSettingsDetails
 	
 	ld   hl, wGameSubstate                                   ; $75da: $21 $a1 $c2
 	inc  [hl]                                        ; $75dd: $34
@@ -7977,12 +7975,12 @@ GameState46_PreTitleScreen::
 	or   a                                           ; $75f2: $b7
 	jr   z, .substate1                              ; $75f3: $28 $24
 
-	ld   [$b0ab], a                                  ; $75f5: $ea $ab $b0
+	ld   [sSramVals2+SRAM2_ARGUMENT_2], a                                  ; $75f5: $ea $ab $b0
 	xor  a                                           ; $75f8: $af
-	ld   [$b0aa], a                                  ; $75f9: $ea $aa $b0
+	ld   [sSramVals2+SRAM2_ARGUMENT_1], a                                  ; $75f9: $ea $aa $b0
 	ld   h, GS_PRE_TITLE_SCREEN                                      ; $75fc: $26 $46
 	ld   l, $00                                      ; $75fe: $2e $00
-	ld   bc, $0003                                   ; $7600: $01 $03 $00
+	ld   bc, SCR_SAVE_DATA_CHECK                                   ; $7600: $01 $03 $00
 	xor  a                                           ; $7603: $af
 
 	M_FarCall SetIntroScriptState
@@ -8012,12 +8010,12 @@ GameState46_PreTitleScreen::
 	or   b                                           ; $7661: $b0
 	jr   z, .substate2                              ; $7662: $28 $25
 
-	ld   [$b0ab], a                                  ; $7664: $ea $ab $b0
+	ld   [sSramVals2+SRAM2_ARGUMENT_2], a                                  ; $7664: $ea $ab $b0
 	ld   a, $01                                      ; $7667: $3e $01
-	ld   [$b0aa], a                                  ; $7669: $ea $aa $b0
-	ld   h, $46                                      ; $766c: $26 $46
+	ld   [sSramVals2+SRAM2_ARGUMENT_1], a                                  ; $7669: $ea $aa $b0
+	ld   h, GS_PRE_TITLE_SCREEN                                      ; $766c: $26 $46
 	ld   l, $00                                      ; $766e: $2e $00
-	ld   bc, $0003                                   ; $7670: $01 $03 $00
+	ld   bc, SCR_SAVE_DATA_CHECK                                   ; $7670: $01 $03 $00
 	xor  a                                           ; $7673: $af
 
 	M_FarCall SetIntroScriptState
@@ -8032,9 +8030,9 @@ GameState46_PreTitleScreen::
 	or   a                                           ; $76a0: $b7
 	jr   nz, .checkFlags                             ; $76a1: $20 $1d
 
-	ld   h, $46                                      ; $76a3: $26 $46
+	ld   h, GS_PRE_TITLE_SCREEN                                      ; $76a3: $26 $46
 	ld   l, $00                                      ; $76a5: $2e $00
-	ld   bc, $0005                                   ; $76a7: $01 $05 $00
+	ld   bc, SCR_THANKS_FOR_PLAYING_PATCH                                   ; $76a7: $01 $05 $00
 	xor  a                                           ; $76aa: $af
 
 	M_FarCall SetIntroScriptState
@@ -8080,7 +8078,7 @@ GameState46_PreTitleScreen::
 
 	ld   h, GS_PRE_TITLE_SCREEN                                      ; $7707: $26 $46
 	ld   l, $00                                      ; $7709: $2e $00
-	ld   bc, $0010                                   ; $770b: $01 $10 $00
+	ld   bc, SCR_GAME_BEAT                                   ; $770b: $01 $10 $00
 	xor  a                                           ; $770e: $af
 
 	M_FarCall SetIntroScriptState
@@ -8095,15 +8093,15 @@ GameState46_PreTitleScreen::
 	ret                                              ; $772d: $c9
 
 .table:
-	db $02, $00, $03, $00
-	db $04, $00, $05, $00
-	db $06, $00, $07, $00
-	db $08, $00, $09, $00
-	db $0a, $00, $0b, $00
-	db $0c, $00, $0d, $00
-	db $0e, $00, $0f, $00
-	db $10, $00, $11, $00
-	db $12, $00, $13, $00
+	dw FLAG1_GAME_BEATEN, FLAG1_SCRIPT_AFTER_GAME_BEATEN
+	dw FLAG1_ALL_ENDINGS, FLAG1_SCRIPT_AFTER_ALL_ENDINGS
+	dw FLAG1_SAKURA_ENDING, FLAG1_SCRIPT_AFTER_SAKURA_ENDING
+	dw FLAG1_SUMIRE_ENDING, FLAG1_SCRIPT_AFTER_SUMIRE_ENDING
+	dw FLAG1_MARIA_ENDING, FLAG1_SCRIPT_AFTER_MARIA_ENDING
+	dw FLAG1_IRIS_ENDING, FLAG1_SCRIPT_AFTER_IRIS_ENDING
+	dw FLAG1_KOHRAN_ENDING, FLAG1_SCRIPT_AFTER_KOHRAN_ENDING
+	dw FLAG1_KANNA_ENDING, FLAG1_SCRIPT_AFTER_KANNA_ENDING
+	dw FLAG1_OGAMI_ENDING, FLAG1_SCRIPT_AFTER_OGAMI_ENDING
 	db $ff, $ff
 
 
@@ -8151,19 +8149,19 @@ GameState47_Prologue::
 	M_FarCall SetAnimSpriteType0CoordsRelativeTo
 	
 ;
-	M_FarCall Func_0a_426b
+	M_FarCall todo_GetBaseSettingsDetails
 	
 ;
 	ld   a, $08                                      ; $77b9: $3e $08
-	ld   [sTextSpeedBaseCounter], a                                  ; $77bb: $ea $b3 $b1
+	ld   [sTextSpeedCurrCounter], a                                  ; $77bb: $ea $b3 $b1
 	xor  a                                           ; $77be: $af
-	ld   [$b1b4], a                                  ; $77bf: $ea $b4 $b1
+	ld   [sMenuSpeedCurrCounter], a                                  ; $77bf: $ea $b4 $b1
 
 ;
 	M_FarCall InitScriptEngine
 
 ;
-	ld   a, [$cc9e]                                  ; $77d6: $fa $9e $cc
+	ld   a, [wPrologueSongToPlay]                                  ; $77d6: $fa $9e $cc
 	ld   [wScriptSongToPlay], a                                  ; $77d9: $ea $c8 $cb
 	xor  a                                           ; $77dc: $af
 	ld   [$cba6], a                                  ; $77dd: $ea $a6 $cb
@@ -8364,13 +8362,13 @@ GameState47_Prologue::
 	ret                                                             ; $792f
 
 
-; A -
+; A - song idx to play
 ; BC - script idx
 ; H - return state
 ; L - return substate
 SetPrologueScriptState::
-;
-	ld   [$cc9e], a                                  ; $7930: $ea $9e $cc
+; Set song to play
+	ld   [wPrologueSongToPlay], a                                   ; $7930
 
 ; Set script idx
 	ld   a, b                                                       ; $7933
@@ -8612,5 +8610,79 @@ FileLoadDisplayLayoutCommon::
 
 	ld   a, [sCurrDay]
 	ret
+
+
+ExploreStatusBarJumpAhead:
+; " / "
+	ld   h, d
+	ld   l, e
+	ld   a, " "
+	ld   [hl+], a
+	ld   a, $01
+	ld   [hl+], a
+	dec  a
+	ld   [hl+], a
+	ld   a, " "
+	ld   [hl+], a
+	ld   d, h
+	ld   e, l
+
+; "<12-hour hr>"
+	ld   a, [wTimeOfDay]
+	add  $07
+	cp   13
+	jr   c, :+
+	sub  12
+:	ld   h, a
+	ld   l, 10
+	call HLequHdivModL
+	ld   a, l
+	push af
+	ld   a, h
+	ld   h, d
+	ld   l, e
+	or   a
+	jr   z, :+
+	add  "0"
+	ld   [hl+], a
+:	pop  af
+	add  "0"
+	ld   [hl+], a
+
+	; "<am/pm>"
+	ld   a, [wTimeOfDay]
+	cp   12-7
+	ld   a, "p"
+	jr   nc, :+
+	ld   a, "a"
+:	ld   [hl+], a
+	ld   a, "m"
+	ld   [hl+], a
+	xor  a
+	ld   [hl], a
+
+;
+	ld   de, wExploreStatusBarText
+	ld   hl, $d340
+	call LoadInstantText
+
+	ld   a, $ff
+	ld   hl, $d340
+	ld   c, 11
+	ld   de, $1f
+:	ld   [hl], a
+	add  hl, de
+	ld   [hl+], a
+	dec  c
+	jr   nz, :-
+
+	ld   c, $81
+	ld   de, $84a0
+	ld   a, $02
+	ld   hl, $d340
+	ld   b, 11*2
+	call EnqueueHDMATransfer
+
+	jp ExploreSubstate8_StatusBarCurrAndFade.returnBack
 
 endc

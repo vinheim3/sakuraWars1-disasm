@@ -8025,7 +8025,7 @@ jr_011_71e2:
 	ret  z                                           ; $71ef: $c8
 
 jr_011_71f0:
-	ld   a, [sTextSpeedBaseCounter]                                  ; $71f0: $fa $b3 $b1
+	ld   a, [sTextSpeedCurrCounter]                                  ; $71f0: $fa $b3 $b1
 	ld   [$ca3a], a                                  ; $71f3: $ea $3a $ca
 	jp   HDMAEnqueueNextTextBoxKanji                                       ; $71f6: $c3 $55 $10
 

@@ -4004,7 +4004,7 @@ BattleSubstate49:
 	ld   a, [$ca79]                                  ; $5d56: $fa $79 $ca
 	ld   h, a                                        ; $5d59: $67
 	ld   l, $64                                      ; $5d5a: $2e $64
-	call AequHtimesL                                       ; $5d5c: $cd $ac $0b
+	call HLandAequHtimesL                                       ; $5d5c: $cd $ac $0b
 	ld   a, [$ca7a]                                  ; $5d5f: $fa $7a $ca
 	call LAequHLdivmodA                                       ; $5d62: $cd $50 $0c
 	ld   a, l                                        ; $5d65: $7d
@@ -6741,7 +6741,7 @@ CheckIfBattleTextBoxDone:
 	jr   z, .done                              ; $6c82: $28 $08
 
 .spedUp:
-	ld   a, [sTextSpeedBaseCounter]                                  ; $6c84: $fa $b3 $b1
+	ld   a, [sTextSpeedCurrCounter]                                  ; $6c84: $fa $b3 $b1
 	ldh  [hScriptOpcodeParams+1], a                                    ; $6c87: $e0 $a1
 	jp   HDMAEnqueueNextTextBoxKanji                                       ; $6c89: $c3 $55 $10
 
@@ -9032,7 +9032,7 @@ Call_024_7731:
 	ld   a, [$ca79]                                  ; $7738: $fa $79 $ca
 	ld   h, a                                        ; $773b: $67
 	ld   l, $64                                      ; $773c: $2e $64
-	call AequHtimesL                                       ; $773e: $cd $ac $0b
+	call HLandAequHtimesL                                       ; $773e: $cd $ac $0b
 	ld   a, [$ca7a]                                  ; $7741: $fa $7a $ca
 	call LAequHLdivmodA                                       ; $7744: $cd $50 $0c
 	ld   a, l                                        ; $7747: $7d

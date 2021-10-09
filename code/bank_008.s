@@ -20,7 +20,7 @@ InitScriptEngine::
 	ld   [$cbac], a                                  ; $4019: $ea $ac $cb
 	ld   [$cbae], a                                  ; $401c: $ea $ae $cb
 	ld   [$b0af], a                                  ; $401f: $ea $af $b0
-	ld   a, [sTextSpeedBaseCounter]                                  ; $4022: $fa $b3 $b1
+	ld   a, [sTextSpeedCurrCounter]                                  ; $4022: $fa $b3 $b1
 	ld   [wTextSpeedBaseCounter], a                                  ; $4025: $ea $90 $cb
 	ld   [wScriptSongToPlay], a                                  ; $4028: $ea $c8 $cb
 	ld   a, $03                                      ; $402b: $3e $03
@@ -525,7 +525,7 @@ HandleScriptEngine::
 	call Call_008_4301                               ; $4343: $cd $01 $43
 
 ;
-	ld   a, [$b1b4]                                  ; $4346: $fa $b4 $b1
+	ld   a, [sMenuSpeedCurrCounter]                                  ; $4346: $fa $b4 $b1
 	ld   [$cb91], a                                  ; $4349: $ea $91 $cb
 
 ;
@@ -716,19 +716,26 @@ ScriptEngineTable:
 	ScriptOpData ScriptOpcode34_PreSpecifiedDelay, $01
 
 
+; A - src bank
+; HL - src addr
 StartAndProcessScriptCalcStack::
-	ld   [wBaseScriptBank], a                                  ; $44b3: $ea $8c $cb
-	ld   [wCurrScriptBank], a                                  ; $44b6: $ea $8f $cb
-	ld   a, h                                        ; $44b9: $7c
-	ld   [wBaseScriptAddr+1], a                                  ; $44ba: $ea $8b $cb
-	ld   [wCurrScriptAddr+1], a                                  ; $44bd: $ea $8e $cb
-	ld   a, l                                        ; $44c0: $7d
-	ld   [wBaseScriptAddr], a                                  ; $44c1: $ea $8a $cb
-	ld   [wCurrScriptAddr], a                                  ; $44c4: $ea $8d $cb
-	xor  a                                           ; $44c7: $af
-	ld   [wIdxInScriptOpcodeStructForCurrOpcode], a                                  ; $44c8: $ea $53 $cb
-	ld   [wNextIdxIntoInterruptScriptBytes], a                                  ; $44cb: $ea $86 $cb
-	ld   [wNumProcessedInterruptScriptBytes], a                                  ; $44ce: $ea $87 $cb
+; Set RPN src details
+	ld   [wBaseScriptBank], a                                       ; $44b3
+	ld   [wCurrScriptBank], a                                       ; $44b6
+
+	ld   a, h                                                       ; $44b9
+	ld   [wBaseScriptAddr+1], a                                     ; $44ba
+	ld   [wCurrScriptAddr+1], a                                     ; $44bd
+
+	ld   a, l                                                       ; $44c0
+	ld   [wBaseScriptAddr], a                                       ; $44c1
+	ld   [wCurrScriptAddr], a                                       ; $44c4
+
+; Clear idx into script, and interrupt vars
+	xor  a                                                          ; $44c7
+	ld   [wIdxInScriptOpcodeStructForCurrOpcode], a                 ; $44c8
+	ld   [wNextIdxIntoInterruptScriptBytes], a                      ; $44cb
+	ld   [wNumProcessedInterruptScriptBytes], a                     ; $44ce
 
 HandleProcessingScriptCalcStack:
 ; Clear stack to be populated from script bytes
@@ -751,22 +758,22 @@ HandleProcessingScriptCalcStack:
 	dec  a                                                          ; $44e4
 	jr   z, ScriptCalcCode2_pushSpecialRamByte                      ; $44e5
 
-	dec  a                                           ; $44e7: $3d
-	jp   z, ScriptCalcCode3_getSramByte2                            ; $44e8: $ca $6b $45
+	dec  a                                                          ; $44e7
+	jp   z, ScriptCalcCode3_GetLocalByte                            ; $44e8
 
-	dec  a                                           ; $44eb: $3d
-	jp   z, ScriptCalcCode4_CheckIfFlagSet2                            ; $44ec: $ca $87 $45
+	dec  a                                                          ; $44eb
+	jp   z, ScriptCalcCode4_CheckIfLocalFlagSet                     ; $44ec
 
-	dec  a                                           ; $44ef: $3d
-	jp   z, ScriptCalcCode5_GetSramByte1                            ; $44f0: $ca $a5 $45
+	dec  a                                                          ; $44ef
+	jp   z, ScriptCalcCode5_GetGlobalByte                           ; $44f0
 
-	dec  a                                           ; $44f3: $3d
-	jp   z, ScriptCalcCode6_CheckIfFlagSet1                            ; $44f4: $ca $c1 $45
+	dec  a                                                          ; $44f3
+	jp   z, ScriptCalcCode6_CheckIfGlobalFlagSet                    ; $44f4
 
 ; Else return the last value in the stack
-	call PopAFromScriptStack                               ; $44f7: $cd $5b $45
-	pop  hl                                          ; $44fa: $e1
-	ret                                              ; $44fb: $c9
+	call PopAFromScriptStack                                        ; $44f7
+	pop  hl                                                         ; $44fa
+	ret                                                             ; $44fb
 
 
 ScriptCalcCode1_pushScriptByte:
@@ -793,7 +800,7 @@ ScriptCalcCode2_pushSpecialRamByte:
 	dw .addNewLine_timedAnswer
 	dw .entry4_miniGameTrainingBattleRank
 	dw .entry5_randomNum
-	dw $453f
+	dw .entry6
 	dw .entry7_kouboChosen
 
 .addPlayerName_currDay:
@@ -820,6 +827,7 @@ ScriptCalcCode2_pushSpecialRamByte:
 	ld   a, [wScriptRandomByte]                                  ; $453a: $fa $94 $cb
 	jr   PushAOntoScriptCalcStack                                 ; $453d: $18 $0a
 
+.entry6:
 	ld   a, [$cb1e]                                  ; $453f: $fa $1e $cb
 	jr   PushAOntoScriptCalcStack                                 ; $4542: $18 $05
 
@@ -863,7 +871,7 @@ PopAFromScriptStack:
 	ret                                                             ; $456a
 
 
-ScriptCalcCode3_getSramByte2:
+ScriptCalcCode3_GetLocalByte:
 	ld   h, $00                                      ; $456b: $26 $00
 	call GetNextScriptOpcodeToProcess                               ; $456d: $cd $70 $42
 	ld   l, a                                        ; $4570: $6f
@@ -873,7 +881,7 @@ ScriptCalcCode3_getSramByte2:
 	jr   PushAOntoScriptCalcStack                                 ; $4585: $18 $c2
 
 
-ScriptCalcCode4_CheckIfFlagSet2:
+ScriptCalcCode4_CheckIfLocalFlagSet:
 	call GetNextScriptOpcodeToProcess                               ; $4587: $cd $70 $42
 	ld   h, a                                        ; $458a: $67
 	call GetNextScriptOpcodeToProcess                               ; $458b: $cd $70 $42
@@ -884,7 +892,7 @@ ScriptCalcCode4_CheckIfFlagSet2:
 	jr   PushAOntoScriptCalcStack                                 ; $45a3: $18 $a4
 
 
-ScriptCalcCode5_GetSramByte1:
+ScriptCalcCode5_GetGlobalByte:
 	ld   h, $00                                      ; $45a5: $26 $00
 	call GetNextScriptOpcodeToProcess                               ; $45a7: $cd $70 $42
 	ld   l, a                                        ; $45aa: $6f
@@ -894,7 +902,7 @@ ScriptCalcCode5_GetSramByte1:
 	jr   PushAOntoScriptCalcStack                                 ; $45bf: $18 $88
 
 
-ScriptCalcCode6_CheckIfFlagSet1:
+ScriptCalcCode6_CheckIfGlobalFlagSet:
 	call GetNextScriptOpcodeToProcess                               ; $45c1: $cd $70 $42
 	ld   h, a                                        ; $45c4: $67
 	call GetNextScriptOpcodeToProcess                               ; $45c5: $cd $70 $42
@@ -1106,7 +1114,7 @@ ScriptCalcFuncs:
 	call PopAFromScriptStack                                        ; $46df
 	ld   l, e                                                       ; $46e2
 	ld   h, a                                                       ; $46e3
-	call AequHtimesL                                                ; $46e4
+	call HLandAequHtimesL                                           ; $46e4
 	call PushAOntoScriptCalcStack                                   ; $46e7
 	ret                                                             ; $46ea
 
@@ -1853,7 +1861,7 @@ ScriptOpcode0a_ContinuePrompt_Init:
 	call EnqueueAScriptOpcode                               ; $4b62: $cd $97 $40
 
 ;
-	ld   a, [sTextSpeedBaseCounter]                                  ; $4b65: $fa $b3 $b1
+	ld   a, [sTextSpeedCurrCounter]                                  ; $4b65: $fa $b3 $b1
 	ld   [wTextSpeedBaseCounter], a                                  ; $4b68: $ea $90 $cb
 	ld   [hl], a                                     ; $4b6b: $77
 
@@ -1925,7 +1933,7 @@ ScriptOpcode0b_SetTextSpeed_Main:
 	ld   [wTextSpeedBaseCounter], a                                 ; $4bcc
 	ret                                                             ; $4bcf
 
-:	ld   a, [sTextSpeedBaseCounter]                                 ; $4bd0
+:	ld   a, [sTextSpeedCurrCounter]                                 ; $4bd0
 	ld   [wTextSpeedBaseCounter], a                                 ; $4bd3
 	ret                                                             ; $4bd6
 

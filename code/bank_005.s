@@ -3465,7 +3465,7 @@ Jump_005_5704:
 	and  $07                                         ; $570f: $e6 $07
 	ld   h, $14                                      ; $5711: $26 $14
 	ld   l, a                                        ; $5713: $6f
-	call AequHtimesL                                       ; $5714: $cd $ac $0b
+	call HLandAequHtimesL                                       ; $5714: $cd $ac $0b
 	add  hl, hl                                      ; $5717: $29
 	add  hl, hl                                      ; $5718: $29
 	add  hl, hl                                      ; $5719: $29

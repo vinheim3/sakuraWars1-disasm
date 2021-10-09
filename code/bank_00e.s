@@ -6893,14 +6893,14 @@ SpriteGroupCPointers::
 	dw $6e28
 	dw $6e34
 	dw $6e40
-	dw $6e8c
-	dw $6ed4
-	dw $6f1c
-	dw $6f64
-	dw $6fac
-	dw $6ff4
-	dw $703c
-	dw $7084
+	dw SpriteGroupC_Idx58h_DayPassedSunday
+	dw SpriteGroupC_Idx59h_DayPassedMonday
+	dw SpriteGroupC_Idx5ah_DayPassedTuesday
+	dw SpriteGroupC_Idx5bh_DayPassedWednesday
+	dw SpriteGroupC_Idx5ch_DayPassedThursday
+	dw SpriteGroupC_Idx5dh_DayPassedFriday
+	dw SpriteGroupC_Idx5eh_DayPassedSaturday
+	dw SpriteGroupC_Idx5fh_DayPassedLastDay
 
 	
 	ld   [hl], b                                     ; $62dc: $70
@@ -9518,7 +9518,7 @@ jr_00e_6e46:
 	ret  nc                                          ; $6e4a: $d0
 
 	rrca                                             ; $6e4b: $0f
-	jr   nz, jr_00e_6e8e                             ; $6e4c: $20 $40
+	db $20, $40
 
 	adc  $0f                                         ; $6e4e: $ce $0f
 	db   $10                                         ; $6e50: $10
@@ -9531,7 +9531,7 @@ jr_00e_6e46:
 	jr   c, jr_00e_6e23                              ; $6e59: $38 $c8
 
 	rrca                                             ; $6e5b: $0f
-	jr   nz, jr_00e_6e8e                             ; $6e5c: $20 $30
+	db $20, $30
 
 	add  $0f                                         ; $6e5e: $c6 $0f
 
@@ -9540,14 +9540,14 @@ jr_00e_6e60:
 	jr   nc, @-$3a                                   ; $6e61: $30 $c4
 
 	rrca                                             ; $6e63: $0f
-	jr   nz, jr_00e_6e8e                             ; $6e64: $20 $28
+	db $20, $28
 
 	jp   nz, $2a0f                                   ; $6e66: $c2 $0f $2a
 
 	jr   nz, jr_00e_6e2b                             ; $6e69: $20 $c0
 
 	rrca                                             ; $6e6b: $0f
-	jr   nz, jr_00e_6e8e                             ; $6e6c: $20 $20
+	db $20, $20
 
 	cp   [hl]                                        ; $6e6e: $be
 	rrca                                             ; $6e6f: $0f
@@ -9560,11 +9560,11 @@ jr_00e_6e60:
 
 jr_00e_6e77:
 	rrca                                             ; $6e77: $0f
-	jr   nz, jr_00e_6e92                             ; $6e78: $20 $18
+	db $20, $18
 
 	cp   b                                           ; $6e7a: $b8
 	rrca                                             ; $6e7b: $0f
-	jr   nz, jr_00e_6e8e                             ; $6e7c: $20 $10
+	db $20, $10
 
 	or   [hl]                                        ; $6e7e: $b6
 	rrca                                             ; $6e7f: $0f
@@ -9577,416 +9577,198 @@ jr_00e_6e77:
 	ld   d, $08                                      ; $6e88: $16 $08
 	or   b                                           ; $6e8a: $b0
 	rra                                              ; $6e8b: $1f
-	inc  h                                           ; $6e8c: $24
-	ld   d, h                                        ; $6e8d: $54
 
-jr_00e_6e8e:
-	ld   a, d                                        ; $6e8e: $7a
-	ld   b, $24                                      ; $6e8f: $06 $24
-	ld   c, h                                        ; $6e91: $4c
 
-jr_00e_6e92:
-	ld   a, b                                        ; $6e92: $78
-	ld   b, $24                                      ; $6e93: $06 $24
-	ld   b, h                                        ; $6e95: $44
-	halt                                             ; $6e96: $76
-	inc  b                                           ; $6e97: $04
-	inc  h                                           ; $6e98: $24
-	inc  a                                           ; $6e99: $3c
-	ld   [hl], h                                     ; $6e9a: $74
-	inc  b                                           ; $6e9b: $04
-	inc  h                                           ; $6e9c: $24
-	cpl                                              ; $6e9d: $2f
-	ld   [hl], d                                     ; $6e9e: $72
-	ld   b, $24                                      ; $6e9f: $06 $24
-	daa                                              ; $6ea1: $27
-	ld   [hl], b                                     ; $6ea2: $70
-	ld   b, $24                                      ; $6ea3: $06 $24
-	ld   hl, $066e                                   ; $6ea5: $21 $6e $06
-	inc  h                                           ; $6ea8: $24
-	add  hl, de                                      ; $6ea9: $19
-	ld   l, h                                        ; $6eaa: $6c
-	ld   b, $24                                      ; $6eab: $06 $24
-	ld   de, $066a                                   ; $6ead: $11 $6a $06
-	inc  h                                           ; $6eb0: $24
-	ld   [$0668], sp                                 ; $6eb1: $08 $68 $06
-	db   $10                                         ; $6eb4: $10
-	ld   c, l                                        ; $6eb5: $4d
-	ld   h, [hl]                                     ; $6eb6: $66
-	ld   b, $10                                      ; $6eb7: $06 $10
-	ld   b, l                                        ; $6eb9: $45
-	ld   h, h                                        ; $6eba: $64
-	ld   b, $10                                      ; $6ebb: $06 $10
-	dec  sp                                          ; $6ebd: $3b
-	ld   h, d                                        ; $6ebe: $62
-	ld   b, $10                                      ; $6ebf: $06 $10
-	inc  sp                                          ; $6ec1: $33
-	ld   h, b                                        ; $6ec2: $60
-	ld   b, $10                                      ; $6ec3: $06 $10
-	add  hl, hl                                      ; $6ec5: $29
-	ld   e, [hl]                                     ; $6ec6: $5e
-	ld   b, $10                                      ; $6ec7: $06 $10
-	ld   hl, $065c                                   ; $6ec9: $21 $5c $06
-	db   $10                                         ; $6ecc: $10
-	rla                                              ; $6ecd: $17
-	ld   e, d                                        ; $6ece: $5a
-	ld   b, $10                                      ; $6ecf: $06 $10
-	rrca                                             ; $6ed1: $0f
-	ld   e, b                                        ; $6ed2: $58
-	ld   d, $24                                      ; $6ed3: $16 $24
-	ld   d, h                                        ; $6ed5: $54
-	ld   a, d                                        ; $6ed6: $7a
-	ld   b, $24                                      ; $6ed7: $06 $24
-	ld   c, h                                        ; $6ed9: $4c
-	ld   a, b                                        ; $6eda: $78
-	ld   b, $24                                      ; $6edb: $06 $24
-	ld   b, h                                        ; $6edd: $44
-	halt                                             ; $6ede: $76
-	ld   b, $24                                      ; $6edf: $06 $24
-	inc  a                                           ; $6ee1: $3c
-	ld   [hl], h                                     ; $6ee2: $74
-	ld   b, $24                                      ; $6ee3: $06 $24
-	cpl                                              ; $6ee5: $2f
-	ld   [hl], d                                     ; $6ee6: $72
-	ld   b, $24                                      ; $6ee7: $06 $24
-	daa                                              ; $6ee9: $27
-	ld   [hl], b                                     ; $6eea: $70
-	ld   b, $24                                      ; $6eeb: $06 $24
-	ld   hl, $066e                                   ; $6eed: $21 $6e $06
-	inc  h                                           ; $6ef0: $24
-	add  hl, de                                      ; $6ef1: $19
-	ld   l, h                                        ; $6ef2: $6c
-	ld   b, $24                                      ; $6ef3: $06 $24
-	ld   de, $066a                                   ; $6ef5: $11 $6a $06
-	inc  h                                           ; $6ef8: $24
-	ld   [$0668], sp                                 ; $6ef9: $08 $68 $06
-	db   $10                                         ; $6efc: $10
-	ld   c, l                                        ; $6efd: $4d
-	ld   h, [hl]                                     ; $6efe: $66
-	ld   b, $10                                      ; $6eff: $06 $10
-	ld   b, l                                        ; $6f01: $45
-	ld   h, h                                        ; $6f02: $64
-	ld   b, $10                                      ; $6f03: $06 $10
-	dec  sp                                          ; $6f05: $3b
-	ld   h, d                                        ; $6f06: $62
-	ld   b, $10                                      ; $6f07: $06 $10
-	inc  sp                                          ; $6f09: $33
-	ld   h, b                                        ; $6f0a: $60
-	ld   b, $10                                      ; $6f0b: $06 $10
-	add  hl, hl                                      ; $6f0d: $29
-	ld   e, [hl]                                     ; $6f0e: $5e
-	ld   b, $10                                      ; $6f0f: $06 $10
-	ld   hl, $065c                                   ; $6f11: $21 $5c $06
-	db   $10                                         ; $6f14: $10
-	rla                                              ; $6f15: $17
-	ld   e, d                                        ; $6f16: $5a
-	ld   b, $10                                      ; $6f17: $06 $10
-	rrca                                             ; $6f19: $0f
-	ld   e, b                                        ; $6f1a: $58
-	ld   d, $24                                      ; $6f1b: $16 $24
-	ld   d, h                                        ; $6f1d: $54
-	ld   a, d                                        ; $6f1e: $7a
-	ld   b, $24                                      ; $6f1f: $06 $24
-	ld   c, h                                        ; $6f21: $4c
-	ld   a, b                                        ; $6f22: $78
-	ld   b, $24                                      ; $6f23: $06 $24
-	ld   b, h                                        ; $6f25: $44
-	halt                                             ; $6f26: $76
-	ld   b, $24                                      ; $6f27: $06 $24
-	inc  a                                           ; $6f29: $3c
-	ld   [hl], h                                     ; $6f2a: $74
-	ld   b, $24                                      ; $6f2b: $06 $24
-	cpl                                              ; $6f2d: $2f
-	ld   [hl], d                                     ; $6f2e: $72
-	ld   b, $24                                      ; $6f2f: $06 $24
-	daa                                              ; $6f31: $27
-	ld   [hl], b                                     ; $6f32: $70
-	ld   b, $24                                      ; $6f33: $06 $24
-	ld   hl, $066e                                   ; $6f35: $21 $6e $06
-	inc  h                                           ; $6f38: $24
-	add  hl, de                                      ; $6f39: $19
-	ld   l, h                                        ; $6f3a: $6c
-	ld   b, $24                                      ; $6f3b: $06 $24
-	ld   de, $066a                                   ; $6f3d: $11 $6a $06
-	inc  h                                           ; $6f40: $24
-	ld   [$0668], sp                                 ; $6f41: $08 $68 $06
-	db   $10                                         ; $6f44: $10
-	ld   c, l                                        ; $6f45: $4d
-	ld   h, [hl]                                     ; $6f46: $66
-	ld   b, $10                                      ; $6f47: $06 $10
-	ld   b, l                                        ; $6f49: $45
-	ld   h, h                                        ; $6f4a: $64
-	ld   b, $10                                      ; $6f4b: $06 $10
-	dec  sp                                          ; $6f4d: $3b
-	ld   h, d                                        ; $6f4e: $62
-	ld   b, $10                                      ; $6f4f: $06 $10
-	inc  sp                                          ; $6f51: $33
-	ld   h, b                                        ; $6f52: $60
-	ld   b, $10                                      ; $6f53: $06 $10
-	add  hl, hl                                      ; $6f55: $29
-	ld   e, [hl]                                     ; $6f56: $5e
-	ld   b, $10                                      ; $6f57: $06 $10
-	ld   hl, $065c                                   ; $6f59: $21 $5c $06
-	db   $10                                         ; $6f5c: $10
-	rla                                              ; $6f5d: $17
-	ld   e, d                                        ; $6f5e: $5a
-	ld   b, $10                                      ; $6f5f: $06 $10
-	rrca                                             ; $6f61: $0f
-	ld   e, b                                        ; $6f62: $58
-	ld   d, $24                                      ; $6f63: $16 $24
-	ld   d, h                                        ; $6f65: $54
-	ld   a, d                                        ; $6f66: $7a
-	ld   b, $24                                      ; $6f67: $06 $24
-	ld   c, h                                        ; $6f69: $4c
-	ld   a, b                                        ; $6f6a: $78
-	ld   b, $24                                      ; $6f6b: $06 $24
-	ld   b, h                                        ; $6f6d: $44
-	halt                                             ; $6f6e: $76
-	ld   b, $24                                      ; $6f6f: $06 $24
-	inc  a                                           ; $6f71: $3c
-	ld   [hl], h                                     ; $6f72: $74
-	ld   b, $24                                      ; $6f73: $06 $24
-	cpl                                              ; $6f75: $2f
-	ld   [hl], d                                     ; $6f76: $72
-	ld   b, $24                                      ; $6f77: $06 $24
-	daa                                              ; $6f79: $27
-	ld   [hl], b                                     ; $6f7a: $70
-	ld   b, $24                                      ; $6f7b: $06 $24
-	ld   hl, $066e                                   ; $6f7d: $21 $6e $06
-	inc  h                                           ; $6f80: $24
-	add  hl, de                                      ; $6f81: $19
-	ld   l, h                                        ; $6f82: $6c
-	ld   b, $24                                      ; $6f83: $06 $24
-	ld   de, $066a                                   ; $6f85: $11 $6a $06
-	inc  h                                           ; $6f88: $24
-	ld   [$0668], sp                                 ; $6f89: $08 $68 $06
-	db   $10                                         ; $6f8c: $10
-	ld   c, l                                        ; $6f8d: $4d
-	ld   h, [hl]                                     ; $6f8e: $66
-	ld   b, $10                                      ; $6f8f: $06 $10
-	ld   b, l                                        ; $6f91: $45
-	ld   h, h                                        ; $6f92: $64
-	ld   b, $10                                      ; $6f93: $06 $10
-	dec  sp                                          ; $6f95: $3b
-	ld   h, d                                        ; $6f96: $62
-	ld   b, $10                                      ; $6f97: $06 $10
-	inc  sp                                          ; $6f99: $33
-	ld   h, b                                        ; $6f9a: $60
-	ld   b, $10                                      ; $6f9b: $06 $10
-	add  hl, hl                                      ; $6f9d: $29
-	ld   e, [hl]                                     ; $6f9e: $5e
-	ld   b, $10                                      ; $6f9f: $06 $10
-	ld   hl, $065c                                   ; $6fa1: $21 $5c $06
-	db   $10                                         ; $6fa4: $10
-	rla                                              ; $6fa5: $17
-	ld   e, d                                        ; $6fa6: $5a
-	ld   b, $10                                      ; $6fa7: $06 $10
-	rrca                                             ; $6fa9: $0f
-	ld   e, b                                        ; $6faa: $58
-	ld   d, $24                                      ; $6fab: $16 $24
-	ld   d, h                                        ; $6fad: $54
-	ld   a, d                                        ; $6fae: $7a
-	ld   b, $24                                      ; $6faf: $06 $24
-	ld   c, h                                        ; $6fb1: $4c
-	ld   a, b                                        ; $6fb2: $78
-	ld   b, $24                                      ; $6fb3: $06 $24
-	ld   b, h                                        ; $6fb5: $44
-	halt                                             ; $6fb6: $76
-	ld   b, $24                                      ; $6fb7: $06 $24
-	inc  a                                           ; $6fb9: $3c
-	ld   [hl], h                                     ; $6fba: $74
-	ld   b, $24                                      ; $6fbb: $06 $24
-	cpl                                              ; $6fbd: $2f
-	ld   [hl], d                                     ; $6fbe: $72
-	ld   b, $24                                      ; $6fbf: $06 $24
-	daa                                              ; $6fc1: $27
-	ld   [hl], b                                     ; $6fc2: $70
-	ld   b, $24                                      ; $6fc3: $06 $24
-	ld   hl, $066e                                   ; $6fc5: $21 $6e $06
-	inc  h                                           ; $6fc8: $24
-	add  hl, de                                      ; $6fc9: $19
-	ld   l, h                                        ; $6fca: $6c
-	ld   b, $24                                      ; $6fcb: $06 $24
-	ld   de, $066a                                   ; $6fcd: $11 $6a $06
-	inc  h                                           ; $6fd0: $24
-	ld   [$0668], sp                                 ; $6fd1: $08 $68 $06
-	db   $10                                         ; $6fd4: $10
-	ld   c, l                                        ; $6fd5: $4d
-	ld   h, [hl]                                     ; $6fd6: $66
-	ld   b, $10                                      ; $6fd7: $06 $10
-	ld   b, l                                        ; $6fd9: $45
-	ld   h, h                                        ; $6fda: $64
-	ld   b, $10                                      ; $6fdb: $06 $10
-	dec  sp                                          ; $6fdd: $3b
-	ld   h, d                                        ; $6fde: $62
-	ld   b, $10                                      ; $6fdf: $06 $10
-	inc  sp                                          ; $6fe1: $33
-	ld   h, b                                        ; $6fe2: $60
-	ld   b, $10                                      ; $6fe3: $06 $10
-	add  hl, hl                                      ; $6fe5: $29
-	ld   e, [hl]                                     ; $6fe6: $5e
-	ld   b, $10                                      ; $6fe7: $06 $10
-	ld   hl, $065c                                   ; $6fe9: $21 $5c $06
-	db   $10                                         ; $6fec: $10
-	rla                                              ; $6fed: $17
-	ld   e, d                                        ; $6fee: $5a
-	ld   b, $10                                      ; $6fef: $06 $10
-	rrca                                             ; $6ff1: $0f
-	ld   e, b                                        ; $6ff2: $58
-	ld   d, $24                                      ; $6ff3: $16 $24
-	ld   d, h                                        ; $6ff5: $54
-	ld   a, d                                        ; $6ff6: $7a
-	ld   b, $24                                      ; $6ff7: $06 $24
-	ld   c, h                                        ; $6ff9: $4c
-	ld   a, b                                        ; $6ffa: $78
-	ld   b, $24                                      ; $6ffb: $06 $24
-	ld   b, h                                        ; $6ffd: $44
-	halt                                             ; $6ffe: $76
-	ld   b, $24                                      ; $6fff: $06 $24
-	inc  a                                           ; $7001: $3c
-	ld   [hl], h                                     ; $7002: $74
-	ld   b, $24                                      ; $7003: $06 $24
-	cpl                                              ; $7005: $2f
-	ld   [hl], d                                     ; $7006: $72
-	ld   b, $24                                      ; $7007: $06 $24
-	daa                                              ; $7009: $27
-	ld   [hl], b                                     ; $700a: $70
-	ld   b, $24                                      ; $700b: $06 $24
-	ld   hl, $066e                                   ; $700d: $21 $6e $06
-	inc  h                                           ; $7010: $24
-	add  hl, de                                      ; $7011: $19
-	ld   l, h                                        ; $7012: $6c
-	ld   b, $24                                      ; $7013: $06 $24
-	ld   de, $066a                                   ; $7015: $11 $6a $06
-	inc  h                                           ; $7018: $24
-	ld   [$0668], sp                                 ; $7019: $08 $68 $06
-	db   $10                                         ; $701c: $10
-	ld   c, l                                        ; $701d: $4d
-	ld   h, [hl]                                     ; $701e: $66
-	ld   b, $10                                      ; $701f: $06 $10
-	ld   b, l                                        ; $7021: $45
-	ld   h, h                                        ; $7022: $64
-	ld   b, $10                                      ; $7023: $06 $10
-	dec  sp                                          ; $7025: $3b
-	ld   h, d                                        ; $7026: $62
-	ld   b, $10                                      ; $7027: $06 $10
-	inc  sp                                          ; $7029: $33
-	ld   h, b                                        ; $702a: $60
-	ld   b, $10                                      ; $702b: $06 $10
-	add  hl, hl                                      ; $702d: $29
-	ld   e, [hl]                                     ; $702e: $5e
-	ld   b, $10                                      ; $702f: $06 $10
-	ld   hl, $065c                                   ; $7031: $21 $5c $06
-	db   $10                                         ; $7034: $10
-	rla                                              ; $7035: $17
-	ld   e, d                                        ; $7036: $5a
-	ld   b, $10                                      ; $7037: $06 $10
-	rrca                                             ; $7039: $0f
-	ld   e, b                                        ; $703a: $58
-	ld   d, $24                                      ; $703b: $16 $24
-	ld   d, h                                        ; $703d: $54
-	ld   a, d                                        ; $703e: $7a
-	ld   b, $24                                      ; $703f: $06 $24
-	ld   c, h                                        ; $7041: $4c
-	ld   a, b                                        ; $7042: $78
-	ld   b, $24                                      ; $7043: $06 $24
-	ld   b, h                                        ; $7045: $44
-	halt                                             ; $7046: $76
-	dec  b                                           ; $7047: $05
-	inc  h                                           ; $7048: $24
-	inc  a                                           ; $7049: $3c
-	ld   [hl], h                                     ; $704a: $74
-	dec  b                                           ; $704b: $05
-	inc  h                                           ; $704c: $24
-	cpl                                              ; $704d: $2f
-	ld   [hl], d                                     ; $704e: $72
-	ld   b, $24                                      ; $704f: $06 $24
-	daa                                              ; $7051: $27
-	ld   [hl], b                                     ; $7052: $70
-	ld   b, $24                                      ; $7053: $06 $24
-	ld   hl, $066e                                   ; $7055: $21 $6e $06
-	inc  h                                           ; $7058: $24
-	add  hl, de                                      ; $7059: $19
-	ld   l, h                                        ; $705a: $6c
-	ld   b, $24                                      ; $705b: $06 $24
-	ld   de, $066a                                   ; $705d: $11 $6a $06
-	inc  h                                           ; $7060: $24
-	ld   [$0668], sp                                 ; $7061: $08 $68 $06
-	db   $10                                         ; $7064: $10
-	ld   c, l                                        ; $7065: $4d
-	ld   h, [hl]                                     ; $7066: $66
-	ld   b, $10                                      ; $7067: $06 $10
-	ld   b, l                                        ; $7069: $45
-	ld   h, h                                        ; $706a: $64
-	ld   b, $10                                      ; $706b: $06 $10
-	dec  sp                                          ; $706d: $3b
-	ld   h, d                                        ; $706e: $62
-	ld   b, $10                                      ; $706f: $06 $10
-	inc  sp                                          ; $7071: $33
-	ld   h, b                                        ; $7072: $60
-	ld   b, $10                                      ; $7073: $06 $10
-	add  hl, hl                                      ; $7075: $29
-	ld   e, [hl]                                     ; $7076: $5e
-	ld   b, $10                                      ; $7077: $06 $10
-	ld   hl, $065c                                   ; $7079: $21 $5c $06
-	db   $10                                         ; $707c: $10
-	rla                                              ; $707d: $17
-	ld   e, d                                        ; $707e: $5a
-	ld   b, $10                                      ; $707f: $06 $10
-	rrca                                             ; $7081: $0f
-	ld   e, b                                        ; $7082: $58
-	ld   d, $24                                      ; $7083: $16 $24
-	ld   d, a                                        ; $7085: $57
-	ld   a, d                                        ; $7086: $7a
-	ld   b, $24                                      ; $7087: $06 $24
-	ld   c, a                                        ; $7089: $4f
-	ld   a, b                                        ; $708a: $78
-	ld   b, $24                                      ; $708b: $06 $24
-	ld   b, a                                        ; $708d: $47
-	halt                                             ; $708e: $76
-	ld   b, $24                                      ; $708f: $06 $24
-	ccf                                              ; $7091: $3f
-	ld   [hl], h                                     ; $7092: $74
-	ld   b, $24                                      ; $7093: $06 $24
-	ld   [hl-], a                                    ; $7095: $32
-	ld   [hl], d                                     ; $7096: $72
-	ld   b, $24                                      ; $7097: $06 $24
-	ld   a, [hl+]                                    ; $7099: $2a
-	ld   [hl], b                                     ; $709a: $70
-	ld   b, $24                                      ; $709b: $06 $24
-	ld   [hl+], a                                    ; $709d: $22
-	ld   l, [hl]                                     ; $709e: $6e
-	ld   b, $24                                      ; $709f: $06 $24
-	ld   a, [de]                                     ; $70a1: $1a
-	ld   l, h                                        ; $70a2: $6c
-	ld   b, $24                                      ; $70a3: $06 $24
-	db   $10                                         ; $70a5: $10
-	ld   l, d                                        ; $70a6: $6a
-	ld   b, $24                                      ; $70a7: $06 $24
-	ld   [$0668], sp                                 ; $70a9: $08 $68 $06
-	db   $10                                         ; $70ac: $10
-	ld   c, a                                        ; $70ad: $4f
-	ld   h, [hl]                                     ; $70ae: $66
-	ld   b, $10                                      ; $70af: $06 $10
-	ld   b, a                                        ; $70b1: $47
-	ld   h, h                                        ; $70b2: $64
-	ld   b, $10                                      ; $70b3: $06 $10
-	dec  a                                           ; $70b5: $3d
-	ld   h, d                                        ; $70b6: $62
-	ld   b, $10                                      ; $70b7: $06 $10
-	dec  [hl]                                        ; $70b9: $35
-	ld   h, b                                        ; $70ba: $60
-	ld   b, $10                                      ; $70bb: $06 $10
-	dec  hl                                          ; $70bd: $2b
-	ld   e, [hl]                                     ; $70be: $5e
-	ld   b, $10                                      ; $70bf: $06 $10
-	inc  hl                                          ; $70c1: $23
-	ld   e, h                                        ; $70c2: $5c
-	ld   b, $10                                      ; $70c3: $06 $10
-	add  hl, de                                      ; $70c5: $19
-	ld   e, d                                        ; $70c6: $5a
-	ld   b, $10                                      ; $70c7: $06 $10
-	ld   de, $1658                                   ; $70c9: $11 $58 $16
+if def(VWF)
+else
+SpriteGroupC_Idx58h_DayPassedSunday:
+endc
+	db $24, $54, $7a, $06
+	db $24, $4c, $78, $06
+	db $24, $44, $76, $04
+	db $24, $3c, $74, $04
+	db $24, $2f, $72, $06
+	db $24, $27, $70, $06
+	db $24, $21, $6e, $06
+	db $24, $19, $6c, $06
+	db $24, $11, $6a, $06
+	db $24, $08, $68, $06
+	db $10, $4d, $66, $06
+	db $10, $45, $64, $06
+	db $10, $3b, $62, $06
+	db $10, $33, $60, $06
+	db $10, $29, $5e, $06
+	db $10, $21, $5c, $06
+	db $10, $17, $5a, $06
+	db $10, $0f, $58, $16
+
+
+if def(VWF)
+else
+SpriteGroupC_Idx59h_DayPassedMonday:
+endc
+	db $24, $54, $7a, $06
+	db $24, $4c, $78, $06
+	db $24, $44, $76, $06
+	db $24, $3c, $74, $06
+	db $24, $2f, $72, $06
+	db $24, $27, $70, $06
+	db $24, $21, $6e, $06
+	db $24, $19, $6c, $06
+	db $24, $11, $6a, $06
+	db $24, $08, $68, $06
+	db $10, $4d, $66, $06
+	db $10, $45, $64, $06
+	db $10, $3b, $62, $06
+	db $10, $33, $60, $06
+	db $10, $29, $5e, $06
+	db $10, $21, $5c, $06
+	db $10, $17, $5a, $06
+	db $10, $0f, $58, $16
+
+
+if def(VWF)
+else
+SpriteGroupC_Idx5ah_DayPassedTuesday:
+endc
+	db $24, $54, $7a, $06
+	db $24, $4c, $78, $06
+	db $24, $44, $76, $06
+	db $24, $3c, $74, $06
+	db $24, $2f, $72, $06
+	db $24, $27, $70, $06
+	db $24, $21, $6e, $06
+	db $24, $19, $6c, $06
+	db $24, $11, $6a, $06
+	db $24, $08, $68, $06
+	db $10, $4d, $66, $06
+	db $10, $45, $64, $06
+	db $10, $3b, $62, $06
+	db $10, $33, $60, $06
+	db $10, $29, $5e, $06
+	db $10, $21, $5c, $06
+	db $10, $17, $5a, $06
+	db $10, $0f, $58, $16
+
+
+if def(VWF)
+else
+SpriteGroupC_Idx5bh_DayPassedWednesday:
+endc
+	db $24, $54, $7a, $06
+	db $24, $4c, $78, $06
+	db $24, $44, $76, $06
+	db $24, $3c, $74, $06
+	db $24, $2f, $72, $06
+	db $24, $27, $70, $06
+	db $24, $21, $6e, $06
+	db $24, $19, $6c, $06
+	db $24, $11, $6a, $06
+	db $24, $08, $68, $06
+	db $10, $4d, $66, $06
+	db $10, $45, $64, $06
+	db $10, $3b, $62, $06
+	db $10, $33, $60, $06
+	db $10, $29, $5e, $06
+	db $10, $21, $5c, $06
+	db $10, $17, $5a, $06
+	db $10, $0f, $58, $16
+
+
+if def(VWF)
+else
+SpriteGroupC_Idx5ch_DayPassedThursday:
+endc
+	db $24, $54, $7a, $06
+	db $24, $4c, $78, $06
+	db $24, $44, $76, $06
+	db $24, $3c, $74, $06
+	db $24, $2f, $72, $06
+	db $24, $27, $70, $06
+	db $24, $21, $6e, $06
+	db $24, $19, $6c, $06
+	db $24, $11, $6a, $06
+	db $24, $08, $68, $06
+	db $10, $4d, $66, $06
+	db $10, $45, $64, $06
+	db $10, $3b, $62, $06
+	db $10, $33, $60, $06
+	db $10, $29, $5e, $06
+	db $10, $21, $5c, $06
+	db $10, $17, $5a, $06
+	db $10, $0f, $58, $16
+
+
+if def(VWF)
+else
+SpriteGroupC_Idx5dh_DayPassedFriday:
+endc
+	db $24, $54, $7a, $06
+	db $24, $4c, $78, $06
+	db $24, $44, $76, $06
+	db $24, $3c, $74, $06
+	db $24, $2f, $72, $06
+	db $24, $27, $70, $06
+	db $24, $21, $6e, $06
+	db $24, $19, $6c, $06
+	db $24, $11, $6a, $06
+	db $24, $08, $68, $06
+	db $10, $4d, $66, $06
+	db $10, $45, $64, $06
+	db $10, $3b, $62, $06
+	db $10, $33, $60, $06
+	db $10, $29, $5e, $06
+	db $10, $21, $5c, $06
+	db $10, $17, $5a, $06
+	db $10, $0f, $58, $16
+
+
+if def(VWF)
+else
+SpriteGroupC_Idx5eh_DayPassedSaturday:
+endc
+	db $24, $54, $7a, $06
+	db $24, $4c, $78, $06
+	db $24, $44, $76, $05
+	db $24, $3c, $74, $05
+	db $24, $2f, $72, $06
+	db $24, $27, $70, $06
+	db $24, $21, $6e, $06
+	db $24, $19, $6c, $06
+	db $24, $11, $6a, $06
+	db $24, $08, $68, $06
+	db $10, $4d, $66, $06
+	db $10, $45, $64, $06
+	db $10, $3b, $62, $06
+	db $10, $33, $60, $06
+	db $10, $29, $5e, $06
+	db $10, $21, $5c, $06
+	db $10, $17, $5a, $06
+	db $10, $0f, $58, $16
+
+
+if def(VWF)
+else
+SpriteGroupC_Idx5fh_DayPassedLastDay:
+endc
+	db $24, $57, $7a, $06
+	db $24, $4f, $78, $06
+	db $24, $47, $76, $06
+	db $24, $3f, $74, $06
+	db $24, $32, $72, $06
+	db $24, $2a, $70, $06
+	db $24, $22, $6e, $06
+	db $24, $1a, $6c, $06
+	db $24, $10, $6a, $06
+	db $24, $08, $68, $06
+	db $10, $4f, $66, $06
+	db $10, $47, $64, $06
+	db $10, $3d, $62, $06
+	db $10, $35, $60, $06
+	db $10, $2b, $5e, $06
+	db $10, $23, $5c, $06
+	db $10, $19, $5a, $06
+	db $10, $11, $58, $16
 
 
 SpriteGroupFPointers::
@@ -11525,5 +11307,189 @@ SpriteGroup1_Idxa3h_GameOverRightKanji4:
 	db $08, $28, $ea, $0b
 	db $18, $28, $ec, $1b
 	;db $30, $28, $ee, $1b
+
+SpriteGroupC_Idx58h_DayPassedSunday:
+; Trial enlistment
+	db $10, $0f, $00, $0e
+	db $10, $17, $02, $0e
+	db $10, $1f, $04, $0e
+	db $10, $27, $06, $0e
+	db $10, $2f, $08, $0e
+	db $10, $37, $0a, $0e
+	db $10, $3f, $0c, $0e
+	db $10, $47, $0e, $0e
+	db $10, $4f, $10, $0e
+	db $10, $57, $12, $0e
+
+; Day + num
+	db $24, $0e, $14, $0e
+	db $24, $16, $16, $0e
+	db $24, $1e, $18, $0e
+	db $24, $26, $1a, $0e
+	db $24, $2e, $1c, $0e
+	
+; Weekday
+	db $24, $3e, $1e, $0c
+	db $24, $46, $20, $0c
+	db $24, $4e, $22, $0c
+	db $24, $56, $24, $0c
+	db $24, $5e, $26, $1c
+SpriteGroupC_Idx59h_DayPassedMonday:
+; Trial enlistment
+	db $10, $0f, $00, $0e
+	db $10, $17, $02, $0e
+	db $10, $1f, $04, $0e
+	db $10, $27, $06, $0e
+	db $10, $2f, $08, $0e
+	db $10, $37, $0a, $0e
+	db $10, $3f, $0c, $0e
+	db $10, $47, $0e, $0e
+	db $10, $4f, $10, $0e
+	db $10, $57, $12, $0e
+
+; Day + num
+	db $24, $0f, $14, $0e
+	db $24, $17, $16, $0e
+	db $24, $1f, $18, $0e
+	db $24, $27, $1a, $0e
+	db $24, $2f, $1c, $0e
+	
+; Weekday
+	db $24, $3f, $1e, $0e
+	db $24, $47, $20, $0e
+	db $24, $4f, $22, $0e
+	db $24, $57, $24, $0e
+	db $24, $5f, $26, $1e
+SpriteGroupC_Idx5ah_DayPassedTuesday:
+; Trial enlistment
+	db $10, $0f, $00, $0e
+	db $10, $17, $02, $0e
+	db $10, $1f, $04, $0e
+	db $10, $27, $06, $0e
+	db $10, $2f, $08, $0e
+	db $10, $37, $0a, $0e
+	db $10, $3f, $0c, $0e
+	db $10, $47, $0e, $0e
+	db $10, $4f, $10, $0e
+	db $10, $57, $12, $0e
+
+; Day + num
+	db $24, $11, $14, $0e
+	db $24, $19, $16, $0e
+	db $24, $21, $18, $0e
+	db $24, $29, $1a, $0e
+	db $24, $31, $1c, $0e
+	
+; Weekday
+	db $24, $41, $1e, $0e
+	db $24, $49, $20, $0e
+	db $24, $51, $22, $0e
+	db $24, $59, $24, $0e
+	db $24, $61, $26, $1e
+SpriteGroupC_Idx5bh_DayPassedWednesday:
+; Trial enlistment
+	db $10, $0f, $00, $0e
+	db $10, $17, $02, $0e
+	db $10, $1f, $04, $0e
+	db $10, $27, $06, $0e
+	db $10, $2f, $08, $0e
+	db $10, $37, $0a, $0e
+	db $10, $3f, $0c, $0e
+	db $10, $47, $0e, $0e
+	db $10, $4f, $10, $0e
+	db $10, $57, $12, $0e
+
+; Day + num
+	db $24, $0e, $14, $0e
+	db $24, $16, $16, $0e
+	db $24, $1e, $18, $0e
+	db $24, $26, $1a, $0e
+	db $24, $2e, $1c, $0e
+	
+; Weekday
+	db $24, $3e, $1e, $0e
+	db $24, $46, $20, $0e
+	db $24, $4e, $22, $0e
+	db $24, $56, $24, $0e
+	db $24, $5e, $26, $1e
+SpriteGroupC_Idx5ch_DayPassedThursday:
+SpriteGroupC_Idx5dh_DayPassedFriday:
+; Trial enlistment
+	db $10, $0f, $00, $0e
+	db $10, $17, $02, $0e
+	db $10, $1f, $04, $0e
+	db $10, $27, $06, $0e
+	db $10, $2f, $08, $0e
+	db $10, $37, $0a, $0e
+	db $10, $3f, $0c, $0e
+	db $10, $47, $0e, $0e
+	db $10, $4f, $10, $0e
+	db $10, $57, $12, $0e
+
+; Day + num
+	db $24, $13, $14, $0e
+	db $24, $1b, $16, $0e
+	db $24, $23, $18, $0e
+	db $24, $2b, $1a, $0e
+	db $24, $33, $1c, $0e
+	
+; Weekday
+	db $24, $43, $1e, $0e
+	db $24, $4b, $20, $0e
+	db $24, $53, $22, $0e
+	db $24, $5b, $24, $0e
+	db $24, $63, $26, $1e
+SpriteGroupC_Idx5eh_DayPassedSaturday:
+; Trial enlistment
+	db $10, $0f, $00, $0e
+	db $10, $17, $02, $0e
+	db $10, $1f, $04, $0e
+	db $10, $27, $06, $0e
+	db $10, $2f, $08, $0e
+	db $10, $37, $0a, $0e
+	db $10, $3f, $0c, $0e
+	db $10, $47, $0e, $0e
+	db $10, $4f, $10, $0e
+	db $10, $57, $12, $0e
+
+; Day + num
+	db $24, $12, $14, $0e
+	db $24, $1a, $16, $0e
+	db $24, $22, $18, $0e
+	db $24, $2a, $1a, $0e
+	db $24, $32, $1c, $0e
+	
+; Weekday
+	db $24, $42, $1e, $0d
+	db $24, $4a, $20, $0d
+	db $24, $52, $22, $0d
+	db $24, $5a, $24, $0d
+	db $24, $62, $26, $1d
+SpriteGroupC_Idx5fh_DayPassedLastDay:
+; Trial enlistment
+	db $10, $0f, $00, $0e
+	db $10, $17, $02, $0e
+	db $10, $1f, $04, $0e
+	db $10, $27, $06, $0e
+	db $10, $2f, $08, $0e
+	db $10, $37, $0a, $0e
+	db $10, $3f, $0c, $0e
+	db $10, $47, $0e, $0e
+	db $10, $4f, $10, $0e
+	db $10, $57, $12, $0e
+
+; Last day
+	db $24, $14, $14, $0e
+	db $24, $1c, $16, $0e
+	db $24, $24, $18, $0e
+	db $24, $2c, $1a, $0e
+	db $24, $34, $1c, $0e
+
+; Weekday
+	db $24, $3e, $1e, $0e
+	db $24, $46, $20, $0e
+	db $24, $4e, $22, $0e
+	db $24, $56, $24, $0e
+	db $24, $5e, $26, $1e
 
 endc
