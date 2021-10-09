@@ -593,6 +593,18 @@ Gfx_EnSettings:
 
 
 ChangeSettingsTileMap::
+	ld   hl, $dc00                                   ; $499c: $21 $00 $dc
+	ld   b, $40                                      ; $499f: $06 $40
+	call EnqueueHDMATransfer                                       ; $49a1: $cd $7c $02
+	rst  WaitUntilVBlankIntHandledIfLCDOn                                         ; $49a4: $cf
+
+;
+	ld   a, BANK(RleXorTileMap_Settings)                                      ; $49a5: $3e $1d
+	ld   hl, $d800                                   ; $49a7: $21 $00 $d8
+	ld   de, RleXorTileMap_Settings                                   ; $49aa: $11 $8f $67
+	call RLEXorCopy
+
+; Custom
 	ld   a, BANK(TileMap_SettingsMainBit)
 	ldbc $0e, $0a
 	ld   de, TileMap_SettingsMainBit
@@ -1388,59 +1400,124 @@ LoadIrisMiniGameTitleScreenGfxSpr::
 	ret
 
 .gfx:
+ASSERT .end-.gfx == $1e0
 	INCBIN "en_irisMGTitleScreenSpr.2bpp"
 .end:
 
 
+CacheShowAndHidePressA::
+	ld   bc, $140
+	ld   de, $d600
+	ld   hl, LoadIrisMiniGameTitleScreenGfxSpr.gfx+$a0
+	call MemCopy
+
+	ld   bc, $140
+	ld   hl, $de80
+	call MemClear
+	ret
+
+
+_ResetIrisFlashASetupHook::
+	ld   a, $21                                      ; $789c: $3e $21
+	ld   [wIrisMiniGameFlashACounter], a                                  ; $789e: $ea $dc $c9
+	xor  a                                           ; $78a1: $af
+	ld   [wIrisMiniGameHidePressA], a
+
+	ld   c, $80
+	ld   de, $8400
+	ld   a, $03
+	ld   hl, $d600
+	ld   b, $140/$10
+	call EnqueueHDMATransfer
+	ret
+
+	
+_DisplayIris1stPopupBox::
+	ld   c, $80
+	ld   de, $8400
+	ld   a, $03
+	ld   hl, $de80
+	ld   b, $140/$10
+	call EnqueueHDMATransfer
+
+	ld   a, [wIsChestMiniGame]                                  ; $78a9: $fa $1d $cb
+	or   a                                           ; $78ac: $b7
+	jr   nz, .chest                             ; $78ad: $20 $20
+
+	ld   c, $80                                      ; $78af: $0e $80
+	ld   de, $9920
+	ld   a, $03                                      ; $78b4: $3e $03
+	ld   hl, $d100                                   ; $78b6: $21 $00 $d1
+	ld   b, $0c                                      ; $78b9: $06 $0c
+	call EnqueueHDMATransfer                                       ; $78bb: $cd $7c $02
+	ld   c, $81                                      ; $78be: $0e $81
+	ld   de, $9920
+	ld   a, $03                                      ; $78c3: $3e $03
+	ld   hl, $d400                                   ; $78c5: $21 $00 $d4
+	ld   b, $0c                                      ; $78c8: $06 $0c
+	call EnqueueHDMATransfer                                       ; $78ca: $cd $7c $02
+	ret                                 ; $78cd: $18 $1e
+
+.chest:
+	ld   c, $80                                      ; $78cf: $0e $80
+	ld   de, $9920
+	ld   a, $03                                      ; $78d4: $3e $03
+	ld   hl, $d000                                   ; $78d6: $21 $00 $d0
+	ld   b, $0c                                      ; $78d9: $06 $0c
+	call EnqueueHDMATransfer                                       ; $78db: $cd $7c $02
+	ld   c, $81                                      ; $78de: $0e $81
+	ld   de, $9920
+	ld   a, $03                                      ; $78e3: $3e $03
+	ld   hl, $d300                                   ; $78e5: $21 $00 $d3
+	ld   b, $0c                                      ; $78e8: $06 $0c
+	call EnqueueHDMATransfer                                       ; $78ea: $cd $7c $02
+	ret
+
+
 LoadIrisMiniGameTitleScreenGfx1::
-	ld   bc, 11*$10
+	ld   bc, 8*$10
 	ld   de, $d000
 	ld   hl, .row1
 	call MemCopy
 
-	ld   bc, 11*$10
-	ld   de, $d000+11*$10
+	ld   bc, 10*$10
+	ld   de, $d000+8*$10
 	ld   hl, .row2
 	call MemCopy
 
 	ld   bc, 11*$10
-	ld   de, $d000+22*$10
+	ld   de, $d000+18*$10
 	ld   hl, .row3
 	call MemCopy
 
-	ld   bc, 6*$10
-	ld   de, $d000+33*$10
+	ld   bc, 11*$10
+	ld   de, $d000+29*$10
 	ld   hl, .row4
 	call MemCopy
 
-	ld   bc, 9*$10
-	ld   de, $d000+39*$10
+	ld   bc, 8*$10
+	ld   de, $d000+40*$10
 	ld   hl, .row5
 	call MemCopy
 
-	ld   bc, 9*$10
+	ld   bc, 8*$10
 	ld   de, $d000+48*$10
 	ld   hl, .row6
 	call MemCopy
 
-	ld   bc, 12*$10
-	ld   de, $d000+57*$10
+	ld   bc, 9*$10
+	ld   de, $d000+56*$10
 	ld   hl, .row7
 	call MemCopy
 
-	ld   bc, 13*$10
-	ld   de, $d000+69*$10
+	ld   bc, 9*$10
+	ld   de, $d000+65*$10
 	ld   hl, .row8
 	call MemCopy
 
-	ld   bc, 13*$10
-	ld   de, $d000+82*$10
+	ld   bc, 8*$10
+	ld   de, $d000+74*$10
 	ld   hl, .row9
-	call MemCopy
-
-	ld   bc, $10
-	ld   de, $d000+95*$10
-	ld   hl, .dress
 	call MemCopy
 
 ; Transfer new tiles
@@ -1467,25 +1544,23 @@ LoadIrisMiniGameTitleScreenGfx1::
 
 	ret
 .row1:
-	INCBIN "en_irisMiniGameTitleScreen.2bpp", 0, 11*$10
+	INCBIN "en_irisMiniGameTitleScreen.2bpp", (0*11)*$10, 8*$10
 .row2:
-	INCBIN "en_irisMiniGameTitleScreen.2bpp", 20*$10, 11*$10
+	INCBIN "en_irisMiniGameTitleScreen.2bpp", (1*11)*$10, 10*$10
 .row3:
-	INCBIN "en_irisMiniGameTitleScreen.2bpp", 40*$10, 11*$10
+	INCBIN "en_irisMiniGameTitleScreen.2bpp", (2*11)*$10, 11*$10
 .row4:
-	INCBIN "en_irisMiniGameTitleScreen.2bpp", 65*$10, 6*$10
+	INCBIN "en_irisMiniGameTitleScreen.2bpp", (3*11)*$10, 11*$10
 .row5:
-	INCBIN "en_irisMiniGameTitleScreen.2bpp", 82*$10, 9*$10
+	INCBIN "en_irisMiniGameTitleScreen.2bpp", (4*11)*$10, 8*$10
 .row6:
-	INCBIN "en_irisMiniGameTitleScreen.2bpp", 102*$10, 9*$10
+	INCBIN "en_irisMiniGameTitleScreen.2bpp", (5*11)*$10, 8*$10
 .row7:
-	INCBIN "en_irisMiniGameTitleScreen.2bpp", 128*$10, 12*$10
+	INCBIN "en_irisMiniGameTitleScreen.2bpp", (6*11)*$10, 9*$10
 .row8:
-	INCBIN "en_irisMiniGameTitleScreen.2bpp", 147*$10, 13*$10
+	INCBIN "en_irisMiniGameTitleScreen.2bpp", (7*11)*$10, 9*$10
 .row9:
-	INCBIN "en_irisMiniGameTitleScreen.2bpp", 167*$10, 13*$10
-.dress:
-	INCBIN "en_irisMiniGameTitleScreen.2bpp", 51*$10, $10
+	INCBIN "en_irisMiniGameTitleScreen.2bpp", (8*11)*$10, 8*$10
 
 
 LoadKannaMiniGameTitleScreenGfx1_2::

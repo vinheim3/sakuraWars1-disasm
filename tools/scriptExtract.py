@@ -638,7 +638,7 @@ class ScriptExtractor:
                     if i != 0:
                         if self.scriptNum == 6:
                             comps.append("\tScriptOpt_SetDelay $3c")
-                            totalBytes += 1
+                            totalBytes += 2
                         comps.append("\tScriptOpt_ContinuePrompt")
                         totalBytes += 1
 
@@ -857,7 +857,7 @@ class ScriptExtractor:
 
 if __name__ == "__main__":
     quotePrefixed = []
-    wb = load_workbook('sakura wars GB - 06:10:21.xlsx')
+    wb = load_workbook('sakura wars GB - 09:10:21.xlsx')
     ws = wb['temp']
     for i, row in enumerate(ws.rows):
         english = row[4]
@@ -892,7 +892,7 @@ if __name__ == "__main__":
     doneEnglish = {}
 
     if translate:
-        with open('sakura wars GB - 06:10:21.csv') as f:
+        with open('sakura wars GB - 09:10:21.csv') as f:
             reader = csv.reader(f)
             for i, (scriptNum, offset, orig, blank, english, char, dupe1, dupe2) in enumerate(reader):
                 if not scriptNum:
@@ -976,6 +976,16 @@ SECTION "Bank $00", ROM0[$150]
             if ret != 0:
                 break
             os.chdir('..')
+
+            # Check total bytes matches used
+            with open('scriptBuild/sakuraWars1.map') as f:
+                usedLine = None
+                for line in f.read().split('\n'):
+                    if "bytes in 1 bank" in line:
+                        usedLine = line
+            if usedLine is None:
+                raise Exception(f"{scriptNum} no usedLine")
+            assert int(usedLine.split()[1][1:], 16) <= totalBytes, f"{scriptNum}, {totalBytes:04x}"
 
             with open('scriptBuild/sakuraWars1.gbc', 'rb') as f:
                 compiledBytes = f.read()[0x150:0x150+totalBytes]

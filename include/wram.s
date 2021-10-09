@@ -470,7 +470,31 @@ wPushUpsCurrPushupToDo:: ; $c9ac
     db
 
 wc9ad:
-    ds $a01-$9ad
+    ds $dc-$ad
+
+wIrisMiniGameFlashACounter:: ; $c9dc
+    db
+
+wIrisMiniGameHidePressA:: ; $c9dd
+    db
+
+wIrisMiniGameCursorSpriteSpecIdxUsed:: ; $c9de
+    db
+
+wIrisMiniGameHardModeUnlocked:: ; $c9df
+    db
+
+wc9e0:
+    ds 1-0
+
+wIrisMiniGameTitleScreenReturnState:: ; $c9e1
+    db
+
+wIrisMiniGameTitleScreenReturnSubstate:: ; $c9e2
+    db
+
+wc9e3:
+    ds $a01-$9e3
 
 wGameResultsReturnState:: ; $ca01
     db
