@@ -10406,7 +10406,11 @@ jr_030_796f:
 	push af                                          ; $796f: $f5
 	ld   b, $00                                      ; $7970: $06 $00
 	ld   c, $40                                      ; $7972: $0e $40
+if def(VWF)
+	call SoundModeFadeInHook
+else
 	call FadePalettesAndSetRangeToUpdate                                       ; $7974: $cd $32 $08
+endc
 	rst  WaitUntilVBlankIntHandledIfLCDOn                                         ; $7977: $cf
 	rst  WaitUntilVBlankIntHandledIfLCDOn                                         ; $7978: $cf
 	rst  WaitUntilVBlankIntHandledIfLCDOn                                         ; $7979: $cf
@@ -11354,6 +11358,7 @@ SoundModeLoadTextHook:
 
 
 SoundModeLCDOnHook:
+; Clear textbox tile map
 	ldbc 14, 6
 	ld   a, $ff
 	ld   hl, $9965
@@ -11427,5 +11432,19 @@ CreditsSubstate7_Credits2Main:
 	add  $04                                         ; $6c69: $c6 $04
 	and  $fc                                         ; $6c6b: $e6 $fc
 	jp   _Credits2MainRet
+
+
+SoundModeFadeInHook:
+	call FadePalettesAndSetRangeToUpdate
+
+	call ClearOam                                       ; $7553: $cd $d7 $0d
+
+; Load sprite for current song
+	ldbc $70, $0f                                   ; $7556: $01 $0f $70
+	ld   a, $0b                                      ; $7559: $3e $0b
+	ld   [wSpriteGroup], a                                  ; $755b: $ea $1a $c2
+	ld   a, $44                                      ; $755e: $3e $44
+	call LoadSpriteFromMainTable                                       ; $7560: $cd $16 $0e
+	ret
 
 endc
