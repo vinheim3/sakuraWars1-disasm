@@ -220,7 +220,7 @@ class ScriptExtractor:
                 calc = colCounter + wordLen
                 if i != 0:
                     calc += spaceLen
-                if calc >= limit:
+                if calc > limit:
                     lineCounter += 1
                     colCounter = 0
                     if lineCounter >= rows:

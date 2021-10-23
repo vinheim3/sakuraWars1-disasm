@@ -4228,13 +4228,23 @@ EventGalleryTileMapHook:
 PortraitGalleryBank1_8800hHook:
 	call RLEXorCopy
 
-	ld   bc, .end-.gfx
-	ld   de, $9000
 	ld   hl, .gfx
+	ld   bc, $120
+	ld   de, $8800
+	call MemCopy
+
+	ld   hl, .gfx+$120
+	ld   bc, $130
+	ld   de, $8970
+	call MemCopy
+
+	ld   hl, .gfx+$250
+	ld   bc, $20
+	ld   de, $8ab0
 	call MemCopy
 	ret
 .gfx:
-	INCBIN "en_portraitGallery.2bpp"
+	INCBIN "en_portraitGallery.2bpp" ; $280
 .end:
 
 
@@ -4247,26 +4257,26 @@ PortraitGalleryTileMap:
 	ld   hl, $9965
 	call FarCopyLayout
 
-	ld   a, $11
+	ld   a, $91
 	ld   [$9a0c], a
-	inc  a
+	ld   a, $97
 	ld   [$9a0d], a
 	inc  a
 	ld   [$9a0e], a
 
-	ld   a, $25
+	ld   a, $ab
 	ld   [$9a10], a
 	inc  a
-	ld   [$9a11], a
+	ld   [$9a11], a	
 	ret
 .mainLayout:
-	db $00, $01, $02, $03, $04, $05, $06, $07, $08, $09, $0a, $0b, $0c
-	db $14, $15, $16, $17, $18, $19, $1a, $1b, $1c, $1d, $1e, $1f, $20
+	db $80, $81, $82, $83, $84, $85, $86, $87, $88, $89, $8a, $8b, $8c
+	db $99, $9a, $9b, $9c, $9d, $9e, $9f, $a0, $a1, $a2, $a3, $a4, $a5
 
 
 PortraitGalleryNonePlayerHook:
 	dec  hl
-	ld   a, $0d
+	ld   a, $8d
 	ld   [hl+], a
 	inc  a
 	ld   [hl+], a
@@ -4277,7 +4287,7 @@ PortraitGalleryNonePlayerHook:
 
 	ld   de, $1c
 	add  hl, de
-	ld   a, $21
+	ld   a, $a6
 	ld   [hl+], a
 	inc  a
 	ld   [hl+], a
@@ -4291,7 +4301,7 @@ PortraitGalleryNonePlayerHook:
 PortraitGalleryNonNonePlayerHook:
 	push af
 
-	ld   a, $27
+	ld   a, $96
 	ld   [$d0c5], a
 	ld   [$d0c8], a
 	ld   [$d0e5], a

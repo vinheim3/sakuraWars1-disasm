@@ -1196,6 +1196,18 @@
                                 ['setBytes', 0, 0, 0x9800+0xa0, ...(new Array(0x10)).fill(0).map((_, i)=>i+0x50+0)],
                             ],
                             showTileData: true,
+                        },
+                        {
+                            name: "Explore Floor 1 Day",
+                            sources: [
+                                ['rleXorCopy', 0x8e, 0x5a50, 0x8800, 'memory'],
+                                ['rleXorCopy', 0x8f, 0x6150, 0x1000, 'vram1'],
+                                ['simpleCopy', 0x8f, 0x7fa0, 0, 0x40, 'rom', 'bgPalettes'],
+                                ['screenCopy', 0x8f, 0x7690, 0x1800, 'rom', 'vram1', 0x14, 0x12],
+                                ['screenCopy', 0x8f, 0x77f8, 0x9800, 'rom', 'memory', 0x14, 0x12],
+                                
+                            ],
+                            isGBC: true,
                         }
                     ],
                 },
