@@ -1204,11 +1204,71 @@
                                 ['rleXorCopy', 0x8f, 0x6150, 0x1000, 'vram1'],
                                 ['simpleCopy', 0x8f, 0x7fa0, 0, 0x40, 'rom', 'bgPalettes'],
                                 ['screenCopy', 0x8f, 0x7690, 0x1800, 'rom', 'vram1', 0x14, 0x12],
-                                ['screenCopy', 0x8f, 0x77f8, 0x9800, 'rom', 'memory', 0x14, 0x12],
+                                ['screenCopy', 0x8f, 0x7690+0x168, 0x9800, 'rom', 'memory', 0x14, 0x12],
                                 
                             ],
                             isGBC: true,
-                        }
+                        },
+                        {
+                            name: "Explore Floor 2 Day",
+                            sources: [
+                                ['rleXorCopy', 0x8e, 0x4000, 0x8800, 'memory'],
+                                ['rleXorCopy', 0x8f, 0x5b90, 0x1000, 'vram1'],
+                                ['simpleCopy', 0x90, 0x4cd0, 0, 0x40, 'rom', 'bgPalettes'],
+                                ['screenCopy', 0x8f, 0x7960, 0x1800, 'rom', 'vram1', 0x14, 0x12],
+                                ['screenCopy', 0x8f, 0x7960+0x168, 0x9800, 'rom', 'memory', 0x14, 0x12],
+                                
+                            ],
+                            isGBC: true,
+                        },
+                        {
+                            name: "Explore Floor B Day",
+                            sources: [
+                                ['rleXorCopy', 0x8e, 0x7160, 0x8800, 'memory'],
+                                ['rleXorCopy', 0x8f, 0x6c30, 0x1000, 'vram1'],
+                                ['simpleCopy', 0x90, 0x4d10, 0, 0x40, 'rom', 'bgPalettes'],
+                                ['screenCopy', 0x8f, 0x7c30, 0x1800, 'rom', 'vram1', 0x14, 0x12],
+                                ['screenCopy', 0x8f, 0x7c30+0x168, 0x9800, 'rom', 'memory', 0x14, 0x12],
+                                
+                            ],
+                            isGBC: true,
+                        },
+                        {
+                            name: "Explore Floor 1 Night",
+                            sources: [
+                                ['rleXorCopy', 0x8e, 0x4d30, 0x8800, 'memory'],
+                                ['rleXorCopy', 0x8f, 0x66f0, 0x1000, 'vram1'],
+                                ['simpleCopy', 0x90, 0x4d50, 0, 0x40, 'rom', 'bgPalettes'],
+                                ['screenCopy', 0x90, 0x4000, 0x1800, 'rom', 'vram1', 0x14, 0x12],
+                                ['screenCopy', 0x90, 0x4000+0x168, 0x9800, 'rom', 'memory', 0x14, 0x12],
+                                
+                            ],
+                            isGBC: true,
+                        },
+                        {
+                            name: "Explore Floor 2 Night",
+                            sources: [
+                                ['rleXorCopy', 0x8d, 0x6000, 0x8800, 'memory'],
+                                ['rleXorCopy', 0x8f, 0x55d0, 0x1000, 'vram1'],
+                                ['simpleCopy', 0x90, 0x4d90, 0, 0x40, 'rom', 'bgPalettes'],
+                                ['screenCopy', 0x90, 0x42d0, 0x1800, 'rom', 'vram1', 0x14, 0x12],
+                                ['screenCopy', 0x90, 0x42d0+0x168, 0x9800, 'rom', 'memory', 0x14, 0x12],
+                                
+                            ],
+                            isGBC: true,
+                        },
+                        {
+                            name: "Explore Floor B Night",
+                            sources: [
+                                ['rleXorCopy', 0x8e, 0x66f0, 0x8800, 'memory'],
+                                ['rleXorCopy', 0x8f, 0x7170, 0x1000, 'vram1'],
+                                ['simpleCopy', 0x90, 0x4dd0, 0, 0x40, 'rom', 'bgPalettes'],
+                                ['screenCopy', 0x90, 0x45a0, 0x1800, 'rom', 'vram1', 0x14, 0x12],
+                                ['screenCopy', 0x90, 0x45a0+0x168, 0x9800, 'rom', 'memory', 0x14, 0x12],
+                                
+                            ],
+                            isGBC: true,
+                        },
                     ],
                 },
                 methods: {

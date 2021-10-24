@@ -1879,6 +1879,33 @@ _CinematronTileAttrHook::
 	db $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f
 	db $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f
 
+
+_InventoryLayout0Hook::
+	call FarCopyLayout
+
+	ld   a, $08
+	ld   [$d000+$20], a
+	ld   [$d000+$33], a
+	ld   [$d000+$40], a
+	ld   [$d000+$53], a
+	ld   [$d000+$60], a
+	ld   [$d000+$73], a
+	ld   [$d000+$80], a
+	ld   [$d000+$93], a
+
+	ld   a, BANK(.textLayout)
+	ldbc 20, 4
+	ld   de, .textLayout
+	ld   hl, $d400+$20
+	call FarCopyLayout
+	ret
+
+.textLayout:
+	db $82, $84, $86, $88, $8a, $8c, $8e, $90, $92, $94, $96, $98, $9a, $9c, $9e, $a0, $a2, $a4, $a6, $a8
+	db $83, $85, $87, $89, $8b, $8d, $8f, $91, $93, $95, $97, $99, $9b, $9d, $9f, $a1, $a3, $a5, $a7, $a9
+	db $aa, $ac, $ae, $b0, $b2, $b4, $b6, $b8, $ba, $bc, $be, $c0, $c2, $c4, $c6, $c8, $ca, $cc, $ce, $d0
+	db $ab, $ad, $af, $b1, $b3, $b5, $b7, $b9, $bb, $bd, $bf, $c1, $c3, $c5, $c7, $c9, $cb, $cd, $cf, $d1
+
 endc
 
 if def(PORTRAITLESS_UNTIMED)

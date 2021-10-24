@@ -80,7 +80,11 @@ ExploreSubstate0_InitAndMapBank0TileData1:
 	ld   d, h                                        ; $4070: $54
 	ld   e, l                                        ; $4071: $5d
 	ld   hl, $d000                                   ; $4072: $21 $00 $d0
+if def(VWF)
+	call ExploreTileDataBank0Hook
+else
 	call RLEXorCopy                                       ; $4075: $cd $d2 $09
+endc
 	pop  af                                          ; $4078: $f1
 	ld   [wWramBank], a                                  ; $4079: $ea $93 $c2
 	ldh  [rSVBK], a                                  ; $407c: $e0 $70
@@ -150,7 +154,11 @@ ExploreSubstate4_MapBank1TileData1:
 	ld   d, h                                        ; $40e5: $54
 	ld   e, l                                        ; $40e6: $5d
 	ld   hl, $d000                                   ; $40e7: $21 $00 $d0
+if def(VWF)
+	call ExploreTileDataBank1Hook
+else
 	call RLEXorCopy                                       ; $40ea: $cd $d2 $09
+endc
 	pop  af                                          ; $40ed: $f1
 	ld   [wWramBank], a                                  ; $40ee: $ea $93 $c2
 	ldh  [rSVBK], a                                  ; $40f1: $e0 $70
@@ -196,7 +204,11 @@ ExploreSubstate6_Layout:
 	ld   e, l                                        ; $4134: $5d
 	ld   hl, $d000                                   ; $4135: $21 $00 $d0
 	ld   bc, $1412                                   ; $4138: $01 $12 $14
+if def(VWF)
+	call ExploreTileAttrHook
+else
 	call FarCopyLayout                                       ; $413b: $cd $2c $0b
+endc
 	ld   hl, $d400                                   ; $413e: $21 $00 $d4
 	call FarCopyLayout                                       ; $4141: $cd $2c $0b
 	pop  af                                          ; $4144: $f1
@@ -8557,30 +8569,8 @@ GameOverBank0_8000hHook:
 
 
 InventoryLayout0Hook:
-	call FarCopyLayout
-
-	ld   a, $08
-	ld   [$d000+$20], a
-	ld   [$d000+$33], a
-	ld   [$d000+$40], a
-	ld   [$d000+$53], a
-	ld   [$d000+$60], a
-	ld   [$d000+$73], a
-	ld   [$d000+$80], a
-	ld   [$d000+$93], a
-
-	ld   a, BANK(.textLayout)
-	ldbc 20, 4
-	ld   de, .textLayout
-	ld   hl, $d400+$20
-	call FarCopyLayout
+	M_FarCall _InventoryLayout0Hook
 	ret
-
-.textLayout:
-	db $82, $84, $86, $88, $8a, $8c, $8e, $90, $92, $94, $96, $98, $9a, $9c, $9e, $a0, $a2, $a4, $a6, $a8
-	db $83, $85, $87, $89, $8b, $8d, $8f, $91, $93, $95, $97, $99, $9b, $9d, $9f, $a1, $a3, $a5, $a7, $a9
-	db $aa, $ac, $ae, $b0, $b2, $b4, $b6, $b8, $ba, $bc, $be, $c0, $c2, $c4, $c6, $c8, $ca, $cc, $ce, $d0
-	db $ab, $ad, $af, $b1, $b3, $b5, $b7, $b9, $bb, $bd, $bf, $c1, $c3, $c5, $c7, $c9, $cb, $cd, $cf, $d1
 
 
 FileLoadDisplayTileDataHook:
@@ -8594,7 +8584,7 @@ FileLoadDisplayLayoutHook:
 	ret
 
 
-FileLoadDisplayLayoutCommon::
+FileLoadDisplayLayoutCommon:
 ; day
 	ld   a, BANK(FileLoadDisplayDayMap)
 	ldbc 4, 3
@@ -8609,6 +8599,36 @@ FileLoadDisplayLayoutCommon::
 	call FarCopyLayout
 
 	ld   a, [sCurrDay]
+	ret
+
+
+ExploreTileDataBank0Hook:
+	M_FarCall _ExploreTileDataBank0Hook
+	ret
+
+
+ExploreTileDataBank1Hook:
+	M_FarCall _ExploreTileDataBank1Hook
+	ret
+
+
+ExploreTileAttrHook:
+	call FarCopyLayout
+
+	push af
+	ld   a, [wExploreFloor]
+	and  a
+	jr   z, :+
+	pop  af
+	ret
+
+:	push hl
+
+	ld   hl, $d000+$a3
+	ld   [hl], $01
+
+	pop  hl
+	pop  af
 	ret
 
 

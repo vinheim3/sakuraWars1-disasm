@@ -7554,4 +7554,142 @@ EndResultsMapAndTileDataHook::
 	db $d4, $d5, $d6, $d7, $c6
 	db $d4, $d8, $d9, $da, $db
 
+
+_ExploreTileDataBank1Hook::
+	call RLEXorCopy
+	ld   a, [wExploreFloor]
+	and  a
+	ret  nz
+
+; bottom-right, top-left tile
+	ld   hl, $d000+$60c
+	ld   a, [hl]
+	and  $fb
+	ld   [hl+], a
+	ld   a, [hl]
+	or   $04
+	ld   [hl+], a
+	ld   a, [hl]
+	and  $fd
+	ld   [hl+], a
+	ld   a, [hl]
+	or   $02
+	ld   [hl+], a
+
+; bottom-right, bottom-left tile
+	ld   hl, $d000+$700
+	ld   a, [hl]
+	and  $00
+	ld   [hl+], a
+	ld   a, [hl]
+	or   $ff
+	ld   [hl+], a
+	ld   a, [hl]
+	and  $fd
+	ld   [hl+], a
+	ld   a, [hl]
+	or   $02
+	ld   [hl+], a
+	ld   a, [hl]
+	and  $fb
+	ld   [hl+], a
+	ld   a, [hl]
+	or   $04
+	ld   [hl+], a
+
+	ret
+
+
+_ExploreTileDataBank0Hook::
+	call RLEXorCopy
+	ld   a, [wExploreFloor]
+	and  a
+	ret  nz
+
+; top-left, top-right tile
+	ld   de, $d000+$530
+	ld   hl, .topRight
+	ld   bc, $10
+	call MemCopy
+
+; top-left, bottom-left tile
+	ld   hl, $d000+$620
+	ld   a, [hl]
+	or   $07
+	ld   [hl+], a
+	ld   a, [hl]
+	or   $07
+	ld   [hl+], a
+	ld   hl, $d000+$626
+	ld   a, [hl]
+	or   $01
+	ld   [hl+], a
+	ld   a, [hl]
+	or   $01
+	ld   [hl+], a
+	ld   a, [hl]
+	or   $02
+	ld   [hl+], a
+	ld   a, [hl]
+	or   $02
+	ld   [hl+], a
+	ld   a, [hl]
+	or   $07
+	ld   [hl+], a
+	ld   a, [hl]
+	or   $07
+	ld   [hl+], a
+	ld   a, [hl]
+	or   $02
+	ld   [hl+], a
+	ld   a, [hl]
+	or   $02
+	ld   [hl+], a
+	ld   a, [hl]
+	or   $01
+	ld   [hl+], a
+	ld   a, [hl]
+	or   $01
+	ld   [hl+], a
+
+; top-left, bottom-right tile
+	ld   hl, $d000+$630
+	ld   a, [hl]
+	or   $f8
+	ld   [hl+], a
+	ld   a, [hl]
+	or   $f8
+	ld   [hl+], a
+	ld   a, [hl]
+	or   $10
+	ld   [hl+], a
+	ld   a, [hl]
+	or   $10
+	ld   [hl+], a
+	ld   a, [hl]
+	or   $20
+	ld   [hl+], a
+	ld   a, [hl]
+	or   $20
+	ld   [hl+], a
+	ld   hl, $d000+$63a
+	ld   a, [hl]
+	or   $f8
+	ld   [hl+], a
+	ld   a, [hl]
+	or   $f8
+	ld   [hl+], a
+
+	ret
+
+.topRight:
+	db $38, $07
+	db $78, $47
+	db $38, $07
+	db $38, $07
+	db $f8, $07
+	db $f8, $07
+	db $f8, $27
+	db $10, $ff
+
 endc
