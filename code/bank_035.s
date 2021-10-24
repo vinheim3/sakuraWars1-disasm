@@ -824,6 +824,94 @@ CinematronTileDataHook0::
 .textboxesNoBottom:
 	INCBIN "en_cinematron.2bpp", (3*20+18)*$10, $20
 
+
+_LoadCinematronGBCPocketSakuraText::
+	ld   a, [wWramBank]                                  ; $6012: $fa $93 $c2
+	push af                                          ; $6015: $f5
+	ld   a, $06                                      ; $6016: $3e $03
+	ld   [wWramBank], a                                  ; $6018: $ea $93 $c2
+	ldh  [rSVBK], a                                  ; $601b: $e0 $70
+
+	ld   bc, $100
+	ld   de, $d000
+	ld   hl, .textboxesGBCTopLeft
+	call MemCopy
+
+	ld   bc, $100
+	ld   de, $d100
+	ld   hl, .textboxesGBCBottomLeft
+	call MemCopy
+
+	ld   bc, $100
+	ld   de, $d200
+	ld   hl, .textboxesPocketSakuraTopLeft
+	call MemCopy
+
+	ld   bc, $100
+	ld   de, $d300
+	ld   hl, .textboxesPocketSakuraBottomLeft
+	call MemCopy
+
+	ld   bc, $20
+	ld   de, $d400
+	ld   hl, .textboxesGBCTopRight
+	call MemCopy
+
+	ld   bc, $20
+	ld   de, $d500
+	ld   hl, .textboxesGBCBottomRight
+	call MemCopy
+
+	ld   bc, $20
+	ld   de, $d420
+	ld   hl, .textboxesPocketSakuraTopRight
+	call MemCopy
+
+	ld   bc, $20
+	ld   de, $d520
+	ld   hl, .textboxesPocketSakuraBottomRight
+	call MemCopy
+
+	pop  af                                          ; $6061: $f1
+	ld   [wWramBank], a                                  ; $6062: $ea $93 $c2
+	ldh  [rSVBK], a                                  ; $6065: $e0 $70
+
+	ld   c, $81                                      ; $403a: $0e $81
+	ld   de, $8d00                                   ; $403c: $11 $00 $98
+	ld   a, $06                                      ; $403f: $3e $03
+	ld   hl, $d500                                   ; $4041: $21 $00 $d0
+	ld   b, $04                                      ; $4044: $06 $24
+	call EnqueueHDMATransfer                                       ; $4046: $cd $7c $02
+
+	ld   c, $81                                      ; $403a: $0e $81
+	ld   de, $8800                                   ; $403c: $11 $00 $98
+	ld   a, $06                                      ; $403f: $3e $03
+	ld   hl, $d000                                   ; $4041: $21 $00 $d0
+	ld   b, $44                                      ; $4044: $06 $24
+	call EnqueueHDMATransfer                                       ; $4046: $cd $7c $02
+
+	ld   hl, $c920
+
+	ret
+
+.textboxesGBCTopLeft:
+	INCBIN "en_cinematron.2bpp", (0*20)*$10, $100
+.textboxesGBCBottomLeft:
+	INCBIN "en_cinematron.2bpp", (1*20)*$10, $100
+.textboxesPocketSakuraTopLeft:
+	INCBIN "en_cinematron.2bpp", (2*20)*$10, $100
+.textboxesPocketSakuraBottomLeft:
+	INCBIN "en_cinematron.2bpp", (3*20)*$10, $100
+.textboxesGBCTopRight:
+	INCBIN "en_cinematron.2bpp", (0*20+16)*$10, $20
+.textboxesGBCBottomRight:
+	INCBIN "en_cinematron.2bpp", (1*20+16)*$10, $20
+.textboxesPocketSakuraTopRight:
+	INCBIN "en_cinematron.2bpp", (2*20+16)*$10, $20
+.textboxesPocketSakuraBottomRight:
+	INCBIN "en_cinematron.2bpp", (3*20+16)*$10, $20
+
+
 CinematronTileDataHook1::
 	call RLEXorCopy
 
@@ -872,46 +960,6 @@ CinematronTileDataHook1::
 	ld   hl, .mainMenuBottomRight
 	call MemCopy
 
-	ld   bc, $100
-	ld   de, $8800
-	ld   hl, .textboxesGBCTopLeft
-	call MemCopy
-
-	ld   bc, $100
-	ld   de, $8900
-	ld   hl, .textboxesGBCBottomLeft
-	call MemCopy
-
-	ld   bc, $100
-	ld   de, $8a00
-	ld   hl, .textboxesPocketSakuraTopLeft
-	call MemCopy
-
-	ld   bc, $100
-	ld   de, $8b00
-	ld   hl, .textboxesPocketSakuraBottomLeft
-	call MemCopy
-
-	ld   bc, $20
-	ld   de, $8c00
-	ld   hl, .textboxesGBCTopRight
-	call MemCopy
-
-	ld   bc, $20
-	ld   de, $8d00
-	ld   hl, .textboxesGBCBottomRight
-	call MemCopy
-
-	ld   bc, $20
-	ld   de, $8c20
-	ld   hl, .textboxesPocketSakuraTopRight
-	call MemCopy
-
-	ld   bc, $20
-	ld   de, $8d20
-	ld   hl, .textboxesPocketSakuraBottomRight
-	call MemCopy
-
 	ld   bc, $c0
 	ld   de, $9440
 	ld   hl, .textboxesTVTopLeft
@@ -950,23 +998,6 @@ CinematronTileDataHook1::
 	INCBIN "en_cinematron.2bpp", (8*20+8)*$10, $40
 .mainMenuBottomRight:
 	INCBIN "en_cinematron.2bpp", (9*20+8)*$10, $40
-
-.textboxesGBCTopLeft:
-	INCBIN "en_cinematron.2bpp", (0*20)*$10, $100
-.textboxesGBCBottomLeft:
-	INCBIN "en_cinematron.2bpp", (1*20)*$10, $100
-.textboxesPocketSakuraTopLeft:
-	INCBIN "en_cinematron.2bpp", (2*20)*$10, $100
-.textboxesPocketSakuraBottomLeft:
-	INCBIN "en_cinematron.2bpp", (3*20)*$10, $100
-.textboxesGBCTopRight:
-	INCBIN "en_cinematron.2bpp", (0*20+16)*$10, $20
-.textboxesGBCBottomRight:
-	INCBIN "en_cinematron.2bpp", (1*20+16)*$10, $20
-.textboxesPocketSakuraTopRight:
-	INCBIN "en_cinematron.2bpp", (2*20+16)*$10, $20
-.textboxesPocketSakuraBottomRight:
-	INCBIN "en_cinematron.2bpp", (3*20+16)*$10, $20
 
 .textboxesTVTopLeft:
 	INCBIN "en_cinematron.2bpp", (4*20)*$10, $c0

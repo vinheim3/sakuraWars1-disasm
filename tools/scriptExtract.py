@@ -200,13 +200,13 @@ class ScriptExtractor:
 
         bigMap = {
             "You see...\nBlah blah blah...\nSo here we are.": [[0x0b, 0x00]],
-            "I get where you're coming from, Sakura, but you realize doing that in the middle of the night bothers everyone, don't you?":  [[0x0b, 0x04], [0x0b, 0x0a]],
-            "I believe the correct answer is Kohran. It seems like she's been conducting a large-scale experiment lately.":  [[0x0b, 0x07], [0x0b, 0x0c]],
-            "The answer is probably Iris. She's likely floating through the air in her sleep, sheets and all.":  [[0x0b, 0x05], [0x0b, 0x21]],
+            "I get where you're coming from, Sakura, but you realize doing that in the middle of the night bothers everyone, don't you?":  [[0x0b, 0x02], [0x0b, 0x0a]],
+            "I believe the correct answer is Kohran. It seems like she's been conducting a large-scale experiment lately.":  [[0x0b, 0x06], [0x0b, 0x0c]],
+            "The answer is probably Iris. She's likely floating through the air in her sleep, sheets and all.":  [[0x0b, 0x03], [0x0b, 0x22]],
             "Hmm... Nails...\n... Props?\nThat's it!":  [[0x0b, 0x01]],
-            "Sometimes when I get nice and buzzed, I just start singing. Still, though, \"eerie\"...?":  [[0x0b, 0x03], [0x0b, 0x5e]],
-            "I like to take a midnight swim on occasion, and one time, I forgot to bring a towel.":  [[0x0b, 0x02], [0x0b, 0x37]],
-            "I figure because these markings only appear in the training room and near her room.":  [[0x0b, 0x06], [0x0b, 0x45]],
+            "Sometimes when I get nice and buzzed, I just start singing. \nStill, though, \"eerie\"...?":  [[0x0b, 0x07], [0x0b, 0x18]],
+            "I like to take a midnight swim on occasion, and one time, I forgot my towel.":  [[0x0b, 0x04], [0x0b, 0x38]],
+            "I figure because these markings only appear in the training room and near her room.":  [[0x0b, 0x05], [0x0b, 0x47]],
         }
         if english in bigMap:
             print(english)
@@ -857,7 +857,7 @@ class ScriptExtractor:
 
 if __name__ == "__main__":
     quotePrefixed = []
-    wb = load_workbook('sakura wars GB - 09:10:21.xlsx')
+    wb = load_workbook('sakura wars GB - 24:10:21.xlsx')
     ws = wb['temp']
     for i, row in enumerate(ws.rows):
         english = row[4]
@@ -892,9 +892,9 @@ if __name__ == "__main__":
     doneEnglish = {}
 
     if translate:
-        with open('sakura wars GB - 09:10:21.csv') as f:
+        with open('sakura wars GB - 24:10:21.csv') as f:
             reader = csv.reader(f)
-            for i, (scriptNum, offset, orig, blank, english, char, dupe1, dupe2) in enumerate(reader):
+            for i, (scriptNum, offset, orig, blank, english, char, dupe1, dupe2, unk) in enumerate(reader):
                 if not scriptNum:
                     continue
 

@@ -7692,4 +7692,17 @@ _ExploreTileDataBank0Hook::
 	db $f8, $27
 	db $10, $ff
 
+
+_EnterNameTileDataHook::
+	ld   bc, .end-.gfx
+	ld   de, $d500
+	ld   hl, .gfx
+	call MemCopy
+
+	ret
+
+.gfx:
+	INCBIN "en_enterName.2bpp"
+.end:
+
 endc

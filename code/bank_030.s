@@ -9494,7 +9494,11 @@ jr_030_74a4:
 	ld   [wWramBank], a                                  ; $7508: $ea $93 $c2
 	ldh  [rSVBK], a                                  ; $750b: $e0 $70
 	ld   hl, wBGPalettes                                   ; $750d: $21 $de $c2
+if def(VWF)
+	ld   de, $d3a0 ; to not conflict with text
+else
 	ld   de, $d220                                   ; $7510: $11 $20 $d2
+endc
 	ld   bc, $0080                                   ; $7513: $01 $80 $00
 	call MemCopy                                       ; $7516: $cd $a9 $09
 	ld   a, BANK(Palettes_AllWhite)                                      ; $7519: $3e $01
@@ -9518,7 +9522,11 @@ endc
 	ld   b, BANK(Palettes_AllWhite)                                      ; $753b: $06 $01
 	ld   hl, Palettes_AllWhite                                   ; $753d: $21 $00 $70
 	ld   c, $00                                      ; $7540: $0e $00
+if def(VWF)
+	ld   de, $d3a0 ; to not conflict with text
+else
 	ld   de, $d220                                   ; $7542: $11 $20 $d2
+endc
 	call Call_030_795c                               ; $7545: $cd $5c $79
 	pop  af                                          ; $7548: $f1
 	ld   [wWramBank], a                                  ; $7549: $ea $93 $c2
@@ -9554,7 +9562,11 @@ SoundModeSubstate2_Return:
 
 ;
 	ld   b, $00                                      ; $7572: $06 $00
+if def(VWF)
+	ld   hl, $d3a0 ; to not conflict with text
+else
 	ld   hl, $d220                                   ; $7574: $21 $20 $d2
+endc
 	ld   c, BANK(Palettes_AllWhite)                                      ; $7577: $0e $01
 	ld   de, Palettes_AllWhite                                   ; $7579: $11 $00 $70
 	call Call_030_795c                               ; $757c: $cd $5c $79
@@ -10395,7 +10407,11 @@ Call_030_795c:
 	push af                                          ; $795d: $f5
 	push de                                          ; $795e: $d5
 	xor  a                                           ; $795f: $af
+if def(VWF)
+	call SoundModeFadeInHook
+else
 	ld   [wStartingColorIdxToLoadCompDataFor], a                                  ; $7960: $ea $62 $c3
+endc
 	ld   a, $40                                      ; $7963: $3e $40
 	ld   [wNumPaletteColorsToLoadCompDataFor], a                                  ; $7965: $ea $63 $c3
 	ld   a, $03                                      ; $7968: $3e $03
@@ -10406,11 +10422,7 @@ jr_030_796f:
 	push af                                          ; $796f: $f5
 	ld   b, $00                                      ; $7970: $06 $00
 	ld   c, $40                                      ; $7972: $0e $40
-if def(VWF)
-	call SoundModeFadeInHook
-else
 	call FadePalettesAndSetRangeToUpdate                                       ; $7974: $cd $32 $08
-endc
 	rst  WaitUntilVBlankIntHandledIfLCDOn                                         ; $7977: $cf
 	rst  WaitUntilVBlankIntHandledIfLCDOn                                         ; $7978: $cf
 	rst  WaitUntilVBlankIntHandledIfLCDOn                                         ; $7979: $cf
@@ -11435,8 +11447,10 @@ CreditsSubstate7_Credits2Main:
 
 
 SoundModeFadeInHook:
-	call FadePalettesAndSetRangeToUpdate
-
+	push af
+	push bc
+	push de
+	push hl
 	call ClearOam                                       ; $7553: $cd $d7 $0d
 
 ; Load sprite for current song
@@ -11445,6 +11459,12 @@ SoundModeFadeInHook:
 	ld   [wSpriteGroup], a                                  ; $755b: $ea $1a $c2
 	ld   a, $44                                      ; $755e: $3e $44
 	call LoadSpriteFromMainTable                                       ; $7560: $cd $16 $0e
+
+	pop  hl
+	pop  de
+	pop  bc
+	pop  af
+	ld   [wStartingColorIdxToLoadCompDataFor], a
 	ret
 
 endc

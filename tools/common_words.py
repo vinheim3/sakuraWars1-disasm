@@ -32,10 +32,10 @@ def get_chosen():
         "sleep, sheets and all.": 2,
         # Sometimes when I get nice
         # and buzzed, I just start
-        # singing. Still, though,
-        # "eerie"...?
-        "Sometimes when I get nice and buzzed, I just start singing. Still, though,": 2,
-        "\"eerie\"...?": 2,
+        # singing. 
+        # Still, though, "eerie"...?
+        "Sometimes when I get nice and buzzed, I just start singing. ": 2,
+        "Still, though, \"eerie\"...?": 2,
         # I figure because these
         # markings only appear in
         # the training room and
@@ -44,9 +44,8 @@ def get_chosen():
         "near her room.": 2,
         # I like to take a midnight
         # swim on occasion, and one
-        # time, I forgot to bring a
-        # towel.
-        "I like to take a midnight swim on occasion, and one time, I forgot to bring a": 2,
+        # time, I forgot my towel.
+        "I like to take a midnight swim on occasion, and one time, I forgot my ": 2,
         "towel.": 2,
 
         "Hmm... Nails...\n... Props?\nThat's it!": 5,
@@ -60,9 +59,9 @@ def get_chosen():
 
     doneEnglish = {}
     whole_texts = []
-    with open('sakura wars GB - 09:10:21.csv') as f:
+    with open('sakura wars GB - 24:10:21.csv') as f:
         reader = csv.reader(f)
-        for scriptNum, offset, orig, blank, english, char, dupe1, dupe2 in reader:
+        for scriptNum, offset, orig, blank, english, char, dupe1, dupe2, unk in reader:
             if not english or not scriptNum:
                 continue
 
@@ -89,6 +88,7 @@ def get_chosen():
                         if '"' in word: continue
                         if "'" in word: continue
                         if "-" in word: continue
+                        if "*" in word: continue
                         if '<name>' in word: continue
                         if '<player>' in word: continue
                         if '<Player>' in word: continue

@@ -4432,10 +4432,10 @@ GameState14_Cinematron::
 	rst  JumpTable                                                  ; $5c09
 	dw CinematronSubstate0_DefaultInit
 	dw CinematronSubstate1_MainInit
-	dw CinematronSubstate2
+	dw CinematronSubstate2_Main
 	dw CinematronSubstate3_SelectedOption
-	dw CinematronSubstate4
-	
+	dw CinematronSubstate4_RewardText
+
 	
 CinematronSubstate0_DefaultInit:
 ; Start off on the 'return' option
@@ -4678,55 +4678,64 @@ endc
 	ld   a, $07                                      ; $5dc8: $3e $07
 	call SafeSetAudVolForMultipleChannels                                       ; $5dca: $cd $e0 $1c
 	call Call_010_61b8                               ; $5dcd: $cd $b8 $61
+if def(VWF)
+	call CinematronInitHook
+else
 	call Call_010_6401                               ; $5dd0: $cd $01 $64
+endc
 	ld   a, $02                                      ; $5dd3: $3e $02
 	ld   [wGameSubstate], a                                  ; $5dd5: $ea $a1 $c2
 	xor  a                                           ; $5dd8: $af
 	ld   [$c919], a                                  ; $5dd9: $ea $19 $c9
 	ld   a, [$c926]                                  ; $5ddc: $fa $26 $c9
 	or   a                                           ; $5ddf: $b7
-	jr   z, jr_010_5de7                              ; $5de0: $28 $05
+	jr   z, .done                              ; $5de0: $28 $05
 
 	ld   a, $04                                      ; $5de2: $3e $04
 	ld   [wGameSubstate], a                                  ; $5de4: $ea $a1 $c2
 
-jr_010_5de7:
+.done:
 	ret                                              ; $5de7: $c9
 
 
-CinematronSubstate2:
+CinematronSubstate2_Main:
 	call ClearOam                                       ; $5de8: $cd $d7 $0d
 	call AnimateAllAnimatedSpriteSpecs                                       ; $5deb: $cd $d3 $2e
 	call Call_010_61f3                               ; $5dee: $cd $f3 $61
 	call Call_010_5eb3                               ; $5df1: $cd $b3 $5e
 	ld   a, [$c919]                                  ; $5df4: $fa $19 $c9
 	rst  JumpTable                                         ; $5df7: $df
-	dw $6151
-	dw $5e3b
-	dw $5ec6
-	dw $5ef2
-	dw $5f03
-	dw $5f7f
-	dw $5f8e
-	dw $5fb5
+	dw todo_CinematronSS2_Entry0
+	dw todo_CinematronSS2_Entry1
+	dw todo_CinematronSS2_Entry2
+	dw todo_CinematronSS2_Entry3
+	dw todo_CinematronSS2_Entry4
+	dw todo_CinematronSS2_Entry5
+	dw todo_CinematronSS2_Entry6
+	dw todo_CinematronSS2_Entry7
 
 
-CinematronSubstate4:
+CinematronSubstate4_RewardText:
 	call ClearOam                                       ; $5e08: $cd $d7 $0d
 	call AnimateAllAnimatedSpriteSpecs                                       ; $5e0b: $cd $d3 $2e
 	call Call_010_61f3                               ; $5e0e: $cd $f3 $61
 	call Call_010_5eb3                               ; $5e11: $cd $b3 $5e
 	ld   a, [$c919]                                  ; $5e14: $fa $19 $c9
 	rst  JumpTable                                         ; $5e17: $df
-	dw $5fe9
-	dw $6151
-	dw $5ff1
-	dw $610b
-	dw $612e
-	dw $5e24
+	dw todo_CinematronSS4_Entry0
+	dw todo_CinematronSS4_Entry1
+	dw todo_CinematronSS4_Entry2
+	dw todo_CinematronSS4_Entry3
+	dw todo_CinematronSS4_Entry4
+	dw todo_CinematronSS4_Entry5
 
 
+todo_CinematronSS4_Entry5:
+if def(VWF)
+	call CinematronRewardTextEndHook
+else
 	ld   hl, $c920                                   ; $5e24: $21 $20 $c9
+endc
 	dec  [hl]                                        ; $5e27: $35
 	jr   nz, jr_010_5e3a                             ; $5e28: $20 $10
 
@@ -4741,6 +4750,7 @@ jr_010_5e3a:
 	ret                                              ; $5e3a: $c9
 
 
+todo_CinematronSS2_Entry1:
 	call Call_010_61b8                               ; $5e3b: $cd $b8 $61
 	ld   a, [wInGameButtonsPressed]                                  ; $5e3e: $fa $10 $c2
 	bit  0, a                                        ; $5e41: $cb $47
@@ -4828,6 +4838,7 @@ jr_010_5ec5:
 	ret                                              ; $5ec5: $c9
 
 
+todo_CinematronSS2_Entry2:
 	ld   a, [$c91a]                                  ; $5ec6: $fa $1a $c9
 	call HLequAddrOfAnimSpriteSpecDetails                                       ; $5ec9: $cd $76 $30
 
@@ -4847,6 +4858,7 @@ jr_010_5ef1:
 	ret                                              ; $5ef1: $c9
 
 
+todo_CinematronSS2_Entry3:
 	ld   hl, $c920                                   ; $5ef2: $21 $20 $c9
 	dec  [hl]                                        ; $5ef5: $35
 	jr   nz, jr_010_5f02                             ; $5ef6: $20 $0a
@@ -4860,6 +4872,7 @@ jr_010_5f02:
 	ret                                              ; $5f02: $c9
 
 
+todo_CinematronSS2_Entry4:
 	ld   a, [wInGameButtonsPressed]                                  ; $5f03: $fa $10 $c2
 	bit  4, a                                        ; $5f06: $cb $67
 	jr   z, jr_010_5f16                              ; $5f08: $28 $0c
@@ -4928,6 +4941,7 @@ jr_010_5f7e:
 	ret                                              ; $5f7e: $c9
 
 
+todo_CinematronSS2_Entry5:
 	ld   hl, $c920                                   ; $5f7f: $21 $20 $c9
 	dec  [hl]                                        ; $5f82: $35
 	jr   nz, jr_010_5f8d                             ; $5f83: $20 $08
@@ -4940,6 +4954,7 @@ jr_010_5f8d:
 	ret                                              ; $5f8d: $c9
 
 
+todo_CinematronSS2_Entry6:
 	xor  a                                           ; $5f8e: $af
 	ld   [wStartingColorIdxToLoadCompDataFor], a                                  ; $5f8f: $ea $62 $c3
 	ld   a, $40                                      ; $5f92: $3e $40
@@ -4959,6 +4974,7 @@ jr_010_5f8d:
 	ret                                              ; $5fb4: $c9
 
 
+todo_CinematronSS2_Entry7:
 	ld   hl, $c921                                   ; $5fb5: $21 $21 $c9
 	dec  [hl]                                        ; $5fb8: $35
 	jr   nz, jr_010_5fe8                             ; $5fb9: $20 $2d
@@ -4989,12 +5005,14 @@ jr_010_5fe8:
 	ret                                              ; $5fe8: $c9
 
 
+todo_CinematronSS4_Entry0:
 	call Call_010_6493                               ; $5fe9: $cd $93 $64
 	ld   hl, $c919                                   ; $5fec: $21 $19 $c9
 	inc  [hl]                                        ; $5fef: $34
 	ret                                              ; $5ff0: $c9
 
 
+todo_CinematronSS4_Entry2:
 	call InitWideTextBoxDimensions                                       ; $5ff1: $cd $ec $0f
 	call ClearTextBoxDimensionsAndSetDefaultTextStyle                                       ; $5ff4: $cd $09 $14
 	ld   bc, $1202                                   ; $5ff7: $01 $02 $12
@@ -5019,10 +5037,12 @@ jr_010_5fe8:
 	dec  a                                           ; $6024: $3d
 	dec  a                                           ; $6025: $3d
 	ld   [$c926], a                                  ; $6026: $ea $26 $c9
-	ld   hl, $6076                                   ; $6029: $21 $76 $60
+; Data_10_6070entry00 - "Romando's gotten"
+	ld   hl, Data_10_6070+6                                   ; $6029: $21 $76 $60
 	ld   de, $da00                                   ; $602c: $11 $00 $da
 	call MemCopyWhileNon0                               ; $602f: $cd $a0 $60
 	call Call_010_60a9                               ; $6032: $cd $a9 $60
+; Data_10_6070entry01 - "new items in stock"
 	call MemCopyWhileNon0                               ; $6035: $cd $a0 $60
 	jr   .cont_6058                                 ; $6038: $18 $1e
 
@@ -5033,11 +5053,13 @@ jr_010_5fe8:
 
 	dec  a                                           ; $6041: $3d
 	ld   [$c926], a                                  ; $6042: $ea $26 $c9
-	ld   hl, $6074                                   ; $6045: $21 $74 $60
+
+; Data_10_6070entry02 - "points received"
+	ld   hl, Data_10_6070+4                                   ; $6045: $21 $74 $60
 	ld   a, [hl+]                                    ; $6048: $2a
 	ld   b, [hl]                                     ; $6049: $46
 	ld   c, a                                        ; $604a: $4f
-	ld   hl, $6070                                   ; $604b: $21 $70 $60
+	ld   hl, Data_10_6070                                   ; $604b: $21 $70 $60
 	add  hl, bc                                      ; $604e: $09
 	ld   de, $da00                                   ; $604f: $11 $00 $da
 	call Call_010_60c9                               ; $6052: $cd $c9 $60
@@ -5058,20 +5080,9 @@ jr_010_5fe8:
 	ret                                              ; $606f: $c9
 
 if def(VWF)
-
-Data_10_6070::
-	dw Data_10_6070entry00-Data_10_6070
-	dw Data_10_6070entry01-Data_10_6070
-	dw Data_10_6070entry02-Data_10_6070
-
-Data_10_6070entry00::
-	db $2c, $43, $41, $35, $42, $38, $43, $01, $01, $47, $10, $3b, $43, $48, $48, $39, $42, $10, $00
-Data_10_6070entry01::
-	db $10, $42, $39, $4b, $10, $3d, $48, $39, $41, $47, $10, $3d, $42, $0d, $47, $48, $43, $37, $3f, $f2, $00
-
-	ds $60a0-@, 0
-
 else
+Data_10_6070:
+endc
 	ld   b, $00                                      ; $6070: $06 $00
 	inc  c                                           ; $6072: $0c
 	nop                                              ; $6073: $00
@@ -5116,8 +5127,6 @@ else
 	ld   l, l                                        ; $609d: $6d
 	sbc  a                                           ; $609e: $9f
 	nop                                              ; $609f: $00
-
-endc
 
 
 ; DE - dest addr
@@ -5234,6 +5243,7 @@ jr_010_610a:
 	ret                                              ; $610a: $c9
 
 
+todo_CinematronSS4_Entry3:
 	call CheckIfReachedLastKanjiIdxInCurrTextBox                                       ; $610b: $cd $71 $14
 	or   a                                           ; $610e: $b7
 	jp   nz, Jump_010_6117                           ; $610f: $c2 $17 $61
@@ -5259,6 +5269,7 @@ jr_010_6125:
 	jp   HDMAEnqueueNextTextBoxKanji                                       ; $612b: $c3 $55 $10
 
 
+todo_CinematronSS4_Entry4:
 	call Call_010_6666                               ; $612e: $cd $66 $66
 	jr   nz, jr_010_6150                             ; $6131: $20 $1d
 
@@ -5280,6 +5291,8 @@ jr_010_6150:
 	ret                                              ; $6150: $c9
 
 
+todo_CinematronSS2_Entry0:
+todo_CinematronSS4_Entry1:
 	ld   hl, $c921                                   ; $6151: $21 $21 $c9
 	dec  [hl]                                        ; $6154: $35
 	jr   nz, jr_010_617e                             ; $6155: $20 $27
@@ -6003,9 +6016,14 @@ jr_010_65d1:
 	ret                                              ; $65df: $c9
 
 
+;DEF CINEMATRON_MSG_HACK = $01
 Call_010_65e0:
 	ld   c, $00                                      ; $65e0: $0e $00
+if def(CINEMATRON_MSG_HACK)
+	call CinematronMsgHack
+else
 	ld   a, [$c941]                                  ; $65e2: $fa $41 $c9
+endc
 	or   a                                           ; $65e5: $b7
 	jr   z, jr_010_65f8                              ; $65e6: $28 $10
 
@@ -9569,18 +9587,8 @@ EnterNameTileMapHook:
 
 EnterNameTileDataHook:
 	call RLEXorCopy
-
-	ld   bc, Gfx_EnEnterName.end-Gfx_EnEnterName
-	ld   de, $d500
-	ld   hl, Gfx_EnEnterName
-	call MemCopy
-
+	M_FarCall _EnterNameTileDataHook
 	ret
-
-
-Gfx_EnEnterName:
-	INCBIN "en_enterName.2bpp"
-.end:
 
 
 CinematronTileDataHook_0_8000h:
@@ -9696,7 +9704,44 @@ TVCommsVramBank0Hook:
 	ret
 
 
+CinematronRewardTextEndHook:
+	M_FarCall _LoadCinematronGBCPocketSakuraText
+	ret
+
+
+CinematronInitHook:
+	call Call_010_6401
+
+	ld   a, [$c926]
+	or   a
+	ret  nz
+
+	M_FarCall _LoadCinematronGBCPocketSakuraText
+	ret
+
+
+Data_10_6070::
+	dw Data_10_6070entry00-Data_10_6070
+	dw Data_10_6070entry01-Data_10_6070
+	dw Data_10_6070entry02-Data_10_6070
+
+Data_10_6070entry00::
+	db $2c, $43, $41, $35, $42, $38, $43, $01, $01, $47, $10, $3b, $43, $48, $48, $39, $42, $10, $00
+Data_10_6070entry01::
+	db $10, $42, $39, $4b, $10, $3d, $48, $39, $41, $01, $03, $47, $01, $04, $0d, $3d, $42, $10, $47, $48, $43, $37, $3f, $f2, $00
 Data_10_6070entry02::
 	db $10, $44, $43, $3d, $42, $48, $47, $10, $46, $39, $37, $39, $3d, $4a, $39, $38, $f2, $00
+
+endc
+
+if def(CINEMATRON_MSG_HACK)
+
+CinematronMsgHack:
+	ld   a, $10
+	ld   [$cc95], a
+	ld   [$cc96], a
+	ld   [$cc97], a
+	ld   a, $03
+	ret
 
 endc
