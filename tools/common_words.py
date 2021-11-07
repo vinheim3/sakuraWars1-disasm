@@ -59,7 +59,7 @@ def get_chosen():
 
     doneEnglish = {}
     whole_texts = []
-    with open('sakura wars GB - 24:10:21.csv') as f:
+    with open('sakura wars GB - 07:11:21.csv') as f:
         reader = csv.reader(f)
         for scriptNum, offset, orig, blank, english, char, dupe1, dupe2, unk in reader:
             if not english or not scriptNum:
