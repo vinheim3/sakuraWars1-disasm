@@ -43,7 +43,7 @@ Apply the .ips or .bps patch using https://www.romhacking.net/patch/. Alternativ
 * Neko - Graphics designer
 * Other translators: Snowyaria, Natsume38
 * Various assistance: starblade86, kori-maru
-* Special thanks: Gamesack, Retro Ali, RetroRGB, The Sakura Wars 1 translation team
+* Special thanks: Gamesack, Retro Ali, RetroRGB, The Sakura Wars 1 translation team, SEGA Saturn Shiro, SEGAbits, and the combat revue review
 
 # Misc rom details
 While patching, you will be prompted for a rom. The patcher should then mention some of the below details. Use these codes to verify you have the correct rom, and you can re-upload the patched rom to verify that the output is correct.
