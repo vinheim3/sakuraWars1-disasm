@@ -32,7 +32,7 @@ My biggest hope for this translation project is that it furthers expands the Wes
 If you enjoyed this patch, please share our work with everyone you can. It’s my dream to get Sakura Wars the popularity it deserves, equal to its popularity in Japan.
 
 # PATCHING INSTRUCTIONS
-Apply the .ips or .bps patch using https://www.romhacking.net/patch/. You can also download Lunar IPS if choosing the .ips file at https://www.romhacking.net/utilities/240/ if you are using Windows. Make the program select a Sakura Wars GB Japanese ROM that definitely wasn’t just downloaded off the internet, and then select the patch files. Virtually a drag a drop process.
+Apply the .ips or .bps patch using https://www.romhacking.net/patch/. Alternatively, in the download, there should be a link to a Gameboy ROM Patcher, for the .ips file, if on Windows. Make the program select a Sakura Wars GB Japanese ROM that definitely wasn’t just downloaded off the internet, and then select the patch files. Virtually a drag a drop process.
 
 # Credits
 * ComicMaster138 - Lead Graphics desginer
